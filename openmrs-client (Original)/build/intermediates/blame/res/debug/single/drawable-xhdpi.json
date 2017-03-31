@@ -1,0 +1,250 @@
+[
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/ic_select_all.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/ic_select_all.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/tab_selected_focused_openmrs.9.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/tab_selected_focused_openmrs.9.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/tab_selected_pressed_openmrs.9.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/tab_selected_pressed_openmrs.9.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/ic_offline.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/ic_offline.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/exp_list_hide_details.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/exp_list_hide_details.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/start_visit.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/start_visit.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/ic_add_disabled.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/generated/res/pngs/debug/drawable-xhdpi/ic_add_disabled.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/list_pressed_openmrs.9.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/list_pressed_openmrs.9.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/ic_edit.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/generated/res/pngs/debug/drawable-xhdpi/ic_edit.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/ic_sync_off.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/generated/res/pngs/debug/drawable-xhdpi/ic_sync_off.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/ic_update_white_48dp.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/ic_update_white_48dp.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/tab_unselected_openmrs.9.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/tab_unselected_openmrs.9.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/list_focused_openmrs.9.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/list_focused_openmrs.9.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/radiobutton_unchecked.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/radiobutton_unchecked.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/discharge.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/discharge.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/admission.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/admission.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/menu_dropdown_panel_openmrs.9.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/menu_dropdown_panel_openmrs.9.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/progress_secondary_openmrs.9.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/progress_secondary_openmrs.9.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/openmrs_logo.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/openmrs_logo.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/ic_search.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/generated/res/pngs/debug/drawable-xhdpi/ic_search.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/ico_vitals_small.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/ico_vitals_small.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/spinner_ab_pressed_openmrs.9.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/spinner_ab_pressed_openmrs.9.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/ic_password_visible.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/generated/res/pngs/debug/drawable-xhdpi/ic_password_visible.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/spinner_ab_default_openmrs.9.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/spinner_ab_default_openmrs.9.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/exp_list_show_details.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/exp_list_show_details.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/btn_cab_done_pressed_openmrs.9.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/btn_cab_done_pressed_openmrs.9.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/ic_password_hidden.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/generated/res/pngs/debug/drawable-xhdpi/ic_password_hidden.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/ic_mult_down.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/ic_mult_down.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/checkbox_unchecked.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/checkbox_unchecked.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/cab_background_bottom_openmrs.9.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/cab_background_bottom_openmrs.9.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/ab_stacked_solid_openmrs.9.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/ab_stacked_solid_openmrs.9.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/tab_unselected_pressed_openmrs.9.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/tab_unselected_pressed_openmrs.9.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/radiobutton_checked.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/radiobutton_checked.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/delete_patient.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/delete_patient.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/ic_sync_on.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/generated/res/pngs/debug/drawable-xhdpi/ic_sync_on.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/btn_cab_done_default_openmrs.9.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/btn_cab_done_default_openmrs.9.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/ic_close.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/ic_close.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/visit_note.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/visit_note.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/spinner_ab_focused_openmrs.9.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/spinner_ab_focused_openmrs.9.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/tab_unselected_focused_openmrs.9.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/tab_unselected_focused_openmrs.9.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/ic_download.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/ic_download.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/ic_person_grey_500_48dp.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/ic_person_grey_500_48dp.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/cab_background_top_openmrs.9.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/cab_background_top_openmrs.9.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/btn_cab_done_focused_openmrs.9.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/btn_cab_done_focused_openmrs.9.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/ab_transparent_openmrs.9.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/ab_transparent_openmrs.9.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/ab_solid_openmrs.9.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/ab_solid_openmrs.9.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/ab_texture_tile_openmrs.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/ab_texture_tile_openmrs.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/checkbox_checked.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/checkbox_checked.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/ic_photo_camera_white_48dp.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/ic_photo_camera_white_48dp.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/ico_vitals.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/ico_vitals.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/ico_registry.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/ico_registry.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/ic_add.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/generated/res/pngs/debug/drawable-xhdpi/ic_add.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/tab_selected_openmrs.9.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/tab_selected_openmrs.9.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/spinner_ab_disabled_openmrs.9.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/spinner_ab_disabled_openmrs.9.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/ico_visits.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/ico_visits.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/form_done.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/form_done.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/progress_bg_openmrs.9.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/progress_bg_openmrs.9.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/ico_search.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/ico_search.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/ic_openmrs.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/ic_openmrs.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/ic_menu_refresh.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/ic_menu_refresh.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/progress_primary_openmrs.9.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/progress_primary_openmrs.9.png"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/drawable-xhdpi/ab_bottom_solid_openmrs.9.png",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/drawable-xhdpi/ab_bottom_solid_openmrs.9.png"
+    }
+]

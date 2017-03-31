@@ -1,0 +1,50 @@
+[
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/menu/find_locally_and_add_patients_menu.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/menu/find_locally_and_add_patients_menu.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/menu/patient_details_menu.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/menu/patient_details_menu.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/menu/download_multiple.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/menu/download_multiple.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/menu/basic_menu.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/menu/basic_menu.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/menu/patient_dashboard_menu.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/menu/patient_dashboard_menu.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/menu/form_entry_patient_list_menu.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/menu/form_entry_patient_list_menu.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/menu/menu_form_create.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/menu/menu_form_create.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/menu/find_patients_remote_menu.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/menu/find_patients_remote_menu.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/menu/patient_photo_menu.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/menu/patient_photo_menu.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/menu/patients_visit_tab_menu.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/menu/patients_visit_tab_menu.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/menu/find_visits_menu.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/menu/find_visits_menu.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/menu/active_visit_menu.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/menu/active_visit_menu.xml"
+    }
+]

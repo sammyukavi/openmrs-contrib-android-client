@@ -1,0 +1,7 @@
+#Fri Mar 31 16:25:38 EAT 2017
+base.0=/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_e78a3102e41916892b16f3a7a84edd935bd2d93c
+renamed.1=classes2.dex
+renamed.0=classes.dex
+file.1=/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_f264716a6d3461ae8029b8a354cbcb4b8a072609/classes.dex
+base.1=/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_f264716a6d3461ae8029b8a354cbcb4b8a072609
+file.0=/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_e78a3102e41916892b16f3a7a84edd935bd2d93c/classes.dex

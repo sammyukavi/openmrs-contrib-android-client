@@ -1,0 +1,360 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:16:1-232:12
+	package
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:17:5-33
+		INJECTED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml
+		INJECTED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml
+	android:versionName
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:19:5-32
+		INJECTED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml
+		INJECTED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml
+	android:versionCode
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:18:5-28
+		INJECTED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml
+		INJECTED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml
+	xmlns:android
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:16:11-69
+uses-permission#android.permission.INTERNET
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:21:5-67
+	android:name
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:21:22-64
+uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:22:5-81
+	android:name
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:22:22-78
+uses-permission#android.permission.READ_LOGS
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:23:5-68
+	android:name
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:23:22-65
+uses-permission#android.permission.ACCESS_NETWORK_STATE
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:24:5-79
+	android:name
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:24:22-76
+uses-permission#android.permission.READ_PHONE_STATE
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:25:5-75
+	android:name
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:25:22-72
+uses-permission#android.permission.ACCESS_WIFI_STATE
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:26:5-76
+	android:name
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:26:22-73
+uses-permission#android.permission.CAMERA
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:27:5-65
+	android:name
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:27:22-62
+uses-feature#android.hardware.camera
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:29:5-85
+	android:required
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:29:58-82
+	android:name
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:29:19-57
+uses-feature#android.hardware.camera.autofocus
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:30:5-94
+	android:required
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:30:68-92
+	android:name
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:30:19-67
+application
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:32:5-230:19
+MERGED from [com.android.support:gridlayout-v7:23.4.0] /home/bandahealth/.android/build-cache/0de728c875b3adaca4abae4bc668181a0398648b/output/AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:cardview-v7:23.4.0] /home/bandahealth/.android/build-cache/6c527cf642bc818679dc61c0684067189c157ea5/output/AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:design:23.4.0] /home/bandahealth/.android/build-cache/66578b95a03f396d3f78dd0f2dce41ac6a93b011/output/AndroidManifest.xml:22:5-20
+MERGED from [net.yanzm:mth:1.0.4] /home/bandahealth/.android/build-cache/3c18294f80e1134b4a2ee6633c926749ab5019df/output/AndroidManifest.xml:12:5-20
+MERGED from [com.android.support:appcompat-v7:23.4.0] /home/bandahealth/.android/build-cache/b4c8f12284571604af0d6cbd304986efce0f5cfc/output/AndroidManifest.xml:25:5-20
+MERGED from [com.android.support:animated-vector-drawable:23.4.0] /home/bandahealth/.android/build-cache/5942ba3798bf3ce644507600d0bd3e52c5b56d08/output/AndroidManifest.xml:7:5-20
+MERGED from [com.android.support:support-vector-drawable:23.4.0] /home/bandahealth/.android/build-cache/ae7e5a00d43d35fa95e8713de4a91189a656352c/output/AndroidManifest.xml:7:5-20
+MERGED from [com.android.support:support-v13:23.4.0] /home/bandahealth/.android/build-cache/62b7a1648ba6b6348a66172f5b85249f7548477d/output/AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:support-v4:23.4.0] /home/bandahealth/.android/build-cache/a34a4ee6c937b8dec29b82c932e053b38beedce6/output/AndroidManifest.xml:22:5-20
+	android:label
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:36:9-41
+	android:allowBackup
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:34:9-35
+	android:icon
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:35:9-44
+	android:theme
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:37:9-45
+	android:name
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:33:9-44
+meta-data#AA_DB_NAME
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:38:9-40:48
+	android:value
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:40:13-45
+	android:name
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:39:13-38
+meta-data#AA_DB_VERSION
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:41:9-43:52
+	android:value
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:43:13-49
+	android:name
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:42:13-41
+meta-data#buildVersion
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:44:9-46:33
+	android:value
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:46:13-30
+	android:name
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:45:13-40
+receiver#org.openmrs.mobile.application.OpenMRSBroadcastReceiver
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:48:9-59:20
+	android:name
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:48:19-71
+intent-filter#org.openmrs.mobile.intent.action.AUTH_FAILED_BROADCAST+org.openmrs.mobile.intent.action.CONN_TIMEOUT_BROADCAST+org.openmrs.mobile.intent.action.NO_INTERNET_CONNECTION_BROADCAST+org.openmrs.mobile.intent.action.SERVER_ERROR_BROADCAST+org.openmrs.mobile.intent.action.SERVER_NOT_SUPPORTED_BROADCAST+org.openmrs.mobile.intent.action.SERVER_UNAVAILABLE_BROADCAST+org.openmrs.mobile.intent.action.SOCKET_EXCEPTION_BROADCAST+org.openmrs.mobile.intent.action.UNAUTHORIZED_BROADCAST
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:49:13-58:29
+action#org.openmrs.mobile.intent.action.AUTH_FAILED_BROADCAST
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:50:17-97
+	android:name
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:50:25-94
+action#org.openmrs.mobile.intent.action.UNAUTHORIZED_BROADCAST
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:51:17-98
+	android:name
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:51:25-95
+action#org.openmrs.mobile.intent.action.CONN_TIMEOUT_BROADCAST
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:52:17-98
+	android:name
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:52:25-95
+action#org.openmrs.mobile.intent.action.NO_INTERNET_CONNECTION_BROADCAST
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:53:17-108
+	android:name
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:53:25-105
+action#org.openmrs.mobile.intent.action.SERVER_UNAVAILABLE_BROADCAST
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:54:17-104
+	android:name
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:54:25-101
+action#org.openmrs.mobile.intent.action.SERVER_ERROR_BROADCAST
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:55:17-98
+	android:name
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:55:25-95
+action#org.openmrs.mobile.intent.action.SOCKET_EXCEPTION_BROADCAST
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:56:17-102
+	android:name
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:56:25-99
+action#org.openmrs.mobile.intent.action.SERVER_NOT_SUPPORTED_BROADCAST
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:57:17-106
+	android:name
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:57:25-103
+receiver#org.openmrs.mobile.api.SyncStateReceiver
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:60:9-64:20
+	android:name
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:60:19-56
+intent-filter#org.openmrs.mobile.intent.action.SYNC_PATIENTS
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:61:13-63:29
+action#org.openmrs.mobile.intent.action.SYNC_PATIENTS
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:62:17-89
+	android:name
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:62:25-86
+activity#org.openmrs.mobile.activities.dashboard.DashboardActivity
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:66:9-75:20
+	android:label
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:68:13-45
+	android:theme
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:69:13-44
+	android:name
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:67:13-67
+intent-filter#android.intent.action.MAIN+android.intent.category.LAUNCHER
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:70:13-74:29
+action#android.intent.action.MAIN
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:71:17-69
+	android:name
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:71:25-66
+category#android.intent.category.LAUNCHER
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:73:17-77
+	android:name
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:73:27-74
+activity#org.openmrs.mobile.activities.dialog.DialogActivity
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:76:9-79:55
+	android:noHistory
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:78:13-37
+	android:theme
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:79:13-52
+	android:name
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:77:13-61
+activity#org.openmrs.mobile.activities.syncedpatients.SyncedPatientsActivity
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:80:9-98:20
+	android:label
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:83:13-59
+	android:launchMode
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:84:13-43
+	android:configChanges
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:82:13-62
+	android:theme
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:85:13-48
+	android:name
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:81:13-77
+meta-data#android.support.PARENT_ACTIVITY
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:88:13-90:75
+	android:value
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:90:17-72
+	android:name
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:89:17-63
+meta-data#android.app.searchable
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:91:13-93:54
+	android:resource
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:93:17-51
+	android:name
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:92:17-54
+intent-filter#android.intent.action.SEARCH
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:95:13-97:29
+action#android.intent.action.SEARCH
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:96:17-71
+	android:name
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:96:25-68
+activity#org.openmrs.mobile.activities.login.LoginActivity
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:99:9-104:55
+	android:label
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:101:13-45
+	android:launchMode
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:102:13-43
+	android:noHistory
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:103:13-37
+	android:theme
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:104:13-52
+	android:name
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:100:13-59
+activity#org.openmrs.mobile.activities.settings.SettingsActivity
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:105:9-108:40
+	android:label
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:107:13-52
+	android:noHistory
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:108:13-37
+	android:name
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:106:13-65
+activity#org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:109:9-117:20
+	android:theme
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:111:13-48
+	android:name
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:110:13-81
+activity#org.openmrs.mobile.activities.activevisits.ActiveVisitsActivity
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:118:9-137:20
+	android:label
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:121:13-57
+	android:launchMode
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:122:13-43
+	android:configChanges
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:120:13-62
+	android:theme
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:123:13-48
+	android:name
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:119:13-73
+activity#org.openmrs.mobile.activities.visitdashboard.VisitDashboardActivity
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:138:9-148:20
+	android:label
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:140:13-58
+	android:launchMode
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:141:13-43
+	android:theme
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:142:13-44
+	android:name
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:139:13-77
+activity#org.openmrs.mobile.activities.formlist.FormListActivity
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:149:9-158:20
+	android:label
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:151:13-54
+	android:parentActivityName
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:153:13-103
+	android:launchMode
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:152:13-43
+	android:theme
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:154:13-44
+	android:name
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:150:13-65
+activity#org.openmrs.mobile.activities.formentrypatientlist.FormEntryPatientListActivity
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:159:9-168:20
+	android:label
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:162:13-54
+	android:parentActivityName
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:163:13-81
+	android:configChanges
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:161:13-74
+	android:theme
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:164:13-44
+	android:name
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:160:13-89
+activity#org.openmrs.mobile.activities.addeditpatient.AddEditPatientActivity
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:169:9-180:20
+	android:label
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:172:13-60
+	android:parentActivityName
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:173:13-91
+	android:configChanges
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:171:13-74
+	android:theme
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:174:13-44
+	android:name
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:170:13-77
+service#org.openmrs.mobile.api.PatientService
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:182:9-184:38
+	android:enabled
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:184:13-35
+	android:name
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:183:13-47
+service#org.openmrs.mobile.api.EncounterService
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:185:9-187:38
+	android:enabled
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:187:13-35
+	android:name
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:186:13-49
+service#org.openmrs.mobile.api.FormListService
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:188:9-190:38
+	android:enabled
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:190:13-35
+	android:name
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:189:13-48
+activity#org.openmrs.mobile.activities.formdisplay.FormDisplayActivity
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:192:9-200:20
+	android:label
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:194:13-63
+	android:parentActivityName
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:195:13-79
+	android:theme
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:196:13-44
+	android:name
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:193:13-71
+activity#org.openmrs.mobile.activities.lastviewedpatients.LastViewedPatientsActivity
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:201:9-219:20
+	android:label
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:204:13-61
+	android:launchMode
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:205:13-43
+	android:configChanges
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:203:13-62
+	android:theme
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:206:13-48
+	android:name
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:202:13-85
+activity#org.openmrs.mobile.activities.matchingpatients.MatchingPatientsActivity
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:221:9-89
+	android:name
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:221:19-87
+activity#org.openmrs.mobile.activities.patientdashboard.details.PatientPhotoActivity
+ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:222:9-229:20
+	android:parentActivityName
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:224:13-95
+	android:theme
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:225:13-44
+	android:name
+		ADDED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml:223:13-85
+uses-sdk
+INJECTED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml reason: use-sdk injection requested
+MERGED from [com.android.support:gridlayout-v7:23.4.0] /home/bandahealth/.android/build-cache/0de728c875b3adaca4abae4bc668181a0398648b/output/AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:cardview-v7:23.4.0] /home/bandahealth/.android/build-cache/6c527cf642bc818679dc61c0684067189c157ea5/output/AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:design:23.4.0] /home/bandahealth/.android/build-cache/66578b95a03f396d3f78dd0f2dce41ac6a93b011/output/AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:recyclerview-v7:23.4.0] /home/bandahealth/.android/build-cache/00d17b0f83a00fb26c8bcdedc21a9113769ab286/output/AndroidManifest.xml:20:5-43
+MERGED from [net.yanzm:mth:1.0.4] /home/bandahealth/.android/build-cache/3c18294f80e1134b4a2ee6633c926749ab5019df/output/AndroidManifest.xml:8:5-10:41
+MERGED from [com.android.support:appcompat-v7:23.4.0] /home/bandahealth/.android/build-cache/b4c8f12284571604af0d6cbd304986efce0f5cfc/output/AndroidManifest.xml:21:5-23:78
+MERGED from [com.android.support:animated-vector-drawable:23.4.0] /home/bandahealth/.android/build-cache/5942ba3798bf3ce644507600d0bd3e52c5b56d08/output/AndroidManifest.xml:5:5-44
+MERGED from [com.android.support:support-vector-drawable:23.4.0] /home/bandahealth/.android/build-cache/ae7e5a00d43d35fa95e8713de4a91189a656352c/output/AndroidManifest.xml:5:5-43
+MERGED from [net.zetetic:android-database-sqlcipher:3.5.1] /home/bandahealth/.android/build-cache/a38729ec261b4f3d152056846885e404259bc8bc/output/AndroidManifest.xml:3:3-40
+MERGED from [org.jdeferred:jdeferred-android-aar:1.2.4] /home/bandahealth/.android/build-cache/42c5eadec3c5eaeb2a6da76fbd92cb65fd5aec27/output/AndroidManifest.xml:22:5-24:41
+MERGED from [com.android.support:support-v13:23.4.0] /home/bandahealth/.android/build-cache/62b7a1648ba6b6348a66172f5b85249f7548477d/output/AndroidManifest.xml:20:5-44
+MERGED from [io.reactivex:rxandroid:1.2.1] /home/bandahealth/.android/build-cache/a68256f60dc1c97c5a043fe4acd84571f0f60e4c/output/AndroidManifest.xml:19:5-43
+MERGED from [com.github.hotchemi:permissionsdispatcher:2.3.1] /home/bandahealth/.android/build-cache/347ead39e134c71c65ecd9b4d87d6f416547cb48/output/AndroidManifest.xml:6:5-9:55
+MERGED from [com.android.support:support-v4:23.4.0] /home/bandahealth/.android/build-cache/a34a4ee6c937b8dec29b82c932e053b38beedce6/output/AndroidManifest.xml:20:5-43
+	tools:overrideLibrary
+		ADDED from [com.android.support:appcompat-v7:23.4.0] /home/bandahealth/.android/build-cache/b4c8f12284571604af0d6cbd304986efce0f5cfc/output/AndroidManifest.xml:23:9-75
+	android:targetSdkVersion
+		INJECTED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml
+		INJECTED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml
+		INJECTED from /mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/AndroidManifest.xml

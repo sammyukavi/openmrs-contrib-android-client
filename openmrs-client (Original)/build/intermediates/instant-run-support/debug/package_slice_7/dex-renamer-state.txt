@@ -1,0 +1,4 @@
+#Fri Mar 31 16:25:37 EAT 2017
+base.0=/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/transforms/dex/debug/folders/1000/5/slice_7
+renamed.0=classes.dex
+file.0=/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/transforms/dex/debug/folders/1000/5/slice_7/classes.dex

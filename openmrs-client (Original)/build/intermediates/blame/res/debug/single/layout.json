@@ -1,0 +1,418 @@
+[
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/fragment_visit_dashboard.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/fragment_visit_dashboard.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/fragment_patient_diagnosis.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/fragment_patient_diagnosis.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/abc_activity_chooser_view.xml",
+        "source": "/home/bandahealth/.android/build-cache/b4c8f12284571604af0d6cbd304986efce0f5cfc/output/res/layout/abc_activity_chooser_view.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/activity_patient_info.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/activity_patient_info.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/abc_action_bar_title_item.xml",
+        "source": "/home/bandahealth/.android/build-cache/b4c8f12284571604af0d6cbd304986efce0f5cfc/output/res/layout/abc_action_bar_title_item.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/select_dialog_item_material.xml",
+        "source": "/home/bandahealth/.android/build-cache/b4c8f12284571604af0d6cbd304986efce0f5cfc/output/res/layout/select_dialog_item_material.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/notification_media_action.xml",
+        "source": "/home/bandahealth/.android/build-cache/b4c8f12284571604af0d6cbd304986efce0f5cfc/output/res/layout/notification_media_action.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/abc_list_menu_item_layout.xml",
+        "source": "/home/bandahealth/.android/build-cache/b4c8f12284571604af0d6cbd304986efce0f5cfc/output/res/layout/abc_list_menu_item_layout.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/design_navigation_item_header.xml",
+        "source": "/home/bandahealth/.android/build-cache/66578b95a03f396d3f78dd0f2dce41ac6a93b011/output/res/layout/design_navigation_item_header.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/abc_alert_dialog_material.xml",
+        "source": "/home/bandahealth/.android/build-cache/b4c8f12284571604af0d6cbd304986efce0f5cfc/output/res/layout/abc_alert_dialog_material.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/notification_template_part_chronometer.xml",
+        "source": "/home/bandahealth/.android/build-cache/b4c8f12284571604af0d6cbd304986efce0f5cfc/output/res/layout/notification_template_part_chronometer.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/abc_screen_simple.xml",
+        "source": "/home/bandahealth/.android/build-cache/b4c8f12284571604af0d6cbd304986efce0f5cfc/output/res/layout/abc_screen_simple.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/abc_search_dropdown_item_icons_2line.xml",
+        "source": "/home/bandahealth/.android/build-cache/b4c8f12284571604af0d6cbd304986efce0f5cfc/output/res/layout/abc_search_dropdown_item_icons_2line.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/notification_template_part_time.xml",
+        "source": "/home/bandahealth/.android/build-cache/b4c8f12284571604af0d6cbd304986efce0f5cfc/output/res/layout/notification_template_part_time.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/activity_form_display.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/activity_form_display.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/activity_find_patients.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/activity_find_patients.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/openmrs_title_view_field.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/openmrs_title_view_field.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/design_layout_tab_icon.xml",
+        "source": "/home/bandahealth/.android/build-cache/66578b95a03f396d3f78dd0f2dce41ac6a93b011/output/res/layout/design_layout_tab_icon.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/abc_screen_content_include.xml",
+        "source": "/home/bandahealth/.android/build-cache/b4c8f12284571604af0d6cbd304986efce0f5cfc/output/res/layout/abc_screen_content_include.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/support_simple_spinner_dropdown_item.xml",
+        "source": "/home/bandahealth/.android/build-cache/b4c8f12284571604af0d6cbd304986efce0f5cfc/output/res/layout/support_simple_spinner_dropdown_item.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/dialog_progress.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/dialog_progress.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/single_text_data_row.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/single_text_data_row.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/key_value_data_row.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/key_value_data_row.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/activity_form_list.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/activity_form_list.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/fragment_synced_patients.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/fragment_synced_patients.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/find_visits_row.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/find_visits_row.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/fragment_form_display.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/fragment_form_display.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/abc_action_bar_up_container.xml",
+        "source": "/home/bandahealth/.android/build-cache/b4c8f12284571604af0d6cbd304986efce0f5cfc/output/res/layout/abc_action_bar_up_container.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/select_dialog_singlechoice_material.xml",
+        "source": "/home/bandahealth/.android/build-cache/b4c8f12284571604af0d6cbd304986efce0f5cfc/output/res/layout/select_dialog_singlechoice_material.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/fragment_login.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/fragment_login.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/abc_action_mode_bar.xml",
+        "source": "/home/bandahealth/.android/build-cache/b4c8f12284571604af0d6cbd304986efce0f5cfc/output/res/layout/abc_action_mode_bar.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/activity_visit_dashboard.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/activity_visit_dashboard.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/openmrs_recycle_view.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/openmrs_recycle_view.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/fragment_matching_patients.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/fragment_matching_patients.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/activity_patient_dashboard.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/activity_patient_dashboard.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/design_navigation_menu.xml",
+        "source": "/home/bandahealth/.android/build-cache/66578b95a03f396d3f78dd0f2dce41ac6a93b011/output/res/layout/design_navigation_menu.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/list_visit_item.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/list_visit_item.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/abc_action_bar_view_list_nav_layout.xml",
+        "source": "/home/bandahealth/.android/build-cache/b4c8f12284571604af0d6cbd304986efce0f5cfc/output/res/layout/abc_action_bar_view_list_nav_layout.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/fragment_last_viewed_patients.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/fragment_last_viewed_patients.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/abc_screen_toolbar.xml",
+        "source": "/home/bandahealth/.android/build-cache/b4c8f12284571604af0d6cbd304986efce0f5cfc/output/res/layout/abc_screen_toolbar.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/fragment_settings.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/fragment_settings.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/notification_template_big_media_narrow.xml",
+        "source": "/home/bandahealth/.android/build-cache/b4c8f12284571604af0d6cbd304986efce0f5cfc/output/res/layout/notification_template_big_media_narrow.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/abc_select_dialog_material.xml",
+        "source": "/home/bandahealth/.android/build-cache/b4c8f12284571604af0d6cbd304986efce0f5cfc/output/res/layout/abc_select_dialog_material.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/abc_action_mode_close_item_material.xml",
+        "source": "/home/bandahealth/.android/build-cache/b4c8f12284571604af0d6cbd304986efce0f5cfc/output/res/layout/abc_action_mode_close_item_material.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/abc_action_menu_item_layout.xml",
+        "source": "/home/bandahealth/.android/build-cache/b4c8f12284571604af0d6cbd304986efce0f5cfc/output/res/layout/abc_action_menu_item_layout.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/abc_list_menu_item_icon.xml",
+        "source": "/home/bandahealth/.android/build-cache/b4c8f12284571604af0d6cbd304986efce0f5cfc/output/res/layout/abc_list_menu_item_icon.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/abc_expanded_menu_layout.xml",
+        "source": "/home/bandahealth/.android/build-cache/b4c8f12284571604af0d6cbd304986efce0f5cfc/output/res/layout/abc_expanded_menu_layout.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/abc_dialog_title_material.xml",
+        "source": "/home/bandahealth/.android/build-cache/b4c8f12284571604af0d6cbd304986efce0f5cfc/output/res/layout/abc_dialog_title_material.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/fragment_modules.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/fragment_modules.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/design_navigation_item.xml",
+        "source": "/home/bandahealth/.android/build-cache/66578b95a03f396d3f78dd0f2dce41ac6a93b011/output/res/layout/design_navigation_item.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/activity_dashboard.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/activity_dashboard.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/patient_visit_row.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/patient_visit_row.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/abc_action_menu_layout.xml",
+        "source": "/home/bandahealth/.android/build-cache/b4c8f12284571604af0d6cbd304986efce0f5cfc/output/res/layout/abc_action_menu_layout.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/design_navigation_item_subheader.xml",
+        "source": "/home/bandahealth/.android/build-cache/66578b95a03f396d3f78dd0f2dce41ac6a93b011/output/res/layout/design_navigation_item_subheader.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/find_synced_patients_row.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/find_synced_patients_row.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/design_navigation_menu_item.xml",
+        "source": "/home/bandahealth/.android/build-cache/66578b95a03f396d3f78dd0f2dce41ac6a93b011/output/res/layout/design_navigation_menu_item.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/similar_patient_row.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/similar_patient_row.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/fragment_patient_vitals.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/fragment_patient_vitals.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/notification_media_cancel_action.xml",
+        "source": "/home/bandahealth/.android/build-cache/b4c8f12284571604af0d6cbd304986efce0f5cfc/output/res/layout/notification_media_cancel_action.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/fragment_patient_details.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/fragment_patient_details.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/fragment_dialog_layout.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/fragment_dialog_layout.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/abc_screen_simple_overlay_action_mode.xml",
+        "source": "/home/bandahealth/.android/build-cache/b4c8f12284571604af0d6cbd304986efce0f5cfc/output/res/layout/abc_screen_simple_overlay_action_mode.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/fragment_form_entry_patient_list.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/fragment_form_entry_patient_list.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/design_menu_item_action_area.xml",
+        "source": "/home/bandahealth/.android/build-cache/66578b95a03f396d3f78dd0f2dce41ac6a93b011/output/res/layout/design_menu_item_action_area.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/activity_settings.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/activity_settings.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/select_dialog_multichoice_material.xml",
+        "source": "/home/bandahealth/.android/build-cache/b4c8f12284571604af0d6cbd304986efce0f5cfc/output/res/layout/select_dialog_multichoice_material.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/abc_list_menu_item_checkbox.xml",
+        "source": "/home/bandahealth/.android/build-cache/b4c8f12284571604af0d6cbd304986efce0f5cfc/output/res/layout/abc_list_menu_item_checkbox.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/notification_template_big_media.xml",
+        "source": "/home/bandahealth/.android/build-cache/b4c8f12284571604af0d6cbd304986efce0f5cfc/output/res/layout/notification_template_big_media.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/notification_template_media.xml",
+        "source": "/home/bandahealth/.android/build-cache/b4c8f12284571604af0d6cbd304986efce0f5cfc/output/res/layout/notification_template_media.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/toast.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/toast.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/fragment_dashboard.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/fragment_dashboard.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/find_last_viewed_patients_row.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/find_last_viewed_patients_row.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/mth_tab_widget_full.xml",
+        "source": "/home/bandahealth/.android/build-cache/3c18294f80e1134b4a2ee6633c926749ab5019df/output/res/layout/mth_tab_widget_full.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/design_layout_snackbar_include.xml",
+        "source": "/home/bandahealth/.android/build-cache/66578b95a03f396d3f78dd0f2dce41ac6a93b011/output/res/layout/design_layout_snackbar_include.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/activity_form_entry_patient_list.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/activity_form_entry_patient_list.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/fragment_find_synced_patients.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/fragment_find_synced_patients.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/activity_patient_photo.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/activity_patient_photo.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/fragment_patient_visit.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/fragment_patient_visit.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/form_dropdown.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/form_dropdown.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/list_visit_group.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/list_visit_group.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/fragment_active_visits.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/fragment_active_visits.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/activity_active_visits.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/activity_active_visits.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/abc_popup_menu_item_layout.xml",
+        "source": "/home/bandahealth/.android/build-cache/b4c8f12284571604af0d6cbd304986efce0f5cfc/output/res/layout/abc_popup_menu_item_layout.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/fragment_patient_info.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/fragment_patient_info.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/notification_template_lines.xml",
+        "source": "/home/bandahealth/.android/build-cache/b4c8f12284571604af0d6cbd304986efce0f5cfc/output/res/layout/notification_template_lines.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/form_entry_end.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/form_entry_end.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/mth_tab_widget.xml",
+        "source": "/home/bandahealth/.android/build-cache/3c18294f80e1134b4a2ee6633c926749ab5019df/output/res/layout/mth_tab_widget.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/activity_matching_patients.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/activity_matching_patients.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/activity_settings_row.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/activity_settings_row.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/abc_alert_dialog_button_bar_material.xml",
+        "source": "/home/bandahealth/.android/build-cache/b4c8f12284571604af0d6cbd304986efce0f5cfc/output/res/layout/abc_alert_dialog_button_bar_material.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/openmrs_edit_text_field.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/openmrs_edit_text_field.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/sync_switch.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/sync_switch.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/abc_activity_chooser_view_list_item.xml",
+        "source": "/home/bandahealth/.android/build-cache/b4c8f12284571604af0d6cbd304986efce0f5cfc/output/res/layout/abc_activity_chooser_view_list_item.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/abc_list_menu_item_radio.xml",
+        "source": "/home/bandahealth/.android/build-cache/b4c8f12284571604af0d6cbd304986efce0f5cfc/output/res/layout/abc_list_menu_item_radio.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/design_navigation_item_separator.xml",
+        "source": "/home/bandahealth/.android/build-cache/66578b95a03f396d3f78dd0f2dce41ac6a93b011/output/res/layout/design_navigation_item_separator.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/fragment_form_list.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/fragment_form_list.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/activity_login.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/activity_login.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/abc_search_view.xml",
+        "source": "/home/bandahealth/.android/build-cache/b4c8f12284571604af0d6cbd304986efce0f5cfc/output/res/layout/abc_search_view.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/openmrs_text_view_field.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/openmrs_text_view_field.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/design_layout_tab_text.xml",
+        "source": "/home/bandahealth/.android/build-cache/66578b95a03f396d3f78dd0f2dce41ac6a93b011/output/res/layout/design_layout_tab_text.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/design_bottom_sheet_dialog.xml",
+        "source": "/home/bandahealth/.android/build-cache/66578b95a03f396d3f78dd0f2dce41ac6a93b011/output/res/layout/design_bottom_sheet_dialog.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/design_layout_snackbar.xml",
+        "source": "/home/bandahealth/.android/build-cache/66578b95a03f396d3f78dd0f2dce41ac6a93b011/output/res/layout/design_layout_snackbar.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/patient_details_row.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/patient_details_row.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/layout/activity_find_last_viewed_patients.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/layout/activity_find_last_viewed_patients.xml"
+    }
+]

@@ -1,0 +1,50 @@
+[
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/color/abc_primary_text_material_light.xml",
+        "source": "/home/bandahealth/.android/build-cache/b4c8f12284571604af0d6cbd304986efce0f5cfc/output/res/color/abc_primary_text_material_light.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/color/mth_tab_widget_text.xml",
+        "source": "/home/bandahealth/.android/build-cache/3c18294f80e1134b4a2ee6633c926749ab5019df/output/res/color/mth_tab_widget_text.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/color/switch_thumb_material_dark.xml",
+        "source": "/home/bandahealth/.android/build-cache/b4c8f12284571604af0d6cbd304986efce0f5cfc/output/res/color/switch_thumb_material_dark.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/color/cardhighlight.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/color/cardhighlight.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/color/abc_primary_text_material_dark.xml",
+        "source": "/home/bandahealth/.android/build-cache/b4c8f12284571604af0d6cbd304986efce0f5cfc/output/res/color/abc_primary_text_material_dark.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/color/abc_secondary_text_material_dark.xml",
+        "source": "/home/bandahealth/.android/build-cache/b4c8f12284571604af0d6cbd304986efce0f5cfc/output/res/color/abc_secondary_text_material_dark.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/color/abc_primary_text_disable_only_material_light.xml",
+        "source": "/home/bandahealth/.android/build-cache/b4c8f12284571604af0d6cbd304986efce0f5cfc/output/res/color/abc_primary_text_disable_only_material_light.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/color/abc_primary_text_disable_only_material_dark.xml",
+        "source": "/home/bandahealth/.android/build-cache/b4c8f12284571604af0d6cbd304986efce0f5cfc/output/res/color/abc_primary_text_disable_only_material_dark.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/color/abc_secondary_text_material_light.xml",
+        "source": "/home/bandahealth/.android/build-cache/b4c8f12284571604af0d6cbd304986efce0f5cfc/output/res/color/abc_secondary_text_material_light.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/color/abc_search_url_text.xml",
+        "source": "/home/bandahealth/.android/build-cache/b4c8f12284571604af0d6cbd304986efce0f5cfc/output/res/color/abc_search_url_text.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/color/tabcolor.xml",
+        "source": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/src/main/res/color/tabcolor.xml"
+    },
+    {
+        "merged": "/mnt/19407EA81F83DE28/Cloud Computing/GitHub/openmrs-contrib-android-client/openmrs-client/build/intermediates/res/merged/debug/color/switch_thumb_material_light.xml",
+        "source": "/home/bandahealth/.android/build-cache/b4c8f12284571604af0d6cbd304986efce0f5cfc/output/res/color/switch_thumb_material_light.xml"
+    }
+]

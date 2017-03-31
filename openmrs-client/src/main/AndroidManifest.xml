@@ -73,16 +73,6 @@
             android:name=".api.FormListService"
             android:enabled="true" />
 
-        <activity
-            android:name=".activities.formdisplay.FormDisplayActivity"
-            android:label="@string/title_activity_form_create"
-            android:parentActivityName=".activities.formlist.FormListActivity"
-            android:theme="@style/AppTheme">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.openmrs.mobile.activities.formlist.FormListActivity" />
-        </activity>
-
 
     </application>
 

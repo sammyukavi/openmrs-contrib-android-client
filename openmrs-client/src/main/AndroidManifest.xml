@@ -1,79 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ The contents of this file are subject to the OpenMRS Public License
-  ~ Version 1.0 (the "License"); you may not use this file except in
-  ~ compliance with the License. You may obtain a copy of the License at
-  ~ http://license.openmrs.org
-  ~
-  ~ Software distributed under the License is distributed on an "AS IS"
-  ~ basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
-  ~ License for the specific language governing rights and limitations
-  ~ under the License.
-  ~
-  ~ Copyright (C) OpenMRS, LLC.  All Rights Reserved.
--->
-
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="org.openmrs.mobile"
     android:versionCode="1"
     android:versionName="1.0.1">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_LOGS" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-sdk tools:overrideLibrary="com.github.clans.fab" />
 
-    <uses-feature android:name="android.hardware.camera" android:required="false" />
-    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false"/>
 
     <application
-        android:name=".application.OpenMRS"
         android:allowBackup="true"
-        android:icon="@drawable/ic_openmrs"
+        android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/Theme.Openmrs">
-        <meta-data
-            android:name="AA_DB_NAME"
-            android:value="@string/aadbname" />
-        <meta-data
-            android:name="AA_DB_VERSION"
-            android:value="@integer/aadbversion" />
-        <meta-data
-            android:name="buildVersion"
-            android:value="0" />
-
-        <receiver android:name=".application.OpenMRSBroadcastReceiver">
+        android:theme="@style/AppTheme">
+        <activity android:name=".activities.Dashboard">
             <intent-filter>
-                <action android:name="org.openmrs.mobile.intent.action.AUTH_FAILED_BROADCAST" />
-                <action android:name="org.openmrs.mobile.intent.action.UNAUTHORIZED_BROADCAST" />
-                <action android:name="org.openmrs.mobile.intent.action.CONN_TIMEOUT_BROADCAST" />
-                <action android:name="org.openmrs.mobile.intent.action.NO_INTERNET_CONNECTION_BROADCAST" />
-                <action android:name="org.openmrs.mobile.intent.action.SERVER_UNAVAILABLE_BROADCAST" />
-                <action android:name="org.openmrs.mobile.intent.action.SERVER_ERROR_BROADCAST" />
-                <action android:name="org.openmrs.mobile.intent.action.SOCKET_EXCEPTION_BROADCAST" />
-                <action android:name="org.openmrs.mobile.intent.action.SERVER_NOT_SUPPORTED_BROADCAST" />
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </receiver>
-        <receiver android:name=".api.SyncStateReceiver">
-            <intent-filter>
-                <action android:name="org.openmrs.mobile.intent.action.SYNC_PATIENTS" />
-            </intent-filter>
-        </receiver>
-
-        <service
-            android:name=".api.PatientService"
-            android:enabled="true" />
-        <service
-            android:name=".api.EncounterService"
-            android:enabled="true" />
-        <service
-            android:name=".api.FormListService"
-            android:enabled="true" />
-
-
+        </activity>
+        <activity
+            android:name=".activities.Login"
+            android:configChanges="keyboardHidden|screenSize" />
+        <activity
+            android:name=".activities.Settings"
+            android:configChanges="keyboardHidden|screenSize" />
     </application>
 
 </manifest>

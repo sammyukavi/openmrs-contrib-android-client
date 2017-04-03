@@ -10,7 +10,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import org.openmrs.mobile.activities.login.LocationArrayAdapter;
+//import org.openmrs.mobile.activities.login.LocationArrayAdapter;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.utilities.StringUtils;
 
@@ -79,12 +79,12 @@ public class LoginValidatorWatcher implements TextWatcher, AdapterView.OnItemSel
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if (position >= 0 && id >= 1) {
-            ((LocationArrayAdapter) parent.getAdapter()).notifyDataSetChanged();
+          //  ((LocationArrayAdapter) parent.getAdapter()).notifyDataSetChanged();
             //Set Text Color to black once option selected
-            TextView currentText = (TextView) parent.getChildAt(0);
-            if (currentText != null) {
-                currentText.setTextColor(Color.BLACK);
-            }
+           // TextView currentText = (TextView) parent.getChildAt(0);
+           // if (currentText != null) {
+              //  currentText.setTextColor(Color.BLACK);
+           // }
         } else if (position >= 0 && id == 0) {
             //Set Text Color to red if spinner is at start/default option
             TextView currentText = (TextView) parent.getChildAt(0);

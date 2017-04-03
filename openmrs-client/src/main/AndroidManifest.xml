@@ -8,7 +8,7 @@
     <uses-sdk tools:overrideLibrary="com.github.clans.fab" />
 
 
-    <application
+    <!--<application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
@@ -27,5 +27,5 @@
             android:name=".activities.Settings"
             android:configChanges="keyboardHidden|screenSize" />
     </application>
-
+-->
 </manifest>

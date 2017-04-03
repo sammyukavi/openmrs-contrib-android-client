@@ -24,12 +24,12 @@ import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.NotificationCompat;
 
 import org.openmrs.mobile.R;
-import org.openmrs.mobile.activities.dashboard.DashboardActivity;
+//import org.openmrs.mobile.activities.dashboard.DashboardActivity;
 import org.openmrs.mobile.application.OpenMRS;
 
 public class NotificationUtil {
 
-    public static void notify(String title, String message)
+    /*public static void notify(String title, String message)
     {
         Bitmap bitmap = BitmapFactory.decodeResource( OpenMRS.getInstance().getResources(), R.drawable.ic_openmrs);
         NotificationCompat.Builder mBuilder =
@@ -52,5 +52,5 @@ public class NotificationUtil {
         NotificationManager mNotificationManager =
                 (NotificationManager) OpenMRS.getInstance().getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationManager.notify(0, mBuilder.build());
-    }
+    }*/
 }

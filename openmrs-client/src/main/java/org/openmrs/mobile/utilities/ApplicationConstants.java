@@ -100,4 +100,8 @@ public abstract class ApplicationConstants {
         public static String[] ENCOUNTER_TYPES_DISPLAYS = {EncounterType.VITALS, EncounterType.ADMISSION, EncounterType.DISCHARGE, EncounterType.VISIT_NOTE};
     }
 
+    public abstract static class Tags {
+        public static final String PATIENT_DATA = "patient_data";
+    }
+
 }

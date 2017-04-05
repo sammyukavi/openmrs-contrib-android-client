@@ -21,10 +21,7 @@ public class VisitTasks extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.nav_visit_tasks);
-
         View view = inflater.inflate(R.layout.fragment_visit_tasks, container, false);
-
         viewPager = (ViewPager) view.findViewById(R.id.viewpager);
         setupViewPager(viewPager);
         tabLayout = (TabLayout) view.findViewById(R.id.tabs);
@@ -37,13 +34,9 @@ public class VisitTasks extends Fragment {
     private void setupTabIcons() {
         tabLayout.getTabAt(0).setIcon(R.drawable.ic_tab_diagnoses);
         tabLayout.getTabAt(1).setIcon(R.drawable.ic_tab_vitals);
-        //tabLayout.getTabAt(2).setIcon(R.drawable.ic_tab_bills);
-        //tabLayout.getTabAt(3).setIcon(R.drawable.ic_tab_appointments);
-        //tabLayout.getTabAt(4).setIcon(R.drawable.ic_tab_allergies);
-        //tabLayout.getTabAt(5).setIcon(R.drawable.ic_tab_recent_visits);
     }
 
-    private void setupViewPager(android.support.v4.view.ViewPager viewPager) {
+    private void setupViewPager(ViewPager viewPager) {
         TabsPageView adapter = new TabsPageView(getActivity().getSupportFragmentManager());
 
         Bundle bundle = new Bundle();

@@ -1,6 +1,9 @@
 package org.openmrs.mobile.adapters;
 
 import android.app.Activity;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,7 +11,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.openmrs.mobile.R;
+import org.openmrs.mobile.fragments.PatientDetails;
 import org.openmrs.mobile.sampledata.Visit;
+import org.openmrs.mobile.utilities.ApplicationConstants;
 
 import java.util.List;
 
@@ -17,10 +22,8 @@ public class ListRecentVisits extends RecyclerView.Adapter<ListRecentVisits.Rece
 
     public static class RecentVisitViewHolder extends RecyclerView.ViewHolder {
 
-
         public TextView visit_date;
         public TextView visit_tag;
-
 
         public RecentVisitViewHolder(View itemView) {
             super(itemView);
@@ -61,8 +64,21 @@ public class ListRecentVisits extends RecyclerView.Adapter<ListRecentVisits.Rece
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                //Load data for this visit
+            public void onClick(View view) {
+                try {
+                    Fragment fragment = PatientDetails.class.newInstance();
+                    ///dataPasser.onPatientDataPass(patients.get(position));
+                    Bundle bundle = new Bundle();
+                    //bundle.putSerializable(ApplicationConstants.Tags.PATIENT_ID, patients.get(position));
+                    fragment.setArguments(bundle);
+                    ((FragmentActivity) activity).getSupportFragmentManager().beginTransaction().setCustomAnimations(
+                            R.anim.slide_in_left, R.anim.slide_out_right,
+                            R.anim.pop_enter, R.anim.pop_exit).replace(R.id.fragment_container, fragment).addToBackStack(null).commit();
+                } catch (InstantiationException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }

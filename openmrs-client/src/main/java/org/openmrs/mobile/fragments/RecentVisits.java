@@ -27,11 +27,11 @@ public class RecentVisits extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        patient = (Patient) getArguments().getSerializable(ApplicationConstants.Tags.PATIENT_DATA);
+        patient = (Patient) getArguments().getSerializable(ApplicationConstants.Tags.PATIENT_ID);
         View view = inflater.inflate(R.layout.fragment_recent_visits, container, false);
         visitsView = (RecyclerView) view.findViewById(R.id.recent_visits_list);
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
-        visitsView.setLayoutManager(llm);
+       visitsView.setLayoutManager(llm);
         visitsView.setHasFixedSize(true);
         initializeData();
         initializeAdapter();

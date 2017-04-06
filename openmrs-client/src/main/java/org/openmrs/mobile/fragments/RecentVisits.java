@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.openmrs.mobile.R;
-import org.openmrs.mobile.adapters.ListRecentVisits;
+import org.openmrs.mobile.activities.patientdashboard.ListRecentVisits;
 import org.openmrs.mobile.sampledata.Patient;
 import org.openmrs.mobile.sampledata.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;

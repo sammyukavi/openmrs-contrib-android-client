@@ -12,6 +12,16 @@ import android.view.MenuItem;
 import android.widget.FrameLayout;
 
 import org.openmrs.mobile.R;
+import org.openmrs.mobile.activities.activevisits.ActiveVisitsActivity;
+import org.openmrs.mobile.activities.capturevitals.CaptureVitalsActivity;
+import org.openmrs.mobile.activities.findpatientrecord.FindPatientRecordActivity;
+import org.openmrs.mobile.activities.login.LoginActivity;
+import org.openmrs.mobile.activities.patientlists.PatientListsActivity;
+import org.openmrs.mobile.activities.registerpatient.RegisterPatientActivity;
+import org.openmrs.mobile.activities.settings.SettingsActivity;
+import org.openmrs.mobile.activities.visittasks.VisitTasksActivity;
+import org.openmrs.mobile.application.OpenMRS;
+import org.openmrs.mobile.net.AuthorizationManager;
 
 public class ACBaseActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -21,31 +31,33 @@ public class ACBaseActivity extends AppCompatActivity
     private static boolean isLaunch = true;
     private DrawerLayout drawer;
     protected static int selectedId;
+    protected AuthorizationManager mAuthorizationManager;
+    protected final OpenMRS mOpenMRS = OpenMRS.getInstance();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_base);
+        setContentView(R.layout.activity_acbase);
+        mAuthorizationManager = new AuthorizationManager();
         intitializeToolbar();
-
         intitializeNavigationDrawer();
-
         frameLayout = (FrameLayout) findViewById(R.id.content_frame);
-
         if (isLaunch) {
             this.isLaunch = false;
             this.selectedId = R.id.navItemFindPatientRecord;
             openActivity(selectedId);
         }
 
+
     }
 
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        this.isLaunch = false;
-        this.selectedId = R.id.navItemFindPatientRecord;
-        openActivity(selectedId);
+    protected void onResume() {
+        super.onResume();
+        if (!(this instanceof LoginActivity) && !mAuthorizationManager.isUserLoggedIn()) {
+            mAuthorizationManager.moveToLoginActivity();
+        }
     }
 
     @Override
@@ -94,25 +106,25 @@ public class ACBaseActivity extends AppCompatActivity
 
         switch (selectedId) {
             case R.id.navItemFindPatientRecord:
-                startActivity(new Intent(this, FindPatientRecord.class));
+                startActivity(new Intent(this, FindPatientRecordActivity.class));
                 break;
             case R.id.navItemActiveVisits:
-                startActivity(new Intent(this, ActiveVisits.class));
+                startActivity(new Intent(this, ActiveVisitsActivity.class));
                 break;
             case R.id.navItemCaptureVitals:
-                startActivity(new Intent(this, CaptureVitals.class));
+                startActivity(new Intent(this, CaptureVitalsActivity.class));
                 break;
             case R.id.navItemRegisterPatient:
-                startActivity(new Intent(this, RegisterPatient.class));
+                startActivity(new Intent(this, RegisterPatientActivity.class));
                 break;
             case R.id.navItemPatientLists:
-                startActivity(new Intent(this, PatientLists.class));
+                startActivity(new Intent(this, PatientListsActivity.class));
                 break;
             case R.id.navItemVisitTasks:
-                startActivity(new Intent(this, VisitTasks.class));
+                startActivity(new Intent(this, VisitTasksActivity.class));
                 break;
             case R.id.navItemSettings:
-                startActivity(new Intent(this, Settings.class));
+                startActivity(new Intent(this, SettingsActivity.class));
                 break;
 
             default:

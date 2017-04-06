@@ -123,7 +123,7 @@
     <string name="dialog_button_ok">OK</string>
     <string name="dialog_button_confirm">Confirm</string>
     <string name="dialog_button_register_new">Register new</string>
-    <!-- Settings activity -->
+    <!-- SettingsActivity activity -->
     <string name="settings_logs">Logs</string>
     <string name="settings_about">About</string>
     <!-- FindPatients activity -->
@@ -325,5 +325,8 @@
     <string name="pref_user_name">Set username</string>
     <string name="pref_user_name_summary">Set your username</string>
     <string name="pref_update_setting">Update Settings</string>
+
+    <string name="snackbar_edit">EDIT</string>
+    <string name="invalid_login_or_password_message">Invalid login or password, please try again.</string>
 
 </resources>

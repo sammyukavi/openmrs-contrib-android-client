@@ -4,18 +4,12 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.github.clans.fab.FloatingActionButton;
-import com.github.clans.fab.FloatingActionMenu;
 
 import org.openmrs.mobile.R;
-import org.openmrs.mobile.adapters.TabsPageView;
+import org.openmrs.mobile.activities.patientdashboard.TabsPageView;
 import org.openmrs.mobile.sampledata.Patient;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 

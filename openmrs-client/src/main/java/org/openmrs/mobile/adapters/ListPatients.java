@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 
 import org.openmrs.mobile.R;
-import org.openmrs.mobile.activities.PatientDashboard;
+import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
 import org.openmrs.mobile.sampledata.Patient;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 
@@ -77,7 +77,7 @@ public class ListPatients extends RecyclerView.Adapter<ListPatients.PatientViewH
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, PatientDashboard.class);
+                Intent intent = new Intent(context, PatientDashboardActivity.class);
                 //intent.putExtra(ApplicationConstants.Tags.PATIENT_ID, patients.get(position));
                 intent.putExtra(ApplicationConstants.Tags.PATIENT_ID, patients.get(holder.getAdapterPosition()).id);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -15,6 +15,7 @@
 package org.openmrs.mobile.bundle;
 
 
+import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
 import org.openmrs.mobile.models.Patient;
 
 import java.io.Serializable;
@@ -22,7 +23,7 @@ import java.util.List;
 
 public class CustomDialogBundle implements Serializable {
 
-    /*private CustomFragmentDialog.OnClickAction leftButtonAction;
+    private CustomFragmentDialog.OnClickAction leftButtonAction;
     private CustomFragmentDialog.OnClickAction rightButtonAction;
     private String textViewMessage;
     private String titleViewMessage;
@@ -134,6 +135,6 @@ public class CustomDialogBundle implements Serializable {
 
     public void setNewPatient(Patient newPatient) {
         this.newPatient = newPatient;
-    }*/
+    }
 
 }

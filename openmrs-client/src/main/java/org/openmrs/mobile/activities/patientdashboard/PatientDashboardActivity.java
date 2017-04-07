@@ -20,7 +20,7 @@ import org.openmrs.mobile.utilities.ApplicationConstants;
 
 public class PatientDashboardActivity extends ACBaseActivity {
 
-    private FloatingActionMenu floatingActionMenu;
+   /* private FloatingActionMenu floatingActionMenu;
     private FragmentManager fragmentManager;
     private Patient patient;
     private String patientId;
@@ -99,7 +99,7 @@ public class PatientDashboardActivity extends ACBaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
 
 }

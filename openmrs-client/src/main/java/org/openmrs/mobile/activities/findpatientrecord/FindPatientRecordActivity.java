@@ -1,50 +1,66 @@
+/*
+ * The contents of this file are subject to the OpenMRS Public License
+ * Version 1.0 (the "License"); you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://license.openmrs.org
+ *
+ * Software distributed under the License is distributed on an "AS IS"
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+ * License for the specific language governing rights and limitations
+ * under the License.
+ *
+ * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
+ */
+
 package org.openmrs.mobile.activities.findpatientrecord;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.openmrs.mobile.ConsoleLogger;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
-import org.openmrs.mobile.adapters.ListPatients;
-import org.openmrs.mobile.sampledata.Patient;
-
-import java.util.ArrayList;
-import java.util.List;
-
 
 public class FindPatientRecordActivity extends ACBaseActivity {
-    private List<Patient> patientList;
-    private RecyclerView patientsView;
-    private Patient patient = new Patient();
 
+    public FindPatientRecordContract.Presenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getLayoutInflater().inflate(R.layout.activity_find_patient_record, frameLayout);
         setTitle(R.string.nav_find_patient);
-        patientsView = (RecyclerView) findViewById(R.id.patients_list);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        patientsView.setLayoutManager(linearLayoutManager);
-        patientsView.setHasFixedSize(true);
-        try {
-            initializeData();
-        } catch (JSONException e) {
-            e.printStackTrace();
+        // Create fragment
+        FindPatientRecordFragment loginFragment = (FindPatientRecordFragment) getSupportFragmentManager().findFragmentById(R.id.loginContentFrame);
+        if (loginFragment == null) {
+            loginFragment = FindPatientRecordFragment.newInstance();
         }
-        initializeAdapter();
+        if (!loginFragment.isActive()) {
+            addFragmentToActivity(getSupportFragmentManager(), loginFragment, R.id.loginContentFrame);
+        }
 
+        mPresenter = new FindPatientRecordPresenter(loginFragment, mOpenMRS);
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -61,35 +77,12 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                //adapter.getFilter().filter(newText);
+                //Implement the search here
 
                 return false;
             }
         });
         return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void initializeData() throws JSONException {
-        patientList = new ArrayList<>();
-        JSONArray patients = patient.getPatients();
-        for (int i = 0; i < patients.length(); i++) {
-            JSONObject patientData = new JSONObject(patients.get(i).toString());
-            patientList.add(patient.newPatient(patientData.get("given_name").toString(),
-                    patientData.get("middle_name").toString(),
-                    patientData.get("family_name").toString(), patientData.get("id").toString(),
-                    Integer.parseInt(patientData.get("age").toString()),
-                    patientData.get("gender").toString().charAt(0), Integer.parseInt(patientData.get("active_visit").toString())));
-        }
-    }
-
-    private void initializeAdapter() {
-        ListPatients listPatients = new ListPatients(getApplicationContext(), patientList);
-        patientsView.setAdapter(listPatients);
     }
 
 }

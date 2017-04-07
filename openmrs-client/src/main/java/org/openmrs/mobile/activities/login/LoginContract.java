@@ -15,8 +15,9 @@
 package org.openmrs.mobile.activities.login;
 
 import android.support.annotation.NonNull;
-import org.openmrs.mobile.BasePresenterContract;
-import org.openmrs.mobile.BaseView;
+
+import org.openmrs.mobile.activities.BasePresenterContract;
+import org.openmrs.mobile.activities.BaseView;
 import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.utilities.ToastUtil;
 

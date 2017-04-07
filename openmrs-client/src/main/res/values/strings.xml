@@ -43,6 +43,7 @@
     <string name="reg_ques_name">What\'s the patient\'s name?</string>
     <string name="reg_ques_gender">What\'s the patient\'s gender?</string>
     <string name="reg_ques_dob">What\'s the patient\'s birth date?</string>
+    <string name="label_or">Or</string>
     <string name="reg_ques_phno">Phone number</string>
     <string name="reg_ques_address">Address</string>
     <string name="addr1_hint">Address</string>
@@ -123,6 +124,10 @@
     <string name="dialog_button_ok">OK</string>
     <string name="dialog_button_confirm">Confirm</string>
     <string name="dialog_button_register_new">Register new</string>
+    <string name="dialog_button_merge">Merge</string>
+    <string name="action_next">Next</string>
+    <string name="action_submit">Submit</string>
+    <string name="action_register">Register Patient</string>
     <!-- SettingsActivity activity -->
     <string name="settings_logs">Logs</string>
     <string name="settings_about">About</string>
@@ -241,7 +246,7 @@
     <string name="button_deny">Deny</string>
 
 
-<string name="app_name">Banda Health Go</string>
+    <string name="app_name">Banda Health Go</string>
     <string name="dashboard">Dashboard</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
@@ -328,5 +333,33 @@
 
     <string name="snackbar_edit">EDIT</string>
     <string name="invalid_login_or_password_message">Invalid login or password, please try again.</string>
+
+
+    <string name="settings_application_info">Application Info</string>
+    <string name="settings_concepts_info">Concepts Info</string>
+    <string name="settings_concepts_in_db">Concepts in DB:</string>
+    <string name="action_starting_visit">"Starting Visit"</string>
+
+    <!-- fragment_patient_details layout -->
+    <string name="patient_identifier"># %1$s</string>
+    <string name="patient_contact_info_label">Contact Information</string>
+
+    <!--Matching Patient Activity-->
+    <string name="matching_patients_toolbar_title">Merge Patients</string>
+
+    <!--Snackbar strings-->
+    <string name="snackbar_no_internet_connection">No internet connection</string>
+
+    <!--permissions-->
+    <string name="patient_not_yet_registered">Patient not yet registered, cannot create encounter.</string>
+
+    <!-- Layout strings -->
+    <string name="sync">Sync</string>
+    <string name="sync_on">Sync on</string>
+    <string name="sync_off">Sync off</string>
+
+
+    <!--Activity Logs-->
+    <string name="title_activity_logs">Logs</string>
 
 </resources>

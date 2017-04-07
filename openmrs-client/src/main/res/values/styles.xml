@@ -101,5 +101,13 @@
         <item name="colorPrimaryDark">#4ec07e</item>
     </style>
 
+    <style name="BackgroundThemeEEE">
+        <item name="android:background">#EEE</item>
+    </style>
+
+    <style name="BackgroundThemeEEEF3F3F3">
+        <item name="android:background">#FFF3F3F3</item>
+    </style>
+
 
 </resources>

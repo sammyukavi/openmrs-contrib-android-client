@@ -64,7 +64,7 @@ public class ListRecentVisits extends RecyclerView.Adapter<ListRecentVisits.Rece
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
+                /*try {
                     Fragment fragment = PatientDetails.class.newInstance();
                     ///dataPasser.onPatientDataPass(patients.get(position));
                     Bundle bundle = new Bundle();
@@ -77,7 +77,7 @@ public class ListRecentVisits extends RecyclerView.Adapter<ListRecentVisits.Rece
                     e.printStackTrace();
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
-                }
+                }*/
             }
         });
     }

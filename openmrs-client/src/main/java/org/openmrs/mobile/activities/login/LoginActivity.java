@@ -23,47 +23,47 @@ import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
 
 public class LoginActivity extends ACBaseActivity {
-
-    public LoginContract.Presenter mPresenter;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-
-        // Create fragment
-        LoginFragment loginFragment =
-                (LoginFragment) getSupportFragmentManager().findFragmentById(R.id.loginContentFrame);
-        if (loginFragment == null) {
-            loginFragment = LoginFragment.newInstance();
-        }
-        if (!loginFragment.isActive()) {
-            addFragmentToActivity(getSupportFragmentManager(),
-                    loginFragment, R.id.loginContentFrame);
-        }
-
-        mPresenter = new LoginPresenter(loginFragment, mOpenMRS);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.addCategory(Intent.CATEGORY_HOME);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return true;
-    }
-
+	
+	public LoginContract.Presenter mPresenter;
+	
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_login);
+		
+		// Create fragment
+		LoginFragment loginFragment =
+				(LoginFragment) getSupportFragmentManager().findFragmentById(R.id.loginContentFrame);
+		if (loginFragment == null) {
+			loginFragment = LoginFragment.newInstance();
+		}
+		if (!loginFragment.isActive()) {
+			addFragmentToActivity(getSupportFragmentManager(),
+					loginFragment, R.id.loginContentFrame);
+		}
+		
+		mPresenter = new LoginPresenter(loginFragment, mOpenMRS);
+	}
+	
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+	}
+	
+	@Override
+	public void onBackPressed() {
+		if (drawer.isDrawerOpen(GravityCompat.START)) {
+			drawer.closeDrawer(GravityCompat.START);
+		} else {
+			Intent intent = new Intent(Intent.ACTION_MAIN);
+			intent.addCategory(Intent.CATEGORY_HOME);
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			startActivity(intent);
+		}
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		return true;
+	}
+	
 }

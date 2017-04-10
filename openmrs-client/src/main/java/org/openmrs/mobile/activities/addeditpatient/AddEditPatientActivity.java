@@ -26,59 +26,59 @@ import java.util.Arrays;
 import java.util.List;
 
 public class AddEditPatientActivity extends ACBaseActivity {
-
-    public AddEditPatientContract.Presenter mPresenter;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.activity_patient_info);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-
-        // Create fragment
-        AddEditPatientFragment addEditPatientFragment =
-                (AddEditPatientFragment) getSupportFragmentManager().findFragmentById(R.id.patientInfoContentFrame);
-        if (addEditPatientFragment == null) {
-            addEditPatientFragment = AddEditPatientFragment.newInstance();
-        }
-        if (!addEditPatientFragment.isActive()) {
-            addFragmentToActivity(getSupportFragmentManager(),
-                    addEditPatientFragment, R.id.patientInfoContentFrame);
-        }
-
-        //Check if bundle includes patient ID
-        Bundle patientBundle = savedInstanceState;
-        if (patientBundle != null) {
-            patientBundle.getString(ApplicationConstants.BundleKeys.PATIENT_ID_BUNDLE);
-        } else {
-            patientBundle = getIntent().getExtras();
-        }
-        String patientID = "";
-        if (patientBundle != null) {
-            patientID = patientBundle.getString(ApplicationConstants.BundleKeys.PATIENT_ID_BUNDLE);
-        }
-
-        List<String> countries = Arrays.asList(getResources().getStringArray(R.array.countries_array));
-        // Create the mPresenter
-        mPresenter = new AddEditPatientPresenter(addEditPatientFragment, countries, patientID);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        return true;
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (!mPresenter.isRegisteringPatient()) {
-            super.onBackPressed();
-        }
-    }
+	
+	public AddEditPatientContract.Presenter mPresenter;
+	
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		this.setContentView(R.layout.activity_patient_info);
+		
+		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		
+		if (toolbar != null) {
+			setSupportActionBar(toolbar);
+			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		}
+		
+		// Create fragment
+		AddEditPatientFragment addEditPatientFragment =
+				(AddEditPatientFragment) getSupportFragmentManager().findFragmentById(R.id.patientInfoContentFrame);
+		if (addEditPatientFragment == null) {
+			addEditPatientFragment = AddEditPatientFragment.newInstance();
+		}
+		if (!addEditPatientFragment.isActive()) {
+			addFragmentToActivity(getSupportFragmentManager(),
+					addEditPatientFragment, R.id.patientInfoContentFrame);
+		}
+		
+		//Check if bundle includes patient ID
+		Bundle patientBundle = savedInstanceState;
+		if (patientBundle != null) {
+			patientBundle.getString(ApplicationConstants.BundleKeys.PATIENT_ID_BUNDLE);
+		} else {
+			patientBundle = getIntent().getExtras();
+		}
+		String patientID = "";
+		if (patientBundle != null) {
+			patientID = patientBundle.getString(ApplicationConstants.BundleKeys.PATIENT_ID_BUNDLE);
+		}
+		
+		List<String> countries = Arrays.asList(getResources().getStringArray(R.array.countries_array));
+		// Create the mPresenter
+		mPresenter = new AddEditPatientPresenter(addEditPatientFragment, countries, patientID);
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		return true;
+	}
+	
+	@Override
+	public void onBackPressed() {
+		if (!mPresenter.isRegisteringPatient()) {
+			super.onBackPressed();
+		}
+	}
 }

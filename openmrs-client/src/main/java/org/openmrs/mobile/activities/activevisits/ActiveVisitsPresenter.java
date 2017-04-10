@@ -18,16 +18,16 @@ import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.application.OpenMRS;
 
 public class ActiveVisitsPresenter extends BasePresenter implements ActiveVisitsContract.Presenter {
-
-    private ActiveVisitsContract.View view;
-
-    public ActiveVisitsPresenter(ActiveVisitsContract.View view, OpenMRS openMRS) {
-        this.view = view;
-        this.view.setPresenter(this);
-    }
-
-    @Override
-    public void subscribe() {
-
-    }
+	
+	private ActiveVisitsContract.View view;
+	
+	public ActiveVisitsPresenter(ActiveVisitsContract.View view, OpenMRS openMRS) {
+		this.view = view;
+		this.view.setPresenter(this);
+	}
+	
+	@Override
+	public void subscribe() {
+		
+	}
 }

@@ -33,75 +33,75 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RestServiceBuilder {
-
-    protected static final OpenMRS mOpenMRS = OpenMRS.getInstance();
-
-    private static String API_BASE_URL = mOpenMRS.getServerUrl()+ ApplicationConstants.API.REST_ENDPOINT;
-
-    private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-
-    private static Retrofit.Builder builder;
-
-    static {
-        builder =
-                new Retrofit.Builder()
-                        .baseUrl(API_BASE_URL)
-                        .addConverterFactory(buildGsonConverter())
-                        .client((httpClient).build());
-    }
-
-    public static <S> S createService(Class<S> serviceClass, String username, String password){
-        if (username != null && password != null) {
-            String credentials = username + ":" + password;
-            final String basic =
-                    "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
-            httpClient.addInterceptor(new Interceptor() {
-                @Override
-                public Response intercept(Interceptor.Chain chain) throws IOException {
-                    Request original = chain.request();
-
-                    Request.Builder requestBuilder = original.newBuilder()
-                            .header("Authorization", basic)
-                            .header("Accept", "application/json")
-                            .method(original.method(), original.body());
-
-
-                    Request request = requestBuilder.build();
-                    return chain.proceed(request);
-                }
-            });
-            HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-            httpClient.addInterceptor(logging);
-        }
-        OkHttpClient client = httpClient.build();
-        Retrofit retrofit = builder.client(client).build();
-        return retrofit.create(serviceClass);
-    }
-
-    public static <S> S createService(Class<S> serviceClass) {
-        String username=mOpenMRS.getUsername();
-        String password=mOpenMRS.getPassword();
-        return createService(serviceClass, username, password);
-    }
-
-    private static GsonConverterFactory buildGsonConverter() {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        Gson myGson = gsonBuilder
-                .excludeFieldsWithoutExposeAnnotation()
-                .registerTypeHierarchyAdapter(Resource.class, new ResourceSerializer())
-                .registerTypeHierarchyAdapter(Observation.class, new ObservationDeserializer())
-                .create();
-
-        return GsonConverterFactory.create(myGson);
-    }
-
-    public static void changeBaseUrl(String newServerUrl){
-        API_BASE_URL = newServerUrl + ApplicationConstants.API.REST_ENDPOINT;
-
-        builder = new Retrofit.Builder()
-                .baseUrl(API_BASE_URL)
-                .addConverterFactory(buildGsonConverter());
-    }
-
+	
+	protected static final OpenMRS mOpenMRS = OpenMRS.getInstance();
+	
+	private static String API_BASE_URL = mOpenMRS.getServerUrl() + ApplicationConstants.API.REST_ENDPOINT;
+	
+	private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+	
+	private static Retrofit.Builder builder;
+	
+	static {
+		builder =
+				new Retrofit.Builder()
+						.baseUrl(API_BASE_URL)
+						.addConverterFactory(buildGsonConverter())
+						.client((httpClient).build());
+	}
+	
+	public static <S> S createService(Class<S> serviceClass, String username, String password) {
+		if (username != null && password != null) {
+			String credentials = username + ":" + password;
+			final String basic =
+					"Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+			httpClient.addInterceptor(new Interceptor() {
+				@Override
+				public Response intercept(Interceptor.Chain chain) throws IOException {
+					Request original = chain.request();
+					
+					Request.Builder requestBuilder = original.newBuilder()
+							.header("Authorization", basic)
+							.header("Accept", "application/json")
+							.method(original.method(), original.body());
+					
+					
+					Request request = requestBuilder.build();
+					return chain.proceed(request);
+				}
+			});
+			HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+			logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+			httpClient.addInterceptor(logging);
+		}
+		OkHttpClient client = httpClient.build();
+		Retrofit retrofit = builder.client(client).build();
+		return retrofit.create(serviceClass);
+	}
+	
+	public static <S> S createService(Class<S> serviceClass) {
+		String username = mOpenMRS.getUsername();
+		String password = mOpenMRS.getPassword();
+		return createService(serviceClass, username, password);
+	}
+	
+	private static GsonConverterFactory buildGsonConverter() {
+		GsonBuilder gsonBuilder = new GsonBuilder();
+		Gson myGson = gsonBuilder
+				.excludeFieldsWithoutExposeAnnotation()
+				.registerTypeHierarchyAdapter(Resource.class, new ResourceSerializer())
+				.registerTypeHierarchyAdapter(Observation.class, new ObservationDeserializer())
+				.create();
+		
+		return GsonConverterFactory.create(myGson);
+	}
+	
+	public static void changeBaseUrl(String newServerUrl) {
+		API_BASE_URL = newServerUrl + ApplicationConstants.API.REST_ENDPOINT;
+		
+		builder = new Retrofit.Builder()
+				.baseUrl(API_BASE_URL)
+				.addConverterFactory(buildGsonConverter());
+	}
+	
 }

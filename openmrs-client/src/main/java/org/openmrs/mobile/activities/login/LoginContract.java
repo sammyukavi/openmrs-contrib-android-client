@@ -24,54 +24,54 @@ import org.openmrs.mobile.utilities.ToastUtil;
 import java.util.List;
 
 public interface LoginContract {
-
-    interface View extends BaseView<Presenter> {
-
-        void hideSoftKeys();
-
-        void setPresenter(@NonNull Presenter presenter);
-
-        void showWarningDialog();
-
-        void showLoadingAnimation();
-
-        void hideLoadingAnimation();
-
-        void showLocationLoadingAnimation();
-
-        void hideUrlLoadingAnimation();
-
-        void finishLoginActivity();
-
-        void showInvalidURLSnackbar(String message);
-
-        void showInvalidLoginOrPasswordSnackbar();
-
-        void setLocationErrorOccurred(boolean errorOccurred);
-
-        void showToast(String message, ToastUtil.ToastType toastType);
-
-        void showToast(int textId, ToastUtil.ToastType toastType);
-
-        void initLoginForm(List<Location> locationList, String url);
-
-        void userAuthenticated();
-
-        void startFormListService();
-
-    }
-
-    interface Presenter extends BasePresenterContract {
-
-        void authenticateUser(final String username, final String password, final String url);
-
-        void authenticateUser(final String username, final String password, final String url, boolean wipeDatabase);
-
-        void login(String username, String password, String url, String oldUrl);
-
-        void saveLocationsToDatabase(List<Location> locationList, String selectedLocation);
-
-        void loadLocations(String url);
-
-    }
+	
+	interface View extends BaseView<Presenter> {
+		
+		void hideSoftKeys();
+		
+		void setPresenter(@NonNull Presenter presenter);
+		
+		void showWarningDialog();
+		
+		void showLoadingAnimation();
+		
+		void hideLoadingAnimation();
+		
+		void showLocationLoadingAnimation();
+		
+		void hideUrlLoadingAnimation();
+		
+		void finishLoginActivity();
+		
+		void showInvalidURLSnackbar(String message);
+		
+		void showInvalidLoginOrPasswordSnackbar();
+		
+		void setLocationErrorOccurred(boolean errorOccurred);
+		
+		void showToast(String message, ToastUtil.ToastType toastType);
+		
+		void showToast(int textId, ToastUtil.ToastType toastType);
+		
+		void initLoginForm(List<Location> locationList, String url);
+		
+		void userAuthenticated();
+		
+		void startFormListService();
+		
+	}
+	
+	interface Presenter extends BasePresenterContract {
+		
+		void authenticateUser(final String username, final String password, final String url);
+		
+		void authenticateUser(final String username, final String password, final String url, boolean wipeDatabase);
+		
+		void login(String username, String password, String url, String oldUrl);
+		
+		void saveLocationsToDatabase(List<Location> locationList, String selectedLocation);
+		
+		void loadLocations(String url);
+		
+	}
 }

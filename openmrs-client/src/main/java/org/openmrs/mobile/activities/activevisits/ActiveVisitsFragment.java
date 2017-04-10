@@ -25,20 +25,20 @@ import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.utilities.FontsUtil;
 
 public class ActiveVisitsFragment extends ACBaseFragment<ActiveVisitsContract.Presenter> implements ActiveVisitsContract.View {
-
-    private View mRootView;
-
-
-    public static ActiveVisitsFragment newInstance() {
-        return new ActiveVisitsFragment();
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mRootView = inflater.inflate(R.layout.fragment_active_visits, container, false);
-        // Font config
-        FontsUtil.setFont((ViewGroup) this.getActivity().findViewById(android.R.id.content));
-
-        return mRootView;
-    }
+	
+	private View mRootView;
+	
+	
+	public static ActiveVisitsFragment newInstance() {
+		return new ActiveVisitsFragment();
+	}
+	
+	@Override
+	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+		mRootView = inflater.inflate(R.layout.fragment_active_visits, container, false);
+		// Font config
+		FontsUtil.setFont((ViewGroup) this.getActivity().findViewById(android.R.id.content));
+		
+		return mRootView;
+	}
 }

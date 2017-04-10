@@ -19,61 +19,61 @@ import java.io.Serializable;
 
 @Table(name = "obscreate")
 public class Obscreate extends Model implements Serializable {
-
-    @SerializedName("person")
-    @Expose
-    private String person;
-    @SerializedName("obsDatetime")
-    @Expose
-    private String obsDatetime;
-    @SerializedName("concept")
-    @Expose
-    private String concept;
-    @SerializedName("value")
-    @Expose
-    private String value;
-    @SerializedName("encounter")
-    @Expose
-    private String encounter;
-
-    public String getPerson() {
-        return person;
-    }
-
-    public void setPerson(String person) {
-        this.person = person;
-    }
-
-    public String getObsDatetime() {
-        return obsDatetime;
-    }
-
-    public void setObsDatetime(String obsDatetime) {
-        this.obsDatetime = obsDatetime;
-    }
-
-    public String getConcept() {
-        return concept;
-    }
-
-    public void setConcept(String concept) {
-        this.concept = concept;
-    }
-
-    public String getEncounter() {
-        return encounter;
-    }
-
-    public void setEncounter(String encounter) {
-        this.encounter = encounter;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
+	
+	@SerializedName("person")
+	@Expose
+	private String person;
+	@SerializedName("obsDatetime")
+	@Expose
+	private String obsDatetime;
+	@SerializedName("concept")
+	@Expose
+	private String concept;
+	@SerializedName("value")
+	@Expose
+	private String value;
+	@SerializedName("encounter")
+	@Expose
+	private String encounter;
+	
+	public String getPerson() {
+		return person;
+	}
+	
+	public void setPerson(String person) {
+		this.person = person;
+	}
+	
+	public String getObsDatetime() {
+		return obsDatetime;
+	}
+	
+	public void setObsDatetime(String obsDatetime) {
+		this.obsDatetime = obsDatetime;
+	}
+	
+	public String getConcept() {
+		return concept;
+	}
+	
+	public void setConcept(String concept) {
+		this.concept = concept;
+	}
+	
+	public String getEncounter() {
+		return encounter;
+	}
+	
+	public void setEncounter(String encounter) {
+		this.encounter = encounter;
+	}
+	
+	public String getValue() {
+		return value;
+	}
+	
+	public void setValue(String value) {
+		this.value = value;
+	}
+	
 }

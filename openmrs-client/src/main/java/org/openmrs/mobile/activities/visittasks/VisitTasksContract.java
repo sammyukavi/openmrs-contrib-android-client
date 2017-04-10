@@ -18,13 +18,13 @@ import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
 
 public interface VisitTasksContract {
-
-    interface View extends BaseView<Presenter> {
-
-    }
-
-    interface Presenter extends BasePresenterContract {
-
-    }
-
+	
+	interface View extends BaseView<Presenter> {
+		
+	}
+	
+	interface Presenter extends BasePresenterContract {
+		
+	}
+	
 }

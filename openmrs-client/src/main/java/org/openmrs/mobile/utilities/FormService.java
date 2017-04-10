@@ -22,51 +22,51 @@ import java.lang.reflect.Modifier;
 import java.util.List;
 
 public class FormService {
-
-    public static Form getForm(String valueReference) {
-        String unescapedValueReference = StringUtils.unescapeJavaString(valueReference);
-
-        GsonBuilder builder = new GsonBuilder();
-        builder.excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC);
-        builder.excludeFieldsWithoutExposeAnnotation();
-        Gson gson = builder.create();
-
-        return gson.fromJson(unescapedValueReference, Form.class);
-    }
-
-    public static Form getFormByUuid(String uuid) {
-        if(!StringUtils.isBlank(uuid)){
-            FormResource formResource = new Select()
-                    .from(FormResource.class)
-                    .where("uuid = ?", uuid)
-                    .executeSingle();
-            if(formResource != null){
-                List<FormResource> resourceList = formResource.getResourceList();
-                for (FormResource resource : resourceList) {
-                    if("json".equals(resource.getName())){
-                        String valueRefString = resource.getValueReference();
-                        Form form = FormService.getForm(valueRefString);
-                        form.setValueReference(valueRefString);
-                        form.setName(formResource.getName());
-                        return form;
-                    }
-                }
-            }
-        }
-        return null;
-    }
-
-    public static FormResource getFormResourceByName(String name) {
-        return new Select()
-                .from(FormResource.class)
-                .where("name = ?", name)
-                .executeSingle();
-    }
-
-    public static List<FormResource> getFormResourceList(){
-        return new Select()
-                .from(FormResource.class)
-                .execute();
-    }
-
+	
+	public static Form getForm(String valueReference) {
+		String unescapedValueReference = StringUtils.unescapeJavaString(valueReference);
+		
+		GsonBuilder builder = new GsonBuilder();
+		builder.excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC);
+		builder.excludeFieldsWithoutExposeAnnotation();
+		Gson gson = builder.create();
+		
+		return gson.fromJson(unescapedValueReference, Form.class);
+	}
+	
+	public static Form getFormByUuid(String uuid) {
+		if (!StringUtils.isBlank(uuid)) {
+			FormResource formResource = new Select()
+					.from(FormResource.class)
+					.where("uuid = ?", uuid)
+					.executeSingle();
+			if (formResource != null) {
+				List<FormResource> resourceList = formResource.getResourceList();
+				for (FormResource resource : resourceList) {
+					if ("json".equals(resource.getName())) {
+						String valueRefString = resource.getValueReference();
+						Form form = FormService.getForm(valueRefString);
+						form.setValueReference(valueRefString);
+						form.setName(formResource.getName());
+						return form;
+					}
+				}
+			}
+		}
+		return null;
+	}
+	
+	public static FormResource getFormResourceByName(String name) {
+		return new Select()
+				.from(FormResource.class)
+				.where("name = ?", name)
+				.executeSingle();
+	}
+	
+	public static List<FormResource> getFormResourceList() {
+		return new Select()
+				.from(FormResource.class)
+				.execute();
+	}
+	
 }

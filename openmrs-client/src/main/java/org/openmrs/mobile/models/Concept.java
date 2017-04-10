@@ -13,42 +13,42 @@ package org.openmrs.mobile.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Concept extends Resource{
-
-    @SerializedName("datatype")
-    @Expose
-    private Datatype datatype;
-
-    @SerializedName("name")
-    @Expose
-    private String name;
-
-    @SerializedName("conceptClass")
-    @Expose
-    private ConceptClass conceptClass;
-
-    public Datatype getDatatype() {
-        return datatype;
-    }
-
-    public void setDatatype(Datatype datatype) {
-        this.datatype = datatype;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public ConceptClass getConceptClass() {
-        return conceptClass;
-    }
-
-    public void setConceptClass(ConceptClass conceptClass) {
-        this.conceptClass = conceptClass;
-    }
-
+public class Concept extends Resource {
+	
+	@SerializedName("datatype")
+	@Expose
+	private Datatype datatype;
+	
+	@SerializedName("name")
+	@Expose
+	private String name;
+	
+	@SerializedName("conceptClass")
+	@Expose
+	private ConceptClass conceptClass;
+	
+	public Datatype getDatatype() {
+		return datatype;
+	}
+	
+	public void setDatatype(Datatype datatype) {
+		this.datatype = datatype;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public ConceptClass getConceptClass() {
+		return conceptClass;
+	}
+	
+	public void setConceptClass(ConceptClass conceptClass) {
+		this.conceptClass = conceptClass;
+	}
+	
 }

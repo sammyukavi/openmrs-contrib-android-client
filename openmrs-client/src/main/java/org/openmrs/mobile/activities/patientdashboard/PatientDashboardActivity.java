@@ -1,21 +1,6 @@
 package org.openmrs.mobile.activities.patientdashboard;
 
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.github.clans.fab.FloatingActionButton;
-import com.github.clans.fab.FloatingActionMenu;
-
-import org.json.JSONException;
-import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
-import org.openmrs.mobile.fragments.RecentVisits;
-import org.openmrs.mobile.sampledata.Patient;
-import org.openmrs.mobile.utilities.ApplicationConstants;
 
 
 public class PatientDashboardActivity extends ACBaseActivity {
@@ -100,6 +85,6 @@ public class PatientDashboardActivity extends ACBaseActivity {
             e.printStackTrace();
         }
     }*/
-
-
+	
+	
 }

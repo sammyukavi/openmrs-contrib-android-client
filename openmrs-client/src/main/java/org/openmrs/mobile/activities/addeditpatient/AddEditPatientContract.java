@@ -21,46 +21,46 @@ import org.openmrs.mobile.models.Patient;
 import java.util.List;
 
 public interface AddEditPatientContract {
-
-    interface View extends BaseView<Presenter> {
-
-        void finishPatientInfoActivity();
-
-        void setErrorsVisibility(boolean givenNameError,
-                                 boolean familyNameError,
-                                 boolean dayOfBirthError,
-                                 boolean addressError,
-                                 boolean countryError,
-                                 boolean genderError);
-
-        void scrollToTop();
-
-        void hideSoftKeys();
-
-        void setProgressBarVisibility(boolean visibility);
-
-        void showSimilarPatientDialog(List<Patient> patients, Patient newPatient);
-
-        void startPatientDashbordActivity(Patient patient);
-
-        void showUpgradeRegistrationModuleInfo();
-    }
-
-    interface Presenter extends BasePresenterContract {
-
-        Patient getPatientToUpdate();
-
-        boolean isRegisteringPatient();
-
-        void confirmRegister(Patient patient);
-
-        void confirmUpdate(Patient patient);
-
-        void finishPatientInfoActivity();
-
-        void registerPatient();
-
-        void updatePatient(Patient patient);
-    }
-
+	
+	interface View extends BaseView<Presenter> {
+		
+		void finishPatientInfoActivity();
+		
+		void setErrorsVisibility(boolean givenNameError,
+		                         boolean familyNameError,
+		                         boolean dayOfBirthError,
+		                         boolean addressError,
+		                         boolean countryError,
+		                         boolean genderError);
+		
+		void scrollToTop();
+		
+		void hideSoftKeys();
+		
+		void setProgressBarVisibility(boolean visibility);
+		
+		void showSimilarPatientDialog(List<Patient> patients, Patient newPatient);
+		
+		void startPatientDashbordActivity(Patient patient);
+		
+		void showUpgradeRegistrationModuleInfo();
+	}
+	
+	interface Presenter extends BasePresenterContract {
+		
+		Patient getPatientToUpdate();
+		
+		boolean isRegisteringPatient();
+		
+		void confirmRegister(Patient patient);
+		
+		void confirmUpdate(Patient patient);
+		
+		void finishPatientInfoActivity();
+		
+		void registerPatient();
+		
+		void updatePatient(Patient patient);
+	}
+	
 }

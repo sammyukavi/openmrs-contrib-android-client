@@ -25,23 +25,23 @@ import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.utilities.FontsUtil;
 
 public class VisitTasksFragment extends ACBaseFragment<VisitTasksContract.Presenter> implements VisitTasksContract.View {
-
-    private View mRootView;
-
-
-    public static VisitTasksFragment newInstance() {
-        return new VisitTasksFragment();
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mRootView = inflater.inflate(R.layout.fragment_visit_tasks, container, false);
-
-        // Font config
-        FontsUtil.setFont((ViewGroup) this.getActivity().findViewById(android.R.id.content));
-
-        return mRootView;
-    }
-
-
+	
+	private View mRootView;
+	
+	
+	public static VisitTasksFragment newInstance() {
+		return new VisitTasksFragment();
+	}
+	
+	@Override
+	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+		mRootView = inflater.inflate(R.layout.fragment_visit_tasks, container, false);
+		
+		// Font config
+		FontsUtil.setFont((ViewGroup) this.getActivity().findViewById(android.R.id.content));
+		
+		return mRootView;
+	}
+	
+	
 }

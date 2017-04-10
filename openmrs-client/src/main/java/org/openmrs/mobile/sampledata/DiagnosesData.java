@@ -4,11 +4,11 @@ import java.io.Serializable;
 
 
 public class DiagnosesData implements Serializable {
-    public String title;
-
-    public DiagnosesData(String title) {
-        this.title = title;
-    }
-
-
+	public String title;
+	
+	public DiagnosesData(String title) {
+		this.title = title;
+	}
+	
+	
 }

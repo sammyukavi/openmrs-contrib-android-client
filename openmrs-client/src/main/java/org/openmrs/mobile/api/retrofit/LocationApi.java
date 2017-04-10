@@ -26,34 +26,34 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class LocationApi extends RetrofitApi{
-
-
-    public SimplePromise<Location> getLocationUuid() {
-        final SimpleDeferredObject<Location> deferred = new SimpleDeferredObject<>();
-
-        RestApi apiService =
-                RestServiceBuilder.createService(RestApi.class);
-        Call<Results<Location>> call = apiService.getLocations(null);
-        call.enqueue(new Callback<Results<Location>>() {
-            @Override
-            public void onResponse(Call<Results<Location>> call, Response<Results<Location>> response) {
-                Results<Location> locationList = response.body();
-                for (Location result : locationList.getResults()) {
-                    if ((result.getDisplay().trim()).equalsIgnoreCase((openMrs.getLocation().trim()))) {
-                        deferred.resolve(result);
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Results<Location>> call, Throwable t) {
-                ToastUtil.notify(t.toString());
-                deferred.reject(t);
-            }
-
-        });
-
-        return deferred.promise();
-    }
+public class LocationApi extends RetrofitApi {
+	
+	
+	public SimplePromise<Location> getLocationUuid() {
+		final SimpleDeferredObject<Location> deferred = new SimpleDeferredObject<>();
+		
+		RestApi apiService =
+				RestServiceBuilder.createService(RestApi.class);
+		Call<Results<Location>> call = apiService.getLocations(null);
+		call.enqueue(new Callback<Results<Location>>() {
+			@Override
+			public void onResponse(Call<Results<Location>> call, Response<Results<Location>> response) {
+				Results<Location> locationList = response.body();
+				for (Location result : locationList.getResults()) {
+					if ((result.getDisplay().trim()).equalsIgnoreCase((openMrs.getLocation().trim()))) {
+						deferred.resolve(result);
+					}
+				}
+			}
+			
+			@Override
+			public void onFailure(Call<Results<Location>> call, Throwable t) {
+				ToastUtil.notify(t.toString());
+				deferred.reject(t);
+			}
+			
+		});
+		
+		return deferred.promise();
+	}
 }

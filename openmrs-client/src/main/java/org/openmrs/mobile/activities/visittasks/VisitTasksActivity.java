@@ -23,45 +23,45 @@ import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
 
 public class VisitTasksActivity extends ACBaseActivity {
-
-    public VisitTasksContract.Presenter mPresenter;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getLayoutInflater().inflate(R.layout.activity_visit_tasks, frameLayout);
-        setTitle(R.string.nav_visit_tasks);
-        // Create fragment
-        VisitTasksFragment visitTasksFragment = (VisitTasksFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
-        if (visitTasksFragment == null) {
-            visitTasksFragment = VisitTasksFragment.newInstance();
-        }
-        if (!visitTasksFragment.isActive()) {
-            addFragmentToActivity(getSupportFragmentManager(), visitTasksFragment, R.id.contentFrame);
-        }
-
-        mPresenter = new VisitTasksPresenter(visitTasksFragment, mOpenMRS);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.addCategory(Intent.CATEGORY_HOME);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return true;
-    }
-
+	
+	public VisitTasksContract.Presenter mPresenter;
+	
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		getLayoutInflater().inflate(R.layout.activity_visit_tasks, frameLayout);
+		setTitle(R.string.nav_visit_tasks);
+		// Create fragment
+		VisitTasksFragment visitTasksFragment = (VisitTasksFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
+		if (visitTasksFragment == null) {
+			visitTasksFragment = VisitTasksFragment.newInstance();
+		}
+		if (!visitTasksFragment.isActive()) {
+			addFragmentToActivity(getSupportFragmentManager(), visitTasksFragment, R.id.contentFrame);
+		}
+		
+		mPresenter = new VisitTasksPresenter(visitTasksFragment, mOpenMRS);
+	}
+	
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+	}
+	
+	@Override
+	public void onBackPressed() {
+		if (drawer.isDrawerOpen(GravityCompat.START)) {
+			drawer.closeDrawer(GravityCompat.START);
+		} else {
+			Intent intent = new Intent(Intent.ACTION_MAIN);
+			intent.addCategory(Intent.CATEGORY_HOME);
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			startActivity(intent);
+		}
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		return true;
+	}
+	
 }

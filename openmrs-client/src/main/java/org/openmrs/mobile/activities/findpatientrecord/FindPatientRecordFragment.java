@@ -25,21 +25,21 @@ import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.utilities.FontsUtil;
 
 public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordContract.Presenter> implements FindPatientRecordContract.View {
-
-    private View mRootView;
-
-    public static FindPatientRecordFragment newInstance() {
-        return new FindPatientRecordFragment();
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mRootView = inflater.inflate(R.layout.fragment_find_patient_record, container, false);
-
-        // Font config
-        FontsUtil.setFont((ViewGroup) this.getActivity().findViewById(android.R.id.content));
-
-        return mRootView;
-    }
-
+	
+	private View mRootView;
+	
+	public static FindPatientRecordFragment newInstance() {
+		return new FindPatientRecordFragment();
+	}
+	
+	@Override
+	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+		mRootView = inflater.inflate(R.layout.fragment_find_patient_record, container, false);
+		
+		// Font config
+		FontsUtil.setFont((ViewGroup) this.getActivity().findViewById(android.R.id.content));
+		
+		return mRootView;
+	}
+	
 }

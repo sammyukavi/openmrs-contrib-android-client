@@ -20,79 +20,77 @@ import android.os.Parcelable;
 import java.io.Serializable;
 
 public class InputField implements Serializable, Parcelable {
-
-    private int id;
-    private String concept;
-    private double value = -1.0;
-    private boolean isRed;
-
-
-    public InputField(String concept) {
-        this.concept = concept;
-        this.id = Math.abs(concept.hashCode());
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setConcept(String concept) {
-        this.concept = concept;
-    }
-
-    public String getConcept() {
-        return concept;
-    }
-
-    public void setValue(Double value) {
-        this.value = value;
-    }
-
-    public Double getValue() {
-        return value;
-    }
-
-    public void setIsRed(boolean isRed) {
-        this.isRed=isRed;
-    }
-
-    public boolean isRed() {
-        return isRed;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.id);
-        dest.writeString(this.concept);
-        dest.writeDouble(this.value);
-        dest.writeInt(this.isRed?1:0);
-    }
-
-    protected InputField(Parcel in) {
-        this.id = in.readInt();
-        this.concept = in.readString();
-        this.value = in.readDouble();
-        this.isRed = (in.readInt()==1);
-    }
-
-    public static final Creator<InputField> CREATOR = new Creator<InputField>() {
-        @Override
-        public InputField createFromParcel(Parcel source) {
-            return new InputField(source);
-        }
-
-        @Override
-        public InputField[] newArray(int size) {
-            return new InputField[size];
-        }
-    };
+	
+	public static final Creator<InputField> CREATOR = new Creator<InputField>() {
+		@Override
+		public InputField createFromParcel(Parcel source) {
+			return new InputField(source);
+		}
+		
+		@Override
+		public InputField[] newArray(int size) {
+			return new InputField[size];
+		}
+	};
+	private int id;
+	private String concept;
+	private double value = -1.0;
+	private boolean isRed;
+	
+	public InputField(String concept) {
+		this.concept = concept;
+		this.id = Math.abs(concept.hashCode());
+	}
+	
+	protected InputField(Parcel in) {
+		this.id = in.readInt();
+		this.concept = in.readString();
+		this.value = in.readDouble();
+		this.isRed = (in.readInt() == 1);
+	}
+	
+	public int getId() {
+		return id;
+	}
+	
+	public void setId(int id) {
+		this.id = id;
+	}
+	
+	public String getConcept() {
+		return concept;
+	}
+	
+	public void setConcept(String concept) {
+		this.concept = concept;
+	}
+	
+	public Double getValue() {
+		return value;
+	}
+	
+	public void setValue(Double value) {
+		this.value = value;
+	}
+	
+	public void setIsRed(boolean isRed) {
+		this.isRed = isRed;
+	}
+	
+	public boolean isRed() {
+		return isRed;
+	}
+	
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+	
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeInt(this.id);
+		dest.writeString(this.concept);
+		dest.writeDouble(this.value);
+		dest.writeInt(this.isRed ? 1 : 0);
+	}
 }

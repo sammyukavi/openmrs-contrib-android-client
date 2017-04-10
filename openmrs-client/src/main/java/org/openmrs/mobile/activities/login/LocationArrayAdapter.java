@@ -23,35 +23,34 @@ import android.widget.TextView;
 import java.util.List;
 
 public class LocationArrayAdapter extends ArrayAdapter<String> {
-
-    public LocationArrayAdapter(Context context, List<String> objects) {
-        super(context, android.R.layout.simple_spinner_item, objects);
-        setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-    }
-
-    @Override
-    public int getCount() {
-        return super.getCount();
-    }
-
-    @Override
-    public View getDropDownView(int position, View convertView, ViewGroup parent) {
-        View v;
-        if (position == 0) {
-            TextView tv = new TextView(getContext());
-            tv.setHeight(0);
-            tv.setVisibility(View.GONE);
-            v = tv;
-        }
-        else {
-            v = super.getDropDownView(position, null, parent);
-        }
-        parent.setVerticalScrollBarEnabled(false);
-        return v;
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
+	
+	public LocationArrayAdapter(Context context, List<String> objects) {
+		super(context, android.R.layout.simple_spinner_item, objects);
+		setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+	}
+	
+	@Override
+	public int getCount() {
+		return super.getCount();
+	}
+	
+	@Override
+	public View getDropDownView(int position, View convertView, ViewGroup parent) {
+		View v;
+		if (position == 0) {
+			TextView tv = new TextView(getContext());
+			tv.setHeight(0);
+			tv.setVisibility(View.GONE);
+			v = tv;
+		} else {
+			v = super.getDropDownView(position, null, parent);
+		}
+		parent.setVerticalScrollBarEnabled(false);
+		return v;
+	}
+	
+	@Override
+	public long getItemId(int position) {
+		return position;
+	}
 }

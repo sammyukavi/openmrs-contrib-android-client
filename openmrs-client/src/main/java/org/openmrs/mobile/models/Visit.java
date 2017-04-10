@@ -19,80 +19,80 @@ import com.google.gson.annotations.Expose;
 import java.util.List;
 
 public class Visit extends Resource {
-
-    private Long id;
-
-    @Expose
-    private Patient patient;
-
-    @Expose
-    private VisitType visitType;
-
-    @Expose
-    private Location location;
-
-    @Expose
-    private String startDatetime;
-
-    @Expose
-    private String stopDatetime;
-
-    @Expose
-    private List<Encounter> encounters;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Patient getPatient() {
-        return patient;
-    }
-
-    public void setPatient(Patient patient) {
-        this.patient = patient;
-    }
-
-    public VisitType getVisitType() {
-        return visitType;
-    }
-
-    public void setVisitType(VisitType visitType) {
-        this.visitType = visitType;
-    }
-
-    public Location getLocation() {
-        return location;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
-    }
-
-    public String getStartDatetime() {
-        return startDatetime;
-    }
-
-    public void setStartDatetime(String startDatetime) {
-        this.startDatetime = startDatetime;
-    }
-
-    public String getStopDatetime() {
-        return stopDatetime;
-    }
-
-    public void setStopDatetime(String stopDatetime) {
-        this.stopDatetime = stopDatetime;
-    }
-
-    public List<Encounter> getEncounters() {
-        return encounters;
-    }
-
-    public void setEncounters(List<Encounter> encounters) {
-        this.encounters = encounters;
-    }
+	
+	private Long id;
+	
+	@Expose
+	private Patient patient;
+	
+	@Expose
+	private VisitType visitType;
+	
+	@Expose
+	private Location location;
+	
+	@Expose
+	private String startDatetime;
+	
+	@Expose
+	private String stopDatetime;
+	
+	@Expose
+	private List<Encounter> encounters;
+	
+	public Long getId() {
+		return id;
+	}
+	
+	public void setId(Long id) {
+		this.id = id;
+	}
+	
+	public Patient getPatient() {
+		return patient;
+	}
+	
+	public void setPatient(Patient patient) {
+		this.patient = patient;
+	}
+	
+	public VisitType getVisitType() {
+		return visitType;
+	}
+	
+	public void setVisitType(VisitType visitType) {
+		this.visitType = visitType;
+	}
+	
+	public Location getLocation() {
+		return location;
+	}
+	
+	public void setLocation(Location location) {
+		this.location = location;
+	}
+	
+	public String getStartDatetime() {
+		return startDatetime;
+	}
+	
+	public void setStartDatetime(String startDatetime) {
+		this.startDatetime = startDatetime;
+	}
+	
+	public String getStopDatetime() {
+		return stopDatetime;
+	}
+	
+	public void setStopDatetime(String stopDatetime) {
+		this.stopDatetime = stopDatetime;
+	}
+	
+	public List<Encounter> getEncounters() {
+		return encounters;
+	}
+	
+	public void setEncounters(List<Encounter> encounters) {
+		this.encounters = encounters;
+	}
 }

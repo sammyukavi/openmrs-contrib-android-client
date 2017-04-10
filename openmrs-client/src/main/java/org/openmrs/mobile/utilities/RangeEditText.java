@@ -12,45 +12,40 @@ package org.openmrs.mobile.utilities;
 
 import android.content.Context;
 import android.support.v7.widget.AppCompatEditText;
+
 ;
 
 public class RangeEditText extends AppCompatEditText {
-
-    private Double upperlimit;
-    private Double lowerlimit;
-    private String name;
-
-    public RangeEditText(Context context) {
-        super(context);
-    }
-
-    public void setUpperlimit(Double upperlimit)
-    {
-        this.upperlimit=upperlimit;
-    }
-
-    public double getUpperlimit()
-    {
-        return upperlimit;
-    }
-
-    public void setLowerlimit(Double lowerlimit)
-    {
-        this.lowerlimit=lowerlimit;
-    }
-
-    public double getLowerlimit()
-    {
-        return lowerlimit;
-    }
-
-    public void setName(String name)
-    {
-        this.name=name;
-    }
-
-    public String getName()
-    {
-        return name;
-    }
+	
+	private Double upperlimit;
+	private Double lowerlimit;
+	private String name;
+	
+	public RangeEditText(Context context) {
+		super(context);
+	}
+	
+	public double getUpperlimit() {
+		return upperlimit;
+	}
+	
+	public void setUpperlimit(Double upperlimit) {
+		this.upperlimit = upperlimit;
+	}
+	
+	public double getLowerlimit() {
+		return lowerlimit;
+	}
+	
+	public void setLowerlimit(Double lowerlimit) {
+		this.lowerlimit = lowerlimit;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
 }

@@ -26,6 +26,9 @@
         <activity
             android:name=".activities.Settings"
             android:configChanges="keyboardHidden|screenSize" />
+        <activity
+            android:name=".activities.patientlist.PatientListActivity"
+            android:configChanges="keyboardHidden|screenSize" />
     </application>
 
 </manifest>

@@ -145,14 +145,12 @@ public class OpenMRS extends Application {
 
     public String getUsername() {
         SharedPreferences prefs = getOpenMRSSharedPreferences();
-        //return prefs.getString(ApplicationConstants.UserKeys.USER_NAME, ApplicationConstants.EMPTY_STRING);
-        return prefs.getString(ApplicationConstants.UserKeys.USER_NAME, "wesb");
+        return prefs.getString(ApplicationConstants.UserKeys.USER_NAME, ApplicationConstants.EMPTY_STRING);
     }
 
     public String getPassword() {
         SharedPreferences prefs = getOpenMRSSharedPreferences();
-        //return prefs.getString(ApplicationConstants.UserKeys.PASSWORD, ApplicationConstants.EMPTY_STRING);
-        return prefs.getString(ApplicationConstants.UserKeys.PASSWORD, "Wonder1land");
+        return prefs.getString(ApplicationConstants.UserKeys.PASSWORD, ApplicationConstants.EMPTY_STRING);
     }
 
     public String getServerUrl() {

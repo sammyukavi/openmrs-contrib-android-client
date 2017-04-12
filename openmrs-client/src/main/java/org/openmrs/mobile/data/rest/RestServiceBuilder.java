@@ -90,7 +90,6 @@ public class RestServiceBuilder {
     }
 
     public static <S> S createService(Class<S> serviceClass) {
-        //return createService(serviceClass, app.getServerUrl(), app.getUsername(), app.getPassword());
-        return createService(serviceClass, "", "wesb", "Wonder1land");
+        return createService(serviceClass, app.getServerUrl(), app.getUsername(), app.getPassword());
     }
 }

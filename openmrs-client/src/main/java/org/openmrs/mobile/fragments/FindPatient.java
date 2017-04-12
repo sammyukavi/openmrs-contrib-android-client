@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,6 +20,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.adapters.ListPatients;
+import org.openmrs.mobile.application.OpenMRS;
+import org.openmrs.mobile.application.OpenMRSLogger;
+import org.openmrs.mobile.data.DataService;
+import org.openmrs.mobile.data.impl.PatientDataService;
 import org.openmrs.mobile.sampledata.Patient;
 
 
@@ -76,6 +81,21 @@ public class FindPatient extends Fragment {
     }
 
     private void initializeData() throws JSONException {
+        PatientDataService svc = new PatientDataService();
+        svc.getByName("Test", new DataService.GetMultipleCallback<org.openmrs.mobile.models.Patient>() {
+            @Override
+            public void onCompleted(List<org.openmrs.mobile.models.Patient> entities) {
+                for (org.openmrs.mobile.models.Patient p : entities){
+                    Log.d("Test", p.toString());
+                }
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                Log.d("Test", "Error", t);
+            }
+        });
+
         patientList = new ArrayList<>();
         JSONArray patients = patient.getPatients();
         for (int i = 0; i < patients.length(); i++) {

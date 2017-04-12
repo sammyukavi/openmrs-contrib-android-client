@@ -6,7 +6,7 @@
     android:versionName="1.0.1">
 
     <uses-sdk tools:overrideLibrary="com.github.clans.fab" />
-
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"

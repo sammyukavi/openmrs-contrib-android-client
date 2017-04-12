@@ -25,8 +25,11 @@ import com.activeandroid.Configuration;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
+import org.greenrobot.greendao.database.Database;
 import org.openmrs.mobile.api.FormListService;
 import org.openmrs.mobile.databases.OpenMRSDBOpenHelper;
+import org.openmrs.mobile.models.DaoMaster;
+import org.openmrs.mobile.models.DaoSession;
 import org.openmrs.mobile.models.EncounterType;
 import org.openmrs.mobile.models.Encountercreate;
 import org.openmrs.mobile.models.FormResource;
@@ -65,16 +68,11 @@ public class OpenMRS extends Application {
         startService(i);
     }
 
+    private static boolean ENCRYPTED = true;
     protected void initializeDB() {
-        Configuration.Builder configurationBuilder = new Configuration.Builder(this);
-        configurationBuilder.addModelClasses(Link.class);
-        configurationBuilder.addModelClasses(FormResource.class);
-        configurationBuilder.addModelClasses(EncounterType.class);
-        configurationBuilder.addModelClasses(Encountercreate.class);
-        configurationBuilder.addModelClasses(Obscreate.class);
-
-
-        ActiveAndroid.initialize(configurationBuilder.create());
+        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, ENCRYPTED ? "notes-db-encrypted" : "notes-db");
+        Database db = ENCRYPTED ? helper.getEncryptedWritableDb("super-secret") : helper.getWritableDb();
+        DaoSession daoSession = new DaoMaster(db).newSession();
     }
 
     public static OpenMRS getInstance() {
@@ -147,12 +145,14 @@ public class OpenMRS extends Application {
 
     public String getUsername() {
         SharedPreferences prefs = getOpenMRSSharedPreferences();
-        return prefs.getString(ApplicationConstants.UserKeys.USER_NAME, ApplicationConstants.EMPTY_STRING);
+        //return prefs.getString(ApplicationConstants.UserKeys.USER_NAME, ApplicationConstants.EMPTY_STRING);
+        return prefs.getString(ApplicationConstants.UserKeys.USER_NAME, "wesb");
     }
 
     public String getPassword() {
         SharedPreferences prefs = getOpenMRSSharedPreferences();
-        return prefs.getString(ApplicationConstants.UserKeys.PASSWORD, ApplicationConstants.EMPTY_STRING);
+        //return prefs.getString(ApplicationConstants.UserKeys.PASSWORD, ApplicationConstants.EMPTY_STRING);
+        return prefs.getString(ApplicationConstants.UserKeys.PASSWORD, "Wonder1land");
     }
 
     public String getServerUrl() {

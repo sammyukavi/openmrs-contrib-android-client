@@ -5,9 +5,11 @@ import android.support.annotation.Nullable;
 
 import com.google.common.base.Supplier;
 
-import org.openmrs.mobile.data.rest.GenericObjectRestService;
+import org.openmrs.mobile.data.rest.RestConstants;
 import org.openmrs.mobile.data.rest.RestServiceBuilder;
 import org.openmrs.mobile.models.BaseOpenmrsObject;
+import org.openmrs.mobile.models.Patient;
+import org.openmrs.mobile.models.Results;
 
 import java.util.List;
 
@@ -17,26 +19,47 @@ import retrofit2.Response;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public abstract class BaseDataService<E extends BaseOpenmrsObject> implements DataService<E> {
-    protected GenericObjectRestService<E> restService;
+public abstract class BaseDataService<E extends BaseOpenmrsObject, S> implements DataService<E> {
+    protected S restService;
 
     protected BaseDataService() {
         restService = RestServiceBuilder.createService(getRestServiceClass());
     }
 
-    protected abstract Class<? extends GenericObjectRestService<E>> getRestServiceClass();
+    /**
+     * Gets the rest service class defined by the implementing class.
+     * @return The rest service class
+     */
+    protected abstract Class<S> getRestServiceClass();
 
+    /**
+     * Gets the rest path for the specific entity.
+     * @return The rest path
+     */
     protected abstract String getRestPath();
 
+    /**
+     * Gets the entity name used for rest calls for the specific entity.
+     * @return The entity name
+     */
     protected abstract String getEntityName();
 
+    protected abstract Call<E> _restGetByUuid(String restPath, String uuid, String representation);
+
+    protected abstract Call<Results<E>> _restGetAll(String restPath, PagingInfo pagingInfo, String representation);
+
+    protected abstract Call<E> _restCreate(String restPath, E entity);
+
+    protected abstract Call<E> _restUpdate(String restPath, E entity);
+
+    protected abstract Call<E> _restPurge(String restPath, String uuid);
 
     @Override
     public void getByUUID(@NonNull String uuid, @NonNull GetSingleCallback<E> callback) {
         checkNotNull(uuid);
         checkNotNull(callback);
 
-        executeSingleCallback(callback, () -> restService.getByUuid(buildRestRequestPath(), uuid));
+        executeSingleCallback(callback, () -> _restGetByUuid(buildRestRequestPath(), uuid, RestConstants.Representations.FULL));
 
         // Build local query
         // Build REST query
@@ -53,7 +76,8 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject> implements Da
                        @NonNull GetMultipleCallback<E> callback) {
         checkNotNull(callback);
 
-        executeMultipleCallback(callback, pagingInfo, () -> restService.getAll(buildRestRequestPath()));
+        executeMultipleCallback(callback, pagingInfo, () -> _restGetAll(buildRestRequestPath(),
+                pagingInfo, RestConstants.Representations.FULL));
     }
 
     @Override
@@ -63,35 +87,19 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject> implements Da
     }
 
     @Override
-    public void save(@NonNull E entity, @NonNull GetSingleCallback<E> callback) {
+    public void create(@NonNull E entity, @NonNull GetSingleCallback<E> callback) {
         checkNotNull(entity);
         checkNotNull(callback);
 
-        // Figure out if entity is new
-
-        executeSingleCallback(callback, () -> restService.create(buildRestRequestPath(), entity));
+        executeSingleCallback(callback, () -> _restCreate(buildRestRequestPath(), entity));
     }
 
     @Override
-    public void deactivate(@NonNull E entity, @NonNull GetSingleCallback<E> callback) {
+    public void update(@NonNull E entity, @NonNull GetSingleCallback<E> callback) {
         checkNotNull(entity);
         checkNotNull(callback);
 
-        entity.setActive(false);
-
-        executeSingleCallback(callback,
-                () -> restService.update(buildRestRequestPath(), entity.getUuid(), entity));
-    }
-
-    @Override
-    public void activate(@NonNull E entity, @NonNull GetSingleCallback<E> callback) {
-        checkNotNull(entity);
-        checkNotNull(callback);
-
-        entity.setActive(true);
-
-        executeSingleCallback(callback,
-                () -> restService.update(buildRestRequestPath(), entity.getUuid(), entity));
+        executeSingleCallback(callback, () -> _restUpdate(buildRestRequestPath(), entity));
     }
 
     @Override
@@ -99,9 +107,13 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject> implements Da
         checkNotNull(entity);
         checkNotNull(callback);
 
-        executeVoidCallback(callback, () -> restService.purge(buildRestRequestPath(), entity.getUuid()));
+        executeVoidCallback(callback, () -> _restPurge(buildRestRequestPath(), entity.getUuid()));
     }
 
+    /**
+     * Helper method to build the rest request path.
+     * @return The rest request path
+     */
     protected String buildRestRequestPath() {
         return getRestPath() + "/" + getEntityName();
     }
@@ -121,15 +133,15 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject> implements Da
     }
 
     protected void executeMultipleCallback(GetMultipleCallback<E> callback, PagingInfo pagingInfo,
-                                           Supplier<Call<List<E>>> supplier) {
-        supplier.get().enqueue(new Callback<List<E>>() {
+                                           Supplier<Call<Results<E>>> supplier) {
+        supplier.get().enqueue(new Callback<Results<E>>() {
             @Override
-            public void onResponse(Call<List<E>> call, Response<List<E>> response) {
-                callback.onCompleted(response.body());
+            public void onResponse(Call<Results<E>> call, Response<Results<E>> response) {
+                callback.onCompleted(response.body().getResults());
             }
 
             @Override
-            public void onFailure(Call<List<E>> call, Throwable t) {
+            public void onFailure(Call<Results<E>> call, Throwable t) {
                 callback.onError(t);
             }
         });
@@ -147,6 +159,14 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject> implements Da
                 callback.onError(t);
             }
         });
+    }
+
+    protected boolean isPagingValid(PagingInfo pagingInfo) {
+        if (pagingInfo == null || pagingInfo.getPage() == 0) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }
 

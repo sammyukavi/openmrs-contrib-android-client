@@ -3,22 +3,20 @@ package org.openmrs.mobile.data;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import org.openmrs.mobile.data.rest.GenericEntityRestService;
+import org.openmrs.mobile.data.rest.RestConstants;
 import org.openmrs.mobile.models.BaseOpenmrsEntity;
 import org.openmrs.mobile.models.Patient;
+import org.openmrs.mobile.models.Results;
+
+import retrofit2.Call;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public abstract class BaseEntityDataService<E extends BaseOpenmrsEntity> extends BaseDataService<E>
+public abstract class BaseEntityDataService<E extends BaseOpenmrsEntity ,S> extends BaseDataService<E, S>
         implements EntityDataService<E> {
 
-    protected GenericEntityRestService<E> entityRestService;
-
-    protected BaseEntityDataService() {
-        super();
-
-        entityRestService = (GenericEntityRestService<E>)restService;
-    }
+    protected abstract Call<Results<E>> _restGetByPatient(String restPath, PagingInfo pagingInfo, String patientUuid,
+                                                          String representation);
 
     @Override
     public void getByPatient(@NonNull Patient patient, boolean includeInactive,
@@ -28,6 +26,6 @@ public abstract class BaseEntityDataService<E extends BaseOpenmrsEntity> extends
         checkNotNull(callback);
 
         executeMultipleCallback(callback, pagingInfo,
-                () -> entityRestService.getByPatient(buildRestRequestPath(), patient.getUuid()));
+                () -> _restGetByPatient(buildRestRequestPath(), pagingInfo, patient.getUuid(), RestConstants.Representations.FULL));
     }
 }

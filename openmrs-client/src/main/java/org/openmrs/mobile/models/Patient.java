@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Patient extends Resource implements Serializable{
+public class Patient extends BaseOpenmrsAuditableObject implements Serializable{
 
     private Long id;
     private String encounters = "";

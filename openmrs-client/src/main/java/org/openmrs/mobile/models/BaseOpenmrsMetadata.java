@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class BaseOpenmrsMetadata extends BaseOpenmrsObject implements Serializable{
+public class BaseOpenmrsMetadata extends BaseOpenmrsAuditableObject implements Serializable{
     @SerializedName("name")
     @Expose
     private String name;

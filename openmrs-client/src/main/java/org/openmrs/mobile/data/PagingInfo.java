@@ -7,8 +7,6 @@ package org.openmrs.mobile.data;
 public class PagingInfo {
     private int page;
     private int pageSize;
-    private Long totalRecordCount;
-    private boolean loadRecordCount;
 
     public PagingInfo() {}
 
@@ -20,8 +18,6 @@ public class PagingInfo {
     public PagingInfo(int page, int pageSize) {
         this.page = page;
         this.pageSize = pageSize;
-
-        this.loadRecordCount = true;
     }
 
     public int getPage() {
@@ -40,26 +36,11 @@ public class PagingInfo {
         this.pageSize = pageSize;
     }
 
-    public Long getTotalRecordCount() {
-        return totalRecordCount;
+    public int getLimit() {
+        return pageSize;
     }
 
-    public void setTotalRecordCount(Long totalRecordCount) {
-        this.totalRecordCount = totalRecordCount;
-
-        // If the total records is set to anything other than null, than don't reload the count
-        this.loadRecordCount = totalRecordCount == null;
-    }
-
-    public boolean shouldLoadRecordCount() {
-        return loadRecordCount;
-    }
-
-    public void setLoadRecordCount(boolean loadRecordCount) {
-        this.loadRecordCount = loadRecordCount;
-    }
-
-    public Boolean hasMoreResults() {
-        return (page * pageSize) < totalRecordCount;
+    public int getStartIndex() {
+        return (pageSize * page) - 1;
     }
 }

@@ -10,6 +10,7 @@ import com.google.gson.GsonBuilder;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Resource;
+import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.ObservationDeserializer;
 import org.openmrs.mobile.utilities.ResourceSerializer;
 import org.openmrs.mobile.utilities.StringUtils;
@@ -30,6 +31,7 @@ public class RestServiceBuilder {
 
     static {
         builder = new Retrofit.Builder()
+                .baseUrl(ApplicationConstants.DEFAULT_OPEN_MRS_URL)
                 .addConverterFactory(buildGsonConverter())
                 .client((httpClient).build());
     }
@@ -56,7 +58,7 @@ public class RestServiceBuilder {
         httpClient.addInterceptor(chain -> {
             Request original = chain.request();
 
-            // Inject the host
+            /* Inject the host
             if (StringUtils.notEmpty(host)) {
                 HttpUrl newUrl = original.url().newBuilder()
                         .host(host)
@@ -65,6 +67,7 @@ public class RestServiceBuilder {
                         .url(newUrl)
                         .build();
             }
+            //*/
 
             // Inject the credentials into the request
             Request.Builder requestBuilder = original.newBuilder()
@@ -87,6 +90,7 @@ public class RestServiceBuilder {
     }
 
     public static <S> S createService(Class<S> serviceClass) {
-        return createService(serviceClass, app.getServerUrl(), app.getUsername(), app.getPassword());
+        //return createService(serviceClass, app.getServerUrl(), app.getUsername(), app.getPassword());
+        return createService(serviceClass, "", "wesb", "Wonder1land");
     }
 }

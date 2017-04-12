@@ -8,7 +8,7 @@ import android.support.annotation.Nullable;
 import java.util.List;
 
 /**
- * Represents classes that provide data services to load entity data.
+ * Represents classes that provide data services for {@link BaseOpenmrsObject} objects.
  * @param <E> The entity class
  */
 public interface DataService<E extends BaseOpenmrsObject> {
@@ -73,20 +73,43 @@ public interface DataService<E extends BaseOpenmrsObject> {
     void getByUUID(@NonNull String uuid, @NonNull GetSingleCallback<E> callback);
 
     /**
-     *
-     * @param includeInactive
-     * @param pagingInfo
+     * Gets all entities.
+     * @param includeInactive {@code true} to include inactive entities; otherwise, {@code false}
+     * @param pagingInfo The paging information or null to exclude paging
      * @param callback
      */
     void getAll(boolean includeInactive, @Nullable PagingInfo pagingInfo,
                 @NonNull GetMultipleCallback<E> callback);
 
+    /**
+     * Performs a template-based search. Doesn't actually work at this point, unless you search
+     * for something which should return no results.
+     * @param template The entity template to create the search values from
+     * @param pagingInfo The paging information or null to exclude paging
+     * @param callback
+     */
     void search(@NonNull E template, @Nullable PagingInfo pagingInfo,
                 @NonNull GetMultipleCallback<E> callback);
 
-    void save(@NonNull E entity, @NonNull GetSingleCallback<E> callback);
-    void deactivate(@NonNull E entity, @NonNull GetSingleCallback<E> callback);
-    void activate(@NonNull E entity, @NonNull GetSingleCallback<E> callback);
+    /**
+     * Saves a newly created entity.
+     * @param entity The new entity to save
+     * @param callback
+     */
+    void create(@NonNull E entity, @NonNull GetSingleCallback<E> callback);
+
+    /**
+     * Saves an updated entity.
+     * @param entity The entity to save
+     * @param callback
+     */
+    void update(@NonNull E entity, @NonNull GetSingleCallback<E> callback);
+
+    /**
+     * Completely deletes the entity.
+     * @param entity The entity to purge
+     * @param callback
+     */
     void purge(@NonNull E entity, @NonNull VoidCallback callback);
 }
 

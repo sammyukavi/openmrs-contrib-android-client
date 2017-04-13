@@ -15,6 +15,7 @@ package org.openmrs.mobile.activities.patientlist;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.Menu;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
@@ -29,7 +30,10 @@ public class PatientListActivity extends ACBaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getLayoutInflater().inflate(R.layout.activity_patient_list, frameLayout);
+        setTitle(R.string.nav_patient_lists);
 
+        // create fragment
         PatientListFragment patientListFragment =
                 (PatientListFragment) getSupportFragmentManager().findFragmentById(R.id.patientListContentFrame);
         if(patientListFragment == null){
@@ -42,5 +46,14 @@ public class PatientListActivity extends ACBaseActivity {
         }
 
         patientListPresenter = new PatientListPresenter(patientListFragment);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return true;
     }
 }

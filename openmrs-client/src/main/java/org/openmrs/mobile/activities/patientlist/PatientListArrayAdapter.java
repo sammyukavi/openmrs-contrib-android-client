@@ -14,11 +14,13 @@
 package org.openmrs.mobile.activities.patientlist;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import org.openmrs.mobile.R;
 import org.openmrs.mobile.models.PatientList;
 
 import java.util.List;
@@ -32,19 +34,20 @@ public class PatientListArrayAdapter extends ArrayAdapter<PatientList> {
         super(context, android.R.layout.simple_spinner_item, patientLists);
     }
 
+
+
     @Override
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
-        View view;
-        if (position == 0) {
-            TextView textView = new TextView(getContext());
-            textView.setHeight(0);
-            textView.setVisibility(View.GONE);
-            view = textView;
+        // retrieve patient list
+        PatientList patientList = getItem(position);
+
+        if(convertView == null){
+            convertView = LayoutInflater.from(this.getContext()).inflate(R.layout.list_item_patient_list, parent, false);
         }
-        else {
-            view = super.getDropDownView(position, null, parent);
-        }
-        parent.setVerticalScrollBarEnabled(false);
-        return view;
+
+        TextView patientListName = (TextView) convertView.findViewById(R.id.patientListName);
+        patientListName.setText(patientList.getName());
+
+        return convertView;
     }
 }

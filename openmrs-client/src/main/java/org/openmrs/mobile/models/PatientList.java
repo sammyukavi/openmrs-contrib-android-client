@@ -103,4 +103,9 @@ public class PatientList extends Resource{
     public void setBodyTemplate(String bodyTemplate) {
         this.bodyTemplate = bodyTemplate;
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

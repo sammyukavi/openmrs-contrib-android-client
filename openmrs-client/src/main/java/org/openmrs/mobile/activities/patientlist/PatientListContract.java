@@ -14,6 +14,7 @@
 package org.openmrs.mobile.activities.patientlist;
 
 import org.openmrs.mobile.activities.BasePresenter;
+import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
 import org.openmrs.mobile.models.PatientList;
 import org.openmrs.mobile.models.PatientListContextModel;
@@ -37,8 +38,10 @@ public interface PatientListContract {
         boolean isActive();
     }
 
-    interface Presenter extends BasePresenter{
+    interface Presenter extends BasePresenterContract{
 
         void refresh();
+
+        void getPatientListData(String patientListUuid, int startIndex, int limit);
     }
 }

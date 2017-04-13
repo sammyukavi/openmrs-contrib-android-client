@@ -13,7 +13,7 @@
  */
 package org.openmrs.mobile.api.retrofit;
 
-import org.openmrs.mobile.api.PatientListRestApi;
+import org.openmrs.mobile.api.RestApi;
 import org.openmrs.mobile.api.RestServiceBuilder;
 import org.openmrs.mobile.listeners.retrofit.PatientListCallbackListener;
 import org.openmrs.mobile.models.PatientList;
@@ -30,7 +30,7 @@ import retrofit2.Response;
 
 public class PatientListApi extends RetrofitApi{
 
-    private PatientListRestApi apiService = RestServiceBuilder.createService(PatientListRestApi.class);
+    private RestApi apiService = RestServiceBuilder.createService(RestApi.class);
 
     /**
      * Synchronously get patient lists

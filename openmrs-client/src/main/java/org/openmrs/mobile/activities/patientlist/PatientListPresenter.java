@@ -15,11 +15,13 @@ package org.openmrs.mobile.activities.patientlist;
 
 import android.support.annotation.NonNull;
 
-import org.openmrs.mobile.api.PatientListRestApi;
+import org.openmrs.mobile.activities.BasePresenter;
+import org.openmrs.mobile.api.RestApi;
 import org.openmrs.mobile.api.RestServiceBuilder;
 import org.openmrs.mobile.models.PatientList;
 import org.openmrs.mobile.models.PatientListContextModel;
 import org.openmrs.mobile.models.Results;
+import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.StringUtils;
 
 import java.util.List;
@@ -28,33 +30,36 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class PatientListPresenter implements PatientListContract.Presenter {
+public class PatientListPresenter extends BasePresenter implements PatientListContract.Presenter {
 
     @NonNull
     private PatientListContract.View patientListView;
 
-    private PatientListRestApi restApi;
+    private RestApi restApi;
 
     private String patientListUuid;
 
     public PatientListPresenter(@NonNull PatientListContract.View patientListView) {
         this.patientListView = patientListView;
-        this.restApi = RestServiceBuilder.createService(PatientListRestApi.class);
+        this.patientListView.setPresenter(this);
+        this.restApi = RestServiceBuilder.createService(RestApi.class);
     }
 
-    public PatientListPresenter(@NonNull PatientListContract.View patientListView, PatientListRestApi restApi) {
+    public PatientListPresenter(@NonNull PatientListContract.View patientListView, RestApi restApi) {
         this.patientListView = patientListView;
+        this.patientListView.setPresenter(this);
         this.restApi = restApi;
     }
 
     @Override
-    public void start() {
+    public void subscribe() {
         // get all patient lists
         getPatientList();
     }
 
     public void getPatientList(){
         setViewBeforeGetPatientList();
+        RestServiceBuilder.changeEndPoint(ApplicationConstants.API.REST_ENDPOINT_V2);
         Call<Results<PatientList>> call = restApi.getPatientLists();
         call.enqueue(new Callback<Results<PatientList>>() {
             @Override
@@ -75,8 +80,10 @@ public class PatientListPresenter implements PatientListContract.Presenter {
         });
     }
 
+    @Override
     public void getPatientListData(String patientListUuid, int startIndex, int limit){
         Call<Results<PatientListContextModel>> call = restApi.getPatientListData(patientListUuid, startIndex, limit);
+        RestServiceBuilder.changeEndPoint(ApplicationConstants.API.REST_ENDPOINT_V2);
         call.enqueue(new Callback<Results<PatientListContextModel>>() {
             @Override
             public void onResponse(Call<Results<PatientListContextModel>> call, Response<Results<PatientListContextModel>> response) {
@@ -95,6 +102,7 @@ public class PatientListPresenter implements PatientListContract.Presenter {
 
     @Override
     public void refresh() {
+        getPatientList();
         if(StringUtils.notEmpty(patientListUuid)){
             getPatientListData(patientListUuid, 1, 5);
         } else {

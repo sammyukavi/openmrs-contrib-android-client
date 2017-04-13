@@ -21,6 +21,8 @@ import org.openmrs.mobile.models.Module;
 import org.openmrs.mobile.models.Obscreate;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
+import org.openmrs.mobile.models.PatientList;
+import org.openmrs.mobile.models.PatientListContextModel;
 import org.openmrs.mobile.models.PatientPhoto;
 import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.models.Session;
@@ -107,17 +109,17 @@ public interface RestApi {
 
     @GET("visit")
     Call<Results<Visit>> findVisitsByPatientUUID(@Query("patient") String patientUUID,
-                                        @Query("v") String representation);
+                                                 @Query("v") String representation);
 
     @GET("visittype")
     Call<Results<VisitType>> getVisitType();
 
     @GET("encounter")
     Call<Results<Encounter>> getLastVitals(@Query("patient") String patientUUID,
-                                  @Query("encounterType") String encounterType,
-                                  @Query("v") String representation,
-                                  @Query("limit") int limit,
-                                  @Query("order") String order);
+                                           @Query("encounterType") String encounterType,
+                                           @Query("v") String representation,
+                                           @Query("limit") int limit,
+                                           @Query("order") String order);
 
     @POST("patient/{uuid}")
     Call<Patient> updatePatient(@Body Patient patient, @Path("uuid") String uuid,
@@ -131,5 +133,13 @@ public interface RestApi {
 
     @GET("user/{uuid}")
     Call<User> getFullUserInfo(@Path("uuid") String uuid);
+
+    @GET("patientlist/list")
+    Call<Results<PatientList>> getPatientLists();
+
+    @GET("patientlist/data")
+    Call<Results<PatientListContextModel>> getPatientListData(@Query("uuid") String uuid,
+                                                              @Query("startIndex") int startIndex,
+                                                              @Query("limit") int limit);
 
 }

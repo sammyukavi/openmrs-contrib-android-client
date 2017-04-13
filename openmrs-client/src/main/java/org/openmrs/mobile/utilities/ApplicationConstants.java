@@ -34,7 +34,8 @@ public abstract class ApplicationConstants {
     }
 
     public abstract static class API {
-        public static final String REST_ENDPOINT = "/ws/rest/v2/";
+        public static final String REST_ENDPOINT = "/ws/rest/v1/";
+        public static final String REST_ENDPOINT_V2 = "/ws/rest/v2/";
         public static final String FULL = "full";
     }
 
@@ -101,7 +102,7 @@ public abstract class ApplicationConstants {
     }
 
     public abstract static class Tags {
-        public static final String PATIENT_DATA = "patient_data";
+        public static final String PATIENT_ID = "patient_ID";
     }
 
 }

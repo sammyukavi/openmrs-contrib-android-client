@@ -13,38 +13,36 @@
  */
 package org.openmrs.mobile.activities.patientlist;
 
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.AdapterView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import org.openmrs.mobile.R;
+import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.models.PatientList;
 import org.openmrs.mobile.models.PatientListContextModel;
+import org.openmrs.mobile.utilities.FontsUtil;
 
 import java.util.List;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Main Patient List UI screen.
  */
-public class PatientListFragment extends Fragment implements PatientListContract.View{
-
-    private PatientListContract.Presenter patientListPresenter;
+public class PatientListFragment extends ACBaseFragment<PatientListContract.Presenter> implements PatientListContract.View{
 
     private ProgressBar patientListSpinner;
     private Spinner patientListDropdown;
-    private LinearLayout patientListLayout;
     private TextView emptyPatientList;
     private PatientListArrayAdapter patientListAdapter;
+    private RecyclerView patientListModelRecyclerView;
 
     public static PatientListFragment newInstance(){
         return new PatientListFragment();
@@ -56,15 +54,16 @@ public class PatientListFragment extends Fragment implements PatientListContract
         View root = inflater.inflate(R.layout.fragment_patient_list, container, false);
         patientListSpinner = (ProgressBar) root.findViewById(R.id.patientListLoadingProgressBar);
         patientListDropdown = (Spinner) root.findViewById(R.id.patientListDropdown);
-        patientListLayout = (LinearLayout) root.findViewById(R.id.patientListDataLayout);
         emptyPatientList = (TextView) root.findViewById(R.id.emptyPatientList);
 
-        return root;
-    }
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getActivity());
+        patientListModelRecyclerView = (RecyclerView) root.findViewById(R.id.patientListModelRecyclerView);
+        patientListModelRecyclerView.setLayoutManager(linearLayoutManager);
 
-    @Override
-    public void setPresenter(@NonNull PatientListContract.Presenter patientListPresenter) {
-        this.patientListPresenter = checkNotNull(patientListPresenter);
+        // Font config
+        FontsUtil.setFont((ViewGroup) this.getActivity().findViewById(android.R.id.content));
+
+        return root;
     }
 
     @Override
@@ -73,14 +72,27 @@ public class PatientListFragment extends Fragment implements PatientListContract
     }
 
     @Override
-    public void updatePatientLists(List<PatientList> patientList) {
-        patientListAdapter = new PatientListArrayAdapter(this.getActivity(), patientList);
+    public void updatePatientLists(List<PatientList> patientLists) {
+        patientListAdapter = new PatientListArrayAdapter(this.getActivity(), patientLists);
         patientListDropdown.setAdapter(patientListAdapter);
+        patientListDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                PatientList patientList = patientLists.get(position);
+                mPresenter.getPatientListData(patientList.getUuid(), 1, 10);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     @Override
     public void updatePatientListData(List<PatientListContextModel> patientListData) {
-
+        PatientListModelRecyclerViewAdapter adapter = new PatientListModelRecyclerViewAdapter(this.getActivity(), patientListData, this);
+        patientListModelRecyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -91,7 +103,7 @@ public class PatientListFragment extends Fragment implements PatientListContract
     @Override
     public void setSpinnerVisibility(boolean visibility) {
         patientListSpinner.setVisibility(visibility ? View.VISIBLE : View.GONE);
-        patientListLayout.setVisibility(visibility ? View.GONE : View.VISIBLE);
+        //patientListLayout.setVisibility(visibility ? View.GONE : View.VISIBLE);
     }
 
     @Override

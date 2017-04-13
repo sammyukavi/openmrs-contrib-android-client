@@ -42,6 +42,14 @@ public class Person extends Resource implements Serializable {
 
     private Bitmap photo;
 
+    @SerializedName("deathDate")
+    @Expose
+    private String deathDate;
+
+    @SerializedName("age")
+    @Expose
+    private Integer age;
+
     /**
      * 
      * @return
@@ -174,5 +182,21 @@ public class Person extends Resource implements Serializable {
 
     public void setPhoto(Bitmap patientPhoto) {
         this.photo = patientPhoto;
+    }
+
+    public String getDeathDate() {
+        return deathDate;
+    }
+
+    public void setDeathDate(String deathDate) {
+        this.deathDate = deathDate;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public Integer getAge() {
+        return age;
     }
 }

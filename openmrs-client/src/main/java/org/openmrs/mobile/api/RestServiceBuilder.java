@@ -104,4 +104,12 @@ public class RestServiceBuilder {
                 .addConverterFactory(buildGsonConverter());
     }
 
+    public static void changeEndPoint(String endPoint){
+        API_BASE_URL = mOpenMRS.getServerUrl() + endPoint;
+
+        builder = new Retrofit.Builder()
+                .baseUrl(API_BASE_URL)
+                .addConverterFactory(buildGsonConverter());
+    }
+
 }

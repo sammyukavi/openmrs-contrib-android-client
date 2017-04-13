@@ -18,7 +18,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.openmrs.mobile.activities.patientlist.PatientListContract;
 import org.openmrs.mobile.activities.patientlist.PatientListPresenter;
-import org.openmrs.mobile.api.PatientListRestApi;
+import org.openmrs.mobile.api.RestApi;
 import org.openmrs.mobile.listeners.retrofit.PatientListCallbackListener;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.PatientList;
@@ -42,7 +42,7 @@ import static org.mockito.Mockito.when;
 public class PatientListTest extends ACUnitTestBase{
 
     @Mock
-    private PatientListRestApi restService;
+    private RestApi restService;
 
     @Mock
     private PatientListContract.View patientListView;

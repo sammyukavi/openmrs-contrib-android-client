@@ -15,7 +15,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class PersonAttribute implements Serializable {
+public class PersonAttribute extends BaseOpenmrsObject implements Serializable {
 
     @SerializedName("attributeType")
     @Expose

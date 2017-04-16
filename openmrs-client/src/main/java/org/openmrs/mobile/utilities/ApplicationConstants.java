@@ -27,7 +27,7 @@ public abstract class ApplicationConstants {
 	public static final String VISIT_TYPE_UUID = "visit_type_uuid";
 	public static final String LAST_SESSION_TOKEN = "last_session_id";
 	public static final String LAST_LOGIN_SERVER_URL = "last_login_server_url";
-	public static final String DEFAULT_OPEN_MRS_URL = "http://192.168.2.32:8080/openmrs"; //discuss on using the openhmis
+	public static final String DEFAULT_OPEN_MRS_URL = "http://192.168.2.34:9997/openmrs"; //discuss on using the openhmis
 	// demo as the main test server to avoid changes here.
 	
 	public abstract static class OpenMRSSharedPreferenceNames {

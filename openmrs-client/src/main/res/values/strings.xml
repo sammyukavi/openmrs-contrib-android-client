@@ -39,17 +39,25 @@
 	<string name="reg_firstname_hint">Given Name</string>
 	<string name="reg_midname_hint">Middle Name</string>
 	<string name="reg_surname_hint">Family Name</string>
+	<string name="reg_file_hint">File Number</string>
 	<string name="phone_hint">Phone Number</string>
+	<string name="civil_status_hint">Civil Status</string>
+	<string name="occupation_hint">Occupation</string>
 	<string name="reg_ques_name">What\'s the patient\'s name?</string>
+	<string name="reg_file_number">What\'s the patient\'s File Number?</string>
 	<string name="reg_ques_gender">What\'s the patient\'s gender?</string>
 	<string name="reg_ques_dob">What\'s the patient\'s birth date?</string>
+	<string name="reg_civil_status">What\'s the patient\'s civil status?</string>
+	<string name="reg_occupation">What\'s the patient\'s occupation?</string>
 	<string name="label_or">Or</string>
 	<string name="reg_ques_phno">Phone number</string>
-	<string name="reg_ques_address">Address</string>
-	<string name="addr1_hint">Address</string>
+	<string name="reg_address">Address</string>
+	<string name="reg_nationality">Nationality</string>
+	<string name="reg_ward">Ward</string>
+	<string name="reg_clinic">Clinic</string>
+	<string name="emergency_contact">Emergency Contact</string>
 	<string name="addr2_hint">Address 2</string>
 	<string name="atleastone">Fill at least one field</string>
-	<string name="incorrect_country">Country name is incorrect</string>
 	
 	<string name="male">Male</string>
 	<string name="female">Female</string>
@@ -57,6 +65,10 @@
 	<string name="estyr">Estimated Years</string>
 	<string name="estmonth">Estimated Months</string>
 	<string name="capture_photo">Capture photo</string>
+	<string name="civilStatus">Civil Status</string>
+	<string name="occupation">Occupation</string>
+	<string name="county">County</string>
+	<string name="sub_county">Sub County</string>
 	
 	<!-- Offline Mode -->
 	<string name="offline_mode_unsupported_in_first_login">Offline mode is not supported during first login.Enable online mode and then try again.</string>
@@ -172,11 +184,17 @@
 	<string name="patient_address_info_label">Contact Information</string>
 	<string name="patient_information_label">Patient Information</string>
 	<string name="patient_address_label">Address</string>
-	<string name="patient_city_label">City</string>
-	<string name="patient_postal_label">Postal Code</string>
+	<string name="patient_clinic">Clinic</string>
+	<string name="patient_ward">Ward</string>
 	<string name="patient_state_label">State</string>
-	<string name="patient_country_label">Country</string>
-	<string name="patient_photo_edit">Update photo</string>
+	<string name="patient_Id_number">Patient Id No.</string>
+	<string name="patient_kin_name">Next of Kin name</string>
+	<string name="kin_relationship">Relationship</string>
+	<string name="kin_phoennumber">Kin Phonenumber</string>
+	<string name="kin_residence">Residence</string>
+	<string name="encounter_date">Date</string>
+	<string name="encounter_dept">Department</string>
+	<string name="encounter_provider">Provider</string>
 	<!-- Find Active visit activity -->
 	<string name="action_active_visits">Active Visits</string>
 	<string name="action_form_entry">Form Entry</string>
@@ -343,6 +361,9 @@
 	<!-- fragment_patient_details layout -->
 	<string name="patient_identifier"># %1$s</string>
 	<string name="patient_contact_info_label">Contact Information</string>
+	<string name="patient_emergency_contact_info_label">Emergency Contact Information</string>
+	<string name="patient_encounter_information_label">Encounter Information</string>
+	<string name="encounter_label">Encounter</string>
 	
 	<!--Matching Patient Activity-->
 	<string name="matching_patients_toolbar_title">Merge Patients</string>

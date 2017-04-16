@@ -31,7 +31,10 @@ public interface AddEditPatientContract {
 		                         boolean dayOfBirthError,
 		                         boolean addressError,
 		                         boolean countryError,
-		                         boolean genderError);
+		                         boolean genderError,
+		                         boolean patientFileNumberError,
+									boolean civilStatusError,
+									boolean occupationError);
 		
 		void scrollToTop();
 		
@@ -41,7 +44,7 @@ public interface AddEditPatientContract {
 		
 		void showSimilarPatientDialog(List<Patient> patients, Patient newPatient);
 		
-		void startPatientDashbordActivity(Patient patient);
+		void startPatientDashboardActivity(Patient patient);
 		
 		void showUpgradeRegistrationModuleInfo();
 	}

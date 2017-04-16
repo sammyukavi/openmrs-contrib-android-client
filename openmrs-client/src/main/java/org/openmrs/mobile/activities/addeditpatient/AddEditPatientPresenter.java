@@ -37,19 +37,19 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class AddEditPatientPresenter extends BasePresenter implements AddEditPatientContract.Presenter {
-	
+
 	private final AddEditPatientContract.View mPatientInfoView;
-	
+
 	private PatientApi patientApi;
 	private RestApi restApi;
 	private Patient mPatient;
 	private String patientToUpdateId;
 	private List<String> mCountries;
 	private boolean registeringPatient = false;
-	
+
 	public AddEditPatientPresenter(AddEditPatientContract.View mPatientInfoView,
-	                               List<String> countries,
-	                               String patientToUpdateId) {
+			List<String> countries,
+			String patientToUpdateId) {
 		this.mPatientInfoView = mPatientInfoView;
 		this.mPatientInfoView.setPresenter(this);
 		this.mCountries = countries;
@@ -57,10 +57,10 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		this.patientApi = new PatientApi();
 		this.restApi = RestServiceBuilder.createService(RestApi.class);
 	}
-	
+
 	public AddEditPatientPresenter(AddEditPatientContract.View mPatientInfoView, PatientApi patientApi,
-	                               Patient mPatient, String patientToUpdateId,
-	                               List<String> mCountries, RestApi restApi) {
+			Patient mPatient, String patientToUpdateId,
+			List<String> mCountries, RestApi restApi) {
 		this.mPatientInfoView = mPatientInfoView;
 		this.patientApi = patientApi;
 		this.mPatient = mPatient;
@@ -69,18 +69,18 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		this.restApi = restApi;
 		this.mPatientInfoView.setPresenter(this);
 	}
-	
+
 	@Override
 	public void subscribe() {
 		// This method is intentionally empty
 	}
-	
+
 	@Override
 	public Patient getPatientToUpdate() {
 		Patient patientToUpdate = new PatientDAO().findPatientByID(patientToUpdateId);
 		return patientToUpdate;
 	}
-	
+
 	@Override
 	public void confirmRegister(Patient patient) {
 		if (!registeringPatient && validate(patient)) {
@@ -92,7 +92,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 			mPatientInfoView.scrollToTop();
 		}
 	}
-	
+
 	@Override
 	public void confirmUpdate(Patient patient) {
 		if (!registeringPatient && validate(patient)) {
@@ -104,23 +104,27 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 			mPatientInfoView.scrollToTop();
 		}
 	}
-	
+
 	@Override
 	public void finishPatientInfoActivity() {
 		mPatientInfoView.finishPatientInfoActivity();
 	}
-	
+
 	private boolean validate(Patient patient) {
-		
+
 		boolean familyNameError = false;
 		boolean lastNameError = false;
 		boolean dateOfBirthError = false;
 		boolean genderError = false;
 		boolean addressError = false;
 		boolean countryError = false;
-		
-		mPatientInfoView.setErrorsVisibility(familyNameError, lastNameError, dateOfBirthError, genderError, addressError, countryError);
-		
+		boolean patientFileNumberError = false;
+		boolean civilStatusError = false;
+		boolean occupatioError = false;
+
+		mPatientInfoView.setErrorsVisibility(familyNameError, lastNameError, dateOfBirthError, genderError, addressError,
+				countryError, patientFileNumberError, civilStatusError, occupatioError);
+
 		// Validate names
 		if (StringUtils.isBlank(patient.getPerson().getName().getGivenName())) {
 			familyNameError = true;
@@ -128,52 +132,61 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		if (StringUtils.isBlank(patient.getPerson().getName().getFamilyName())) {
 			lastNameError = true;
 		}
-		
+
 		// Validate date of birth
 		if (StringUtils.isBlank(patient.getPerson().getBirthdate())) {
 			dateOfBirthError = true;
 		}
-		
+
 		// Validate address
 		if (StringUtils.isBlank(patient.getPerson().getAddress().getAddress1())
-		    && StringUtils.isBlank(patient.getPerson().getAddress().getAddress2())
-		    && StringUtils.isBlank(patient.getPerson().getAddress().getCityVillage())
-		    && StringUtils.isBlank(patient.getPerson().getAddress().getStateProvince())
-		    && StringUtils.isBlank(patient.getPerson().getAddress().getCountry())
-		    && StringUtils.isBlank(patient.getPerson().getAddress().getPostalCode())) {
+				&& StringUtils.isBlank(patient.getPerson().getAddress().getAddress2())
+				&& StringUtils.isBlank(patient.getPerson().getAddress().getCityVillage())
+				&& StringUtils.isBlank(patient.getPerson().getAddress().getStateProvince())
+				&& StringUtils.isBlank(patient.getPerson().getAddress().getCountry())
+				&& StringUtils.isBlank(patient.getPerson().getAddress().getPostalCode())) {
 			addressError = true;
 		}
-		
+
 		if (!StringUtils.isBlank(patient.getPerson().getAddress().getCountry()) &&
-		    !mCountries.contains(patient.getPerson().getAddress().getCountry())) {
+				!mCountries.contains(patient.getPerson().getAddress().getCountry())) {
 			countryError = true;
 		}
-		
+
 		// Validate gender
 		if (StringUtils.isBlank(patient.getPerson().getGender())) {
 			genderError = true;
 		}
-		
+
+		/*
+		* Validate File Number
+		* */
+		if (StringUtils.isBlank(patient.getIdentifier().toString())) {
+			patientFileNumberError = true;
+		}
+
 		boolean result =
-				!familyNameError && !lastNameError && !dateOfBirthError && !addressError && !countryError && !genderError;
+				!familyNameError && !lastNameError && !dateOfBirthError && !addressError && !countryError && !genderError
+						&& !patientFileNumberError;
 		if (result) {
 			mPatient = patient;
 			return true;
 		} else {
-			mPatientInfoView.setErrorsVisibility(familyNameError, lastNameError, dateOfBirthError, addressError, countryError, genderError);
+			mPatientInfoView.setErrorsVisibility(familyNameError, lastNameError, dateOfBirthError, addressError,
+					countryError, genderError, patientFileNumberError, civilStatusError, occupatioError);
 			return false;
 		}
 	}
-	
+
 	@Override
 	public void registerPatient() {
 		patientApi.registerPatient(mPatient, new DefaultResponseCallbackListener() {
 			@Override
 			public void onResponse() {
-				mPatientInfoView.startPatientDashbordActivity(mPatient);
+				mPatientInfoView.startPatientDashboardActivity(mPatient);
 				mPatientInfoView.finishPatientInfoActivity();
 			}
-			
+
 			@Override
 			public void onErrorResponse(String errorMessage) {
 				registeringPatient = false;
@@ -181,7 +194,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 			}
 		});
 	}
-	
+
 	@Override
 	public void updatePatient(Patient patient) {
 		patientApi.updatePatient(patient, new DefaultResponseCallbackListener() {
@@ -189,7 +202,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 			public void onResponse() {
 				mPatientInfoView.finishPatientInfoActivity();
 			}
-			
+
 			@Override
 			public void onErrorResponse(String errorMessage) {
 				registeringPatient = false;
@@ -197,7 +210,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 			}
 		});
 	}
-	
+
 	public void findSimilarPatients(final Patient patient) {
 		if (NetworkUtils.isOnline()) {
 			Call<Results<Module>> moduleCall = restApi.getModules(ApplicationConstants.API.FULL);
@@ -214,7 +227,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 						fetchSimilarPatientAndCalculateLocally(patient);
 					}
 				}
-				
+
 				@Override
 				public void onFailure(Call<Results<Module>> call, Throwable t) {
 					registeringPatient = false;
@@ -223,7 +236,8 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 				}
 			});
 		} else {
-	       /* List<Patient> similarPatient = new PatientComparator().findSimilarPatient(new PatientDAO().getAllPatients().toBlocking().first(), patient);
+		   /* List<Patient> similarPatient = new PatientComparator().findSimilarPatient(new PatientDAO().getAllPatients()
+		   .toBlocking().first(), patient);
             if(!similarPatient.isEmpty()){
                 mPatientInfoView.showSimilarPatientDialog(similarPatient, patient);
             } else {
@@ -231,9 +245,10 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
             }*/
 		}
 	}
-	
+
 	private void fetchSimilarPatientAndCalculateLocally(final Patient patient) {
-		Call<Results<Patient>> call = restApi.getPatients(patient.getPerson().getName().getGivenName(), ApplicationConstants.API.FULL);
+		Call<Results<Patient>> call =
+				restApi.getPatients(patient.getPerson().getName().getGivenName(), ApplicationConstants.API.FULL);
 		call.enqueue(new Callback<Results<Patient>>() {
 			@Override
 			public void onResponse(Call<Results<Patient>> call, Response<Results<Patient>> response) {
@@ -256,7 +271,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 					ToastUtil.error(response.message());
 				}
 			}
-			
+
 			@Override
 			public void onFailure(Call<Results<Patient>> call, Throwable t) {
 				registeringPatient = false;
@@ -265,7 +280,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 			}
 		});
 	}
-	
+
 	private void fetchSimilarPatientsFromServer(final Patient patient) {
 		Call<Results<Patient>> call = restApi.getSimilarPatients(patient.toMap());
 		call.enqueue(new Callback<Results<Patient>>() {
@@ -284,7 +299,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 					ToastUtil.error(response.message());
 				}
 			}
-			
+
 			@Override
 			public void onFailure(Call<Results<Patient>> call, Throwable t) {
 				registeringPatient = false;
@@ -293,10 +308,10 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 			}
 		});
 	}
-	
+
 	@Override
 	public boolean isRegisteringPatient() {
 		return registeringPatient;
 	}
-	
+
 }

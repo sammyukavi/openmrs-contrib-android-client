@@ -18,8 +18,8 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-@Table(name = "link")
-public class Link extends Model implements Serializable{
+//@Table(name = "link")
+public class Link implements Serializable{
 
     @Column
     @SerializedName("rel")

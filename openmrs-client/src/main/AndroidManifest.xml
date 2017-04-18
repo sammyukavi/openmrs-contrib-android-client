@@ -16,7 +16,6 @@
     <uses-feature
         android:name="android.hardware.camera.autofocus"
         android:required="false" />
-    <uses-sdk tools:overrideLibrary="com.github.clans.fab" />
 
     <application
         android:name=".application.OpenMRS"

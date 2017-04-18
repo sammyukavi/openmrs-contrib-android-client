@@ -45,7 +45,7 @@ public class FindPatient extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.nav_find_patient);
-        View view = inflater.inflate(R.layout.fragment_find_patient, container, false);
+        View view = inflater.inflate(R.layout.fragment_find_patient_record, container, false);
         patientsView = (RecyclerView) view.findViewById(R.id.patients_list);
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
         patientsView.setLayoutManager(llm);
@@ -61,7 +61,7 @@ public class FindPatient extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_home, menu);
+        inflater.inflate(R.menu.menu_find_patient_record, menu);
         MenuItem item = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
 

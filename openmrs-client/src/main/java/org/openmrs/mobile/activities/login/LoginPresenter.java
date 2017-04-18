@@ -212,7 +212,7 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
         loginView.showLocationLoadingAnimation();
 
         if (NetworkUtils.hasNetwork()) {
-            String locationEndPoint = url + ApplicationConstants.API.REST_ENDPOINT + "location";
+            String locationEndPoint = url + ApplicationConstants.API.REST_ENDPOINT_V1 + "location";
             Call<Results<Location>> call =
                     restApi.getLocations(locationEndPoint, "Login Location", "full");
             call.enqueue(new Callback<Results<Location>>() {

@@ -25,7 +25,7 @@ public interface PatientListContract {
 
     interface View extends BaseView<Presenter>{
 
-        PatientList getSelectedPatientList(int position);
+        void setSelectedPatientList(PatientList selectedPatientList);
 
         void setEmptyPatientListText(String text);
 
@@ -42,6 +42,10 @@ public interface PatientListContract {
 
         void refresh();
 
-        void getPatientListData(String patientListUuid, int startIndex, int limit);
+        void getPatientListData(String patientListUuid);
+
+        void setStartIndex(int startIndex);
+
+        void loadPreviousResults(String patientListUuid);
     }
 }

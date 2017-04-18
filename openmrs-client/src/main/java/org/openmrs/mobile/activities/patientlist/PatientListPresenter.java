@@ -22,7 +22,6 @@ import org.openmrs.mobile.models.PatientList;
 import org.openmrs.mobile.models.PatientListContextModel;
 import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.utilities.ApplicationConstants;
-import org.openmrs.mobile.utilities.StringUtils;
 
 import java.util.List;
 
@@ -37,7 +36,8 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 
     private RestApi restApi;
 
-    private String patientListUuid;
+    private int limit = 10;
+    private int startIndex = 0;
 
     public PatientListPresenter(@NonNull PatientListContract.View patientListView) {
         this.patientListView = patientListView;
@@ -58,6 +58,7 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
     }
 
     public void getPatientList(){
+        startIndex = 0;
         setViewBeforeGetPatientList();
         RestServiceBuilder.changeEndPoint(ApplicationConstants.API.REST_ENDPOINT_V2);
         Call<Results<PatientList>> call = restApi.getPatientLists();
@@ -81,7 +82,7 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
     }
 
     @Override
-    public void getPatientListData(String patientListUuid, int startIndex, int limit){
+    public void getPatientListData(String patientListUuid){
         Call<Results<PatientListContextModel>> call = restApi.getPatientListData(patientListUuid, startIndex, limit);
         RestServiceBuilder.changeEndPoint(ApplicationConstants.API.REST_ENDPOINT_V2);
         call.enqueue(new Callback<Results<PatientListContextModel>>() {
@@ -90,24 +91,36 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
                 if(response.isSuccessful()){
                     List<PatientListContextModel> results = response.body().getResults();
                     patientListView.updatePatientListData(results);
+                    computeStartIndex(response.body().getLength());
                 }
             }
 
             @Override
             public void onFailure(Call<Results<PatientListContextModel>> call, Throwable throwable) {
-
             }
         });
     }
 
     @Override
-    public void refresh() {
-        getPatientList();
-        if(StringUtils.notEmpty(patientListUuid)){
-            getPatientListData(patientListUuid, 1, 5);
-        } else {
-            getPatientList();
+    public void loadPreviousResults(String patientListUuid) {
+        startIndex -= limit;
+        getPatientListData(patientListUuid);
+    }
+
+    @Override
+    public void setStartIndex(int startIndex) {
+        this.startIndex = startIndex;
+    }
+
+    private void computeStartIndex(int totalNumResults){
+        if(startIndex + limit < totalNumResults){
+            startIndex += limit;
         }
+    }
+
+    @Override
+    public void refresh() {
+
     }
 
     private void setViewBeforeGetPatientList(){

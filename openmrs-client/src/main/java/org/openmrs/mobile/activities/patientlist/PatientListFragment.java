@@ -43,6 +43,37 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
     private TextView emptyPatientList;
     private PatientListArrayAdapter patientListAdapter;
     private RecyclerView patientListModelRecyclerView;
+    private LinearLayoutManager layoutManager;
+
+    private PatientList selectedPatientList;
+
+    private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
+
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            super.onScrollStateChanged(recyclerView, newState);
+        }
+
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+            if (!recyclerView.canScrollVertically(1)) {
+                // load next page
+                mPresenter.getPatientListData(selectedPatientList.getUuid());
+            }
+
+            if(!recyclerView.canScrollVertically(-1)){
+                // load previous page
+                mPresenter.loadPreviousResults(selectedPatientList.getUuid());
+            }
+        }
+    };
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        patientListModelRecyclerView.removeOnScrollListener(recyclerViewOnScrollListener);
+    }
 
     public static PatientListFragment newInstance(){
         return new PatientListFragment();
@@ -56,9 +87,9 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
         patientListDropdown = (Spinner) root.findViewById(R.id.patientListDropdown);
         emptyPatientList = (TextView) root.findViewById(R.id.emptyPatientList);
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getActivity());
+        layoutManager = new LinearLayoutManager(this.getActivity());
         patientListModelRecyclerView = (RecyclerView) root.findViewById(R.id.patientListModelRecyclerView);
-        patientListModelRecyclerView.setLayoutManager(linearLayoutManager);
+        patientListModelRecyclerView.setLayoutManager(layoutManager);
 
         // Font config
         FontsUtil.setFont((ViewGroup) this.getActivity().findViewById(android.R.id.content));
@@ -78,8 +109,9 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
         patientListDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                PatientList patientList = patientLists.get(position);
-                mPresenter.getPatientListData(patientList.getUuid(), 1, 10);
+                setSelectedPatientList(patientLists.get(position));
+                mPresenter.setStartIndex(0);
+                mPresenter.getPatientListData(selectedPatientList.getUuid());
             }
 
             @Override
@@ -90,20 +122,21 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
     }
 
     @Override
-    public void updatePatientListData(List<PatientListContextModel> patientListData) {
-        PatientListModelRecyclerViewAdapter adapter = new PatientListModelRecyclerViewAdapter(this.getActivity(), patientListData, this);
-        patientListModelRecyclerView.setAdapter(adapter);
+    public void setSelectedPatientList(PatientList selectedPatientList) {
+        this.selectedPatientList = selectedPatientList;
     }
 
     @Override
-    public PatientList getSelectedPatientList(int position) {
-        return patientListAdapter.getItem(position);
+    public void updatePatientListData(List<PatientListContextModel> patientListData) {
+        PatientListModelRecyclerViewAdapter adapter = new PatientListModelRecyclerViewAdapter(this.getActivity(), patientListData, this);
+        patientListModelRecyclerView.setAdapter(adapter);
+
+        patientListModelRecyclerView.addOnScrollListener(recyclerViewOnScrollListener);
     }
 
     @Override
     public void setSpinnerVisibility(boolean visibility) {
         patientListSpinner.setVisibility(visibility ? View.VISIBLE : View.GONE);
-        //patientListLayout.setVisibility(visibility ? View.GONE : View.VISIBLE);
     }
 
     @Override

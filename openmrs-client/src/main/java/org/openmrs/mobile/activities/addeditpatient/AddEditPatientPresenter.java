@@ -120,10 +120,10 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		boolean countryError = false;
 		boolean patientFileNumberError = false;
 		boolean civilStatusError = false;
-		boolean occupatioError = false;
+		boolean occupationError = false;
 
 		mPatientInfoView.setErrorsVisibility(familyNameError, lastNameError, dateOfBirthError, genderError, addressError,
-				countryError, patientFileNumberError, civilStatusError, occupatioError);
+				countryError, patientFileNumberError, civilStatusError, occupationError);
 
 		// Validate names
 		if (StringUtils.isBlank(patient.getPerson().getName().getGivenName())) {
@@ -173,7 +173,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 			return true;
 		} else {
 			mPatientInfoView.setErrorsVisibility(familyNameError, lastNameError, dateOfBirthError, addressError,
-					countryError, genderError, patientFileNumberError, civilStatusError, occupatioError);
+					countryError, genderError, patientFileNumberError, civilStatusError, occupationError);
 			return false;
 		}
 	}

@@ -10,69 +10,94 @@
 
 package org.openmrs.mobile.models;
 
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Transient;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import org.greenrobot.greendao.annotation.Generated;
 
 public class Resource implements Serializable {
-	
-	@SerializedName("uuid")
-	@Expose
-	protected String uuid;
-	
-	@SerializedName("display")
-	@Expose
-	protected String display;
-	
-	@SerializedName("links")
-	@Expose
-	protected List<Link> links = new ArrayList<Link>();
-	
-	/**
-	 * @return The uuid
-	 */
-	public String getUuid() {
-		return uuid;
-	}
-	
-	/**
-	 * @param uuid The uuid
-	 */
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
-	}
-	
-	/**
-	 * @return The display
-	 */
-	public String getDisplay() {
-		return display;
-	}
-	
-	/**
-	 * @param display The display
-	 */
-	public void setDisplay(String display) {
-		this.display = display;
-	}
-	
-	/**
-	 * @return The links
-	 */
-	public List<Link> getLinks() {
-		return links;
-	}
-	
-	/**
-	 * @param links The links
-	 */
-	public void setLinks(List<Link> links) {
-		this.links = links;
-	}
-	
-	
+    private static final long serialVersionUID = 1;
+
+    @SerializedName("uuid")
+    @Expose
+    protected String uuid;
+
+    @Transient
+    @SerializedName("display")
+    @Expose
+    protected String display;
+
+    @Transient
+    @SerializedName("links")
+    @Expose
+    protected List<Link> links = new ArrayList<Link>();
+
+    @Generated(hash = 561006165)
+    public Resource(String uuid) {
+        this.uuid = uuid;
+    }
+
+    @Generated(hash = 632359988)
+    public Resource() {
+    }
+
+    /**
+     *
+     * @return
+     *     The uuid
+     */
+    public String getUuid() {
+        return uuid;
+    }
+
+    /**
+     *
+     * @param uuid
+     *     The uuid
+     */
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    /**
+     *
+     * @return
+     *     The display
+     */
+    public String getDisplay() {
+        return display;
+    }
+
+    /**
+     *
+     * @param display
+     *     The display
+     */
+    public void setDisplay(String display) {
+        this.display = display;
+    }
+
+    /**
+     *
+     * @return
+     *     The links
+     */
+    public List<Link> getLinks() {
+        return links;
+    }
+
+    /**
+     *
+     * @param links
+     *     The links
+     */
+    public void setLinks(List<Link> links) {
+        this.links = links;
+    }
 }

@@ -16,83 +16,91 @@ package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Transient;
 import java.util.List;
+import org.greenrobot.greendao.annotation.Generated;
 
-public class Visit extends Resource {
-	
-	private Long id;
-	
-	@Expose
-	private Patient patient;
-	
-	@Expose
-	private VisitType visitType;
-	
-	@Expose
-	private Location location;
-	
-	@Expose
-	private String startDatetime;
-	
-	@Expose
-	private String stopDatetime;
-	
-	@Expose
-	private List<Encounter> encounters;
-	
-	public Long getId() {
-		return id;
-	}
-	
-	public void setId(Long id) {
-		this.id = id;
-	}
-	
-	public Patient getPatient() {
-		return patient;
-	}
-	
-	public void setPatient(Patient patient) {
-		this.patient = patient;
-	}
-	
-	public VisitType getVisitType() {
-		return visitType;
-	}
-	
-	public void setVisitType(VisitType visitType) {
-		this.visitType = visitType;
-	}
-	
-	public Location getLocation() {
-		return location;
-	}
-	
-	public void setLocation(Location location) {
-		this.location = location;
-	}
-	
-	public String getStartDatetime() {
-		return startDatetime;
-	}
-	
-	public void setStartDatetime(String startDatetime) {
-		this.startDatetime = startDatetime;
-	}
-	
-	public String getStopDatetime() {
-		return stopDatetime;
-	}
-	
-	public void setStopDatetime(String stopDatetime) {
-		this.stopDatetime = stopDatetime;
-	}
-	
-	public List<Encounter> getEncounters() {
-		return encounters;
-	}
-	
-	public void setEncounters(List<Encounter> encounters) {
-		this.encounters = encounters;
-	}
+@Entity
+public class Visit extends BaseOpenmrsEntity {
+    @Id
+    private Long id;
+
+    @Transient
+    @Expose
+    private VisitType visitType;
+
+    @Transient
+    @Expose
+    private Location location;
+
+    @Expose
+    private String startDatetime;
+
+    @Expose
+    private String stopDatetime;
+
+    @Transient
+    @Expose
+    private List<Encounter> encounters;
+
+    @Generated(hash = 284896357)
+    public Visit(Long id, String startDatetime, String stopDatetime) {
+        this.id = id;
+        this.startDatetime = startDatetime;
+        this.stopDatetime = stopDatetime;
+    }
+
+    @Generated(hash = 808752442)
+    public Visit() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public VisitType getVisitType() {
+        return visitType;
+    }
+
+    public void setVisitType(VisitType visitType) {
+        this.visitType = visitType;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    public String getStartDatetime() {
+        return startDatetime;
+    }
+
+    public void setStartDatetime(String startDatetime) {
+        this.startDatetime = startDatetime;
+    }
+
+    public String getStopDatetime() {
+        return stopDatetime;
+    }
+
+    public void setStopDatetime(String stopDatetime) {
+        this.stopDatetime = stopDatetime;
+    }
+
+    public List<Encounter> getEncounters() {
+        return encounters;
+    }
+
+    public void setEncounters(List<Encounter> encounters) {
+        this.encounters = encounters;
+    }
 }

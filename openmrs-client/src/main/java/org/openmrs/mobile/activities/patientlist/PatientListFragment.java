@@ -57,14 +57,16 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
-            if (!recyclerView.canScrollVertically(1)) {
-                // load next page
-                mPresenter.getPatientListData(selectedPatientList.getUuid());
-            }
+            if(!mPresenter.isLoading()){
+                if (!recyclerView.canScrollVertically(1)) {
+                    // load next page
+                    mPresenter.loadResults(selectedPatientList.getUuid(), true);
+                }
 
-            if(!recyclerView.canScrollVertically(-1)){
-                // load previous page
-                mPresenter.loadPreviousResults(selectedPatientList.getUuid());
+                if( !recyclerView.canScrollVertically(-1) && dy < 0){
+                    // load previous page
+                    mPresenter.loadResults(selectedPatientList.getUuid(), false);
+                }
             }
         }
     };
@@ -98,8 +100,13 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
     }
 
     @Override
-    public void setEmptyPatientListText(String text) {
-        emptyPatientList.setText(text);
+    public void setEmptyPatientListVisibility(boolean visible) {
+        emptyPatientList.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setSpinnerVisibility(boolean visible) {
+        patientListSpinner.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -110,13 +117,11 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 setSelectedPatientList(patientLists.get(position));
-                mPresenter.setStartIndex(0);
-                mPresenter.getPatientListData(selectedPatientList.getUuid());
+                mPresenter.getPatientListData(selectedPatientList.getUuid(), 0);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
     }
@@ -132,11 +137,6 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
         patientListModelRecyclerView.setAdapter(adapter);
 
         patientListModelRecyclerView.addOnScrollListener(recyclerViewOnScrollListener);
-    }
-
-    @Override
-    public void setSpinnerVisibility(boolean visibility) {
-        patientListSpinner.setVisibility(visibility ? View.VISIBLE : View.GONE);
     }
 
     @Override

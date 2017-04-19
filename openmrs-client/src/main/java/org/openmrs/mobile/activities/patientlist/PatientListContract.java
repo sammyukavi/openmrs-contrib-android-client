@@ -27,7 +27,7 @@ public interface PatientListContract {
 
         void setSelectedPatientList(PatientList selectedPatientList);
 
-        void setEmptyPatientListText(String text);
+        void setEmptyPatientListVisibility(boolean visibility);
 
         void updatePatientLists(List<PatientList> patientList);
 
@@ -42,10 +42,18 @@ public interface PatientListContract {
 
         void refresh();
 
-        void getPatientListData(String patientListUuid);
+        void getPatientListData(String patientListUuid, int startIndex);
 
         void setStartIndex(int startIndex);
 
-        void loadPreviousResults(String patientListUuid);
+        void setTotalNumberResults(int totalNumberResults);
+
+        int getStartIndex();
+
+        boolean isLoading();
+
+        void setLoading(boolean loading);
+
+        void loadResults(String patientListUuid, boolean loadNextResults);
     }
 }

@@ -34,8 +34,6 @@ public class PatientListArrayAdapter extends ArrayAdapter<PatientList> {
         super(context, android.R.layout.simple_spinner_item, patientLists);
     }
 
-
-
     @Override
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
         // retrieve patient list

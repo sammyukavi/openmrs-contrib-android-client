@@ -23,6 +23,7 @@ import org.openmrs.mobile.models.PatientListContextModel;
 import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -33,19 +34,21 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 
     @NonNull
     private PatientListContract.View patientListView;
-
     private RestApi restApi;
-
     private int limit = 10;
     private int startIndex = 0;
+    private int totalNumberResults;
+    private boolean loading;
 
     public PatientListPresenter(@NonNull PatientListContract.View patientListView) {
+        RestServiceBuilder.setEndPoint(ApplicationConstants.API.REST_ENDPOINT_V2);
         this.patientListView = patientListView;
         this.patientListView.setPresenter(this);
         this.restApi = RestServiceBuilder.createService(RestApi.class);
     }
 
     public PatientListPresenter(@NonNull PatientListContract.View patientListView, RestApi restApi) {
+        RestServiceBuilder.setEndPoint(ApplicationConstants.API.REST_ENDPOINT_V2);
         this.patientListView = patientListView;
         this.patientListView.setPresenter(this);
         this.restApi = restApi;
@@ -59,8 +62,6 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 
     public void getPatientList(){
         startIndex = 0;
-        setViewBeforeGetPatientList();
-        RestServiceBuilder.changeEndPoint(ApplicationConstants.API.REST_ENDPOINT_V2);
         Call<Results<PatientList>> call = restApi.getPatientLists();
         call.enqueue(new Callback<Results<PatientList>>() {
             @Override
@@ -68,43 +69,52 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
                 if(response.isSuccessful()){
                     List<PatientList> results = response.body().getResults();
                     patientListView.updatePatientLists(results);
-                    setViewAfterGetPatientListSuccess(results.isEmpty());
-                } else {
-                    setViewAfterGetPatientListError(response.message());
                 }
             }
 
             @Override
             public void onFailure(Call<Results<PatientList>> call, Throwable throwable) {
-                setViewAfterGetPatientListError(throwable.getMessage());
             }
         });
     }
 
     @Override
-    public void getPatientListData(String patientListUuid){
-        Call<Results<PatientListContextModel>> call = restApi.getPatientListData(patientListUuid, startIndex, limit);
-        RestServiceBuilder.changeEndPoint(ApplicationConstants.API.REST_ENDPOINT_V2);
+    public void getPatientListData(String patientListUuid, int startIndex){
+        if(startIndex < 0){
+            return;
+        }
+
+        setStartIndex(startIndex);
+        setLoading(true);
+        setViewBeforeLoadData();
+        Call<Results<PatientListContextModel>> call = restApi.getPatientListData(patientListUuid, getStartIndex(), limit);
         call.enqueue(new Callback<Results<PatientListContextModel>>() {
             @Override
             public void onResponse(Call<Results<PatientListContextModel>> call, Response<Results<PatientListContextModel>> response) {
                 if(response.isSuccessful()){
+                    setViewAfterLoadData(false);
                     List<PatientListContextModel> results = response.body().getResults();
                     patientListView.updatePatientListData(results);
-                    computeStartIndex(response.body().getLength());
+                    setTotalNumberResults(response.body().getLength());
+                } else {
+                    setViewAfterLoadData(true);
                 }
+
+                setLoading(false);
             }
 
             @Override
             public void onFailure(Call<Results<PatientListContextModel>> call, Throwable throwable) {
+                patientListView.updatePatientListData(new ArrayList<>());
+                setViewAfterLoadData(true);
+                setLoading(false);
             }
         });
     }
 
     @Override
-    public void loadPreviousResults(String patientListUuid) {
-        startIndex -= limit;
-        getPatientListData(patientListUuid);
+    public void loadResults(String patientListUuid, boolean loadNextResults) {
+        getPatientListData(patientListUuid, computeStartIndex(loadNextResults));
     }
 
     @Override
@@ -112,27 +122,60 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
         this.startIndex = startIndex;
     }
 
-    private void computeStartIndex(int totalNumResults){
-        if(startIndex + limit < totalNumResults){
-            startIndex += limit;
+    @Override
+    public int getStartIndex() {
+        return startIndex;
+    }
+
+    @Override
+    public void setTotalNumberResults(int totalNumberResults) {
+        this.totalNumberResults = totalNumberResults;
+    }
+
+    private int getTotalNumberResults(){
+        return totalNumberResults;
+    }
+
+    private int computeStartIndex(boolean next){
+        int tmpStartIndex = startIndex;
+        // check if pagination is required.
+        if(tmpStartIndex + limit < getTotalNumberResults()){
+            if(next) {
+                // calculate startindex for the next page
+                tmpStartIndex += limit;
+            }
+            else if(tmpStartIndex - limit >= 0) {
+                // calculate start index for the previous page.
+                 tmpStartIndex -= limit;
+            }
+        } else {
+            tmpStartIndex = -1;
         }
+
+        return tmpStartIndex;
+    }
+
+    @Override
+    public boolean isLoading() {
+        return loading;
+    }
+
+    @Override
+    public void setLoading(boolean loading) {
+        this.loading = loading;
     }
 
     @Override
     public void refresh() {
-
     }
 
-    private void setViewBeforeGetPatientList(){
+    private void setViewBeforeLoadData(){
         patientListView.setSpinnerVisibility(true);
+        patientListView.setEmptyPatientListVisibility(false);
     }
 
-    private void setViewAfterGetPatientListSuccess(boolean emptyList){
+    private void setViewAfterLoadData(boolean visible){
         patientListView.setSpinnerVisibility(false);
-    }
-
-    private void setViewAfterGetPatientListError(String errorMessage) {
-        patientListView.setSpinnerVisibility(false);
-        patientListView.setEmptyPatientListText(errorMessage);
+        patientListView.setEmptyPatientListVisibility(visible);
     }
 }

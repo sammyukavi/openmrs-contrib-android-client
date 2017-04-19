@@ -109,7 +109,7 @@ public class PatientListTest extends ACUnitTestBase{
         PatientListCallbackListener listener = spy(PatientListCallbackListener.class);
         Call<Results<PatientListContextModel>> callSuccess = mockSuccessCall(patientListData);
         when(restService.getPatientListData("11-22-33", 1, 10)).thenReturn(callSuccess);
-        patientListPresenter.getPatientListData("11-22-33", 1, 10);
+        patientListPresenter.getPatientListData("11-22-33", 1);
         verify(restService).getPatientListData("11-22-33", 1, 10);
         verify(patientListView).updatePatientListData(patientListData);
     }

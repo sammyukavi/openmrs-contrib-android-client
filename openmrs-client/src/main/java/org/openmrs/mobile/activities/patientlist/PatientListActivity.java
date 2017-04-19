@@ -19,6 +19,8 @@ import android.view.Menu;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
+import org.openmrs.mobile.api.RestServiceBuilder;
+import org.openmrs.mobile.utilities.ApplicationConstants;
 
 /**
  * Patient List activity
@@ -31,7 +33,7 @@ public class PatientListActivity extends ACBaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getLayoutInflater().inflate(R.layout.activity_patient_list, frameLayout);
-        setTitle(R.string.nav_patient_lists);
+        setTitle(R.string.nav_patient_list);
 
         // create fragment
         PatientListFragment patientListFragment =
@@ -56,4 +58,5 @@ public class PatientListActivity extends ACBaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         return true;
     }
+
 }

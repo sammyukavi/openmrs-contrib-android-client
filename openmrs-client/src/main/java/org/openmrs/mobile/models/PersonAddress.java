@@ -7,7 +7,6 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-
 package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
@@ -18,28 +17,45 @@ import org.openmrs.mobile.utilities.StringUtils;
 import java.io.Serializable;
 
 public class PersonAddress extends BaseOpenmrsEntity implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    private String personUuid;
 
     @SerializedName("preferred")
     @Expose
     private Boolean preferred;
+
     @SerializedName("address1")
     @Expose
     private String address1;
+
     @SerializedName("address2")
     @Expose
     private String address2;
+
     @SerializedName("cityVillage")
     @Expose
     private String cityVillage;
+
     @SerializedName("stateProvince")
     @Expose
     private String stateProvince;
+
     @SerializedName("country")
     @Expose
     private String country;
+
     @SerializedName("postalCode")
     @Expose
     private String postalCode;
+
+    public String getPersonUuid() {
+        return personUuid;
+    }
+
+    public void setPersonUuid(String personUuid) {
+        this.personUuid = personUuid;
+    }
 
     /**
      * 

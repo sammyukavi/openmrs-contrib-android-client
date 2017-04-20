@@ -82,7 +82,7 @@ public class FindPatient extends Fragment {
 
     private void initializeData() throws JSONException {
         PatientDataService svc = new PatientDataService();
-        svc.getByName("Test", null, new DataService.GetMultipleCallback<org.openmrs.mobile.models.Patient>() {
+        svc.getByName("Test", null, new DataService.GetCallback<List<org.openmrs.mobile.models.Patient>>() {
             @Override
             public void onCompleted(List<org.openmrs.mobile.models.Patient> entities) {
                 for (org.openmrs.mobile.models.Patient p : entities){

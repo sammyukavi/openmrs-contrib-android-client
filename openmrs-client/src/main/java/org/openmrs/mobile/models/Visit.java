@@ -11,28 +11,22 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-
 package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 
-import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Id;
-import org.greenrobot.greendao.annotation.Transient;
-
+import java.io.Serializable;
 import java.util.List;
-import org.greenrobot.greendao.annotation.Generated;
 
-@Entity
-public class Visit extends BaseOpenmrsEntity {
-    @Id
-    private Long id;
+public class Visit extends BaseOpenmrsEntity implements Serializable {
+    private static final long serialVersionUID = 1L;
 
-    @Transient
+    private String visitTypeUuid;
+    private String locationUuid;
+
     @Expose
     private VisitType visitType;
 
-    @Transient
     @Expose
     private Location location;
 
@@ -42,27 +36,20 @@ public class Visit extends BaseOpenmrsEntity {
     @Expose
     private String stopDatetime;
 
-    @Transient
     @Expose
     private List<Encounter> encounters;
 
-    @Generated(hash = 284896357)
-    public Visit(Long id, String startDatetime, String stopDatetime) {
-        this.id = id;
-        this.startDatetime = startDatetime;
-        this.stopDatetime = stopDatetime;
-    }
+    @Override
+    public void refreshDaoProperties() {
+        super.refreshDaoProperties();
 
-    @Generated(hash = 808752442)
-    public Visit() {
-    }
+        if (visitType != null) {
+            visitTypeUuid = visitType.getUuid();
+        }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+        if (location != null) {
+            locationUuid = location.getUuid();
+        }
     }
 
     public VisitType getVisitType() {

@@ -7,7 +7,6 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-
 package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
@@ -22,9 +21,11 @@ import java.util.List;
 import java.util.Map;
 
 public class Patient extends BaseOpenmrsAuditableObject implements Serializable{
+    private static final long serialVersionUID = 1L;
 
-    private Long id;
     private String encounters = "";
+
+    private String personUuid;
 
     @SerializedName("identifiers")
     @Expose
@@ -41,14 +42,6 @@ public class Patient extends BaseOpenmrsAuditableObject implements Serializable{
     @SerializedName("resourceVersion")
     @Expose
     private String resourceVersion;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     /**
      * 
@@ -172,5 +165,18 @@ public class Patient extends BaseOpenmrsAuditableObject implements Serializable{
         }
     }
 
+    @Override
+    public void refreshDaoProperties() {
+        super.refreshDaoProperties();
 
+        if (identifiers != null) {
+            for (PatientIdentifier identifier : identifiers) {
+                identifier.setPatientUuid(this.uuid);
+            }
+        }
+
+        if (person != null) {
+            this.personUuid = person.getUuid();
+        }
+    }
 }

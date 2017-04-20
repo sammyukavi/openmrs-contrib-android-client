@@ -7,7 +7,6 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-
 package org.openmrs.mobile.models;
 
 import android.graphics.Bitmap;
@@ -20,27 +19,56 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Person extends BaseOpenmrsEntity implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     @SerializedName("names")
     @Expose
     private List<PersonName> names = new ArrayList<PersonName>();
+
     @SerializedName("gender")
     @Expose
     private String gender;
+
     @SerializedName("birthdate")
     @Expose
     private String birthdate;
+
     @SerializedName("birthdateEstimated")
     @Expose
     private boolean birthdateEstimated;
+
     @SerializedName("addresses")
     @Expose
     private List<PersonAddress> addresses = new ArrayList<PersonAddress>();
+
     @SerializedName("attributes")
     @Expose
     private List<PersonAttribute> attributes = new ArrayList<PersonAttribute>();
 
     private Bitmap photo;
+
+    @Override
+    public void refreshDaoProperties() {
+        super.refreshDaoProperties();
+
+        if (names != null) {
+            for (PersonName name : names) {
+                name.setPersonUuid(this.getUuid());
+            }
+        }
+
+        if (addresses != null) {
+            for (PersonAddress address : addresses) {
+                address.setPersonUuid(this.getUuid());
+            }
+        }
+
+        if (attributes != null) {
+            for (PersonAttribute attribute : attributes) {
+                attribute.setPersonUuid(this.getUuid());
+            }
+        }
+    }
 
     /**
      * 

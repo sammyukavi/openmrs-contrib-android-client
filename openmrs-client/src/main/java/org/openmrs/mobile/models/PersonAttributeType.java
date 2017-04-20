@@ -7,8 +7,50 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-
 package org.openmrs.mobile.models;
 
-public class PersonAttributeType extends Resource {
+import java.io.Serializable;
+
+public class PersonAttributeType extends BaseOpenmrsObject implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    private String format;
+
+    private Integer foreignKey;
+
+    private Double sortWeight;
+
+    private Boolean searchable = false;
+
+    public String getFormat() {
+        return format;
+    }
+
+    public void setFormat(String format) {
+        this.format = format;
+    }
+
+    public Integer getForeignKey() {
+        return foreignKey;
+    }
+
+    public void setForeignKey(Integer foreignKey) {
+        this.foreignKey = foreignKey;
+    }
+
+    public Double getSortWeight() {
+        return sortWeight;
+    }
+
+    public void setSortWeight(Double sortWeight) {
+        this.sortWeight = sortWeight;
+    }
+
+    public Boolean getSearchable() {
+        return searchable;
+    }
+
+    public void setSearchable(Boolean searchable) {
+        this.searchable = searchable;
+    }
 }

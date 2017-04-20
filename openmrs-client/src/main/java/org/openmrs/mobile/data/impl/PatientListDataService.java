@@ -3,6 +3,7 @@ package org.openmrs.mobile.data.impl;
 import org.openmrs.mobile.data.BaseMetadataDataService;
 import org.openmrs.mobile.data.MetadataDataService;
 import org.openmrs.mobile.data.PagingInfo;
+import org.openmrs.mobile.data.db.impl.PatientListDbService;
 import org.openmrs.mobile.data.rest.PatientListRestService;
 import org.openmrs.mobile.models.PatientList;
 import org.openmrs.mobile.models.Results;
@@ -10,7 +11,9 @@ import org.openmrs.mobile.utilities.ApplicationConstants;
 
 import retrofit2.Call;
 
-public class PatientListDataService extends BaseMetadataDataService<PatientList, PatientListRestService> implements MetadataDataService<PatientList> {
+public class PatientListDataService
+        extends BaseMetadataDataService<PatientList, PatientListDbService, PatientListRestService>
+        implements MetadataDataService<PatientList> {
     @Override
     protected Class<PatientListRestService> getRestServiceClass() {
         return PatientListRestService.class;

@@ -7,24 +7,48 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-
 package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class PatientIdentifier extends Resource {
+public class PatientIdentifier extends BaseOpenmrsObject {
+    private String patientUuid;
+    private String identifierTypeUuid;
+    private String locationUuid;
 
     @SerializedName("identifierType")
     @Expose
     private IdentifierType identifierType;
+
     @SerializedName("identifier")
     @Expose
     private String identifier;
+
     @SerializedName("location")
     @Expose
     private Location location;
 
+    @Override
+    public void refreshDaoProperties() {
+        super.refreshDaoProperties();
+
+        if (identifierType != null) {
+            identifierTypeUuid = identifierType.getUuid();
+        }
+
+        if (location == null) {
+            locationUuid = location.getUuid();
+        }
+    }
+
+    public String getPatientUuid() {
+        return patientUuid;
+    }
+
+    public void setPatientUuid(String patientUuid) {
+        this.patientUuid = patientUuid;
+    }
 
     /**
      * 

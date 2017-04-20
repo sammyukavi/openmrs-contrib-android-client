@@ -5,6 +5,8 @@ import android.support.annotation.Nullable;
 
 import org.openmrs.mobile.models.BaseOpenmrsMetadata;
 
+import java.util.List;
+
 /**
  * Represents classes the provide data services for {@link BaseOpenmrsMetadata} objects.
  * @param <E> The entity class
@@ -19,5 +21,5 @@ public interface MetadataDataService<E extends BaseOpenmrsMetadata> extends Data
      */
     void getByNameFragment(@NonNull String name, boolean includeInactive,
                            @Nullable PagingInfo pagingInfo,
-                           @NonNull GetMultipleCallback<E> callback);
+                           @NonNull GetCallback<List<E>> callback);
 }

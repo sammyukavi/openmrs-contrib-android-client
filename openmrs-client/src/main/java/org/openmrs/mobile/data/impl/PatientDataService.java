@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import org.openmrs.mobile.data.BaseDataService;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
+import org.openmrs.mobile.data.db.impl.PatientDbService;
 import org.openmrs.mobile.data.rest.PatientRestService;
 import org.openmrs.mobile.data.rest.RestConstants;
 import org.openmrs.mobile.models.Patient;
@@ -16,7 +17,7 @@ import java.util.List;
 
 import retrofit2.Call;
 
-public class PatientDataService extends BaseDataService<Patient, PatientRestService> {
+public class PatientDataService extends BaseDataService<Patient, PatientDbService, PatientRestService> {
 
     @Override
     protected Class<PatientRestService> getRestServiceClass() {
@@ -34,7 +35,8 @@ public class PatientDataService extends BaseDataService<Patient, PatientRestServ
     }
 
     @Override
-    public void getAll(boolean includeInactive, @Nullable PagingInfo pagingInfo, @NonNull GetMultipleCallback<Patient> callback) {
+    public void getAll(boolean includeInactive, @Nullable PagingInfo pagingInfo,
+            @NonNull GetCallback<List<Patient>> callback) {
         // The patient rest service does not support getting all patients
         return;
     }
@@ -68,14 +70,16 @@ public class PatientDataService extends BaseDataService<Patient, PatientRestServ
 
     // End Retrofit Workaround
 
-    public void getByName(String name, PagingInfo pagingInfo, GetMultipleCallback<Patient> callback) {
-        executeMultipleCallback(callback, null, () -> {
-            if (isPagingValid(pagingInfo)) {
-                return restService.getByName(buildRestRequestPath(), name, RestConstants.Representations.FULL,
-                        pagingInfo.getLimit(), pagingInfo.getStartIndex());
-            } else {
-                return restService.getByName(buildRestRequestPath(), name, RestConstants.Representations.FULL);
-            }
-        });
+    public void getByName(String name, PagingInfo pagingInfo, GetCallback<List<Patient>> callback) {
+        executeMultipleCallback(callback,
+                () -> dbService.getByName(name, pagingInfo),
+                () -> {
+                    if (isPagingValid(pagingInfo)) {
+                        return restService.getByName(buildRestRequestPath(), name, RestConstants.Representations.FULL,
+                                pagingInfo.getLimit(), pagingInfo.getStartIndex());
+                    } else {
+                        return restService.getByName(buildRestRequestPath(), name, RestConstants.Representations.FULL);
+                    }
+                });
     }
 }

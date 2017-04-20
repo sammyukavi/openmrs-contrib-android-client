@@ -3,6 +3,7 @@ package org.openmrs.mobile.data.impl;
 import org.openmrs.mobile.data.BaseEntityDataService;
 import org.openmrs.mobile.data.EntityDataService;
 import org.openmrs.mobile.data.PagingInfo;
+import org.openmrs.mobile.data.db.impl.VisitDbService;
 import org.openmrs.mobile.data.rest.RestConstants;
 import org.openmrs.mobile.data.rest.VisitRestService;
 import org.openmrs.mobile.models.Results;
@@ -13,7 +14,7 @@ import java.util.List;
 
 import retrofit2.Call;
 
-public class VisitDataService extends BaseEntityDataService<Visit, VisitRestService>
+public class VisitDataService extends BaseEntityDataService<Visit, VisitDbService, VisitRestService>
         implements EntityDataService<Visit> {
     @Override
     protected Class<VisitRestService> getRestServiceClass() {

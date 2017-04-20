@@ -11,12 +11,16 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-
 package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 
-public class User extends Resource{
+import java.io.Serializable;
+
+public class User extends BaseOpenmrsObject implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    private String personUuid;
 
     @Expose
     private String username;
@@ -26,6 +30,15 @@ public class User extends Resource{
 
     @Expose
     private Person person;
+
+    @Override
+    public void refreshDaoProperties() {
+        super.refreshDaoProperties();
+
+        if (person != null) {
+            personUuid = person.getUuid();
+        }
+    }
 
     public String getUsername() {
         return username;

@@ -59,4 +59,8 @@ public final class NetworkUtils {
             return false;
 
     }
+
+    public static boolean isServerAvailable() {
+        return true;
+    }
 }

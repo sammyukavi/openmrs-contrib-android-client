@@ -6,6 +6,8 @@ import android.support.annotation.Nullable;
 import org.openmrs.mobile.models.BaseOpenmrsEntity;
 import org.openmrs.mobile.models.Patient;
 
+import java.util.List;
+
 /**
  * Represents classes the provide data services for {@link BaseOpenmrsEntity} objects.
  * @param <E> The entity class
@@ -20,5 +22,5 @@ public interface EntityDataService<E extends BaseOpenmrsEntity> extends DataServ
      */
     void getByPatient(@NonNull Patient patient, boolean includeInactive,
                       @Nullable PagingInfo pagingInfo,
-                      @NonNull GetMultipleCallback<E> callback);
+                      @NonNull GetCallback<List<E>> callback);
 }

@@ -28,38 +28,19 @@ public interface DataService<E extends BaseOpenmrsObject> {
         void onError(Throwable t);
     }
 
-
     /**
-     * Callback interface for operations that return a single entity.
-     * @param <E> The entity class
+     * Callback interface for data service methods
+     * @param <TResult> The result of the function execution
      */
-    interface GetSingleCallback<E> {
+    interface GetCallback<TResult> {
         /**
          * Called if the operation completes successfully.
-         * @param entity The returned entity
+         * @param result The returned result
          */
-        void onCompleted(E entity);
+        void onCompleted(TResult result);
 
         /**
-         * Called if the operation fails.
-         * @param t The exception information
-         */
-        void onError(Throwable t);
-    }
-
-    /**
-     * Callback interface for operations that return multiple entities.
-     * @param <E> The entity class
-     */
-    interface GetMultipleCallback<E> {
-        /**
-         * Called if the operation completes successfully.
-         * @param entities The returned entities
-         */
-        void onCompleted(List<E> entities);
-
-        /**
-         * Called if the operation fails.
+         * Called if the operations fails.
          * @param t The exception information
          */
         void onError(Throwable t);
@@ -70,7 +51,7 @@ public interface DataService<E extends BaseOpenmrsObject> {
      * @param uuid The entity UUID
      * @param callback
      */
-    void getByUUID(@NonNull String uuid, @NonNull GetSingleCallback<E> callback);
+    void getByUUID(@NonNull String uuid, @NonNull GetCallback<E> callback);
 
     /**
      * Gets all entities.
@@ -79,7 +60,7 @@ public interface DataService<E extends BaseOpenmrsObject> {
      * @param callback
      */
     void getAll(boolean includeInactive, @Nullable PagingInfo pagingInfo,
-                @NonNull GetMultipleCallback<E> callback);
+                @NonNull GetCallback<List<E>> callback);
 
     /**
      * Performs a template-based search. Doesn't actually work at this point, unless you search
@@ -89,21 +70,21 @@ public interface DataService<E extends BaseOpenmrsObject> {
      * @param callback
      */
     void search(@NonNull E template, @Nullable PagingInfo pagingInfo,
-                @NonNull GetMultipleCallback<E> callback);
+                @NonNull GetCallback<List<E>> callback);
 
     /**
      * Saves a newly created entity.
      * @param entity The new entity to save
      * @param callback
      */
-    void create(@NonNull E entity, @NonNull GetSingleCallback<E> callback);
+    void create(@NonNull E entity, @NonNull GetCallback<E> callback);
 
     /**
      * Saves an updated entity.
      * @param entity The entity to save
      * @param callback
      */
-    void update(@NonNull E entity, @NonNull GetSingleCallback<E> callback);
+    void update(@NonNull E entity, @NonNull GetCallback<E> callback);
 
     /**
      * Completely deletes the entity.

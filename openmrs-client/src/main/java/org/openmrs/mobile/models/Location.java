@@ -11,12 +11,11 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-
 package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 
-public class Location extends Resource {
+public class Location extends BaseOpenmrsObject {
     @Expose
     private Long id;
     @Expose

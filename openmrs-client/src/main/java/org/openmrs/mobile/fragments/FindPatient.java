@@ -23,6 +23,7 @@ import org.openmrs.mobile.adapters.ListPatients;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.application.OpenMRSLogger;
 import org.openmrs.mobile.data.DataService;
+import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.impl.PatientDataService;
 import org.openmrs.mobile.sampledata.Patient;
 
@@ -82,7 +83,8 @@ public class FindPatient extends Fragment {
 
     private void initializeData() throws JSONException {
         PatientDataService svc = new PatientDataService();
-        svc.getByName("Test", null, new DataService.GetCallback<List<org.openmrs.mobile.models.Patient>>() {
+        svc.getByName("Test", QueryOptions.LOAD_RELATED_OBJECTS, null, new DataService.GetCallback<List<org.openmrs.mobile
+                .models.Patient>>() {
             @Override
             public void onCompleted(List<org.openmrs.mobile.models.Patient> entities) {
                 for (org.openmrs.mobile.models.Patient p : entities){

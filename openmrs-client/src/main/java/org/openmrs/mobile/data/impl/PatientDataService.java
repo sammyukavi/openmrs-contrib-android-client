@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import org.openmrs.mobile.data.BaseDataService;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
+import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.db.impl.PatientDbService;
 import org.openmrs.mobile.data.rest.PatientRestService;
 import org.openmrs.mobile.data.rest.RestConstants;
@@ -18,6 +19,10 @@ import java.util.List;
 import retrofit2.Call;
 
 public class PatientDataService extends BaseDataService<Patient, PatientDbService, PatientRestService> {
+    @Override
+    protected PatientDbService getDbService() {
+        return new PatientDbService();
+    }
 
     @Override
     protected Class<PatientRestService> getRestServiceClass() {
@@ -35,7 +40,7 @@ public class PatientDataService extends BaseDataService<Patient, PatientDbServic
     }
 
     @Override
-    public void getAll(boolean includeInactive, @Nullable PagingInfo pagingInfo,
+    public void getAll(@Nullable QueryOptions options, @Nullable PagingInfo pagingInfo,
             @NonNull GetCallback<List<Patient>> callback) {
         // The patient rest service does not support getting all patients
         return;
@@ -44,12 +49,13 @@ public class PatientDataService extends BaseDataService<Patient, PatientDbServic
     // Begin Retrofit Workaround
 
     @Override
-    protected Call<Patient> _restGetByUuid(String restPath, String uuid, String representation) {
-        return restService.getByUuid(restPath, uuid, representation);
+    protected Call<Patient> _restGetByUuid(String restPath, String uuid, QueryOptions options) {
+		return restService.getByUuid(restPath, uuid, QueryOptions.getRepresentation(options),
+				QueryOptions.getIncludeInactive(options));
     }
 
     @Override
-    protected Call<Results<Patient>> _restGetAll(String restPath, PagingInfo pagingInfo, String representation) {
+    protected Call<Results<Patient>> _restGetAll(String restPath, QueryOptions options, PagingInfo pagingInfo) {
         throw new UnsupportedOperationException("The patients rest service does not support a get all method.");
     }
 
@@ -70,15 +76,16 @@ public class PatientDataService extends BaseDataService<Patient, PatientDbServic
 
     // End Retrofit Workaround
 
-    public void getByName(String name, PagingInfo pagingInfo, GetCallback<List<Patient>> callback) {
+    public void getByName(String name, QueryOptions options, PagingInfo pagingInfo, GetCallback<List<Patient>> callback) {
         executeMultipleCallback(callback,
-                () -> dbService.getByName(name, pagingInfo),
+                () -> dbService.getByName(name, options, pagingInfo),
                 () -> {
                     if (isPagingValid(pagingInfo)) {
-                        return restService.getByName(buildRestRequestPath(), name, RestConstants.Representations.FULL,
-                                pagingInfo.getLimit(), pagingInfo.getStartIndex());
+                        return restService.getByName(buildRestRequestPath(), name, QueryOptions.getRepresentation(options),
+								QueryOptions.getIncludeInactive(options), pagingInfo.getLimit(), pagingInfo.getStartIndex());
                     } else {
-                        return restService.getByName(buildRestRequestPath(), name, RestConstants.Representations.FULL);
+                        return restService.getByName(buildRestRequestPath(), name, QueryOptions.getRepresentation(options),
+								QueryOptions.getIncludeInactive(options));
                     }
                 });
     }

@@ -51,15 +51,15 @@ public interface DataService<E extends BaseOpenmrsObject> {
      * @param uuid The entity UUID
      * @param callback
      */
-    void getByUUID(@NonNull String uuid, @NonNull GetCallback<E> callback);
+    void getByUUID(@NonNull String uuid, @Nullable QueryOptions options, @NonNull GetCallback<E> callback);
 
     /**
      * Gets all entities.
-     * @param includeInactive {@code true} to include inactive entities; otherwise, {@code false}
+     * @param options The {@link QueryOptions} settings to use for this operation
      * @param pagingInfo The paging information or null to exclude paging
      * @param callback
      */
-    void getAll(boolean includeInactive, @Nullable PagingInfo pagingInfo,
+    void getAll(@Nullable QueryOptions options, @Nullable PagingInfo pagingInfo,
                 @NonNull GetCallback<List<E>> callback);
 
     /**
@@ -69,7 +69,7 @@ public interface DataService<E extends BaseOpenmrsObject> {
      * @param pagingInfo The paging information or null to exclude paging
      * @param callback
      */
-    void search(@NonNull E template, @Nullable PagingInfo pagingInfo,
+    void search(@NonNull E template, @Nullable QueryOptions options, @Nullable PagingInfo pagingInfo,
                 @NonNull GetCallback<List<E>> callback);
 
     /**

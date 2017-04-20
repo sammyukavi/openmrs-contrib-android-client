@@ -3,6 +3,7 @@ package org.openmrs.mobile.data.impl;
 import org.openmrs.mobile.data.BaseMetadataDataService;
 import org.openmrs.mobile.data.MetadataDataService;
 import org.openmrs.mobile.data.PagingInfo;
+import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.db.impl.PatientListDbService;
 import org.openmrs.mobile.data.rest.PatientListRestService;
 import org.openmrs.mobile.models.PatientList;
@@ -14,6 +15,11 @@ import retrofit2.Call;
 public class PatientListDataService
         extends BaseMetadataDataService<PatientList, PatientListDbService, PatientListRestService>
         implements MetadataDataService<PatientList> {
+    @Override
+    protected PatientListDbService getDbService() {
+        return new PatientListDbService();
+    }
+
     @Override
     protected Class<PatientListRestService> getRestServiceClass() {
         return PatientListRestService.class;
@@ -30,16 +36,19 @@ public class PatientListDataService
     }
 
     @Override
-    protected Call<PatientList> _restGetByUuid(String restPath, String uuid, String representation) {
-        return restService.getByUuid(restPath, uuid, representation);
+    protected Call<PatientList> _restGetByUuid(String restPath, String uuid, QueryOptions options) {
+        return restService.getByUuid(restPath, uuid, QueryOptions.getRepresentation(options),
+                QueryOptions.getIncludeInactive(options));
     }
 
     @Override
-    protected Call<Results<PatientList>> _restGetAll(String restPath, PagingInfo pagingInfo, String representation) {
+    protected Call<Results<PatientList>> _restGetAll(String restPath, QueryOptions options, PagingInfo pagingInfo) {
         if (isPagingValid(pagingInfo)) {
-            return restService.getAll(restPath, representation, pagingInfo.getLimit(), pagingInfo.getStartIndex());
+            return restService.getAll(restPath, QueryOptions.getRepresentation(options),
+                    QueryOptions.getIncludeInactive(options), pagingInfo.getLimit(), pagingInfo.getStartIndex());
         } else {
-            return restService.getAll(restPath, representation);
+            return restService.getAll(restPath, QueryOptions.getRepresentation(options),
+                    QueryOptions.getIncludeInactive(options));
         }
     }
 
@@ -59,11 +68,14 @@ public class PatientListDataService
     }
 
     @Override
-    protected Call<Results<PatientList>> _restGetByNameFragment(String restPath, PagingInfo pagingInfo, String name, String representation) {
+    protected Call<Results<PatientList>> _restGetByNameFragment(String restPath, String name, QueryOptions options,
+            PagingInfo pagingInfo) {
         if (isPagingValid(pagingInfo)) {
-            return restService.getByNameFragment(restPath, name, representation, pagingInfo.getLimit(), pagingInfo.getStartIndex());
+            return restService.getByNameFragment(restPath, name, QueryOptions.getRepresentation(options),
+                    QueryOptions.getIncludeInactive(options), pagingInfo.getLimit(), pagingInfo.getStartIndex());
         } else {
-            return restService.getByNameFragment(restPath, name, representation);
+            return restService.getByNameFragment(restPath, name, QueryOptions.getRepresentation(options),
+                    QueryOptions.getIncludeInactive(options));
         }
     }
 }

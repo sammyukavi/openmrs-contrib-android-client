@@ -13,39 +13,43 @@ import retrofit2.http.Query;
 public interface VisitRestService {
     @GET(RestConstants.GET_BY_UUID)
     Call<Visit> getByUuid(@Path(value = "restPath", encoded = true) String restPath,
-                          @Path("uuid") String uuid,
-                          @Query("v") String representation);
+			@Path("uuid") String uuid,
+			@Query("v") String representation);
 
     @GET(RestConstants.GET_ALL)
     Call<Results<Visit>> getAll(@Path(value = "restPath", encoded = true) String restPath,
-                                @Query("v") String representation);
+            @Query("v") String representation,
+            @Query("includeAll") Boolean includeAll);
 
     @GET(RestConstants.GET_ALL)
     Call<Results<Visit>> getAll(@Path(value = "restPath", encoded = true) String restPath,
-                                @Query("v") String representation,
-                                @Query("limit") int limit,
-                                @Query("startIndex") int startIndex);
+			@Query("v") String representation,
+			@Query("includeAll") Boolean includeAll,
+			@Query("limit") int limit,
+			@Query("startIndex") int startIndex);
 
     @POST(RestConstants.CREATE)
     Call<Visit> create(@Path(value = "restPath", encoded = true) String restPath, Visit entity);
 
     @POST(RestConstants.UPDATE)
     Call<Visit> update(@Path(value = "restPath", encoded = true) String restPath,
-                       @Path("uuid") String uuid, Visit entity);
+			@Path("uuid") String uuid, Visit entity);
 
     @DELETE(RestConstants.PURGE)
     Call<Visit> purge(@Path(value = "restPath", encoded = true) String restPath,
-                      @Path("uuid") String uuid);
+			@Path("uuid") String uuid);
 
     @GET(RestConstants.REST_PATH)
     Call<Results<Visit>> getByPatient(@Path(value = "restPath", encoded = true) String restPath,
-                                      @Query("patient") String patientUuid,
-                                      @Query("v") String representation);
+			@Query("patient") String patientUuid,
+			@Query("v") String representation,
+			@Query("includeAll") Boolean includeAll);
 
     @GET(RestConstants.REST_PATH)
     Call<Results<Visit>> getByPatient(@Path(value = "restPath", encoded = true) String restPath,
-                                      @Query("patient") String patientUuid,
-                                      @Query("v") String representation,
-                                      @Query("limit") int limit,
-                                      @Query("startIndex") int startIndex);
+			@Query("patient") String patientUuid,
+			@Query("v") String representation,
+			@Query("includeAll") Boolean includeAll,
+			@Query("limit") int limit,
+			@Query("startIndex") int startIndex);
 }

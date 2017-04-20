@@ -3,6 +3,7 @@ package org.openmrs.mobile.data.impl;
 import org.openmrs.mobile.data.BaseEntityDataService;
 import org.openmrs.mobile.data.EntityDataService;
 import org.openmrs.mobile.data.PagingInfo;
+import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.db.impl.VisitDbService;
 import org.openmrs.mobile.data.rest.RestConstants;
 import org.openmrs.mobile.data.rest.VisitRestService;
@@ -13,9 +14,15 @@ import org.openmrs.mobile.utilities.ApplicationConstants;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.http.Query;
 
 public class VisitDataService extends BaseEntityDataService<Visit, VisitDbService, VisitRestService>
         implements EntityDataService<Visit> {
+    @Override
+    protected VisitDbService getDbService() {
+        return new VisitDbService();
+    }
+
     @Override
     protected Class<VisitRestService> getRestServiceClass() {
         return VisitRestService.class;
@@ -34,16 +41,18 @@ public class VisitDataService extends BaseEntityDataService<Visit, VisitDbServic
     // Begin Retrofit Workaround
 
     @Override
-    protected Call<Visit> _restGetByUuid(String restPath, String uuid, String representation) {
-        return restService.getByUuid(restPath, uuid, RestConstants.Representations.FULL);
+    protected Call<Visit> _restGetByUuid(String restPath, String uuid, QueryOptions options) {
+        return restService.getByUuid(restPath, uuid, QueryOptions.getRepresentation(options));
     }
 
     @Override
-    protected Call<Results<Visit>> _restGetAll(String restPath, PagingInfo pagingInfo, String representation) {
+    protected Call<Results<Visit>> _restGetAll(String restPath, QueryOptions options, PagingInfo pagingInfo) {
         if (isPagingValid(pagingInfo)) {
-            return restService.getAll(restPath, representation, pagingInfo.getLimit(), pagingInfo.getStartIndex());
+            return restService.getAll(restPath, QueryOptions.getRepresentation(options),
+					QueryOptions.getIncludeInactive(options), pagingInfo.getLimit(), pagingInfo.getStartIndex());
         } else {
-            return restService.getAll(restPath, representation);
+            return restService.getAll(restPath, QueryOptions.getRepresentation(options),
+					QueryOptions.getIncludeInactive(options));
         }
     }
 
@@ -63,13 +72,14 @@ public class VisitDataService extends BaseEntityDataService<Visit, VisitDbServic
     }
 
     @Override
-    protected Call<Results<Visit>> _restGetByPatient(String restPath, PagingInfo pagingInfo, String patientUuid,
-                                                     String representation) {
+    protected Call<Results<Visit>> _restGetByPatient(String restPath, String patientUuid, QueryOptions options,
+			PagingInfo pagingInfo) {
         if (isPagingValid(pagingInfo)) {
-            return restService.getByPatient(restPath, patientUuid, representation,
-                    pagingInfo.getLimit(), pagingInfo.getStartIndex());
+            return restService.getByPatient(restPath, patientUuid, QueryOptions.getRepresentation(options),
+					QueryOptions.getIncludeInactive(options), pagingInfo.getLimit(), pagingInfo.getStartIndex());
         } else {
-            return restService.getByPatient(restPath, patientUuid, representation);
+            return restService.getByPatient(restPath, patientUuid, QueryOptions.getRepresentation(options),
+					QueryOptions.getIncludeInactive(options));
         }
     }
 

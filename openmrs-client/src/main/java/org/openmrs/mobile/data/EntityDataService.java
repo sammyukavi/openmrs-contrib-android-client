@@ -16,11 +16,11 @@ public interface EntityDataService<E extends BaseOpenmrsEntity> extends DataServ
     /**
      * Gets entities associated with the specified patient.
      * @param patient The patient to search for
-     * @param includeInactive {@code true} to include inactive entities; otherwise, {@code false}
+     * @param options The {@link QueryOptions} settings to use for this operation
      * @param pagingInfo The paging information or null to exclude paging
      * @param callback
      */
-    void getByPatient(@NonNull Patient patient, boolean includeInactive,
+    void getByPatient(@NonNull Patient patient, @Nullable QueryOptions options,
                       @Nullable PagingInfo pagingInfo,
                       @NonNull GetCallback<List<E>> callback);
 }

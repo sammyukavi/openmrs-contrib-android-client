@@ -28,12 +28,22 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
         implements DataService<E> {
 	public static final String TAG = "BaseDataService";
 
-    protected DS dbService;
+	/**
+	 * The database service for this entity.
+	 */
+	protected DS dbService;
+
+	/**
+	 * The REST service for this entity.
+	 */
     protected RS restService;
 
     protected BaseDataService() {
+		dbService = getDbService();
         restService = RestServiceBuilder.createService(getRestServiceClass());
     }
+
+    protected abstract DS getDbService();
 
     /**
      * Gets the rest service class defined by the implementing class.
@@ -53,9 +63,9 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
      */
     protected abstract String getEntityName();
 
-    protected abstract Call<E> _restGetByUuid(String restPath, String uuid, String representation);
+    protected abstract Call<E> _restGetByUuid(String restPath, String uuid, QueryOptions options);
 
-    protected abstract Call<Results<E>> _restGetAll(String restPath, PagingInfo pagingInfo, String representation);
+    protected abstract Call<Results<E>> _restGetAll(String restPath, QueryOptions options, PagingInfo pagingInfo);
 
     protected abstract Call<E> _restCreate(String restPath, E entity);
 
@@ -64,13 +74,13 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
     protected abstract Call<E> _restPurge(String restPath, String uuid);
 
     @Override
-    public void getByUUID(@NonNull String uuid, @NonNull GetCallback<E> callback) {
+    public void getByUUID(@NonNull String uuid, @Nullable QueryOptions options, @NonNull GetCallback<E> callback) {
         checkNotNull(uuid);
         checkNotNull(callback);
 
-        executeSingleCallback(callback,
-                () -> dbService.getByUuid(uuid),
-                () -> _restGetByUuid(buildRestRequestPath(), uuid, RestConstants.Representations.FULL));
+		executeSingleCallback(callback,
+                () -> dbService.getByUuid(uuid, options),
+                () -> _restGetByUuid(buildRestRequestPath(), uuid, options));
 
         // Build local query
         // Build REST query
@@ -83,19 +93,22 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
     }
 
     @Override
-    public void getAll(boolean includeInactive, @Nullable PagingInfo pagingInfo,
+    public void getAll(@Nullable QueryOptions options, @Nullable PagingInfo pagingInfo,
                        @NonNull GetCallback<List<E>> callback) {
         checkNotNull(callback);
 
         executeMultipleCallback(callback,
-				() -> dbService.getAll(pagingInfo),
-				() -> _restGetAll(buildRestRequestPath(), pagingInfo, RestConstants.Representations.FULL));
+				() -> dbService.getAll(options, pagingInfo),
+				() -> _restGetAll(buildRestRequestPath(), options, pagingInfo));
     }
 
     @Override
-    public void search(@NonNull E template, @Nullable PagingInfo pagingInfo, @NonNull GetCallback<List<E>> callback) {
+    public void search(@NonNull E template, @Nullable QueryOptions options, @Nullable PagingInfo pagingInfo,
+			@NonNull GetCallback<List<E>> callback) {
         checkNotNull(template);
         checkNotNull(callback);
+
+
     }
 
     @Override

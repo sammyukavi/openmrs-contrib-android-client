@@ -52,6 +52,7 @@ public abstract class OpenMRSSQLiteOpenHelper extends SQLiteOpenHelper {
         return mSecretKey != null ? mSecretKey : OpenMRS.getInstance().getSecretKey();
     }
 
+    //TODO: Refactor to remove exception to control program flow
     public synchronized SQLiteDatabase getWritableDatabase() {
         SQLiteDatabase db;
         try {

@@ -16,18 +16,17 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public abstract class BaseMetadataDataService<E extends BaseOpenmrsMetadata, DS extends BaseMetadataDbService<E>, RS>
         extends BaseDataService<E, DS, RS> implements MetadataDataService<E> {
-    protected abstract Call<Results<E>> _restGetByNameFragment(String restPath, PagingInfo pagingInfo, String name,
-                                                               String representation);
+    protected abstract Call<Results<E>> _restGetByNameFragment(String restPath, String name, QueryOptions options,
+			PagingInfo pagingInfo);
 
     @Override
-    public void getByNameFragment(@NonNull String name, boolean includeInactive,
-                                  @Nullable PagingInfo pagingInfo,
+    public void getByNameFragment(@NonNull String name, @Nullable QueryOptions options, @Nullable PagingInfo pagingInfo,
                                   @NonNull GetCallback<List<E>> callback) {
         checkNotNull(name);
         checkNotNull(callback);
 
         executeMultipleCallback(callback,
-                () -> dbService.getByNameFragment(name, includeInactive, pagingInfo),
-                () -> _restGetByNameFragment(buildRestRequestPath(), pagingInfo, name, RestConstants.Representations.FULL));
+                () -> dbService.getByNameFragment(name, options, pagingInfo),
+                () -> _restGetByNameFragment(buildRestRequestPath(), name, options, pagingInfo));
     }
 }

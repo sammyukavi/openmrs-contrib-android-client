@@ -155,14 +155,11 @@ public class Patient extends BaseOpenmrsAuditableObject implements Serializable{
         puToMapIfNotNull(map, "givenname", person.getName().getGivenName());
         puToMapIfNotNull(map, "middlename",person.getName().getMiddleName());
         puToMapIfNotNull(map, "familyname", person.getName().getFamilyName());
+        puToMapIfNotNull(map, "nexOfKinName", person.getName().getNextOfKinName());
         puToMapIfNotNull(map, "gender", person.getGender());
         puToMapIfNotNull(map, "birthdate", person.getBirthdate());
-        puToMapIfNotNull(map, "address1", person.getAddress().getAddress1());
-        puToMapIfNotNull(map, "address2", person.getAddress().getAddress2());
-        puToMapIfNotNull(map, "city", person.getAddress().getCityVillage());
-        puToMapIfNotNull(map, "state", person.getAddress().getStateProvince());
-        puToMapIfNotNull(map, "postalcode", person.getAddress().getPostalCode());
-        puToMapIfNotNull(map, "country", person.getAddress().getCountry());
+        puToMapIfNotNull(map, "subcounty", person.getAddress().getSubCounty());
+        puToMapIfNotNull(map, "country", person.getAddress().getCounty());
         return map;
     }
 

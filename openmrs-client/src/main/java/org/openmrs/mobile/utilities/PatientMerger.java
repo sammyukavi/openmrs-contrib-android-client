@@ -21,12 +21,12 @@ public class PatientMerger {
 	}
 	
 	private void mergePersonAddress(PersonAddress oldAddress, PersonAddress newAddress) {
-		oldAddress.setAddress1(getNewValueIfOldIsNull(oldAddress.getAddress1(), newAddress.getAddress1()));
-		oldAddress.setAddress2(getNewValueIfOldIsNull(oldAddress.getAddress2(), newAddress.getAddress2()));
-		oldAddress.setCityVillage(getNewValueIfOldIsNull(oldAddress.getCityVillage(), newAddress.getCityVillage()));
-		oldAddress.setCountry(getNewValueIfOldIsNull(oldAddress.getCountry(), newAddress.getCountry()));
-		oldAddress.setPostalCode(getNewValueIfOldIsNull(oldAddress.getPostalCode(), newAddress.getPostalCode()));
-		oldAddress.setStateProvince(getNewValueIfOldIsNull(oldAddress.getStateProvince(), newAddress.getStateProvince()));
+		//oldAddress.setAddress1(getNewValueIfOldIsNull(oldAddress.getAddress1(), newAddress.getAddress1()));
+		//oldAddress.setAddress2(getNewValueIfOldIsNull(oldAddress.getAddress2(), newAddress.getAddress2()));
+		//oldAddress.setCityVillage(getNewValueIfOldIsNull(oldAddress.getCityVillage(), newAddress.getCityVillage()));
+		oldAddress.setCounty(getNewValueIfOldIsNull(oldAddress.getCounty(), newAddress.getCounty()));
+		//oldAddress.setPostalCode(getNewValueIfOldIsNull(oldAddress.getPostalCode(), newAddress.getPostalCode()));
+		oldAddress.setSubCounty(getNewValueIfOldIsNull(oldAddress.getSubCounty(), newAddress.getSubCounty()));
 	}
 	
 	private void mergePersonNames(PersonName oldName, PersonName newName) {

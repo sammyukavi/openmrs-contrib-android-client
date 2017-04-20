@@ -64,9 +64,9 @@ public class AddEditPatientActivity extends ACBaseActivity {
 			patientID = patientBundle.getString(ApplicationConstants.BundleKeys.PATIENT_ID_BUNDLE);
 		}
 		
-		List<String> countries = Arrays.asList(getResources().getStringArray(R.array.countries_array));
+		List<String> counties = Arrays.asList(getResources().getStringArray(R.array.countiesArray));
 		// Create the mPresenter
-		mPresenter = new AddEditPatientPresenter(addEditPatientFragment, countries, patientID);
+		mPresenter = new AddEditPatientPresenter(addEditPatientFragment, counties, patientID);
 	}
 	
 	@Override

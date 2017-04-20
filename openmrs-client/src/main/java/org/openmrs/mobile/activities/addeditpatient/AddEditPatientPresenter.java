@@ -70,6 +70,70 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		this.mPatientInfoView.setPresenter(this);
 	}
 
+	private boolean validate(Patient patient) {
+
+		boolean familyNameError = false;
+		boolean lastNameError = false;
+		boolean dateOfBirthError = false;
+		boolean genderError = false;
+		boolean addressError = false;
+		boolean countyError = false;
+		boolean patientFileNumberError = false;
+		boolean civilStatusError = false;
+		boolean occupationError = false;
+
+		mPatientInfoView.setErrorsVisibility(familyNameError, lastNameError, dateOfBirthError, genderError, addressError,
+				countyError, patientFileNumberError, civilStatusError, occupationError);
+
+		// Validate names
+		if (StringUtils.isBlank(patient.getPerson().getName().getGivenName())) {
+			familyNameError = true;
+		}
+		if (StringUtils.isBlank(patient.getPerson().getName().getFamilyName())) {
+			lastNameError = true;
+		}
+
+		// Validate date of birth
+		if (StringUtils.isBlank(patient.getPerson().getBirthdate())) {
+			dateOfBirthError = true;
+		}
+
+		// Validate address
+		if (StringUtils.isBlank(patient.getPerson().getAddress().getSubCounty())
+				&& StringUtils.isBlank(patient.getPerson().getAddress().getCounty())) {
+			addressError = true;
+		}
+
+		if (!StringUtils.isBlank(patient.getPerson().getAddress().getCounty()) &&
+				!mCountries.contains(patient.getPerson().getAddress().getCounty())) {
+			countyError = true;
+		}
+
+		// Validate gender
+		if (StringUtils.isBlank(patient.getPerson().getGender())) {
+			genderError = true;
+		}
+
+		/*
+		* Validate File Number
+		* */
+		if (StringUtils.isBlank(patient.getIdentifier().toString())) {
+			patientFileNumberError = true;
+		}
+
+		boolean result =
+				!familyNameError && !lastNameError && !dateOfBirthError && !addressError && !countyError && !genderError
+						&& !patientFileNumberError && !occupationError && !civilStatusError;
+		if (result) {
+			mPatient = patient;
+			return true;
+		} else {
+			mPatientInfoView.setErrorsVisibility(familyNameError, lastNameError, dateOfBirthError, addressError,
+					countyError, genderError, patientFileNumberError, civilStatusError, occupationError);
+			return false;
+		}
+	}
+
 	@Override
 	public void subscribe() {
 		// This method is intentionally empty
@@ -108,74 +172,6 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 	@Override
 	public void finishPatientInfoActivity() {
 		mPatientInfoView.finishPatientInfoActivity();
-	}
-
-	private boolean validate(Patient patient) {
-
-		boolean familyNameError = false;
-		boolean lastNameError = false;
-		boolean dateOfBirthError = false;
-		boolean genderError = false;
-		boolean addressError = false;
-		boolean countryError = false;
-		boolean patientFileNumberError = false;
-		boolean civilStatusError = false;
-		boolean occupationError = false;
-
-		mPatientInfoView.setErrorsVisibility(familyNameError, lastNameError, dateOfBirthError, genderError, addressError,
-				countryError, patientFileNumberError, civilStatusError, occupationError);
-
-		// Validate names
-		if (StringUtils.isBlank(patient.getPerson().getName().getGivenName())) {
-			familyNameError = true;
-		}
-		if (StringUtils.isBlank(patient.getPerson().getName().getFamilyName())) {
-			lastNameError = true;
-		}
-
-		// Validate date of birth
-		if (StringUtils.isBlank(patient.getPerson().getBirthdate())) {
-			dateOfBirthError = true;
-		}
-
-		// Validate address
-		if (StringUtils.isBlank(patient.getPerson().getAddress().getAddress1())
-				&& StringUtils.isBlank(patient.getPerson().getAddress().getAddress2())
-				&& StringUtils.isBlank(patient.getPerson().getAddress().getCityVillage())
-				&& StringUtils.isBlank(patient.getPerson().getAddress().getStateProvince())
-				&& StringUtils.isBlank(patient.getPerson().getAddress().getCountry())
-				&& StringUtils.isBlank(patient.getPerson().getAddress().getPostalCode())) {
-			addressError = true;
-		}
-
-		if (!StringUtils.isBlank(patient.getPerson().getAddress().getCountry()) &&
-				!mCountries.contains(patient.getPerson().getAddress().getCountry())) {
-			countryError = true;
-		}
-
-		// Validate gender
-		if (StringUtils.isBlank(patient.getPerson().getGender())) {
-			genderError = true;
-		}
-
-		/*
-		* Validate File Number
-		* */
-		if (StringUtils.isBlank(patient.getIdentifier().toString())) {
-			patientFileNumberError = true;
-		}
-
-		boolean result =
-				!familyNameError && !lastNameError && !dateOfBirthError && !addressError && !countryError && !genderError
-						&& !patientFileNumberError;
-		if (result) {
-			mPatient = patient;
-			return true;
-		} else {
-			mPatientInfoView.setErrorsVisibility(familyNameError, lastNameError, dateOfBirthError, addressError,
-					countryError, genderError, patientFileNumberError, civilStatusError, occupationError);
-			return false;
-		}
 	}
 
 	@Override

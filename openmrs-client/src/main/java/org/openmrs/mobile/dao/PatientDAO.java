@@ -195,12 +195,12 @@ public class PatientDAO {
 		int cityColumnIndex = cursor.getColumnIndex(PatientTable.Column.CITY);
 		
 		PersonAddress personAddress = new PersonAddress();
-		personAddress.setAddress1(cursor.getString(address1ColumnIndex));
-		personAddress.setAddress2(cursor.getString(address2ColumnIndex));
-		personAddress.setPostalCode(cursor.getString(postalColumnIndex));
-		personAddress.setCountry(cursor.getString(countryColumnIndex));
-		personAddress.setStateProvince(cursor.getString(stateColumnIndex));
-		personAddress.setCityVillage(cursor.getString(cityColumnIndex));
+		//personAddress.setAddress1(cursor.getString(address1ColumnIndex));
+		//personAddress.setAddress2(cursor.getString(address2ColumnIndex));
+		//personAddress.setPostalCode(cursor.getString(postalColumnIndex));
+		personAddress.setCounty(cursor.getString(countryColumnIndex));
+		personAddress.setSubCounty(cursor.getString(stateColumnIndex));
+		//personAddress.setCityVillage(cursor.getString(cityColumnIndex));
 		
 		return personAddress;
 	}

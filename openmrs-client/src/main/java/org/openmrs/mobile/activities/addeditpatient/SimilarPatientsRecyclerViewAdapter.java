@@ -63,7 +63,7 @@ public class SimilarPatientsRecyclerViewAdapter extends RecyclerView.Adapter<Sim
 		setPatientName(holder, patient);
 		setGender(holder, patient);
 		setBirthdate(holder, patient);
-		setPatientAdres(holder, patient);
+		setPatientAddress(holder, patient);
 		
 		holder.mRowLayout.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -117,8 +117,8 @@ public class SimilarPatientsRecyclerViewAdapter extends RecyclerView.Adapter<Sim
 		}
 	}
 	
-	private void setPatientAdres(PatientViewHolder holder, Patient patient) {
-		if (null != patient.getPerson().getAddress().getAddress1()) {
+	private void setPatientAddress(PatientViewHolder holder, Patient patient) {
+		/*if (null != patient.getPerson().getAddress().getAddress1()) {
 			holder.mAddres.setText(patient.getPerson().getAddress().getAddress1());
 			if (Objects.equal(patient.getPerson().getAddress().getAddress1(), newPatient.getPerson().getAddress().getAddress1())) {
 				setStyleForMatchedPatientFields(holder.mAddres);
@@ -135,10 +135,10 @@ public class SimilarPatientsRecyclerViewAdapter extends RecyclerView.Adapter<Sim
 			if (Objects.equal(patient.getPerson().getAddress().getCityVillage(), newPatient.getPerson().getAddress().getCityVillage())) {
 				setStyleForMatchedPatientFields(holder.mCity);
 			}
-		}
-		if (null != patient.getPerson().getAddress().getCountry()) {
-			holder.mCountry.setText(patient.getPerson().getAddress().getCountry());
-			if (Objects.equal(patient.getPerson().getAddress().getCountry(), newPatient.getPerson().getAddress().getCountry())) {
+		}*/
+		if (null != patient.getPerson().getAddress().getCounty()) {
+			holder.mCountry.setText(patient.getPerson().getAddress().getCounty());
+			if (Objects.equal(patient.getPerson().getAddress().getCounty(), newPatient.getPerson().getAddress().getCounty())) {
 				setStyleForMatchedPatientFields(holder.mCountry);
 			}
 		}

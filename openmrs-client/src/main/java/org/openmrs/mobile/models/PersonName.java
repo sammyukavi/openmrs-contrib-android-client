@@ -26,7 +26,24 @@ public class PersonName implements Serializable {
 	@SerializedName("familyName")
 	@Expose
 	private String familyName;
-	
+	@SerializedName("nextOfKinName")
+	@Expose
+	private String nextOfKinName;
+
+	/**
+	 * @return The nextOfKinName
+	 * */
+	public String getNextOfKinName() {
+		return nextOfKinName;
+	}
+
+	/**
+	* @param nextOfKinName The nextOfKinName
+	*/
+	public void setNextOfKinName(String nextOfKinName) {
+		this.nextOfKinName = nextOfKinName;
+	}
+
 	/**
 	 * @return The givenName
 	 */

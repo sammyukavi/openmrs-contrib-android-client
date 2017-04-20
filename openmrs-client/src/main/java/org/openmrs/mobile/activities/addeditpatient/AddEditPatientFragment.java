@@ -17,10 +17,8 @@ package org.openmrs.mobile.activities.addeditpatient;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -72,20 +70,17 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 
 	private final static int IMAGE_REQUEST = 1;
 	private LinearLayout linearLayout;
-	private LocalDate birthdate;
-	private DateTime bdt;
+	private LocalDate birthdate , patientEncouterDate;
+	private DateTime bdt, enconterdate;
 	private EditText edfname;
 	private EditText edmname;
 	private EditText edlname;
 	private EditText eddob;
 	private EditText edyr;
 	private EditText edmonth;
-	private EditText edaddr1;
-	private EditText edaddr2;
-	private EditText edcity;
 	private EditText fileNumber;
-	private EditText county;
-	private EditText subCounty;
+	private AutoCompleteTextView county;
+	private AutoCompleteTextView subCounty;
 	private EditText nationality;
 	private EditText patientIdNo;
 	private EditText clinic;
@@ -97,15 +92,13 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 	private EditText kinResidence;
 	private EditText encounterDate;
 	private EditText encounterDept;
-	private EditText encounterProvider;
+	private Spinner encounterProvider;
 	private RadioGroup gen;
 	private ProgressBar progressBar;
 
 	private Button submitConfirm;
-	private String[] countries;
+	private String[] counties;
 	private ImageView patientImageView;
-	private FloatingActionButton capturePhoto;
-	private Bitmap patientPhoto = null;
 	private String patientName;
 	private File output = null;
 	private OpenMRSLogger logger = new OpenMRSLogger();
@@ -143,12 +136,68 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		return new AddEditPatientFragment();
 	}
 
+	private void resolveViews(View v) {
+		linearLayout = (LinearLayout)v.findViewById(R.id.addEditLinearLayout);
+		edfname = (EditText)v.findViewById(R.id.firstname);
+		edmname = (EditText)v.findViewById(R.id.middlename);
+		edlname = (EditText)v.findViewById(R.id.surname);
+		eddob = (EditText)v.findViewById(R.id.dob);
+		edyr = (EditText)v.findViewById(R.id.estyr);
+		edmonth = (EditText)v.findViewById(R.id.estmonth);
+		fileNumber = (EditText)v.findViewById(R.id.fileNumber);
+		fileNumber = (EditText)v.findViewById(R.id.fileNumber);
+		occupation = (EditText)v.findViewById(R.id.occuapation);
+		county = (AutoCompleteTextView)v.findViewById(R.id.county);
+		subCounty = (AutoCompleteTextView)v.findViewById(R.id.sub_county);
+		nationality = (EditText)v.findViewById(R.id.nationality);
+		patientIdNo = (EditText)v.findViewById(R.id.patient_id_no);
+		clinic = (EditText)v.findViewById(R.id.clinic);
+		ward = (EditText)v.findViewById(R.id.ward);
+		phonenumber = (EditText)v.findViewById(R.id.phonenumber);
+		kinName = (EditText)v.findViewById(R.id.kinName);
+		kinRelationship = (EditText)v.findViewById(R.id.kinRelationship);
+		kinPhonenumber = (EditText)v.findViewById(R.id.kinPhonenumber);
+		kinResidence = (EditText)v.findViewById(R.id.kinResidence);
+		encounterDate = (EditText)v.findViewById(R.id.encounterDate);
+		encounterDept = (EditText)v.findViewById(R.id.encounterDept);
+		encounterProvider = (Spinner)v.findViewById(R.id.encounterProvider);
+
+		gen = (RadioGroup)v.findViewById(R.id.gender);
+		progressBar = (ProgressBar)v.findViewById(R.id.progress_bar);
+
+		fnameerror = (TextView)v.findViewById(R.id.fnameerror);
+		lnameerror = (TextView)v.findViewById(R.id.lnameerror);
+		doberror = (TextView)v.findViewById(R.id.doberror);
+		gendererror = (TextView)v.findViewById(R.id.gendererror);
+		addrerror = (TextView)v.findViewById(R.id.addrerror);
+		fileNumberError = (TextView)v.findViewById(R.id.fileNumberError);
+		marriageStatusError = (TextView)v.findViewById(R.id.civilStatusError);
+		countyerror = (TextView)v.findViewById(R.id.countyError);
+		subCountyError = (TextView)v.findViewById(R.id.sub_countError);
+		nationalityError = (TextView)v.findViewById(R.id.nationalityError);
+		patientIdNoError = (TextView)v.findViewById(R.id.patient_id_noError);
+		clinicError = (TextView)v.findViewById(R.id.clinicError);
+		wardError = (TextView)v.findViewById(R.id.wardError);
+		phonenumberError = (TextView)v.findViewById(R.id.phonenumberError);
+		kinNameError = (TextView)v.findViewById(R.id.kinNameError);
+		kinRelationshipError = (TextView)v.findViewById(R.id.kinRelationshipError);
+		kinPhonenumberError = (TextView)v.findViewById(R.id.kinPhonenumberError);
+		kinResidenceError = (TextView)v.findViewById(R.id.kinResidenceError);
+		encounterDateError = (TextView)v.findViewById(R.id.encounterDateError);
+		encounterDeptError = (TextView)v.findViewById(R.id.encounterDeptError);
+		encounterProviderError = (TextView)v.findViewById(R.id.encounterProviderError);
+		occupationError = (TextView)v.findViewById(R.id.occupationError);
+
+		submitConfirm = (Button)v.findViewById(R.id.submitConfirm);
+		civilStatus = (Spinner)v.findViewById(R.id.civilStatusSpinner);
+	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View root = inflater.inflate(R.layout.fragment_patient_info, container, false);
 		resolveViews(root);
-		//addSuggestionsToAutoCompleTextView();
+		addSuggestionsToAutoCompleTextView();
 		addListeners();
 		fillFields(mPresenter.getPatientToUpdate());
 		return root;
@@ -229,9 +278,6 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 
 		// Add address
 		PersonAddress address = new PersonAddress();
-		address.setAddress1(ViewUtils.getInput(edaddr1));
-		address.setAddress2(ViewUtils.getInput(edaddr2));
-		address.setCityVillage(ViewUtils.getInput(edcity));
 		address.setPreferred(true);
 
 		List<PersonAddress> addresses = new ArrayList<>();
@@ -262,12 +308,12 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern(DateUtils.OPEN_MRS_REQUEST_PATIENT_FORMAT);
 		if (ViewUtils.isEmpty(eddob)) {
 			if (!StringUtils.isBlank(ViewUtils.getInput(edyr)) || !StringUtils.isBlank(ViewUtils.getInput(edmonth))) {
-				int yeardiff = ViewUtils.isEmpty(edyr) ? 0 : Integer.parseInt(edyr.getText().toString());
-				int mondiff = ViewUtils.isEmpty(edmonth) ? 0 : Integer.parseInt(edmonth.getText().toString());
+				int yearDiff = ViewUtils.isEmpty(edyr) ? 0 : Integer.parseInt(edyr.getText().toString());
+				int monthDiff = ViewUtils.isEmpty(edmonth) ? 0 : Integer.parseInt(edmonth.getText().toString());
 				LocalDate now = new LocalDate();
 				bdt = now.toDateTimeAtStartOfDay().toDateTime();
-				bdt = bdt.minusYears(yeardiff);
-				bdt = bdt.minusMonths(mondiff);
+				bdt = bdt.minusYears(yearDiff);
+				bdt = bdt.minusMonths(monthDiff);
 				person.setBirthdateEstimated(true);
 				birthdate = dateTimeFormatter.print(bdt);
 			}
@@ -275,9 +321,6 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 			birthdate = dateTimeFormatter.print(bdt);
 		}
 		person.setBirthdate(birthdate);
-
-		if (patientPhoto != null)
-			person.setPhoto(patientPhoto);
 
 		return person;
 	}
@@ -337,62 +380,6 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		ToastUtil.notifyLong(getResources().getString(R.string.registration_core_info));
 	}
 
-	private void resolveViews(View v) {
-		linearLayout = (LinearLayout)v.findViewById(R.id.addEditLinearLayout);
-		edfname = (EditText)v.findViewById(R.id.firstname);
-		edmname = (EditText)v.findViewById(R.id.middlename);
-		edlname = (EditText)v.findViewById(R.id.surname);
-		eddob = (EditText)v.findViewById(R.id.dob);
-		edyr = (EditText)v.findViewById(R.id.estyr);
-		edmonth = (EditText)v.findViewById(R.id.estmonth);
-		fileNumber = (EditText)v.findViewById(R.id.fileNumber);
-		fileNumber = (EditText)v.findViewById(R.id.fileNumber);
-		occupation = (EditText)v.findViewById(R.id.occuapation);
-		county = (EditText)v.findViewById(R.id.county);
-		subCounty = (EditText)v.findViewById(R.id.sub_county);
-		nationality = (EditText)v.findViewById(R.id.nationality);
-		patientIdNo = (EditText)v.findViewById(R.id.patient_id_no);
-		clinic = (EditText)v.findViewById(R.id.clinic);
-		ward = (EditText)v.findViewById(R.id.ward);
-		phonenumber = (EditText)v.findViewById(R.id.phonenumber);
-		kinName = (EditText)v.findViewById(R.id.kinName);
-		kinRelationship = (EditText)v.findViewById(R.id.kinRelationship);
-		kinPhonenumber = (EditText)v.findViewById(R.id.kinPhonenumber);
-		kinResidence = (EditText)v.findViewById(R.id.kinResidence);
-		encounterDate = (EditText)v.findViewById(R.id.encounterDate);
-		encounterDept = (EditText)v.findViewById(R.id.encounterDept);
-		encounterProvider = (EditText)v.findViewById(R.id.encounterProvider);
-
-		gen = (RadioGroup)v.findViewById(R.id.gender);
-		progressBar = (ProgressBar)v.findViewById(R.id.progress_bar);
-
-		fnameerror = (TextView)v.findViewById(R.id.fnameerror);
-		lnameerror = (TextView)v.findViewById(R.id.lnameerror);
-		doberror = (TextView)v.findViewById(R.id.doberror);
-		gendererror = (TextView)v.findViewById(R.id.gendererror);
-		addrerror = (TextView)v.findViewById(R.id.addrerror);
-		fileNumberError = (TextView)v.findViewById(R.id.fileNumberError);
-		marriageStatusError = (TextView)v.findViewById(R.id.civilStatusError);
-		countyerror = (TextView)v.findViewById(R.id.countyError);
-		subCountyError = (TextView)v.findViewById(R.id.sub_countError);
-		nationalityError = (TextView)v.findViewById(R.id.nationalityError);
-		patientIdNoError = (TextView)v.findViewById(R.id.patient_id_noError);
-		clinicError = (TextView)v.findViewById(R.id.clinicError);
-		wardError = (TextView)v.findViewById(R.id.wardError);
-		phonenumberError = (TextView)v.findViewById(R.id.phonenumberError);
-		kinNameError = (TextView)v.findViewById(R.id.kinNameError);
-		kinRelationshipError = (TextView)v.findViewById(R.id.kinRelationshipError);
-		kinPhonenumberError = (TextView)v.findViewById(R.id.kinPhonenumberError);
-		kinResidenceError = (TextView)v.findViewById(R.id.kinResidenceError);
-		encounterDateError = (TextView)v.findViewById(R.id.encounterDateError);
-		encounterDeptError = (TextView)v.findViewById(R.id.encounterDeptError);
-		encounterProviderError = (TextView)v.findViewById(R.id.encounterProviderError);
-		occupationError = (TextView)v.findViewById(R.id.occupationError);
-
-		submitConfirm = (Button)v.findViewById(R.id.submitConfirm);
-		civilStatus = (Spinner)v.findViewById(R.id.civilStatusSpinner);
-	}
-
 	private void fillFields(final Patient patient) {
 		if (patient != null && patient.getPerson() != null) {
 			//Change to Update Patient Form
@@ -426,38 +413,34 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 				gen.check(R.id.female);
 			}
 
-			edaddr1.setText(person.getAddress().getAddress1());
-			edaddr2.setText(person.getAddress().getAddress2());
-			edcity.setText(person.getAddress().getCityVillage());
 
 		}
 	}
 
-	/*private void addSuggestionsToAutoCompleTextView() {
-		countries = getContext().getResources().getStringArray(R.array.countries_array);
+	private void addSuggestionsToAutoCompleTextView() {
+		counties = getContext().getResources().getStringArray(R.array.countiesArray);
 		ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
-				android.R.layout.simple_dropdown_item_1line, countries);
-		edcountry.setAdapter(adapter);
+				android.R.layout.simple_dropdown_item_1line, counties);
+		county.setAdapter(adapter);
 
 	}
-
-	private void addSuggestionsToCities() {
-		String country_name = edcountry.getText().toString();
-		country_name = country_name.replace("(", "");
-		country_name = country_name.replace(")", "");
-		country_name = country_name.replace(" ", "");
-		country_name = country_name.replace("-", "_");
-		country_name = country_name.replace(".", "");
-		country_name = country_name.replace("'", "");
+	private void addSuggestionsToSubCounties() {
+		String countyName = county.getText().toString();
+		countyName = countyName.replace("(", "");
+		countyName = countyName.replace(")", "");
+		countyName = countyName.replace(" ", "");
+		countyName = countyName.replace("-", "_");
+		countyName = countyName.replace(".", "");
+		countyName = countyName.replace("'", "");
 		int resourceId =
-				this.getResources().getIdentifier(country_name.toLowerCase(), "array", getContext().getPackageName());
+				this.getResources().getIdentifier(countyName.toLowerCase(), "array", getContext().getPackageName());
 		if (resourceId != 0) {
-			String[] states = getContext().getResources().getStringArray(resourceId);
-			ArrayAdapter<String> state_adapter = new ArrayAdapter<>(getContext(),
-					android.R.layout.simple_dropdown_item_1line, states);
-			edstate.setAdapter(state_adapter);
+			String[] subCounties = getContext().getResources().getStringArray(resourceId);
+			ArrayAdapter<String> countiesAdapter = new ArrayAdapter<>(getContext(),
+					android.R.layout.simple_dropdown_item_1line, subCounties);
+			subCounty.setAdapter(countiesAdapter);
 		}
-	}*/
+	}
 
 	private void addListeners() {
 		gen.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -466,24 +449,26 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 			}
 		});
 
-		/*edcountry.setThreshold(2);
-		edcountry.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+		county.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
-				if (edcountry.getText().length() >= edcountry.getThreshold()) {
-					edcountry.showDropDown();
+				if (county.getText().length() >= county.getThreshold()) {
+					county.showDropDown();
 				}
-				if (Arrays.asList(countries).contains(edcountry.getText().toString())) {
-					edcountry.dismissDropDown();
+				if (Arrays.asList(counties).contains(county.getText().toString())) {
+					county.dismissDropDown();
 				}
 			}
 		});
-		edstate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+
+		county.setThreshold(2);
+		subCounty.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
-				addSuggestionsToCities();
+				addSuggestionsToSubCounties();
 			}
-		});*/
+		});
+
 		if (eddob != null) {
 			eddob.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -519,6 +504,42 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 					mDatePicker.getDatePicker().setMaxDate(System.currentTimeMillis());
 					mDatePicker.setTitle("Select Date");
 					mDatePicker.show();
+				}
+			});
+		}
+
+		if (encounterDate != null){
+			encounterDate.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					int encounterYear;
+					int encounterMonth;
+					int encounterDay;
+
+					if (enconterdate == null ){
+						Calendar currentDate = Calendar.getInstance();
+						encounterYear = currentDate.get(Calendar.YEAR);
+						encounterMonth = currentDate.get(Calendar.MONTH);
+						encounterDay = currentDate.get(Calendar.DAY_OF_MONTH);
+					} else {
+						encounterYear = enconterdate.getYear();
+						encounterMonth = enconterdate.getMonthOfYear() -1;
+						encounterDay = enconterdate.getDayOfMonth();
+					}
+
+					DatePickerDialog encounterDateDialog = new DatePickerDialog(AddEditPatientFragment.this.getActivity(),
+							new DatePickerDialog.OnDateSetListener(){
+								public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth,
+										int selectedday) {
+									int adjustedMonth = selectedmonth + 1;
+									encounterDate.setText(selectedday + "/" + adjustedMonth + "/" + selectedyear);
+									patientEncouterDate = new LocalDate(selectedyear, adjustedMonth, selectedday);
+									enconterdate = patientEncouterDate.toDateTimeAtStartOfDay().toDateTime();
+								}
+							}, encounterYear, encounterMonth, encounterDay);
+					encounterDateDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
+					encounterDateDialog.setTitle("Select Date");
+					encounterDateDialog.show();
 				}
 			});
 		}

@@ -117,8 +117,8 @@ public abstract class ACUnitTestBase {
         personAddress.setAddress1("address_1_" + id);
         personAddress.setAddress2("address_2_" + id);
         personAddress.setCityVillage("city_" + id);
-        personAddress.setStateProvince("state_" + id);
-        personAddress.setCountry("country_" + id);
+        personAddress.setSubCounty("state_" + id);
+        personAddress.setCounty("country_" + id);
         personAddress.setPostalCode("postal_code_" + id);
         return personAddress;
     }

@@ -12,7 +12,6 @@ import java.io.Serializable;
 public class BaseOpenmrsEntity extends BaseOpenmrsAuditableObject implements Serializable {
     private static final long serialVersionUID = 1;
 
-    //@ToOne(joinProperty = "patientId")
     @Transient
     @Expose
     private Patient patient;

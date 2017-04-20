@@ -129,12 +129,12 @@ public class DBOpenHelper extends OpenMRSSQLiteOpenHelper {
 				bindBlob(13, bitmapToByteArray(patient.getPerson().getPhoto()), patientStatement);
 			}
 			if (null != patient.getPerson().getAddress()) {
-				bindString(14, patient.getPerson().getAddress().getAddress1(), patientStatement);
-				bindString(15, patient.getPerson().getAddress().getAddress2(), patientStatement);
-				bindString(16, patient.getPerson().getAddress().getPostalCode(), patientStatement);
-				bindString(17, patient.getPerson().getAddress().getCountry(), patientStatement);
-				bindString(18, patient.getPerson().getAddress().getStateProvince(), patientStatement);
-				bindString(19, patient.getPerson().getAddress().getCityVillage(), patientStatement);
+				//bindString(14, patient.getPerson().getAddress().getAddress1(), patientStatement);
+				//bindString(15, patient.getPerson().getAddress().getAddress2(), patientStatement);
+				//bindString(16, patient.getPerson().getAddress().getPostalCode(), patientStatement);
+				bindString(17, patient.getPerson().getAddress().getCounty(), patientStatement);
+				//bindString(18, patient.getPerson().getAddress().getSubCounty(), patientStatement);
+				//bindString(19, patient.getPerson().getAddress().getCityVillage(), patientStatement);
 			}
 			bindString(20, patient.getEncounters(), patientStatement);
 			bindString(21, null, patientStatement);
@@ -174,12 +174,12 @@ public class DBOpenHelper extends OpenMRSSQLiteOpenHelper {
 		}
 		
 		if (null != patient.getPerson().getAddress()) {
-			newValues.put(PatientTable.Column.ADDRESS_1, patient.getPerson().getAddress().getAddress1());
-			newValues.put(PatientTable.Column.ADDRESS_2, patient.getPerson().getAddress().getAddress2());
-			newValues.put(PatientTable.Column.POSTAL_CODE, patient.getPerson().getAddress().getPostalCode());
-			newValues.put(PatientTable.Column.COUNTRY, patient.getPerson().getAddress().getCountry());
-			newValues.put(PatientTable.Column.STATE, patient.getPerson().getAddress().getStateProvince());
-			newValues.put(PatientTable.Column.CITY, patient.getPerson().getAddress().getCityVillage());
+			//newValues.put(PatientTable.Column.ADDRESS_1, patient.getPerson().getAddress().getAddress1());
+			//newValues.put(PatientTable.Column.ADDRESS_2, patient.getPerson().getAddress().getAddress2());
+			//newValues.put(PatientTable.Column.POSTAL_CODE, patient.getPerson().getAddress().getPostalCode());
+			newValues.put(PatientTable.Column.COUNTRY, patient.getPerson().getAddress().getCounty());
+			newValues.put(PatientTable.Column.STATE, patient.getPerson().getAddress().getSubCounty());
+			//newValues.put(PatientTable.Column.CITY, patient.getPerson().getAddress().getCityVillage());
 			
 		}
 		newValues.put(PatientTable.Column.ENCOUNTERS, patient.getEncounters());

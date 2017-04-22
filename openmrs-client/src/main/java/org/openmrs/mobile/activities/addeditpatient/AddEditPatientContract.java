@@ -21,49 +21,48 @@ import org.openmrs.mobile.models.Patient;
 import java.util.List;
 
 public interface AddEditPatientContract {
-	
+
 	interface View extends BaseView<Presenter> {
-		
+
 		void finishPatientInfoActivity();
-		
-		void setErrorsVisibility(boolean givenNameError,
-		                         boolean familyNameError,
-		                         boolean dayOfBirthError,
-		                         boolean addressError,
-		                         boolean countryError,
-		                         boolean genderError,
-		                         boolean patientFileNumberError,
-									boolean civilStatusError,
-									boolean occupationError);
-		
+
+		void setErrorsVisibility(boolean givenNameError, boolean familyNameError, boolean dayOfBirthError,
+				boolean addressError, boolean county_Error, boolean genderError, boolean patientFileNumberError,
+				boolean civilStatusError, boolean occupationError, boolean subCounty_Error, boolean nationality_Error,
+				boolean patientIdNo_Error, boolean clinic_Error, boolean ward_Error, boolean phonenumber_Error,
+				boolean kinName_Error, boolean kinRelationship_Error, boolean kinPhonenumber_Error,
+				boolean encounterDate_Error, boolean encounterDepartment_Error, boolean encounterProvider_Error,
+				boolean kinResidence_Error
+		);
+
 		void scrollToTop();
-		
+
 		void hideSoftKeys();
-		
+
 		void setProgressBarVisibility(boolean visibility);
-		
+
 		void showSimilarPatientDialog(List<Patient> patients, Patient newPatient);
-		
+
 		void startPatientDashboardActivity(Patient patient);
-		
+
 		void showUpgradeRegistrationModuleInfo();
 	}
-	
+
 	interface Presenter extends BasePresenterContract {
-		
+
 		Patient getPatientToUpdate();
-		
+
 		boolean isRegisteringPatient();
-		
-		void confirmRegister(Patient patient);
-		
+
+		void  confirmRegister(Patient patient);
+
 		void confirmUpdate(Patient patient);
-		
+
 		void finishPatientInfoActivity();
-		
+
 		void registerPatient();
-		
+
 		void updatePatient(Patient patient);
 	}
-	
+
 }

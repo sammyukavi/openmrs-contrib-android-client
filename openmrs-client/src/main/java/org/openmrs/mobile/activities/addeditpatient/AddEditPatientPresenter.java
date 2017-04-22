@@ -14,6 +14,8 @@
 
 package org.openmrs.mobile.activities.addeditpatient;
 
+import android.util.Log;
+
 import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.api.RestApi;
 import org.openmrs.mobile.api.RestServiceBuilder;
@@ -44,7 +46,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 	private RestApi restApi;
 	private Patient mPatient;
 	private String patientToUpdateId;
-	private List<String> mCountries;
+	private List<String> mCounties;
 	private boolean registeringPatient = false;
 
 	public AddEditPatientPresenter(AddEditPatientContract.View mPatientInfoView,
@@ -52,7 +54,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 			String patientToUpdateId) {
 		this.mPatientInfoView = mPatientInfoView;
 		this.mPatientInfoView.setPresenter(this);
-		this.mCountries = countries;
+		this.mCounties = countries;
 		this.patientToUpdateId = patientToUpdateId;
 		this.patientApi = new PatientApi();
 		this.restApi = RestServiceBuilder.createService(RestApi.class);
@@ -60,12 +62,12 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 
 	public AddEditPatientPresenter(AddEditPatientContract.View mPatientInfoView, PatientApi patientApi,
 			Patient mPatient, String patientToUpdateId,
-			List<String> mCountries, RestApi restApi) {
+			List<String> mCounties, RestApi restApi) {
 		this.mPatientInfoView = mPatientInfoView;
 		this.patientApi = patientApi;
 		this.mPatient = mPatient;
 		this.patientToUpdateId = patientToUpdateId;
-		this.mCountries = mCountries;
+		this.mCounties = mCounties;
 		this.restApi = restApi;
 		this.mPatientInfoView.setPresenter(this);
 	}
@@ -81,9 +83,24 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		boolean patientFileNumberError = false;
 		boolean civilStatusError = false;
 		boolean occupationError = false;
+		boolean subCountyError = false;
+		boolean nationalityError = false;
+		boolean patientIdNoError = false;
+		boolean clinicError = false;
+		boolean wardError = false;
+		boolean phonenumberError = false;
+		boolean kinNameError = false;
+		boolean kinRelationshipError = false;
+		boolean kinPhonenumberError = false;
+		boolean kinResidenceError = false;
+		boolean encounterDateError = false;
+		boolean encounterDepartmentError = false;
+		boolean encounterProviderError = false;
 
 		mPatientInfoView.setErrorsVisibility(familyNameError, lastNameError, dateOfBirthError, genderError, addressError,
-				countyError, patientFileNumberError, civilStatusError, occupationError);
+				countyError, patientFileNumberError, civilStatusError, occupationError, subCountyError, nationalityError,
+				patientIdNoError,clinicError,wardError,phonenumberError,kinNameError,kinRelationshipError,
+				kinPhonenumberError,encounterDateError,encounterDepartmentError,encounterProviderError,kinResidenceError);
 
 		// Validate names
 		if (StringUtils.isBlank(patient.getPerson().getName().getGivenName())) {
@@ -105,7 +122,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		}
 
 		if (!StringUtils.isBlank(patient.getPerson().getAddress().getCounty()) &&
-				!mCountries.contains(patient.getPerson().getAddress().getCounty())) {
+				!mCounties.contains(patient.getPerson().getAddress().getCounty())) {
 			countyError = true;
 		}
 
@@ -128,8 +145,10 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 			mPatient = patient;
 			return true;
 		} else {
-			mPatientInfoView.setErrorsVisibility(familyNameError, lastNameError, dateOfBirthError, addressError,
-					countyError, genderError, patientFileNumberError, civilStatusError, occupationError);
+			mPatientInfoView.setErrorsVisibility(familyNameError, lastNameError, dateOfBirthError, genderError, addressError,
+					countyError, patientFileNumberError, civilStatusError, occupationError, subCountyError, nationalityError,
+					patientIdNoError,clinicError,wardError,phonenumberError,kinNameError,kinRelationshipError,
+					kinPhonenumberError,encounterDateError,encounterDepartmentError,encounterProviderError,kinResidenceError);
 			return false;
 		}
 	}

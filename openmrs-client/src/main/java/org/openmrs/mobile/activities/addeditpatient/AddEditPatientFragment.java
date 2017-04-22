@@ -50,6 +50,7 @@ import org.openmrs.mobile.application.OpenMRSLogger;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.listeners.watcher.PatientBirthdateValidatorWatcher;
 import org.openmrs.mobile.models.Patient;
+import org.openmrs.mobile.models.PatientIdentifier;
 import org.openmrs.mobile.models.Person;
 import org.openmrs.mobile.models.PersonAddress;
 import org.openmrs.mobile.models.PersonName;
@@ -70,7 +71,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 
 	private final static int IMAGE_REQUEST = 1;
 	private LinearLayout linearLayout;
-	private LocalDate birthdate , patientEncouterDate;
+	private LocalDate birthdate, patientEncouterDate;
 	private DateTime bdt, enconterdate;
 	private EditText edfname;
 	private EditText edmname;
@@ -113,7 +114,6 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 	private TextView doberror;
 	private TextView gendererror;
 	private TextView addrerror;
-	private TextView countyerror;
 	private TextView fileNumberError;
 	private TextView marriageStatusError;
 	private TextView occupationError;
@@ -172,7 +172,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		addrerror = (TextView)v.findViewById(R.id.addrerror);
 		fileNumberError = (TextView)v.findViewById(R.id.fileNumberError);
 		marriageStatusError = (TextView)v.findViewById(R.id.civilStatusError);
-		countyerror = (TextView)v.findViewById(R.id.countyError);
+		countyError = (TextView)v.findViewById(R.id.countyError);
 		subCountyError = (TextView)v.findViewById(R.id.sub_countError);
 		nationalityError = (TextView)v.findViewById(R.id.nationalityError);
 		patientIdNoError = (TextView)v.findViewById(R.id.patient_id_noError);
@@ -197,7 +197,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 			Bundle savedInstanceState) {
 		View root = inflater.inflate(R.layout.fragment_patient_info, container, false);
 		resolveViews(root);
-		addSuggestionsToAutoCompleTextView();
+		addSuggestionsToAutoCompleteTextView();
 		addListeners();
 		fillFields(mPresenter.getPatientToUpdate());
 		return root;
@@ -215,62 +215,37 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 	}
 
 	@Override
-	public void setErrorsVisibility(boolean givenNameError, boolean familyNameError, boolean dayOfBirthError,
-			boolean addressError, boolean countryError, boolean genderError, boolean patientFileNumberError, boolean
-			civilStatusError, boolean occuaptionerror) {
-		if (givenNameError) {
-			fnameerror.setVisibility(View.VISIBLE);
-		} else {
-			fnameerror.setVisibility(View.INVISIBLE);
-		}
+	public void setErrorsVisibility(
+			boolean givenNameError, boolean familyNameError, boolean dayOfBirthError, boolean addressError,
+			boolean county_Error, boolean genderError, boolean patientFileNumberError, boolean civilStatusError,
+			boolean occuaptionerror, boolean subCounty_Error, boolean nationality_Error, boolean patientIdNo_Error,
+			boolean clinic_Error, boolean ward_Error, boolean phonenumber_Error, boolean kinName_Error,
+			boolean kinRelationship_Error, boolean kinPhonenumber_Error, boolean encounterDate_Error,
+			boolean encounterDepartment_Error, boolean encounterProvider_Error, boolean kinResidence_Error
+	) {
+		fnameerror.setVisibility(givenNameError ? View.VISIBLE : View.INVISIBLE);
+		lnameerror.setVisibility(familyNameError ? View.VISIBLE : View.INVISIBLE);
+		doberror.setVisibility(dayOfBirthError ? View.VISIBLE : View.GONE);
+		addrerror.setVisibility(addressError ? View.VISIBLE : View.GONE);
+		countyError.setVisibility(county_Error ? View.VISIBLE : View.GONE);
+		gendererror.setVisibility(genderError ? View.VISIBLE : View.GONE);
+		fileNumberError.setVisibility(patientFileNumberError ? View.VISIBLE : View.GONE);
+		marriageStatusError.setVisibility(civilStatusError ? View.VISIBLE : View.GONE);
+		occupationError.setVisibility(occuaptionerror ? View.VISIBLE : View.GONE);
+		subCountyError.setVisibility(subCounty_Error ? View.VISIBLE : View.GONE);
+		nationalityError.setVisibility(nationality_Error ? View.VISIBLE : View.GONE);
+		patientIdNoError.setVisibility(patientIdNo_Error ? View.VISIBLE : View.GONE);
+		clinicError.setVisibility(clinic_Error ? View.VISIBLE : View.GONE);
+		wardError.setVisibility(ward_Error ? View.VISIBLE : View.GONE);
+		phonenumberError.setVisibility(phonenumber_Error ? View.VISIBLE : View.GONE);
+		kinNameError.setVisibility(kinName_Error ? View.VISIBLE : View.GONE);
+		kinRelationshipError.setVisibility(kinRelationship_Error ? View.VISIBLE : View.GONE);
+		kinPhonenumberError.setVisibility(kinPhonenumber_Error ? View.VISIBLE : View.GONE);
+		kinResidenceError.setVisibility(kinResidence_Error ? View.VISIBLE : View.GONE);
+		encounterDateError.setVisibility(encounterDate_Error ? View.VISIBLE : View.GONE);
+		encounterDateError.setVisibility(encounterDepartment_Error? View.VISIBLE : View.GONE);
+		encounterProviderError.setVisibility(encounterDate_Error ? View.VISIBLE: View.GONE);
 
-		if (familyNameError) {
-			lnameerror.setVisibility(View.VISIBLE);
-		} else {
-			lnameerror.setVisibility(View.INVISIBLE);
-		}
-
-		if (dayOfBirthError) {
-			doberror.setVisibility(View.VISIBLE);
-		} else {
-			doberror.setVisibility(View.GONE);
-		}
-
-		if (addressError) {
-			addrerror.setVisibility(View.VISIBLE);
-		} else {
-			addrerror.setVisibility(View.GONE);
-		}
-
-		if (countryError) {
-			countyerror.setVisibility(View.VISIBLE);
-		} else {
-			countyerror.setVisibility(View.GONE);
-		}
-
-		if (genderError) {
-			gendererror.setVisibility(View.VISIBLE);
-		} else {
-			gendererror.setVisibility(View.GONE);
-		}
-
-		if (patientFileNumberError) {
-			fileNumberError.setVisibility(View.VISIBLE);
-		} else {
-			fileNumberError.setVisibility(View.GONE);
-		}
-
-		if (civilStatusError) {
-			marriageStatusError.setVisibility(View.VISIBLE);
-		} else {
-			marriageStatusError.setVisibility(View.GONE);
-		}
-
-		if (occuaptionerror) {
-			occupationError.setVisibility(View.VISIBLE);
-		} else {
-			occupationError.setVisibility(View.GONE);
-		}
 	}
 
 	private Person createPerson() {
@@ -327,6 +302,14 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 
 	private Patient createPatient() {
 		final Patient patient = new Patient();
+		// Add identifier
+		PatientIdentifier identifier = new PatientIdentifier();
+		identifier.setIdentifier(ViewUtils.getInput(fileNumber));
+
+		List<PatientIdentifier> patientIdentifierList = new ArrayList<>();
+		patientIdentifierList.add(identifier);
+		patient.setIdentifiers(patientIdentifierList);
+
 		patient.setPerson(createPerson());
 		patient.setUuid(" ");
 		return patient;
@@ -413,17 +396,17 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 				gen.check(R.id.female);
 			}
 
-
 		}
 	}
 
-	private void addSuggestionsToAutoCompleTextView() {
+	private void addSuggestionsToAutoCompleteTextView() {
 		counties = getContext().getResources().getStringArray(R.array.countiesArray);
 		ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
 				android.R.layout.simple_dropdown_item_1line, counties);
 		county.setAdapter(adapter);
 
 	}
+
 	private void addSuggestionsToSubCounties() {
 		String countyName = county.getText().toString();
 		countyName = countyName.replace("(", "");
@@ -508,7 +491,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 			});
 		}
 
-		if (encounterDate != null){
+		if (encounterDate != null) {
 			encounterDate.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -516,19 +499,19 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 					int encounterMonth;
 					int encounterDay;
 
-					if (enconterdate == null ){
+					if (enconterdate == null) {
 						Calendar currentDate = Calendar.getInstance();
 						encounterYear = currentDate.get(Calendar.YEAR);
 						encounterMonth = currentDate.get(Calendar.MONTH);
 						encounterDay = currentDate.get(Calendar.DAY_OF_MONTH);
 					} else {
 						encounterYear = enconterdate.getYear();
-						encounterMonth = enconterdate.getMonthOfYear() -1;
+						encounterMonth = enconterdate.getMonthOfYear() - 1;
 						encounterDay = enconterdate.getDayOfMonth();
 					}
 
 					DatePickerDialog encounterDateDialog = new DatePickerDialog(AddEditPatientFragment.this.getActivity(),
-							new DatePickerDialog.OnDateSetListener(){
+							new DatePickerDialog.OnDateSetListener() {
 								public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth,
 										int selectedday) {
 									int adjustedMonth = selectedmonth + 1;

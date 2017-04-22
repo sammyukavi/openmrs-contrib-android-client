@@ -21,9 +21,6 @@ import android.os.Build;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 
-import com.activeandroid.ActiveAndroid;
-import com.activeandroid.Configuration;
-
 import net.sqlcipher.database.SQLiteDatabase;
 
 import org.greenrobot.greendao.database.Database;
@@ -31,11 +28,6 @@ import org.openmrs.mobile.api.FormListService;
 import org.openmrs.mobile.databases.OpenMRSDBOpenHelper;
 import org.openmrs.mobile.models.DaoMaster;
 import org.openmrs.mobile.models.DaoSession;
-import org.openmrs.mobile.models.EncounterType;
-import org.openmrs.mobile.models.Encountercreate;
-import org.openmrs.mobile.models.FormResource;
-import org.openmrs.mobile.models.Link;
-import org.openmrs.mobile.models.Obscreate;
 import org.openmrs.mobile.security.SecretKeyGenerator;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 

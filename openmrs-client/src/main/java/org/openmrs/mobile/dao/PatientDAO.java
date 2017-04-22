@@ -93,9 +93,9 @@ public class PatientDAO {
 		
 		person.setGender(cursor.getString(cursor.getColumnIndex(PatientTable.Column.GENDER)));
 		person.setBirthdate(cursor.getString(cursor.getColumnIndex(PatientTable.Column.BIRTH_DATE)));
-		byte[] photoByteArray = cursor.getBlob(cursor.getColumnIndex(PatientTable.Column.PHOTO));
+		/*byte[] photoByteArray = cursor.getBlob(cursor.getColumnIndex(PatientTable.Column.PHOTO));
 		if (photoByteArray != null)
-			person.setPhoto(byteArrayToBitmap(photoByteArray));
+			person.setPhoto(byteArrayToBitmap(photoByteArray));*/
 		person.getAddresses().add(cursorToAddress(cursor));
 		
 		patient.setPerson(person);

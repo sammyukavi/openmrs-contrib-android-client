@@ -40,8 +40,6 @@ public class Person extends BaseOpenmrsEntity implements Serializable {
 	@Expose
 	private List<PersonAttribute> attributes = new ArrayList<PersonAttribute>();
 
-	private Bitmap photo;
-
 	/**
 	 * @return The names
 	 */
@@ -140,13 +138,5 @@ public class Person extends BaseOpenmrsEntity implements Serializable {
 	 */
 	public void setAttributes(List<PersonAttribute> attributes) {
 		this.attributes = attributes;
-	}
-
-	public Bitmap getPhoto() {
-		return photo;
-	}
-
-	public void setPhoto(Bitmap patientPhoto) {
-		this.photo = patientPhoto;
 	}
 }

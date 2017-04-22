@@ -125,9 +125,9 @@ public class DBOpenHelper extends OpenMRSSQLiteOpenHelper {
 			bindLong(10, null, patientStatement);
 			bindString(11, null, patientStatement);
 			bindString(12, null, patientStatement);
-			if (null != patient.getPerson().getPhoto()) {
+			/*if (null != patient.getPerson().getPhoto()) {
 				bindBlob(13, bitmapToByteArray(patient.getPerson().getPhoto()), patientStatement);
-			}
+			}*/
 			if (null != patient.getPerson().getAddress()) {
 				//bindString(14, patient.getPerson().getAddress().getAddress1(), patientStatement);
 				//bindString(15, patient.getPerson().getAddress().getAddress2(), patientStatement);
@@ -167,11 +167,11 @@ public class DBOpenHelper extends OpenMRSSQLiteOpenHelper {
 		
 		newValues.put(PatientTable.Column.DEATH_DATE, (Long) null);
 		newValues.put(PatientTable.Column.CAUSE_OF_DEATH, (String) null);
-		newValues.put(PatientTable.Column.AGE, (String) null);
+		/*newValues.put(PatientTable.Column.AGE, (String) null);
 		if (null != patient.getPerson().getPhoto()) {
 			mLogger.i("inserting into db");
 			newValues.put(PatientTable.Column.PHOTO, bitmapToByteArray(patient.getPerson().getPhoto()));
-		}
+		}*/
 		
 		if (null != patient.getPerson().getAddress()) {
 			//newValues.put(PatientTable.Column.ADDRESS_1, patient.getPerson().getAddress().getAddress1());

@@ -12,7 +12,7 @@ package org.openmrs.mobile.api;
 
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.EncounterType;
-import org.openmrs.mobile.models.Encountercreate;
+import org.openmrs.mobile.models.EncounterCreate;
 import org.openmrs.mobile.models.FormResource;
 import org.openmrs.mobile.models.IdGenPatientIdentifiers;
 import org.openmrs.mobile.models.IdentifierType;
@@ -91,7 +91,7 @@ public interface RestApi {
 	Call<Observation> createObs(@Body Obscreate obscreate);
 	
 	@POST("encounter")
-	Call<Encounter> createEncounter(@Body Encountercreate encountercreate);
+	Call<Encounter> createEncounter(@Body EncounterCreate encounterCreate);
 	
 	@GET("encountertype")
 	Call<Results<EncounterType>> getEncounterTypes();

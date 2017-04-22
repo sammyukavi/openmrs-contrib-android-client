@@ -15,10 +15,7 @@
 package org.openmrs.mobile.api.retrofit;
 
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.activeandroid.query.Select;
@@ -35,23 +32,18 @@ import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.application.OpenMRSLogger;
 import org.openmrs.mobile.dao.PatientDAO;
 import org.openmrs.mobile.listeners.retrofit.DefaultResponseCallbackListener;
-import org.openmrs.mobile.listeners.retrofit.DownloadPatientCallbackListener;
-import org.openmrs.mobile.models.Encountercreate;
+import org.openmrs.mobile.models.EncounterCreate;
 import org.openmrs.mobile.models.IdGenPatientIdentifiers;
 import org.openmrs.mobile.models.IdentifierType;
 import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.PatientIdentifier;
-import org.openmrs.mobile.models.PatientPhoto;
 import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.utilities.ToastUtil;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -59,24 +51,25 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PatientApi extends RetrofitApi {
-	
+
 	public static final String FULL_REPRESENTATION = "full";
 	private OpenMRSLogger logger = new OpenMRSLogger();
 	private PatientDAO patientDao = new PatientDAO();
-	
+
 	/**
 	 * Sync Patient
 	 */
 	public SimplePromise<Patient> syncPatient(final Patient patient) {
 		return syncPatient(patient, null);
 	}
-	
-	public SimplePromise<Patient> syncPatient(final Patient patient, @Nullable final DefaultResponseCallbackListener callbackListener) {
+
+	public SimplePromise<Patient> syncPatient(final Patient patient,
+			@Nullable final DefaultResponseCallbackListener callbackListener) {
 		final SimpleDeferredObject<Patient> deferred = new SimpleDeferredObject<>();
-		
+
 		final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(OpenMRS.getInstance());
 		Boolean syncState = prefs.getBoolean("sync", true);
-		
+
 		if (syncState) {
 			AndroidDeferredManager dm = new AndroidDeferredManager();
 			dm.when(new LocationApi().getLocationUuid(), getIdGenPatientIdentifier(), getPatientIdentifierTypeUuid())
@@ -84,16 +77,16 @@ public class PatientApi extends RetrofitApi {
 						@Override
 						public void onDone(final MultipleResults results) {
 							final List<PatientIdentifier> identifiers = new ArrayList<>();
-							
+
 							final PatientIdentifier identifier = new PatientIdentifier();
-							identifier.setLocation((Location) results.get(0).getResult());
-							identifier.setIdentifier((String) results.get(1).getResult());
-							identifier.setIdentifierType((IdentifierType) results.get(2).getResult());
+							identifier.setLocation((Location)results.get(0).getResult());
+							identifier.setIdentifier((String)results.get(1).getResult());
+							identifier.setIdentifierType((IdentifierType)results.get(2).getResult());
 							identifiers.add(identifier);
-							
+
 							patient.setIdentifiers(identifiers);
 							patient.setUuid(null);
-							
+
 							final RestApi apiService =
 									RestServiceBuilder.createService(RestApi.class);
 							Call<Patient> call = apiService.createPatient(patient);
@@ -102,40 +95,40 @@ public class PatientApi extends RetrofitApi {
 								public void onResponse(Call<Patient> call, Response<Patient> response) {
 									if (response.isSuccessful()) {
 										Patient newPatient = response.body();
-										
+
 										patient.setUuid(newPatient.getUuid());
 										patient.getPerson().setUuid(newPatient.getUuid());
-										if (patient.getPerson().getPhoto() != null)
-											uploadPatientPhoto(patient);
-										
+										/*if (patient.getPerson().getPhoto() != null)
+											uploadPatientPhoto(patient);*/
+
 										new PatientDAO().updatePatient(patient.getId(), patient);
 										if (!patient.getEncounters().equals(""))
 											addEncounters(patient);
-										
+
 										deferred.resolve(patient);
-										
+
 										if (callbackListener != null) {
 											callbackListener.onResponse();
 										}
-										
+
 									} else {
 										ToastUtil.error(
 												"Patient[" + patient.getId() + "] cannot be synced due to server error" +
-												response.message());
+														response.message());
 										deferred.reject(new RuntimeException(
 												"Patient cannot be synced due to server error: " +
-												response.errorBody().toString()));
+														response.errorBody().toString()));
 										if (callbackListener != null) {
 											callbackListener.onErrorResponse(response.message());
 										}
 									}
 								}
-								
+
 								@Override
 								public void onFailure(Call<Patient> call, Throwable t) {
 									ToastUtil.notify(
 											"Patient[" + patient.getId() + "] cannot be synced due to request error: " +
-											t.toString());
+													t.toString());
 									deferred.reject(t);
 									if (callbackListener != null) {
 										callbackListener.onErrorResponse(t.getMessage());
@@ -146,16 +139,16 @@ public class PatientApi extends RetrofitApi {
 					});
 		} else {
 			ToastUtil.notify("Sync is off. Patient Registration data is saved locally " +
-			                 "and will sync when online mode is restored. ");
+					"and will sync when online mode is restored. ");
 			if (callbackListener != null) {
 				callbackListener.onResponse();
 			}
 		}
-		
+
 		return deferred.promise();
 	}
 	
-	private void uploadPatientPhoto(final Patient patient) {
+	/*private void uploadPatientPhoto(final Patient patient) {
 		RestApi apiService = RestServiceBuilder.createService(RestApi.class);
 		PatientPhoto patientPhoto = new PatientPhoto();
 		patientPhoto.setPhoto(patient.getPerson().getPhoto());
@@ -176,16 +169,17 @@ public class PatientApi extends RetrofitApi {
 				ToastUtil.notify("Patient photo cannot be synced due to error: " + t.toString());
 			}
 		});
-	}
-	
+	}*/
+
 	/**
 	 * Register Patient
 	 */
 	public SimplePromise<Patient> registerPatient(final Patient patient) {
 		return registerPatient(patient, null);
 	}
-	
-	public SimplePromise<Patient> registerPatient(final Patient patient, @Nullable final DefaultResponseCallbackListener callbackListener) {
+
+	public SimplePromise<Patient> registerPatient(final Patient patient,
+			@Nullable final DefaultResponseCallbackListener callbackListener) {
 		patientDao.savePatient(patient);
 		if (callbackListener != null) {
 			return syncPatient(patient, callbackListener);
@@ -193,7 +187,7 @@ public class PatientApi extends RetrofitApi {
 			return syncPatient(patient);
 		}
 	}
-	
+
 	/**
 	 * Update Patient
 	 */
@@ -209,31 +203,31 @@ public class PatientApi extends RetrofitApi {
 					if (response.isSuccessful()) {
 						Patient updatedPatient = response.body();
 						patient.getPerson().setBirthdate(updatedPatient.getPerson().getBirthdate());
-						
+
 						patient.getPerson().setUuid(patient.getUuid());
-						if (patient.getPerson().getPhoto() != null)
-							uploadPatientPhoto(patient);
-						
+						/*if (patient.getPerson().getPhoto() != null)
+							uploadPatientPhoto(patient);*/
+
 						new PatientDAO().updatePatient(patient.getId(), patient);
-						
+
 						ToastUtil.success("Patient " + patient.getPerson().getName().getNameString()
-						                  + " updated");
+								+ " updated");
 						if (callbackListener != null) {
 							callbackListener.onResponse();
 						}
 					} else {
 						ToastUtil.error("Patient " + patient.getPerson().getName().getNameString()
-						                + " cannot be updated due to server error" + response.message());
+								+ " cannot be updated due to server error" + response.message());
 						if (callbackListener != null) {
 							callbackListener.onErrorResponse(response.message());
 						}
 					}
 				}
-				
+
 				@Override
 				public void onFailure(Call<Patient> call, Throwable t) {
 					ToastUtil.notify("Patient " + patient.getPerson().getName().getNameString()
-					                 + " cannot be updated due to request error: " + t.toString());
+							+ " cannot be updated due to request error: " + t.toString());
 					if (callbackListener != null) {
 						callbackListener.onErrorResponse(t.getMessage());
 					}
@@ -241,17 +235,18 @@ public class PatientApi extends RetrofitApi {
 			});
 		} else {
 			ToastUtil.notify("Sync is off. Patient Update data is saved locally " +
-			                 "and will sync when online mode is restored. ");
+					"and will sync when online mode is restored. ");
 			if (callbackListener != null) {
 				callbackListener.onResponse();
 			}
 		}
 	}
-	
+
 	/**
 	 * Download Patient by UUID
 	 */
-	public void downloadPatientByUuid(@NonNull final String uuid, @NonNull final DownloadPatientCallbackListener callbackListener) {
+	/*public void downloadPatientByUuid(@NonNull final String uuid, @NonNull final DownloadPatientCallbackListener
+	callbackListener) {
 		RestApi restApi = RestServiceBuilder.createService(RestApi.class);
 		Call<Patient> call = restApi.getPatientByUUID(uuid, "full");
 		call.enqueue(new Callback<Patient>() {
@@ -280,9 +275,9 @@ public class PatientApi extends RetrofitApi {
 				callbackListener.onErrorResponse(t.getMessage());
 			}
 		});
-	}
+	}*/
 	
-	public SimplePromise<Bitmap> downloadPatientPhotoByUuid(String uuid) {
+	/*public SimplePromise<Bitmap> downloadPatientPhotoByUuid(String uuid) {
 		final SimpleDeferredObject<Bitmap> deferredObject = new SimpleDeferredObject<>();
 		RestApi restApi = RestServiceBuilder.createService(RestApi.class);
 		Call<ResponseBody> call = restApi.downloadPatientPhoto(uuid);
@@ -311,34 +306,32 @@ public class PatientApi extends RetrofitApi {
 			}
 		});
 		return deferredObject.promise();
-	}
-	
+	}*/
 	private void addEncounters(Patient patient) {
 		String enc = patient.getEncounters();
 		List<Long> list = new ArrayList<>();
 		for (String s : enc.split(","))
 			list.add(Long.parseLong(s));
-		
-		
+
 		for (long id : list) {
-			Encountercreate encountercreate = new Select()
-					.from(Encountercreate.class)
+			EncounterCreate encounterCreate = new Select()
+					.from(EncounterCreate.class)
 					.where("id = ?", id)
 					.executeSingle();
-			encountercreate.setPatient(patient.getUuid());
-			encountercreate.save();
-			new EncounterService().addEncounter(encountercreate);
+			encounterCreate.setPatient(patient.getUuid());
+			encounterCreate.save();
+			new EncounterService().addEncounter(encounterCreate);
 		}
 	}
-	
+
 	private SimplePromise<String> getIdGenPatientIdentifier() {
 		final SimpleDeferredObject<String> deferred = new SimpleDeferredObject<>();
-		
+
 		Retrofit retrofit = new Retrofit.Builder()
 				.baseUrl(openMrs.getServerUrl() + '/')
 				.addConverterFactory(GsonConverterFactory.create())
 				.build();
-		
+
 		RestApi apiService =
 				retrofit.create(RestApi.class);
 		Call<IdGenPatientIdentifiers> call = apiService.getPatientIdentifiers(openMrs.getUsername(), openMrs.getPassword());
@@ -348,21 +341,21 @@ public class PatientApi extends RetrofitApi {
 				IdGenPatientIdentifiers idList = response.body();
 				deferred.resolve(idList.getIdentifiers().get(0));
 			}
-			
+
 			@Override
 			public void onFailure(Call<IdGenPatientIdentifiers> call, Throwable t) {
 				ToastUtil.notify(t.toString());
 				deferred.reject(t);
 			}
-			
+
 		});
-		
+
 		return deferred.promise();
 	}
-	
+
 	private SimplePromise<IdentifierType> getPatientIdentifierTypeUuid() {
 		final SimpleDeferredObject<IdentifierType> deferred = new SimpleDeferredObject<>();
-		
+
 		RestApi apiService =
 				RestServiceBuilder.createService(RestApi.class);
 		Call<Results<IdentifierType>> call = apiService.getIdentifierTypes();
@@ -377,15 +370,15 @@ public class PatientApi extends RetrofitApi {
 					}
 				}
 			}
-			
+
 			@Override
 			public void onFailure(Call<Results<IdentifierType>> call, Throwable t) {
 				ToastUtil.notify(t.toString());
 				deferred.reject(t);
 			}
-			
+
 		});
 		return deferred.promise();
 	}
-	
+
 }

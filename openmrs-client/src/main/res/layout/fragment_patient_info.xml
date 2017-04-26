@@ -425,19 +425,6 @@
 						android:layout_marginTop="20dp"
 						android:weightSum="2">
 					
-					<TextView
-							android:id="@+id/countyError"
-							android:layout_width="wrap_content"
-							android:layout_height="wrap_content"
-							android:layout_marginLeft="12dp"
-							android:layout_marginStart="12dp"
-							android:padding="2dp"
-							android:text="@string/emptyerror"
-							android:textColor="@color/red"
-							android:textSize="14sp"
-							android:textStyle="bold"
-							android:visibility="gone" />
-					
 					<AutoCompleteTextView
 							android:id="@+id/county"
 							android:layout_width="0dp"
@@ -451,7 +438,7 @@
 							android:textSize="14sp" />
 					
 					<TextView
-							android:id="@+id/sub_countError"
+							android:id="@+id/countyError"
 							android:layout_width="wrap_content"
 							android:layout_height="wrap_content"
 							android:layout_marginLeft="12dp"
@@ -474,6 +461,19 @@
 							android:inputType="textCapSentences"
 							android:maxLines="1"
 							android:textSize="14sp" />
+					
+					<TextView
+							android:id="@+id/sub_countError"
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:layout_marginLeft="12dp"
+							android:layout_marginStart="12dp"
+							android:padding="2dp"
+							android:text="@string/emptyerror"
+							android:textColor="@color/red"
+							android:textSize="14sp"
+							android:textStyle="bold"
+							android:visibility="gone" />
 				</LinearLayout>
 				
 				<LinearLayout
@@ -864,6 +864,7 @@
 						android:textSize="14sp"
 						android:textStyle="bold"
 						android:visibility="gone" />
+				
 				<Spinner
 						android:id="@+id/encounterProvider"
 						android:layout_width="match_parent"
@@ -878,7 +879,7 @@
 						android:clickable="true"
 						android:focusable="true"
 						android:textSize="14sp" />
-				
+			
 			</LinearLayout>
 			
 			<Button

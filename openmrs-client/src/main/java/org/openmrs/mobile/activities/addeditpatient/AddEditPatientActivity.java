@@ -55,13 +55,13 @@ public class AddEditPatientActivity extends ACBaseActivity {
 		//Check if bundle includes patient ID
 		Bundle patientBundle = savedInstanceState;
 		if (patientBundle != null) {
-			patientBundle.getString(ApplicationConstants.BundleKeys.PATIENT_ID_BUNDLE);
+			patientBundle.getString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
 		} else {
 			patientBundle = getIntent().getExtras();
 		}
 		String patientID = "";
 		if (patientBundle != null) {
-			patientID = patientBundle.getString(ApplicationConstants.BundleKeys.PATIENT_ID_BUNDLE);
+			patientID = patientBundle.getString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
 		}
 		
 		List<String> counties = Arrays.asList(getResources().getStringArray(R.array.countiesArray));

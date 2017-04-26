@@ -16,81 +16,77 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 public class PersonName implements Serializable {
-	
-	@SerializedName("givenName")
-	@Expose
-	private String givenName;
-	@SerializedName("middleName")
-	@Expose
-	private String middleName;
-	@SerializedName("familyName")
-	@Expose
-	private String familyName;
-	@SerializedName("nextOfKinName")
-	@Expose
-	private String nextOfKinName;
 
-	/**
-	 * @return The nextOfKinName
-	 * */
-	public String getNextOfKinName() {
-		return nextOfKinName;
-	}
+    @SerializedName("givenName")
+    @Expose
+    private String givenName;
+    @SerializedName("middleName")
+    @Expose
+    private String middleName;
+    @SerializedName("familyName")
+    @Expose
+    private String familyName;
 
-	/**
-	* @param nextOfKinName The nextOfKinName
-	*/
-	public void setNextOfKinName(String nextOfKinName) {
-		this.nextOfKinName = nextOfKinName;
-	}
+    /**
+     *
+     * @return
+     *     The givenName
+     */
+    public String getGivenName() {
+        return givenName;
+    }
 
-	/**
-	 * @return The givenName
-	 */
-	public String getGivenName() {
-		return givenName;
-	}
-	
-	/**
-	 * @param givenName The givenName
-	 */
-	public void setGivenName(String givenName) {
-		this.givenName = givenName;
-	}
-	
-	/**
-	 * @return The familyName
-	 */
-	public String getFamilyName() {
-		return familyName;
-	}
-	
-	/**
-	 * @param familyName The familyName
-	 */
-	public void setFamilyName(String familyName) {
-		this.familyName = familyName;
-	}
-	
-	/**
-	 * @return The middleName
-	 */
-	public String getMiddleName() {
-		return middleName;
-	}
-	
-	/**
-	 * @param middleName The middleName
-	 */
-	public void setMiddleName(String middleName) {
-		this.middleName = middleName;
-	}
-	
-	
-	public String getNameString() {
-		if (middleName == null || middleName.equals("null"))
-			return givenName + " " + familyName;
-		else
-			return givenName + " " + middleName + " " + familyName;
-	}
+    /**
+     *
+     * @param givenName
+     *     The givenName
+     */
+    public void setGivenName(String givenName) {
+        this.givenName = givenName;
+    }
+
+    /**
+     *
+     * @return
+     *     The familyName
+     */
+    public String getFamilyName() {
+        return familyName;
+    }
+
+    /**
+     *
+     * @param familyName
+     *     The familyName
+     */
+    public void setFamilyName(String familyName) {
+        this.familyName = familyName;
+    }
+
+    /**
+     *
+     * @return
+     *     The middleName
+     */
+    public String getMiddleName() {
+        return middleName;
+    }
+
+    /**
+     *
+     * @param middleName
+     *     The middleName
+     */
+    public void setMiddleName(String middleName) {
+        this.middleName = middleName;
+    }
+
+
+    public String getNameString()
+    {
+        if (middleName==null || middleName.equals("null"))
+            return givenName+" "+familyName;
+        else
+            return givenName+" "+middleName+" "+familyName;
+    }
 }

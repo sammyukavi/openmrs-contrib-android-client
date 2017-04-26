@@ -70,7 +70,7 @@ public class PatientComparator {
 	private int compareAddress(Person newPerson, Person existingPerson) {
 		int score = 0;
 		if (existingPerson.getAddress() != null && newPerson.getAddress() != null) {
-			/*if (Objects.equal(newPerson.getAddress().getAddress1(), existingPerson.getAddress().getAddress1())) {
+			if (Objects.equal(newPerson.getAddress().getAddress1(), existingPerson.getAddress().getAddress1())) {
 				score += 1;
 			}
 			if (Objects.equal(newPerson.getAddress().getAddress2(), existingPerson.getAddress().getAddress2())) {
@@ -78,16 +78,16 @@ public class PatientComparator {
 			}
 			if (Objects.equal(newPerson.getAddress().getCityVillage(), existingPerson.getAddress().getAddress2())) {
 				score += 1;
-			}*/
-			if (Objects.equal(newPerson.getAddress().getCounty(), existingPerson.getAddress().getCounty())) {
+			}
+			if (Objects.equal(newPerson.getAddress().getCountry(), existingPerson.getAddress().getCountry())) {
 				score += 1;
 			}
-			if (Objects.equal(newPerson.getAddress().getSubCounty(), existingPerson.getAddress().getSubCounty())) {
+			if (Objects.equal(newPerson.getAddress().getStateProvince(), existingPerson.getAddress().getStateProvince())) {
 				score += 1;
 			}
-			/*if (Objects.equal(newPerson.getAddress().getPostalCode(), existingPerson.getAddress().getPostalCode())) {
+			if (Objects.equal(newPerson.getAddress().getPostalCode(), existingPerson.getAddress().getPostalCode())) {
 				score += 1;
-			}*/
+			}
 		}
 		return score == 6 ? MIN_SCORE - 1 : score;
 	}

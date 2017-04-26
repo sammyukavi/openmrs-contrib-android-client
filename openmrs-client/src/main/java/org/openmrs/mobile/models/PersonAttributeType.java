@@ -10,5 +10,35 @@
 
 package org.openmrs.mobile.models;
 
-public class PersonAttributeType extends Resource {
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
+
+public class PersonAttributeType extends BaseOpenmrsObject implements Serializable {
+
+	@SerializedName("format")
+	@Expose
+	private String format;
+	@SerializedName("foreignKey")
+	@Expose
+	private Integer foreignKey;
+
+
+
+	public String getFormat() {
+		return format;
+	}
+
+	public void setFormat(String format) {
+		this.format = format;
+	}
+
+	public Integer getForeignKey() {
+		return foreignKey;
+	}
+
+	public void setForeignKey(Integer foreignKey) {
+		this.foreignKey = foreignKey;
+	}
 }

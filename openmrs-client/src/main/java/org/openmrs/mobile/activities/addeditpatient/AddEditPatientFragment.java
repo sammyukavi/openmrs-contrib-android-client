@@ -145,7 +145,6 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		edyr = (EditText)v.findViewById(R.id.estyr);
 		edmonth = (EditText)v.findViewById(R.id.estmonth);
 		fileNumber = (EditText)v.findViewById(R.id.fileNumber);
-		fileNumber = (EditText)v.findViewById(R.id.fileNumber);
 		occupation = (EditText)v.findViewById(R.id.occuapation);
 		county = (AutoCompleteTextView)v.findViewById(R.id.county);
 		subCounty = (AutoCompleteTextView)v.findViewById(R.id.sub_county);
@@ -204,7 +203,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 	}
 
 	@Override
-	public void finishPatientInfoActivity() {
+	public void finishAddPatientActivity() {
 		getActivity().finish();
 	}
 
@@ -243,7 +242,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		kinPhonenumberError.setVisibility(kinPhonenumber_Error ? View.VISIBLE : View.GONE);
 		kinResidenceError.setVisibility(kinResidence_Error ? View.VISIBLE : View.GONE);
 		encounterDateError.setVisibility(encounterDate_Error ? View.VISIBLE : View.GONE);
-		encounterDateError.setVisibility(encounterDepartment_Error? View.VISIBLE : View.GONE);
+		encounterDeptError.setVisibility(encounterDepartment_Error? View.VISIBLE : View.GONE);
 		encounterProviderError.setVisibility(encounterDate_Error ? View.VISIBLE: View.GONE);
 
 	}
@@ -253,7 +252,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 
 		// Add address
 		PersonAddress address = new PersonAddress();
-		address.setPreferred(true);
+		address.getPreferred();
 
 		List<PersonAddress> addresses = new ArrayList<>();
 		addresses.add(address);
@@ -302,6 +301,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 
 	private Patient createPatient() {
 		final Patient patient = new Patient();
+
 		// Add identifier
 		PatientIdentifier identifier = new PatientIdentifier();
 		identifier.setIdentifier(ViewUtils.getInput(fileNumber));
@@ -354,7 +354,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 	@Override
 	public void startPatientDashboardActivity(Patient patient) {
 		Intent intent = new Intent(getActivity(), PatientDashboardActivity.class);
-		intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_ID_BUNDLE, patient.getId());
+		intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patient.getId());
 		startActivity(intent);
 	}
 

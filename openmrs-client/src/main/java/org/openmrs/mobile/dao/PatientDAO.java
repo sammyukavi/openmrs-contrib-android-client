@@ -198,8 +198,8 @@ public class PatientDAO {
 		//personAddress.setAddress1(cursor.getString(address1ColumnIndex));
 		//personAddress.setAddress2(cursor.getString(address2ColumnIndex));
 		//personAddress.setPostalCode(cursor.getString(postalColumnIndex));
-		personAddress.setCounty(cursor.getString(countryColumnIndex));
-		personAddress.setSubCounty(cursor.getString(stateColumnIndex));
+		//personAddress.setCounty(cursor.getString(countryColumnIndex));
+		//personAddress.setSubCounty(cursor.getString(stateColumnIndex));
 		//personAddress.setCityVillage(cursor.getString(cityColumnIndex));
 		
 		return personAddress;

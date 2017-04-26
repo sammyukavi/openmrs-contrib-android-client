@@ -19,7 +19,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Encounter extends Resource implements Serializable {
+public class Encounter extends BaseOpenmrsAuditableObject implements Serializable {
 	
 	private Long id;
 	

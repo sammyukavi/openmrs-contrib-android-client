@@ -132,7 +132,7 @@ public class DBOpenHelper extends OpenMRSSQLiteOpenHelper {
 				//bindString(14, patient.getPerson().getAddress().getAddress1(), patientStatement);
 				//bindString(15, patient.getPerson().getAddress().getAddress2(), patientStatement);
 				//bindString(16, patient.getPerson().getAddress().getPostalCode(), patientStatement);
-				bindString(17, patient.getPerson().getAddress().getCounty(), patientStatement);
+				//bindString(17, patient.getPerson().getAddress().getCounty(), patientStatement);
 				//bindString(18, patient.getPerson().getAddress().getSubCounty(), patientStatement);
 				//bindString(19, patient.getPerson().getAddress().getCityVillage(), patientStatement);
 			}
@@ -177,8 +177,8 @@ public class DBOpenHelper extends OpenMRSSQLiteOpenHelper {
 			//newValues.put(PatientTable.Column.ADDRESS_1, patient.getPerson().getAddress().getAddress1());
 			//newValues.put(PatientTable.Column.ADDRESS_2, patient.getPerson().getAddress().getAddress2());
 			//newValues.put(PatientTable.Column.POSTAL_CODE, patient.getPerson().getAddress().getPostalCode());
-			newValues.put(PatientTable.Column.COUNTRY, patient.getPerson().getAddress().getCounty());
-			newValues.put(PatientTable.Column.STATE, patient.getPerson().getAddress().getSubCounty());
+		//	newValues.put(PatientTable.Column.COUNTRY, patient.getPerson().getAddress().getCounty());
+			//newValues.put(PatientTable.Column.STATE, patient.getPerson().getAddress().getSubCounty());
 			//newValues.put(PatientTable.Column.CITY, patient.getPerson().getAddress().getCityVillage());
 			
 		}

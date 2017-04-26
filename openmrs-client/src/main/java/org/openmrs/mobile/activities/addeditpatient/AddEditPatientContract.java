@@ -24,7 +24,7 @@ public interface AddEditPatientContract {
 
 	interface View extends BaseView<Presenter> {
 
-		void finishPatientInfoActivity();
+		void finishAddPatientActivity();
 
 		void setErrorsVisibility(boolean givenNameError, boolean familyNameError, boolean dayOfBirthError,
 				boolean addressError, boolean county_Error, boolean genderError, boolean patientFileNumberError,
@@ -58,9 +58,9 @@ public interface AddEditPatientContract {
 
 		void confirmUpdate(Patient patient);
 
-		void finishPatientInfoActivity();
+		void finishAddPatientActivity();
 
-		void registerPatient();
+		void registerPatient(Patient patient);
 
 		void updatePatient(Patient patient);
 	}

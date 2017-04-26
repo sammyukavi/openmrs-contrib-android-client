@@ -66,6 +66,7 @@ public class SimilarPatientsRecyclerViewAdapter
 		setGender(holder, patient);
 		setBirthdate(holder, patient);
 		setPatientAddress(holder, patient);
+		setFileNumber(holder,patient);
 
 		holder.mRowLayout.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -117,7 +118,7 @@ public class SimilarPatientsRecyclerViewAdapter
 				setStyleForMatchedPatientFields(holder.mGender);
 			}
 		} catch (Exception e) {
-			holder.mGender.setText(ApplicationConstants.NULL_VALUES);
+			holder.mGender.setText(ApplicationConstants.EMPTY_STRING);
 		}
 	}
 
@@ -129,7 +130,7 @@ public class SimilarPatientsRecyclerViewAdapter
 				setStyleForMatchedPatientFields(holder.mAddress);
 			}
 		} catch (Exception e) {
-			holder.mAddress.setText(ApplicationConstants.NULL_VALUES);
+			holder.mAddress.setText(ApplicationConstants.EMPTY_STRING);
 		}
 		try {
 			holder.mPostalCode.setText(patient.getPerson().getAddress().getPostalCode());
@@ -138,7 +139,7 @@ public class SimilarPatientsRecyclerViewAdapter
 				setStyleForMatchedPatientFields(holder.mPostalCode);
 			}
 		} catch (Exception e) {
-			holder.mPostalCode.setText(ApplicationConstants.NULL_VALUES);
+			holder.mPostalCode.setText(ApplicationConstants.EMPTY_STRING);
 		}
 		try {
 			holder.mCity.setText(patient.getPerson().getAddress().getCityVillage());
@@ -147,7 +148,7 @@ public class SimilarPatientsRecyclerViewAdapter
 				setStyleForMatchedPatientFields(holder.mCity);
 			}
 		} catch (Exception e) {
-			holder.mCity.setText(ApplicationConstants.NULL_VALUES);
+			holder.mCity.setText(ApplicationConstants.EMPTY_STRING);
 		}
 		try {
 			holder.mCountry.setText(patient.getPerson().getAddress().getCountry());
@@ -156,7 +157,7 @@ public class SimilarPatientsRecyclerViewAdapter
 				setStyleForMatchedPatientFields(holder.mCountry);
 			}
 		} catch (Exception e) {
-			holder.mCountry.setText(ApplicationConstants.NULL_VALUES);
+			holder.mCountry.setText(ApplicationConstants.EMPTY_STRING);
 		}
 	}
 
@@ -168,7 +169,7 @@ public class SimilarPatientsRecyclerViewAdapter
 				setStyleForMatchedPatientFields(holder.mGivenName);
 			}
 		} catch (Exception e) {
-			holder.mGivenName.setText(ApplicationConstants.NULL_VALUES);
+			holder.mGivenName.setText(ApplicationConstants.EMPTY_STRING);
 		}
 		try {
 			holder.mMiddleName.setText(patient.getPerson().getName().getMiddleName());
@@ -177,7 +178,7 @@ public class SimilarPatientsRecyclerViewAdapter
 				setStyleForMatchedPatientFields(holder.mMiddleName);
 			}
 		} catch (Exception e) {
-			holder.mMiddleName.setText(ApplicationConstants.NULL_VALUES);
+			holder.mMiddleName.setText(ApplicationConstants.EMPTY_STRING);
 		}
 		try {
 			holder.mFamilyName.setText(patient.getPerson().getName().getFamilyName());
@@ -186,7 +187,19 @@ public class SimilarPatientsRecyclerViewAdapter
 				setStyleForMatchedPatientFields(holder.mFamilyName);
 			}
 		} catch (Exception e) {
-			holder.mFamilyName.setText(ApplicationConstants.NULL_VALUES);
+			holder.mFamilyName.setText(ApplicationConstants.EMPTY_STRING);
+		}
+	}
+	
+	private void setFileNumber(PatientViewHolder holder, Patient patient) {
+		try {
+			holder.fileNumber.setText(patient.getIdentifier().getIdentifier());
+			if (Objects.equal(patient.getIdentifier().getIdentifier(),
+					newPatient.getIdentifier().getIdentifier())) {
+				setStyleForMatchedPatientFields(holder.fileNumber);
+			}
+		} catch (Exception e) {
+			holder.fileNumber.setText(ApplicationConstants.EMPTY_STRING);
 		}
 	}
 
@@ -207,6 +220,7 @@ public class SimilarPatientsRecyclerViewAdapter
 		private TextView mPostalCode;
 		private TextView mCity;
 		private TextView mCountry;
+		private TextView fileNumber;
 
 		public PatientViewHolder(View itemView) {
 			super(itemView);
@@ -220,6 +234,7 @@ public class SimilarPatientsRecyclerViewAdapter
 			mPostalCode = (TextView)itemView.findViewById(R.id.patientPostalCode);
 			mCity = (TextView)itemView.findViewById(R.id.patientCity);
 			mCountry = (TextView)itemView.findViewById(R.id.patientCountry);
+			fileNumber = (TextView)itemView.findViewById(R.id.patientFileNumber);
 		}
 
 	}

@@ -27,7 +27,7 @@ public class PatientComparator {
 	
 	private static final int MIN_SCORE = 6;
 	private static final List<String> PATIENT_FIELDS = Arrays.asList("name", "gender",
-			"birthdate", "addres");
+			"birthdate", "address");
 	
 	public List<Patient> findSimilarPatient(List<Patient> patientList, Patient patient) {
 		List<Patient> similarPatients = new LinkedList<>();

@@ -69,6 +69,7 @@
 	<string name="occupation">Occupation</string>
 	<string name="county">County</string>
 	<string name="sub_county">Sub County</string>
+	<string name="dash">  --  </string>
 	
 	<!-- Offline Mode -->
 	<string name="offline_mode_unsupported_in_first_login">Offline mode is not supported during first login.Enable online mode and then try again.</string>

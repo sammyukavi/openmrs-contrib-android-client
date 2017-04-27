@@ -31,6 +31,10 @@
             android:title="@string/nav_visit_tasks" />
 
         <item
+            android:id="@+id/navItemAddEditVisit"
+            android:title="Start Visit" />
+
+        <item
             android:id="@+id/navItemSettings"
             android:icon="@drawable/ic_nav_settings"
             android:title="@string/nav_settings" />

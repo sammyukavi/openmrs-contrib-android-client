@@ -16,21 +16,14 @@ package org.openmrs.mobile.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Model class that represents a Patient List.
  */
-public class PatientList extends Resource{
-
-    @Expose
-    private String name;
-
-    @Expose
-    private String dateCreated;
-
-    @Expose
-    private boolean retired;
+public class PatientList extends BaseOpenmrsMetadata implements Serializable{
+    private Long id;
 
     @SerializedName("patientListConditions")
     @Expose
@@ -48,28 +41,12 @@ public class PatientList extends Resource{
     @Expose
     private String bodyTemplate;
 
-    public String getName() {
-        return name;
+    public Long getId() {
+        return id;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDateCreated() {
-        return dateCreated;
-    }
-
-    public void setDateCreated(String dateCreated) {
-        this.dateCreated = dateCreated;
-    }
-
-    public boolean isRetired() {
-        return retired;
-    }
-
-    public void setRetired(boolean retired) {
-        this.retired = retired;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public List<PatientListCondition> getPatientListConditions() {
@@ -106,6 +83,6 @@ public class PatientList extends Resource{
 
     @Override
     public String toString() {
-        return name;
+        return getName();
     }
 }

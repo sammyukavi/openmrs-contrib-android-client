@@ -12,18 +12,12 @@
   ~
   ~ Copyright (C) OpenHMIS.  All Rights Reserved.
   -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:orientation="vertical">
-
-    <ProgressBar
-        android:id="@+id/patientListLoadingProgressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
 
     <ScrollView
         android:id="@+id/scrollView"
@@ -32,55 +26,72 @@
         android:layout_alignParentBottom="false">
 
         <LinearLayout
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/card"
             android:orientation="vertical">
 
-            <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="fill_parent"
+            <TextView android:text="@string/select_patient_list"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/patient_card_margin"
-                android:stretchColumns="1">
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp"
+                android:textColor="@color/primary"
+                android:textSize="22sp" />
 
-                <TableRow
-                    android:layout_width="fill_parent"
+            <Spinner
+                android:id="@+id/patientListDropdown"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp"
+                android:textSize="18sp"
+                android:focusable="true"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:orientation="vertical">
+
+                <ProgressBar
+                    android:id="@+id/patientListLoadingProgressBar"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/table_rows_margin">
+                    android:layout_marginLeft="100dp"
+                    android:visibility="gone" />
 
-                    <TextView android:text="Select Patient list:"
-                        android:layout_column="0"
-                        android:layout_marginRight="@dimen/table_columns_margin"
-                        android:gravity="right"
-                        android:textColor="@color/color_primary"/>
+                <TextView android:id="@+id/noPatientLists"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/no_patient_list"
+                    android:visibility="gone" />
 
-                    <Spinner
-                        android:id="@+id/patientListDropdown"
-                        android:layout_column="1"
-                        android:paddingLeft="10dp"
-                        android:gravity="left"/>
+                <TextView android:id="@+id/emptyPatientList"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/no_patients_found"
+                    android:visibility="gone" />
 
-                    <TextView
-                        android:id="@+id/vital_height"
-                        android:layout_column="1"
-                        android:layout_marginLeft="@dimen/table_columns_margin"
-                        android:textColor="@color/list_color" />
+                <TextView android:id="@+id/numberOfPatients"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/no_patients_found"
+                    android:textColor="@color/light_teal"
+                    android:visibility="gone" />
 
-                </TableRow>
+                <android.support.v7.widget.RecyclerView android:id="@+id/patientListModelRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="left|bottom" />
 
-            </TableLayout>
+            </LinearLayout>
 
-            <TextView android:id="@+id/emptyPatientList"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="@string/no_patients_found"
-                android:visibility="gone" />
-
-            <android.support.v7.widget.RecyclerView android:id="@+id/patientListModelRecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="left|bottom" />
 
         </LinearLayout>
     </ScrollView>
-</RelativeLayout>
+</LinearLayout>

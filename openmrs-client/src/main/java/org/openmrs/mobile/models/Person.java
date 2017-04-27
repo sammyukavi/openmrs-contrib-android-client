@@ -19,7 +19,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Person extends Resource implements Serializable {
+public class Person extends BaseOpenmrsEntity implements Serializable {
 
     @SerializedName("names")
     @Expose

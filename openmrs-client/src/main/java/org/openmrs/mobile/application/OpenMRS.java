@@ -21,18 +21,12 @@ import android.os.Build;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 
-import com.activeandroid.ActiveAndroid;
-import com.activeandroid.Configuration;
-
 import net.sqlcipher.database.SQLiteDatabase;
 
 import org.openmrs.mobile.api.FormListService;
 import org.openmrs.mobile.databases.OpenMRSDBOpenHelper;
-import org.openmrs.mobile.models.EncounterType;
-import org.openmrs.mobile.models.Encountercreate;
-import org.openmrs.mobile.models.FormResource;
-import org.openmrs.mobile.models.Link;
-import org.openmrs.mobile.models.Obscreate;
+//import org.openmrs.mobile.models.DaoMaster;
+//import org.openmrs.mobile.models.DaoSession;
 import org.openmrs.mobile.security.SecretKeyGenerator;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 
@@ -72,16 +66,11 @@ public class OpenMRS extends Application {
         startService(i);
     }
 
+    private static boolean ENCRYPTED = true;
     protected void initializeDB() {
-        Configuration.Builder configurationBuilder = new Configuration.Builder(this);
-        configurationBuilder.addModelClasses(Link.class);
-        configurationBuilder.addModelClasses(FormResource.class);
-        configurationBuilder.addModelClasses(EncounterType.class);
-        configurationBuilder.addModelClasses(Encountercreate.class);
-        configurationBuilder.addModelClasses(Obscreate.class);
-
-
-        ActiveAndroid.initialize(configurationBuilder.create());
+        //DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, ENCRYPTED ? "notes-db-encrypted" : "notes-db");
+        //Database db = ENCRYPTED ? helper.getEncryptedWritableDb("super-secret") : helper.getWritableDb();
+        //DaoSession daoSession = new DaoMaster(db).newSession();
     }
 
     public static OpenMRS getInstance() {

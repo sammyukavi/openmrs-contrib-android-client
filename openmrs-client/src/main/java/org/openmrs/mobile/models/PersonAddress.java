@@ -17,7 +17,7 @@ import org.openmrs.mobile.utilities.StringUtils;
 
 import java.io.Serializable;
 
-public class PersonAddress implements Serializable {
+public class PersonAddress extends BaseOpenmrsEntity implements Serializable {
 
     @SerializedName("preferred")
     @Expose

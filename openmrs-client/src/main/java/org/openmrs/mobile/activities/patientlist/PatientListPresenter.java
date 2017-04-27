@@ -15,43 +15,51 @@ package org.openmrs.mobile.activities.patientlist;
 
 import android.support.annotation.NonNull;
 
+import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.BasePresenter;
-import org.openmrs.mobile.api.RestApi;
-import org.openmrs.mobile.api.RestServiceBuilder;
+import org.openmrs.mobile.data.DataService;
+import org.openmrs.mobile.data.PagingInfo;
+import org.openmrs.mobile.data.impl.PatientListContextModelDataService;
+import org.openmrs.mobile.data.impl.PatientListDataService;
 import org.openmrs.mobile.models.PatientList;
 import org.openmrs.mobile.models.PatientListContextModel;
-import org.openmrs.mobile.models.Results;
-import org.openmrs.mobile.utilities.ApplicationConstants;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class PatientListPresenter extends BasePresenter implements PatientListContract.Presenter {
 
     @NonNull
     private PatientListContract.View patientListView;
-    private RestApi restApi;
     private int limit = 10;
-    private int startIndex = 0;
+    private int page = 1;
     private int totalNumberResults;
     private boolean loading;
 
+    private PatientListDataService patientListDataService;
+    private PatientListContextModelDataService patientListContextModelDataService;
+
     public PatientListPresenter(@NonNull PatientListContract.View patientListView) {
-        RestServiceBuilder.setEndPoint(ApplicationConstants.API.REST_ENDPOINT_V2);
-        this.patientListView = patientListView;
-        this.patientListView.setPresenter(this);
-        this.restApi = RestServiceBuilder.createService(RestApi.class);
+        this(patientListView, null, null);
     }
 
-    public PatientListPresenter(@NonNull PatientListContract.View patientListView, RestApi restApi) {
-        RestServiceBuilder.setEndPoint(ApplicationConstants.API.REST_ENDPOINT_V2);
+    public PatientListPresenter(@NonNull PatientListContract.View patientListView,
+                                PatientListDataService patientListDataService,
+                                PatientListContextModelDataService patientListContextModelDataService ) {
         this.patientListView = patientListView;
         this.patientListView.setPresenter(this);
-        this.restApi = restApi;
+
+        if(patientListDataService == null){
+            this.patientListDataService = new PatientListDataService();
+        } else {
+            this.patientListDataService = patientListDataService;
+        }
+
+        if(patientListContextModelDataService == null) {
+            this.patientListContextModelDataService = new PatientListContextModelDataService();
+        } else {
+            this.patientListContextModelDataService = patientListContextModelDataService;
+        }
     }
 
     @Override
@@ -60,51 +68,47 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
         getPatientList();
     }
 
+    @Override
     public void getPatientList(){
-        startIndex = 0;
-        Call<Results<PatientList>> call = restApi.getPatientLists();
-        call.enqueue(new Callback<Results<PatientList>>() {
+        setPage(1);
+        PagingInfo pagingInfo = new PagingInfo();
+        patientListDataService.getAll(false, pagingInfo, new DataService.GetMultipleCallback<PatientList>() {
             @Override
-            public void onResponse(Call<Results<PatientList>> call, Response<Results<PatientList>> response) {
-                if(response.isSuccessful()){
-                    List<PatientList> results = response.body().getResults();
-                    patientListView.updatePatientLists(results);
-                }
+            public void onCompleted(List<PatientList> entities, int length) {
+                patientListView.setNoPatientListsVisibility(false);
+                patientListView.updatePatientLists(entities);
             }
 
             @Override
-            public void onFailure(Call<Results<PatientList>> call, Throwable throwable) {
+            public void onError(Throwable t) {
+                patientListView.setNoPatientListsVisibility(true);
             }
         });
     }
 
     @Override
-    public void getPatientListData(String patientListUuid, int startIndex){
-        if(startIndex < 0){
+    public void getPatientListData(String patientListUuid, int page){
+        if(page <= 0){
             return;
         }
-
-        setStartIndex(startIndex);
+        setPage(page);
         setLoading(true);
         setViewBeforeLoadData();
-        Call<Results<PatientListContextModel>> call = restApi.getPatientListData(patientListUuid, getStartIndex(), limit);
-        call.enqueue(new Callback<Results<PatientListContextModel>>() {
+        PagingInfo pagingInfo = new PagingInfo(page, limit);
+        patientListContextModelDataService.getAll(patientListUuid, pagingInfo, new DataService.GetMultipleCallback<PatientListContextModel>() {
             @Override
-            public void onResponse(Call<Results<PatientListContextModel>> call, Response<Results<PatientListContextModel>> response) {
-                if(response.isSuccessful()){
-                    setViewAfterLoadData(false);
-                    List<PatientListContextModel> results = response.body().getResults();
-                    patientListView.updatePatientListData(results);
-                    setTotalNumberResults(response.body().getLength());
-                } else {
-                    setViewAfterLoadData(true);
+            public void onCompleted(List<PatientListContextModel> entities, int length) {
+                setViewAfterLoadData(false);
+                patientListView.updatePatientListData(entities);
+                setTotalNumberResults(length);
+                if(length > 0){
+                    patientListView.setNumberOfPatientsView(length);
                 }
-
                 setLoading(false);
             }
 
             @Override
-            public void onFailure(Call<Results<PatientListContextModel>> call, Throwable throwable) {
+            public void onError(Throwable t) {
                 patientListView.updatePatientListData(new ArrayList<>());
                 setViewAfterLoadData(true);
                 setLoading(false);
@@ -114,17 +118,17 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 
     @Override
     public void loadResults(String patientListUuid, boolean loadNextResults) {
-        getPatientListData(patientListUuid, computeStartIndex(loadNextResults));
+        getPatientListData(patientListUuid, computePage(loadNextResults));
     }
 
     @Override
-    public void setStartIndex(int startIndex) {
-        this.startIndex = startIndex;
+    public void setPage(int page) {
+        this.page = page;
     }
 
     @Override
-    public int getStartIndex() {
-        return startIndex;
+    public int getPage() {
+        return page;
     }
 
     @Override
@@ -136,23 +140,22 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
         return totalNumberResults;
     }
 
-    private int computeStartIndex(boolean next){
-        int tmpStartIndex = startIndex;
+    private int computePage(boolean next){
+        int tmpPage = getPage();
         // check if pagination is required.
-        if(tmpStartIndex + limit < getTotalNumberResults()){
+        if(page < Math.round(getTotalNumberResults() / limit)){
             if(next) {
-                // calculate startindex for the next page
-                tmpStartIndex += limit;
-            }
-            else if(tmpStartIndex - limit >= 0) {
-                // calculate start index for the previous page.
-                 tmpStartIndex -= limit;
+                // set next page
+                tmpPage += 1;
+            } else {
+                // set previous page.
+                 tmpPage -= 1;
             }
         } else {
-            tmpStartIndex = -1;
+            tmpPage = -1;
         }
 
-        return tmpStartIndex;
+        return tmpPage;
     }
 
     @Override

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ The contents of this file are subject to the OpenMRS Public License
+  ~ Version 2.0 (the "License"); you may not use this file except in
+  ~ compliance with the License. You may obtain a copy of the License at
+  ~ http://license.openmrs.org
+  ~
+  ~ Software distributed under the License is distributed on an "AS IS"
+  ~ basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+  ~ License for the specific language governing rights and limitations
+  ~ under the License.
+  ~
+  ~ Copyright (C) OpenHMIS.  All Rights Reserved.
+  -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
+
+    <ProgressBar
+        android:id="@+id/visitLoadingProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="false">
+
+        <LinearLayout
+            android:id="@+id/visitLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/card"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/visitTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:textColor="@color/primary"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/visitTableLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/patient_card_margin">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp">
+
+                    <TextView android:text="@string/visit_type"
+                        android:layout_column="0"
+                        android:layout_marginRight="@dimen/table_columns_margin"
+                        android:textColor="@color/dark_grey"
+                        android:textSize="18sp"
+                        android:gravity="left"/>
+
+                    <Spinner
+                        android:id="@+id/visit_type"
+                        android:layout_column="1"
+                        android:paddingLeft="20dp"
+                        android:gravity="left"/>
+
+                </TableRow>
+            </TableLayout>
+
+            <TextView android:id="@+id/confirmMessage"
+                android:layout_width="match_parent"
+                android:padding="10dp"
+                android:textColor="@color/light_teal"
+                android:layout_height="match_parent"/>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp">
+
+                <Button
+                    android:layout_marginRight="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:id="@+id/visitCancelButton"
+                    android:layout_width="130dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:gravity="center"
+                    android:text="@string/dialog_button_cancel"
+                    android:background="@drawable/button_cancel"
+                    android:textColor="@color/white"
+                    style="@style/Widget.AppCompat.Button.Borderless" />
+
+                <Button
+                    android:id="@+id/visitSubmitButton"
+                    android:layout_marginLeft="65dp"
+                    android:layout_width="130dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:gravity="center"
+                    android:text="@string/dialog_button_confirm"
+                    android:background="@drawable/button_apply"
+                    android:textColor="@color/white"
+                    style="@style/Widget.AppCompat.Button.Borderless" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

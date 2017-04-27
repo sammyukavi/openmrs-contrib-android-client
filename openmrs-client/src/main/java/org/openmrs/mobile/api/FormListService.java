@@ -16,7 +16,7 @@ import android.content.Intent;
 import com.activeandroid.ActiveAndroid;
 import com.activeandroid.query.Delete;
 
-import org.openmrs.mobile.models.EncounterType;
+import org.openmrs.mobile.models.EncounterTypeEntity;
 import org.openmrs.mobile.models.FormResource;
 import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.utilities.NetworkUtils;
@@ -72,21 +72,21 @@ public class FormListService extends IntentService {
                 }
             });
 
-            Call<Results<EncounterType>> call2 = apiService.getEncounterTypes();
-            call2.enqueue(new Callback<Results<EncounterType>>() {
+            Call<Results<EncounterTypeEntity>> call2 = apiService.getEncounterTypes();
+            call2.enqueue(new Callback<Results<EncounterTypeEntity>>() {
                 @Override
-                public void onResponse(Call<Results<EncounterType>> call, Response<Results<EncounterType>> response) {
+                public void onResponse(Call<Results<EncounterTypeEntity>> call, Response<Results<EncounterTypeEntity>> response) {
                     if (response.isSuccessful()) {
-                        new Delete().from(EncounterType.class).execute();
-                        Results<EncounterType> encountertypelist = response.body();
-                            for (EncounterType enctype : encountertypelist.getResults())
+                        new Delete().from(EncounterTypeEntity.class).execute();
+                        Results<EncounterTypeEntity> encountertypelist = response.body();
+                            for (EncounterTypeEntity enctype : encountertypelist.getResults())
                                 enctype.save();
                     }
 
                 }
 
                 @Override
-                public void onFailure(Call<Results<EncounterType>> call, Throwable t) {
+                public void onFailure(Call<Results<EncounterTypeEntity>> call, Throwable t) {
                     ToastUtil.error(t.getMessage());
 
                 }

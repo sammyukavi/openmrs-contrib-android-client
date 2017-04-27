@@ -14,6 +14,7 @@
 package org.openmrs.mobile.activities.patientlist;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,10 +23,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.openmrs.mobile.R;
+import org.openmrs.mobile.activities.addeditvisit.AddEditVisitActivity;
+import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.PatientListContextModel;
+import org.openmrs.mobile.models.Visit;
+import org.openmrs.mobile.models.VisitAttribute;
+import org.openmrs.mobile.utilities.ApplicationConstants;
+import org.openmrs.mobile.utilities.StringUtils;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Display {@link PatientListContextModel}s
@@ -51,26 +59,20 @@ public class PatientListModelRecyclerViewAdapter extends RecyclerView.Adapter<Pa
 
     @Override
     public void onBindViewHolder(PatientListModelViewHolder holder, int position) {
-        final Patient patient = items.get(position).getPatient();
+        PatientListContextModel patientListContextModel = items.get(position);
 
-        if (patient.getPerson().getDisplay() != null) {
-            holder.displayName.setText(patient.getPerson().getDisplay());
-        }
-
-        String genderAge = "Gender: ";
-        if (patient.getPerson().getGender() != null) {
-            if(patient.getPerson().getGender().equalsIgnoreCase("F")){
-                genderAge += "Female";
-            } else {
-                genderAge += "Male";
+        holder.headerContent.setText(StringUtils.stripHtmlTags(patientListContextModel.getHeaderContent()));
+        holder.bodyContent.setText(StringUtils.stripHtmlTags(patientListContextModel.getBodyContent()));
+        holder.rowLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, AddEditVisitActivity.class);
+                intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_ID_BUNDLE,
+                        patientListContextModel.getPatient().getUuid());
+                context.startActivity(intent);
+                context.finish();
             }
-
-            if(patient.getPerson().getAge() != null){
-                genderAge += " - Age: " + patient.getPerson().getAge();
-            }
-
-            holder.genderAge.setText("(" + genderAge + ")");
-        }
+        });
     }
 
     @Override
@@ -78,29 +80,16 @@ public class PatientListModelRecyclerViewAdapter extends RecyclerView.Adapter<Pa
         return items.size();
     }
 
-    class PatientListModelViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener, View.OnClickListener{
+    class PatientListModelViewHolder extends RecyclerView.ViewHolder{
         private LinearLayout rowLayout;
-        private TextView displayName;
-        private TextView genderAge;
+        private TextView headerContent;
+        private TextView bodyContent;
 
         public PatientListModelViewHolder(View itemView) {
             super(itemView);
             rowLayout = (LinearLayout) itemView;
-            displayName = (TextView) itemView.findViewById(R.id.patientListModelDisplayName);
-            genderAge = (TextView) itemView.findViewById(R.id.patientListModelGenderAge);
-            rowLayout.setOnLongClickListener(this);
-            rowLayout.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View v) {
-
-        }
-
-        @Override
-        public boolean onLongClick(View v) {
-            return false;
+            headerContent = (TextView) itemView.findViewById(R.id.headerContent);
+            bodyContent = (TextView) itemView.findViewById(R.id.bodyContent);
         }
     }
-
 }

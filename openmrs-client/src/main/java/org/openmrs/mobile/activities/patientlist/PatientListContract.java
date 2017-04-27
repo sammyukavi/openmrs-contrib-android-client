@@ -25,9 +25,13 @@ public interface PatientListContract {
 
     interface View extends BaseView<Presenter>{
 
+        void setNumberOfPatientsView(int length);
+
         void setSelectedPatientList(PatientList selectedPatientList);
 
         void setEmptyPatientListVisibility(boolean visibility);
+
+        void setNoPatientListsVisibility(boolean visibility);
 
         void updatePatientLists(List<PatientList> patientList);
 
@@ -42,13 +46,15 @@ public interface PatientListContract {
 
         void refresh();
 
+        void getPatientList();
+
         void getPatientListData(String patientListUuid, int startIndex);
 
-        void setStartIndex(int startIndex);
+        void setPage(int page);
 
         void setTotalNumberResults(int totalNumberResults);
 
-        int getStartIndex();
+        int getPage();
 
         boolean isLoading();
 

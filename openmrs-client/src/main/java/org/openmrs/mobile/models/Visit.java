@@ -16,14 +16,12 @@ package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 
+import java.util.Collection;
 import java.util.List;
 
-public class Visit extends Resource {
+public class Visit extends BaseOpenmrsEntity  {
 
     private Long id;
-
-    @Expose
-    private Patient patient;
 
     @Expose
     private VisitType visitType;
@@ -40,13 +38,11 @@ public class Visit extends Resource {
     @Expose
     private List<Encounter> encounters;
 
-    public Long getId() {
-        return id;
-    }
+    @Expose
+    private List<VisitAttribute> attributes;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @Expose
+    private Patient patient;
 
     public Patient getPatient() {
         return patient;
@@ -54,6 +50,14 @@ public class Visit extends Resource {
 
     public void setPatient(Patient patient) {
         this.patient = patient;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public VisitType getVisitType() {
@@ -94,5 +98,13 @@ public class Visit extends Resource {
 
     public void setEncounters(List<Encounter> encounters) {
         this.encounters = encounters;
+    }
+
+    public List<VisitAttribute> getAttributes() {
+        return attributes;
+    }
+
+    public void setAttributes(List<VisitAttribute> attributes) {
+        this.attributes = attributes;
     }
 }

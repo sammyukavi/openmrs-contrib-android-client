@@ -19,7 +19,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Represents {@link PatientList} model data
  */
-public class PatientListContextModel extends Resource {
+public class PatientListContextModel extends BaseOpenmrsObject {
 
     @SerializedName("patient")
     @Expose

@@ -11,7 +11,7 @@
 package org.openmrs.mobile.api;
 
 import org.openmrs.mobile.models.Encounter;
-import org.openmrs.mobile.models.EncounterType;
+import org.openmrs.mobile.models.EncounterTypeEntity;
 import org.openmrs.mobile.models.Encountercreate;
 import org.openmrs.mobile.models.FormResource;
 import org.openmrs.mobile.models.IdGenPatientIdentifiers;
@@ -21,8 +21,6 @@ import org.openmrs.mobile.models.Module;
 import org.openmrs.mobile.models.Obscreate;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
-import org.openmrs.mobile.models.PatientList;
-import org.openmrs.mobile.models.PatientListContextModel;
 import org.openmrs.mobile.models.PatientPhoto;
 import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.models.Session;
@@ -96,7 +94,7 @@ public interface RestApi {
     Call<Encounter> createEncounter(@Body Encountercreate encountercreate);
 
     @GET("encountertype")
-    Call<Results<EncounterType>> getEncounterTypes();
+    Call<Results<EncounterTypeEntity>> getEncounterTypes();
 
     @GET("session")
     Call<Session> getSession();
@@ -133,13 +131,5 @@ public interface RestApi {
 
     @GET("user/{uuid}")
     Call<User> getFullUserInfo(@Path("uuid") String uuid);
-
-    @GET("patientlist/list")
-    Call<Results<PatientList>> getPatientLists();
-
-    @GET("patientlist/data")
-    Call<Results<PatientListContextModel>> getPatientListData(@Query("uuid") String uuid,
-                                                              @Query("startIndex") int startIndex,
-                                                              @Query("limit") int limit);
 
 }

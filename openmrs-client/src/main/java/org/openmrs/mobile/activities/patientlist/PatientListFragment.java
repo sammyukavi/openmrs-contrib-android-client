@@ -30,6 +30,7 @@ import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.models.PatientList;
 import org.openmrs.mobile.models.PatientListContextModel;
 import org.openmrs.mobile.utilities.FontsUtil;
+import org.openmrs.mobile.utilities.StringUtils;
 
 import java.util.List;
 
@@ -41,6 +42,8 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
     private ProgressBar patientListSpinner;
     private Spinner patientListDropdown;
     private TextView emptyPatientList;
+    private TextView noPatientLists;
+    private TextView numberOfPatients;
     private PatientListArrayAdapter patientListAdapter;
     private RecyclerView patientListModelRecyclerView;
     private LinearLayoutManager layoutManager;
@@ -88,6 +91,8 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
         patientListSpinner = (ProgressBar) root.findViewById(R.id.patientListLoadingProgressBar);
         patientListDropdown = (Spinner) root.findViewById(R.id.patientListDropdown);
         emptyPatientList = (TextView) root.findViewById(R.id.emptyPatientList);
+        noPatientLists = (TextView) root.findViewById(R.id.noPatientLists);
+        numberOfPatients = (TextView) root.findViewById(R.id.numberOfPatients);
 
         layoutManager = new LinearLayoutManager(this.getActivity());
         patientListModelRecyclerView = (RecyclerView) root.findViewById(R.id.patientListModelRecyclerView);
@@ -105,6 +110,11 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
     }
 
     @Override
+    public void setNoPatientListsVisibility(boolean visible) {
+        noPatientLists.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
     public void setSpinnerVisibility(boolean visible) {
         patientListSpinner.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
@@ -117,7 +127,7 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 setSelectedPatientList(patientLists.get(position));
-                mPresenter.getPatientListData(selectedPatientList.getUuid(), 0);
+                mPresenter.getPatientListData(selectedPatientList.getUuid(), mPresenter.getPage());
             }
 
             @Override
@@ -137,6 +147,12 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
         patientListModelRecyclerView.setAdapter(adapter);
 
         patientListModelRecyclerView.addOnScrollListener(recyclerViewOnScrollListener);
+    }
+
+    @Override
+    public void setNumberOfPatientsView(int length) {
+        numberOfPatients.setText(getString(R.string.number_of_patients, String.valueOf(length)));
+        numberOfPatients.setVisibility(length <= 0 ? View.GONE : View.VISIBLE);
     }
 
     @Override

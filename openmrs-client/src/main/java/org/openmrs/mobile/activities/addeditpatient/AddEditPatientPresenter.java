@@ -23,12 +23,15 @@ import org.openmrs.mobile.api.retrofit.PatientApi;
 import org.openmrs.mobile.dao.PatientDAO;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
+import org.openmrs.mobile.data.impl.ConceptDataService;
 import org.openmrs.mobile.data.impl.PatientDataService;
-import org.openmrs.mobile.listeners.retrofit.DefaultResponseCallbackListener;
+import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.Patient;
+import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.NetworkUtils;
 import org.openmrs.mobile.utilities.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AddEditPatientPresenter extends BasePresenter implements AddEditPatientContract.Presenter {
@@ -36,6 +39,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 	private final AddEditPatientContract.View mPatientInfoView;
 
 	private PatientDataService patientDataService;
+	private ConceptDataService conceptDataService;
 	private RestApi restApi;
 	private Patient mPatient;
 	private String patientToUpdateId;
@@ -85,15 +89,11 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		boolean kinRelationshipError = false;
 		boolean kinPhonenumberError = false;
 		boolean kinResidenceError = false;
-		boolean encounterDateError = false;
-		boolean encounterDepartmentError = false;
-		boolean encounterProviderError = false;
 
 		mPatientInfoView.setErrorsVisibility(familyNameError, lastNameError, dateOfBirthError, genderError, subCountyError,
 				countyError, patientFileNumberError, civilStatusError, occupationError, subCountyError, nationalityError,
 				patientIdNoError, clinicError, wardError, phonenumberError, kinNameError, kinRelationshipError,
-				kinPhonenumberError, encounterDateError, encounterDepartmentError, encounterProviderError,
-				kinResidenceError);
+				kinPhonenumberError, kinResidenceError);
 
 		// Validate names
 		if (StringUtils.isBlank(patient.getPerson().getName().getGivenName())) {
@@ -132,8 +132,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 				!familyNameError && !lastNameError && !dateOfBirthError && !subCountyError && !countyError && !genderError
 						&& !patientFileNumberError && !occupationError && !civilStatusError && !subCountyError &&
 						!nationalityError && !patientIdNoError && !clinicError && !wardError && !phonenumberError
-						&& !kinNameError && !kinRelationshipError && !kinPhonenumberError && !encounterDateError &&
-						!encounterDepartmentError && !encounterProviderError && !kinResidenceError;
+						&& !kinNameError && !kinRelationshipError && !kinPhonenumberError  && !kinResidenceError;
 		if (result) {
 			mPatient = patient;
 			return true;
@@ -141,9 +140,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 			mPatientInfoView.setErrorsVisibility(familyNameError, lastNameError, dateOfBirthError, genderError,
 					subCountyError, countyError, patientFileNumberError, civilStatusError, occupationError, subCountyError,
 					nationalityError, patientIdNoError, clinicError, wardError, phonenumberError, kinNameError,
-					kinRelationshipError,
-					kinPhonenumberError, encounterDateError, encounterDepartmentError, encounterProviderError,
-					kinResidenceError);
+					kinRelationshipError, kinPhonenumberError, kinResidenceError);
 			return false;
 		}
 	}
@@ -230,25 +227,40 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 			DataService.GetMultipleCallback<Patient> getMultipleCallback = new DataService.GetMultipleCallback<Patient>() {
 				@Override
 				public void onCompleted(List<Patient> patients) {
-					System.out.println(patients);
 					if (patients == null || patients.isEmpty()) {
 						registerPatient(patient);
+						System.out.print(patients);
 					} else {
 						mPatientInfoView.showSimilarPatientDialog(patients, patient);
 					}
 				}
-
 				@Override
 				public void onError(Throwable t) {
-					System.out.println("===========================");
-					System.out.println("Error: ");
-					System.out.println(t);
-					System.out.println("===========================");
+					System.out.println(t.getLocalizedMessage());
 				}
 			};
 			patientDataService.getByName(patient.getPerson().getName().getNameString(), pagingInfo, getMultipleCallback);
 		} else {
 		   // get the users from the local storage.
+		}
+	}
+
+	public void getCivilStatus() {
+		if (NetworkUtils.hasNetwork()) {
+			DataService.GetSingleCallback<Concept> getSingleCallback = new DataService.GetSingleCallback<Concept>() {
+				@Override
+				public void onCompleted(Concept entity) {
+					mPatientInfoView.setCivilStatus(entity);
+				}
+
+				@Override
+				public void onError(Throwable t) {
+					System.out.print(t);
+				}
+			};
+			conceptDataService.getByUUID(ApplicationConstants.CIVIL_STATUS_UUID, getSingleCallback);
+		} else {
+			// get the users from the local storage.
 		}
 	}
 

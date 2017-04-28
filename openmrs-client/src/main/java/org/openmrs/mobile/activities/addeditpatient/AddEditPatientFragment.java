@@ -49,6 +49,7 @@ import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
 import org.openmrs.mobile.application.OpenMRSLogger;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.listeners.watcher.PatientBirthdateValidatorWatcher;
+import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.PatientIdentifier;
 import org.openmrs.mobile.models.Person;
@@ -91,9 +92,6 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 	private EditText kinRelationship;
 	private EditText kinPhonenumber;
 	private EditText kinResidence;
-	private EditText encounterDate;
-	private EditText encounterDept;
-	private Spinner encounterProvider;
 	private RadioGroup gen;
 	private ProgressBar progressBar;
 
@@ -131,6 +129,8 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 	private TextView encounterDateError;
 	private TextView encounterDeptError;
 	private TextView encounterProviderError;
+	private String[] patientCivilStatus;
+	Concept test;
 
 	public static AddEditPatientFragment newInstance() {
 		return new AddEditPatientFragment();
@@ -157,9 +157,6 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		kinRelationship = (EditText)v.findViewById(R.id.kinRelationship);
 		kinPhonenumber = (EditText)v.findViewById(R.id.kinPhonenumber);
 		kinResidence = (EditText)v.findViewById(R.id.kinResidence);
-		encounterDate = (EditText)v.findViewById(R.id.encounterDate);
-		encounterDept = (EditText)v.findViewById(R.id.encounterDept);
-		encounterProvider = (Spinner)v.findViewById(R.id.encounterProvider);
 
 		gen = (RadioGroup)v.findViewById(R.id.gender);
 		progressBar = (ProgressBar)v.findViewById(R.id.progress_bar);
@@ -182,9 +179,6 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		kinRelationshipError = (TextView)v.findViewById(R.id.kinRelationshipError);
 		kinPhonenumberError = (TextView)v.findViewById(R.id.kinPhonenumberError);
 		kinResidenceError = (TextView)v.findViewById(R.id.kinResidenceError);
-		encounterDateError = (TextView)v.findViewById(R.id.encounterDateError);
-		encounterDeptError = (TextView)v.findViewById(R.id.encounterDeptError);
-		encounterProviderError = (TextView)v.findViewById(R.id.encounterProviderError);
 		occupationError = (TextView)v.findViewById(R.id.occupationError);
 
 		submitConfirm = (Button)v.findViewById(R.id.submitConfirm);
@@ -199,7 +193,9 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		addSuggestionsToAutoCompleteTextView();
 		addListeners();
 		fillFields(mPresenter.getPatientToUpdate());
+		System.out.print(test);
 		return root;
+
 	}
 
 	@Override
@@ -219,8 +215,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 			boolean county_Error, boolean genderError, boolean patientFileNumberError, boolean civilStatusError,
 			boolean occuaptionerror, boolean subCounty_Error, boolean nationality_Error, boolean patientIdNo_Error,
 			boolean clinic_Error, boolean ward_Error, boolean phonenumber_Error, boolean kinName_Error,
-			boolean kinRelationship_Error, boolean kinPhonenumber_Error, boolean encounterDate_Error,
-			boolean encounterDepartment_Error, boolean encounterProvider_Error, boolean kinResidence_Error
+			boolean kinRelationship_Error, boolean kinPhonenumber_Error, boolean kinResidence_Error
 	) {
 		fnameerror.setVisibility(givenNameError ? View.VISIBLE : View.INVISIBLE);
 		lnameerror.setVisibility(familyNameError ? View.VISIBLE : View.INVISIBLE);
@@ -241,9 +236,6 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		kinRelationshipError.setVisibility(kinRelationship_Error ? View.VISIBLE : View.GONE);
 		kinPhonenumberError.setVisibility(kinPhonenumber_Error ? View.VISIBLE : View.GONE);
 		kinResidenceError.setVisibility(kinResidence_Error ? View.VISIBLE : View.GONE);
-		encounterDateError.setVisibility(encounterDate_Error ? View.VISIBLE : View.GONE);
-		encounterDeptError.setVisibility(encounterDepartment_Error? View.VISIBLE : View.GONE);
-		encounterProviderError.setVisibility(encounterDate_Error ? View.VISIBLE: View.GONE);
 
 	}
 
@@ -363,6 +355,11 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		ToastUtil.notifyLong(getResources().getString(R.string.registration_core_info));
 	}
 
+	@Override
+	public void setCivilStatus(Concept civilStatus) {
+		test = civilStatus;
+	}
+
 	private void fillFields(final Patient patient) {
 		if (patient != null && patient.getPerson() != null) {
 			//Change to Update Patient Form
@@ -426,6 +423,10 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 	}
 
 	private void addListeners() {
+
+		/*civilStatus.setAdapter(new ArrayAdapter<String>(AddEditPatientFragment.this, android.R.layout
+				.simple_spinner_dropdown_item));*/
+
 		gen.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 			public void onCheckedChanged(RadioGroup rGroup, int checkedId) {
 				gendererror.setVisibility(View.GONE);
@@ -487,42 +488,6 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 					mDatePicker.getDatePicker().setMaxDate(System.currentTimeMillis());
 					mDatePicker.setTitle("Select Date");
 					mDatePicker.show();
-				}
-			});
-		}
-
-		if (encounterDate != null) {
-			encounterDate.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					int encounterYear;
-					int encounterMonth;
-					int encounterDay;
-
-					if (enconterdate == null) {
-						Calendar currentDate = Calendar.getInstance();
-						encounterYear = currentDate.get(Calendar.YEAR);
-						encounterMonth = currentDate.get(Calendar.MONTH);
-						encounterDay = currentDate.get(Calendar.DAY_OF_MONTH);
-					} else {
-						encounterYear = enconterdate.getYear();
-						encounterMonth = enconterdate.getMonthOfYear() - 1;
-						encounterDay = enconterdate.getDayOfMonth();
-					}
-
-					DatePickerDialog encounterDateDialog = new DatePickerDialog(AddEditPatientFragment.this.getActivity(),
-							new DatePickerDialog.OnDateSetListener() {
-								public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth,
-										int selectedday) {
-									int adjustedMonth = selectedmonth + 1;
-									encounterDate.setText(selectedday + "/" + adjustedMonth + "/" + selectedyear);
-									patientEncouterDate = new LocalDate(selectedyear, adjustedMonth, selectedday);
-									enconterdate = patientEncouterDate.toDateTimeAtStartOfDay().toDateTime();
-								}
-							}, encounterYear, encounterMonth, encounterDay);
-					encounterDateDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
-					encounterDateDialog.setTitle("Select Date");
-					encounterDateDialog.show();
 				}
 			});
 		}

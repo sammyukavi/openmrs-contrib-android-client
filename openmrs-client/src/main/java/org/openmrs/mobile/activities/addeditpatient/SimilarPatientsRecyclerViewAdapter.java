@@ -29,7 +29,6 @@ import com.google.common.base.Objects;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
-import org.openmrs.mobile.data.impl.PatientDataService;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.DateUtils;
@@ -43,7 +42,6 @@ public class SimilarPatientsRecyclerViewAdapter
 	private List<Patient> patientList;
 	private Patient newPatient;
 	private Activity mContext;
-	private PatientDataService patientDataService;
 
 	public SimilarPatientsRecyclerViewAdapter(Activity mContext, List<Patient> patientList, Patient patient) {
 		this.newPatient = patient;

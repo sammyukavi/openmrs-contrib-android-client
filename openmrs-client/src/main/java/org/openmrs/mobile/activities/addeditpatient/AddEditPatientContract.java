@@ -16,6 +16,7 @@ package org.openmrs.mobile.activities.addeditpatient;
 
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
+import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.Patient;
 
 import java.util.List;
@@ -31,7 +32,6 @@ public interface AddEditPatientContract {
 				boolean civilStatusError, boolean occupationError, boolean subCounty_Error, boolean nationality_Error,
 				boolean patientIdNo_Error, boolean clinic_Error, boolean ward_Error, boolean phonenumber_Error,
 				boolean kinName_Error, boolean kinRelationship_Error, boolean kinPhonenumber_Error,
-				boolean encounterDate_Error, boolean encounterDepartment_Error, boolean encounterProvider_Error,
 				boolean kinResidence_Error
 		);
 
@@ -46,6 +46,8 @@ public interface AddEditPatientContract {
 		void startPatientDashboardActivity(Patient patient);
 
 		void showUpgradeRegistrationModuleInfo();
+
+		void setCivilStatus(Concept civilStatus);
 	}
 
 	interface Presenter extends BasePresenterContract {
@@ -54,7 +56,7 @@ public interface AddEditPatientContract {
 
 		boolean isRegisteringPatient();
 
-		void  confirmRegister(Patient patient);
+		void confirmRegister(Patient patient);
 
 		void confirmUpdate(Patient patient);
 

@@ -236,7 +236,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 				}
 				@Override
 				public void onError(Throwable t) {
-					System.out.println(t.getLocalizedMessage());
+					Log.e("User Error","Error",t.fillInStackTrace());
 				}
 			};
 			patientDataService.getByName(patient.getPerson().getName().getNameString(), pagingInfo, getMultipleCallback);

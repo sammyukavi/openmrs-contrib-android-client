@@ -110,6 +110,7 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 				} else {
 					findPatientRecordFragment.setSearchPatientVisibility(true);
 					findPatientRecordFragment.setNumberOfPatientsView(0);
+					findPatientRecordFragment.setNoPatientsVisibility(false);
 				}
 				return true;
 			}
@@ -121,6 +122,7 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 				} else {
 					findPatientRecordFragment.setSearchPatientVisibility(true);
 					findPatientRecordFragment.setNumberOfPatientsView(0);
+					findPatientRecordFragment.setNoPatientsVisibility(false);
 				}
 				return false;
 			}

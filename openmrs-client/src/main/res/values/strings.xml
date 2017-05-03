@@ -389,5 +389,6 @@
 	<string name="number_of_patients">%1$s patients found</string>
 	<string name="findPatientsTitle">Search to find patients</string>
 	<string name="patientNotFound">Patient not found</string>
+	<string name="patientsFoundTitle">No. of Patients Found</string>
 
 </resources>

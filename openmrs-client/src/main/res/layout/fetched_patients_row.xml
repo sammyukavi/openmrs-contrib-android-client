@@ -21,12 +21,12 @@
 			android:id="@+id/cardView"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_margin="10dp"
+			android:layout_margin="4dp"
 			card_view:cardBackgroundColor="@color/white"
 			card_view:cardCornerRadius="4dp">
 		
 		<LinearLayout
-				android:layout_margin="10dp"
+				android:layout_margin="5dp"
 				android:orientation="vertical"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content">

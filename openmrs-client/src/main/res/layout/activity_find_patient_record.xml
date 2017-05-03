@@ -4,6 +4,8 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		xmlns:app="http://schemas.android.com/apk/res-auto"
+		style="@style/BackgroundThemeEEE"
+		android:orientation="vertical"
 		android:fitsSystemWindows="true"
 		tools:context=".activities.findpatientrecord.FindPatientRecordActivity">
 	
@@ -27,6 +29,6 @@
 			android:layout_height="wrap_content"
 			android:layout_gravity="bottom|end"
 			android:layout_margin="@dimen/fab_margin"
-			app:backgroundTint="@color/switchcolor"
+			app:backgroundTint="@color/color_primary"
 			android:src="@drawable/ic_add" />
 </android.support.design.widget.CoordinatorLayout>

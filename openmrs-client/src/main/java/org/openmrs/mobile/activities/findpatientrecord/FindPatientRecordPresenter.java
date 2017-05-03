@@ -14,21 +14,83 @@
 
 package org.openmrs.mobile.activities.findpatientrecord;
 
+import android.os.Bundle;
+import android.util.Log;
+
 import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.application.OpenMRS;
+import org.openmrs.mobile.data.DataService;
+import org.openmrs.mobile.data.PagingInfo;
+import org.openmrs.mobile.data.impl.PatientDataService;
+import org.openmrs.mobile.models.Patient;
+import org.openmrs.mobile.models.PersonName;
+import org.openmrs.mobile.utilities.NetworkUtils;
+import org.openmrs.mobile.utilities.ViewUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class FindPatientRecordPresenter extends BasePresenter implements FindPatientRecordContract.Presenter {
 	
 	
 	private FindPatientRecordContract.View findPatientView;
+	private int totalNumberResults;
+	private PatientDataService patientDataService;
+	private String lastQuery = "";
 	
-	public FindPatientRecordPresenter(FindPatientRecordContract.View view, OpenMRS openMRS) {
+	public FindPatientRecordPresenter(FindPatientRecordContract.View view, String lastQuery) {
 		this.findPatientView = view;
 		this.findPatientView.setPresenter(this);
+		this.lastQuery = lastQuery;
+		this.patientDataService = new PatientDataService();
+	}
+
+	public FindPatientRecordPresenter(FindPatientRecordContract.View view) {
+		this.findPatientView = view;
+		this.findPatientView.setPresenter(this);
+		this.patientDataService = new PatientDataService();
 	}
 	
 	@Override
 	public void subscribe() {
 		
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+
+	}
+
+
+	public void findPatient(String query) {
+		findPatientView.setProgressBarVisibility(true);
+		if (NetworkUtils.hasNetwork()) {
+			PagingInfo pagingInfo = new PagingInfo(0, 20);
+			DataService.GetMultipleCallback<Patient> getMultipleCallback = new DataService.GetMultipleCallback<Patient>() {
+				@Override
+				public void onCompleted(List<Patient> patients) {
+					findPatientView.setProgressBarVisibility(false);
+					if (patients == null || patients.isEmpty()) {
+						findPatientView.setNumberOfPatientsView(0);
+						findPatientView.setSearchPatientVisibility(false);
+						findPatientView.setNoPatientsVisibility(true);
+					} else {
+						findPatientView.setNoPatientsVisibility(false);
+						findPatientView.setSearchPatientVisibility(false);
+						findPatientView.setNumberOfPatientsView(patients.size());
+						System.out.print(patients);
+						System.out.println(patients.size());
+					}
+				}
+				@Override
+				public void onError(Throwable t) {
+					findPatientView.setProgressBarVisibility(false);
+					Log.e("Patient Error","Error",t.fillInStackTrace());
+				}
+			};
+			patientDataService.getByName(query, pagingInfo, getMultipleCallback);
+		} else {
+			// get the users from the local storage.
+		}
 	}
 }

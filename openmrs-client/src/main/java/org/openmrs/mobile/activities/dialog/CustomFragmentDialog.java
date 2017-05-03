@@ -332,7 +332,7 @@ public class CustomFragmentDialog extends DialogFragment {
 						dismiss();
 						break;
 					case END_VISIT:
-						//((VisitDashboardActivity) getActivity()).mPresenter.endVisit();
+						//((VisitDashboardActivity) getActivity()).findPatientPresenter.endVisit();
 						dismiss();
 						break;
 					case START_VISIT:
@@ -340,7 +340,7 @@ public class CustomFragmentDialog extends DialogFragment {
 						dismiss();
 						break;
 					case REGISTER_PATIENT:
-						//((AddEditPatientActivity) getActivity()).mPresenter.registerPatient(Patient);
+						//((AddEditPatientActivity) getActivity()).findPatientPresenter.registerPatient(Patient);
 						dismiss();
 						break;
 					case CANCEL_REGISTERING:
@@ -349,7 +349,7 @@ public class CustomFragmentDialog extends DialogFragment {
 						break;
 					case DELETE_PATIENT:
 						PatientDashboardActivity activity = (PatientDashboardActivity) getActivity();
-						//activity.mPresenter.deletePatient();
+						//activity.findPatientPresenter.deletePatient();
 						dismiss();
 						activity.finish();
 						break;

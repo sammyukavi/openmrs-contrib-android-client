@@ -229,7 +229,6 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 				public void onCompleted(List<Patient> patients) {
 					if (patients == null || patients.isEmpty()) {
 						registerPatient(patient);
-						System.out.print(patients);
 					} else {
 						mPatientInfoView.showSimilarPatientDialog(patients, patient);
 					}

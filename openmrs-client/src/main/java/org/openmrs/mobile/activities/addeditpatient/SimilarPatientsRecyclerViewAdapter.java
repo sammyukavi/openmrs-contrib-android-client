@@ -69,9 +69,6 @@ public class SimilarPatientsRecyclerViewAdapter
 		holder.mRowLayout.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				/*if (!(new PatientDAO().isUserAlreadySaved(patient.getUuid()))) {
-					downloadPatient(patient);
-				}*/
 				Intent intent = new Intent(mContext, PatientDashboardActivity.class);
 				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, getPatientUuid(patient));
 				mContext.startActivity(intent);
@@ -87,15 +84,6 @@ public class SimilarPatientsRecyclerViewAdapter
 	@Override
 	public int getItemCount() {
 		return patientList.size();
-	}
-
-	private void downloadPatient(Patient patient) {
-		/*new PatientDAO().savePatient(patient)
-				.observeOn(AndroidSchedulers.mainThread())
-                .subscribe(id -> {
-                    new VisitApi().syncVisitsData(patient);
-                    new VisitApi().syncLastVitals(patient.getUuid());
-                });*/
 	}
 
 	private void setBirthdate(PatientViewHolder holder, Patient patient) {

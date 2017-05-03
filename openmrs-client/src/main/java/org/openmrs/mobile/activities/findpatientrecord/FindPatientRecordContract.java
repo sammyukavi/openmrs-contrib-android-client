@@ -14,15 +14,35 @@
 
 package org.openmrs.mobile.activities.findpatientrecord;
 
+import android.os.Bundle;
+
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
+import org.openmrs.mobile.models.Patient;
+
+import java.util.List;
 
 public interface FindPatientRecordContract {
-	
+
 	interface View extends BaseView<Presenter> {
+
+		void setNumberOfPatientsView(int length);
+
+		void setNoPatientsVisibility(boolean visibility);
+
+		void updatePatientLists(List<Patient> patientsList);
+
+		void setSearchPatientVisibility(boolean visibility);
+
+		void setProgressBarVisibility(boolean visibility);
+
 	}
-	
+
 	interface Presenter extends BasePresenterContract {
+
+		void onSaveInstanceState(Bundle outState);
+
+		void findPatient(String name);
 	}
-	
+
 }

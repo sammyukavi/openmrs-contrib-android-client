@@ -26,7 +26,7 @@ public abstract class ApplicationConstants {
     public static final String VISIT_TYPE_UUID = "visit_type_uuid";
     public static final String LAST_SESSION_TOKEN = "last_session_id";
     public static final String LAST_LOGIN_SERVER_URL = "last_login_server_url";
-	public static final String DEFAULT_OPEN_MRS_URL = "http://192.168.0.21:8080/openmrs/";
+	public static final String DEFAULT_OPEN_MRS_URL = "http://192.168.2.34:9996/openmrs/";
 	public static final String CIVIL_STATUS_UUID = 	"1054AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
     //discuss on using the openhmis
 	// demo as the main test server to avoid changes here.
@@ -77,6 +77,8 @@ public abstract class ApplicationConstants {
     public abstract static class BundleKeys {
         public static final String CUSTOM_DIALOG_BUNDLE = "customDialogBundle";
         public static final String PATIENT_UUID_BUNDLE = "patientID";
+        public static final String PATIENT_ID_BUNDLE = "patientID";
+        public static final String PATIENTS_START_INDEX = "patientsStartIndex";
         public static final String VISIT_ID = "visitID";
         public static final String ENCOUNTERTYPE = "encounterType";
         public static final String VALUEREFERENCE = "valueReference";
@@ -106,5 +108,9 @@ public abstract class ApplicationConstants {
 
     public abstract static class Tags {
         public static final String PATIENT_ID = "patient_ID";
+    }
+
+    public abstract static class messages {
+        public static final String SEARCH_STRING_LENGTH = "Type at least 3 characters to search";
     }
 }

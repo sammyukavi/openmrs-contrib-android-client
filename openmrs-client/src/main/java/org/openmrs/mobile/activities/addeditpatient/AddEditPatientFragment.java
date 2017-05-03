@@ -193,7 +193,6 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		addSuggestionsToAutoCompleteTextView();
 		addListeners();
 		fillFields(mPresenter.getPatientToUpdate());
-		System.out.print(test);
 		return root;
 
 	}

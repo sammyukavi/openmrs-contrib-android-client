@@ -46,7 +46,7 @@ public class FindPatient extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.nav_find_patient);
         View view = inflater.inflate(R.layout.fragment_find_patient_record, container, false);
-        patientsView = (RecyclerView) view.findViewById(R.id.patients_list);
+       // patientsView = (RecyclerView) view.findViewById(R.id.patients_list);
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
         patientsView.setLayoutManager(llm);
         patientsView.setHasFixedSize(true);

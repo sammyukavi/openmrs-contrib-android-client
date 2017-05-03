@@ -42,6 +42,7 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 		super.onCreate(savedInstanceState);
 		getLayoutInflater().inflate(R.layout.activity_find_patient_record, frameLayout);
 		setTitle(R.string.nav_find_patient);
+
 		// Create fragment
 		findPatientRecordFragment =
 				(FindPatientRecordFragment)getSupportFragmentManager().findFragmentById(R.id

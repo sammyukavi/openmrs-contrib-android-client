@@ -40,7 +40,7 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 	private TextView noPatientFound, numberOfFetchedPatients, searchForPatient, patientSearchTitle, noPatientFoundTitle;
 	private LinearLayoutManager layoutManager;
 	private ProgressBar findPatientProgressBar;
-	private FindPatientRecyclerViewAdapter findPatientRecyclerViewAdapter;
+	private RecyclerView findPatientRecyclerViewAdapter;
 	private LinearLayout findPatientLayout, noPatientsFoundLayout,  foundPatientsLayout;
 
 	public static FindPatientRecordFragment newInstance() {
@@ -96,6 +96,11 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 		resolveViews(mRootView);
 		setSearchPatientVisibility(true);
 		setNumberOfPatientsView(0);
+
+		layoutManager = new LinearLayoutManager(this.getActivity());
+		findPatientRecyclerViewAdapter = (RecyclerView) mRootView.findViewById(R.id.findPatientModelRecyclerView);
+		findPatientRecyclerViewAdapter.setLayoutManager(layoutManager);
+
 		// Font config
 		FontsUtil.setFont((ViewGroup)this.getActivity().findViewById(android.R.id.content));
 		return mRootView;
@@ -113,8 +118,10 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 	}
 
 	@Override
-	public void updatePatientLists(List<Patient> patientsList) {
-
+	public void fetchPatients(List<Patient> patients) {
+		FindPatientRecyclerViewAdapter adapter = new FindPatientRecyclerViewAdapter(this.getActivity(), patients, this);
+		findPatientRecyclerViewAdapter.setAdapter(adapter);
+		findPatientRecyclerViewAdapter.addOnScrollListener(recyclerViewOnScrollListener);
 	}
 
 	@Override
@@ -127,8 +134,4 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 		findPatientProgressBar.setVisibility(visibility? View.VISIBLE: View.GONE);
 	}
 
-	public void updateList(List<Patient> patientList) {
-		findPatientRecyclerViewAdapter = new FindPatientRecyclerViewAdapter(this.getActivity(), patientList, this);
-		findPatientRecyclerView.setAdapter(findPatientRecyclerViewAdapter);
-	}
 }

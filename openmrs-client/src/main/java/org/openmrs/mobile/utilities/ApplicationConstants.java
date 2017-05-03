@@ -109,8 +109,4 @@ public abstract class ApplicationConstants {
     public abstract static class Tags {
         public static final String PATIENT_ID = "patient_ID";
     }
-
-    public abstract static class messages {
-        public static final String SEARCH_STRING_LENGTH = "Type at least 3 characters to search";
-    }
 }

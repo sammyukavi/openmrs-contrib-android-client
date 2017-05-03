@@ -30,7 +30,7 @@ public interface FindPatientRecordContract {
 
 		void setNoPatientsVisibility(boolean visibility);
 
-		void updatePatientLists(List<Patient> patientsList);
+		void fetchPatients(List<Patient> patients);
 
 		void setSearchPatientVisibility(boolean visibility);
 

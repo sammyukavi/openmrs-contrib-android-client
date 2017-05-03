@@ -78,8 +78,7 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 						findPatientView.setNoPatientsVisibility(false);
 						findPatientView.setSearchPatientVisibility(false);
 						findPatientView.setNumberOfPatientsView(patients.size());
-						System.out.print(patients);
-						System.out.println(patients.size());
+						findPatientView.fetchPatients(patients);
 					}
 				}
 				@Override

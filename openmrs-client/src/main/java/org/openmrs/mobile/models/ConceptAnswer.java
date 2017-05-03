@@ -11,14 +11,12 @@ public class ConceptAnswer extends BaseOpenmrsObject {
     /**
      * The question concept that this object is answering
      */
-    @SerializedName("concept")
     @Expose
     private Concept concept;
 
     /**
      * The answer to the question
      */
-    @SerializedName("conceptClass")
     @Expose
     private Concept answerConcept;
 

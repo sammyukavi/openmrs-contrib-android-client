@@ -16,6 +16,7 @@ public abstract class BaseEntityDataService<E extends BaseOpenmrsEntity ,S> exte
         implements EntityDataService<E> {
 
     protected abstract Call<Results<E>> _restGetByPatient(String restPath, PagingInfo pagingInfo, String patientUuid,
+                                                          boolean includeInactive,
                                                           String representation);
 
     @Override
@@ -26,6 +27,6 @@ public abstract class BaseEntityDataService<E extends BaseOpenmrsEntity ,S> exte
         checkNotNull(callback);
 
         executeMultipleCallback(callback, pagingInfo,
-                () -> _restGetByPatient(buildRestRequestPath(), pagingInfo, patient.getUuid(), RestConstants.Representations.FULL));
+                () -> _restGetByPatient(buildRestRequestPath(), pagingInfo, patient.getUuid(), includeInactive, RestConstants.Representations.FULL));
     }
 }

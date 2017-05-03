@@ -21,6 +21,7 @@ import org.openmrs.mobile.activities.ACBaseActivity;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.StringUtils;
+import org.openmrs.mobile.utilities.ToastUtil;
 
 public class AddEditVisitActivity extends ACBaseActivity{
 
@@ -35,20 +36,23 @@ public class AddEditVisitActivity extends ACBaseActivity{
         String patientUuid = "";
         if (extras != null) {
             patientUuid = extras.getString(ApplicationConstants.BundleKeys.PATIENT_ID_BUNDLE);
+            if(StringUtils.notEmpty(patientUuid)){
+                AddEditVisitFragment addEditVisitFragment =
+                        (AddEditVisitFragment) getSupportFragmentManager().findFragmentById(R.id.addeditVisitContentFrame);
+                if(addEditVisitFragment == null){
+                    addEditVisitFragment = AddEditVisitFragment.newInstance();
+                }
+
+                if(!addEditVisitFragment.isActive()){
+                    addFragmentToActivity(getSupportFragmentManager(), addEditVisitFragment, R.id.addeditVisitContentFrame);
+                }
+
+                addEditVisitPresenter = new AddEditVisitPresenter(addEditVisitFragment, patientUuid);
+
+            } else {
+                ToastUtil.error(getString(R.string.no_patient_selected));
+            }
         }
-
-        AddEditVisitFragment addEditVisitFragment =
-                (AddEditVisitFragment) getSupportFragmentManager().findFragmentById(R.id.addeditVisitContentFrame);
-        if(addEditVisitFragment == null){
-            addEditVisitFragment = AddEditVisitFragment.newInstance();
-        }
-
-        if(!addEditVisitFragment.isActive()){
-            addFragmentToActivity(getSupportFragmentManager(), addEditVisitFragment, R.id.addeditVisitContentFrame);
-        }
-
-        addEditVisitPresenter = new AddEditVisitPresenter(addEditVisitFragment, patientUuid);
-
     }
 
     @Override

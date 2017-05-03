@@ -1,19 +1,20 @@
 package org.openmrs.mobile.models;
 
-public class VisitAttribute extends BaseOpenmrsAuditableObject{
+import com.google.gson.annotations.Expose;
 
-    private Integer visitAttributeId;
+public class VisitAttribute extends BaseOpenmrsData{
+
+    @Expose
     private Visit visit;
+
+    @Expose
+    private Object value;
+
+    @Expose
     private String valueReference;
+
+    @Expose
     private VisitAttributeType attributeType;
-
-    public Integer getVisitAttributeId() {
-        return visitAttributeId;
-    }
-
-    public void setVisitAttributeId(Integer visitAttributeId) {
-        this.visitAttributeId = visitAttributeId;
-    }
 
     public Visit getVisit() {
         return visit;
@@ -37,5 +38,13 @@ public class VisitAttribute extends BaseOpenmrsAuditableObject{
 
     public void setAttributeType(VisitAttributeType attributeType) {
         this.attributeType = attributeType;
+    }
+
+    public Object getValue() {
+        return value;
+    }
+
+    public void setValue(Object value) {
+        this.value = value;
     }
 }

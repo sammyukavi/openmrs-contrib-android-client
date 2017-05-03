@@ -47,7 +47,6 @@ public interface AddEditPatientContract {
 
 		void showUpgradeRegistrationModuleInfo();
 
-		void setCivilStatus(Concept civilStatus);
 	}
 
 	interface Presenter extends BasePresenterContract {
@@ -65,6 +64,8 @@ public interface AddEditPatientContract {
 		void registerPatient(Patient patient);
 
 		void updatePatient(Patient patient);
+
+		void getCivilStatus();
 	}
 
 }

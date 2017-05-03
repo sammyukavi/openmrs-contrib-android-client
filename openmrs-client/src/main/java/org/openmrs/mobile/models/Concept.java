@@ -23,7 +23,7 @@ public class Concept extends BaseOpenmrsAuditableObject implements Serializable 
 	
 	@SerializedName("name")
 	@Expose
-	private String name;
+	private Object name;
 	
 	@SerializedName("conceptClass")
 	@Expose
@@ -37,11 +37,11 @@ public class Concept extends BaseOpenmrsAuditableObject implements Serializable 
 		this.datatype = datatype;
 	}
 	
-	public String getName() {
+	public Object getName() {
 		return name;
 	}
 	
-	public void setName(String name) {
+	public void setName(Object name) {
 		this.name = name;
 	}
 	

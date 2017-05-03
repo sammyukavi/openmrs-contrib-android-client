@@ -67,6 +67,8 @@ public class AddEditPatientActivity extends ACBaseActivity {
 		List<String> counties = Arrays.asList(getResources().getStringArray(R.array.countiesArray));
 		// Create the findPatientPresenter
 		mPresenter = new AddEditPatientPresenter(addEditPatientFragment, counties, patientID);
+
+		mPresenter.getCivilStatus();
 	}
 	
 	@Override

@@ -130,7 +130,6 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 	private TextView encounterDeptError;
 	private TextView encounterProviderError;
 	private String[] patientCivilStatus;
-	Concept test;
 
 	public static AddEditPatientFragment newInstance() {
 		return new AddEditPatientFragment();
@@ -354,10 +353,6 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		ToastUtil.notifyLong(getResources().getString(R.string.registration_core_info));
 	}
 
-	@Override
-	public void setCivilStatus(Concept civilStatus) {
-		test = civilStatus;
-	}
 
 	private void fillFields(final Patient patient) {
 		if (patient != null && patient.getPerson() != null) {

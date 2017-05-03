@@ -54,6 +54,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		this.mCounties = countries;
 		this.patientToUpdateId = patientToUpdateId;
 		this.patientDataService = new PatientDataService();
+		this.conceptDataService = new ConceptDataService();
 		this.restApi = RestServiceBuilder.createService(RestApi.class);
 	}
 
@@ -62,6 +63,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 			List<String> mCounties, RestApi restApi) {
 		this.mPatientInfoView = mPatientInfoView;
 		this.patientDataService = new PatientDataService();
+		this.conceptDataService = new ConceptDataService();
 		this.mPatient = mPatient;
 		this.patientToUpdateId = patientToUpdateId;
 		this.mCounties = mCounties;
@@ -249,12 +251,13 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 			DataService.GetSingleCallback<Concept> getSingleCallback = new DataService.GetSingleCallback<Concept>() {
 				@Override
 				public void onCompleted(Concept entity) {
-					mPatientInfoView.setCivilStatus(entity);
+					//mPatientInfoView.setCivilStatus(entity);
+					System.out.print(entity);
 				}
 
 				@Override
 				public void onError(Throwable t) {
-					System.out.print(t);
+					Log.e("Civil Status Error","Error",t.fillInStackTrace());
 				}
 			};
 			conceptDataService.getByUUID(ApplicationConstants.CIVIL_STATUS_UUID, getSingleCallback);

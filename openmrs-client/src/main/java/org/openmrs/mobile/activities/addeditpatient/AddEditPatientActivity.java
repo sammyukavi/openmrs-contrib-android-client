@@ -55,7 +55,7 @@ public class AddEditPatientActivity extends ACBaseActivity {
 		//Check if bundle includes patient ID
 		Bundle patientBundle = savedInstanceState;
 		if (patientBundle != null) {
-			patientBundle.getString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
+			patientBundle.getString(ApplicationConstants.BundleKeys.PATIENT_ID_BUNDLE);
 		} else {
 			patientBundle = getIntent().getExtras();
 		}

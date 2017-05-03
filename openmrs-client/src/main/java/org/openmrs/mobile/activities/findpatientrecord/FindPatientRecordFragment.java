@@ -41,13 +41,13 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 	private LinearLayoutManager layoutManager;
 	private ProgressBar findPatientProgressBar;
 	private RecyclerView findPatientRecyclerViewAdapter;
-	private LinearLayout findPatientLayout, noPatientsFoundLayout,  foundPatientsLayout;
+	private LinearLayout findPatientLayout, noPatientsFoundLayout, foundPatientsLayout, patientListlayout;
 
 	public static FindPatientRecordFragment newInstance() {
 		return new FindPatientRecordFragment();
 	}
 
-	private void resolveViews (View v) {
+	private void resolveViews(View v) {
 		noPatientFound = (TextView)v.findViewById(R.id.noPatientsFound);
 		findPatientRecyclerView = (RecyclerView)v.findViewById(R.id.findPatientModelRecyclerView);
 		findPatientProgressBar = (ProgressBar)v.findViewById(R.id.findPatientLoadingProgressBar);
@@ -56,6 +56,7 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 		findPatientLayout = (LinearLayout)v.findViewById(R.id.searchPatientsLayout);
 		noPatientsFoundLayout = (LinearLayout)v.findViewById(R.id.noPatientsFoundLayout);
 		foundPatientsLayout = (LinearLayout)v.findViewById(R.id.resultsLayout);
+		patientListlayout = (LinearLayout)v.findViewById(R.id.patientsCardViewLayout);
 		patientSearchTitle = (TextView)v.findViewById(R.id.findPatientTitle);
 		noPatientFoundTitle = (TextView)v.findViewById(R.id.noPatientsFoundPatientTitle);
 	}
@@ -96,9 +97,9 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 		resolveViews(mRootView);
 		setSearchPatientVisibility(true);
 		setNumberOfPatientsView(0);
-
+		//Adding the Recycler view
 		layoutManager = new LinearLayoutManager(this.getActivity());
-		findPatientRecyclerViewAdapter = (RecyclerView) mRootView.findViewById(R.id.findPatientModelRecyclerView);
+		findPatientRecyclerViewAdapter = (RecyclerView)mRootView.findViewById(R.id.findPatientModelRecyclerView);
 		findPatientRecyclerViewAdapter.setLayoutManager(layoutManager);
 
 		// Font config
@@ -110,6 +111,7 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 	public void setNumberOfPatientsView(int length) {
 		numberOfFetchedPatients.setText(getString(R.string.number_of_patients, String.valueOf(length)));
 		foundPatientsLayout.setVisibility(length <= 0 ? View.GONE : View.VISIBLE);
+		patientListlayout.setVisibility(length <= 0 ? View.GONE : View.VISIBLE);
 	}
 
 	@Override
@@ -126,12 +128,12 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 
 	@Override
 	public void setSearchPatientVisibility(boolean visibility) {
-		findPatientLayout.setVisibility(visibility? View.VISIBLE : View.GONE);
+		findPatientLayout.setVisibility(visibility ? View.VISIBLE : View.GONE);
 	}
 
 	@Override
 	public void setProgressBarVisibility(boolean visibility) {
-		findPatientProgressBar.setVisibility(visibility? View.VISIBLE: View.GONE);
+		findPatientProgressBar.setVisibility(visibility ? View.VISIBLE : View.GONE);
 	}
 
 }

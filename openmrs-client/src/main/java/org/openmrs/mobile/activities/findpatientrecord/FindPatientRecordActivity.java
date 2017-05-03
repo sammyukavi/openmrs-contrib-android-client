@@ -75,8 +75,8 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		String query = searchView.getQuery().toString();
-		outState.putString(ApplicationConstants.BundleKeys.PATIENT_QUERY_BUNDLE, query);
+		//String query = searchView.getQuery().toString();
+		//outState.putString(ApplicationConstants.BundleKeys.PATIENT_QUERY_BUNDLE, query);
 	}
 
 	@Override

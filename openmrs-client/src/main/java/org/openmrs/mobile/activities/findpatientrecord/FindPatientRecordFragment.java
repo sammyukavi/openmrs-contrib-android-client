@@ -41,7 +41,7 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 	private LinearLayoutManager layoutManager;
 	private ProgressBar findPatientProgressBar;
 	private RecyclerView findPatientRecyclerViewAdapter;
-	private LinearLayout findPatientLayout, noPatientsFoundLayout, foundPatientsLayout, patientListlayout;
+	private LinearLayout findPatientLayout, noPatientsFoundLayout, foundPatientsLayout, patientListLayout, progessBarLayout;
 
 	public static FindPatientRecordFragment newInstance() {
 		return new FindPatientRecordFragment();
@@ -50,16 +50,19 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 	private void resolveViews(View v) {
 		noPatientFound = (TextView)v.findViewById(R.id.noPatientsFound);
 		findPatientRecyclerView = (RecyclerView)v.findViewById(R.id.findPatientModelRecyclerView);
+
 		findPatientProgressBar = (ProgressBar)v.findViewById(R.id.findPatientLoadingProgressBar);
 		numberOfFetchedPatients = (TextView)v.findViewById(R.id.numberOfFetchedPatients);
 		searchForPatient = (TextView)v.findViewById(R.id.findPatients);
 		findPatientLayout = (LinearLayout)v.findViewById(R.id.searchPatientsLayout);
 		noPatientsFoundLayout = (LinearLayout)v.findViewById(R.id.noPatientsFoundLayout);
 		foundPatientsLayout = (LinearLayout)v.findViewById(R.id.resultsLayout);
-		patientListlayout = (LinearLayout)v.findViewById(R.id.patientsCardViewLayout);
+		patientListLayout = (LinearLayout)v.findViewById(R.id.patientsCardViewLayout);
 		patientSearchTitle = (TextView)v.findViewById(R.id.findPatientTitle);
 		noPatientFoundTitle = (TextView)v.findViewById(R.id.noPatientsFoundPatientTitle);
+		progessBarLayout = (LinearLayout)v.findViewById(R.id.progressBarLayout);
 	}
+
 
 	private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
 
@@ -111,7 +114,7 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 	public void setNumberOfPatientsView(int length) {
 		numberOfFetchedPatients.setText(getString(R.string.number_of_patients, String.valueOf(length)));
 		foundPatientsLayout.setVisibility(length <= 0 ? View.GONE : View.VISIBLE);
-		patientListlayout.setVisibility(length <= 0 ? View.GONE : View.VISIBLE);
+		patientListLayout.setVisibility(length <= 0 ? View.GONE : View.VISIBLE);
 	}
 
 	@Override
@@ -133,7 +136,7 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 
 	@Override
 	public void setProgressBarVisibility(boolean visibility) {
-		findPatientProgressBar.setVisibility(visibility ? View.VISIBLE : View.GONE);
+		progessBarLayout.setVisibility(visibility ? View.VISIBLE : View.GONE);
 	}
 
 }

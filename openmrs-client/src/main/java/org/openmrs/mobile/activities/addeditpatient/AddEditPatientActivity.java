@@ -14,7 +14,9 @@
 
 package org.openmrs.mobile.activities.addeditpatient;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.GravityCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 
@@ -32,15 +34,9 @@ public class AddEditPatientActivity extends ACBaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		this.setContentView(R.layout.activity_patient_info);
-		
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-		
-		if (toolbar != null) {
-			setSupportActionBar(toolbar);
-			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		}
-		
+		getLayoutInflater().inflate(R.layout.activity_patient_info, frameLayout);
+		setTitle(R.string.nav_register_patient);
+
 		// Create fragment
 		AddEditPatientFragment addEditPatientFragment =
 				(AddEditPatientFragment) getSupportFragmentManager().findFragmentById(R.id.patientInfoContentFrame);
@@ -79,8 +75,13 @@ public class AddEditPatientActivity extends ACBaseActivity {
 	
 	@Override
 	public void onBackPressed() {
-		if (!mPresenter.isRegisteringPatient()) {
-			super.onBackPressed();
+		if (drawer.isDrawerOpen(GravityCompat.START)) {
+			drawer.closeDrawer(GravityCompat.START);
+		} else {
+			Intent intent = new Intent(Intent.ACTION_MAIN);
+			intent.addCategory(Intent.CATEGORY_HOME);
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			startActivity(intent);
 		}
 	}
 }

@@ -31,7 +31,6 @@ import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.NetworkUtils;
 import org.openmrs.mobile.utilities.StringUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class AddEditPatientPresenter extends BasePresenter implements AddEditPatientContract.Presenter {
@@ -45,6 +44,9 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 	private String patientToUpdateId;
 	private List<String> mCounties;
 	private boolean registeringPatient = false;
+
+	private int page = 1;
+	private int limit = 10;
 
 	public AddEditPatientPresenter(AddEditPatientContract.View mPatientInfoView,
 			List<String> countries,
@@ -134,7 +136,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 				!familyNameError && !lastNameError && !dateOfBirthError && !subCountyError && !countyError && !genderError
 						&& !patientFileNumberError && !occupationError && !civilStatusError && !subCountyError &&
 						!nationalityError && !patientIdNoError && !clinicError && !wardError && !phonenumberError
-						&& !kinNameError && !kinRelationshipError && !kinPhonenumberError  && !kinResidenceError;
+						&& !kinNameError && !kinRelationshipError && !kinPhonenumberError && !kinResidenceError;
 		if (result) {
 			mPatient = patient;
 			return true;
@@ -225,7 +227,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 
 	public void findSimilarPatients(final Patient patient) {
 		if (NetworkUtils.hasNetwork()) {
-			PagingInfo pagingInfo = new PagingInfo(0, 20);
+			PagingInfo pagingInfo = new PagingInfo(page, limit);
 			DataService.GetMultipleCallback<Patient> getMultipleCallback = new DataService.GetMultipleCallback<Patient>() {
 				@Override
 				public void onCompleted(List<Patient> patients) {
@@ -235,14 +237,15 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 						mPatientInfoView.showSimilarPatientDialog(patients, patient);
 					}
 				}
+
 				@Override
 				public void onError(Throwable t) {
-					Log.e("User Error","Error",t.fillInStackTrace());
+					Log.e("User Error", "Error", t.fillInStackTrace());
 				}
 			};
 			patientDataService.getByName(patient.getPerson().getName().getNameString(), pagingInfo, getMultipleCallback);
 		} else {
-		   // get the users from the local storage.
+			// get the users from the local storage.
 		}
 	}
 
@@ -251,13 +254,12 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 			DataService.GetSingleCallback<Concept> getSingleCallback = new DataService.GetSingleCallback<Concept>() {
 				@Override
 				public void onCompleted(Concept entity) {
-					//mPatientInfoView.setCivilStatus(entity);
-					System.out.print(entity);
+					mPatientInfoView.setCivilStatus(entity.getAnswers());
 				}
 
 				@Override
 				public void onError(Throwable t) {
-					Log.e("Civil Status Error","Error",t.fillInStackTrace());
+					Log.e("Civil Status Error", "Error", t.fillInStackTrace());
 				}
 			};
 			conceptDataService.getByUUID(ApplicationConstants.CIVIL_STATUS_UUID, getSingleCallback);
@@ -265,7 +267,6 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 			// get the users from the local storage.
 		}
 	}
-
 
 	@Override
 	public boolean isRegisteringPatient() {

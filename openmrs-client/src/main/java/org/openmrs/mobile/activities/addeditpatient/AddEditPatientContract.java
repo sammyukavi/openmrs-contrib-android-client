@@ -14,9 +14,12 @@
 
 package org.openmrs.mobile.activities.addeditpatient;
 
+import android.widget.Spinner;
+
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
 import org.openmrs.mobile.models.Concept;
+import org.openmrs.mobile.models.ConceptAnswer;
 import org.openmrs.mobile.models.Patient;
 
 import java.util.List;
@@ -46,6 +49,8 @@ public interface AddEditPatientContract {
 		void startPatientDashboardActivity(Patient patient);
 
 		void showUpgradeRegistrationModuleInfo();
+
+		void setCivilStatus(List<ConceptAnswer> answers);
 
 	}
 

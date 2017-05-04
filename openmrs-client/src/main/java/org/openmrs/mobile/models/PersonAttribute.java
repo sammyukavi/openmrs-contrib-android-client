@@ -15,48 +15,50 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class PersonAttribute extends BaseOpenmrsObject implements Serializable {
+public class PersonAttribute extends BaseOpenmrsData {
 
-    @SerializedName("attributeType")
     @Expose
-    private PersonAttributeType attributeType;
-    @SerializedName("value")
+    private Person person;
+
     @Expose
     private Object value;
 
-    /**
-     * 
-     * @return
-     *     The attributeType
-     */
-    public PersonAttributeType getAttributeType() {
-        return attributeType;
+    @Expose
+    private String valueReference;
+
+    @Expose
+    private PersonAttributeType personAttributeType;
+
+    public String getValueReference() {
+        return valueReference;
     }
 
-    /**
-     * 
-     * @param attributeType
-     *     The attributeType
-     */
-    public void setAttributeType(PersonAttributeType attributeType) {
-        this.attributeType = attributeType;
+    public void setValueReference(String valueReference) {
+        this.valueReference = valueReference;
     }
 
-    /**
-     * 
-     * @return
-     *     The value
-     */
     public Object getValue() {
         return value;
     }
 
-    /**
-     * 
-     * @param value
-     *     The value
-     */
     public void setValue(Object value) {
         this.value = value;
     }
+
+    public Person getPerson() {
+        return person;
+    }
+
+    public void setPerson(Person person) {
+        this.person = person;
+    }
+
+    public PersonAttributeType getPersonAttributeType() {
+        return personAttributeType;
+    }
+
+    public void setPersonAttributeType(PersonAttributeType personAttributeType) {
+        this.personAttributeType = personAttributeType;
+    }
 }
+

@@ -18,11 +18,6 @@
       xmlns:tools="http://schemas.android.com/tools"
       tools:context="org.openmrs.mobile.activities.ACBaseActivity">
 	<item
-			android:id="@+id/syncbutton"
-			android:title="@string/sync"
-			app:showAsAction="ifRoom"
-			android:icon="@drawable/ic_sync_off"/>
-	<item
 			android:id="@+id/actionSettings"
 			android:orderInCategory="100"
 			android:title="@string/action_settings"

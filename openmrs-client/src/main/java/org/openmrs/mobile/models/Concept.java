@@ -14,43 +14,56 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.List;
 
-public class Concept extends BaseOpenmrsAuditableObject implements Serializable {
-	
+public class Concept extends BaseOpenmrsObject {
+
 	@SerializedName("datatype")
 	@Expose
 	private Datatype datatype;
-	
-	@SerializedName("name")
+
+	@SerializedName("description")
 	@Expose
-	private Object name;
-	
+	private String description;
+
 	@SerializedName("conceptClass")
 	@Expose
 	private ConceptClass conceptClass;
-	
+
+	@SerializedName("answers")
+	@Expose
+	private List<ConceptAnswer> answers;
+
 	public Datatype getDatatype() {
 		return datatype;
 	}
-	
+
 	public void setDatatype(Datatype datatype) {
 		this.datatype = datatype;
 	}
-	
-	public Object getName() {
-		return name;
+
+	public String getDescription() {
+		return description;
 	}
-	
-	public void setName(Object name) {
-		this.name = name;
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
-	
+
 	public ConceptClass getConceptClass() {
 		return conceptClass;
 	}
-	
+
 	public void setConceptClass(ConceptClass conceptClass) {
 		this.conceptClass = conceptClass;
+	}
+
+	public List<ConceptAnswer> getAnswers() {
+		return answers;
+	}
+
+	public void setAnswers(List<ConceptAnswer> answers) {
+		this.answers = answers;
 	}
 	
 }

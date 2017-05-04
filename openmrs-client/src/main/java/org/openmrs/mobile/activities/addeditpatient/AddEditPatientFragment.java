@@ -49,11 +49,13 @@ import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
 import org.openmrs.mobile.application.OpenMRSLogger;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.listeners.watcher.PatientBirthdateValidatorWatcher;
-import org.openmrs.mobile.models.Concept;
+import org.openmrs.mobile.models.BaseOpenmrsObject;
+import org.openmrs.mobile.models.ConceptAnswer;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.PatientIdentifier;
 import org.openmrs.mobile.models.Person;
 import org.openmrs.mobile.models.PersonAddress;
+import org.openmrs.mobile.models.PersonAttributeType;
 import org.openmrs.mobile.models.PersonName;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.DateUtils;
@@ -65,7 +67,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContract.Presenter>
 		implements AddEditPatientContract.View {
@@ -130,6 +134,8 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 	private TextView encounterDeptError;
 	private TextView encounterProviderError;
 	private String[] patientCivilStatus;
+
+	private Map<View, PersonAttributeType> viewPersonAttributeTypeMap = new HashMap<>();
 
 	public static AddEditPatientFragment newInstance() {
 		return new AddEditPatientFragment();
@@ -353,6 +359,12 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		ToastUtil.notifyLong(getResources().getString(R.string.registration_core_info));
 	}
 
+	@Override
+	public void setCivilStatus(List<ConceptAnswer> answers) {
+		ArrayAdapter<ConceptAnswer> conceptAnswerArrayAdapter =
+				new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, answers);
+		civilStatus.setAdapter(conceptAnswerArrayAdapter);
+	}
 
 	private void fillFields(final Patient patient) {
 		if (patient != null && patient.getPerson() != null) {
@@ -504,6 +516,15 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		TextView textView = (TextView)sbView.findViewById(android.support.design.R.id.snackbar_text);
 		textView.setTextColor(Color.WHITE);
 		return snackbar;
+	}
+
+	private <T extends BaseOpenmrsObject> void setDefaultDropdownSelection(ArrayAdapter<T> arrayAdapter, String searchUuid,
+			Spinner dropdown) {
+		for (int count = 0; count < arrayAdapter.getCount(); count++) {
+			if (arrayAdapter.getItem(count).getUuid().equalsIgnoreCase(searchUuid)) {
+				dropdown.setSelection(count);
+			}
+		}
 	}
 
 }

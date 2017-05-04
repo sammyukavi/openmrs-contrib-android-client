@@ -101,14 +101,9 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 	
 	@Override
 	public boolean onPrepareOptionsMenu(final Menu menu) {
-		mSyncbutton = menu.findItem(R.id.syncbutton);
 		MenuItem logoutMenuItem = menu.findItem(R.id.actionLogout);
 		if (logoutMenuItem != null) {
 			logoutMenuItem.setTitle(getString(R.string.action_logout) + " " + mOpenMRS.getUsername());
-		}
-		if (mSyncbutton != null) {
-			final Boolean syncState = NetworkUtils.isOnline();
-			setSyncButtonState(syncState);
 		}
 		return true;
 	}

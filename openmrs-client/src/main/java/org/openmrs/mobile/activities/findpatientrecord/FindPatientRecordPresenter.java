@@ -18,16 +18,12 @@ import android.os.Bundle;
 import android.util.Log;
 
 import org.openmrs.mobile.activities.BasePresenter;
-import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.impl.PatientDataService;
 import org.openmrs.mobile.models.Patient;
-import org.openmrs.mobile.models.PersonName;
 import org.openmrs.mobile.utilities.NetworkUtils;
-import org.openmrs.mobile.utilities.ViewUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class FindPatientRecordPresenter extends BasePresenter implements FindPatientRecordContract.Presenter {
@@ -35,6 +31,8 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 	
 	private FindPatientRecordContract.View findPatientView;
 	private int totalNumberResults;
+	private int page = 1;
+	private int limit = 10;
 	private PatientDataService patientDataService;
 	private String lastQuery = "";
 	
@@ -64,8 +62,9 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 
 	public void findPatient(String query) {
 		findPatientView.setProgressBarVisibility(true);
+		findPatientView.setNumberOfPatientsView(0);
 		if (NetworkUtils.hasNetwork()) {
-			PagingInfo pagingInfo = new PagingInfo(0, 7);
+			PagingInfo pagingInfo = new PagingInfo(page, limit);
 			DataService.GetMultipleCallback<Patient> getMultipleCallback = new DataService.GetMultipleCallback<Patient>() {
 				@Override
 				public void onCompleted(List<Patient> patients) {

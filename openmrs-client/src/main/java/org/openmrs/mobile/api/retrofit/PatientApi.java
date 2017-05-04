@@ -34,7 +34,7 @@ import org.openmrs.mobile.dao.PatientDAO;
 import org.openmrs.mobile.listeners.retrofit.DefaultResponseCallbackListener;
 import org.openmrs.mobile.models.EncounterCreate;
 import org.openmrs.mobile.models.IdGenPatientIdentifiers;
-import org.openmrs.mobile.models.IdentifierType;
+import org.openmrs.mobile.models.PatientIdentifierType;
 import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.PatientIdentifier;
@@ -81,7 +81,7 @@ public class PatientApi extends RetrofitApi {
 							final PatientIdentifier identifier = new PatientIdentifier();
 							identifier.setLocation((Location)results.get(0).getResult());
 							identifier.setIdentifier((String)results.get(1).getResult());
-							identifier.setIdentifierType((IdentifierType)results.get(2).getResult());
+							identifier.setIdentifierType((PatientIdentifierType)results.get(2).getResult());
 							identifiers.add(identifier);
 
 							patient.setIdentifiers(identifiers);
@@ -353,17 +353,17 @@ public class PatientApi extends RetrofitApi {
 		return deferred.promise();
 	}
 
-	private SimplePromise<IdentifierType> getPatientIdentifierTypeUuid() {
-		final SimpleDeferredObject<IdentifierType> deferred = new SimpleDeferredObject<>();
+	private SimplePromise<PatientIdentifierType> getPatientIdentifierTypeUuid() {
+		final SimpleDeferredObject<PatientIdentifierType> deferred = new SimpleDeferredObject<>();
 
 		RestApi apiService =
 				RestServiceBuilder.createService(RestApi.class);
-		Call<Results<IdentifierType>> call = apiService.getIdentifierTypes();
-		call.enqueue(new Callback<Results<IdentifierType>>() {
+		Call<Results<PatientIdentifierType>> call = apiService.getIdentifierTypes();
+		call.enqueue(new Callback<Results<PatientIdentifierType>>() {
 			@Override
-			public void onResponse(Call<Results<IdentifierType>> call, Response<Results<IdentifierType>> response) {
-				Results<IdentifierType> idresList = response.body();
-				for (IdentifierType result : idresList.getResults()) {
+			public void onResponse(Call<Results<PatientIdentifierType>> call, Response<Results<PatientIdentifierType>> response) {
+				Results<PatientIdentifierType> idresList = response.body();
+				for (PatientIdentifierType result : idresList.getResults()) {
 					if (result.getDisplay().equals("OpenMRS ID")) {
 						deferred.resolve(result);
 						return;
@@ -372,7 +372,7 @@ public class PatientApi extends RetrofitApi {
 			}
 
 			@Override
-			public void onFailure(Call<Results<IdentifierType>> call, Throwable t) {
+			public void onFailure(Call<Results<PatientIdentifierType>> call, Throwable t) {
 				ToastUtil.notify(t.toString());
 				deferred.reject(t);
 			}

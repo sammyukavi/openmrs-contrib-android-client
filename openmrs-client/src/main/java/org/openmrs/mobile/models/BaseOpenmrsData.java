@@ -19,9 +19,6 @@ import com.google.gson.annotations.Expose;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * Created by dubdabasoduba on 04/05/2017.
- */
 
 public class BaseOpenmrsData extends BaseOpenmrsAuditableObject implements Serializable {
 	@Expose

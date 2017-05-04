@@ -64,7 +64,6 @@ public class AddEditPatientActivity extends ACBaseActivity {
 		// Create the findPatientPresenter
 		mPresenter = new AddEditPatientPresenter(addEditPatientFragment, counties, patientID);
 
-		mPresenter.getCivilStatus();
 	}
 	
 	@Override

@@ -62,9 +62,7 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 
 	public void findPatient(String query) {
 		findPatientView.setProgressBarVisibility(true);
-		findPatientView.setNumberOfPatientsView(0);
 		if (NetworkUtils.hasNetwork()) {
-			PagingInfo pagingInfo = new PagingInfo(page, limit);
 			DataService.GetMultipleCallback<Patient> getMultipleCallback = new DataService.GetMultipleCallback<Patient>() {
 				@Override
 				public void onCompleted(List<Patient> patients) {
@@ -86,7 +84,7 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 					Log.e("Patient Error","Error",t.fillInStackTrace());
 				}
 			};
-			patientDataService.getByName(query, pagingInfo, getMultipleCallback);
+			patientDataService.getByName(query,null, getMultipleCallback);
 		} else {
 			// get the users from the local storage.
 		}

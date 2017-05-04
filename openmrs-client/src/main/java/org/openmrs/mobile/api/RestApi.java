@@ -15,7 +15,7 @@ import org.openmrs.mobile.models.EncounterType;
 import org.openmrs.mobile.models.EncounterCreate;
 import org.openmrs.mobile.models.FormResource;
 import org.openmrs.mobile.models.IdGenPatientIdentifiers;
-import org.openmrs.mobile.models.IdentifierType;
+import org.openmrs.mobile.models.PatientIdentifierType;
 import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Module;
 import org.openmrs.mobile.models.Obscreate;
@@ -56,7 +56,7 @@ public interface RestApi {
 	                                     @Query("v") String representation);
 	
 	@GET("patientidentifiertype")
-	Call<Results<IdentifierType>> getIdentifierTypes();
+	Call<Results<PatientIdentifierType>> getIdentifierTypes();
 	
 	@GET("module/idgen/generateIdentifier.form?source=1")
 	Call<IdGenPatientIdentifiers> getPatientIdentifiers(@Query("username") String username,

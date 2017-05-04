@@ -53,6 +53,7 @@ import org.openmrs.mobile.models.BaseOpenmrsObject;
 import org.openmrs.mobile.models.ConceptAnswer;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.PatientIdentifier;
+import org.openmrs.mobile.models.PatientIdentifierType;
 import org.openmrs.mobile.models.Person;
 import org.openmrs.mobile.models.PersonAddress;
 import org.openmrs.mobile.models.PersonAttributeType;
@@ -134,6 +135,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 	private TextView encounterDeptError;
 	private TextView encounterProviderError;
 	private String[] patientCivilStatus;
+	private PatientIdentifierType patientIdentifierType;
 
 	private Map<View, PersonAttributeType> viewPersonAttributeTypeMap = new HashMap<>();
 
@@ -198,6 +200,8 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		addSuggestionsToAutoCompleteTextView();
 		addListeners();
 		fillFields(mPresenter.getPatientToUpdate());
+		mPresenter.getCivilStatus();
+		mPresenter.getPatientIdentifierTypes();
 		return root;
 
 	}
@@ -301,6 +305,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		// Add identifier
 		PatientIdentifier identifier = new PatientIdentifier();
 		identifier.setIdentifier(ViewUtils.getInput(fileNumber));
+		identifier.setIdentifierType(patientIdentifierType);
 
 		List<PatientIdentifier> patientIdentifierList = new ArrayList<>();
 		patientIdentifierList.add(identifier);
@@ -364,6 +369,14 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		ArrayAdapter<ConceptAnswer> conceptAnswerArrayAdapter =
 				new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, answers);
 		civilStatus.setAdapter(conceptAnswerArrayAdapter);
+	}
+
+	@Override
+	public void setPatientIdentifierType(PatientIdentifierType patientIdentifierType) {
+		System.out.print("===============Second One ================");
+		System.out.print(patientIdentifierType);
+		System.out.print("===============Second One ================");
+		this.patientIdentifierType = patientIdentifierType;
 	}
 
 	private void fillFields(final Patient patient) {

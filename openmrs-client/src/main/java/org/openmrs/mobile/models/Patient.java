@@ -13,6 +13,7 @@ package org.openmrs.mobile.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import org.greenrobot.greendao.annotation.Transient;
 import org.openmrs.mobile.utilities.StringUtils;
 
 import java.io.Serializable;
@@ -21,12 +22,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Patient extends BaseOpenmrsAuditableObject implements Serializable{
+public class Patient extends BaseOpenmrsEntity{
 
     private Long id;
     private String encounters = "";
 
-    @SerializedName("identifiers")
+    @Transient
     @Expose
     private List<PatientIdentifier> identifiers = new ArrayList<PatientIdentifier>();
 

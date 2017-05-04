@@ -25,8 +25,10 @@ import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.impl.ConceptDataService;
 import org.openmrs.mobile.data.impl.PatientDataService;
+import org.openmrs.mobile.data.impl.PatientIdentifierTypeDataService;
 import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.Patient;
+import org.openmrs.mobile.models.PatientIdentifierType;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.NetworkUtils;
 import org.openmrs.mobile.utilities.StringUtils;
@@ -39,13 +41,14 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 
 	private PatientDataService patientDataService;
 	private ConceptDataService conceptDataService;
+	private PatientIdentifierTypeDataService patientIdentifierTypeDataService;
 	private RestApi restApi;
 	private Patient mPatient;
 	private String patientToUpdateId;
 	private List<String> mCounties;
 	private boolean registeringPatient = false;
 
-	private int page = 1;
+	private int page = 0;
 	private int limit = 10;
 
 	public AddEditPatientPresenter(AddEditPatientContract.View mPatientInfoView,
@@ -57,6 +60,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		this.patientToUpdateId = patientToUpdateId;
 		this.patientDataService = new PatientDataService();
 		this.conceptDataService = new ConceptDataService();
+		this.patientIdentifierTypeDataService = new PatientIdentifierTypeDataService();
 		this.restApi = RestServiceBuilder.createService(RestApi.class);
 	}
 
@@ -71,6 +75,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		this.mCounties = mCounties;
 		this.restApi = restApi;
 		this.mPatientInfoView.setPresenter(this);
+		this.patientIdentifierTypeDataService = new PatientIdentifierTypeDataService();
 	}
 
 	private boolean validate(Patient patient) {
@@ -181,6 +186,10 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 
 	@Override
 	public void registerPatient(Patient patient) {
+		System.out.println("=======================Patient Object ==========================");
+		System.out.print(patient);
+		System.out.println("=======================Patient Object ==========================");
+		mPatientInfoView.setProgressBarVisibility(true);
 		if (NetworkUtils.hasNetwork()) {
 			DataService.GetSingleCallback<Patient> getSingleCallback = new DataService.GetSingleCallback<Patient>() {
 
@@ -215,7 +224,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		});*/
 	}
 
-	public void findSimilarPatients(final Patient patient) {
+	public void findSimilarPatients(Patient patient) {
 		if (NetworkUtils.hasNetwork()) {
 			PagingInfo pagingInfo = new PagingInfo(page, limit);
 			DataService.GetMultipleCallback<Patient> getMultipleCallback = new DataService.GetMultipleCallback<Patient>() {
@@ -227,6 +236,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 						mPatientInfoView.showSimilarPatientDialog(patients, patient);
 					}
 				}
+
 				@Override
 				public void onError(Throwable t) {
 					Log.e("User Error", "Error", t.fillInStackTrace());
@@ -252,6 +262,33 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 				}
 			};
 			conceptDataService.getByUUID(ApplicationConstants.CIVIL_STATUS_UUID, getSingleCallback);
+		} else {
+			// get the users from the local storage.
+		}
+	}
+
+	public void getPatientIdentifierTypes() {
+		if (NetworkUtils.hasNetwork()) {
+			DataService.GetMultipleCallback<PatientIdentifierType> getMultipleCallback = new DataService
+					.GetMultipleCallback<PatientIdentifierType>() {
+
+				@Override
+				public void onCompleted(List<PatientIdentifierType> entities) {
+					if (entities.size() > 0) {
+						for (int i = 0; i < entities.size(); i++) {
+							if (entities.get(i).getRequired()) {
+								mPatientInfoView.setPatientIdentifierType(entities.get(i));
+							}
+						}
+					}
+				}
+
+				@Override
+				public void onError(Throwable t) {
+					Log.e("Identifier Type Error", "Error", t.fillInStackTrace());
+				}
+			};
+			patientIdentifierTypeDataService.getAll(false, null, getMultipleCallback);
 		} else {
 			// get the users from the local storage.
 		}

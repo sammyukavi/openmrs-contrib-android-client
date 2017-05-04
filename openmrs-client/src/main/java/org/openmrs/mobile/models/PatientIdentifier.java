@@ -13,11 +13,11 @@ package org.openmrs.mobile.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class PatientIdentifier extends Resource {
+public class PatientIdentifier extends BaseOpenmrsData {
 	
 	@SerializedName("identifierType")
 	@Expose
-	private IdentifierType identifierType;
+	private PatientIdentifierType identifierType;
 	@SerializedName("identifier")
 	@Expose
 	private String identifier;
@@ -29,14 +29,14 @@ public class PatientIdentifier extends Resource {
 	/**
 	 * @return The identifierType
 	 */
-	public IdentifierType getIdentifierType() {
+	public PatientIdentifierType getIdentifierType() {
 		return identifierType;
 	}
 	
 	/**
 	 * @param identifierType The identifierType
 	 */
-	public void setIdentifierType(IdentifierType identifierType) {
+	public void setIdentifierType(PatientIdentifierType identifierType) {
 		this.identifierType = identifierType;
 	}
 	

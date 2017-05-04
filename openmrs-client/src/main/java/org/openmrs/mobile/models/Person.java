@@ -10,33 +10,29 @@
 
 package org.openmrs.mobile.models;
 
-import android.graphics.Bitmap;
-
 import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 
-import java.io.Serializable;
+import org.greenrobot.greendao.annotation.Transient;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class Person extends BaseOpenmrsEntity implements Serializable {
+public class Person extends BaseOpenmrsEntity {
 
-	@SerializedName("names")
+	@Transient
 	@Expose
 	private List<PersonName> names = new ArrayList<PersonName>();
-	@SerializedName("gender")
 	@Expose
 	private String gender;
-	@SerializedName("birthdate")
 	@Expose
 	private String birthdate;
-	@SerializedName("birthdateEstimated")
 	@Expose
 	private boolean birthdateEstimated;
-	@SerializedName("addresses")
+
+	@Transient
 	@Expose
 	private List<PersonAddress> addresses = new ArrayList<PersonAddress>();
-	@SerializedName("attributes")
+	@Transient
 	@Expose
 	private List<PersonAttribute> attributes = new ArrayList<PersonAttribute>();
 

@@ -19,6 +19,7 @@ import android.os.Bundle;
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
 import org.openmrs.mobile.models.Patient;
+import org.openmrs.mobile.utilities.ToastUtil;
 
 import java.util.List;
 
@@ -30,11 +31,15 @@ public interface FindPatientRecordContract {
 
 		void setNoPatientsVisibility(boolean visibility);
 
+		void setFetchedPatientsVisibility(int length);
+
 		void fetchPatients(List<Patient> patients);
 
 		void setSearchPatientVisibility(boolean visibility);
 
 		void setProgressBarVisibility(boolean visibility);
+
+		void showToast(String message, ToastUtil.ToastType toastType);
 
 	}
 
@@ -43,6 +48,8 @@ public interface FindPatientRecordContract {
 		void onSaveInstanceState(Bundle outState);
 
 		void findPatient(String name);
+
+		void getLastViewed();
 	}
 
 }

@@ -29,6 +29,7 @@ import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.utilities.FontsUtil;
+import org.openmrs.mobile.utilities.ToastUtil;
 
 import java.util.List;
 
@@ -107,6 +108,7 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 
 		// Font config
 		FontsUtil.setFont((ViewGroup)this.getActivity().findViewById(android.R.id.content));
+		mPresenter.getLastViewed();
 		return mRootView;
 	}
 
@@ -114,12 +116,17 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 	public void setNumberOfPatientsView(int length) {
 		numberOfFetchedPatients.setText(getString(R.string.number_of_patients, String.valueOf(length)));
 		foundPatientsLayout.setVisibility(length <= 0 ? View.GONE : View.VISIBLE);
-		patientListLayout.setVisibility(length <= 0 ? View.GONE : View.VISIBLE);
 	}
 
 	@Override
 	public void setNoPatientsVisibility(boolean visibility) {
 		noPatientsFoundLayout.setVisibility(visibility ? View.VISIBLE : View.GONE);
+	}
+
+	@Override
+	public void setFetchedPatientsVisibility(int length) {
+		numberOfFetchedPatients.setText(getString(R.string.number_of_patients, String.valueOf(length)));
+		patientListLayout.setVisibility(length <= 0 ? View.GONE : View.VISIBLE);
 	}
 
 	@Override
@@ -137,6 +144,11 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 	@Override
 	public void setProgressBarVisibility(boolean visibility) {
 		progessBarLayout.setVisibility(visibility ? View.VISIBLE : View.GONE);
+	}
+
+	@Override
+	public void showToast(String message, ToastUtil.ToastType toastType) {
+		ToastUtil.showShortToast(getContext(), toastType, message);
 	}
 
 }

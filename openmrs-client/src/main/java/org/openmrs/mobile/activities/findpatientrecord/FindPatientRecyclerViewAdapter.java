@@ -99,7 +99,7 @@ class FindPatientRecyclerViewAdapter extends RecyclerView.Adapter<FindPatientRec
 
 	class FetchedPatientHolder extends RecyclerView.ViewHolder {
 		private LinearLayout mRowLayout;
-		private TextView mIdentifier, mGender, mDisplayName, mBirthDate, genderLabel, birthDateLabel;
+		private TextView mIdentifier, mGender, mDisplayName, mBirthDate, genderLabel, birthDateLabel, patientSeperator;
 
 		FetchedPatientHolder(View itemView) {
 			super(itemView);
@@ -110,6 +110,7 @@ class FindPatientRecyclerViewAdapter extends RecyclerView.Adapter<FindPatientRec
 			mBirthDate = (TextView)itemView.findViewById(R.id.fetchedPatientBirthDate);
 			genderLabel = (TextView)itemView.findViewById(R.id.gender);
 			birthDateLabel = (TextView)itemView.findViewById(R.id.birthdate);
+			patientSeperator = (TextView)itemView.findViewById(R.id.patientSeperator);
 		}
 	}
 }

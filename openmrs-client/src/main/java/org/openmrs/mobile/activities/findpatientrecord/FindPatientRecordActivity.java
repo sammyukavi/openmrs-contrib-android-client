@@ -109,8 +109,8 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 				if (query.length() >= 3) {
 					findPatientPresenter.findPatient(query);
 				} else {
+					findPatientPresenter.getLastViewed();
 					findPatientRecordFragment.setSearchPatientVisibility(true);
-					findPatientRecordFragment.setNumberOfPatientsView(0);
 					findPatientRecordFragment.setNoPatientsVisibility(false);
 				}
 				return true;
@@ -121,8 +121,9 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 				if (query.length() >= 3) {
 					findPatientPresenter.findPatient(query);
 				} else {
-					findPatientRecordFragment.setSearchPatientVisibility(true);
+					//findPatientPresenter.getLastViewed();
 					findPatientRecordFragment.setNumberOfPatientsView(0);
+					findPatientRecordFragment.setSearchPatientVisibility(true);
 					findPatientRecordFragment.setNoPatientsVisibility(false);
 				}
 				return false;

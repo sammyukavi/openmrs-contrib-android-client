@@ -187,7 +187,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 	@Override
 	public void registerPatient(Patient patient) {
 		System.out.println("=======================Patient Object ==========================");
-		System.out.print(patient);
+		System.out.println(patient);
 		System.out.println("=======================Patient Object ==========================");
 		mPatientInfoView.setProgressBarVisibility(true);
 		if (NetworkUtils.hasNetwork()) {

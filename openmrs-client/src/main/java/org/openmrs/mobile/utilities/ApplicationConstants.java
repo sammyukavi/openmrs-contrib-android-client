@@ -26,7 +26,7 @@ public abstract class ApplicationConstants {
     public static final String VISIT_TYPE_UUID = "visit_type_uuid";
     public static final String LAST_SESSION_TOKEN = "last_session_id";
     public static final String LAST_LOGIN_SERVER_URL = "last_login_server_url";
-	public static final String DEFAULT_OPEN_MRS_URL = "http://demo.openhmisafrica.org/openmrs/";
+	public static final String DEFAULT_OPEN_MRS_URL = "http://10.1.1.3:8080/openmrs/";
 	public static final String CIVIL_STATUS_UUID = 	"1054AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
     //discuss on using the openhmis
 	// demo as the main test server to avoid changes here.
@@ -109,4 +109,13 @@ public abstract class ApplicationConstants {
     public abstract static class Tags {
         public static final String PATIENT_ID = "patient_ID";
     }
+
+    public static class  toastMessages {
+		public static final String findPatientError = "Patients could not be loaded";
+		public static final String findPatientSuccess = "Patients loaded successfully";
+		public static final String findPatientInfo = "No patient with given name was found";
+		public static final String lastviewedPatientError = "Last Viewed Patients could not be loaded";
+		public static final String lastviewedPatientSuccess = "Last Viewed Patients loaded successfully";
+		public static final String lastviewedPatientInfo = "No last viewed patients found";
+	}
 }

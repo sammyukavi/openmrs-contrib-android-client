@@ -76,4 +76,15 @@ public class PatientDataService extends BaseDataService<Patient, PatientRestServ
 			}
 		});
 	}
+
+	public void getLastViewed(String lastviewed, PagingInfo pagingInfo, GetMultipleCallback<Patient> callback) {
+		executeMultipleCallback(callback, null, () -> {
+			if (isPagingValid(pagingInfo)) {
+				return restService.getLastViewed(buildRestRequestPath(),lastviewed,RestConstants.Representations.FULL,
+						pagingInfo.getLimit(), pagingInfo.getStartIndex());
+			} else {
+				return restService.getLastViewed(buildRestRequestPath(), lastviewed, RestConstants.Representations.FULL);
+			}
+		});
+	}
 }

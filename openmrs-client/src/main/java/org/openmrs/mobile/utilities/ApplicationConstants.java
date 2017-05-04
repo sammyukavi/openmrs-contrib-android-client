@@ -117,5 +117,9 @@ public abstract class ApplicationConstants {
 		public static final String lastviewedPatientError = "Last Viewed Patients could not be loaded";
 		public static final String lastviewedPatientSuccess = "Last Viewed Patients loaded successfully";
 		public static final String lastviewedPatientInfo = "No last viewed patients found";
+		public static final String noPatientIdentifierType = "No Patient Identifier type found";
+		public static final String civilStatusFetchError = "Civil Status could not be fetched";
+		public static final String patientRegistrationError = "Patient registration failed";
+		public static final String patientRegistrationSuccess = "Patient was registered successfully";
 	}
 }

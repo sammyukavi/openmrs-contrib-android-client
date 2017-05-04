@@ -32,6 +32,7 @@ import org.openmrs.mobile.models.PatientIdentifierType;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.NetworkUtils;
 import org.openmrs.mobile.utilities.StringUtils;
+import org.openmrs.mobile.utilities.ToastUtil;
 
 import java.util.List;
 
@@ -186,22 +187,22 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 
 	@Override
 	public void registerPatient(Patient patient) {
-		System.out.println("=======================Patient Object ==========================");
-		System.out.println(patient);
-		System.out.println("=======================Patient Object ==========================");
 		mPatientInfoView.setProgressBarVisibility(true);
 		if (NetworkUtils.hasNetwork()) {
 			DataService.GetSingleCallback<Patient> getSingleCallback = new DataService.GetSingleCallback<Patient>() {
-
 				@Override
 				public void onCompleted(Patient entity) {
-					//mPatientInfoView.startPatientDashboardActivity(mPatient);
+					mPatientInfoView.showToast(ApplicationConstants.toastMessages.patientRegistrationSuccess, ToastUtil.ToastType
+							.SUCCESS);
+					mPatientInfoView.startPatientDashboardActivity(entity);
 					mPatientInfoView.finishAddPatientActivity();
 				}
 
 				@Override
 				public void onError(Throwable t) {
 					mPatientInfoView.setProgressBarVisibility(false);
+					mPatientInfoView.showToast(ApplicationConstants.toastMessages.patientRegistrationError, ToastUtil.ToastType
+							.ERROR);
 				}
 			};
 			patientDataService.create(patient, getSingleCallback);
@@ -230,7 +231,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 			DataService.GetMultipleCallback<Patient> getMultipleCallback = new DataService.GetMultipleCallback<Patient>() {
 				@Override
 				public void onCompleted(List<Patient> patients) {
-					if (patients == null || patients.isEmpty()) {
+					if (patients.isEmpty()) {
 						registerPatient(patient);
 					} else {
 						mPatientInfoView.showSimilarPatientDialog(patients, patient);
@@ -240,6 +241,8 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 				@Override
 				public void onError(Throwable t) {
 					Log.e("User Error", "Error", t.fillInStackTrace());
+					mPatientInfoView.showToast(ApplicationConstants.toastMessages.findPatientError, ToastUtil.ToastType
+							.ERROR);
 				}
 			};
 			patientDataService.getByName(patient.getPerson().getName().getNameString(), pagingInfo, getMultipleCallback);
@@ -259,6 +262,8 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 				@Override
 				public void onError(Throwable t) {
 					Log.e("Civil Status Error", "Error", t.fillInStackTrace());
+					mPatientInfoView.showToast(ApplicationConstants.toastMessages.civilStatusFetchError, ToastUtil.ToastType
+							.ERROR);
 				}
 			};
 			conceptDataService.getByUUID(ApplicationConstants.CIVIL_STATUS_UUID, getSingleCallback);
@@ -271,10 +276,9 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		if (NetworkUtils.hasNetwork()) {
 			DataService.GetMultipleCallback<PatientIdentifierType> getMultipleCallback = new DataService
 					.GetMultipleCallback<PatientIdentifierType>() {
-
 				@Override
 				public void onCompleted(List<PatientIdentifierType> entities) {
-					if (entities.size() > 0) {
+					if (!entities.isEmpty()) {
 						for (int i = 0; i < entities.size(); i++) {
 							if (entities.get(i).getRequired()) {
 								mPatientInfoView.setPatientIdentifierType(entities.get(i));
@@ -286,6 +290,8 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 				@Override
 				public void onError(Throwable t) {
 					Log.e("Identifier Type Error", "Error", t.fillInStackTrace());
+					mPatientInfoView.showToast(ApplicationConstants.toastMessages.noPatientIdentifierType, ToastUtil.ToastType
+							.ERROR);
 				}
 			};
 			patientIdentifierTypeDataService.getAll(false, null, getMultipleCallback);

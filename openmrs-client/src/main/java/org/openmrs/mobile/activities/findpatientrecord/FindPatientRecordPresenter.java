@@ -68,7 +68,7 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 				@Override
 				public void onCompleted(List<Patient> patients) {
 					findPatientView.setProgressBarVisibility(false);
-					if (patients == null || patients.isEmpty()) {
+					if (patients.isEmpty()) {
 						findPatientView.setNumberOfPatientsView(0);
 						findPatientView.setSearchPatientVisibility(false);
 						findPatientView.setNoPatientsVisibility(true);
@@ -109,7 +109,7 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 				@Override
 				public void onCompleted(List<Patient> patients) {
 					findPatientView.setProgressBarVisibility(false);
-					if (patients.size() > 0) {
+					if (!patients.isEmpty()) {
 						findPatientView.setNumberOfPatientsView(0);
 						findPatientView.setFetchedPatientsVisibility(patients.size());
 						findPatientView.fetchPatients(patients);

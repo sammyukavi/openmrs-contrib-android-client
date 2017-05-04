@@ -233,6 +233,7 @@
 	<string name="gender_hint">gender:</string>
 	<string name="birthdate_hint">birthdate:</string>
 	<string name="address_hint">address:</string>
+	<string name="dateadded_hint">Date Added:</string>
 	<string name="demographics">Demographics</string>
 	<string name="unable_to_login">Unable to login?</string>
 	<string name="no_patient_selected">No patient selected</string>

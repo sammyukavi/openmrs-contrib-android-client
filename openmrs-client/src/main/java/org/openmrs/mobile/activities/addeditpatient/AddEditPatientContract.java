@@ -14,14 +14,12 @@
 
 package org.openmrs.mobile.activities.addeditpatient;
 
-import android.widget.Spinner;
-
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
-import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.ConceptAnswer;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.PatientIdentifierType;
+import org.openmrs.mobile.utilities.ToastUtil;
 
 import java.util.List;
 
@@ -54,6 +52,8 @@ public interface AddEditPatientContract {
 		void setCivilStatus(List<ConceptAnswer> answers);
 
 		void setPatientIdentifierType(PatientIdentifierType patientIdentifierType);
+
+		void showToast(String message, ToastUtil.ToastType toastType);
 
 	}
 

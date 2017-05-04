@@ -373,10 +373,12 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 
 	@Override
 	public void setPatientIdentifierType(PatientIdentifierType patientIdentifierType) {
-		System.out.print("===============Second One ================");
-		System.out.print(patientIdentifierType);
-		System.out.print("===============Second One ================");
 		this.patientIdentifierType = patientIdentifierType;
+	}
+
+	@Override
+	public void showToast(String message, ToastUtil.ToastType toastType) {
+		ToastUtil.showShortToast(getContext(), toastType, message);
 	}
 
 	private void fillFields(final Patient patient) {

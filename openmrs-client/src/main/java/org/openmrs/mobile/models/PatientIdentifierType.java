@@ -9,6 +9,9 @@
  */
 package org.openmrs.mobile.models;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import org.openmrs.mobile.utilities.StringUtils;
 
 public class PatientIdentifierType extends BaseOpenmrsMetadata {
@@ -17,6 +20,7 @@ public class PatientIdentifierType extends BaseOpenmrsMetadata {
 	 * Enumerates the possible ways that location may be applicable for a particular Patient
 	 * Identifer Type
 	 */
+
 	public enum LocationBehavior {
 		/**
 		 * Indicates that location is required for the current identifier type
@@ -49,23 +53,27 @@ public class PatientIdentifierType extends BaseOpenmrsMetadata {
 		 */
 		LOCATION
 	}
-
-
+	@SerializedName("format")
+	@Expose
 	private String format;
-
+	@SerializedName("required")
+	@Expose
 	private Boolean required = Boolean.FALSE;
-
+	@SerializedName("formatDescription")
+	@Expose
 	private String formatDescription;
-
+	@SerializedName("checkDigit")
+	@Expose
 	private Boolean checkDigit = Boolean.FALSE;
-
+	@SerializedName("validator")
+	@Expose
 	private String validator;
-
+	@SerializedName("locationBehavior")
+	@Expose
 	private LocationBehavior locationBehavior;
-
+	@SerializedName("uniquenessBehavior")
+	@Expose
 	private UniquenessBehavior uniquenessBehavior;
-
-
 
 	/**
 	 * @return Returns the formatDescription.
@@ -138,8 +146,6 @@ public class PatientIdentifierType extends BaseOpenmrsMetadata {
 	public void setFormat(String format) {
 		this.format = format;
 	}
-
-
 
 	public String getValidator() {
 		return validator;

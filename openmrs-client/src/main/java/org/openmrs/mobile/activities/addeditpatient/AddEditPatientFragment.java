@@ -430,8 +430,6 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 
 	private void addListeners() {
 
-		/*civilStatus.setAdapter(new ArrayAdapter<String>(AddEditPatientFragment.this, android.R.layout
-				.simple_spinner_dropdown_item));*/
 
 		gen.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 			public void onCheckedChanged(RadioGroup rGroup, int checkedId) {

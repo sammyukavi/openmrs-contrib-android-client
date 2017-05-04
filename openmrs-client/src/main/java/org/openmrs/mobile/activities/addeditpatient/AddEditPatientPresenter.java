@@ -112,16 +112,6 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 			dateOfBirthError = true;
 		}
 
-		// Validate address
-		if (StringUtils.isBlank(patient.getPerson().getAddress().getAddress1())
-				&& StringUtils.isBlank(patient.getPerson().getAddress().getAddress2())
-				&& StringUtils.isBlank(patient.getPerson().getAddress().getCityVillage())
-				&& StringUtils.isBlank(patient.getPerson().getAddress().getStateProvince())
-				&& StringUtils.isBlank(patient.getPerson().getAddress().getCountry())
-				&& StringUtils.isBlank(patient.getPerson().getAddress().getPostalCode())) {
-			//addressError = true;
-		}
-
 		// Validate gender
 		if (StringUtils.isBlank(patient.getPerson().getGender())) {
 			genderError = true;
@@ -237,7 +227,6 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 						mPatientInfoView.showSimilarPatientDialog(patients, patient);
 					}
 				}
-
 				@Override
 				public void onError(Throwable t) {
 					Log.e("User Error", "Error", t.fillInStackTrace());

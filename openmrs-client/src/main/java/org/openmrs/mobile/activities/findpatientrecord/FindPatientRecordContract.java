@@ -53,8 +53,6 @@ public interface FindPatientRecordContract {
 
 		void getLastViewed();
 
-		void setPage(int page);
-
 		boolean isLoading();
 
 		void setLoading(boolean loading);
@@ -66,6 +64,8 @@ public interface FindPatientRecordContract {
 		void refresh();
 
 		int getPage();
+
+		void setPage(int page);
 	}
 
 }

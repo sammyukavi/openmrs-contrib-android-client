@@ -14,8 +14,8 @@
 
 package org.openmrs.mobile.data.rest;
 
-import org.openmrs.mobile.models.VisitPredefinedTasks;
 import org.openmrs.mobile.models.Results;
+import org.openmrs.mobile.models.VisitPredefinedTasks;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

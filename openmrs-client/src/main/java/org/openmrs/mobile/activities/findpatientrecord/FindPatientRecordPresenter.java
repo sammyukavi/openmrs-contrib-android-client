@@ -16,14 +16,12 @@ package org.openmrs.mobile.activities.findpatientrecord;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.AutoCompleteTextView;
 
 import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.impl.PatientDataService;
 import org.openmrs.mobile.models.Patient;
-import org.openmrs.mobile.net.AuthorizationManager;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.NetworkUtils;
 import org.openmrs.mobile.utilities.ToastUtil;
@@ -54,7 +52,8 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 	}
 
 	@Override
-	public void subscribe() {}
+	public void subscribe() {
+	}
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
@@ -139,11 +138,11 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 		}
 	}
 
-	private int computePage(boolean next){
+	private int computePage(boolean next) {
 		int tmpPage = getPage();
 		// check if pagination is required.
-		if(page < Math.round(getTotalNumberResults() / limit)){
-			if(next) {
+		if (page < Math.round(getTotalNumberResults() / limit)) {
+			if (next) {
 				// set next page
 				tmpPage += 1;
 			} else {
@@ -158,11 +157,6 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 	}
 
 	@Override
-	public void setPage(int page) {
-
-	}
-
-	@Override
 	public boolean isLoading() {
 		return loading;
 	}
@@ -172,7 +166,7 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 		this.loading = loading;
 	}
 
-	private int getTotalNumberResults(){
+	private int getTotalNumberResults() {
 		return totalNumberResults;
 	}
 
@@ -194,5 +188,10 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 	@Override
 	public int getPage() {
 		return page;
+	}
+
+	@Override
+	public void setPage(int page) {
+
 	}
 }

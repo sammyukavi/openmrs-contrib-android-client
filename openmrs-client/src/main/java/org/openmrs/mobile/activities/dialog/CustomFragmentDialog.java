@@ -68,7 +68,7 @@ public class CustomFragmentDialog extends DialogFragment {
 	private Button mLeftButton;
 	private Button mRightButton;
 	private CustomDialogBundle mCustomDialogBundle;
-	
+
 	public static CustomFragmentDialog newInstance(CustomDialogBundle customDialogBundle) {
 		CustomFragmentDialog dialog = new CustomFragmentDialog();
 		dialog.setRetainInstance(true);
@@ -77,11 +77,12 @@ public class CustomFragmentDialog extends DialogFragment {
 		dialog.setArguments(bundle);
 		return dialog;
 	}
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mCustomDialogBundle = (CustomDialogBundle) getArguments().getSerializable(ApplicationConstants.BundleKeys.CUSTOM_DIALOG_BUNDLE);
+		mCustomDialogBundle =
+				(CustomDialogBundle)getArguments().getSerializable(ApplicationConstants.BundleKeys.CUSTOM_DIALOG_BUNDLE);
 		if (mCustomDialogBundle.hasLoadingBar()) {
 			this.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.LoadingDialogTheme_DialogTheme);
 		} else if (mCustomDialogBundle.hasPatientList()) {
@@ -91,19 +92,19 @@ public class CustomFragmentDialog extends DialogFragment {
 		}
 		this.setRetainInstance(true);
 	}
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		this.mInflater = inflater;
 		View dialogLayout = mInflater.inflate(R.layout.fragment_dialog_layout, null, false);
-		this.mFieldsLayout = (LinearLayout) dialogLayout.findViewById(R.id.dialogForm);
+		this.mFieldsLayout = (LinearLayout)dialogLayout.findViewById(R.id.dialogForm);
 		this.setRightButton(dialogLayout);
 		getDialog().setCanceledOnTouchOutside(false);
 		buildDialog();
-		FontsUtil.setFont((ViewGroup) dialogLayout);
+		FontsUtil.setFont((ViewGroup)dialogLayout);
 		return dialogLayout;
 	}
-	
+
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
@@ -112,7 +113,7 @@ public class CustomFragmentDialog extends DialogFragment {
 			this.setOnBackListener();
 		}
 	}
-	
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
@@ -121,23 +122,23 @@ public class CustomFragmentDialog extends DialogFragment {
 			this.setOnBackListener();
 		}
 	}
-	
+
 	@Override
 	public void show(FragmentManager manager, String tag) {
 		if (null == manager.findFragmentByTag(tag)) {
 			manager.beginTransaction().add(this, tag).commitAllowingStateLoss();
 		}
 	}
-	
+
 	@Override
 	public void onDestroyView() {
 		if (getDialog() != null && getRetainInstance()) {
 			getDialog().setDismissMessage(null);
 		}
 		super.onDestroyView();
-		
+
 	}
-	
+
 	public final void setOnBackListener() {
 		getDialog().setOnKeyListener(new DialogInterface.OnKeyListener() {
 			@Override
@@ -148,7 +149,7 @@ public class CustomFragmentDialog extends DialogFragment {
 						getActivity().onBackPressed();
 						dismiss();
 					} else {
-	                   /* ((FindPatientRecordFragment) getActivity()
+					   /* ((FindPatientRecordFragment) getActivity()
                                 .getSupportFragmentManager()
                                 .findFragmentById(R.id.loginContentFrame))
                                 .hideURLDialog();*/
@@ -159,22 +160,22 @@ public class CustomFragmentDialog extends DialogFragment {
 			}
 		});
 	}
-	
+
 	public final void setBorderless() {
 		getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-		
-		int marginWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, TYPED_DIMENSION_VALUE,
+
+		int marginWidth = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, TYPED_DIMENSION_VALUE,
 				OpenMRS.getInstance().getResources().getDisplayMetrics());
-		
+
 		DisplayMetrics display = this.getResources().getDisplayMetrics();
 		int width = display.widthPixels;
-		
+
 		WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
 		params.width = width - 2 * marginWidth;
-		
+
 		getDialog().getWindow().setAttributes(params);
 	}
-	
+
 	private void buildDialog() {
 		if (null != mCustomDialogBundle.getTitleViewMessage()) {
 			mTitleTextView = addTitleBar(mCustomDialogBundle.getTitleViewMessage());
@@ -201,52 +202,53 @@ public class CustomFragmentDialog extends DialogFragment {
 			mRecyclerView = addRecycleView(mCustomDialogBundle.getPatientsList(), mCustomDialogBundle.getNewPatient());
 		}
 	}
-	
+
 	private RecyclerView addRecycleView(List<Patient> patientsList, Patient newPatient) {
-		LinearLayout field = (LinearLayout) mInflater.inflate(R.layout.openmrs_recycle_view, null);
-		RecyclerView recyclerView = (RecyclerView) field.findViewById(R.id.recyclerView);
+		LinearLayout field = (LinearLayout)mInflater.inflate(R.layout.openmrs_recycle_view, null);
+		RecyclerView recyclerView = (RecyclerView)field.findViewById(R.id.recyclerView);
 		recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 		recyclerView.setAdapter(new SimilarPatientsRecyclerViewAdapter((getActivity()), patientsList, newPatient));
 		mFieldsLayout.addView(field);
 		recyclerView.setHasFixedSize(true);
 		return recyclerView;
 	}
-	
+
 	public EditText addEditTextField(String defaultMessage) {
-		LinearLayout field = (LinearLayout) mInflater.inflate(R.layout.openmrs_edit_text_field, null);
-		EditText editText = (EditText) field.findViewById(R.id.openmrsEditText);
+		LinearLayout field = (LinearLayout)mInflater.inflate(R.layout.openmrs_edit_text_field, null);
+		EditText editText = (EditText)field.findViewById(R.id.openmrsEditText);
 		if (null != defaultMessage) {
 			editText.setText(defaultMessage);
 		}
 		mFieldsLayout.addView(field);
 		return editText;
 	}
-	
+
 	public TextView addTextField(String message) {
-		LinearLayout field = (LinearLayout) mInflater.inflate(R.layout.openmrs_text_view_field, null);
-		TextView textView = (TextView) field.findViewById(R.id.openmrsTextView);
+		LinearLayout field = (LinearLayout)mInflater.inflate(R.layout.openmrs_text_view_field, null);
+		TextView textView = (TextView)field.findViewById(R.id.openmrsTextView);
 		textView.setText(message);
 		textView.setSingleLine(false);
 		FontsUtil.setFont(textView, FontsUtil.OpenFonts.OPEN_SANS_ITALIC);
-		mFieldsLayout.addView(field, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-		return textView;
-	}
-	
-	public TextView addTitleBar(String title) {
-		LinearLayout field = (LinearLayout) mInflater.inflate(R.layout.openmrs_title_view_field, null);
-		TextView textView = (TextView) field.findViewById(R.id.openmrsTitleView);
-		textView.setText(title);
-		textView.setSingleLine(true);
-		mFieldsLayout.addView(field, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+		mFieldsLayout.addView(field,
+				new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 		return textView;
 	}
 
-	
+	public TextView addTitleBar(String title) {
+		LinearLayout field = (LinearLayout)mInflater.inflate(R.layout.openmrs_title_view_field, null);
+		TextView textView = (TextView)field.findViewById(R.id.openmrsTitleView);
+		textView.setText(title);
+		textView.setSingleLine(true);
+		mFieldsLayout.addView(field,
+				new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+		return textView;
+	}
+
 	public void setRightButton(String text) {
 		mRightButton.setText(text);
 		setViewVisible(mRightButton, true);
 	}
-	
+
 	private void setViewVisible(View view, boolean visible) {
 		if (visible) {
 			view.setVisibility(View.VISIBLE);
@@ -254,19 +256,19 @@ public class CustomFragmentDialog extends DialogFragment {
 			view.setVisibility(View.GONE);
 		}
 	}
-	
+
 	public void setRightButton(View dialogLayout) {
-		this.mRightButton = (Button) dialogLayout.findViewById(R.id.dialogFormButtonsSubmitButton);
+		this.mRightButton = (Button)dialogLayout.findViewById(R.id.dialogFormButtonsSubmitButton);
 	}
 
-	
 	public void addProgressBar(String message) {
-		RelativeLayout progressBarLayout = (RelativeLayout) mInflater.inflate(R.layout.dialog_progress, null);
-		TextView textView = (TextView) progressBarLayout.findViewById(R.id.progressTextView);
+		RelativeLayout progressBarLayout = (RelativeLayout)mInflater.inflate(R.layout.dialog_progress, null);
+		TextView textView = (TextView)progressBarLayout.findViewById(R.id.progressTextView);
 		textView.setText(message);
-		mFieldsLayout.addView(progressBarLayout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+		mFieldsLayout.addView(progressBarLayout,
+				new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 	}
-	
+
 	public String getEditTextValue() {
 		String value = "";
 		if (mEditText != null) {
@@ -274,11 +276,11 @@ public class CustomFragmentDialog extends DialogFragment {
 		}
 		return value;
 	}
-	
+
 	private boolean isDialogAvailable() {
 		return null != this && null != this.getDialog();
 	}
-	
+
 	private View.OnClickListener onClickActionSolver(final OnClickAction action) {
 		return new View.OnClickListener() {
 			//CHECKSTYLE:OFF
@@ -303,7 +305,7 @@ public class CustomFragmentDialog extends DialogFragment {
 						dismiss();
 						break;
 					case LOGOUT:
-						((ACBaseActivity) getActivity()).logout();
+						((ACBaseActivity)getActivity()).logout();
 						dismiss();
 						break;
 					case FINISH:
@@ -316,7 +318,7 @@ public class CustomFragmentDialog extends DialogFragment {
 						dismiss();
 						break;
 					case UNAUTHORIZED:
-						((ACBaseActivity) getActivity()).moveUnauthorizedUserToLoginScreen();
+						((ACBaseActivity)getActivity()).moveUnauthorizedUserToLoginScreen();
 						dismiss();
 						break;
 					case END_VISIT:
@@ -332,11 +334,11 @@ public class CustomFragmentDialog extends DialogFragment {
 						dismiss();
 						break;
 					case CANCEL_REGISTERING:
-						((AddEditPatientActivity) getActivity()).mPresenter.finishAddPatientActivity();
+						((AddEditPatientActivity)getActivity()).mPresenter.finishAddPatientActivity();
 						dismiss();
 						break;
 					case DELETE_PATIENT:
-						PatientDashboardActivity activity = (PatientDashboardActivity) getActivity();
+						PatientDashboardActivity activity = (PatientDashboardActivity)getActivity();
 						//activity.findPatientPresenter.deletePatient();
 						dismiss();
 						activity.finish();
@@ -348,11 +350,11 @@ public class CustomFragmentDialog extends DialogFragment {
 			//CHECKSTYLE:ON
 		};
 	}
-	
+
 	private void doStartVisitAction() {
 		Activity activity = getActivity();
 		if (activity instanceof PatientDashboardActivity) {
-			PatientDashboardActivity pda = ((PatientDashboardActivity) activity);
+			PatientDashboardActivity pda = ((PatientDashboardActivity)activity);
             /*List<Fragment> fragments = pda.getSupportFragmentManager().getFragments();
             PatientVisitsFragment fragment = null;
             for (Fragment frag : fragments) {
@@ -366,9 +368,21 @@ public class CustomFragmentDialog extends DialogFragment {
             }*/
 		}
 	}
-	
+
 	public enum OnClickAction {
-		SET_URL, SHOW_URL_DIALOG, DISMISS_URL_DIALOG, DISMISS, LOGOUT, FINISH, INTERNET, UNAUTHORIZED, END_VISIT,
-		START_VISIT, LOGIN, REGISTER_PATIENT, CANCEL_REGISTERING, DELETE_PATIENT
+		SET_URL,
+		SHOW_URL_DIALOG,
+		DISMISS_URL_DIALOG,
+		DISMISS,
+		LOGOUT,
+		FINISH,
+		INTERNET,
+		UNAUTHORIZED,
+		END_VISIT,
+		START_VISIT,
+		LOGIN,
+		REGISTER_PATIENT,
+		CANCEL_REGISTERING,
+		DELETE_PATIENT
 	}
 }

@@ -17,9 +17,7 @@ package org.openmrs.mobile.activities.addeditpatient;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,14 +47,12 @@ import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
 import org.openmrs.mobile.application.OpenMRSLogger;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.listeners.watcher.PatientBirthdateValidatorWatcher;
-import org.openmrs.mobile.models.BaseOpenmrsObject;
 import org.openmrs.mobile.models.ConceptAnswer;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.PatientIdentifier;
 import org.openmrs.mobile.models.PatientIdentifierType;
 import org.openmrs.mobile.models.Person;
 import org.openmrs.mobile.models.PersonAddress;
-import org.openmrs.mobile.models.PersonAttribute;
 import org.openmrs.mobile.models.PersonAttributeType;
 import org.openmrs.mobile.models.PersonName;
 import org.openmrs.mobile.utilities.ApplicationConstants;
@@ -370,7 +366,8 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 
 	@Override
 	public void setCivilStatus(List<ConceptAnswer> answers) {
-		ArrayAdapter<ConceptAnswer> conceptAnswerArrayAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, answers);
+		ArrayAdapter<ConceptAnswer> conceptAnswerArrayAdapter =
+				new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, answers);
 		civilStatus.setAdapter(conceptAnswerArrayAdapter);
 	}
 

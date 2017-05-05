@@ -18,7 +18,7 @@ package org.openmrs.mobile.models;
  * Created by dubdabasoduba on 05/05/2017.
  */
 
-public enum  VisitTaskStatus {
+public enum VisitTaskStatus {
 	/**
 	 * A visit task is open/ongoing.
 	 */

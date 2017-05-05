@@ -23,30 +23,31 @@ import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
 
 public class SettingsActivity extends ACBaseActivity {
-	
+
 	public SettingsContract.Presenter mPresenter;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getLayoutInflater().inflate(R.layout.activity_settings, frameLayout);
 		setTitle(R.string.nav_settings);
 		// Create fragment
-		SettingsFragment settingsFragment = (SettingsFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
+		SettingsFragment settingsFragment =
+				(SettingsFragment)getSupportFragmentManager().findFragmentById(R.id.contentFrame);
 		if (settingsFragment == null) {
 			settingsFragment = SettingsFragment.newInstance();
 		}
 		if (!settingsFragment.isActive()) {
 			addFragmentToActivity(getSupportFragmentManager(), settingsFragment, R.id.contentFrame);
 		}
-		
+
 		mPresenter = new SettingsPresenter(settingsFragment, mOpenMRS);
 	}
-	
+
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 	}
-	
+
 	@Override
 	public void onBackPressed() {
 		if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -58,10 +59,10 @@ public class SettingsActivity extends ACBaseActivity {
 			startActivity(intent);
 		}
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		return true;
 	}
-	
+
 }

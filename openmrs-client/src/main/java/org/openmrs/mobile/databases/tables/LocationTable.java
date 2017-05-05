@@ -31,36 +31,36 @@ public class LocationTable extends Table<Location> {
 	@Override
 	public String createTableDefinition() {
 		return CREATE_TABLE + TABLE_NAME + "("
-		       + Column.ID + PRIMARY_KEY
-		       + Column.UUID + Column.Type.TEXT_TYPE_NOT_NULL
-		       + Column.DISPLAY + Column.Type.TEXT_TYPE_WITH_COMMA
-		       + Column.NAME + Column.Type.TEXT_TYPE_WITH_COMMA
-		       + Column.DESCRIPTION + Column.Type.TEXT_TYPE_WITH_COMMA
-		       + Column.ADDRESS_1 + Column.Type.TEXT_TYPE_WITH_COMMA
-		       + Column.ADDRESS_2 + Column.Type.TEXT_TYPE_WITH_COMMA
-		       + Column.CITY + Column.Type.TEXT_TYPE_WITH_COMMA
-		       + Column.STATE + Column.Type.TEXT_TYPE_WITH_COMMA
-		       + Column.COUNTRY + Column.Type.TEXT_TYPE_WITH_COMMA
-		       + Column.POSTAL_CODE + Column.Type.TEXT_TYPE_WITH_COMMA
-		       + Column.PARENT_LOCATION_UUID + Column.Type.TEXT_TYPE
-		       + ");";
+				+ Column.ID + PRIMARY_KEY
+				+ Column.UUID + Column.Type.TEXT_TYPE_NOT_NULL
+				+ Column.DISPLAY + Column.Type.TEXT_TYPE_WITH_COMMA
+				+ Column.NAME + Column.Type.TEXT_TYPE_WITH_COMMA
+				+ Column.DESCRIPTION + Column.Type.TEXT_TYPE_WITH_COMMA
+				+ Column.ADDRESS_1 + Column.Type.TEXT_TYPE_WITH_COMMA
+				+ Column.ADDRESS_2 + Column.Type.TEXT_TYPE_WITH_COMMA
+				+ Column.CITY + Column.Type.TEXT_TYPE_WITH_COMMA
+				+ Column.STATE + Column.Type.TEXT_TYPE_WITH_COMMA
+				+ Column.COUNTRY + Column.Type.TEXT_TYPE_WITH_COMMA
+				+ Column.POSTAL_CODE + Column.Type.TEXT_TYPE_WITH_COMMA
+				+ Column.PARENT_LOCATION_UUID + Column.Type.TEXT_TYPE
+				+ ");";
 	}
 
 	@Override
 	public String insertIntoTableDefinition() {
 		return INSERT_INTO + TABLE_NAME + "("
-		       + Column.UUID + Column.COMMA
-		       + Column.DISPLAY + Column.COMMA
-		       + Column.NAME + Column.COMMA
-		       + Column.DESCRIPTION + Column.COMMA
-		       + Column.ADDRESS_1 + Column.COMMA
-		       + Column.ADDRESS_2 + Column.COMMA
-		       + Column.CITY + Column.COMMA
-		       + Column.STATE + Column.COMMA
-		       + Column.COUNTRY + Column.COMMA
-		       + Column.POSTAL_CODE + Column.COMMA
-		       + Column.PARENT_LOCATION_UUID + ")"
-		       + values(INSERT_COLUMNS_COUNT);
+				+ Column.UUID + Column.COMMA
+				+ Column.DISPLAY + Column.COMMA
+				+ Column.NAME + Column.COMMA
+				+ Column.DESCRIPTION + Column.COMMA
+				+ Column.ADDRESS_1 + Column.COMMA
+				+ Column.ADDRESS_2 + Column.COMMA
+				+ Column.CITY + Column.COMMA
+				+ Column.STATE + Column.COMMA
+				+ Column.COUNTRY + Column.COMMA
+				+ Column.POSTAL_CODE + Column.COMMA
+				+ Column.PARENT_LOCATION_UUID + ")"
+				+ values(INSERT_COLUMNS_COUNT);
 	}
 
 	@Override

@@ -30,79 +30,79 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class ToastUtil {
-	
+
 	private static OpenMRSLogger logger = OpenMRS.getInstance().getOpenMRSLogger();
 	private static List<ToastThread> toastQueue = new ArrayList<ToastThread>();
-	
+
 	private ToastUtil() {
 	}
-	
+
 	public static void notifyLong(String message) {
 		showToast(OpenMRS.getInstance(), ToastType.NOTICE, message, Toast.LENGTH_LONG);
 	}
-	
+
 	public static void notify(String message) {
 		showToast(OpenMRS.getInstance(), ToastType.NOTICE, message, Toast.LENGTH_SHORT);
 	}
-	
+
 	public static void success(String message) {
 		showToast(OpenMRS.getInstance(), ToastType.SUCCESS, message, Toast.LENGTH_SHORT);
 	}
-	
+
 	public static void error(String message) {
 		showToast(OpenMRS.getInstance(), ToastType.ERROR, message, Toast.LENGTH_SHORT);
 	}
-	
+
 	public static void showShortToast(Context context, ToastType type, int textId) {
 		showToast(context, type, context.getResources().getString(textId), Toast.LENGTH_SHORT);
 	}
-	
+
 	public static void showLongToast(Context context, ToastType type, int textId) {
 		showToast(context, type, context.getResources().getString(textId), Toast.LENGTH_LONG);
 	}
-	
+
 	public static void showShortToast(Context context, ToastType type, String text) {
 		showToast(context, type, text, Toast.LENGTH_SHORT);
 	}
-	
+
 	public static void showLongToast(Context context, ToastType type, String text) {
 		showToast(context, type, text, Toast.LENGTH_LONG);
 	}
-	
+
 	private static void showToast(Context context, ToastType type,
-	                              String text, final int duration) {
-		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			String text, final int duration) {
+		LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View toastRoot = inflater.inflate(R.layout.toast, null);
-		
+
 		Bitmap bitmap;
-		ImageView toastImage = (ImageView) toastRoot.findViewById(R.id.toastImage);
-		TextView toastText = (TextView) toastRoot.findViewById(R.id.toastText);
+		ImageView toastImage = (ImageView)toastRoot.findViewById(R.id.toastImage);
+		TextView toastText = (TextView)toastRoot.findViewById(R.id.toastText);
 		toastText.setText(text);
-		
+
 		bitmap = ImageUtils.decodeBitmapFromResource(
 				context.getResources(),
 				getImageResId(type),
 				toastImage.getLayoutParams().width,
 				toastImage.getLayoutParams().height);
 		toastImage.setImageBitmap(bitmap);
-		
+
 		logger.d("Decode bitmap: " + bitmap.toString());
 		Toast toast = new Toast(context);
-		
+
 		toast.setView(toastRoot);
 		toast.setDuration(duration);
 		toast.show();
-		
+
 		ToastThread thread = new ToastThread(bitmap, duration);
 		if (toastQueue.size() == 0) {
 			thread.start();
 		}
 		toastQueue.add(thread);
 	}
-	
+
 	private static int getImageResId(ToastType type) {
 		int toastTypeImageId = 0;
-		
+
 		switch (type) {
 			case ERROR:
 				toastTypeImageId = R.drawable.toast_error;
@@ -119,23 +119,26 @@ public final class ToastUtil {
 			default:
 				break;
 		}
-		
+
 		return toastTypeImageId;
 	}
-	
+
 	public enum ToastType {
-		ERROR, NOTICE, SUCCESS, WARNING
+		ERROR,
+		NOTICE,
+		SUCCESS,
+		WARNING
 	}
-	
+
 	private static class ToastThread extends Thread {
 		private Bitmap mBitmap;
 		private int mDuration;
-		
+
 		public ToastThread(Bitmap bitmap, int duration) {
 			mBitmap = bitmap;
 			mDuration = duration;
 		}
-		
+
 		@Override
 		public void run() {
 			try {

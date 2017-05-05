@@ -16,27 +16,27 @@ import org.openmrs.mobile.utilities.ApplicationConstants;
 
 import java.util.List;
 
-
 public class ListPatients extends RecyclerView.Adapter<ListPatients.PatientViewHolder> {
-	
+
 	private List<Patient> patients;
 	private Context context;
+
 	public ListPatients(Context context, List<Patient> patients) {
 		this.context = context;
 		this.patients = patients;
 	}
-	
+
 	@Override
 	public void onAttachedToRecyclerView(RecyclerView recyclerView) {
 		super.onAttachedToRecyclerView(recyclerView);
 	}
-	
+
 	@Override
 	public PatientViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
 		View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_item_patients, viewGroup, false);
 		return new PatientViewHolder(view);
 	}
-	
+
 	@Override
 	public void onBindViewHolder(final PatientViewHolder holder, int position) {
 		holder.given_name.setText(patients.get(holder.getAdapterPosition()).given_name);
@@ -46,11 +46,11 @@ public class ListPatients extends RecyclerView.Adapter<ListPatients.PatientViewH
 		holder.id.setText(patients.get(holder.getAdapterPosition()).id);
 		holder.gender.setImageResource(
 				String.valueOf(patients.get(holder.getAdapterPosition()).gender).toLowerCase().equals("m")
-				? R.drawable.ic_male : R.drawable.ic_female);
+						? R.drawable.ic_male : R.drawable.ic_female);
 		if (patients.get(holder.getAdapterPosition()).active_visit == 1) {
 			holder.active_visit.setVisibility(View.VISIBLE);
 		}
-		
+
 		holder.itemView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -62,15 +62,14 @@ public class ListPatients extends RecyclerView.Adapter<ListPatients.PatientViewH
 			}
 		});
 	}
-	
+
 	@Override
 	public int getItemCount() {
 		return patients.size();
 	}
-	
+
 	public static class PatientViewHolder extends RecyclerView.ViewHolder {
-		
-		
+
 		private TextView given_name;
 		private TextView middle_name;
 		private TextView family_name;
@@ -78,16 +77,16 @@ public class ListPatients extends RecyclerView.Adapter<ListPatients.PatientViewH
 		private TextView id;
 		private ImageView gender;
 		private ImageView active_visit;
-		
+
 		public PatientViewHolder(View itemView) {
 			super(itemView);
-			given_name = (TextView) itemView.findViewById(R.id.given_name);
-			middle_name = (TextView) itemView.findViewById(R.id.middle_name);
-			family_name = (TextView) itemView.findViewById(R.id.family_name);
-			age = (TextView) itemView.findViewById(R.id.age);
-			id = (TextView) itemView.findViewById(R.id.patient_id);
-			gender = (ImageView) itemView.findViewById(R.id.genderIcon);
-			active_visit = (ImageView) itemView.findViewById(R.id.activeVisitIcon);
+			given_name = (TextView)itemView.findViewById(R.id.given_name);
+			middle_name = (TextView)itemView.findViewById(R.id.middle_name);
+			family_name = (TextView)itemView.findViewById(R.id.family_name);
+			age = (TextView)itemView.findViewById(R.id.age);
+			id = (TextView)itemView.findViewById(R.id.patient_id);
+			gender = (ImageView)itemView.findViewById(R.id.genderIcon);
+			active_visit = (ImageView)itemView.findViewById(R.id.activeVisitIcon);
 		}
 	}
 }

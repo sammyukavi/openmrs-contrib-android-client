@@ -23,22 +23,22 @@ import org.openmrs.mobile.utilities.ApplicationConstants;
 //import org.openmrs.mobile.activities.login.FindPatientRecordActivity;
 
 public class AuthorizationManager {
-	
+
 	protected OpenMRS mOpenMRS = OpenMRS.getInstance();
-	
+
 	public boolean isUserNameOrServerEmpty() {
 		boolean result = false;
 		if (mOpenMRS.getUsername().equals(ApplicationConstants.EMPTY_STRING) ||
-		    (mOpenMRS.getServerUrl().equals(ApplicationConstants.EMPTY_STRING))) {
+				(mOpenMRS.getServerUrl().equals(ApplicationConstants.EMPTY_STRING))) {
 			result = true;
 		}
 		return result;
 	}
-	
+
 	public boolean isUserLoggedIn() {
 		return !ApplicationConstants.EMPTY_STRING.equals(mOpenMRS.getSessionToken());
 	}
-	
+
 	public void moveToLoginActivity() {
 		Intent intent = new Intent(mOpenMRS.getApplicationContext(), LoginActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

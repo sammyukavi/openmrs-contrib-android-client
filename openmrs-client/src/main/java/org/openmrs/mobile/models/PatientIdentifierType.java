@@ -16,43 +16,6 @@ import org.openmrs.mobile.utilities.StringUtils;
 
 public class PatientIdentifierType extends BaseOpenmrsMetadata {
 
-	/**
-	 * Enumerates the possible ways that location may be applicable for a particular Patient
-	 * Identifer Type
-	 */
-
-	public enum LocationBehavior {
-		/**
-		 * Indicates that location is required for the current identifier type
-		 */
-		REQUIRED,
-		/**
-		 * Indicates that location is not used for the current identifier type
-		 */
-		NOT_USED
-	}
-
-	/**
-	 * Enumeration for the way to handle uniqueness among identifiers for a given identifier type
-	 */
-	public enum UniquenessBehavior {
-
-		/**
-		 * Indicates that identifiers should be globally unique
-		 */
-		UNIQUE,
-
-		/**
-		 * Indicates that duplicates identifiers are allowed
-		 */
-		NON_UNIQUE,
-
-		/**
-		 * Indicates that identifiers should be unique only across a location if the identifier's
-		 * location property is not null
-		 */
-		LOCATION
-	}
 	@SerializedName("format")
 	@Expose
 	private String format;
@@ -165,11 +128,48 @@ public class PatientIdentifierType extends BaseOpenmrsMetadata {
 	/**
 	 * TODO: make this return a more debug-worth string instead of just the name. Check the webapp
 	 * to make sure it is not depending on this
-	 *
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
 		return getName();
+	}
+
+	/**
+	 * Enumerates the possible ways that location may be applicable for a particular Patient
+	 * Identifer Type
+	 */
+
+	public enum LocationBehavior {
+		/**
+		 * Indicates that location is required for the current identifier type
+		 */
+		REQUIRED,
+		/**
+		 * Indicates that location is not used for the current identifier type
+		 */
+		NOT_USED
+	}
+
+	/**
+	 * Enumeration for the way to handle uniqueness among identifiers for a given identifier type
+	 */
+	public enum UniquenessBehavior {
+
+		/**
+		 * Indicates that identifiers should be globally unique
+		 */
+		UNIQUE,
+
+		/**
+		 * Indicates that duplicates identifiers are allowed
+		 */
+		NON_UNIQUE,
+
+		/**
+		 * Indicates that identifiers should be unique only across a location if the identifier's
+		 * location property is not null
+		 */
+		LOCATION
 	}
 
 }

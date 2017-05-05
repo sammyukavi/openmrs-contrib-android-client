@@ -31,26 +31,26 @@ public class VisitTable extends Table<Visit> {
 	@Override
 	public String createTableDefinition() {
 		return CREATE_TABLE + TABLE_NAME + "("
-		       + Column.ID + PRIMARY_KEY
-		       + Column.PATIENT_KEY_ID + Column.Type.INT_TYPE_NOT_NULL
-		       + Column.UUID + Column.Type.DATE_TYPE_NOT_NULL
-		       + Column.VISIT_TYPE + Column.Type.TEXT_TYPE_WITH_COMMA
-		       + Column.VISIT_PLACE + Column.Type.TEXT_TYPE_WITH_COMMA
-		       + Column.START_DATE + Column.Type.DATE_TYPE_NOT_NULL
-		       + Column.STOP_DATE + Column.Type.DATE_TYPE
-		       + ");";
+				+ Column.ID + PRIMARY_KEY
+				+ Column.PATIENT_KEY_ID + Column.Type.INT_TYPE_NOT_NULL
+				+ Column.UUID + Column.Type.DATE_TYPE_NOT_NULL
+				+ Column.VISIT_TYPE + Column.Type.TEXT_TYPE_WITH_COMMA
+				+ Column.VISIT_PLACE + Column.Type.TEXT_TYPE_WITH_COMMA
+				+ Column.START_DATE + Column.Type.DATE_TYPE_NOT_NULL
+				+ Column.STOP_DATE + Column.Type.DATE_TYPE
+				+ ");";
 	}
 
 	@Override
 	public String insertIntoTableDefinition() {
 		return INSERT_INTO + TABLE_NAME + "("
-		       + Column.UUID + Column.COMMA
-		       + Column.PATIENT_KEY_ID + Column.COMMA
-		       + Column.VISIT_TYPE + Column.COMMA
-		       + Column.VISIT_PLACE + Column.COMMA
-		       + Column.START_DATE + Column.COMMA
-		       + Column.STOP_DATE + ")"
-		       + values(INSERT_COLUMNS_COUNT);
+				+ Column.UUID + Column.COMMA
+				+ Column.PATIENT_KEY_ID + Column.COMMA
+				+ Column.VISIT_TYPE + Column.COMMA
+				+ Column.VISIT_PLACE + Column.COMMA
+				+ Column.START_DATE + Column.COMMA
+				+ Column.STOP_DATE + ")"
+				+ values(INSERT_COLUMNS_COUNT);
 	}
 
 	@Override

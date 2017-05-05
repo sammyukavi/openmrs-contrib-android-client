@@ -32,24 +32,25 @@ public abstract class OpenMRSSQLiteOpenHelper extends SQLiteOpenHelper {
 			getResources().getString(R.string.dbname);
 	protected OpenMRSLogger mLogger = OpenMRS.getInstance().getOpenMRSLogger();
 	private String mSecretKey;
-	
-	public OpenMRSSQLiteOpenHelper(Context context, SQLiteDatabase.CursorFactory factory, int version, SQLiteDatabaseHook hook) {
+
+	public OpenMRSSQLiteOpenHelper(Context context, SQLiteDatabase.CursorFactory factory, int version,
+			SQLiteDatabaseHook hook) {
 		super(context, DATABASE_NAME, factory, version, hook);
 	}
-	
+
 	public OpenMRSSQLiteOpenHelper(Context context, SQLiteDatabase.CursorFactory factory, int version) {
 		super(context, DATABASE_NAME, factory, version, new OpenMRSDefaultDBHook());
 	}
-	
+
 	public OpenMRSSQLiteOpenHelper(Context context, SQLiteDatabase.CursorFactory factory, int version, String secretKey) {
 		this(context, factory, version);
 		mSecretKey = secretKey;
 	}
-	
+
 	public String getSecretKey() {
 		return mSecretKey != null ? mSecretKey : OpenMRS.getInstance().getSecretKey();
 	}
-	
+
 	public synchronized SQLiteDatabase getWritableDatabase() {
 		SQLiteDatabase db;
 		try {
@@ -59,7 +60,7 @@ public abstract class OpenMRSSQLiteOpenHelper extends SQLiteOpenHelper {
 		}
 		return db;
 	}
-	
+
 	public synchronized SQLiteDatabase getReadableDatabase() {
 		SQLiteDatabase db;
 		try {
@@ -69,7 +70,7 @@ public abstract class OpenMRSSQLiteOpenHelper extends SQLiteOpenHelper {
 		}
 		return db;
 	}
-	
+
 	private SQLiteDatabase openDatabaseWithoutSecretKey(boolean writable) {
 		SQLiteDatabase db;
 		mLogger.w("Can't open database with secret key. Trying to open without key (may be not encrypted).");
@@ -81,7 +82,7 @@ public abstract class OpenMRSSQLiteOpenHelper extends SQLiteOpenHelper {
 		mLogger.w("Database opened but is not encrypted!");
 		return db;
 	}
-	
+
 	/**
 	 * Null safe wrapper method for
 	 * @param columnIndex
@@ -94,7 +95,7 @@ public abstract class OpenMRSSQLiteOpenHelper extends SQLiteOpenHelper {
 			statement.bindString(columnIndex, columnValue);
 		}
 	}
-	
+
 	/**
 	 * Null safe wrapper method for
 	 * @param columnIndex
@@ -107,7 +108,7 @@ public abstract class OpenMRSSQLiteOpenHelper extends SQLiteOpenHelper {
 			statement.bindLong(columnIndex, columnValue);
 		}
 	}
-	
+
 	/**
 	 * Null safe wrapper method for
 	 * @param columnIndex
@@ -120,7 +121,7 @@ public abstract class OpenMRSSQLiteOpenHelper extends SQLiteOpenHelper {
 			statement.bindDouble(columnIndex, columnValue);
 		}
 	}
-	
+
 	/**
 	 * Null safe wrapper method for
 	 * @param columnIndex
@@ -133,18 +134,18 @@ public abstract class OpenMRSSQLiteOpenHelper extends SQLiteOpenHelper {
 			statement.bindBlob(columnIndex, columnValue);
 		}
 	}
-	
+
 	public static class OpenMRSDefaultDBHook implements SQLiteDatabaseHook {
-		
+
 		@Override
 		public void preKey(SQLiteDatabase sqLiteDatabase) {
 			sqLiteDatabase.execSQL("PRAGMA cipher_default_kdf_iter = '4000'");
 		}
-		
+
 		@Override
 		public void postKey(SQLiteDatabase sqLiteDatabase) {
 			// This method is intentionally empty
 		}
-		
+
 	}
 }

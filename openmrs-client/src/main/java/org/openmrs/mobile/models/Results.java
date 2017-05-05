@@ -17,15 +17,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Results<T> implements Serializable {
-	
+
 	@SerializedName("results")
 	@Expose
 	private List<T> results = new ArrayList<T>();
-	
+
 	public List<T> getResults() {
 		return results;
 	}
-	
+
 	public void setResults(List<T> results) {
 		this.results = results;
 	}

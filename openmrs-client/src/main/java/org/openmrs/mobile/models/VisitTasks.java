@@ -19,7 +19,11 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
 
-public class VisitTasks extends BaseOpenmrsMetadata {
+public class VisitTasks extends BaseOpenmrsEntity {
+
+	@SerializedName("name")
+	@Expose
+	private String name;
 
 	@SerializedName("status")
 	@Expose
@@ -36,10 +40,6 @@ public class VisitTasks extends BaseOpenmrsMetadata {
 	@SerializedName("visit")
 	@Expose
 	private Visit visit;
-
-	@SerializedName("patient")
-	@Expose
-	private Patient patient;
 
 	public VisitTaskStatus getStatus() {
 		return status;
@@ -73,11 +73,11 @@ public class VisitTasks extends BaseOpenmrsMetadata {
 		this.visit = visit;
 	}
 
-	public Patient getPatient() {
-		return patient;
+	public String getName() {
+		return name;
 	}
 
-	public void setPatient(Patient patient) {
-		this.patient = patient;
+	public void setName(String name) {
+		this.name = name;
 	}
 }

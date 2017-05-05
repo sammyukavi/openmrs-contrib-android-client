@@ -24,22 +24,22 @@ import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.utilities.FontsUtil;
 
-public class CaptureVitalsFragment extends ACBaseFragment<CaptureVitalsContract.Presenter> implements CaptureVitalsContract.View {
-	
+public class CaptureVitalsFragment extends ACBaseFragment<CaptureVitalsContract.Presenter>
+		implements CaptureVitalsContract.View {
+
 	private View mRootView;
-	
-	
+
 	public static CaptureVitalsFragment newInstance() {
 		return new CaptureVitalsFragment();
 	}
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		mRootView = inflater.inflate(R.layout.fragment_capture_vitals, container, false);
-		
+
 		// Font config
-		FontsUtil.setFont((ViewGroup) this.getActivity().findViewById(android.R.id.content));
-		
+		FontsUtil.setFont((ViewGroup)this.getActivity().findViewById(android.R.id.content));
+
 		return mRootView;
 	}
 }

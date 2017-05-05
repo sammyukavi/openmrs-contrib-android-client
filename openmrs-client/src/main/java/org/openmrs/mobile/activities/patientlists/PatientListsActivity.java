@@ -23,30 +23,31 @@ import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
 
 public class PatientListsActivity extends ACBaseActivity {
-	
+
 	public PatientListsContract.Presenter mPresenter;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getLayoutInflater().inflate(R.layout.activity_patient_lists, frameLayout);
 		setTitle(R.string.nav_patient_lists);
 		// Create fragment
-		PatientListsFragment patientListsFragment = (PatientListsFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
+		PatientListsFragment patientListsFragment =
+				(PatientListsFragment)getSupportFragmentManager().findFragmentById(R.id.contentFrame);
 		if (patientListsFragment == null) {
 			patientListsFragment = PatientListsFragment.newInstance();
 		}
 		if (!patientListsFragment.isActive()) {
 			addFragmentToActivity(getSupportFragmentManager(), patientListsFragment, R.id.contentFrame);
 		}
-		
+
 		mPresenter = new PatientListsPresenter(patientListsFragment, mOpenMRS);
 	}
-	
+
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 	}
-	
+
 	@Override
 	public void onBackPressed() {
 		if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -58,10 +59,10 @@ public class PatientListsActivity extends ACBaseActivity {
 			startActivity(intent);
 		}
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		return true;
 	}
-	
+
 }

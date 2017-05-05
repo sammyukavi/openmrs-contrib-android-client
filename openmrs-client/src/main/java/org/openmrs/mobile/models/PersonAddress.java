@@ -15,163 +15,134 @@ import com.google.gson.annotations.SerializedName;
 
 import org.openmrs.mobile.utilities.StringUtils;
 
-import java.io.Serializable;
-
 public class PersonAddress extends BaseOpenmrsData {
 
-    @SerializedName("preferred")
-    @Expose
-    private Boolean preferred;
-    @SerializedName("address1")
-    @Expose
-    private String address1;
-    @SerializedName("address2")
-    @Expose
-    private String address2;
-    @SerializedName("cityVillage")
-    @Expose
-    private String cityVillage;
-    @SerializedName("stateProvince")
-    @Expose
-    private String stateProvince;
-    @SerializedName("country")
-    @Expose
-    private String country;
-    @SerializedName("postalCode")
-    @Expose
-    private String postalCode;
+	@SerializedName("preferred")
+	@Expose
+	private Boolean preferred;
+	@SerializedName("address1")
+	@Expose
+	private String address1;
+	@SerializedName("address2")
+	@Expose
+	private String address2;
+	@SerializedName("cityVillage")
+	@Expose
+	private String cityVillage;
+	@SerializedName("stateProvince")
+	@Expose
+	private String stateProvince;
+	@SerializedName("country")
+	@Expose
+	private String country;
+	@SerializedName("postalCode")
+	@Expose
+	private String postalCode;
 
-    /**
-     * 
-     * @return
-     *     The preferred
-     */
-    public Boolean getPreferred() {
-        return preferred;
-    }
+	/**
+	 * @return The preferred
+	 */
+	public Boolean getPreferred() {
+		return preferred;
+	}
 
-    /**
-     * 
-     * @param preferred
-     *     The preferred
-     */
-    public void setPreferred(Boolean preferred) {
-        this.preferred = preferred;
-    }
+	/**
+	 * @param preferred The preferred
+	 */
+	public void setPreferred(Boolean preferred) {
+		this.preferred = preferred;
+	}
 
-    /**
-     *
-     * @return
-     *     The address1
-     */
-    public String getAddress1() {
-        return address1;
-    }
+	/**
+	 * @return The address1
+	 */
+	public String getAddress1() {
+		return address1;
+	}
 
-    /**
-     *
-     * @param address1
-     *     The address1
-     */
-    public void setAddress1(String address1) {
-        this.address1 = address1;
-    }
-    /**
-     *
-     * @return
-     *     The address2
-     */
-    public String getAddress2() {
-        return address2;
-    }
+	/**
+	 * @param address1 The address1
+	 */
+	public void setAddress1(String address1) {
+		this.address1 = address1;
+	}
 
-    /**
-     *
-     * @param address2
-     *     The address2
-     */
-    public void setAddress2(String address2) {
-        this.address2 = address2;
-    }
+	/**
+	 * @return The address2
+	 */
+	public String getAddress2() {
+		return address2;
+	}
 
-    /**
-     * 
-     * @return
-     *     The cityVillage
-     */
-    public String getAddressString()
-    {
-        String addr="";
-        if(StringUtils.notNull(address1))
-            addr+=address1+"\n";
-        if(StringUtils.notNull(address2))
-            addr+=address2;
-        return addr;
-    }
-    public String getCityVillage() {
-        return cityVillage;
-    }
+	/**
+	 * @param address2 The address2
+	 */
+	public void setAddress2(String address2) {
+		this.address2 = address2;
+	}
 
-    /**
-     *
-     * @param cityVillage
-     *     The cityVillage
-     */
-    public void setCityVillage(String cityVillage) {
-        this.cityVillage = cityVillage;
-    }
+	/**
+	 * @return The cityVillage
+	 */
+	public String getAddressString() {
+		String addr = "";
+		if (StringUtils.notNull(address1))
+			addr += address1 + "\n";
+		if (StringUtils.notNull(address2))
+			addr += address2;
+		return addr;
+	}
 
-    /**
-     * 
-     * @return
-     *     The stateProvince
-     */
-    public String getStateProvince() {
-        return stateProvince;
-    }
+	public String getCityVillage() {
+		return cityVillage;
+	}
 
-    /**
-     * 
-     * @param stateProvince
-     *     The stateProvince
-     */
-    public void setStateProvince(String stateProvince) {
-        this.stateProvince = stateProvince;
-    }
+	/**
+	 * @param cityVillage The cityVillage
+	 */
+	public void setCityVillage(String cityVillage) {
+		this.cityVillage = cityVillage;
+	}
 
-    /**
-     * 
-     * @return
-     *     The country
-     */
-    public String getCountry() {
-        return country;
-    }
+	/**
+	 * @return The stateProvince
+	 */
+	public String getStateProvince() {
+		return stateProvince;
+	}
 
-    /**
-     * 
-     * @param country
-     *     The country
-     */
-    public void setCountry(String country) {
-        this.country = country;
-    }
+	/**
+	 * @param stateProvince The stateProvince
+	 */
+	public void setStateProvince(String stateProvince) {
+		this.stateProvince = stateProvince;
+	}
 
-    /**
-     *
-     * @return
-     *     The postalCode
-     */
-    public String getPostalCode() {
-        return postalCode;
-    }
+	/**
+	 * @return The country
+	 */
+	public String getCountry() {
+		return country;
+	}
 
-    /**
-     *
-     * @param postalCode
-     *     The postalCode
-     */
-    public void setPostalCode(String postalCode) {
-        this.postalCode = postalCode;
-    }
+	/**
+	 * @param country The country
+	 */
+	public void setCountry(String country) {
+		this.country = country;
+	}
+
+	/**
+	 * @return The postalCode
+	 */
+	public String getPostalCode() {
+		return postalCode;
+	}
+
+	/**
+	 * @param postalCode The postalCode
+	 */
+	public void setPostalCode(String postalCode) {
+		this.postalCode = postalCode;
+	}
 }

@@ -19,7 +19,7 @@ package org.openmrs.mobile.utilities;
 public class NotificationUtil {
 
     /*public static void notify(String title, String message)
-    {
+	{
         Bitmap bitmap = BitmapFactory.decodeResource( OpenMRS.getInstance().getResources(), R.drawable.ic_openmrs);
         NotificationCompat.Builder mBuilder =
                 (NotificationCompat.Builder) new NotificationCompat.Builder(OpenMRS.getInstance())

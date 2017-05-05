@@ -36,249 +36,251 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class OpenMRS extends Application {
-    private static final String OPENMRS_DIR_NAME = "OpenMRS";
-    private static final String OPENMRS_DIR_PATH = File.separator + OPENMRS_DIR_NAME;
-    private static String mExternalDirectoryPath;
+	private static final String OPENMRS_DIR_NAME = "OpenMRS";
+	private static final String OPENMRS_DIR_PATH = File.separator + OPENMRS_DIR_NAME;
+	private static String mExternalDirectoryPath;
 
-    private static OpenMRS instance;
-    private OpenMRSLogger mLogger;
+	private static OpenMRS instance;
+	private static boolean ENCRYPTED = true;
+	private OpenMRSLogger mLogger;
 
-    @Override
-    public void onCreate() {
-        initializeSQLCipher();
-        super.onCreate();
-        instance = this;
-        if (mExternalDirectoryPath == null) {
-            //mExternalDirectoryPath = this.getExternalFilesDir(null).toString();
-            String state = Environment.getExternalStorageState();
-            if (Environment.MEDIA_MOUNTED.equals(state)) {
-                mExternalDirectoryPath = getExternalFilesDir(null).toString();
-            } else {
-                mExternalDirectoryPath = getFilesDir().toString();
-            }
-        }
-        mLogger = new OpenMRSLogger();
-        generateKey();
-        OpenMRSDBOpenHelper.init();
-        initializeDB();
+	public static OpenMRS getInstance() {
+		return instance;
+	}
 
-        Intent i=new Intent(this,FormListService.class);
-        startService(i);
-    }
+	@Override
+	public void onCreate() {
+		initializeSQLCipher();
+		super.onCreate();
+		instance = this;
+		if (mExternalDirectoryPath == null) {
+			//mExternalDirectoryPath = this.getExternalFilesDir(null).toString();
+			String state = Environment.getExternalStorageState();
+			if (Environment.MEDIA_MOUNTED.equals(state)) {
+				mExternalDirectoryPath = getExternalFilesDir(null).toString();
+			} else {
+				mExternalDirectoryPath = getFilesDir().toString();
+			}
+		}
+		mLogger = new OpenMRSLogger();
+		generateKey();
+		OpenMRSDBOpenHelper.init();
+		initializeDB();
 
-    private static boolean ENCRYPTED = true;
-    protected void initializeDB() {
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, ENCRYPTED ? "notes-db-encrypted" : "notes-db");
-        Database db = ENCRYPTED ? helper.getEncryptedWritableDb("super-secret") : helper.getWritableDb();
-        DaoSession daoSession = new DaoMaster(db).newSession();
-    }
+		Intent i = new Intent(this, FormListService.class);
+		startService(i);
+	}
 
-    public static OpenMRS getInstance() {
-        return instance;
-    }
+	protected void initializeDB() {
+		DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, ENCRYPTED ? "notes-db-encrypted" : "notes-db");
+		Database db = ENCRYPTED ? helper.getEncryptedWritableDb("super-secret") : helper.getWritableDb();
+		DaoSession daoSession = new DaoMaster(db).newSession();
+	}
 
-    public SharedPreferences getOpenMRSSharedPreferences() {
-        return getSharedPreferences(ApplicationConstants.OpenMRSSharedPreferenceNames.SHARED_PREFERENCES_NAME,
-                MODE_PRIVATE);
-    }
+	public SharedPreferences getOpenMRSSharedPreferences() {
+		return getSharedPreferences(ApplicationConstants.OpenMRSSharedPreferenceNames.SHARED_PREFERENCES_NAME,
+				MODE_PRIVATE);
+	}
 
-    public void setUserLoggedOnline(boolean firstLogin) {
-        SharedPreferences.Editor editor = getOpenMRSSharedPreferences().edit();
-        editor.putBoolean(ApplicationConstants.UserKeys.LOGIN, firstLogin);
-        editor.commit();
-    }
+	public boolean isUserLoggedOnline() {
+		SharedPreferences prefs = getOpenMRSSharedPreferences();
+		return prefs.getBoolean(ApplicationConstants.UserKeys.LOGIN, false);
+	}
 
-    public void setUsername(String username) {
-        SharedPreferences.Editor editor = getOpenMRSSharedPreferences().edit();
-        editor.putString(ApplicationConstants.UserKeys.USER_NAME, username);
-        editor.commit();
-    }
+	public void setUserLoggedOnline(boolean firstLogin) {
+		SharedPreferences.Editor editor = getOpenMRSSharedPreferences().edit();
+		editor.putBoolean(ApplicationConstants.UserKeys.LOGIN, firstLogin);
+		editor.commit();
+	}
 
-    public void setPassword(String password) {
-        SharedPreferences.Editor editor = getOpenMRSSharedPreferences().edit();
-        editor.putString(ApplicationConstants.UserKeys.PASSWORD, password);
-        editor.commit();
-    }
+	public String getUsername() {
+		SharedPreferences prefs = getOpenMRSSharedPreferences();
+		return prefs.getString(ApplicationConstants.UserKeys.USER_NAME, ApplicationConstants.EMPTY_STRING);
+	}
 
-    public void setServerUrl(String serverUrl) {
-        SharedPreferences.Editor editor = getOpenMRSSharedPreferences().edit();
-        editor.putString(ApplicationConstants.SERVER_URL, serverUrl);
-        editor.commit();
-    }
+	public void setUsername(String username) {
+		SharedPreferences.Editor editor = getOpenMRSSharedPreferences().edit();
+		editor.putString(ApplicationConstants.UserKeys.USER_NAME, username);
+		editor.commit();
+	}
 
-    public void setLastLoginServerUrl(String url) {
-        SharedPreferences.Editor editor = getOpenMRSSharedPreferences().edit();
-        editor.putString(ApplicationConstants.LAST_LOGIN_SERVER_URL, url);
-        editor.commit();
-    }
+	public String getPassword() {
+		SharedPreferences prefs = getOpenMRSSharedPreferences();
+		return prefs.getString(ApplicationConstants.UserKeys.PASSWORD, ApplicationConstants.EMPTY_STRING);
+	}
 
-    public void setSessionToken(String serverUrl) {
-        SharedPreferences.Editor editor = getOpenMRSSharedPreferences().edit();
-        editor.putString(ApplicationConstants.SESSION_TOKEN, serverUrl);
-        editor.commit();
-    }
+	public void setPassword(String password) {
+		SharedPreferences.Editor editor = getOpenMRSSharedPreferences().edit();
+		editor.putString(ApplicationConstants.UserKeys.PASSWORD, password);
+		editor.commit();
+	}
 
-    public void setAuthorizationToken(String authorization) {
-        SharedPreferences.Editor editor = getOpenMRSSharedPreferences().edit();
-        editor.putString(ApplicationConstants.AUTHORIZATION_TOKEN, authorization);
-        editor.commit();
-    }
+	public String getServerUrl() {
+		SharedPreferences prefs = getOpenMRSSharedPreferences();
+		return prefs.getString(ApplicationConstants.SERVER_URL, ApplicationConstants.DEFAULT_OPEN_MRS_URL);
+	}
 
-    public void setLocation(String location) {
-        SharedPreferences.Editor editor = getOpenMRSSharedPreferences().edit();
-        editor.putString(ApplicationConstants.LOCATION, location);
-        editor.commit();
-    }
+	public void setServerUrl(String serverUrl) {
+		SharedPreferences.Editor editor = getOpenMRSSharedPreferences().edit();
+		editor.putString(ApplicationConstants.SERVER_URL, serverUrl);
+		editor.commit();
+	}
 
-    public void setVisitTypeUUID(String visitTypeUUID) {
-        SharedPreferences.Editor editor = getOpenMRSSharedPreferences().edit();
-        editor.putString(ApplicationConstants.VISIT_TYPE_UUID, visitTypeUUID);
-        editor.commit();
-    }
+	public String getLastLoginServerUrl() {
+		SharedPreferences prefs = getOpenMRSSharedPreferences();
+		return prefs.getString(ApplicationConstants.LAST_LOGIN_SERVER_URL, ApplicationConstants.EMPTY_STRING);
+	}
 
-    public boolean isUserLoggedOnline() {
-        SharedPreferences prefs = getOpenMRSSharedPreferences();
-        return prefs.getBoolean(ApplicationConstants.UserKeys.LOGIN, false);
-    }
+	public void setLastLoginServerUrl(String url) {
+		SharedPreferences.Editor editor = getOpenMRSSharedPreferences().edit();
+		editor.putString(ApplicationConstants.LAST_LOGIN_SERVER_URL, url);
+		editor.commit();
+	}
 
-    public String getUsername() {
-        SharedPreferences prefs = getOpenMRSSharedPreferences();
-        return prefs.getString(ApplicationConstants.UserKeys.USER_NAME, ApplicationConstants.EMPTY_STRING);
-    }
+	public String getSessionToken() {
+		SharedPreferences prefs = getOpenMRSSharedPreferences();
+		return prefs.getString(ApplicationConstants.SESSION_TOKEN, ApplicationConstants.EMPTY_STRING);
+	}
 
-    public String getPassword() {
-        SharedPreferences prefs = getOpenMRSSharedPreferences();
-        return prefs.getString(ApplicationConstants.UserKeys.PASSWORD, ApplicationConstants.EMPTY_STRING);
-    }
+	public void setSessionToken(String serverUrl) {
+		SharedPreferences.Editor editor = getOpenMRSSharedPreferences().edit();
+		editor.putString(ApplicationConstants.SESSION_TOKEN, serverUrl);
+		editor.commit();
+	}
 
-    public String getServerUrl() {
-        SharedPreferences prefs = getOpenMRSSharedPreferences();
-        return prefs.getString(ApplicationConstants.SERVER_URL, ApplicationConstants.DEFAULT_OPEN_MRS_URL);
-    }
+	public String getLastSessionToken() {
+		SharedPreferences prefs = getOpenMRSSharedPreferences();
+		return prefs.getString(ApplicationConstants.LAST_SESSION_TOKEN, ApplicationConstants.EMPTY_STRING);
+	}
 
-    public String getLastLoginServerUrl() {
-        SharedPreferences prefs = getOpenMRSSharedPreferences();
-        return prefs.getString(ApplicationConstants.LAST_LOGIN_SERVER_URL, ApplicationConstants.EMPTY_STRING);
-    }
+	public String getAuthorizationToken() {
+		SharedPreferences prefs = getOpenMRSSharedPreferences();
+		return prefs.getString(ApplicationConstants.AUTHORIZATION_TOKEN, ApplicationConstants.EMPTY_STRING);
+	}
 
-    public String getSessionToken() {
-        SharedPreferences prefs = getOpenMRSSharedPreferences();
-        return prefs.getString(ApplicationConstants.SESSION_TOKEN, ApplicationConstants.EMPTY_STRING);
-    }
+	public void setAuthorizationToken(String authorization) {
+		SharedPreferences.Editor editor = getOpenMRSSharedPreferences().edit();
+		editor.putString(ApplicationConstants.AUTHORIZATION_TOKEN, authorization);
+		editor.commit();
+	}
 
-    public String getLastSessionToken() {
-        SharedPreferences prefs = getOpenMRSSharedPreferences();
-        return prefs.getString(ApplicationConstants.LAST_SESSION_TOKEN, ApplicationConstants.EMPTY_STRING);
-    }
+	public String getLocation() {
+		SharedPreferences prefs = getOpenMRSSharedPreferences();
+		return prefs.getString(ApplicationConstants.LOCATION, ApplicationConstants.EMPTY_STRING);
+	}
 
-    public String getAuthorizationToken() {
-        SharedPreferences prefs = getOpenMRSSharedPreferences();
-        return prefs.getString(ApplicationConstants.AUTHORIZATION_TOKEN, ApplicationConstants.EMPTY_STRING);
-    }
+	public void setLocation(String location) {
+		SharedPreferences.Editor editor = getOpenMRSSharedPreferences().edit();
+		editor.putString(ApplicationConstants.LOCATION, location);
+		editor.commit();
+	}
 
-    public String getLocation() {
-        SharedPreferences prefs = getOpenMRSSharedPreferences();
-        return prefs.getString(ApplicationConstants.LOCATION, ApplicationConstants.EMPTY_STRING);
-    }
+	public String getVisitTypeUUID() {
+		SharedPreferences prefs = getOpenMRSSharedPreferences();
+		return prefs.getString(ApplicationConstants.VISIT_TYPE_UUID, ApplicationConstants.EMPTY_STRING);
+	}
 
-    public String getVisitTypeUUID() {
-        SharedPreferences prefs = getOpenMRSSharedPreferences();
-        return prefs.getString(ApplicationConstants.VISIT_TYPE_UUID, ApplicationConstants.EMPTY_STRING);
-    }
+	public void setVisitTypeUUID(String visitTypeUUID) {
+		SharedPreferences.Editor editor = getOpenMRSSharedPreferences().edit();
+		editor.putString(ApplicationConstants.VISIT_TYPE_UUID, visitTypeUUID);
+		editor.commit();
+	}
 
-    private void generateKey() {
-        // create database key only if not exist
-        if (ApplicationConstants.EMPTY_STRING.equals(getSecretKey())) {
-            SharedPreferences.Editor editor = getOpenMRSSharedPreferences().edit();
-            String key = SecretKeyGenerator.generateKey();
-            editor.putString(ApplicationConstants.SECRET_KEY, key);
-            editor.commit();
-        }
-    }
+	private void generateKey() {
+		// create database key only if not exist
+		if (ApplicationConstants.EMPTY_STRING.equals(getSecretKey())) {
+			SharedPreferences.Editor editor = getOpenMRSSharedPreferences().edit();
+			String key = SecretKeyGenerator.generateKey();
+			editor.putString(ApplicationConstants.SECRET_KEY, key);
+			editor.commit();
+		}
+	}
 
-    public String getSecretKey() {
-        SharedPreferences prefs = getOpenMRSSharedPreferences();
-        return prefs.getString(ApplicationConstants.SECRET_KEY, ApplicationConstants.EMPTY_STRING);
-    }
+	public String getSecretKey() {
+		SharedPreferences prefs = getOpenMRSSharedPreferences();
+		return prefs.getString(ApplicationConstants.SECRET_KEY, ApplicationConstants.EMPTY_STRING);
+	}
 
-    public boolean getSyncState() {
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        return prefs.getBoolean("sync", true);
-    }
+	public boolean getSyncState() {
+		final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		return prefs.getBoolean("sync", true);
+	}
 
-    public void setSyncState(boolean enabled) {
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putBoolean("sync", enabled);
-        editor.apply();
-    }
+	public void setSyncState(boolean enabled) {
+		final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		SharedPreferences.Editor editor = prefs.edit();
+		editor.putBoolean("sync", enabled);
+		editor.apply();
+	}
 
-    public void setDefaultFormLoadID(String xFormName, String xFormID) {
-        SharedPreferences.Editor editor = getOpenMRSSharedPreferences().edit();
-        editor.putString(xFormName, xFormID);
-        editor.commit();
-    }
+	public void setDefaultFormLoadID(String xFormName, String xFormID) {
+		SharedPreferences.Editor editor = getOpenMRSSharedPreferences().edit();
+		editor.putString(xFormName, xFormID);
+		editor.commit();
+	}
 
-    public String getDefaultFormLoadID(String xFormName) {
-        SharedPreferences prefs = getOpenMRSSharedPreferences();
-        return prefs.getString(xFormName, ApplicationConstants.EMPTY_STRING);
-    }
+	public String getDefaultFormLoadID(String xFormName) {
+		SharedPreferences prefs = getOpenMRSSharedPreferences();
+		return prefs.getString(xFormName, ApplicationConstants.EMPTY_STRING);
+	}
 
-    public void setCurrentUserInformation(Map<String, String> userInformation) {
-        SharedPreferences.Editor editor = getOpenMRSSharedPreferences().edit();
-        for (Map.Entry<String, String> entry : userInformation.entrySet()) {
-            editor.putString(entry.getKey(), entry.getValue());
-        }
-        editor.commit();
-    }
+	public void setCurrentUserInformation(Map<String, String> userInformation) {
+		SharedPreferences.Editor editor = getOpenMRSSharedPreferences().edit();
+		for (Map.Entry<String, String> entry : userInformation.entrySet()) {
+			editor.putString(entry.getKey(), entry.getValue());
+		}
+		editor.commit();
+	}
 
-    public Map<String, String> getCurrentLoggedInUserInfo() {
-        SharedPreferences prefs = getOpenMRSSharedPreferences();
-        Map<String, String> infoMap = new HashMap<String, String>();
-        infoMap.put(ApplicationConstants.UserKeys.USER_PERSON_NAME, prefs.getString(ApplicationConstants.UserKeys.USER_PERSON_NAME, ApplicationConstants.EMPTY_STRING));
-        infoMap.put(ApplicationConstants.UserKeys.USER_UUID, prefs.getString(ApplicationConstants.UserKeys.USER_UUID, ApplicationConstants.EMPTY_STRING));
-        return infoMap;
-    }
+	public Map<String, String> getCurrentLoggedInUserInfo() {
+		SharedPreferences prefs = getOpenMRSSharedPreferences();
+		Map<String, String> infoMap = new HashMap<String, String>();
+		infoMap.put(ApplicationConstants.UserKeys.USER_PERSON_NAME,
+				prefs.getString(ApplicationConstants.UserKeys.USER_PERSON_NAME, ApplicationConstants.EMPTY_STRING));
+		infoMap.put(ApplicationConstants.UserKeys.USER_UUID,
+				prefs.getString(ApplicationConstants.UserKeys.USER_UUID, ApplicationConstants.EMPTY_STRING));
+		return infoMap;
+	}
 
-    private void clearCurrentLoggedInUserInfo() {
-        SharedPreferences prefs = OpenMRS.getInstance().getOpenMRSSharedPreferences();
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.remove(ApplicationConstants.UserKeys.USER_PERSON_NAME);
-        editor.remove(ApplicationConstants.UserKeys.USER_UUID);
-    }
+	private void clearCurrentLoggedInUserInfo() {
+		SharedPreferences prefs = OpenMRS.getInstance().getOpenMRSSharedPreferences();
+		SharedPreferences.Editor editor = prefs.edit();
+		editor.remove(ApplicationConstants.UserKeys.USER_PERSON_NAME);
+		editor.remove(ApplicationConstants.UserKeys.USER_UUID);
+	}
 
-    public OpenMRSLogger getOpenMRSLogger() {
-        return mLogger;
-    }
+	public OpenMRSLogger getOpenMRSLogger() {
+		return mLogger;
+	}
 
-    public String getOpenMRSDir() {
-        return mExternalDirectoryPath + OPENMRS_DIR_PATH;
-    }
+	public String getOpenMRSDir() {
+		return mExternalDirectoryPath + OPENMRS_DIR_PATH;
+	}
 
-    public boolean isRunningHoneycombVersionOrHigher() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
-    }
+	public boolean isRunningHoneycombVersionOrHigher() {
+		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
+	}
 
-    public boolean isRunningJellyBeanVersionOrHigher() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;
-    }
+	public boolean isRunningJellyBeanVersionOrHigher() {
+		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;
+	}
 
-    public boolean isRunningKitKatVersionOrHigher() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
-    }
+	public boolean isRunningKitKatVersionOrHigher() {
+		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+	}
 
-    private void initializeSQLCipher() {
-        SQLiteDatabase.loadLibs(this);
-    }
+	private void initializeSQLCipher() {
+		SQLiteDatabase.loadLibs(this);
+	}
 
-    public void clearUserPreferencesData() {
-        SharedPreferences prefs = OpenMRS.getInstance().getOpenMRSSharedPreferences();
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(ApplicationConstants.LAST_SESSION_TOKEN,
-                prefs.getString(ApplicationConstants.SESSION_TOKEN, ApplicationConstants.EMPTY_STRING));
-        editor.remove(ApplicationConstants.SESSION_TOKEN);
-        editor.remove(ApplicationConstants.AUTHORIZATION_TOKEN);
-        clearCurrentLoggedInUserInfo();
-        editor.commit();
-    }
+	public void clearUserPreferencesData() {
+		SharedPreferences prefs = OpenMRS.getInstance().getOpenMRSSharedPreferences();
+		SharedPreferences.Editor editor = prefs.edit();
+		editor.putString(ApplicationConstants.LAST_SESSION_TOKEN,
+				prefs.getString(ApplicationConstants.SESSION_TOKEN, ApplicationConstants.EMPTY_STRING));
+		editor.remove(ApplicationConstants.SESSION_TOKEN);
+		editor.remove(ApplicationConstants.AUTHORIZATION_TOKEN);
+		clearCurrentLoggedInUserInfo();
+		editor.commit();
+	}
 }

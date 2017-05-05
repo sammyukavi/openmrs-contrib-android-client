@@ -35,14 +35,14 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 public class PatientService extends IntentService {
-	
+
 	public static final String PATIENT_SERVICE_TAG = "PATIENT_SERVICE";
 	private boolean calculatedLocally = false;
-	
+
 	public PatientService() {
 		super("Register Patients");
 	}
-	
+
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		if (NetworkUtils.isOnline()) {
@@ -62,10 +62,10 @@ public class PatientService extends IntentService {
 			}
 		} else {
 			ToastUtil.error("No internet connection. Patient Registration data is saved locally " +
-			                "and will sync when internet connection is restored. ");
+					"and will sync when internet connection is restored. ");
 		}
 	}
-	
+
 	private void fetchSimilarPatients(final Patient patient, final PatientAndMatchesWrapper patientAndMatchesWrapper) {
 		RestApi restApi = RestServiceBuilder.createService(RestApi.class);
 		Call<Results<Module>> moduleCall = restApi.getModules(ApplicationConstants.API.FULL);
@@ -84,11 +84,13 @@ public class PatientService extends IntentService {
 			Log.e(PATIENT_SERVICE_TAG, e.getMessage());
 		}
 	}
-	
-	private void fetchPatientsAndCalculateLocally(Patient patient, PatientAndMatchesWrapper patientAndMatchesWrapper) throws IOException {
+
+	private void fetchPatientsAndCalculateLocally(Patient patient, PatientAndMatchesWrapper patientAndMatchesWrapper)
+			throws IOException {
 		calculatedLocally = true;
 		RestApi restApi = RestServiceBuilder.createService(RestApi.class);
-		Call<Results<Patient>> patientCall = restApi.getPatients(patient.getPerson().getName().getGivenName(), ApplicationConstants.API.FULL);
+		Call<Results<Patient>> patientCall =
+				restApi.getPatients(patient.getPerson().getName().getGivenName(), ApplicationConstants.API.FULL);
 		Response<Results<Patient>> resp = patientCall.execute();
 		if (resp.isSuccessful()) {
 			List<Patient> similarPatient = new PatientComparator().findSimilarPatient(resp.body().getResults(), patient);
@@ -99,8 +101,9 @@ public class PatientService extends IntentService {
 			}
 		}
 	}
-	
-	private void fetchSimilarPatientsFromServer(Patient patient, PatientAndMatchesWrapper patientAndMatchesWrapper) throws IOException {
+
+	private void fetchSimilarPatientsFromServer(Patient patient, PatientAndMatchesWrapper patientAndMatchesWrapper)
+			throws IOException {
 		calculatedLocally = false;
 		RestApi restApi = RestServiceBuilder.createService(RestApi.class);
 		Call<Results<Patient>> patientCall = restApi.getSimilarPatients(patient.toMap());
@@ -114,5 +117,5 @@ public class PatientService extends IntentService {
 			}
 		}
 	}
-	
+
 }

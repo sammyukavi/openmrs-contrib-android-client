@@ -23,10 +23,6 @@ import org.openmrs.mobile.utilities.ApplicationConstants;
 
 import retrofit2.Call;
 
-/**
- * Created by dubdabasoduba on 26/04/2017.
- */
-
 public class ConceptDataService extends BaseDataService<Concept, ConceptRestService> {
 	@Override
 	protected Class<ConceptRestService> getRestServiceClass() {

@@ -27,7 +27,6 @@ public class Privilege extends BaseOpenmrsMetadata {
 	@SerializedName("privilege")
 	private String privilege;
 
-
 	public String getPrivilege() {
 		return privilege;
 	}

@@ -15,7 +15,6 @@ import com.google.gson.annotations.SerializedName;
 
 public class PersonAttributeType extends BaseOpenmrsMetadata {
 
-
 	@Expose
 	@SerializedName("concept")
 	private Concept concept;
@@ -39,7 +38,6 @@ public class PersonAttributeType extends BaseOpenmrsMetadata {
 	@Expose
 	@SerializedName("editPrivilege")
 	private Privilege editPrivilege;
-
 
 	public Concept getConcept() {
 		return concept;
@@ -118,7 +116,6 @@ public class PersonAttributeType extends BaseOpenmrsMetadata {
 
 	/**
 	 * The privilege required in order to edit this attribute
-	 *
 	 * @return Returns the required privilege
 	 * @since 1.5
 	 */
@@ -129,7 +126,6 @@ public class PersonAttributeType extends BaseOpenmrsMetadata {
 	/**
 	 * The privilege required in order to edit this attribute If <code>editPrivilege</code> is null,
 	 * no extra permissions are required to edit this type
-	 *
 	 * @param editPrivilege
 	 * @since 1.5
 	 */

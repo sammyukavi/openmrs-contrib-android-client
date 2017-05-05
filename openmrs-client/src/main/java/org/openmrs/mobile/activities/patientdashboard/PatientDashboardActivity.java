@@ -2,11 +2,10 @@ package org.openmrs.mobile.activities.patientdashboard;
 
 import org.openmrs.mobile.activities.ACBaseActivity;
 
-
 public class PatientDashboardActivity extends ACBaseActivity {
 
    /* private FloatingActionMenu floatingActionMenu;
-    private FragmentManager fragmentManager;
+	private FragmentManager fragmentManager;
     private Patient patient;
     private String patientId;
 
@@ -56,7 +55,8 @@ public class PatientDashboardActivity extends ACBaseActivity {
             family_name.setText(patient.family_name);
             age.setText(String.valueOf(patient.age));
             id.setText(patient.id);
-            gender.setImageResource(String.valueOf(patient.gender).toLowerCase().equals("m") ? R.drawable.ic_male : R.drawable.ic_female);
+            gender.setImageResource(String.valueOf(patient.gender).toLowerCase().equals("m") ? R.drawable.ic_male : R
+            .drawable.ic_female);
             if (patient.active_visit == 1) {
                 active_visit.setVisibility(View.VISIBLE);
                 visitTasks.setVisibility(View.VISIBLE);
@@ -85,6 +85,5 @@ public class PatientDashboardActivity extends ACBaseActivity {
             e.printStackTrace();
         }
     }*/
-	
-	
+
 }

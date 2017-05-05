@@ -15,5 +15,5 @@
 package org.openmrs.mobile.models;
 
 public class ConceptClass extends Resource {
-	
+
 }

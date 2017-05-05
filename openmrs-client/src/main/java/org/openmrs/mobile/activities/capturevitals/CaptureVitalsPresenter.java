@@ -18,16 +18,16 @@ import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.application.OpenMRS;
 
 public class CaptureVitalsPresenter extends BasePresenter implements CaptureVitalsContract.Presenter {
-	
+
 	private CaptureVitalsContract.View findPatientView;
-	
+
 	public CaptureVitalsPresenter(CaptureVitalsContract.View view, OpenMRS openMRS) {
 		this.findPatientView = view;
 		this.findPatientView.setPresenter(this);
 	}
-	
+
 	@Override
 	public void subscribe() {
-		
+
 	}
 }

@@ -14,7 +14,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class PatientIdentifier extends BaseOpenmrsData {
-	
+
 	@SerializedName("identifierType")
 	@Expose
 	private PatientIdentifierType identifierType;
@@ -24,48 +24,47 @@ public class PatientIdentifier extends BaseOpenmrsData {
 	@SerializedName("location")
 	@Expose
 	private Location location;
-	
-	
+
 	/**
 	 * @return The identifierType
 	 */
 	public PatientIdentifierType getIdentifierType() {
 		return identifierType;
 	}
-	
+
 	/**
 	 * @param identifierType The identifierType
 	 */
 	public void setIdentifierType(PatientIdentifierType identifierType) {
 		this.identifierType = identifierType;
 	}
-	
+
 	/**
 	 * @return The identifier
 	 */
 	public String getIdentifier() {
 		return identifier;
 	}
-	
+
 	/**
 	 * @param identifier The identifier
 	 */
 	public void setIdentifier(String identifier) {
 		this.identifier = identifier;
 	}
-	
+
 	/**
 	 * @return The location
 	 */
 	public Location getLocation() {
 		return location;
 	}
-	
+
 	/**
 	 * @param location The location
 	 */
 	public void setLocation(Location location) {
 		this.location = location;
 	}
-	
+
 }

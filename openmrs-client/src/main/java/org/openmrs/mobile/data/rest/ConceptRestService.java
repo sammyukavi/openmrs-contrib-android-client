@@ -15,7 +15,6 @@
 package org.openmrs.mobile.data.rest;
 
 import org.openmrs.mobile.models.Concept;
-import org.openmrs.mobile.models.Patient;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

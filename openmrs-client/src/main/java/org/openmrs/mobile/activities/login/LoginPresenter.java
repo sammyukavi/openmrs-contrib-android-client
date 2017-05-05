@@ -45,7 +45,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class LoginPresenter extends BasePresenter implements LoginContract.Presenter {
-	
+
 	private RestApi restApi;
 	private VisitApi visitApi;
 	private UserService userService;
@@ -55,7 +55,7 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 	private AuthorizationManager authorizationManager;
 	private LocationDAO locationDAO;
 	private boolean mWipeRequired;
-	
+
 	public LoginPresenter(LoginContract.View loginView, OpenMRS openMRS) {
 		this.loginView = loginView;
 		this.mOpenMRS = openMRS;
@@ -67,10 +67,10 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 		this.visitApi = new VisitApi();
 		this.userService = new UserService();
 	}
-	
+
 	public LoginPresenter(RestApi restApi, VisitApi visitApi, LocationDAO locationDAO,
-	                      UserService userService, LoginContract.View loginView, OpenMRS mOpenMRS,
-	                      OpenMRSLogger mLogger, AuthorizationManager authorizationManager) {
+			UserService userService, LoginContract.View loginView, OpenMRS mOpenMRS,
+			OpenMRSLogger mLogger, AuthorizationManager authorizationManager) {
 		this.restApi = restApi;
 		this.visitApi = visitApi;
 		this.locationDAO = locationDAO;
@@ -81,35 +81,36 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 		this.authorizationManager = authorizationManager;
 		this.loginView.setPresenter(this);
 	}
-	
+
 	@Override
 	public void subscribe() {
 		// This method is intentionally empty
 	}
-	
+
 	@Override
 	public void login(String username, String password, String url, String oldUrl) {
 		if (validateLoginFields(username, password, url)) {
 			loginView.hideSoftKeys();
 			if ((!mOpenMRS.getUsername().equals(ApplicationConstants.EMPTY_STRING) &&
-			     !mOpenMRS.getUsername().equals(username)) ||
-			    ((!mOpenMRS.getServerUrl().equals(ApplicationConstants.EMPTY_STRING) &&
-			      !mOpenMRS.getServerUrl().equals(oldUrl))) ||
-			    mWipeRequired) {
+					!mOpenMRS.getUsername().equals(username)) ||
+					((!mOpenMRS.getServerUrl().equals(ApplicationConstants.EMPTY_STRING) &&
+							!mOpenMRS.getServerUrl().equals(oldUrl))) ||
+					mWipeRequired) {
 				loginView.showWarningDialog();
 			} else {
 				authenticateUser(username, password, url);
 			}
 		}
 	}
-	
+
 	@Override
 	public void authenticateUser(final String username, final String password, final String url) {
 		authenticateUser(username, password, url, mWipeRequired);
 	}
-	
+
 	@Override
-	public void authenticateUser(final String username, final String password, final String url, final boolean wipeDatabase) {
+	public void authenticateUser(final String username, final String password, final String url,
+			final boolean wipeDatabase) {
 		loginView.showLoadingAnimation();
 		if (NetworkUtils.isOnline()) {
 			mWipeRequired = wipeDatabase;
@@ -132,18 +133,18 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 							} else {
 								mOpenMRS.setSessionToken(session.getSessionId());
 							}
-							
+
 							visitApi.getVisitType(new GetVisitTypeCallbackListener() {
 								@Override
 								public void onGetVisitTypeResponse(VisitType visitType) {
 									OpenMRS.getInstance().setVisitTypeUUID(visitType.getUuid());
 								}
-								
+
 								@Override
 								public void onResponse() {
 									// This method is intentionally empty
 								}
-								
+
 								@Override
 								public void onErrorResponse(String errorMessage) {
 									loginView.showToast("Failed to fetch visit type",
@@ -152,7 +153,7 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 							});
 							setLogin(true, url);
 							userService.updateUserInformation(username);
-							
+
 							loginView.userAuthenticated();
 							loginView.finishLoginActivity();
 						} else {
@@ -164,7 +165,7 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 						loginView.showToast(response.message(), ToastUtil.ToastType.ERROR);
 					}
 				}
-				
+
 				@Override
 				public void onFailure(Call<Session> call, Throwable t) {
 					loginView.hideLoadingAnimation();
@@ -194,8 +195,7 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 			}
 		}
 	}
-	
-	
+
 	@Override
 	public void saveLocationsToDatabase(List<Location> locationList, String selectedLocation) {
 		mOpenMRS.setLocation(selectedLocation);
@@ -206,11 +206,11 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 					.subscribe();
 		}
 	}
-	
+
 	@Override
 	public void loadLocations(final String url) {
 		loginView.showLocationLoadingAnimation();
-		
+
 		if (NetworkUtils.hasNetwork()) {
 			String locationEndPoint = url + ApplicationConstants.API.REST_ENDPOINT_V1 + "location";
 			Call<Results<Location>> call =
@@ -231,7 +231,7 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 					}
 					loginView.hideUrlLoadingAnimation();
 				}
-				
+
 				@Override
 				public void onFailure(Call<Results<Location>> call, Throwable t) {
 					loginView.hideUrlLoadingAnimation();
@@ -254,20 +254,20 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 						loginView.hideLoadingAnimation();
 					}));
 		}
-		
+
 	}
-	
+
 	private boolean validateLoginFields(String username, String password, String url) {
 		return StringUtils.notEmpty(username) || StringUtils.notEmpty(password) || StringUtils.notEmpty(url);
 	}
-	
+
 	private void setData(String sessionToken, String url, String username, String password) {
 		mOpenMRS.setSessionToken(sessionToken);
 		mOpenMRS.setServerUrl(url);
 		mOpenMRS.setUsername(username);
 		mOpenMRS.setPassword(password);
 	}
-	
+
 	private void setLogin(boolean isLogin, String serverUrl) {
 		mOpenMRS.setUserLoggedOnline(isLogin);
 		mOpenMRS.setLastLoginServerUrl(serverUrl);

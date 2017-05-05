@@ -22,7 +22,7 @@ import java.util.List;
 
 @Table(name = "encountertype")
 public class EncounterType extends Model implements Serializable {
-	
+
 	public static final String VITALS = "Vitals";
 	public static final String VISIT_NOTE = "Visit Note";
 	public static final String DISCHARGE = "Discharge";
@@ -39,54 +39,54 @@ public class EncounterType extends Model implements Serializable {
 	@SerializedName("links")
 	@Expose
 	private List<Link> links = new ArrayList<Link>();
-	
-	public EncounterType() {}
-	
+
+	public EncounterType() {
+	}
+
 	public EncounterType(String display) {
 		this.setDisplay(display);
 	}
-	
+
 	/**
 	 * @return The uuid
 	 */
 	public String getUuid() {
 		return uuid;
 	}
-	
+
 	/**
 	 * @param uuid The uuid
 	 */
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
 	}
-	
+
 	/**
 	 * @return The display
 	 */
 	public String getDisplay() {
 		return display;
 	}
-	
+
 	/**
 	 * @param display The display
 	 */
 	public void setDisplay(String display) {
 		this.display = display;
 	}
-	
+
 	/**
 	 * @return The links
 	 */
 	public List<Link> getLinks() {
 		return links;
 	}
-	
+
 	/**
 	 * @param links The links
 	 */
 	public void setLinks(List<Link> links) {
 		this.links = links;
 	}
-	
-	
+
 }

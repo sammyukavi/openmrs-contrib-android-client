@@ -74,9 +74,9 @@ class FindPatientRecyclerViewAdapter extends RecyclerView.Adapter<FindPatientRec
 			holder.mGender.setText("");
 		}
 
-		try{
+		try {
 			holder.dateAdded.setText(patient.getDateCreated().toString());
-		}catch (Exception e) {
+		} catch (Exception e) {
 			holder.dateAdded.setText("");
 		}
 

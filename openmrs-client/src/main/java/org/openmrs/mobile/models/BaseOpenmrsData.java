@@ -19,7 +19,6 @@ import com.google.gson.annotations.Expose;
 import java.io.Serializable;
 import java.util.Date;
 
-
 public class BaseOpenmrsData extends BaseOpenmrsAuditableObject implements Serializable {
 	@Expose
 	private Boolean voided = Boolean.FALSE;

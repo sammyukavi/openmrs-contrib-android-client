@@ -27,11 +27,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LocationApi extends RetrofitApi {
-	
-	
+
 	public SimplePromise<Location> getLocationUuid() {
 		final SimpleDeferredObject<Location> deferred = new SimpleDeferredObject<>();
-		
+
 		RestApi apiService =
 				RestServiceBuilder.createService(RestApi.class);
 		Call<Results<Location>> call = apiService.getLocations(null);
@@ -45,15 +44,15 @@ public class LocationApi extends RetrofitApi {
 					}
 				}
 			}
-			
+
 			@Override
 			public void onFailure(Call<Results<Location>> call, Throwable t) {
 				ToastUtil.notify(t.toString());
 				deferred.reject(t);
 			}
-			
+
 		});
-		
+
 		return deferred.promise();
 	}
 }

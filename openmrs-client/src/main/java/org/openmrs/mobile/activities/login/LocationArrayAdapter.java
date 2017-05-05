@@ -23,17 +23,17 @@ import android.widget.TextView;
 import java.util.List;
 
 public class LocationArrayAdapter extends ArrayAdapter<String> {
-	
+
 	public LocationArrayAdapter(Context context, List<String> objects) {
 		super(context, android.R.layout.simple_spinner_item, objects);
 		setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 	}
-	
+
 	@Override
 	public int getCount() {
 		return super.getCount();
 	}
-	
+
 	@Override
 	public View getDropDownView(int position, View convertView, ViewGroup parent) {
 		View v;
@@ -48,7 +48,7 @@ public class LocationArrayAdapter extends ArrayAdapter<String> {
 		parent.setVerticalScrollBarEnabled(false);
 		return v;
 	}
-	
+
 	@Override
 	public long getItemId(int position) {
 		return position;

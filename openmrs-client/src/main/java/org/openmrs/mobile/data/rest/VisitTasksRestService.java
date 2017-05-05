@@ -14,7 +14,6 @@
 
 package org.openmrs.mobile.data.rest;
 
-import org.openmrs.mobile.models.VisitTasks;
 import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.models.VisitTasks;
 
@@ -46,12 +45,35 @@ public interface VisitTasksRestService {
 	@GET(RestConstants.REST_PATH)
 	Call<Results<VisitTasks>> getByName(@Path(value = "restPath", encoded = true) String restPath,
 			@Query("v") String representation,
-			@Query("q") String name);
+			@Query("status") String status,
+			@Query("q") String name,
+			@Query("patient") String patientUuid,
+			@Query("visit") String visitUuid
+	);
 
 	@GET(RestConstants.REST_PATH)
 	Call<Results<VisitTasks>> getByName(@Path(value = "restPath", encoded = true) String restPath,
 			@Query("v") String representation,
+			@Query("status") String status,
 			@Query("q") String name,
+			@Query("patient") String patientUuid,
+			@Query("visit") String visitUuid,
+			@Query("limit") int limit,
+			@Query("startIndex") int startIndex);
+
+	@GET(RestConstants.GET_ALL)
+	Call<Results<VisitTasks>> getAll(@Path(value = "restPath", encoded = true) String restPath,
+			@Query("v") String representation,
+			@Query("status") String status,
+			@Query("patient") String patientUuid,
+			@Query("visit") String visitUuid);
+
+	@GET(RestConstants.GET_ALL)
+	Call<Results<VisitTasks>> getAll(@Path(value = "restPath", encoded = true) String restPath,
+			@Query("v") String representation,
+			@Query("status") String status,
+			@Query("patient") String patientUuid,
+			@Query("visit") String visitUuid,
 			@Query("limit") int limit,
 			@Query("startIndex") int startIndex);
 }

@@ -21,7 +21,7 @@ import android.content.Intent;
 //import org.openmrs.mobile.activities.dialog.DialogActivity;
 
 public class OpenMRSBroadcastReceiver extends BroadcastReceiver {
-	
+
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		//Intent i = new Intent(context, DialogActivity.class);

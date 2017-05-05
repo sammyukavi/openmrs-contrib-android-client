@@ -32,34 +32,34 @@ public final class DateUtils {
 	public static final String OPEN_MRS_REQUEST_PATIENT_FORMAT = "yyyy-MM-dd";
 	public static final Long ZERO = 0L;
 	private static final String OPEN_MRS_RESPONSE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
-	
+
 	private DateUtils() {
-		
+
 	}
-	
+
 	public static String convertTime(long time, String dateFormat, TimeZone timeZone) {
 		Date date = new Date(time);
 		SimpleDateFormat format = new SimpleDateFormat(dateFormat);
 		format.setTimeZone(timeZone);
 		return format.format(date);
 	}
-	
+
 	public static String convertTime(long time, String dateFormat) {
 		return convertTime(time, dateFormat, TimeZone.getDefault());
 	}
-	
+
 	public static String convertTime(long timestamp, TimeZone timeZone) {
 		return convertTime(timestamp, DEFAULT_DATE_FORMAT, timeZone);
 	}
-	
+
 	public static String convertTime(long timestamp) {
 		return convertTime(timestamp, DEFAULT_DATE_FORMAT, TimeZone.getDefault());
 	}
-	
+
 	public static Long convertTime(String dateAsString) {
 		return convertTime(dateAsString, OPEN_MRS_RESPONSE_FORMAT);
 	}
-	
+
 	public static Long convertTime(String dateAsString, String dateFormat) {
 		Long time = null;
 		if (StringUtils.notNull(dateAsString)) {
@@ -80,7 +80,7 @@ public final class DateUtils {
 		}
 		return time;
 	}
-	
+
 	private static Date parseString(String dateAsString, DateFormat format) throws ParseException {
 		Date formattedDate = null;
 		try {
@@ -91,7 +91,7 @@ public final class DateUtils {
 		}
 		return formattedDate;
 	}
-	
+
 	public static DateTime convertTimeString(String dateAsString) {
 		DateTime date = null;
 		if (StringUtils.notNull(dateAsString)) {
@@ -100,12 +100,12 @@ public final class DateUtils {
 		}
 		return date;
 	}
-	
+
 	public static String convertTime1(String dateAsString, String dateFormat) {
 		if (StringUtils.notNull(dateAsString) && StringUtils.notEmpty(dateAsString)) {
 			return convertTime(convertTime(dateAsString), dateFormat, TimeZone.getDefault());
 		}
 		return dateAsString;
 	}
-	
+
 }

@@ -17,7 +17,6 @@ package org.openmrs.mobile.activities.addeditpatient;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 
 import org.openmrs.mobile.R;
@@ -28,9 +27,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public class AddEditPatientActivity extends ACBaseActivity {
-	
+
 	public AddEditPatientContract.Presenter mPresenter;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -39,7 +38,7 @@ public class AddEditPatientActivity extends ACBaseActivity {
 
 		// Create fragment
 		AddEditPatientFragment addEditPatientFragment =
-				(AddEditPatientFragment) getSupportFragmentManager().findFragmentById(R.id.patientInfoContentFrame);
+				(AddEditPatientFragment)getSupportFragmentManager().findFragmentById(R.id.patientInfoContentFrame);
 		if (addEditPatientFragment == null) {
 			addEditPatientFragment = AddEditPatientFragment.newInstance();
 		}
@@ -47,7 +46,7 @@ public class AddEditPatientActivity extends ACBaseActivity {
 			addFragmentToActivity(getSupportFragmentManager(),
 					addEditPatientFragment, R.id.patientInfoContentFrame);
 		}
-		
+
 		//Check if bundle includes patient ID
 		Bundle patientBundle = savedInstanceState;
 		if (patientBundle != null) {
@@ -59,19 +58,19 @@ public class AddEditPatientActivity extends ACBaseActivity {
 		if (patientBundle != null) {
 			patientID = patientBundle.getString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
 		}
-		
+
 		List<String> counties = Arrays.asList(getResources().getStringArray(R.array.countiesArray));
 		// Create the findPatientPresenter
 		mPresenter = new AddEditPatientPresenter(addEditPatientFragment, counties, patientID);
 
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		return true;
 	}
-	
+
 	@Override
 	public void onBackPressed() {
 		if (drawer.isDrawerOpen(GravityCompat.START)) {

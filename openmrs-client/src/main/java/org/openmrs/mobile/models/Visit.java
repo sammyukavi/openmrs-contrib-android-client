@@ -17,90 +17,91 @@ package org.openmrs.mobile.models;
 import com.google.gson.annotations.Expose;
 
 import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Transient;
+
 import java.util.List;
-import org.greenrobot.greendao.annotation.Generated;
 
 @Entity
 public class Visit extends BaseOpenmrsEntity {
-    @Id
-    private Long id;
+	@Id
+	private Long id;
 
-    @Transient
-    @Expose
-    private VisitType visitType;
+	@Transient
+	@Expose
+	private VisitType visitType;
 
-    @Transient
-    @Expose
-    private Location location;
+	@Transient
+	@Expose
+	private Location location;
 
-    @Expose
-    private String startDatetime;
+	@Expose
+	private String startDatetime;
 
-    @Expose
-    private String stopDatetime;
+	@Expose
+	private String stopDatetime;
 
-    @Transient
-    @Expose
-    private List<Encounter> encounters;
+	@Transient
+	@Expose
+	private List<Encounter> encounters;
 
-    @Generated(hash = 284896357)
-    public Visit(Long id, String startDatetime, String stopDatetime) {
-        this.id = id;
-        this.startDatetime = startDatetime;
-        this.stopDatetime = stopDatetime;
-    }
+	@Generated(hash = 284896357)
+	public Visit(Long id, String startDatetime, String stopDatetime) {
+		this.id = id;
+		this.startDatetime = startDatetime;
+		this.stopDatetime = stopDatetime;
+	}
 
-    @Generated(hash = 808752442)
-    public Visit() {
-    }
+	@Generated(hash = 808752442)
+	public Visit() {
+	}
 
-    public Long getId() {
-        return id;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public VisitType getVisitType() {
-        return visitType;
-    }
+	public VisitType getVisitType() {
+		return visitType;
+	}
 
-    public void setVisitType(VisitType visitType) {
-        this.visitType = visitType;
-    }
+	public void setVisitType(VisitType visitType) {
+		this.visitType = visitType;
+	}
 
-    public Location getLocation() {
-        return location;
-    }
+	public Location getLocation() {
+		return location;
+	}
 
-    public void setLocation(Location location) {
-        this.location = location;
-    }
+	public void setLocation(Location location) {
+		this.location = location;
+	}
 
-    public String getStartDatetime() {
-        return startDatetime;
-    }
+	public String getStartDatetime() {
+		return startDatetime;
+	}
 
-    public void setStartDatetime(String startDatetime) {
-        this.startDatetime = startDatetime;
-    }
+	public void setStartDatetime(String startDatetime) {
+		this.startDatetime = startDatetime;
+	}
 
-    public String getStopDatetime() {
-        return stopDatetime;
-    }
+	public String getStopDatetime() {
+		return stopDatetime;
+	}
 
-    public void setStopDatetime(String stopDatetime) {
-        this.stopDatetime = stopDatetime;
-    }
+	public void setStopDatetime(String stopDatetime) {
+		this.stopDatetime = stopDatetime;
+	}
 
-    public List<Encounter> getEncounters() {
-        return encounters;
-    }
+	public List<Encounter> getEncounters() {
+		return encounters;
+	}
 
-    public void setEncounters(List<Encounter> encounters) {
-        this.encounters = encounters;
-    }
+	public void setEncounters(List<Encounter> encounters) {
+		this.encounters = encounters;
+	}
 }

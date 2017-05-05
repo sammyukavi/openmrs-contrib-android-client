@@ -26,28 +26,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ObservationDAO {
-	
+
 	public void saveObservation(Observation observation, long encounterID) {
 		observation.setEncounterID(encounterID);
 		new ObservationTable().insert(observation);
 	}
-	
+
 	public boolean updateObservation(long observationID, Observation observation, long encounterID) {
 		observation.setEncounterID(encounterID);
 		return new ObservationTable().update(observationID, observation) > 0;
 	}
-	
+
 	public void deleteObservation(long observationID) {
 		new ObservationTable().delete(observationID);
 	}
-	
+
 	public List<Observation> findObservationByEncounterID(Long encounterID) {
 		DBOpenHelper helper = OpenMRSDBOpenHelper.getInstance().getDBOpenHelper();
 		List<Observation> observationList = new ArrayList<Observation>();
-		
+
 		String where = String.format("%s = ?", ObservationTable.Column.ENCOUNTER_KEY_ID);
-		String[] whereArgs = new String[]{encounterID.toString()};
-		final Cursor cursor = helper.getReadableDatabase().query(ObservationTable.TABLE_NAME, null, where, whereArgs, null, null, null);
+		String[] whereArgs = new String[] { encounterID.toString() };
+		final Cursor cursor =
+				helper.getReadableDatabase().query(ObservationTable.TABLE_NAME, null, where, whereArgs, null, null, null);
 		if (null != cursor) {
 			try {
 				while (cursor.moveToNext()) {
@@ -94,14 +95,15 @@ public class ObservationDAO {
 		}
 		return observationList;
 	}
-	
+
 	public Observation getObservationByUUID(final String observationUUID) {
 		DBOpenHelper helper = OpenMRSDBOpenHelper.getInstance().getDBOpenHelper();
-		
+
 		String where = String.format("%s = ?", ObservationTable.Column.UUID);
-		String[] whereArgs = new String[]{observationUUID};
+		String[] whereArgs = new String[] { observationUUID };
 		Observation obs = new Observation();
-		final Cursor cursor = helper.getReadableDatabase().query(ObservationTable.TABLE_NAME, null, where, whereArgs, null, null, null);
+		final Cursor cursor =
+				helper.getReadableDatabase().query(ObservationTable.TABLE_NAME, null, where, whereArgs, null, null, null);
 		if (null != cursor) {
 			try {
 				if (cursor.moveToFirst()) {

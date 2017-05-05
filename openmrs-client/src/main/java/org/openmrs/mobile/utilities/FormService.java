@@ -10,7 +10,6 @@
 
 package org.openmrs.mobile.utilities;
 
-
 import com.activeandroid.query.Select;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -22,18 +21,18 @@ import java.lang.reflect.Modifier;
 import java.util.List;
 
 public class FormService {
-	
+
 	public static Form getForm(String valueReference) {
 		String unescapedValueReference = StringUtils.unescapeJavaString(valueReference);
-		
+
 		GsonBuilder builder = new GsonBuilder();
 		builder.excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC);
 		builder.excludeFieldsWithoutExposeAnnotation();
 		Gson gson = builder.create();
-		
+
 		return gson.fromJson(unescapedValueReference, Form.class);
 	}
-	
+
 	public static Form getFormByUuid(String uuid) {
 		if (!StringUtils.isBlank(uuid)) {
 			FormResource formResource = new Select()
@@ -55,18 +54,18 @@ public class FormService {
 		}
 		return null;
 	}
-	
+
 	public static FormResource getFormResourceByName(String name) {
 		return new Select()
 				.from(FormResource.class)
 				.where("name = ?", name)
 				.executeSingle();
 	}
-	
+
 	public static List<FormResource> getFormResourceList() {
 		return new Select()
 				.from(FormResource.class)
 				.execute();
 	}
-	
+
 }

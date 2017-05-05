@@ -50,7 +50,7 @@ public class DBOpenHelper extends OpenMRSSQLiteOpenHelper {
 	private EncounterTable mEncounterTable;
 	private ObservationTable mObservationTable;
 	private LocationTable mLocationTable;
-	
+
 	public DBOpenHelper(Context context) {
 		super(context, null, DATABASE_VERSION);
 		this.mPatientTable = new PatientTable();
@@ -59,16 +59,16 @@ public class DBOpenHelper extends OpenMRSSQLiteOpenHelper {
 		this.mObservationTable = new ObservationTable();
 		this.mLocationTable = new LocationTable();
 	}
-	
+
 	public static <T> Observable<T> createObservableIO(final Callable<T> func) {
 		return Observable.fromCallable(func)
 				.subscribeOn(Schedulers.io());
 	}
-	
+
 	@Override
 	public void onCreate(SQLiteDatabase sqLiteDatabase) {
 		mLogger.d("Database creating...");
-		
+
 		sqLiteDatabase.execSQL(mPatientTable.createTableDefinition());
 		logOnCreate(mPatientTable.toString());
 		sqLiteDatabase.execSQL(mVisitTable.createTableDefinition());
@@ -80,11 +80,11 @@ public class DBOpenHelper extends OpenMRSSQLiteOpenHelper {
 		sqLiteDatabase.execSQL(mLocationTable.createTableDefinition());
 		logOnCreate(mLocationTable.toString());
 	}
-	
+
 	@Override
 	public void onUpgrade(SQLiteDatabase sqLiteDatabase, int currentVersion, int newVersion) {
 		mLogger.w("Upgrading database from version " + currentVersion + " to "
-		          + newVersion + ", which will destroy all old data");
+				+ newVersion + ", which will destroy all old data");
 		sqLiteDatabase.execSQL(mPatientTable.dropTableDefinition());
 		sqLiteDatabase.execSQL(mVisitTable.dropTableDefinition());
 		sqLiteDatabase.execSQL(mEncounterTable.dropTableDefinition());
@@ -92,31 +92,31 @@ public class DBOpenHelper extends OpenMRSSQLiteOpenHelper {
 		sqLiteDatabase.execSQL(mLocationTable.dropTableDefinition());
 		onCreate(sqLiteDatabase);
 	}
-	
+
 	private void logOnCreate(String tableToString) {
 		mLogger.d("Table " + tableToString + " ver." + DATABASE_VERSION + " created");
 	}
-	
+
 	public long insertPatient(SQLiteDatabase db, Patient patient) {
 		long patientId;
-		
+
 		SQLiteStatement patientStatement = db.compileStatement(mPatientTable.insertIntoTableDefinition());
-		
+
 		try {
 			db.beginTransaction();
 			bindString(1, patient.getPerson().getName().getNameString(), patientStatement);
 			bindString(2, Boolean.toString(patient.isSynced()), patientStatement);
-			
+
 			if (patient.getUuid() != null)
 				bindString(3, patient.getUuid(), patientStatement);
 			else
 				bindString(3, null, patientStatement);
-			
+
 			if (patient.getIdentifier() != null)
 				bindString(4, patient.getIdentifier().getIdentifier(), patientStatement);
 			else
 				bindString(4, null, patientStatement);
-			
+
 			bindString(5, patient.getPerson().getName().getGivenName(), patientStatement);
 			bindString(6, patient.getPerson().getName().getMiddleName(), patientStatement);
 			bindString(7, patient.getPerson().getName().getFamilyName(), patientStatement);
@@ -145,55 +145,55 @@ public class DBOpenHelper extends OpenMRSSQLiteOpenHelper {
 			db.endTransaction();
 			patientStatement.close();
 		}
-		
+
 		patient.setId(patientId);
-		
+
 		return patientId;
 	}
-	
+
 	public int updatePatient(SQLiteDatabase db, long patientID, Patient patient) {
 		ContentValues newValues = new ContentValues();
 		newValues.put(PatientTable.Column.UUID, patient.getUuid());
 		newValues.put(PatientTable.Column.SYNCED, patient.isSynced());
 		newValues.put(PatientTable.Column.DISPLAY, patient.getDisplay());
-		
+
 		newValues.put(PatientTable.Column.IDENTIFIER, patient.getIdentifier().getIdentifier());
 		newValues.put(PatientTable.Column.GIVEN_NAME, patient.getPerson().getName().getGivenName());
 		newValues.put(PatientTable.Column.MIDDLE_NAME, patient.getPerson().getName().getMiddleName());
-		
+
 		newValues.put(PatientTable.Column.FAMILY_NAME, patient.getPerson().getName().getFamilyName());
 		newValues.put(PatientTable.Column.GENDER, patient.getPerson().getGender());
 		newValues.put(PatientTable.Column.BIRTH_DATE, patient.getPerson().getBirthdate());
-		
-		newValues.put(PatientTable.Column.DEATH_DATE, (Long) null);
-		newValues.put(PatientTable.Column.CAUSE_OF_DEATH, (String) null);
+
+		newValues.put(PatientTable.Column.DEATH_DATE, (Long)null);
+		newValues.put(PatientTable.Column.CAUSE_OF_DEATH, (String)null);
 		/*newValues.put(PatientTable.Column.AGE, (String) null);
 		if (null != patient.getPerson().getPhoto()) {
 			mLogger.i("inserting into db");
 			newValues.put(PatientTable.Column.PHOTO, bitmapToByteArray(patient.getPerson().getPhoto()));
 		}*/
-		
+
 		if (null != patient.getPerson().getAddress()) {
 			//newValues.put(PatientTable.Column.ADDRESS_1, patient.getPerson().getAddress().getAddress1());
 			//newValues.put(PatientTable.Column.ADDRESS_2, patient.getPerson().getAddress().getAddress2());
 			//newValues.put(PatientTable.Column.POSTAL_CODE, patient.getPerson().getAddress().getPostalCode());
-		//	newValues.put(PatientTable.Column.COUNTRY, patient.getPerson().getAddress().getCounty());
+			//	newValues.put(PatientTable.Column.COUNTRY, patient.getPerson().getAddress().getCounty());
 			//newValues.put(PatientTable.Column.STATE, patient.getPerson().getAddress().getSubCounty());
 			//newValues.put(PatientTable.Column.CITY, patient.getPerson().getAddress().getCityVillage());
-			
+
 		}
 		newValues.put(PatientTable.Column.ENCOUNTERS, patient.getEncounters());
-		
-		String[] whereArgs = new String[]{String.valueOf(patientID)};
-		
+
+		String[] whereArgs = new String[] { String.valueOf(patientID) };
+
 		return db.update(PatientTable.TABLE_NAME, newValues, WHERE_ID_CLAUSE, whereArgs);
 	}
-	
+
 	public long insertVisit(SQLiteDatabase db, Visit visit) {
 		long visitId;
-		
+
 		SQLiteStatement visitStatement = db.compileStatement(mVisitTable.insertIntoTableDefinition());
-		
+
 		try {
 			db.beginTransaction();
 			bindString(1, visit.getUuid(), visitStatement);
@@ -213,7 +213,7 @@ public class DBOpenHelper extends OpenMRSSQLiteOpenHelper {
 		}
 		return visitId;
 	}
-	
+
 	public int updateVisit(SQLiteDatabase db, long visitID, Visit visit) {
 		ContentValues newValues = new ContentValues();
 		newValues.put(VisitTable.Column.UUID, visit.getUuid());
@@ -224,17 +224,17 @@ public class DBOpenHelper extends OpenMRSSQLiteOpenHelper {
 		}
 		newValues.put(VisitTable.Column.START_DATE, visit.getStartDatetime());
 		newValues.put(VisitTable.Column.STOP_DATE, visit.getStopDatetime());
-		
-		String[] whereArgs = new String[]{String.valueOf(visitID)};
-		
+
+		String[] whereArgs = new String[] { String.valueOf(visitID) };
+
 		return db.update(VisitTable.TABLE_NAME, newValues, WHERE_ID_CLAUSE, whereArgs);
 	}
-	
+
 	public long insertEncounter(SQLiteDatabase db, Encounter encounter) {
 		long encounterId;
-		
+
 		SQLiteStatement encounterStatement = db.compileStatement(mEncounterTable.insertIntoTableDefinition());
-		
+
 		try {
 			db.beginTransaction();
 			bindLong(1, encounter.getVisitID(), encounterStatement);
@@ -253,7 +253,7 @@ public class DBOpenHelper extends OpenMRSSQLiteOpenHelper {
 		}
 		return encounterId;
 	}
-	
+
 	public int updateEncounter(SQLiteDatabase db, long encounterID, Encounter encounter) {
 		ContentValues newValues = new ContentValues();
 		newValues.put(EncounterTable.Column.UUID, encounter.getUuid());
@@ -261,16 +261,16 @@ public class DBOpenHelper extends OpenMRSSQLiteOpenHelper {
 		newValues.put(EncounterTable.Column.DISPLAY, encounter.getDisplay());
 		newValues.put(EncounterTable.Column.ENCOUNTER_DATETIME, encounter.getEncounterDatetime());
 		newValues.put(EncounterTable.Column.ENCOUNTER_TYPE, encounter.getEncounterType().getDisplay());
-		
-		String[] whereArgs = new String[]{String.valueOf(encounterID)};
-		
+
+		String[] whereArgs = new String[] { String.valueOf(encounterID) };
+
 		return db.update(EncounterTable.TABLE_NAME, newValues, WHERE_ID_CLAUSE, whereArgs);
 	}
-	
+
 	public long insertObservation(SQLiteDatabase db, Observation obs) {
 		long obsID;
 		SQLiteStatement observationStatement = db.compileStatement(mObservationTable.insertIntoTableDefinition());
-		
+
 		try {
 			db.beginTransaction();
 			bindLong(1, obs.getEncounterID(), observationStatement);
@@ -297,7 +297,7 @@ public class DBOpenHelper extends OpenMRSSQLiteOpenHelper {
 		}
 		return obsID;
 	}
-	
+
 	public int updateObservation(SQLiteDatabase db, long observationID, Observation observation) {
 		ContentValues newValues = new ContentValues();
 		newValues.put(ObservationTable.Column.UUID, observation.getUuid());
@@ -312,17 +312,17 @@ public class DBOpenHelper extends OpenMRSSQLiteOpenHelper {
 			newValues.put(ObservationTable.Column.DIAGNOSIS_CERTAINTY, observation.getDiagnosisCertainty());
 		}
 		newValues.put(ObservationTable.Column.DIAGNOSIS_NOTE, observation.getDiagnosisNote());
-		
-		String[] whereArgs = new String[]{String.valueOf(observationID)};
-		
+
+		String[] whereArgs = new String[] { String.valueOf(observationID) };
+
 		return db.update(ObservationTable.TABLE_NAME, newValues, WHERE_ID_CLAUSE, whereArgs);
 	}
-	
+
 	public Long insertLocation(SQLiteDatabase db, Location loc) {
 		long locID;
-		
+
 		SQLiteStatement locationStatement = db.compileStatement(mLocationTable.insertIntoTableDefinition());
-		
+
 		try {
 			db.beginTransaction();
 			bindString(1, loc.getUuid(), locationStatement);
@@ -345,7 +345,7 @@ public class DBOpenHelper extends OpenMRSSQLiteOpenHelper {
 		}
 		return locID;
 	}
-	
+
 	private byte[] bitmapToByteArray(Bitmap image) {
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		image.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);

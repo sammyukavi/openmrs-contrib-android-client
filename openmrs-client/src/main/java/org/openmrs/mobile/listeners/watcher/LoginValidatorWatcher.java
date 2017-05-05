@@ -17,48 +17,49 @@ import org.openmrs.mobile.utilities.StringUtils;
 
 //Class used to extract view validation logic
 public class LoginValidatorWatcher implements TextWatcher, AdapterView.OnItemSelectedListener {
-	
+
 	private EditText mUrl;
 	private EditText mUsername;
 	private EditText mPassword;
 	private Spinner mLocation;
-	
+
 	private Button mLoginButton;
-	
+
 	private boolean urlChanged;
 	private boolean locationErrorOccurred;
-	
-	public LoginValidatorWatcher(EditText urlEditText, EditText usernameEditText, EditText passwordEditText, Spinner locationSpinner, Button loginButton) {
+
+	public LoginValidatorWatcher(EditText urlEditText, EditText usernameEditText, EditText passwordEditText,
+			Spinner locationSpinner, Button loginButton) {
 		this.mUrl = urlEditText;
 		this.mUsername = usernameEditText;
 		this.mPassword = passwordEditText;
 		this.mLocation = locationSpinner;
 		this.mLoginButton = loginButton;
-		
+
 		mUrl.addTextChangedListener(this);
 		mUsername.addTextChangedListener(this);
 		mPassword.addTextChangedListener(this);
 		mLocation.setOnItemSelectedListener(this);
 	}
-	
+
 	public boolean isUrlChanged() {
 		return urlChanged;
 	}
-	
+
 	public void setUrlChanged(boolean urlChanged) {
 		this.urlChanged = urlChanged;
 	}
-	
+
 	@Override
 	public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 		// This method is intentionally empty
 	}
-	
+
 	@Override
 	public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 		// This method is intentionally empty
 	}
-	
+
 	@Override
 	public void afterTextChanged(Editable editable) {
 		// If URL text changed
@@ -67,16 +68,16 @@ public class LoginValidatorWatcher implements TextWatcher, AdapterView.OnItemSel
 		}
 		mLoginButton.setEnabled(isAllDataValid());
 	}
-	
+
 	private void urlChanged(Editable editable) {
 		if ((!OpenMRS.getInstance().getServerUrl().equals(editable.toString())) &&
-		    StringUtils.notEmpty(editable.toString())) {
+				StringUtils.notEmpty(editable.toString())) {
 			setUrlChanged(true);
 		} else if (OpenMRS.getInstance().getServerUrl().equals(editable.toString())) {
 			setUrlChanged(false);
 		}
 	}
-	
+
 	@Override
 	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 		if (position >= 0 && id >= 1) {
@@ -88,49 +89,50 @@ public class LoginValidatorWatcher implements TextWatcher, AdapterView.OnItemSel
 			// }
 		} else if (position >= 0 && id == 0) {
 			//Set Text Color to red if spinner is at start/default option
-			TextView currentText = (TextView) parent.getChildAt(0);
+			TextView currentText = (TextView)parent.getChildAt(0);
 			if (currentText != null) {
 				currentText.setTextColor(Color.RED);
 			}
 		}
 		mLoginButton.setEnabled(isAllDataValid());
 	}
-	
+
 	@Override
 	public void onNothingSelected(AdapterView<?> adapterView) {
 		// This method is intentionally empty
 	}
-	
+
 	private boolean isAllDataValid() {
-		
+
 		boolean result =
 				validateNotEmpty(mUsername) && validateNotEmpty(mPassword) && validateNotEmpty(mLocation) && !urlChanged;
-		
+
 		if (locationErrorOccurred && urlChanged) {
 			mLocation.setEnabled(false);
 		} else {
 			mLocation.setEnabled(true);
 		}
-		
+
 		if (!result && (!locationErrorOccurred && urlChanged)) {
 			mLocation.setEnabled(false);
 		}
-		
+
 		return result;
 	}
-	
+
 	private boolean validateNotEmpty(EditText editText) {
 		return StringUtils.notEmpty(editText.getText().toString());
 	}
-	
+
 	private boolean validateNotEmpty(Spinner spinner) {
-		return spinner.getSelectedItemPosition() >= 0 && spinner.getItemIdAtPosition(spinner.getSelectedItemPosition()) >= 1;
+		return spinner.getSelectedItemPosition() >= 0 && spinner.getItemIdAtPosition(spinner.getSelectedItemPosition())
+				>= 1;
 	}
-	
+
 	public boolean isLocationErrorOccurred() {
 		return locationErrorOccurred;
 	}
-	
+
 	public void setLocationErrorOccurred(boolean locationErrorOccurred) {
 		this.locationErrorOccurred = locationErrorOccurred;
 	}

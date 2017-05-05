@@ -24,92 +24,90 @@ import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.impl.PatientDataService;
 import org.openmrs.mobile.sampledata.Patient;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class FindPatient extends Fragment {
-    private List<Patient> patientList;
-    private RecyclerView patientsView;
-    private Patient patient = new Patient();
+	private List<Patient> patientList;
+	private RecyclerView patientsView;
+	private Patient patient = new Patient();
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
+	}
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.nav_find_patient);
-        View view = inflater.inflate(R.layout.fragment_find_patient_record, container, false);
-       // patientsView = (RecyclerView) view.findViewById(R.id.patients_list);
-        LinearLayoutManager llm = new LinearLayoutManager(getContext());
-        patientsView.setLayoutManager(llm);
-        patientsView.setHasFixedSize(true);
-        try {
-            initializeData();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        initializeAdapter();
-        return view;
-    }
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.nav_find_patient);
+		View view = inflater.inflate(R.layout.fragment_find_patient_record, container, false);
+		// patientsView = (RecyclerView) view.findViewById(R.id.patients_list);
+		LinearLayoutManager llm = new LinearLayoutManager(getContext());
+		patientsView.setLayoutManager(llm);
+		patientsView.setHasFixedSize(true);
+		try {
+			initializeData();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		initializeAdapter();
+		return view;
+	}
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_find_patient_record, menu);
-        MenuItem item = menu.findItem(R.id.action_search);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.menu_find_patient_record, menu);
+		MenuItem item = menu.findItem(R.id.action_search);
+		SearchView searchView = (SearchView)MenuItemCompat.getActionView(item);
 
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
+		searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+			@Override
+			public boolean onQueryTextSubmit(String query) {
+				return false;
+			}
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                //adapter.getFilter().filter(newText);
+			@Override
+			public boolean onQueryTextChange(String newText) {
+				//adapter.getFilter().filter(newText);
 
-                return false;
-            }
-        });
-    }
+				return false;
+			}
+		});
+	}
 
-    private void initializeData() throws JSONException {
-        PatientDataService svc = new PatientDataService();
-        svc.getByNameAndIdentifier("Test", null, new DataService.GetMultipleCallback<org.openmrs.mobile.models.Patient>() {
-            @Override
-            public void onCompleted(List<org.openmrs.mobile.models.Patient> entities) {
-                for (org.openmrs.mobile.models.Patient p : entities){
-                    Log.d("Test", p.toString());
-                }
-            }
+	private void initializeData() throws JSONException {
+		PatientDataService svc = new PatientDataService();
+		svc.getByNameAndIdentifier("Test", null, new DataService.GetMultipleCallback<org.openmrs.mobile.models.Patient>() {
+			@Override
+			public void onCompleted(List<org.openmrs.mobile.models.Patient> entities) {
+				for (org.openmrs.mobile.models.Patient p : entities) {
+					Log.d("Test", p.toString());
+				}
+			}
 
-            @Override
-            public void onError(Throwable t) {
-                Log.d("Test", "Error", t);
-            }
-        });
+			@Override
+			public void onError(Throwable t) {
+				Log.d("Test", "Error", t);
+			}
+		});
 
-        patientList = new ArrayList<>();
-        JSONArray patients = patient.getPatients();
-        for (int i = 0; i < patients.length(); i++) {
-            JSONObject patientData = new JSONObject(patients.get(i).toString());
-            patientList.add(patient.newPatient(patientData.get("visit_date").toString(),
-                    patientData.get("end_date").toString(),
-                    patientData.get("visit_tag").toString(), patientData.get("id").toString(),
-                    Integer.parseInt(patientData.get("age").toString()),
-                    patientData.get("gender").toString().charAt(0), Integer.parseInt(patientData.get("active_visit").toString())));
-        }
-    }
+		patientList = new ArrayList<>();
+		JSONArray patients = patient.getPatients();
+		for (int i = 0; i < patients.length(); i++) {
+			JSONObject patientData = new JSONObject(patients.get(i).toString());
+			patientList.add(patient.newPatient(patientData.get("visit_date").toString(),
+					patientData.get("end_date").toString(),
+					patientData.get("visit_tag").toString(), patientData.get("id").toString(),
+					Integer.parseInt(patientData.get("age").toString()),
+					patientData.get("gender").toString().charAt(0),
+					Integer.parseInt(patientData.get("active_visit").toString())));
+		}
+	}
 
-    private void initializeAdapter() {
-        ListPatients listPatients = new ListPatients(getActivity(), patientList);
-        patientsView.setAdapter(listPatients);
-    }
-
+	private void initializeAdapter() {
+		ListPatients listPatients = new ListPatients(getActivity(), patientList);
+		patientsView.setAdapter(listPatients);
+	}
 
 }

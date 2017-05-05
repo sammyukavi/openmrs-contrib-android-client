@@ -23,30 +23,31 @@ import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
 
 public class CaptureVitalsActivity extends ACBaseActivity {
-	
+
 	public CaptureVitalsContract.Presenter mPresenter;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getLayoutInflater().inflate(R.layout.activity_capture_vitals, frameLayout);
 		setTitle(R.string.nav_capture_vitals);
 		// Create fragment
-		CaptureVitalsFragment captureVitalsFragment = (CaptureVitalsFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
+		CaptureVitalsFragment captureVitalsFragment =
+				(CaptureVitalsFragment)getSupportFragmentManager().findFragmentById(R.id.contentFrame);
 		if (captureVitalsFragment == null) {
 			captureVitalsFragment = CaptureVitalsFragment.newInstance();
 		}
 		if (!captureVitalsFragment.isActive()) {
 			addFragmentToActivity(getSupportFragmentManager(), captureVitalsFragment, R.id.contentFrame);
 		}
-		
+
 		mPresenter = new CaptureVitalsPresenter(captureVitalsFragment, mOpenMRS);
 	}
-	
+
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 	}
-	
+
 	@Override
 	public void onBackPressed() {
 		if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -58,10 +59,10 @@ public class CaptureVitalsActivity extends ACBaseActivity {
 			startActivity(intent);
 		}
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		return true;
 	}
-	
+
 }

@@ -26,7 +26,7 @@ import java.io.LineNumberReader;
 import java.io.PrintWriter;
 
 public class OpenMRSLogger {
-	
+
 	private static final boolean IS_DEBUGGING_ON = true;
 	private static final String LOG_FILENAME = "OpenMRS.log";
 	private static final int MAX_SIZE = 64 * 1024; // 64kB;
@@ -39,7 +39,7 @@ public class OpenMRSLogger {
 	private static OpenMRS mOpenMRS = OpenMRS.getInstance();
 	private static OpenMRSLogger logger = null;
 	private Thread.UncaughtExceptionHandler androidDefaultUEH;
-	
+
 	public OpenMRSLogger() {
 		logger = this;
 		androidDefaultUEH = Thread.getDefaultUncaughtExceptionHandler();
@@ -50,7 +50,7 @@ public class OpenMRSLogger {
 			}
 		};
 		Thread.setDefaultUncaughtExceptionHandler(handler);
-		
+
 		mFolder = new File(mOpenMRS.getOpenMRSDir());
 		try {
 			if (isFolderExist()) {
@@ -58,7 +58,7 @@ public class OpenMRSLogger {
 				if (!mLogFile.createNewFile()) {
 					rotateLogFile();
 				}
-				
+
 				mLogFile.createNewFile();
 			}
 			logger.d("Start logging to file");
@@ -66,7 +66,7 @@ public class OpenMRSLogger {
 			logger.e("Error during create file", e);
 		}
 	}
-	
+
 	private static boolean isFolderExist() {
 		boolean success = true;
 		if (!mFolder.exists()) {
@@ -74,11 +74,11 @@ public class OpenMRSLogger {
 		}
 		return success;
 	}
-	
+
 	private static boolean isSaveToFileEnable() {
 		return mSaveToFileEnable && mErrorCountSaveToFile > 0;
 	}
-	
+
 	private static void setErrorCount() {
 		mErrorCountSaveToFile--;
 		if (mErrorCountSaveToFile <= 0) {
@@ -86,7 +86,7 @@ public class OpenMRSLogger {
 			logger.e("logging to file disabled because of to much error during save");
 		}
 	}
-	
+
 	private static void saveToFile() {
 		if (isFolderExist() && isSaveToFileEnable()) {
 			String command = "logcat -d -v time -s " + mTAG;
@@ -94,7 +94,7 @@ public class OpenMRSLogger {
 				Process mLoggerProcess = Runtime.getRuntime().exec(command);
 				BufferedReader in = new BufferedReader(new InputStreamReader(mLoggerProcess.getInputStream()));
 				String line;
-				
+
 				FileWriter writer = new FileWriter(mLogFile, true);
 				while ((line = in.readLine()) != null) {
 					if (!line.startsWith("---------")) {
@@ -103,10 +103,10 @@ public class OpenMRSLogger {
 				}
 				writer.flush();
 				writer.close();
-				
+
 				mLoggerProcess = Runtime.getRuntime().exec("logcat -c");
 				mLoggerProcess.waitFor();
-				
+
 			} catch (IOException e) {
 				setErrorCount();
 				if (isSaveToFileEnable()) {
@@ -121,16 +121,16 @@ public class OpenMRSLogger {
 			rotateLogFile();
 		}
 	}
-	
+
 	private static String getMessage(String msg) {
 		final String fullClassName = Thread.currentThread().getStackTrace()[4].getClassName();
 		final String className = fullClassName.substring(fullClassName.lastIndexOf('.') + 1);
 		final String methodName = Thread.currentThread().getStackTrace()[4].getMethodName();
 		final int lineNumber = Thread.currentThread().getStackTrace()[4].getLineNumber();
-		
+
 		return "#" + lineNumber + " " + className + "." + methodName + "() : " + msg;
 	}
-	
+
 	private static void rotateLogFile() {
 		if (mLogFile.length() > MAX_SIZE && !mIsRotating) {
 			mIsRotating = true;
@@ -140,30 +140,30 @@ public class OpenMRSLogger {
 				public void run() {
 					try {
 						LineNumberReader r = new LineNumberReader(new FileReader(mLogFile));
-						
+
 						while (r.readLine() != null) {
 							continue;
 						}
 						r.close();
-						
+
 						int remove = Math.round(r.getLineNumber() * 0.3f);
 						if (remove > 0) {
 							r = new LineNumberReader(new FileReader(mLogFile));
-							
+
 							while (r.readLine() != null && r.getLineNumber() < remove) {
 								continue;
 							}
-							
+
 							File newFile = new File(mLogFile.getAbsolutePath() + ".new");
 							PrintWriter pw = new PrintWriter(new FileWriter(newFile));
 							String line;
 							while ((line = r.readLine()) != null) {
 								pw.println(line);
 							}
-							
+
 							pw.close();
 							r.close();
-							
+
 							if (newFile.renameTo(mLogFile)) {
 								logger.i("Log file rotated");
 							}
@@ -176,61 +176,61 @@ public class OpenMRSLogger {
 			}.start();
 		}
 	}
-	
+
 	public void v(final String msg) {
 		Log.v(mTAG, getMessage(msg));
 		saveToFile();
 	}
-	
+
 	public void v(final String msg, Throwable tr) {
 		Log.v(mTAG, getMessage(msg), tr);
 		saveToFile();
 	}
-	
+
 	public void d(final String msg) {
 		if (IS_DEBUGGING_ON) {
 			Log.d(mTAG, getMessage(msg));
 			saveToFile();
 		}
 	}
-	
+
 	public void d(final String msg, Throwable tr) {
 		if (IS_DEBUGGING_ON) {
 			Log.d(mTAG, getMessage(msg), tr);
 			saveToFile();
 		}
 	}
-	
+
 	public void i(final String msg) {
 		Log.i(mTAG, getMessage(msg));
 		saveToFile();
 	}
-	
+
 	public void i(final String msg, Throwable tr) {
 		Log.i(mTAG, getMessage(msg), tr);
 		saveToFile();
 	}
-	
+
 	public void w(final String msg) {
 		Log.w(mTAG, getMessage(msg));
 		saveToFile();
 	}
-	
+
 	public void w(final String msg, Throwable tr) {
 		Log.w(mTAG, getMessage(msg), tr);
 		saveToFile();
 	}
-	
+
 	public void e(final String msg) {
 		Log.e(mTAG, getMessage(msg));
 		saveToFile();
 	}
-	
+
 	public void e(final String msg, Throwable tr) {
 		Log.e(mTAG, getMessage(msg), tr);
 		saveToFile();
 	}
-	
+
 	public String getLogFilename() {
 		return LOG_FILENAME;
 	}

@@ -64,7 +64,7 @@ public class SimilarPatientsRecyclerViewAdapter
 		setGender(holder, patient);
 		setBirthdate(holder, patient);
 		setPatientAddress(holder, patient);
-		setFileNumber(holder,patient);
+		setFileNumber(holder, patient);
 
 		holder.mRowLayout.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -176,7 +176,7 @@ public class SimilarPatientsRecyclerViewAdapter
 			holder.mFamilyName.setText(ApplicationConstants.EMPTY_STRING);
 		}
 	}
-	
+
 	private void setFileNumber(PatientViewHolder holder, Patient patient) {
 		try {
 			holder.fileNumber.setText(patient.getIdentifier().getIdentifier());

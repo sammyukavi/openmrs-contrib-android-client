@@ -15,5 +15,5 @@
 package org.openmrs.mobile.models;
 
 public class Datatype extends Resource {
-	
+
 }

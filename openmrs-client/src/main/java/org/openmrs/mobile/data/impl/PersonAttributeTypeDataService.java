@@ -24,11 +24,8 @@ import org.openmrs.mobile.utilities.ApplicationConstants;
 
 import retrofit2.Call;
 
-/**
- * Created by dubdabasoduba on 05/05/2017.
- */
-
-public class PersonAttributeTypeDataService extends BaseMetadataDataService<PersonAttributeType, PersonAttributeTypeRestService>
+public class PersonAttributeTypeDataService
+		extends BaseMetadataDataService<PersonAttributeType, PersonAttributeTypeRestService>
 		implements MetadataDataService<PersonAttributeType> {
 	@Override
 	protected Call<Results<PersonAttributeType>> _restGetByNameFragment(String restPath, PagingInfo pagingInfo, String name,
@@ -61,7 +58,8 @@ public class PersonAttributeTypeDataService extends BaseMetadataDataService<Pers
 	}
 
 	@Override
-	protected Call<Results<PersonAttributeType>> _restGetAll(String restPath, PagingInfo pagingInfo, String representation) {
+	protected Call<Results<PersonAttributeType>> _restGetAll(String restPath, PagingInfo pagingInfo, String
+			representation) {
 		if (isPagingValid(pagingInfo)) {
 			return restService.getAll(restPath, representation, pagingInfo.getLimit(), pagingInfo.getStartIndex());
 		} else {

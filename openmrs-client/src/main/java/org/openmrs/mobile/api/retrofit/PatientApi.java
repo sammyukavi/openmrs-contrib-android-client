@@ -34,10 +34,10 @@ import org.openmrs.mobile.dao.PatientDAO;
 import org.openmrs.mobile.listeners.retrofit.DefaultResponseCallbackListener;
 import org.openmrs.mobile.models.EncounterCreate;
 import org.openmrs.mobile.models.IdGenPatientIdentifiers;
-import org.openmrs.mobile.models.PatientIdentifierType;
 import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.PatientIdentifier;
+import org.openmrs.mobile.models.PatientIdentifierType;
 import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.utilities.ToastUtil;
 
@@ -361,7 +361,8 @@ public class PatientApi extends RetrofitApi {
 		Call<Results<PatientIdentifierType>> call = apiService.getIdentifierTypes();
 		call.enqueue(new Callback<Results<PatientIdentifierType>>() {
 			@Override
-			public void onResponse(Call<Results<PatientIdentifierType>> call, Response<Results<PatientIdentifierType>> response) {
+			public void onResponse(Call<Results<PatientIdentifierType>> call,
+					Response<Results<PatientIdentifierType>> response) {
 				Results<PatientIdentifierType> idresList = response.body();
 				for (PatientIdentifierType result : idresList.getResults()) {
 					if (result.getDisplay().equals("OpenMRS ID")) {

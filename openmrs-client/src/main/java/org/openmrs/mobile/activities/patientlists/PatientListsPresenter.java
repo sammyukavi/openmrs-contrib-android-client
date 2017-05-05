@@ -18,19 +18,16 @@ import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.application.OpenMRS;
 
 public class PatientListsPresenter extends BasePresenter implements PatientListsContract.Presenter {
-	
-	
+
 	private PatientListsContract.View findPatientView;
-	
-	
+
 	public PatientListsPresenter(PatientListsContract.View view, OpenMRS openMRS) {
 		this.findPatientView = view;
 		this.findPatientView.setPresenter(this);
 	}
-	
-	
+
 	@Override
 	public void subscribe() {
-		
+
 	}
 }

@@ -13,7 +13,6 @@ package org.openmrs.mobile.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.io.Serializable;
 import java.util.List;
 
 public class Concept extends BaseOpenmrsObject {
@@ -65,5 +64,5 @@ public class Concept extends BaseOpenmrsObject {
 	public void setAnswers(List<ConceptAnswer> answers) {
 		this.answers = answers;
 	}
-	
+
 }

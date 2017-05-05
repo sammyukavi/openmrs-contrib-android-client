@@ -15,7 +15,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class UserService {
-	
+
 	public void updateUserInformation(final String username) {
 		RestApi restApi = RestServiceBuilder.createService(RestApi.class);
 		Call<Results<User>> call = restApi.getUserInfo(username);
@@ -40,14 +40,14 @@ public class UserService {
 					ToastUtil.error(response.message());
 				}
 			}
-			
+
 			@Override
 			public void onFailure(Call<Results<User>> call, Throwable t) {
 				ToastUtil.error(t.getMessage());
 			}
 		});
 	}
-	
+
 	public void fetchFullUserInformation(String uuid) {
 		RestApi restApi = RestServiceBuilder.createService(RestApi.class);
 		Call<User> call = restApi.getFullUserInfo(uuid);
@@ -63,7 +63,7 @@ public class UserService {
 					ToastUtil.error(response.message());
 				}
 			}
-			
+
 			@Override
 			public void onFailure(Call<User> call, Throwable t) {
 				ToastUtil.error(t.getMessage());

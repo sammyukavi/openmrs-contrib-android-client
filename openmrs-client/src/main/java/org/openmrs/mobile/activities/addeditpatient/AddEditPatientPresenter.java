@@ -199,8 +199,9 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 			DataService.GetSingleCallback<Patient> getSingleCallback = new DataService.GetSingleCallback<Patient>() {
 				@Override
 				public void onCompleted(Patient entity) {
-					mPatientInfoView.showToast(ApplicationConstants.toastMessages.patientRegistrationSuccess, ToastUtil.ToastType
-							.SUCCESS);
+					mPatientInfoView
+							.showToast(ApplicationConstants.toastMessages.patientRegistrationSuccess, ToastUtil.ToastType
+									.SUCCESS);
 					mPatientInfoView.startPatientDashboardActivity(entity);
 					mPatientInfoView.finishAddPatientActivity();
 				}
@@ -208,8 +209,9 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 				@Override
 				public void onError(Throwable t) {
 					mPatientInfoView.setProgressBarVisibility(false);
-					mPatientInfoView.showToast(ApplicationConstants.toastMessages.patientRegistrationError, ToastUtil.ToastType
-							.ERROR);
+					mPatientInfoView
+							.showToast(ApplicationConstants.toastMessages.patientRegistrationError, ToastUtil.ToastType
+									.ERROR);
 				}
 			};
 			patientDataService.create(patient, getSingleCallback);
@@ -298,8 +300,9 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 				@Override
 				public void onError(Throwable t) {
 					Log.e("Identifier Type Error", "Error", t.fillInStackTrace());
-					mPatientInfoView.showToast(ApplicationConstants.toastMessages.noPatientIdentifierType, ToastUtil.ToastType
-							.ERROR);
+					mPatientInfoView
+							.showToast(ApplicationConstants.toastMessages.noPatientIdentifierType, ToastUtil.ToastType
+									.ERROR);
 				}
 			};
 			patientIdentifierTypeDataService.getAll(false, null, getMultipleCallback);
@@ -311,7 +314,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 	public void getPersonAttributeTypes() {
 		if (NetworkUtils.hasNetwork()) {
 			DataService.GetMultipleCallback<PersonAttributeType> getMultipleCallback = new DataService
-					.GetMultipleCallback<PersonAttributeType>(){
+					.GetMultipleCallback<PersonAttributeType>() {
 
 				@Override
 				public void onCompleted(List<PersonAttributeType> personAttributeTypes) {
@@ -330,7 +333,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 							.ERROR);
 				}
 			};
-			personAttributeTypeDataService.getAll(false,null,getMultipleCallback);
+			personAttributeTypeDataService.getAll(false, null, getMultipleCallback);
 		}
 	}
 

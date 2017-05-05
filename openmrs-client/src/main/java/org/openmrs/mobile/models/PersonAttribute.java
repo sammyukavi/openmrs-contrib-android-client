@@ -11,54 +11,51 @@
 package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-
-import java.io.Serializable;
 
 public class PersonAttribute extends BaseOpenmrsData {
 
-    @Expose
-    private Person person;
+	@Expose
+	private Person person;
 
-    @Expose
-    private Object value;
+	@Expose
+	private Object value;
 
-    @Expose
-    private String valueReference;
+	@Expose
+	private String valueReference;
 
-    @Expose
-    private PersonAttributeType personAttributeType;
+	@Expose
+	private PersonAttributeType personAttributeType;
 
-    public String getValueReference() {
-        return valueReference;
-    }
+	public String getValueReference() {
+		return valueReference;
+	}
 
-    public void setValueReference(String valueReference) {
-        this.valueReference = valueReference;
-    }
+	public void setValueReference(String valueReference) {
+		this.valueReference = valueReference;
+	}
 
-    public Object getValue() {
-        return value;
-    }
+	public Object getValue() {
+		return value;
+	}
 
-    public void setValue(Object value) {
-        this.value = value;
-    }
+	public void setValue(Object value) {
+		this.value = value;
+	}
 
-    public Person getPerson() {
-        return person;
-    }
+	public Person getPerson() {
+		return person;
+	}
 
-    public void setPerson(Person person) {
-        this.person = person;
-    }
+	public void setPerson(Person person) {
+		this.person = person;
+	}
 
-    public PersonAttributeType getPersonAttributeType() {
-        return personAttributeType;
-    }
+	public PersonAttributeType getPersonAttributeType() {
+		return personAttributeType;
+	}
 
-    public void setPersonAttributeType(PersonAttributeType personAttributeType) {
-        this.personAttributeType = personAttributeType;
-    }
+	public void setPersonAttributeType(PersonAttributeType personAttributeType) {
+		this.personAttributeType = personAttributeType;
+	}
 }
 

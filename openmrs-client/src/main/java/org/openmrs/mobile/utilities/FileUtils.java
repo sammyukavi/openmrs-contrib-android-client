@@ -14,7 +14,6 @@
 
 package org.openmrs.mobile.utilities;
 
-
 import org.openmrs.mobile.application.OpenMRS;
 
 import java.io.ByteArrayOutputStream;
@@ -24,11 +23,11 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public final class FileUtils {
-	
+
 	private FileUtils() {
-		
+
 	}
-	
+
 	public static byte[] fileToByteArray(String path) {
 		byte[] buffer = new byte[4096];
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -53,7 +52,7 @@ public final class FileUtils {
 				OpenMRS.getInstance().getOpenMRSLogger().d(e.toString());
 			}
 		}
-		
+
 		return out.toByteArray();
 	}
 }

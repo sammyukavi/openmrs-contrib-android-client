@@ -17,24 +17,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class IdGenPatientIdentifiers {
-	
+
 	@SerializedName("identifiers")
 	@Expose
 	private List<String> identifiers = new ArrayList<String>();
-	
+
 	/**
 	 * @return The identifiers
 	 */
 	public List<String> getIdentifiers() {
 		return identifiers;
 	}
-	
+
 	/**
 	 * @param identifiers The identifiers
 	 */
 	public void setIdentifiers(List<String> identifiers) {
 		this.identifiers = identifiers;
 	}
-	
+
 }
 

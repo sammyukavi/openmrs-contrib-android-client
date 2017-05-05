@@ -31,28 +31,28 @@ public class EncounterTable extends Table<Encounter> {
 	@Override
 	public String createTableDefinition() {
 		return CREATE_TABLE + TABLE_NAME + "("
-		       + Column.ID + PRIMARY_KEY
-		       + Column.VISIT_KEY_ID + Column.Type.INT_TYPE_WITH_COMMA
-		       + Column.UUID + Column.Type.TEXT_TYPE_NOT_NULL
-		       + Column.DISPLAY + Column.Type.TEXT_TYPE_WITH_COMMA
-		       + Column.ENCOUNTER_DATETIME + Column.Type.DATE_TYPE_NOT_NULL
-		       + Column.ENCOUNTER_TYPE + Column.Type.DATE_TYPE_WITH_COMMA
-		       + Column.PATIENT_UUID + Column.Type.TEXT_TYPE + Column.COMMA
-		       + Column.FORM_UUID + Column.Type.TEXT_TYPE
-		       + ");";
+				+ Column.ID + PRIMARY_KEY
+				+ Column.VISIT_KEY_ID + Column.Type.INT_TYPE_WITH_COMMA
+				+ Column.UUID + Column.Type.TEXT_TYPE_NOT_NULL
+				+ Column.DISPLAY + Column.Type.TEXT_TYPE_WITH_COMMA
+				+ Column.ENCOUNTER_DATETIME + Column.Type.DATE_TYPE_NOT_NULL
+				+ Column.ENCOUNTER_TYPE + Column.Type.DATE_TYPE_WITH_COMMA
+				+ Column.PATIENT_UUID + Column.Type.TEXT_TYPE + Column.COMMA
+				+ Column.FORM_UUID + Column.Type.TEXT_TYPE
+				+ ");";
 	}
 
 	@Override
 	public String insertIntoTableDefinition() {
 		return INSERT_INTO + TABLE_NAME + "("
-		       + Column.VISIT_KEY_ID + Column.COMMA
-		       + Column.UUID + Column.COMMA
-		       + Column.DISPLAY + Column.COMMA
-		       + Column.ENCOUNTER_DATETIME + Column.COMMA
-		       + Column.ENCOUNTER_TYPE + Column.COMMA
-		       + Column.PATIENT_UUID + Column.COMMA
-		       + Column.FORM_UUID + ")"
-		       + values(INSERT_COLUMNS_COUNT);
+				+ Column.VISIT_KEY_ID + Column.COMMA
+				+ Column.UUID + Column.COMMA
+				+ Column.DISPLAY + Column.COMMA
+				+ Column.ENCOUNTER_DATETIME + Column.COMMA
+				+ Column.ENCOUNTER_TYPE + Column.COMMA
+				+ Column.PATIENT_UUID + Column.COMMA
+				+ Column.FORM_UUID + ")"
+				+ values(INSERT_COLUMNS_COUNT);
 	}
 
 	@Override

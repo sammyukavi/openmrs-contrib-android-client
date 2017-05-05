@@ -11,14 +11,14 @@
 package org.openmrs.mobile.models;
 
 public class VisitType extends Resource {
-	
+
 	public VisitType(String display) {
 		this.display = display;
 	}
-	
+
 	public VisitType(String display, String uuid) {
 		this.uuid = uuid;
 		this.display = display;
 	}
-	
+
 }

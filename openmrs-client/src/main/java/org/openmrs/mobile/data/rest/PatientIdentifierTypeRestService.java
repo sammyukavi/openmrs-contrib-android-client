@@ -25,10 +25,10 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
-
 public interface PatientIdentifierTypeRestService {
 	@POST(RestConstants.CREATE)
-	Call<PatientIdentifierType> create(@Path(value = "restPath", encoded = true) String restPath, @Body PatientIdentifierType entity);
+	Call<PatientIdentifierType> create(@Path(value = "restPath", encoded = true) String restPath,
+			@Body PatientIdentifierType entity);
 
 	@POST(RestConstants.UPDATE)
 	Call<PatientIdentifierType> update(@Path(value = "restPath", encoded = true) String restPath,

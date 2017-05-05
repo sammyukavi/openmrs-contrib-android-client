@@ -24,17 +24,15 @@ import org.openmrs.mobile.utilities.ApplicationConstants;
 
 import retrofit2.Call;
 
-/**
- * Created by dubdabasoduba on 04/05/2017.
- */
-
-public class PatientIdentifierTypeDataService extends BaseMetadataDataService<PatientIdentifierType, PatientIdentifierTypeRestService>
+public class PatientIdentifierTypeDataService
+		extends BaseMetadataDataService<PatientIdentifierType, PatientIdentifierTypeRestService>
 		implements MetadataDataService<PatientIdentifierType> {
 	@Override
 	protected Call<Results<PatientIdentifierType>> _restGetByNameFragment(String restPath, PagingInfo pagingInfo,
 			String name, String representation) {
 		if (isPagingValid(pagingInfo)) {
-			return restService.getByNameFragment(restPath, name, representation, pagingInfo.getLimit(), pagingInfo.getStartIndex());
+			return restService
+					.getByNameFragment(restPath, name, representation, pagingInfo.getLimit(), pagingInfo.getStartIndex());
 		} else {
 			return restService.getByNameFragment(restPath, name, representation);
 		}

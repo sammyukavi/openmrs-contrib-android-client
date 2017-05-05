@@ -37,11 +37,11 @@ public class CivilStatusArrayAdapter extends ArrayAdapter<ConceptAnswer> {
 	public View getDropDownView(int position, View convertView, ViewGroup parent) {
 		ConceptAnswer conceptAnswer = getItem(position);
 
-		if(convertView == null){
+		if (convertView == null) {
 			convertView = LayoutInflater.from(this.getContext()).inflate(R.layout.list_item_concept_name, parent, false);
 		}
 
-		TextView conceptAnswerText = (TextView) convertView.findViewById(R.id.conceptName);
+		TextView conceptAnswerText = (TextView)convertView.findViewById(R.id.conceptName);
 		assert conceptAnswer != null;
 		conceptAnswerText.setText(conceptAnswer.getConcept().getDisplay());
 

@@ -31,32 +31,32 @@ public class ObservationTable extends Table<Observation> {
 	@Override
 	public String createTableDefinition() {
 		return CREATE_TABLE + TABLE_NAME + "("
-		       + Column.ID + PRIMARY_KEY
-		       + Column.ENCOUNTER_KEY_ID + Column.Type.INT_TYPE_NOT_NULL
-		       + Column.UUID + Column.Type.TEXT_TYPE_NOT_NULL
-		       + Column.DISPLAY + Column.Type.TEXT_TYPE_WITH_COMMA
-		       + Column.DISPLAY_VALUE + Column.Type.TEXT_TYPE_WITH_COMMA
-		       + Column.DIAGNOSIS_ORDER + Column.Type.TEXT_TYPE_WITH_COMMA
-		       + Column.DIAGNOSIS_LIST + Column.Type.TEXT_TYPE_WITH_COMMA
-		       + Column.DIAGNOSIS_CERTAINTY + Column.Type.TEXT_TYPE_WITH_COMMA
-		       + Column.DIAGNOSIS_NOTE + Column.Type.TEXT_TYPE_WITH_COMMA
-		       + Column.CONCEPT_UUID + Column.Type.TEXT_TYPE
-		       + ");";
+				+ Column.ID + PRIMARY_KEY
+				+ Column.ENCOUNTER_KEY_ID + Column.Type.INT_TYPE_NOT_NULL
+				+ Column.UUID + Column.Type.TEXT_TYPE_NOT_NULL
+				+ Column.DISPLAY + Column.Type.TEXT_TYPE_WITH_COMMA
+				+ Column.DISPLAY_VALUE + Column.Type.TEXT_TYPE_WITH_COMMA
+				+ Column.DIAGNOSIS_ORDER + Column.Type.TEXT_TYPE_WITH_COMMA
+				+ Column.DIAGNOSIS_LIST + Column.Type.TEXT_TYPE_WITH_COMMA
+				+ Column.DIAGNOSIS_CERTAINTY + Column.Type.TEXT_TYPE_WITH_COMMA
+				+ Column.DIAGNOSIS_NOTE + Column.Type.TEXT_TYPE_WITH_COMMA
+				+ Column.CONCEPT_UUID + Column.Type.TEXT_TYPE
+				+ ");";
 	}
 
 	@Override
 	public String insertIntoTableDefinition() {
 		return INSERT_INTO + TABLE_NAME + "("
-		       + Column.ENCOUNTER_KEY_ID + Column.COMMA
-		       + Column.UUID + Column.COMMA
-		       + Column.DISPLAY + Column.COMMA
-		       + Column.DISPLAY_VALUE + Column.COMMA
-		       + Column.DIAGNOSIS_ORDER + Column.COMMA
-		       + Column.DIAGNOSIS_LIST + Column.COMMA
-		       + Column.DIAGNOSIS_CERTAINTY + Column.COMMA
-		       + Column.DIAGNOSIS_NOTE + Column.COMMA
-		       + Column.CONCEPT_UUID + ")"
-		       + values(INSERT_COLUMNS_COUNT);
+				+ Column.ENCOUNTER_KEY_ID + Column.COMMA
+				+ Column.UUID + Column.COMMA
+				+ Column.DISPLAY + Column.COMMA
+				+ Column.DISPLAY_VALUE + Column.COMMA
+				+ Column.DIAGNOSIS_ORDER + Column.COMMA
+				+ Column.DIAGNOSIS_LIST + Column.COMMA
+				+ Column.DIAGNOSIS_CERTAINTY + Column.COMMA
+				+ Column.DIAGNOSIS_NOTE + Column.COMMA
+				+ Column.CONCEPT_UUID + ")"
+				+ values(INSERT_COLUMNS_COUNT);
 	}
 
 	@Override
@@ -80,7 +80,7 @@ public class ObservationTable extends Table<Observation> {
 	public void delete(long tableObjectID) {
 		DBOpenHelper openHelper = OpenMRSDBOpenHelper.getInstance().getDBOpenHelper();
 		String where = String.format("%s = ?", Column.ID);
-		String[] whereArgs = new String[]{String.valueOf(tableObjectID)};
+		String[] whereArgs = new String[] { String.valueOf(tableObjectID) };
 
 		openHelper.getWritableDatabase().delete(TABLE_NAME, where, whereArgs);
 	}

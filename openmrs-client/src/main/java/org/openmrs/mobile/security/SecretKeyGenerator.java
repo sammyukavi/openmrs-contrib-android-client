@@ -14,7 +14,6 @@
 
 package org.openmrs.mobile.security;
 
-
 import org.openmrs.mobile.application.OpenMRS;
 
 import java.security.NoSuchAlgorithmException;
@@ -24,10 +23,10 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 
 public final class SecretKeyGenerator {
-	
+
 	private SecretKeyGenerator() {
 	}
-	
+
 	public static String generateKey() {
 		// Generate a 256-bit key
 		final int outputKeyLength = 256;
@@ -44,12 +43,12 @@ public final class SecretKeyGenerator {
 		SecretKey key = keyGenerator.generateKey();
 		return bytesToHex(key.getEncoded());
 	}
-	
+
 	private static String bytesToHex(byte[] data) {
 		if (data == null) {
 			return null;
 		}
-		
+
 		int len = data.length;
 		String str = "";
 		for (int i = 0; i < len; i++) {

@@ -34,8 +34,8 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 
 	public FindPatientRecordContract.Presenter findPatientPresenter;
 	FindPatientRecordFragment findPatientRecordFragment;
-	private String query;
 	SearchView searchView;
+	private String query;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

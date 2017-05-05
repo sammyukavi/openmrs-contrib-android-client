@@ -34,10 +34,10 @@ import java.lang.reflect.Type;
 import java.util.Collection;
 
 public class ResourceSerializer implements JsonSerializer<Resource> {
-	
+
 	public static final String RESOURCE_SERIALIZER = "RESOURCE_SERIALIZER";
 	public static final String EXCEPTION = "exception";
-	
+
 	@Override
 	public JsonElement serialize(Resource src, Type typeOfSrc, JsonSerializationContext context) {
 		Gson myGson = getGson();
@@ -49,19 +49,19 @@ public class ResourceSerializer implements JsonSerializer<Resource> {
 				if (Resource.class.isAssignableFrom(field.getType())) {
 					try {
 						if (field.get(src) != null) {
-							srcJson.add(field.getName(), serializeField((Resource) field.get(src), context));
+							srcJson.add(field.getName(), serializeField((Resource)field.get(src), context));
 						}
 					} catch (IllegalAccessException e) {
 						Log.e(RESOURCE_SERIALIZER, EXCEPTION, e);
 					}
 				} else if (Collection.class.isAssignableFrom(field.getType())) {
 					try {
-						Collection collection = ((Collection) field.get(src));
+						Collection collection = ((Collection)field.get(src));
 						if (collection != null && !collection.isEmpty()) {
 							if (isResourceCollection(collection)) {
 								JsonArray jsonArray = new JsonArray();
 								for (Object resource : collection) {
-									jsonArray.add(serializeField((Resource) resource, context));
+									jsonArray.add(serializeField((Resource)resource, context));
 								}
 								srcJson.add(field.getName(), jsonArray);
 							} else {
@@ -86,7 +86,7 @@ public class ResourceSerializer implements JsonSerializer<Resource> {
 		}
 		return srcJson;
 	}
-	
+
 	@NonNull
 	private Gson getGson() {
 		GsonBuilder gsonBuilder = new GsonBuilder();
@@ -94,7 +94,7 @@ public class ResourceSerializer implements JsonSerializer<Resource> {
 				.excludeFieldsWithoutExposeAnnotation()
 				.create();
 	}
-	
+
 	private JsonElement serializeField(Resource src, JsonSerializationContext context) {
 		if (src.getUuid() != null) {
 			return new JsonPrimitive(src.getUuid());
@@ -102,8 +102,7 @@ public class ResourceSerializer implements JsonSerializer<Resource> {
 			return context.serialize(src);
 		}
 	}
-	
-	
+
 	private boolean isResourceCollection(Collection collection) {
 		return Resource.class.isAssignableFrom(collection.toArray()[0].getClass());
 	}

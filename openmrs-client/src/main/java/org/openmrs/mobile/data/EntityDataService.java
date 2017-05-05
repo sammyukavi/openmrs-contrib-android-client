@@ -11,14 +11,14 @@ import org.openmrs.mobile.models.Patient;
  * @param <E> The entity class
  */
 public interface EntityDataService<E extends BaseOpenmrsEntity> extends DataService<E> {
-    /**
-     * Gets entities associated with the specified patient.
-     * @param patient The patient to search for
-     * @param includeInactive {@code true} to include inactive entities; otherwise, {@code false}
-     * @param pagingInfo The paging information or null to exclude paging
-     * @param callback
-     */
-    void getByPatient(@NonNull Patient patient, boolean includeInactive,
-                      @Nullable PagingInfo pagingInfo,
-                      @NonNull GetMultipleCallback<E> callback);
+	/**
+	 * Gets entities associated with the specified patient.
+	 * @param patient         The patient to search for
+	 * @param includeInactive {@code true} to include inactive entities; otherwise, {@code false}
+	 * @param pagingInfo      The paging information or null to exclude paging
+	 * @param callback
+	 */
+	void getByPatient(@NonNull Patient patient, boolean includeInactive,
+			@Nullable PagingInfo pagingInfo,
+			@NonNull GetMultipleCallback<E> callback);
 }

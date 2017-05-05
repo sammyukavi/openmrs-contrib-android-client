@@ -75,6 +75,7 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 						findPatientView.setFetchedPatientsVisibility(0);
 						findPatientView.showToast(ApplicationConstants.toastMessages.findPatientInfo, ToastUtil.ToastType
 								.NOTICE);
+						//findPatientView.showRegistration();
 					} else {
 						findPatientView.setNoPatientsVisibility(false);
 						findPatientView.setSearchPatientVisibility(false);
@@ -94,7 +95,7 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 							.showToast(ApplicationConstants.toastMessages.findPatientError, ToastUtil.ToastType.ERROR);
 				}
 			};
-			patientDataService.getByName(query, null, getMultipleCallback);
+			patientDataService.getByNameAndIdentifier(query, null, getMultipleCallback);
 		} else {
 			// get the users from the local storage.
 		}

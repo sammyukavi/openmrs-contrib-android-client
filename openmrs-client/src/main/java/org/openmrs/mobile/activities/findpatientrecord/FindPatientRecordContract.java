@@ -41,6 +41,8 @@ public interface FindPatientRecordContract {
 
 		void showToast(String message, ToastUtil.ToastType toastType);
 
+		void showRegistration();
+
 	}
 
 	interface Presenter extends BasePresenterContract {

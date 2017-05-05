@@ -15,10 +15,10 @@
 				android:icon="@drawable/ic_nav_capture_vitals"
 				android:title="@string/nav_capture_vitals"/>
 		
-		<item
+		<!--<item
 				android:id="@+id/navItemRegisterPatient"
 				android:icon="@drawable/ic_nav_register_patient"
-				android:title="@string/nav_register_patient"/>
+				android:title="@string/nav_register_patient"/>-->
 		<item
 				android:id="@+id/navItemPatientLists"
 				android:icon="@drawable/ic_nav_patient_lists"

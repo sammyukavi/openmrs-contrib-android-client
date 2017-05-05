@@ -66,13 +66,15 @@ public class PatientDataService extends BaseDataService<Patient, PatientRestServ
 
 	// End Retrofit Workaround
 
-	public void getByName(String name, PagingInfo pagingInfo, GetMultipleCallback<Patient> callback) {
+	public void getByNameAndIdentifier(String query, PagingInfo pagingInfo, GetMultipleCallback<Patient> callback) {
 		executeMultipleCallback(callback, null, () -> {
 			if (isPagingValid(pagingInfo)) {
-				return restService.getByName(buildRestRequestPath(), name, RestConstants.Representations.FULL,
+				return restService.getByNameAndIdentifier(buildRestRequestPath(), RestConstants.Representations
+								.FULL, query, query,
 						pagingInfo.getLimit(), pagingInfo.getStartIndex());
 			} else {
-				return restService.getByName(buildRestRequestPath(), name, RestConstants.Representations.FULL);
+				return restService.getByNameAndIdentifier(buildRestRequestPath(), RestConstants.Representations
+						.FULL, query, query);
 			}
 		});
 	}
@@ -80,7 +82,7 @@ public class PatientDataService extends BaseDataService<Patient, PatientRestServ
 	public void getLastViewed(String lastviewed, PagingInfo pagingInfo, GetMultipleCallback<Patient> callback) {
 		executeMultipleCallback(callback, null, () -> {
 			if (isPagingValid(pagingInfo)) {
-				return restService.getLastViewed(buildRestRequestPath(),lastviewed,RestConstants.Representations.FULL,
+				return restService.getLastViewed(buildRestRequestPath(), lastviewed, RestConstants.Representations.FULL,
 						pagingInfo.getLimit(), pagingInfo.getStartIndex());
 			} else {
 				return restService.getLastViewed(buildRestRequestPath(), lastviewed, RestConstants.Representations.FULL);

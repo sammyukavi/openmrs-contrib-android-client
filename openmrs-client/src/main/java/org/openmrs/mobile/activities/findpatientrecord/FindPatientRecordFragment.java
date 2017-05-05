@@ -14,6 +14,7 @@
 
 package org.openmrs.mobile.activities.findpatientrecord;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,7 +28,11 @@ import android.widget.TextView;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
+import org.openmrs.mobile.activities.addeditpatient.AddEditPatientActivity;
+import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.models.Patient;
+import org.openmrs.mobile.models.Session;
+import org.openmrs.mobile.net.AuthorizationManager;
 import org.openmrs.mobile.utilities.FontsUtil;
 import org.openmrs.mobile.utilities.ToastUtil;
 
@@ -43,6 +48,8 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 	private ProgressBar findPatientProgressBar;
 	private RecyclerView findPatientRecyclerViewAdapter;
 	private LinearLayout findPatientLayout, noPatientsFoundLayout, foundPatientsLayout, patientListLayout, progessBarLayout;
+	private AuthorizationManager authorizationManager;
+	private OpenMRS openMRS = OpenMRS.getInstance();
 
 	public static FindPatientRecordFragment newInstance() {
 		return new FindPatientRecordFragment();
@@ -63,7 +70,6 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 		noPatientFoundTitle = (TextView)v.findViewById(R.id.noPatientsFoundPatientTitle);
 		progessBarLayout = (LinearLayout)v.findViewById(R.id.progressBarLayout);
 	}
-
 
 	private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
 
@@ -108,7 +114,12 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 
 		// Font config
 		FontsUtil.setFont((ViewGroup)this.getActivity().findViewById(android.R.id.content));
-		mPresenter.getLastViewed();
+
+		authorizationManager = new AuthorizationManager();
+		if (authorizationManager.isUserLoggedIn()) {
+			mPresenter.getLastViewed();
+		}
+
 		return mRootView;
 	}
 
@@ -149,6 +160,13 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 	@Override
 	public void showToast(String message, ToastUtil.ToastType toastType) {
 		ToastUtil.showShortToast(getContext(), toastType, message);
+	}
+
+	@Override
+	public void showRegistration() {
+		Intent intent = new Intent(openMRS.getApplicationContext(), AddEditPatientActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		openMRS.getApplicationContext().startActivity(intent);
 	}
 
 }

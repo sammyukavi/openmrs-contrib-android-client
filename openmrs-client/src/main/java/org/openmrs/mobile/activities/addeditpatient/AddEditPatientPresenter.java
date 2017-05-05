@@ -245,7 +245,8 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 							.ERROR);
 				}
 			};
-			patientDataService.getByName(patient.getPerson().getName().getNameString(), pagingInfo, getMultipleCallback);
+			patientDataService.getByNameAndIdentifier(patient.getPerson().getName().getNameString(), pagingInfo,
+					getMultipleCallback);
 		} else {
 			// get the users from the local storage.
 		}

@@ -29,14 +29,16 @@ public interface PatientRestService {
 			@Path("uuid") String uuid);
 
 	@GET(RestConstants.REST_PATH)
-	Call<Results<Patient>> getByName(@Path(value = "restPath", encoded = true) String restPath,
+	Call<Results<Patient>> getByNameAndIdentifier(@Path(value = "restPath", encoded = true) String restPath,
+			@Query("v") String representation,
 			@Query("q") String name,
-			@Query("v") String representation);
+			@Query("identifier") String identifier);
 
 	@GET(RestConstants.REST_PATH)
-	Call<Results<Patient>> getByName(@Path(value = "restPath", encoded = true) String restPath,
-			@Query("q") String name,
+	Call<Results<Patient>> getByNameAndIdentifier(@Path(value = "restPath", encoded = true) String restPath,
 			@Query("v") String representation,
+			@Query("q") String name,
+			@Query("identifier") String identifier,
 			@Query("limit") int limit,
 			@Query("startIndex") int startIndex);
 

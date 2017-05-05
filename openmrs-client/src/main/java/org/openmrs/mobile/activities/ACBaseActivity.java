@@ -254,9 +254,6 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 			case R.id.navItemCaptureVitals:
 				startActivity(new Intent(this, CaptureVitalsActivity.class));
 				break;
-			case R.id.navItemRegisterPatient:
-				startActivity(new Intent(this, AddEditPatientActivity.class));
-				break;
 			case R.id.navItemPatientLists:
 				startActivity(new Intent(this, PatientListsActivity.class));
 				break;

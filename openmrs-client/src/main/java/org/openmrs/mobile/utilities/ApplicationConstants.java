@@ -26,7 +26,7 @@ public abstract class ApplicationConstants {
     public static final String VISIT_TYPE_UUID = "visit_type_uuid";
     public static final String LAST_SESSION_TOKEN = "last_session_id";
     public static final String LAST_LOGIN_SERVER_URL = "last_login_server_url";
-	public static final String DEFAULT_OPEN_MRS_URL = "http://192.168.2.34:9996/openmrs/";
+	public static final String DEFAULT_OPEN_MRS_URL = "http://10.1.1.3:8080/openmrs/";
 	public static final String CIVIL_STATUS_UUID = 	"1054AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
     //discuss on using the openhmis
 	// demo as the main test server to avoid changes here.
@@ -121,5 +121,7 @@ public abstract class ApplicationConstants {
 		public static final String civilStatusFetchError = "Civil Status could not be fetched";
 		public static final String patientRegistrationError = "Patient registration failed";
 		public static final String patientRegistrationSuccess = "Patient was registered successfully";
+		public static final String attributeTypeError = "Attribute Types not fetched";
+		public static final String attributeTypeInfo = "No Attribute Types found";
 	}
 }

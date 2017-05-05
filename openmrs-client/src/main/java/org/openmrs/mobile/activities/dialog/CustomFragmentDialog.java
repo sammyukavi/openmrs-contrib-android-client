@@ -98,7 +98,6 @@ public class CustomFragmentDialog extends DialogFragment {
 		View dialogLayout = mInflater.inflate(R.layout.fragment_dialog_layout, null, false);
 		this.mFieldsLayout = (LinearLayout) dialogLayout.findViewById(R.id.dialogForm);
 		this.setRightButton(dialogLayout);
-		this.setLeftButton(dialogLayout);
 		getDialog().setCanceledOnTouchOutside(false);
 		buildDialog();
 		FontsUtil.setFont((ViewGroup) dialogLayout);
@@ -186,10 +185,6 @@ public class CustomFragmentDialog extends DialogFragment {
 		if (null != mCustomDialogBundle.getTextViewMessage()) {
 			mTextView = addTextField(mCustomDialogBundle.getTextViewMessage());
 		}
-		if (null != mCustomDialogBundle.getLeftButtonAction()) {
-			setLeftButton(mCustomDialogBundle.getLeftButtonText());
-			mLeftButton.setOnClickListener(onClickActionSolver(mCustomDialogBundle.getLeftButtonAction()));
-		}
 		if (null != mCustomDialogBundle.getRightButtonAction()) {
 			setRightButton(mCustomDialogBundle.getRightButtonText());
 			mRightButton.setOnClickListener(onClickActionSolver(mCustomDialogBundle.getRightButtonAction()));
@@ -245,11 +240,7 @@ public class CustomFragmentDialog extends DialogFragment {
 		mFieldsLayout.addView(field, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 		return textView;
 	}
-	
-	public void setLeftButton(String text) {
-		mLeftButton.setText(text);
-		setViewVisible(mLeftButton, true);
-	}
+
 	
 	public void setRightButton(String text) {
 		mRightButton.setText(text);
@@ -267,10 +258,7 @@ public class CustomFragmentDialog extends DialogFragment {
 	public void setRightButton(View dialogLayout) {
 		this.mRightButton = (Button) dialogLayout.findViewById(R.id.dialogFormButtonsSubmitButton);
 	}
-	
-	public void setLeftButton(View dialogLayout) {
-		this.mLeftButton = (Button) dialogLayout.findViewById(R.id.dialogFormButtonsCancelButton);
-	}
+
 	
 	public void addProgressBar(String message) {
 		RelativeLayout progressBarLayout = (RelativeLayout) mInflater.inflate(R.layout.dialog_progress, null);

@@ -31,7 +31,6 @@ import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.activities.addeditpatient.AddEditPatientActivity;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.models.Patient;
-import org.openmrs.mobile.models.Session;
 import org.openmrs.mobile.net.AuthorizationManager;
 import org.openmrs.mobile.utilities.FontsUtil;
 import org.openmrs.mobile.utilities.ToastUtil;
@@ -48,8 +47,8 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 	private ProgressBar findPatientProgressBar;
 	private RecyclerView findPatientRecyclerViewAdapter;
 	private LinearLayout findPatientLayout, noPatientsFoundLayout, foundPatientsLayout, patientListLayout, progessBarLayout;
-	private AuthorizationManager authorizationManager;
 	private OpenMRS openMRS = OpenMRS.getInstance();
+	private AuthorizationManager authorizationManager;
 
 	public static FindPatientRecordFragment newInstance() {
 		return new FindPatientRecordFragment();
@@ -81,17 +80,17 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 		@Override
 		public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
 			super.onScrolled(recyclerView, dx, dy);
-			/*if(!findPatientPresenter.isLoading()){
+			if (!mPresenter.isLoading()) {
 				if (!findPatientRecyclerView.canScrollVertically(1)) {
 					// load next page
-					findPatientPresenter.loadResults(selectedPatientList.getUuid(), true);
+					//mPresenter.loadResults(selectedPatientList.getUuid(), true);
 				}
 
-				if( !findPatientRecyclerView.canScrollVertically(-1) && dy < 0){
+				if (!findPatientRecyclerView.canScrollVertically(-1) && dy < 0) {
 					// load previous page
-					findPatientPresenter.loadResults(selectedPatientList.getUuid(), false);
+					//mPresenter.loadResults(selectedPatientList.getUuid(), false);
 				}
-			}*/
+			}
 		}
 	};
 
@@ -114,12 +113,10 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 
 		// Font config
 		FontsUtil.setFont((ViewGroup)this.getActivity().findViewById(android.R.id.content));
-
 		authorizationManager = new AuthorizationManager();
 		if (authorizationManager.isUserLoggedIn()) {
 			mPresenter.getLastViewed();
 		}
-
 		return mRootView;
 	}
 

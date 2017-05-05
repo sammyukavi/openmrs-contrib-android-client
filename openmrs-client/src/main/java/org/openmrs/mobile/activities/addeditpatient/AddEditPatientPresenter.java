@@ -26,9 +26,11 @@ import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.impl.ConceptDataService;
 import org.openmrs.mobile.data.impl.PatientDataService;
 import org.openmrs.mobile.data.impl.PatientIdentifierTypeDataService;
+import org.openmrs.mobile.data.impl.PersonAttributeTypeDataService;
 import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.PatientIdentifierType;
+import org.openmrs.mobile.models.PersonAttributeType;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.NetworkUtils;
 import org.openmrs.mobile.utilities.StringUtils;
@@ -42,6 +44,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 
 	private PatientDataService patientDataService;
 	private ConceptDataService conceptDataService;
+	private PersonAttributeTypeDataService personAttributeTypeDataService;
 	private PatientIdentifierTypeDataService patientIdentifierTypeDataService;
 	private RestApi restApi;
 	private Patient mPatient;
@@ -62,6 +65,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		this.patientDataService = new PatientDataService();
 		this.conceptDataService = new ConceptDataService();
 		this.patientIdentifierTypeDataService = new PatientIdentifierTypeDataService();
+		this.personAttributeTypeDataService = new PersonAttributeTypeDataService();
 		this.restApi = RestServiceBuilder.createService(RestApi.class);
 	}
 
@@ -77,6 +81,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		this.restApi = restApi;
 		this.mPatientInfoView.setPresenter(this);
 		this.patientIdentifierTypeDataService = new PatientIdentifierTypeDataService();
+		this.personAttributeTypeDataService = new PersonAttributeTypeDataService();
 	}
 
 	private boolean validate(Patient patient) {
@@ -147,7 +152,9 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 
 	@Override
 	public void subscribe() {
-		// This method is intentionally empty
+		getCivilStatus();
+		getPatientIdentifierTypes();
+		getPersonAttributeTypes();
 	}
 
 	@Override
@@ -298,6 +305,32 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 			patientIdentifierTypeDataService.getAll(false, null, getMultipleCallback);
 		} else {
 			// get the users from the local storage.
+		}
+	}
+
+	public void getPersonAttributeTypes() {
+		if (NetworkUtils.hasNetwork()) {
+			DataService.GetMultipleCallback<PersonAttributeType> getMultipleCallback = new DataService
+					.GetMultipleCallback<PersonAttributeType>(){
+
+				@Override
+				public void onCompleted(List<PersonAttributeType> personAttributeTypes) {
+					if (!personAttributeTypes.isEmpty()) {
+						System.out.println(personAttributeTypes);
+					} else {
+						mPatientInfoView.showToast(ApplicationConstants.toastMessages.attributeTypeInfo, ToastUtil.ToastType
+								.NOTICE);
+					}
+				}
+
+				@Override
+				public void onError(Throwable t) {
+					Log.e("Attribute Type Error", "Error", t.fillInStackTrace());
+					mPatientInfoView.showToast(ApplicationConstants.toastMessages.attributeTypeError, ToastUtil.ToastType
+							.ERROR);
+				}
+			};
+			personAttributeTypeDataService.getAll(false,null,getMultipleCallback);
 		}
 	}
 

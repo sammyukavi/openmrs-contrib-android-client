@@ -15,75 +15,126 @@ import com.google.gson.annotations.SerializedName;
 
 public class PersonAttributeType extends BaseOpenmrsMetadata {
 
-	@Expose
-	@SerializedName("minOccurs")
-	private Integer minOccurs = 0;
 
 	@Expose
-	@SerializedName("maxOccurs")
-	private Integer maxOccurs = null;
+	@SerializedName("concept")
+	private Concept concept;
+
+	@SerializedName("format")
+	@Expose
+	private String format;
 
 	@Expose
-	@SerializedName("datatypeClassname")
-	private String datatypeClassname;
+	@SerializedName("foreignKey")
+	private Integer foreignKey;
 
 	@Expose
-	@SerializedName("datatypeConfig")
-	private String datatypeConfig;
+	@SerializedName("sortWeight")
+	private Double sortWeight;
 
 	@Expose
-	@SerializedName("preferredHandlerClassname")
-	private String preferredHandlerClassname;
+	@SerializedName("searchable")
+	private Boolean searchable = false;
 
 	@Expose
-	@SerializedName("handlerConfig")
-	private String handlerConfig;
+	@SerializedName("editPrivilege")
+	private Privilege editPrivilege;
 
-	public Integer getMinOccurs() {
-		return minOccurs;
+
+	public Concept getConcept() {
+		return concept;
 	}
 
-	public void setMinOccurs(Integer minOccurs) {
-		this.minOccurs = minOccurs;
+	public void setConcept(Concept concept) {
+		this.concept = concept;
 	}
 
-	public Integer getMaxOccurs() {
-		return maxOccurs;
+	/**
+	 * @return Returns the format.
+	 */
+	public String getFormat() {
+		return format;
 	}
 
-	public void setMaxOccurs(Integer maxOccurs) {
-		this.maxOccurs = maxOccurs;
+	/**
+	 * @param format The format to set.
+	 */
+	public void setFormat(String format) {
+		this.format = format;
 	}
 
-	public String getDatatypeClassname() {
-		return datatypeClassname;
+	/**
+	 * @return the foreignKey
+	 */
+	public Integer getForeignKey() {
+		return foreignKey;
 	}
 
-	public void setDatatypeClassname(String datatypeClassname) {
-		this.datatypeClassname = datatypeClassname;
+	/**
+	 * @param foreignKey the foreignKey to set
+	 */
+	public void setForeignKey(Integer foreignKey) {
+		this.foreignKey = foreignKey;
 	}
 
-	public String getDatatypeConfig() {
-		return datatypeConfig;
+	/**
+	 * @return the sortWeight
+	 */
+	public Double getSortWeight() {
+		return sortWeight;
 	}
 
-	public void setDatatypeConfig(String datatypeConfig) {
-		this.datatypeConfig = datatypeConfig;
+	/**
+	 * @param sortWeight the formOrder to set
+	 */
+	public void setSortWeight(Double sortWeight) {
+		this.sortWeight = sortWeight;
 	}
 
-	public String getPreferredHandlerClassname() {
-		return preferredHandlerClassname;
+	/**
+	 * @return the searchable status
+	 */
+	public Boolean isSearchable() {
+		return getSearchable();
 	}
 
-	public void setPreferredHandlerClassname(String preferredHandlerClassname) {
-		this.preferredHandlerClassname = preferredHandlerClassname;
+	public Boolean getSearchable() {
+		return searchable;
 	}
 
-	public String getHandlerConfig() {
-		return handlerConfig;
+	/**
+	 * @param searchable the searchable to set
+	 */
+	public void setSearchable(Boolean searchable) {
+		this.searchable = searchable;
 	}
 
-	public void setHandlerConfig(String handlerConfig) {
-		this.handlerConfig = handlerConfig;
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString() {
+		return getName();
 	}
+
+	/**
+	 * The privilege required in order to edit this attribute
+	 *
+	 * @return Returns the required privilege
+	 * @since 1.5
+	 */
+	public Privilege getEditPrivilege() {
+		return editPrivilege;
+	}
+
+	/**
+	 * The privilege required in order to edit this attribute If <code>editPrivilege</code> is null,
+	 * no extra permissions are required to edit this type
+	 *
+	 * @param editPrivilege
+	 * @since 1.5
+	 */
+	public void setEditPrivilege(Privilege editPrivilege) {
+		this.editPrivilege = editPrivilege;
+	}
+
 }

@@ -56,6 +56,7 @@ import org.openmrs.mobile.models.PatientIdentifier;
 import org.openmrs.mobile.models.PatientIdentifierType;
 import org.openmrs.mobile.models.Person;
 import org.openmrs.mobile.models.PersonAddress;
+import org.openmrs.mobile.models.PersonAttribute;
 import org.openmrs.mobile.models.PersonAttributeType;
 import org.openmrs.mobile.models.PersonName;
 import org.openmrs.mobile.utilities.ApplicationConstants;
@@ -200,8 +201,6 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		addSuggestionsToAutoCompleteTextView();
 		addListeners();
 		fillFields(mPresenter.getPatientToUpdate());
-		mPresenter.getCivilStatus();
-		mPresenter.getPatientIdentifierTypes();
 		return root;
 
 	}
@@ -257,6 +256,13 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		List<PersonAddress> addresses = new ArrayList<>();
 		addresses.add(address);
 		person.setAddresses(addresses);
+
+		/*PersonAttribute personAttribute = new PersonAttribute();
+		personAttribute.setValue(ViewUtils.getInput(occupation));
+
+		List<PersonAttribute> personAttributes = new ArrayList<>();
+		personAttributes.add(personAttribute);
+		person.setAttributes(personAttributes);*/
 
 		// Add names
 		PersonName name = new PersonName();
@@ -344,8 +350,6 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		similarPatientsDialog.setTitleViewMessage(getString(R.string.similar_patients_dialog_title));
 		similarPatientsDialog.setRightButtonText(getString(R.string.dialog_button_register_new));
 		similarPatientsDialog.setRightButtonAction(CustomFragmentDialog.OnClickAction.REGISTER_PATIENT);
-		similarPatientsDialog.setLeftButtonText(getString(R.string.dialog_button_cancel));
-		similarPatientsDialog.setLeftButtonAction(CustomFragmentDialog.OnClickAction.CANCEL_REGISTERING);
 		similarPatientsDialog.setPatientsList(patients);
 		similarPatientsDialog.setNewPatient(newPatient);
 		((AddEditPatientActivity)this.getActivity())
@@ -366,8 +370,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 
 	@Override
 	public void setCivilStatus(List<ConceptAnswer> answers) {
-		ArrayAdapter<ConceptAnswer> conceptAnswerArrayAdapter =
-				new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, answers);
+		ArrayAdapter<ConceptAnswer> conceptAnswerArrayAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, answers);
 		civilStatus.setAdapter(conceptAnswerArrayAdapter);
 	}
 
@@ -445,7 +448,6 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 
 	private void addListeners() {
 
-
 		gen.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 			public void onCheckedChanged(RadioGroup rGroup, int checkedId) {
 				gendererror.setVisibility(View.GONE);
@@ -522,22 +524,4 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		edmonth.addTextChangedListener(textWatcher);
 		edyr.addTextChangedListener(textWatcher);
 	}
-
-	private Snackbar createSnackbarLong(int stringId) {
-		Snackbar snackbar = Snackbar.make(linearLayout, stringId, Snackbar.LENGTH_LONG);
-		View sbView = snackbar.getView();
-		TextView textView = (TextView)sbView.findViewById(android.support.design.R.id.snackbar_text);
-		textView.setTextColor(Color.WHITE);
-		return snackbar;
-	}
-
-	private <T extends BaseOpenmrsObject> void setDefaultDropdownSelection(ArrayAdapter<T> arrayAdapter, String searchUuid,
-			Spinner dropdown) {
-		for (int count = 0; count < arrayAdapter.getCount(); count++) {
-			if (arrayAdapter.getItem(count).getUuid().equalsIgnoreCase(searchUuid)) {
-				dropdown.setSelection(count);
-			}
-		}
-	}
-
 }

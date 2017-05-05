@@ -52,6 +52,20 @@ public interface FindPatientRecordContract {
 		void findPatient(String name);
 
 		void getLastViewed();
+
+		void setPage(int page);
+
+		boolean isLoading();
+
+		void setLoading(boolean loading);
+
+		void setTotalNumberResults(int totalNumberResults);
+
+		void loadResults(String patientListUuid, boolean loadNextResults);
+
+		void refresh();
+
+		int getPage();
 	}
 
 }

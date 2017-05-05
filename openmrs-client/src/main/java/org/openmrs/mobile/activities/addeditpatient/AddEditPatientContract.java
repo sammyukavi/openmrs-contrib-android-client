@@ -76,6 +76,8 @@ public interface AddEditPatientContract {
 		void getCivilStatus();
 
 		void getPatientIdentifierTypes();
+
+		void getPersonAttributeTypes();
 	}
 
 }

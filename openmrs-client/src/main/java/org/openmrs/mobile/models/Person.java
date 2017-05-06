@@ -21,6 +21,8 @@ import java.util.List;
 
 public class Person extends BaseOpenmrsEntity implements Serializable {
 
+    private Integer personId;
+
     @SerializedName("names")
     @Expose
     private List<PersonName> names = new ArrayList<PersonName>();
@@ -49,6 +51,14 @@ public class Person extends BaseOpenmrsEntity implements Serializable {
     @SerializedName("age")
     @Expose
     private Integer age;
+
+    public Integer getPersonId() {
+        return personId;
+    }
+
+    public void setPersonId(Integer personId) {
+        this.personId = personId;
+    }
 
     /**
      * 

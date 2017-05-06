@@ -271,10 +271,6 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
             case R.id.navItemSettings:
                 startActivity(new Intent(this, SettingsActivity.class));
                 break;
-            case R.id.navItemAddEditVisit:
-                startActivity(new Intent(this, AddEditVisitActivity.class));
-                break;
-
             default:
                 break;
         }

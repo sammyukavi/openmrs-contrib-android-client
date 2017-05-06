@@ -21,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -30,7 +31,6 @@ import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.models.PatientList;
 import org.openmrs.mobile.models.PatientListContextModel;
 import org.openmrs.mobile.utilities.FontsUtil;
-import org.openmrs.mobile.utilities.StringUtils;
 
 import java.util.List;
 
@@ -44,7 +44,6 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
     private TextView emptyPatientList;
     private TextView noPatientLists;
     private TextView numberOfPatients;
-    private PatientListArrayAdapter patientListAdapter;
     private RecyclerView patientListModelRecyclerView;
     private LinearLayoutManager layoutManager;
 
@@ -121,8 +120,9 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 
     @Override
     public void updatePatientLists(List<PatientList> patientLists) {
-        patientListAdapter = new PatientListArrayAdapter(this.getActivity(), patientLists);
-        patientListDropdown.setAdapter(patientListAdapter);
+        ArrayAdapter<PatientList> adapter = new ArrayAdapter<PatientList>(getContext(),
+                android.R.layout.simple_spinner_dropdown_item, patientLists);
+        patientListDropdown.setAdapter(adapter);
         patientListDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

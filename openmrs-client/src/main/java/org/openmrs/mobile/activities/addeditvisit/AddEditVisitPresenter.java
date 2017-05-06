@@ -17,21 +17,25 @@ import android.widget.Spinner;
 
 import org.greenrobot.greendao.annotation.NotNull;
 import org.openmrs.mobile.activities.BasePresenter;
+import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.impl.ConceptNameDataService;
+import org.openmrs.mobile.data.impl.LocationDataService;
 import org.openmrs.mobile.data.impl.PatientDataService;
+import org.openmrs.mobile.data.impl.ProviderDataService;
 import org.openmrs.mobile.data.impl.VisitAttributeTypeDataService;
 import org.openmrs.mobile.data.impl.VisitDataService;
 import org.openmrs.mobile.data.impl.VisitTypeDataService;
-import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.ConceptName;
+import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Patient;
+import org.openmrs.mobile.models.Provider;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitAttribute;
 import org.openmrs.mobile.models.VisitAttributeType;
 import org.openmrs.mobile.models.VisitType;
-import org.openmrs.mobile.utilities.DateUtils;
+import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.StringUtils;
 import org.openmrs.mobile.utilities.ToastUtil;
 
@@ -51,8 +55,12 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
     private ConceptNameDataService conceptNameDataService;
     private VisitDataService visitDataService;
     private PatientDataService patientDataService;
+    private ProviderDataService providerDataService;
+    private LocationDataService locationDataService;
     private boolean processing;
     private String patientUuid;
+    private Provider provider;
+    private Location location;
 
     public AddEditVisitPresenter(@NotNull AddEditVisitContract.View addEditVisitView, String patientUuid) {
         this.addEditVisitView = addEditVisitView;
@@ -63,13 +71,41 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
         this.patientDataService = new PatientDataService();
         this.conceptNameDataService = new ConceptNameDataService();
         this.visitDataService = new VisitDataService();
+        this.providerDataService = new ProviderDataService();
+        this.locationDataService = new LocationDataService();
         this.visit = new Visit();
+    }
+
+    /**
+     * TODO: create a service to getProviderByPerson, move code to commons
+     */
+    private void getCurrentProvider(){
+        String personUuid = OpenMRS.getInstance().getCurrentLoggedInUserInfo().get(ApplicationConstants.UserKeys.USER_UUID);
+        if(StringUtils.notEmpty(personUuid)) {
+
+            providerDataService.getAll(false, null, new DataService.GetMultipleCallback<Provider>() {
+                @Override
+                public void onCompleted(List<Provider> entities, int length) {
+                    for (Provider entity : entities) {
+                        if (personUuid.equalsIgnoreCase(entity.getPerson().getUuid())){
+                            provider = entity;
+                        }
+                    }
+                }
+
+                @Override
+                public void onError(Throwable t) {
+                    ToastUtil.error(t.getMessage());
+                }
+            });
+        }
     }
 
     @Override
     public void subscribe() {
         loadPatient();
-
+        getCurrentProvider();
+        getLocation();
     }
 
     private void loadPatient(){
@@ -90,11 +126,9 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
     }
 
     private void loadVisit(Patient patient){
-        System.out.println("***************************LOAD VISIT********************************");
         visitDataService.getByPatient(patient, false, null, new DataService.GetMultipleCallback<Visit>() {
             @Override
             public void onCompleted(List<Visit> entities, int length) {
-                System.out.println("SUCCESSFUL:VISIT " + "::" + entities.size());
                 if( entities.size() > 0){
                     visit = entities.get(0);
                     addEditVisitView.initView(false);
@@ -109,7 +143,6 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 
             @Override
             public void onError(Throwable t) {
-                System.out.println("ERROR:::VISIT " + t.getMessage());
                 ToastUtil.error(t.getMessage());
             }
         });
@@ -140,6 +173,23 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
             @Override
             public void onCompleted(List<VisitType> entities, int length) {
                 addEditVisitView.updateVisitTypes(entities);
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                ToastUtil.error(t.getMessage());
+            }
+        });
+    }
+
+    /**
+     * TODO: Move to Base class
+     */
+    public void getLocation(){
+        locationDataService.getByUUID(OpenMRS.getInstance().getLocation(), new DataService.GetSingleCallback<Location>() {
+            @Override
+            public void onCompleted(Location entity) {
+                location = entity;
             }
 
             @Override
@@ -183,8 +233,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
     public void startVisit(List<VisitAttribute> attributes) {
         visit.setAttributes(attributes);
         visit.setPatient(patient);
-        visit.setStartDatetime(
-                DateUtils.convertTime(System.currentTimeMillis(), DateUtils.OPEN_MRS_REQUEST_FORMAT));
+        visit.setLocation(location.getParentLocation());
         setProcessing(true);
 
         visitDataService.create(visit, new DataService.GetSingleCallback<Visit>() {
@@ -247,11 +296,18 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 
     @Override
     public <T> T searchVisitAttributeValueByType(VisitAttributeType visitAttributeType){
-        for(VisitAttribute visitAttribute : getVisit().getAttributes()){
-            if(visitAttribute.getAttributeType().getUuid().equalsIgnoreCase(visitAttributeType.getUuid())){
-                return (T) visitAttribute.getValue();
+        if(null != getVisit() && null != getVisit().getAttributes()) {
+            for (VisitAttribute visitAttribute : getVisit().getAttributes()) {
+                if (visitAttribute.getAttributeType().getUuid().equalsIgnoreCase(visitAttributeType.getUuid())) {
+                    return (T) visitAttribute.getValue();
+                }
             }
         }
         return null;
+    }
+
+    @Override
+    public Provider getProvider() {
+        return provider;
     }
 }

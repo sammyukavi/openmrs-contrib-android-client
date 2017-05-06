@@ -44,6 +44,7 @@
         <activity android:name=".activities.patientdashboard.PatientDashboardActivity" />
         <activity android:name=".activities.login.LoginActivity" />
         <activity android:name=".activities.addeditvisit.AddEditVisitActivity" />
+        <activity android:name=".activities.visitphoto.VisitPhotoActivity" />
     </application>
 
 </manifest>

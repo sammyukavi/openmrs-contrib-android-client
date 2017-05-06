@@ -34,7 +34,8 @@ public class Location extends BaseOpenmrsMetadata {
     private String country;
     @Expose
     private String postalCode;
-
+    @Expose
+    private Location parentLocation;
 
     public Location() {}
 
@@ -117,5 +118,13 @@ public class Location extends BaseOpenmrsMetadata {
 
     public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
+    }
+
+    public Location getParentLocation() {
+        return parentLocation;
+    }
+
+    public void setParentLocation(Location parentLocation) {
+        this.parentLocation = parentLocation;
     }
 }

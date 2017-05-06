@@ -230,6 +230,7 @@
     <string name="toast_with_black_background">Toast with black background</string>
     <string name="edit_form">Edit form</string>
     <string name="patient_photo">Patient Photo</string>
+    <string name="visit_photo">Visit Photo</string>
     <string name="visit_encounter_icon">Visit encounter Icon</string>
     <string name="visit_status_icon">Status of visit</string>
     <string name="show_or_hide_visit_details">Show/Hide visit details</string>
@@ -373,5 +374,6 @@
     <!-- Add/edit visit -->
     <string name="select_visit_type">Select Visit Type:</string>
     <string name="visit_type">Visit Type:</string>
+    <string name="upload_image">Upload Image</string>
 
 </resources>

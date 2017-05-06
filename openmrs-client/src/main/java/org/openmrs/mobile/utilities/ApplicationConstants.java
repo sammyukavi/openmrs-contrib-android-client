@@ -75,7 +75,8 @@ public abstract class ApplicationConstants {
     public abstract static class BundleKeys {
         public static final String CUSTOM_DIALOG_BUNDLE = "customDialogBundle";
         public static final String PATIENT_ID_BUNDLE = "patientID";
-        public static final String VISIT_ID = "visitID";
+        public static final String VISIT_ID_BUNDLE = "visitID";
+        public static final String PROVIDER_ID_BUNDLE = "providerID";
         public static final String ENCOUNTERTYPE = "encounterType";
         public static final String VALUEREFERENCE = "valueReference";
         public static final String FORM_NAME = "formName";

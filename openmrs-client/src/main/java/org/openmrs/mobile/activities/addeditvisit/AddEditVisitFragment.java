@@ -18,10 +18,13 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
+import org.openmrs.mobile.activities.visitphoto.VisitPhotoActivity;
 import org.openmrs.mobile.models.BaseOpenmrsObject;
 import org.openmrs.mobile.models.ConceptName;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.ViewUtils;
+
+import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +32,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.Spinner;
@@ -54,9 +58,9 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
     private TableLayout visitTableLayout;
     private ProgressBar progressBar;
     private TextView confirmMessage;
-    private VisitTypeArrayAdapter visitTypeArrayAdapter;
     private Spinner visitTypeDropdown;
     private Button visitSubmitButton;
+    private ImageView capturePhoto;
     private Map<String, VisitAttribute> visitAttributeMap = new HashMap<>();
     private Map<View, VisitAttributeType> viewVisitAttributeTypeMap = new HashMap<>();
     private static TableRow.LayoutParams marginParams;
@@ -66,11 +70,19 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_addedit_visit, container, false);
         visitTitle = (TextView) root.findViewById(R.id.visitTitle);
+        capturePhoto = (ImageView) root.findViewById(R.id.capture_photo);
         visitTableLayout = (TableLayout) root.findViewById(R.id.visitTableLayout);
         progressBar = (ProgressBar) root.findViewById(R.id.visitLoadingProgressBar);
         confirmMessage = (TextView) root.findViewById(R.id.confirmMessage);
         visitTypeDropdown = (Spinner) root.findViewById(R.id.visit_type);
         visitSubmitButton = (Button) root.findViewById(R.id.visitSubmitButton);
+        addListeners();
+        buildMarginLayout();
+
+        return root;
+    }
+
+    private void addListeners(){
         visitSubmitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,9 +92,19 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
             }
         });
 
-        buildMarginLayout();
-
-        return root;
+        capturePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), VisitPhotoActivity.class);
+                intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_ID_BUNDLE,
+                       mPresenter.getPatient().getUuid());
+                intent.putExtra(ApplicationConstants.BundleKeys.VISIT_ID_BUNDLE,
+                       mPresenter.getVisit().getUuid());
+                intent.putExtra(ApplicationConstants.BundleKeys.PROVIDER_ID_BUNDLE,
+                       mPresenter.getProvider().getUuid());
+                getContext().startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -147,7 +169,7 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 
                 // set default value
                 Boolean defaultValue = mPresenter.searchVisitAttributeValueByType(visitAttributeType);
-                if(defaultValue){
+                if(defaultValue != null){
                     booleanType.setChecked(defaultValue);
                 }
 
@@ -197,7 +219,8 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
     @Override
     public void updateConceptNamesView(Spinner conceptNamesDropdown, List<ConceptName> conceptNames){
         VisitAttributeType visitAttributeType = viewVisitAttributeTypeMap.get(conceptNamesDropdown);
-        ConceptNameArrayAdapter conceptNameArrayAdapter = new ConceptNameArrayAdapter(this.getActivity(), conceptNames);
+        ArrayAdapter<ConceptName> conceptNameArrayAdapter = new ArrayAdapter<ConceptName>(this.getActivity(),
+                android.R.layout.simple_spinner_dropdown_item, conceptNames);
         conceptNamesDropdown.setAdapter(conceptNameArrayAdapter);
 
         // set existing visit attribute if any
@@ -224,7 +247,8 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 
     @Override
     public void updateVisitTypes(List<VisitType> visitTypes) {
-        visitTypeArrayAdapter = new VisitTypeArrayAdapter(this.getActivity(), visitTypes);
+        ArrayAdapter<VisitType> visitTypeArrayAdapter = new ArrayAdapter(this.getActivity(),
+                android.R.layout.simple_spinner_dropdown_item, visitTypes);
         visitTypeDropdown.setAdapter(visitTypeArrayAdapter);
 
         // set existing visit type if any

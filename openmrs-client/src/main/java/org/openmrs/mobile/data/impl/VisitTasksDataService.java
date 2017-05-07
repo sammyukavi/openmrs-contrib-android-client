@@ -17,12 +17,15 @@ package org.openmrs.mobile.data.impl;
 import org.openmrs.mobile.data.BaseEntityDataService;
 import org.openmrs.mobile.data.EntityDataService;
 import org.openmrs.mobile.data.PagingInfo;
+import org.openmrs.mobile.data.rest.RestConstants;
+import org.openmrs.mobile.data.rest.VisitTasksRestService;
 import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.models.VisitTasks;
+import org.openmrs.mobile.utilities.ApplicationConstants;
 
 import retrofit2.Call;
 
-public class VisitTasksDataService extends BaseEntityDataService<VisitTasks, VisitTasks> implements
+public class VisitTasksDataService extends BaseEntityDataService<VisitTasks, VisitTasksRestService> implements
 		EntityDataService<VisitTasks> {
 
 	@Override
@@ -33,23 +36,23 @@ public class VisitTasksDataService extends BaseEntityDataService<VisitTasks, Vis
 	}
 
 	@Override
-	protected Class<VisitTasks> getRestServiceClass() {
-		return null;
+	protected Class<VisitTasksRestService> getRestServiceClass() {
+		return VisitTasksRestService.class;
 	}
 
 	@Override
 	protected String getRestPath() {
-		return null;
+		return ApplicationConstants.API.REST_ENDPOINT_V2;
 	}
 
 	@Override
 	protected String getEntityName() {
-		return null;
+		return "visittasks/task";
 	}
 
 	@Override
 	protected Call<VisitTasks> _restGetByUuid(String restPath, String uuid, String representation) {
-		return null;
+		return restService.getByUuid(restPath, uuid, representation);
 	}
 
 	@Override
@@ -59,16 +62,42 @@ public class VisitTasksDataService extends BaseEntityDataService<VisitTasks, Vis
 
 	@Override
 	protected Call<VisitTasks> _restCreate(String restPath, VisitTasks entity) {
-		return null;
+		return restService.create(restPath, entity);
 	}
 
 	@Override
 	protected Call<VisitTasks> _restUpdate(String restPath, VisitTasks entity) {
-		return null;
+		return restService.update(restPath, entity.getUuid(), entity);
 	}
 
 	@Override
 	protected Call<VisitTasks> _restPurge(String restPath, String uuid) {
-		return null;
+		return restService.purge(restPath, uuid);
+	}
+
+	public void getByName(String status, String query, String patient_uuid, String visit_uuid, PagingInfo pagingInfo,
+			GetMultipleCallback<VisitTasks> callback) {
+		executeMultipleCallback(callback, null, () -> {
+			if (isPagingValid(pagingInfo)) {
+				return restService.getByName(buildRestRequestPath(), RestConstants.Representations
+						.FULL, status, query, patient_uuid, visit_uuid, pagingInfo.getLimit(), pagingInfo.getStartIndex());
+			} else {
+				return restService.getByName(buildRestRequestPath(), RestConstants.Representations
+						.FULL, status, query, patient_uuid, visit_uuid);
+			}
+		});
+	}
+
+	public void getAll(String status, String patient_uuid, String visit_uuid, PagingInfo pagingInfo,
+			GetMultipleCallback<VisitTasks> callback) {
+		executeMultipleCallback(callback, null, () -> {
+			if (isPagingValid(pagingInfo)) {
+				return restService.getAll(buildRestRequestPath(), RestConstants.Representations
+						.FULL, status, patient_uuid, visit_uuid, pagingInfo.getLimit(), pagingInfo.getStartIndex());
+			} else {
+				return restService.getAll(buildRestRequestPath(), RestConstants.Representations
+						.FULL, status, patient_uuid, visit_uuid);
+			}
+		});
 	}
 }

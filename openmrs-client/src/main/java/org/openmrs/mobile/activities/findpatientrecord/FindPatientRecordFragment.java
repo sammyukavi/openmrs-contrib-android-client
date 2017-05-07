@@ -49,6 +49,27 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 	private LinearLayout findPatientLayout, noPatientsFoundLayout, foundPatientsLayout, patientListLayout, progessBarLayout;
 	private OpenMRS openMRS = OpenMRS.getInstance();
 	private AuthorizationManager authorizationManager;
+
+	public static FindPatientRecordFragment newInstance() {
+		return new FindPatientRecordFragment();
+	}
+
+	private void resolveViews(View v) {
+		noPatientFound = (TextView)v.findViewById(R.id.noPatientsFound);
+		findPatientRecyclerView = (RecyclerView)v.findViewById(R.id.findPatientModelRecyclerView);
+
+		findPatientProgressBar = (ProgressBar)v.findViewById(R.id.findPatientLoadingProgressBar);
+		numberOfFetchedPatients = (TextView)v.findViewById(R.id.numberOfFetchedPatients);
+		searchForPatient = (TextView)v.findViewById(R.id.findPatients);
+		findPatientLayout = (LinearLayout)v.findViewById(R.id.searchPatientsLayout);
+		noPatientsFoundLayout = (LinearLayout)v.findViewById(R.id.noPatientsFoundLayout);
+		foundPatientsLayout = (LinearLayout)v.findViewById(R.id.resultsLayout);
+		patientListLayout = (LinearLayout)v.findViewById(R.id.patientsCardViewLayout);
+		patientSearchTitle = (TextView)v.findViewById(R.id.findPatientTitle);
+		noPatientFoundTitle = (TextView)v.findViewById(R.id.noPatientsFoundPatientTitle);
+		progessBarLayout = (LinearLayout)v.findViewById(R.id.progressBarLayout);
+	}
+
 	private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
 
 		@Override
@@ -72,26 +93,6 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 			}
 		}
 	};
-
-	public static FindPatientRecordFragment newInstance() {
-		return new FindPatientRecordFragment();
-	}
-
-	private void resolveViews(View v) {
-		noPatientFound = (TextView)v.findViewById(R.id.noPatientsFound);
-		findPatientRecyclerView = (RecyclerView)v.findViewById(R.id.findPatientModelRecyclerView);
-
-		findPatientProgressBar = (ProgressBar)v.findViewById(R.id.findPatientLoadingProgressBar);
-		numberOfFetchedPatients = (TextView)v.findViewById(R.id.numberOfFetchedPatients);
-		searchForPatient = (TextView)v.findViewById(R.id.findPatients);
-		findPatientLayout = (LinearLayout)v.findViewById(R.id.searchPatientsLayout);
-		noPatientsFoundLayout = (LinearLayout)v.findViewById(R.id.noPatientsFoundLayout);
-		foundPatientsLayout = (LinearLayout)v.findViewById(R.id.resultsLayout);
-		patientListLayout = (LinearLayout)v.findViewById(R.id.patientsCardViewLayout);
-		patientSearchTitle = (TextView)v.findViewById(R.id.findPatientTitle);
-		noPatientFoundTitle = (TextView)v.findViewById(R.id.noPatientsFoundPatientTitle);
-		progessBarLayout = (LinearLayout)v.findViewById(R.id.progressBarLayout);
-	}
 
 	@Override
 	public void onDestroyView() {

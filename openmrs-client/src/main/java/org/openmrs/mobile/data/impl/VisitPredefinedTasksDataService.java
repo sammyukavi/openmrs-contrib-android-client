@@ -20,42 +20,51 @@ import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.rest.VisitPredefinedTasksRestService;
 import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.models.VisitPredefinedTasks;
+import org.openmrs.mobile.utilities.ApplicationConstants;
 
 import retrofit2.Call;
 
-public class VisitTasksPredefinedTasksDataService extends BaseMetadataDataService<VisitPredefinedTasks,
+public class VisitPredefinedTasksDataService extends BaseMetadataDataService<VisitPredefinedTasks,
 		VisitPredefinedTasksRestService> implements MetadataDataService<VisitPredefinedTasks> {
 	@Override
 	protected Call<Results<VisitPredefinedTasks>> _restGetByNameFragment(String restPath, PagingInfo pagingInfo, String
 			name,
 			String representation) {
-		return null;
+		if (isPagingValid(pagingInfo)) {
+			return restService.getByName(restPath, name, representation, pagingInfo.getLimit(), pagingInfo.getStartIndex());
+		} else {
+			return restService.getByName(restPath, name, representation);
+		}
 	}
 
 	@Override
 	protected Class<VisitPredefinedTasksRestService> getRestServiceClass() {
-		return null;
+		return VisitPredefinedTasksRestService.class;
 	}
 
 	@Override
 	protected String getRestPath() {
-		return null;
+		return ApplicationConstants.API.REST_ENDPOINT_V2;
 	}
 
 	@Override
 	protected String getEntityName() {
-		return null;
+		return "visittasks/predefinedTask";
 	}
 
 	@Override
 	protected Call<VisitPredefinedTasks> _restGetByUuid(String restPath, String uuid, String representation) {
-		return null;
+		return restService.getByUuid(restPath, uuid, representation);
 	}
 
 	@Override
 	protected Call<Results<VisitPredefinedTasks>> _restGetAll(String restPath, PagingInfo pagingInfo,
 			String representation) {
-		return null;
+		if (isPagingValid(pagingInfo)) {
+			return restService.getAll(restPath, representation, pagingInfo.getLimit(), pagingInfo.getStartIndex());
+		} else {
+			return restService.getAll(restPath, representation);
+		}
 	}
 
 	@Override

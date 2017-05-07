@@ -47,8 +47,8 @@ public interface VisitTasksRestService {
 			@Query("v") String representation,
 			@Query("status") String status,
 			@Query("q") String name,
-			@Query("patient") String patientUuid,
-			@Query("visit") String visitUuid
+			@Query("patient_uuid") String patientUuid,
+			@Query("visit_uuid") String visitUuid
 	);
 
 	@GET(RestConstants.REST_PATH)
@@ -56,8 +56,8 @@ public interface VisitTasksRestService {
 			@Query("v") String representation,
 			@Query("status") String status,
 			@Query("q") String name,
-			@Query("patient") String patientUuid,
-			@Query("visit") String visitUuid,
+			@Query("patient_uuid") String patientUuid,
+			@Query("visit_uuid") String visitUuid,
 			@Query("limit") int limit,
 			@Query("startIndex") int startIndex);
 
@@ -65,15 +65,15 @@ public interface VisitTasksRestService {
 	Call<Results<VisitTasks>> getAll(@Path(value = "restPath", encoded = true) String restPath,
 			@Query("v") String representation,
 			@Query("status") String status,
-			@Query("patient") String patientUuid,
-			@Query("visit") String visitUuid);
+			@Query("patient_uuid") String patientUuid,
+			@Query("visit_uuid") String visitUuid);
 
 	@GET(RestConstants.GET_ALL)
 	Call<Results<VisitTasks>> getAll(@Path(value = "restPath", encoded = true) String restPath,
 			@Query("v") String representation,
 			@Query("status") String status,
-			@Query("patient") String patientUuid,
-			@Query("visit") String visitUuid,
+			@Query("patient_uuid") String patientUuid,
+			@Query("visit_uuid") String visitUuid,
 			@Query("limit") int limit,
 			@Query("startIndex") int startIndex);
 }

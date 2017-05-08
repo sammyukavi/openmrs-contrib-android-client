@@ -63,13 +63,14 @@ public class VisitTasksPresenter extends BasePresenter implements VisitTasksCont
 				public void onCompleted(List<VisitPredefinedTask> visitPredefinedTasks) {
 					if (visitPredefinedTasks.isEmpty()) {
 						visitTasksView.setPredefinedTasks(visitPredefinedTasks);
-						visitTasksView.showToast(ApplicationConstants.toastMessages.predefinedTaskInfo, ToastUtil.ToastType
-								.NOTICE);
+						/*visitTasksView.showToast(ApplicationConstants.toastMessages.predefinedTaskInfo, ToastUtil
+						.ToastType
+								.NOTICE);*/
 					} else {
 						visitTasksView.setPredefinedTasks(visitPredefinedTasks);
-						visitTasksView.showToast(ApplicationConstants.toastMessages.predefinedTaskSuccess, ToastUtil
-								.ToastType
-								.SUCCESS);
+						visitTasksView.showToast(
+								ApplicationConstants.entityName.PREDEFINED_TASKS + ApplicationConstants.toastMessages
+										.fetchSuccessMessage, ToastUtil.ToastType.SUCCESS);
 					}
 				}
 
@@ -77,7 +78,8 @@ public class VisitTasksPresenter extends BasePresenter implements VisitTasksCont
 				public void onError(Throwable t) {
 					Log.e("Patient Error", "Error", t.fillInStackTrace());
 					visitTasksView
-							.showToast(ApplicationConstants.toastMessages.predefinedTaskError, ToastUtil.ToastType.ERROR);
+							.showToast(ApplicationConstants.entityName.PREDEFINED_TASKS + ApplicationConstants.toastMessages
+									.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 				}
 			};
 			visitPredefinedTasksDataService.getAll(false, null, getMultipleCallback);
@@ -96,12 +98,13 @@ public class VisitTasksPresenter extends BasePresenter implements VisitTasksCont
 				public void onCompleted(List<VisitTask> visitTasksList) {
 					if (visitTasksList.isEmpty()) {
 						visitTasksView.getVisitTasks(visitTasksList);
-						visitTasksView.showToast(ApplicationConstants.toastMessages.predefinedTaskInfo, ToastUtil.ToastType
-								.NOTICE);
+						/*visitTasksView.showToast(ApplicationConstants.toastMessages.predefinedTaskInfo, ToastUtil
+						.ToastType
+								.NOTICE);*/
 					} else {
 						visitTasksView.getVisitTasks(visitTasksList);
 						visitTasksView
-								.showToast(ApplicationConstants.moduleName.VISIT_TASKS
+								.showToast(ApplicationConstants.entityName.VISIT_TASKS
 												+ ApplicationConstants.toastMessages.fetchSuccessMessage,
 										ToastUtil.ToastType.SUCCESS);
 					}
@@ -111,7 +114,7 @@ public class VisitTasksPresenter extends BasePresenter implements VisitTasksCont
 				public void onError(Throwable t) {
 					Log.e("Patient Error", "Error", t.fillInStackTrace());
 					visitTasksView
-							.showToast(ApplicationConstants.moduleName.VISIT_TASKS + ApplicationConstants.toastMessages
+							.showToast(ApplicationConstants.entityName.VISIT_TASKS + ApplicationConstants.toastMessages
 									.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 				}
 			};
@@ -128,45 +131,31 @@ public class VisitTasksPresenter extends BasePresenter implements VisitTasksCont
 	}
 
 	@Override
-	public void addVisitTasks(String visitTasks) {
-		Patient patient = new Patient();
-		patient.setUuid(ApplicationConstants.PATIENT_UUID);
-
-		Visit visit = new Visit();
-		visit.setUuid(ApplicationConstants.VISIT_UUID);
-
-		VisitTask visitTask1 = new VisitTask();
-
-		System.out.println(visitTasks + "===============================================");
-
-		visitTask1.setName(visitTasks);
-		visitTask1.setStatus(VisitTaskStatus.OPEN);
-		visitTask1.setPatient(patient);
-		visitTask1.setVisit(visit);
-
+	public void addVisitTasks(VisitTask visitTask) {
 		if (NetworkUtils.hasNetwork()) {
 			DataService.GetSingleCallback<VisitTask> getSingleCallback = new DataService
 					.GetSingleCallback<VisitTask>() {
 
 				@Override
 				public void onCompleted(VisitTask entity) {
-					System.out.println("===============Created Visit Task================");
-					System.out.print(entity);
-					visitTasksView
-							.showToast(ApplicationConstants.moduleName.VISIT_TASKS
-									+ ApplicationConstants.toastMessages.addSuccessMessage, ToastUtil.ToastType.SUCCESS);
+					if (entity != null) {
+						visitTasksView
+								.showToast(ApplicationConstants.entityName.VISIT_TASKS
+										+ ApplicationConstants.toastMessages.addSuccessMessage, ToastUtil.ToastType
+										.SUCCESS);
+						visitTasksView.refresh();
+					}
 				}
 
 				@Override
 				public void onError(Throwable t) {
 					Log.e("Patient Error", "Error", t.fillInStackTrace());
-					System.out.print(t);
 					visitTasksView
-							.showToast(ApplicationConstants.moduleName.VISIT_TASKS + ApplicationConstants.toastMessages
+							.showToast(ApplicationConstants.entityName.VISIT_TASKS + ApplicationConstants.toastMessages
 									.addErrorMessage, ToastUtil.ToastType.ERROR);
 				}
 			};
-			visitTasksDataService.create(visitTask1, getSingleCallback);
+			visitTasksDataService.create(visitTask, getSingleCallback);
 		} else {
 			// get the users from the local storage.
 		}
@@ -179,18 +168,19 @@ public class VisitTasksPresenter extends BasePresenter implements VisitTasksCont
 
 				@Override
 				public void onCompleted(VisitTask entity) {
-					System.out.println("===============Updated Visit Task================");
-					System.out.print(entity);
-					visitTasksView
-							.showToast(ApplicationConstants.moduleName.VISIT_TASKS + ApplicationConstants.toastMessages
-									.updateSuccessMessage, ToastUtil.ToastType.SUCCESS);
+					if (entity != null) {
+						visitTasksView
+								.showToast(ApplicationConstants.entityName.VISIT_TASKS + ApplicationConstants.toastMessages
+										.updateSuccessMessage, ToastUtil.ToastType.SUCCESS);
+						visitTasksView.refresh();
+					}
 				}
 
 				@Override
 				public void onError(Throwable t) {
 					Log.e("Patient Error", "Error", t.fillInStackTrace());
 					visitTasksView
-							.showToast(ApplicationConstants.moduleName.VISIT_TASKS + ApplicationConstants.toastMessages
+							.showToast(ApplicationConstants.entityName.VISIT_TASKS + ApplicationConstants.toastMessages
 									.updateErrorMessage, ToastUtil.ToastType.ERROR);
 				}
 			};
@@ -198,5 +188,23 @@ public class VisitTasksPresenter extends BasePresenter implements VisitTasksCont
 		} else {
 			// get the users from the local storage.
 		}
+	}
+
+	@Override
+	public void createVisitTasksObject(String visitTask) {
+		Patient patient = new Patient();
+		patient.setUuid(ApplicationConstants.PATIENT_UUID);
+
+		Visit visit = new Visit();
+		visit.setUuid(ApplicationConstants.VISIT_UUID);
+
+		VisitTask visitTaskEntity = new VisitTask();
+
+		visitTaskEntity.setName(visitTask);
+		visitTaskEntity.setStatus(VisitTaskStatus.OPEN);
+		visitTaskEntity.setPatient(patient);
+		visitTaskEntity.setVisit(visit);
+
+		addVisitTasks(visitTaskEntity);
 	}
 }

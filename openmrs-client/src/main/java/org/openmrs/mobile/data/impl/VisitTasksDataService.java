@@ -14,8 +14,8 @@
 
 package org.openmrs.mobile.data.impl;
 
-import org.openmrs.mobile.data.BaseMetadataDataService;
-import org.openmrs.mobile.data.MetadataDataService;
+import org.openmrs.mobile.data.BaseDataService;
+import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.rest.RestConstants;
 import org.openmrs.mobile.data.rest.VisitTasksRestService;
@@ -25,8 +25,8 @@ import org.openmrs.mobile.utilities.ApplicationConstants;
 
 import retrofit2.Call;
 
-public class VisitTasksDataService extends BaseMetadataDataService<VisitTask, VisitTasksRestService> implements
-		MetadataDataService<VisitTask> {
+public class VisitTasksDataService extends BaseDataService<VisitTask, VisitTasksRestService> implements
+		DataService<VisitTask> {
 
 	@Override
 	protected Class<VisitTasksRestService> getRestServiceClass() {
@@ -94,9 +94,4 @@ public class VisitTasksDataService extends BaseMetadataDataService<VisitTask, Vi
 		});
 	}
 
-	@Override
-	protected Call<Results<VisitTask>> _restGetByNameFragment(String restPath, PagingInfo pagingInfo, String name,
-			String representation) {
-		return null;
-	}
 }

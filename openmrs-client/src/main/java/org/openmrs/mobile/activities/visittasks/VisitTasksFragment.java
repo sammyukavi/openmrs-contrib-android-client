@@ -16,6 +16,7 @@ package org.openmrs.mobile.activities.visittasks;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -109,6 +110,12 @@ public class VisitTasksFragment extends ACBaseFragment<VisitTasksContract.Presen
 	public void setUnSelectedVisitTask(VisitTask visitTask) {
 		visitTask.setStatus(VisitTaskStatus.OPEN);
 		mPresenter.updateVisitTask(visitTask);
+	}
+
+	@Override
+	public void refresh() {
+		FragmentTransaction ft = getFragmentManager().beginTransaction();
+		ft.detach(this).attach(this).commit();
 	}
 
 	public List<VisitPredefinedTask> removeUsedPredefinedTasks(List<VisitPredefinedTask> visitPredefinedTask,

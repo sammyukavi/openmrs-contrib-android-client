@@ -26,10 +26,10 @@ public abstract class ApplicationConstants {
 	public static final String VISIT_TYPE_UUID = "visit_type_uuid";
 	public static final String LAST_SESSION_TOKEN = "last_session_id";
 	public static final String LAST_LOGIN_SERVER_URL = "last_login_server_url";
-	public static final String DEFAULT_OPEN_MRS_URL = "http://192.168.2.30:8080/openmrs/";
+	public static final String DEFAULT_OPEN_MRS_URL = "http://10.1.1.2:8080/openmrs/";
 	public static final String CIVIL_STATUS_UUID = "1054AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
-	public static final String PATIENT_UUID = "6fd9b701-6abb-4e70-aa4a-c4b298972249";
-	public static final String VISIT_UUID = "bf37ab88-16e2-4c0c-8c95-ca12ea2e2843";
+	public static final String PATIENT_UUID = "50133200-15c6-406c-b813-30b7f496a023";
+	public static final String VISIT_UUID = "2dd343e5-65e3-4b09-8fbb-ab9b3005d5ce";
 	//discuss on using the openhmis
 	// demo as the main test server to avoid changes here.
 
@@ -121,31 +121,21 @@ public abstract class ApplicationConstants {
 	}
 
 	public static class toastMessages {
-		public static final String findPatientError = "Patients could not be loaded";
-		public static final String findPatientSuccess = "Patients loaded successfully";
-		public static final String findPatientInfo = "No patient with given name was found";
-		public static final String lastviewedPatientError = "Last Viewed Patients could not be loaded";
-		public static final String lastviewedPatientSuccess = "Last Viewed Patients loaded successfully";
-		public static final String lastviewedPatientInfo = "No last viewed patients found";
-		public static final String noPatientIdentifierType = "No Patient Identifier type found";
-		public static final String civilStatusFetchError = "Civil Status could not be fetched";
-		public static final String patientRegistrationError = "Patient registration failed";
-		public static final String patientRegistrationSuccess = "Patient was registered successfully";
-		public static final String attributeTypeError = "Attribute Types not fetched";
-		public static final String attributeTypeInfo = "No Attribute Types found";
-		public static final String predefinedTaskInfo = "No predefined tasks were found";
-		public static final String predefinedTaskError = "Predefined tasks could not be fetched";
-		public static final String predefinedTaskSuccess = "Predefined tasks were fetched";
-		public static final String taskAddInfo = "Name task name given";
 		public static final String addErrorMessage = " could not be added";
 		public static final String addSuccessMessage = " was added successfully";
 		public static final String updateErrorMessage = " could not be updated";
 		public static final String updateSuccessMessage = " update successfully";
 		public static final String fetchErrorMessage = " could not be fetched";
-		public static final String fetchSuccessMessage = " were fetched successfully";
+		public static final String fetchSuccessMessage = " were loaded successfully";
 	}
 
-	public static class moduleName {
+	public static class entityName {
 		public static final String VISIT_TASKS  = "Visit Task(s)";
+		public static final String PATIENTS  = "Patient(s)";
+		public static final String LAST_VIEWED_PATIENT  = "Last Viewed Patient(s)";
+		public static final String CIVIL_STATUS  = "Civil Status";
+		public static final String ATTRIBUTE_TPYES  = "Attribute Type(s)";
+		public static final String IDENTIFIER_TPYES  = "Identifier Type(s)";
+		public static final String PREDEFINED_TASKS  = "Predefined task(s)";
 	}
 }

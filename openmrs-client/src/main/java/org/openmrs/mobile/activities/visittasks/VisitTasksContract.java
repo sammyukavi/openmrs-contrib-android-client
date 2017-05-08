@@ -36,6 +36,8 @@ public interface VisitTasksContract {
 		void setSelectedVisitTask(VisitTask visitTask);
 
 		void setUnSelectedVisitTask(VisitTask visitTask);
+
+		void refresh();
 	}
 
 	interface Presenter extends BasePresenterContract {
@@ -46,9 +48,11 @@ public interface VisitTasksContract {
 
 		void displayAddTask(Boolean visibility);
 
-		void addVisitTasks(String visitTasks);
+		void addVisitTasks(VisitTask visitTasks);
 
 		void updateVisitTask(VisitTask visitTask);
+
+		void createVisitTasksObject(String visitTask);
 	}
 
 }

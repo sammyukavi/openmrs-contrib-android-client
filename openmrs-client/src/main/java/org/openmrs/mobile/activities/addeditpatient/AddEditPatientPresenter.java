@@ -200,8 +200,8 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 				@Override
 				public void onCompleted(Patient entity) {
 					mPatientInfoView
-							.showToast(ApplicationConstants.toastMessages.patientRegistrationSuccess, ToastUtil.ToastType
-									.SUCCESS);
+							.showToast(ApplicationConstants.entityName.PATIENTS
+									+ ApplicationConstants.toastMessages.addSuccessMessage, ToastUtil.ToastType.SUCCESS);
 					mPatientInfoView.startPatientDashboardActivity(entity);
 					mPatientInfoView.finishAddPatientActivity();
 				}
@@ -210,8 +210,8 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 				public void onError(Throwable t) {
 					mPatientInfoView.setProgressBarVisibility(false);
 					mPatientInfoView
-							.showToast(ApplicationConstants.toastMessages.patientRegistrationError, ToastUtil.ToastType
-									.ERROR);
+							.showToast(ApplicationConstants.entityName.PATIENTS + ApplicationConstants.toastMessages
+									.addErrorMessage, ToastUtil.ToastType.ERROR);
 				}
 			};
 			patientDataService.create(patient, getSingleCallback);
@@ -250,8 +250,8 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 				@Override
 				public void onError(Throwable t) {
 					Log.e("User Error", "Error", t.fillInStackTrace());
-					mPatientInfoView.showToast(ApplicationConstants.toastMessages.findPatientError, ToastUtil.ToastType
-							.ERROR);
+					mPatientInfoView.showToast(ApplicationConstants.entityName.PATIENTS + ApplicationConstants
+							.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 				}
 			};
 			patientDataService.getByNameAndIdentifier(patient.getPerson().getName().getNameString(), pagingInfo,
@@ -272,8 +272,8 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 				@Override
 				public void onError(Throwable t) {
 					Log.e("Civil Status Error", "Error", t.fillInStackTrace());
-					mPatientInfoView.showToast(ApplicationConstants.toastMessages.civilStatusFetchError, ToastUtil.ToastType
-							.ERROR);
+					mPatientInfoView.showToast(ApplicationConstants.entityName.CIVIL_STATUS + ApplicationConstants
+							.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 				}
 			};
 			conceptDataService.getByUUID(ApplicationConstants.CIVIL_STATUS_UUID, getSingleCallback);
@@ -301,8 +301,8 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 				public void onError(Throwable t) {
 					Log.e("Identifier Type Error", "Error", t.fillInStackTrace());
 					mPatientInfoView
-							.showToast(ApplicationConstants.toastMessages.noPatientIdentifierType, ToastUtil.ToastType
-									.ERROR);
+							.showToast(ApplicationConstants.entityName.IDENTIFIER_TPYES + ApplicationConstants.toastMessages
+									.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 				}
 			};
 			patientIdentifierTypeDataService.getAll(false, null, getMultipleCallback);
@@ -321,16 +321,16 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 					if (!personAttributeTypes.isEmpty()) {
 						System.out.println(personAttributeTypes);
 					} else {
-						mPatientInfoView.showToast(ApplicationConstants.toastMessages.attributeTypeInfo, ToastUtil.ToastType
-								.NOTICE);
+						/*mPatientInfoView.showToast(ApplicationConstants.toastMessages.attributeTypeInfo, ToastUtil.ToastType
+								.NOTICE);*/
 					}
 				}
 
 				@Override
 				public void onError(Throwable t) {
 					Log.e("Attribute Type Error", "Error", t.fillInStackTrace());
-					mPatientInfoView.showToast(ApplicationConstants.toastMessages.attributeTypeError, ToastUtil.ToastType
-							.ERROR);
+					mPatientInfoView.showToast(ApplicationConstants.entityName.ATTRIBUTE_TPYES + ApplicationConstants
+							.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 				}
 			};
 			personAttributeTypeDataService.getAll(false, null, getMultipleCallback);

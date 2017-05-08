@@ -17,21 +17,11 @@ package org.openmrs.mobile.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Date;
-
-public class VisitTask extends BaseOpenmrsMetadata {
+public class VisitTask extends BaseOpenmrsData {
 
 	@SerializedName("status")
 	@Expose
 	private VisitTaskStatus status;
-
-	@SerializedName("closedBy")
-	@Expose
-	private User closedBy;
-
-	@SerializedName("closedOn")
-	@Expose
-	private Date closedOn;
 
 	@SerializedName("visit")
 	@Expose
@@ -40,6 +30,10 @@ public class VisitTask extends BaseOpenmrsMetadata {
 	@SerializedName("patient")
 	@Expose
 	private Patient patient;
+
+	@SerializedName("name")
+	@Expose
+	private String name;
 
 	public Patient getPatient() {
 		return patient;
@@ -57,27 +51,19 @@ public class VisitTask extends BaseOpenmrsMetadata {
 		this.status = status;
 	}
 
-	public User getClosedBy() {
-		return closedBy;
-	}
-
-	public void setClosedBy(User closedBy) {
-		this.closedBy = closedBy;
-	}
-
-	public Date getClosedOn() {
-		return closedOn;
-	}
-
-	public void setClosedOn(Date closedOn) {
-		this.closedOn = closedOn;
-	}
-
 	public Visit getVisit() {
 		return visit;
 	}
 
 	public void setVisit(Visit visit) {
 		this.visit = visit;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 }

@@ -14,6 +14,7 @@
 
 package org.openmrs.mobile.activities.findpatientrecord;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -73,8 +74,8 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 						findPatientView.setSearchPatientVisibility(false);
 						findPatientView.setNoPatientsVisibility(true);
 						findPatientView.setFetchedPatientsVisibility(0);
-						findPatientView.showToast(ApplicationConstants.toastMessages.findPatientInfo, ToastUtil.ToastType
-								.NOTICE);
+						/*findPatientView.showToast(ApplicationConstants.toastMessages.findPatientInfo, ToastUtil.ToastType
+								.NOTICE);*/
 						//findPatientView.showRegistration();
 					} else {
 						findPatientView.setNoPatientsVisibility(false);
@@ -82,8 +83,8 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 						findPatientView.setNumberOfPatientsView(patients.size());
 						findPatientView.setFetchedPatientsVisibility(patients.size());
 						findPatientView.fetchPatients(patients);
-						findPatientView.showToast(ApplicationConstants.toastMessages.findPatientSuccess, ToastUtil.ToastType
-								.SUCCESS);
+						findPatientView.showToast(ApplicationConstants.entityName.PATIENTS + ApplicationConstants
+								.toastMessages.fetchSuccessMessage, ToastUtil.ToastType.SUCCESS);
 					}
 				}
 
@@ -92,7 +93,8 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 					findPatientView.setProgressBarVisibility(false);
 					Log.e("Patient Error", "Error", t.fillInStackTrace());
 					findPatientView
-							.showToast(ApplicationConstants.toastMessages.findPatientError, ToastUtil.ToastType.ERROR);
+							.showToast(ApplicationConstants.entityName.PATIENTS + ApplicationConstants.toastMessages
+									.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 				}
 			};
 			patientDataService.getByNameAndIdentifier(query, null, getMultipleCallback);
@@ -114,14 +116,14 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 						findPatientView.setNumberOfPatientsView(0);
 						findPatientView.setFetchedPatientsVisibility(patients.size());
 						findPatientView.fetchPatients(patients);
-						findPatientView.showToast(ApplicationConstants.toastMessages.lastviewedPatientSuccess, ToastUtil
-								.ToastType.SUCCESS);
+						findPatientView.showToast(ApplicationConstants.entityName.LAST_VIEWED_PATIENT + ApplicationConstants
+								.toastMessages.fetchSuccessMessage, ToastUtil.ToastType.SUCCESS);
 					} else {
 						findPatientView.setNumberOfPatientsView(0);
 						findPatientView.setFetchedPatientsVisibility(0);
-						findPatientView
+						/*findPatientView
 								.showToast(ApplicationConstants.toastMessages.lastviewedPatientInfo, ToastUtil.ToastType
-										.NOTICE);
+										.NOTICE);*/
 					}
 				}
 
@@ -130,8 +132,8 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 					findPatientView.setProgressBarVisibility(false);
 					Log.e("User Error", "Error", t.fillInStackTrace());
 					findPatientView
-							.showToast(ApplicationConstants.toastMessages.lastviewedPatientError, ToastUtil.ToastType
-									.ERROR);
+							.showToast(ApplicationConstants.entityName.LAST_VIEWED_PATIENT + ApplicationConstants.toastMessages
+									.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 				}
 			};
 			patientDataService.getLastViewed(ApplicationConstants.EMPTY_STRING, pagingInfo, getMultipleCallback);
@@ -182,7 +184,6 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 
 	@Override
 	public void refresh() {
-
 	}
 
 	@Override

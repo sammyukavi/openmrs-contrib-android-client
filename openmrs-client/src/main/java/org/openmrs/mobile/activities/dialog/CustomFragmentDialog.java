@@ -15,6 +15,8 @@
 package org.openmrs.mobile.activities.dialog;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -34,24 +36,35 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.joda.time.LocalDate;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
 import org.openmrs.mobile.activities.addeditpatient.AddEditPatientActivity;
+import org.openmrs.mobile.activities.addeditpatient.AddEditPatientFragment;
 import org.openmrs.mobile.activities.addeditpatient.SimilarPatientsRecyclerViewAdapter;
 import org.openmrs.mobile.activities.login.LoginActivity;
 import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
+import org.openmrs.mobile.activities.visittasks.VisitTasksActivity;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.models.Patient;
+import org.openmrs.mobile.models.VisitPredefinedTask;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.FontsUtil;
 
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -68,6 +81,7 @@ public class CustomFragmentDialog extends DialogFragment {
 	private Button mLeftButton;
 	private Button mRightButton;
 	private CustomDialogBundle mCustomDialogBundle;
+	private AutoCompleteTextView autoCompleteTextView;
 
 	public static CustomFragmentDialog newInstance(CustomDialogBundle customDialogBundle) {
 		CustomFragmentDialog dialog = new CustomFragmentDialog();
@@ -99,6 +113,7 @@ public class CustomFragmentDialog extends DialogFragment {
 		View dialogLayout = mInflater.inflate(R.layout.fragment_dialog_layout, null, false);
 		this.mFieldsLayout = (LinearLayout)dialogLayout.findViewById(R.id.dialogForm);
 		this.setRightButton(dialogLayout);
+		this.setLeftButton(dialogLayout);
 		getDialog().setCanceledOnTouchOutside(false);
 		buildDialog();
 		FontsUtil.setFont((ViewGroup)dialogLayout);
@@ -186,6 +201,10 @@ public class CustomFragmentDialog extends DialogFragment {
 		if (null != mCustomDialogBundle.getTextViewMessage()) {
 			mTextView = addTextField(mCustomDialogBundle.getTextViewMessage());
 		}
+		if (null != mCustomDialogBundle.getLeftButtonAction()) {
+			setLeftButton(mCustomDialogBundle.getLeftButtonText());
+			mLeftButton.setOnClickListener(onClickActionSolver(mCustomDialogBundle.getLeftButtonAction()));
+		}
 		if (null != mCustomDialogBundle.getRightButtonAction()) {
 			setRightButton(mCustomDialogBundle.getRightButtonText());
 			mRightButton.setOnClickListener(onClickActionSolver(mCustomDialogBundle.getRightButtonAction()));
@@ -201,6 +220,12 @@ public class CustomFragmentDialog extends DialogFragment {
 		if (null != mCustomDialogBundle.getPatientsList()) {
 			mRecyclerView = addRecycleView(mCustomDialogBundle.getPatientsList(), mCustomDialogBundle.getNewPatient());
 		}
+
+		if (null != mCustomDialogBundle.getAutoCompleteTextView()) {
+			autoCompleteTextView = addAutoCompleteTextView(mCustomDialogBundle
+					.getAutoCompleteTextView());
+		}
+
 	}
 
 	private RecyclerView addRecycleView(List<Patient> patientsList, Patient newPatient) {
@@ -223,6 +248,32 @@ public class CustomFragmentDialog extends DialogFragment {
 		return editText;
 	}
 
+	public AutoCompleteTextView addAutoCompleteTextView(List<VisitPredefinedTask> autoComplete){
+		LinearLayout field = (LinearLayout)mInflater.inflate(R.layout.openmrs_auto_complete_text_view_field, null);
+		AutoCompleteTextView autoCompleteText = (AutoCompleteTextView)field.findViewById(R.id
+				.openmrsAutoCompleteTextView);
+		ArrayAdapter adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, autoComplete);
+		autoCompleteText.setAdapter(adapter);
+
+		autoCompleteText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if (autoCompleteText.getText().length() >= autoCompleteText.getThreshold()) {
+					autoCompleteText.showDropDown();
+				}
+				if (Arrays.asList(autoComplete).contains(autoCompleteText.getText().toString())) {
+					autoCompleteText.dismissDropDown();
+				}
+			}
+		});
+
+		mFieldsLayout.addView(field);
+		return autoCompleteText;
+	}
+
+
+
+
 	public TextView addTextField(String message) {
 		LinearLayout field = (LinearLayout)mInflater.inflate(R.layout.openmrs_text_view_field, null);
 		TextView textView = (TextView)field.findViewById(R.id.openmrsTextView);
@@ -244,6 +295,11 @@ public class CustomFragmentDialog extends DialogFragment {
 		return textView;
 	}
 
+	public void setLeftButton(String text) {
+		mLeftButton.setText(text);
+		setViewVisible(mLeftButton, true);
+	}
+
 	public void setRightButton(String text) {
 		mRightButton.setText(text);
 		setViewVisible(mRightButton, true);
@@ -261,6 +317,10 @@ public class CustomFragmentDialog extends DialogFragment {
 		this.mRightButton = (Button)dialogLayout.findViewById(R.id.dialogFormButtonsSubmitButton);
 	}
 
+	public void setLeftButton(View dialogLayout) {
+		this.mLeftButton = (Button)dialogLayout.findViewById(R.id.dialogFormButtonsCancelButton);
+	}
+
 	public void addProgressBar(String message) {
 		RelativeLayout progressBarLayout = (RelativeLayout)mInflater.inflate(R.layout.dialog_progress, null);
 		TextView textView = (TextView)progressBarLayout.findViewById(R.id.progressTextView);
@@ -273,6 +333,14 @@ public class CustomFragmentDialog extends DialogFragment {
 		String value = "";
 		if (mEditText != null) {
 			value = mEditText.getText().toString();
+		}
+		return value;
+	}
+
+	public String getAutoCompleteTextValue() {
+		String value = "";
+		if (autoCompleteTextView != null) {
+			value = autoCompleteTextView.getText().toString();
 		}
 		return value;
 	}
@@ -343,6 +411,10 @@ public class CustomFragmentDialog extends DialogFragment {
 						dismiss();
 						activity.finish();
 						break;
+					case ADD_VISIT_TASKS:
+						((VisitTasksActivity)getActivity()).mPresenter.addVisitTasks(getAutoCompleteTextValue());
+						dismiss();
+						break;
 					default:
 						break;
 				}
@@ -383,6 +455,7 @@ public class CustomFragmentDialog extends DialogFragment {
 		LOGIN,
 		REGISTER_PATIENT,
 		CANCEL_REGISTERING,
-		DELETE_PATIENT
+		DELETE_PATIENT,
+		ADD_VISIT_TASKS
 	}
 }

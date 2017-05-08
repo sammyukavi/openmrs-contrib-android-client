@@ -15,7 +15,7 @@
 package org.openmrs.mobile.data.rest;
 
 import org.openmrs.mobile.models.Results;
-import org.openmrs.mobile.models.VisitPredefinedTasks;
+import org.openmrs.mobile.models.VisitPredefinedTask;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -24,29 +24,29 @@ import retrofit2.http.Query;
 
 public interface VisitPredefinedTasksRestService {
 	@GET(RestConstants.GET_ALL)
-	Call<Results<VisitPredefinedTasks>> getAll(@Path(value = "restPath", encoded = true) String restPath,
+	Call<Results<VisitPredefinedTask>> getAll(@Path(value = "restPath", encoded = true) String restPath,
 			@Query("v") String representation);
 
 	@GET(RestConstants.GET_ALL)
-	Call<Results<VisitPredefinedTasks>> getAll(@Path(value = "restPath", encoded = true) String restPath,
+	Call<Results<VisitPredefinedTask>> getAll(@Path(value = "restPath", encoded = true) String restPath,
 			@Query("v") String representation,
 			@Query("limit") int limit,
 			@Query("startIndex") int startIndex);
 
 	@GET(RestConstants.REST_PATH)
-	Call<Results<VisitPredefinedTasks>> getByName(@Path(value = "restPath", encoded = true) String restPath,
+	Call<Results<VisitPredefinedTask>> getByName(@Path(value = "restPath", encoded = true) String restPath,
 			@Query("q") String name,
 			@Query("v") String representation);
 
 	@GET(RestConstants.REST_PATH)
-	Call<Results<VisitPredefinedTasks>> getByName(@Path(value = "restPath", encoded = true) String restPath,
+	Call<Results<VisitPredefinedTask>> getByName(@Path(value = "restPath", encoded = true) String restPath,
 			@Query("q") String name,
 			@Query("v") String representation,
 			@Query("limit") int limit,
 			@Query("startIndex") int startIndex);
 
 	@GET(RestConstants.GET_BY_UUID)
-	Call<VisitPredefinedTasks> getByUuid(@Path(value = "restPath", encoded = true) String restPath,
+	Call<VisitPredefinedTask> getByUuid(@Path(value = "restPath", encoded = true) String restPath,
 			@Path("uuid") String uuid,
 			@Query("v") String representation);
 }

@@ -344,8 +344,8 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		setProgressBarVisibility(false);
 		CustomDialogBundle similarPatientsDialog = new CustomDialogBundle();
 		similarPatientsDialog.setTitleViewMessage(getString(R.string.similar_patients_dialog_title));
-		similarPatientsDialog.setRightButtonText(getString(R.string.dialog_button_register_new));
-		similarPatientsDialog.setRightButtonAction(CustomFragmentDialog.OnClickAction.REGISTER_PATIENT);
+		similarPatientsDialog.setLeftButtonText(getString(R.string.dialog_button_cancel));
+		similarPatientsDialog.setLeftButtonAction(CustomFragmentDialog.OnClickAction.CANCEL_REGISTERING);
 		similarPatientsDialog.setPatientsList(patients);
 		similarPatientsDialog.setNewPatient(newPatient);
 		((AddEditPatientActivity)this.getActivity())

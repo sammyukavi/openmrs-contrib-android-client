@@ -25,17 +25,12 @@
 			android:layout_margin="5dp"
 			card_view:cardBackgroundColor="@color/white"
 			card_view:cardCornerRadius="4dp">
-		
-		<LinearLayout
-				android:orientation="vertical"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content">
 			
 			<LinearLayout
 					android:id="@+id/topRow"
 					android:layout_width="wrap_content"
-					android:layout_height="match_parent"
-					android:orientation="horizontal">
+					android:layout_height="wrap_content"
+					android:orientation="vertical">
 				
 				<CheckBox
 						android:id="@+id/visitTasksCheckBox"
@@ -43,10 +38,10 @@
 						android:layout_height="wrap_content"
 						android:layout_marginLeft="5dp"
 						android:layout_marginStart="5dp"
+						android:paddingTop="8dp"
+						android:text="test"
 						android:gravity="start" />
 			
 			</LinearLayout>
-		</LinearLayout>
-	
 	</android.support.v7.widget.CardView>
 </LinearLayout>

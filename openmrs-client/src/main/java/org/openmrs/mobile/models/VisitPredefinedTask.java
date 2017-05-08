@@ -21,7 +21,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by dubdabasoduba on 05/05/2017.
  */
 
-public class VisitPredefinedTasks extends BaseOpenmrsMetadata {
+public class VisitPredefinedTask extends BaseOpenmrsMetadata {
 
 	@SerializedName("global")
 	@Expose
@@ -33,5 +33,9 @@ public class VisitPredefinedTasks extends BaseOpenmrsMetadata {
 
 	public void setGlobal(Boolean global) {
 		this.global = global;
+	}
+
+	public String toString() {
+		return getName();
 	}
 }

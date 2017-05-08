@@ -19,15 +19,15 @@ import org.openmrs.mobile.data.MetadataDataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.rest.VisitPredefinedTasksRestService;
 import org.openmrs.mobile.models.Results;
-import org.openmrs.mobile.models.VisitPredefinedTasks;
+import org.openmrs.mobile.models.VisitPredefinedTask;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 
 import retrofit2.Call;
 
-public class VisitPredefinedTasksDataService extends BaseMetadataDataService<VisitPredefinedTasks,
-		VisitPredefinedTasksRestService> implements MetadataDataService<VisitPredefinedTasks> {
+public class VisitPredefinedTasksDataService extends BaseMetadataDataService<VisitPredefinedTask,
+		VisitPredefinedTasksRestService> implements MetadataDataService<VisitPredefinedTask> {
 	@Override
-	protected Call<Results<VisitPredefinedTasks>> _restGetByNameFragment(String restPath, PagingInfo pagingInfo, String
+	protected Call<Results<VisitPredefinedTask>> _restGetByNameFragment(String restPath, PagingInfo pagingInfo, String
 			name,
 			String representation) {
 		if (isPagingValid(pagingInfo)) {
@@ -53,12 +53,12 @@ public class VisitPredefinedTasksDataService extends BaseMetadataDataService<Vis
 	}
 
 	@Override
-	protected Call<VisitPredefinedTasks> _restGetByUuid(String restPath, String uuid, String representation) {
+	protected Call<VisitPredefinedTask> _restGetByUuid(String restPath, String uuid, String representation) {
 		return restService.getByUuid(restPath, uuid, representation);
 	}
 
 	@Override
-	protected Call<Results<VisitPredefinedTasks>> _restGetAll(String restPath, PagingInfo pagingInfo,
+	protected Call<Results<VisitPredefinedTask>> _restGetAll(String restPath, PagingInfo pagingInfo,
 			String representation) {
 		if (isPagingValid(pagingInfo)) {
 			return restService.getAll(restPath, representation, pagingInfo.getLimit(), pagingInfo.getStartIndex());
@@ -68,17 +68,17 @@ public class VisitPredefinedTasksDataService extends BaseMetadataDataService<Vis
 	}
 
 	@Override
-	protected Call<VisitPredefinedTasks> _restCreate(String restPath, VisitPredefinedTasks entity) {
+	protected Call<VisitPredefinedTask> _restCreate(String restPath, VisitPredefinedTask entity) {
 		return null;
 	}
 
 	@Override
-	protected Call<VisitPredefinedTasks> _restUpdate(String restPath, VisitPredefinedTasks entity) {
+	protected Call<VisitPredefinedTask> _restUpdate(String restPath, VisitPredefinedTask entity) {
 		return null;
 	}
 
 	@Override
-	protected Call<VisitPredefinedTasks> _restPurge(String restPath, String uuid) {
+	protected Call<VisitPredefinedTask> _restPurge(String restPath, String uuid) {
 		return null;
 	}
 }

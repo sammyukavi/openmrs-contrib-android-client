@@ -32,6 +32,6 @@
 			android:layout_marginLeft="10dp"
 			android:layout_marginStart="10dp"
 			android:textSize="22sp"
-			android:background="@color/dark_teal"/>
+			android:background="@color/color_primary_dark"/>
 
 </LinearLayout>

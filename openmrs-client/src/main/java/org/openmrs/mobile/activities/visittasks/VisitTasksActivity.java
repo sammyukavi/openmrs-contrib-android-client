@@ -16,11 +16,18 @@ package org.openmrs.mobile.activities.visittasks;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.GravityCompat;
 import android.view.Menu;
+import android.view.View;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
+import org.openmrs.mobile.activities.addeditpatient.AddEditPatientActivity;
+import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
+import org.openmrs.mobile.activities.findpatientrecord.FindPatientRecordActivity;
+import org.openmrs.mobile.bundle.CustomDialogBundle;
+import org.openmrs.mobile.utilities.ApplicationConstants;
 
 public class VisitTasksActivity extends ACBaseActivity {
 
@@ -31,6 +38,7 @@ public class VisitTasksActivity extends ACBaseActivity {
 		super.onCreate(savedInstanceState);
 		getLayoutInflater().inflate(R.layout.activity_visit_tasks, frameLayout);
 		setTitle(R.string.nav_visit_tasks);
+
 		// Create fragment
 		VisitTasksFragment visitTasksFragment =
 				(VisitTasksFragment)getSupportFragmentManager().findFragmentById(R.id.contentFrame);
@@ -40,6 +48,15 @@ public class VisitTasksActivity extends ACBaseActivity {
 		if (!visitTasksFragment.isActive()) {
 			addFragmentToActivity(getSupportFragmentManager(), visitTasksFragment, R.id.contentFrame);
 		}
+
+		//adding
+		FloatingActionButton floatingActionButton = (FloatingActionButton)findViewById(R.id.fab);
+		floatingActionButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mPresenter.displayAddTask(true);
+			}
+		});
 
 		mPresenter = new VisitTasksPresenter(visitTasksFragment, mOpenMRS);
 	}

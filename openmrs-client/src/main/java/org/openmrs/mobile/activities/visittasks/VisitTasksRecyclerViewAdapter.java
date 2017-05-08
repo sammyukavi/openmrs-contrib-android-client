@@ -24,20 +24,20 @@ import android.widget.LinearLayout;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.models.VisitTaskStatus;
-import org.openmrs.mobile.models.VisitTasks;
+import org.openmrs.mobile.models.VisitTask;
 
 import java.util.List;
 
 class VisitTasksRecyclerViewAdapter extends RecyclerView.Adapter<VisitTasksRecyclerViewAdapter.FetchedVisitTasksHolder> {
 
 	private Activity mContext;
-	private List<VisitTasks> visitTasksList;
+	private List<VisitTask> visitTaskList;
 	private VisitTasksContract.View view;
 
 	VisitTasksRecyclerViewAdapter(Activity context,
-			List<VisitTasks> visitTasksList, VisitTasksContract.View view) {
+			List<VisitTask> visitTaskList, VisitTasksContract.View view) {
 		this.mContext = context;
-		this.visitTasksList = visitTasksList;
+		this.visitTaskList = visitTaskList;
 		this.view = view;
 	}
 
@@ -49,11 +49,11 @@ class VisitTasksRecyclerViewAdapter extends RecyclerView.Adapter<VisitTasksRecyc
 
 	@Override
 	public void onBindViewHolder(FetchedVisitTasksHolder holder, int position) {
-		final VisitTasks visitTasks = visitTasksList.get(position);
+		final VisitTask visitTask = visitTaskList.get(position);
 
 		try {
-			holder.visitTasks.setText(visitTasks.getName());
-			if (visitTasks.getStatus() == VisitTaskStatus.CLOSED) {
+			holder.visitTasks.setText(visitTask.getName());
+			if (visitTask.getStatus() == VisitTaskStatus.CLOSED) {
 				holder.visitTasks.setChecked(true);
 				holder.visitTasks.setEnabled(false);
 			}
@@ -74,7 +74,7 @@ class VisitTasksRecyclerViewAdapter extends RecyclerView.Adapter<VisitTasksRecyc
 
 	@Override
 	public int getItemCount() {
-		return visitTasksList == null ? 0 : visitTasksList.size();
+		return visitTaskList == null ? 0 : visitTaskList.size();
 	}
 
 	class FetchedVisitTasksHolder extends RecyclerView.ViewHolder {

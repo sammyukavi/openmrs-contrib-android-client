@@ -26,10 +26,10 @@ public abstract class ApplicationConstants {
 	public static final String VISIT_TYPE_UUID = "visit_type_uuid";
 	public static final String LAST_SESSION_TOKEN = "last_session_id";
 	public static final String LAST_LOGIN_SERVER_URL = "last_login_server_url";
-	public static final String DEFAULT_OPEN_MRS_URL = "http://10.1.1.2:8080/openmrs/";
+	public static final String DEFAULT_OPEN_MRS_URL = "http://192.168.2.34:9996/openmrs/";
 	public static final String CIVIL_STATUS_UUID = "1054AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
-	public static final String PATIENT_UUID = "50133200-15c6-406c-b813-30b7f496a023";
-	public static final String VISIT_UUID = "2dd343e5-65e3-4b09-8fbb-ab9b3005d5ce";
+	public static final String PATIENT_UUID = "1027a3b6-6129-48e0-91c6-edb8ec7e8f3e";
+	public static final String VISIT_UUID = "98ba2669-802c-4d00-8a89-8b28e47823bf";
 	//discuss on using the openhmis
 	// demo as the main test server to avoid changes here.
 
@@ -69,6 +69,7 @@ public abstract class ApplicationConstants {
 		public static final String NO_VISIT_DIALOG_TAG = "noVisitDialogTag";
 		public static final String SIMILAR_PATIENTS_TAG = "similarPatientsDialogTag";
 		public static final String DELET_PATIENT_DIALOG_TAG = "deletePatientDialogTag";
+		public static final String ADD_VISIT_TASK_DIALOG_TAG = "addVisitTaskDialogTag";
 	}
 
 	public abstract static class RegisterPatientRequirements {
@@ -134,6 +135,6 @@ public abstract class ApplicationConstants {
 		public static final String attributeTypeInfo = "No Attribute Types found";
 		public static final String predefinedTaskInfo = "No predefined tasks were found";
 		public static final String predefinedTaskError = "Predefined tasks could not be fetched";
-		public static final String predefinedTaskSucess = "Predefined tasks were fetched";
+		public static final String predefinedTaskSuccess = "Predefined tasks were fetched";
 	}
 }

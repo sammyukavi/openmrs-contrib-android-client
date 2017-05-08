@@ -15,7 +15,7 @@
 package org.openmrs.mobile.data.rest;
 
 import org.openmrs.mobile.models.Results;
-import org.openmrs.mobile.models.VisitTasks;
+import org.openmrs.mobile.models.VisitTask;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -27,23 +27,23 @@ import retrofit2.http.Query;
 
 public interface VisitTasksRestService {
 	@GET(RestConstants.GET_BY_UUID)
-	Call<VisitTasks> getByUuid(@Path(value = "restPath", encoded = true) String restPath,
+	Call<VisitTask> getByUuid(@Path(value = "restPath", encoded = true) String restPath,
 			@Path("uuid") String uuid,
 			@Query("v") String representation);
 
 	@POST(RestConstants.CREATE)
-	Call<VisitTasks> create(@Path(value = "restPath", encoded = true) String restPath, @Body VisitTasks entity);
+	Call<VisitTask> create(@Path(value = "restPath", encoded = true) String restPath, @Body VisitTask entity);
 
 	@POST(RestConstants.UPDATE)
-	Call<VisitTasks> update(@Path(value = "restPath", encoded = true) String restPath,
-			@Path("uuid") String uuid, @Body VisitTasks entity);
+	Call<VisitTask> update(@Path(value = "restPath", encoded = true) String restPath,
+			@Path("uuid") String uuid, @Body VisitTask entity);
 
 	@DELETE(RestConstants.PURGE)
-	Call<VisitTasks> purge(@Path(value = "restPath", encoded = true) String restPath,
+	Call<VisitTask> purge(@Path(value = "restPath", encoded = true) String restPath,
 			@Path("uuid") String uuid);
 
 	@GET(RestConstants.REST_PATH)
-	Call<Results<VisitTasks>> getByName(@Path(value = "restPath", encoded = true) String restPath,
+	Call<Results<VisitTask>> getByName(@Path(value = "restPath", encoded = true) String restPath,
 			@Query("v") String representation,
 			@Query("status") String status,
 			@Query("q") String name,
@@ -52,7 +52,7 @@ public interface VisitTasksRestService {
 	);
 
 	@GET(RestConstants.REST_PATH)
-	Call<Results<VisitTasks>> getByName(@Path(value = "restPath", encoded = true) String restPath,
+	Call<Results<VisitTask>> getByName(@Path(value = "restPath", encoded = true) String restPath,
 			@Query("v") String representation,
 			@Query("status") String status,
 			@Query("q") String name,
@@ -62,14 +62,14 @@ public interface VisitTasksRestService {
 			@Query("startIndex") int startIndex);
 
 	@GET(RestConstants.GET_ALL)
-	Call<Results<VisitTasks>> getAll(@Path(value = "restPath", encoded = true) String restPath,
+	Call<Results<VisitTask>> getAll(@Path(value = "restPath", encoded = true) String restPath,
 			@Query("v") String representation,
 			@Query("status") String status,
 			@Query("patient_uuid") String patientUuid,
 			@Query("visit_uuid") String visitUuid);
 
 	@GET(RestConstants.GET_ALL)
-	Call<Results<VisitTasks>> getAll(@Path(value = "restPath", encoded = true) String restPath,
+	Call<Results<VisitTask>> getAll(@Path(value = "restPath", encoded = true) String restPath,
 			@Query("v") String representation,
 			@Query("status") String status,
 			@Query("patient_uuid") String patientUuid,

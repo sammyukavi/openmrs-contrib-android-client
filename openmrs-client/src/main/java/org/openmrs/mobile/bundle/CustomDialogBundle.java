@@ -14,8 +14,11 @@
 
 package org.openmrs.mobile.bundle;
 
+import android.content.Context;
+
 import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
 import org.openmrs.mobile.models.Patient;
+import org.openmrs.mobile.models.VisitPredefinedTask;
 
 import java.io.Serializable;
 import java.util.List;
@@ -34,6 +37,8 @@ public class CustomDialogBundle implements Serializable {
 	private Patient newPatient;
 	private boolean loadingBar;
 	private boolean progressDialog;
+	private List<VisitPredefinedTask> autoCompleteTextView;
+	private Context context;
 
 	public boolean hasProgressDialog() {
 		return progressDialog;
@@ -135,4 +140,19 @@ public class CustomDialogBundle implements Serializable {
 		this.newPatient = newPatient;
 	}
 
+	public List<VisitPredefinedTask> getAutoCompleteTextView() {
+		return autoCompleteTextView;
+	}
+
+	public void setAutoCompleteTextView(List<VisitPredefinedTask> autoCompleteTextView) {
+		this.autoCompleteTextView = autoCompleteTextView;
+	}
+
+	public Context getContext() {
+		return context;
+	}
+
+	public void setContext(Context context) {
+		this.context = context;
+	}
 }

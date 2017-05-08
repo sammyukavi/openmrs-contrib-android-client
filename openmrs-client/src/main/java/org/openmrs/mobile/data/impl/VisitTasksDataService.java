@@ -14,26 +14,19 @@
 
 package org.openmrs.mobile.data.impl;
 
-import org.openmrs.mobile.data.BaseEntityDataService;
-import org.openmrs.mobile.data.EntityDataService;
+import org.openmrs.mobile.data.BaseMetadataDataService;
+import org.openmrs.mobile.data.MetadataDataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.rest.RestConstants;
 import org.openmrs.mobile.data.rest.VisitTasksRestService;
 import org.openmrs.mobile.models.Results;
-import org.openmrs.mobile.models.VisitTasks;
+import org.openmrs.mobile.models.VisitTask;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 
 import retrofit2.Call;
 
-public class VisitTasksDataService extends BaseEntityDataService<VisitTasks, VisitTasksRestService> implements
-		EntityDataService<VisitTasks> {
-
-	@Override
-	protected Call<Results<VisitTasks>> _restGetByPatient(String restPath, PagingInfo pagingInfo, String patientUuid,
-			String representation) {
-		// Does not allow the getting of the visit tasks using the patient.
-		return null;
-	}
+public class VisitTasksDataService extends BaseMetadataDataService<VisitTask, VisitTasksRestService> implements
+		MetadataDataService<VisitTask> {
 
 	@Override
 	protected Class<VisitTasksRestService> getRestServiceClass() {
@@ -51,32 +44,32 @@ public class VisitTasksDataService extends BaseEntityDataService<VisitTasks, Vis
 	}
 
 	@Override
-	protected Call<VisitTasks> _restGetByUuid(String restPath, String uuid, String representation) {
+	protected Call<VisitTask> _restGetByUuid(String restPath, String uuid, String representation) {
 		return restService.getByUuid(restPath, uuid, representation);
 	}
 
 	@Override
-	protected Call<Results<VisitTasks>> _restGetAll(String restPath, PagingInfo pagingInfo, String representation) {
+	protected Call<Results<VisitTask>> _restGetAll(String restPath, PagingInfo pagingInfo, String representation) {
 		return null;
 	}
 
 	@Override
-	protected Call<VisitTasks> _restCreate(String restPath, VisitTasks entity) {
+	protected Call<VisitTask> _restCreate(String restPath, VisitTask entity) {
 		return restService.create(restPath, entity);
 	}
 
 	@Override
-	protected Call<VisitTasks> _restUpdate(String restPath, VisitTasks entity) {
+	protected Call<VisitTask> _restUpdate(String restPath, VisitTask entity) {
 		return restService.update(restPath, entity.getUuid(), entity);
 	}
 
 	@Override
-	protected Call<VisitTasks> _restPurge(String restPath, String uuid) {
+	protected Call<VisitTask> _restPurge(String restPath, String uuid) {
 		return restService.purge(restPath, uuid);
 	}
 
 	public void getByName(String status, String query, String patient_uuid, String visit_uuid, PagingInfo pagingInfo,
-			GetMultipleCallback<VisitTasks> callback) {
+			GetMultipleCallback<VisitTask> callback) {
 		executeMultipleCallback(callback, null, () -> {
 			if (isPagingValid(pagingInfo)) {
 				return restService.getByName(buildRestRequestPath(), RestConstants.Representations
@@ -89,7 +82,7 @@ public class VisitTasksDataService extends BaseEntityDataService<VisitTasks, Vis
 	}
 
 	public void getAll(String status, String patient_uuid, String visit_uuid, PagingInfo pagingInfo,
-			GetMultipleCallback<VisitTasks> callback) {
+			GetMultipleCallback<VisitTask> callback) {
 		executeMultipleCallback(callback, null, () -> {
 			if (isPagingValid(pagingInfo)) {
 				return restService.getAll(buildRestRequestPath(), RestConstants.Representations
@@ -99,5 +92,11 @@ public class VisitTasksDataService extends BaseEntityDataService<VisitTasks, Vis
 						.FULL, status, patient_uuid, visit_uuid);
 			}
 		});
+	}
+
+	@Override
+	protected Call<Results<VisitTask>> _restGetByNameFragment(String restPath, PagingInfo pagingInfo, String name,
+			String representation) {
+		return null;
 	}
 }

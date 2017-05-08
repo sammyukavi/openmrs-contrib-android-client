@@ -16,8 +16,8 @@ package org.openmrs.mobile.activities.visittasks;
 
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
-import org.openmrs.mobile.models.Patient;
-import org.openmrs.mobile.models.VisitTasks;
+import org.openmrs.mobile.models.VisitPredefinedTask;
+import org.openmrs.mobile.models.VisitTask;
 import org.openmrs.mobile.utilities.ToastUtil;
 
 import java.util.List;
@@ -27,7 +27,11 @@ public interface VisitTasksContract {
 	interface View extends BaseView<Presenter> {
 		void showToast(String message, ToastUtil.ToastType toastType);
 
-		void getVisitTasks(List<VisitTasks> visitTasksList);
+		void getVisitTasks(List<VisitTask> visitTaskList);
+
+		void showAddTaskDialog(Boolean visibility);
+
+		void setPredefinedTasks(List<VisitPredefinedTask> predefinedTasks);
 	}
 
 	interface Presenter extends BasePresenterContract {
@@ -35,6 +39,10 @@ public interface VisitTasksContract {
 		void getPredefinedTasks();
 
 		void getVisitTasks();
+
+		void displayAddTask(Boolean visibility);
+
+		void addVisitTasks(String visitTasks);
 	}
 
 }

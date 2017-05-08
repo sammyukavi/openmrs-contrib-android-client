@@ -24,7 +24,11 @@ import android.view.ViewGroup;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
-import org.openmrs.mobile.models.VisitTasks;
+import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
+import org.openmrs.mobile.bundle.CustomDialogBundle;
+import org.openmrs.mobile.models.VisitPredefinedTask;
+import org.openmrs.mobile.models.VisitTask;
+import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.FontsUtil;
 import org.openmrs.mobile.utilities.ToastUtil;
 
@@ -36,6 +40,7 @@ public class VisitTasksFragment extends ACBaseFragment<VisitTasksContract.Presen
 	private RecyclerView viewTasksRecyclerView;
 	private LinearLayoutManager layoutManager;
 	private RecyclerView visitTasksRecyclerViewAdapter;
+	private List<VisitPredefinedTask> predefinedTasks;
 
 	public static VisitTasksFragment newInstance() {
 		return new VisitTasksFragment();
@@ -69,9 +74,25 @@ public class VisitTasksFragment extends ACBaseFragment<VisitTasksContract.Presen
 	}
 
 	@Override
-	public void getVisitTasks(List<VisitTasks> visitTasksList) {
-		VisitTasksRecyclerViewAdapter adapter = new VisitTasksRecyclerViewAdapter(this.getActivity(), visitTasksList, this);
+	public void getVisitTasks(List<VisitTask> visitTaskList) {
+		VisitTasksRecyclerViewAdapter adapter = new VisitTasksRecyclerViewAdapter(this.getActivity(), visitTaskList, this);
 		visitTasksRecyclerViewAdapter.setAdapter(adapter);
 		//visitTasksRecyclerViewAdapter.addOnScrollListener(recyclerViewOnScrollListener);
+	}
+
+	@Override
+	public void showAddTaskDialog(Boolean visibility) {
+		CustomDialogBundle addVisitTasksDialog = new CustomDialogBundle();
+		addVisitTasksDialog.setTitleViewMessage(getString(R.string.add_visit_task_dialog_title));
+		addVisitTasksDialog.setRightButtonText(getString(R.string.action_submit));
+		addVisitTasksDialog.setAutoCompleteTextView(predefinedTasks);
+		addVisitTasksDialog.setRightButtonAction(CustomFragmentDialog.OnClickAction.ADD_VISIT_TASKS);
+		((VisitTasksActivity)this.getActivity())
+				.createAndShowDialog(addVisitTasksDialog, ApplicationConstants.DialogTAG.ADD_VISIT_TASK_DIALOG_TAG);
+	}
+
+	@Override
+	public void setPredefinedTasks(List<VisitPredefinedTask> predefinedTasks) {
+		this.predefinedTasks = predefinedTasks;
 	}
 }

@@ -34,7 +34,6 @@
             android:layout_height="wrap_content">
 
             <LinearLayout
-                android:id="@+id/patientListModelTopRow"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
@@ -45,6 +44,7 @@
                     android:textSize="22sp"
                     android:layout_marginRight="10dp"
                     android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="5dp"
                     android:gravity="start" />
 
             </LinearLayout>
@@ -55,7 +55,6 @@
                 android:background="@android:color/darker_gray"/>
 
                 <LinearLayout
-                    android:id="@+id/patientListModelBottomRow"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:orientation="horizontal">

@@ -18,13 +18,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
-import org.openmrs.mobile.activities.visitphoto.VisitPhotoActivity;
+import org.openmrs.mobile.activities.visitphoto.upload.UploadVisitPhotoActivity;
 import org.openmrs.mobile.models.BaseOpenmrsObject;
 import org.openmrs.mobile.models.ConceptName;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.ViewUtils;
 
-import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -95,7 +94,7 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
         capturePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), VisitPhotoActivity.class);
+                Intent intent = new Intent(getContext(), UploadVisitPhotoActivity.class);
                 intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_ID_BUNDLE,
                        mPresenter.getPatient().getUuid());
                 intent.putExtra(ApplicationConstants.BundleKeys.VISIT_ID_BUNDLE,

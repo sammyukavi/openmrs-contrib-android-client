@@ -1,4 +1,4 @@
-package org.openmrs.mobile.activities.visitphoto;
+package org.openmrs.mobile.activities.visitphoto.upload;
 
 import org.greenrobot.greendao.annotation.NotNull;
 import org.openmrs.mobile.activities.BasePresenter;
@@ -9,20 +9,17 @@ import org.openmrs.mobile.models.Provider;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitPhoto;
 
-public class VisitPhotoPresenter extends BasePresenter implements VisitPhotoContract.Presenter{
+public class UploadVisitPhotoPresenter extends BasePresenter implements UploadVisitPhotoContract.Presenter{
 
     @NotNull
-    private VisitPhotoContract.View visitPhotoView;
+    private UploadVisitPhotoContract.View visitPhotoView;
     private VisitPhotoDataService visitPhotoDataService;
-
     private String patientUuid, visitUuid, providerUuid;
-
     private VisitPhoto visitPhoto;
+    private boolean loading;
 
-    private boolean uploading;
-
-    public VisitPhotoPresenter(VisitPhotoContract.View visitPhotoView,
-                               String patientUuid, String visitUuid, String providerUuid) {
+    public UploadVisitPhotoPresenter(UploadVisitPhotoContract.View visitPhotoView,
+                                     String patientUuid, String visitUuid, String providerUuid) {
         this.visitPhotoView = visitPhotoView;
         this.visitPhotoView.setPresenter(this);
         this.patientUuid = patientUuid;
@@ -54,7 +51,7 @@ public class VisitPhotoPresenter extends BasePresenter implements VisitPhotoCont
 
     @Override
     public void uploadImage() {
-        visitPhotoDataService.uploadVisitPhoto(visitPhoto, new DataService.GetSingleCallback<VisitPhoto>() {
+        visitPhotoDataService.uploadPhoto(visitPhoto, new DataService.GetSingleCallback<VisitPhoto>() {
             @Override
             public void onCompleted(VisitPhoto entity) {
                 System.out.println("image uploaded " + entity);
@@ -73,12 +70,12 @@ public class VisitPhotoPresenter extends BasePresenter implements VisitPhotoCont
     }
 
     @Override
-    public boolean isUploading() {
-        return uploading;
+    public boolean isLoading() {
+        return loading;
     }
 
     @Override
-    public void setUploading(boolean uploading) {
-        this.uploading = uploading;
+    public void setLoading(boolean loading) {
+        this.loading = loading;
     }
 }

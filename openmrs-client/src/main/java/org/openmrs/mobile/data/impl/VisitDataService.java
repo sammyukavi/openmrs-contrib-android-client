@@ -73,6 +73,12 @@ public class VisitDataService extends BaseEntityDataService<Visit, VisitRestServ
         }
     }
 
+    public void endVisit(String uuid, String stopDatetime, GetSingleCallback<Visit> callback){
+        executeSingleCallback(callback, () -> {
+            return restService.endVisit(buildRestRequestPath(), uuid, stopDatetime);
+        });
+    }
+
     // End Retrofit Workaround
 }
 

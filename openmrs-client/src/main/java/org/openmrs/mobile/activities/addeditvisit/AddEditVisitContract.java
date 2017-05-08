@@ -69,6 +69,8 @@ public interface AddEditVisitContract {
         void setProcessing(boolean processing);
 
         Provider getProvider();
+
+        void endVisit(String uuid);
     }
 }
 

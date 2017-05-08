@@ -36,6 +36,7 @@ import org.openmrs.mobile.models.VisitAttribute;
 import org.openmrs.mobile.models.VisitAttributeType;
 import org.openmrs.mobile.models.VisitType;
 import org.openmrs.mobile.utilities.ApplicationConstants;
+import org.openmrs.mobile.utilities.DateUtils;
 import org.openmrs.mobile.utilities.StringUtils;
 import org.openmrs.mobile.utilities.ToastUtil;
 
@@ -281,6 +282,23 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
                 addEditVisitView.setSpinnerVisibility(false);
                 ToastUtil.error(t.getMessage());
             }
+        });
+    }
+
+    @Override
+    public void endVisit(String uuid) {
+        visitDataService.endVisit(uuid,
+                DateUtils.convertTime(System.currentTimeMillis(), DateUtils.OPEN_MRS_REQUEST_FORMAT),
+                new DataService.GetSingleCallback<Visit>() {
+                    @Override
+                    public void onCompleted(Visit entity) {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        ToastUtil.error(t.getMessage());
+                    }
         });
     }
 

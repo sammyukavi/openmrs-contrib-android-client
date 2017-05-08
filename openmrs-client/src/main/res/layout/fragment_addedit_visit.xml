@@ -63,14 +63,16 @@
 
                     <ImageView
                         android:id="@+id/capture_photo"
-                        android:layout_width="0dp"
+                        android:layout_width="20dp"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
                         android:layout_marginTop="5dp"
                         android:gravity="end"
                         android:maxLines="1"
                         android:layout_weight="1"
-                        android:src="@drawable/ic_download" />
+                        android:layout_centerInParent="true"
+                        android:background="@color/fragment_background"
+                        android:src="@drawable/ic_photo_camera_white_48dp" />
 
                 </LinearLayout>
 
@@ -133,7 +135,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/button_apply"
-                        android:text="@string/dialog_button_confirm"
+                        android:text="@string/action_submit"
                         android:backgroundTint="@color/primary"
                         android:textColor="@color/white" />
                 </LinearLayout>

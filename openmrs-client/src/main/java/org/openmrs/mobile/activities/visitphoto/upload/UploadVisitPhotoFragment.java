@@ -1,11 +1,10 @@
-package org.openmrs.mobile.activities.visitphoto;
+package org.openmrs.mobile.activities.visitphoto.upload;
 
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.media.ThumbnailUtils;
@@ -22,11 +21,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
+import org.openmrs.mobile.utilities.ViewUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -45,7 +45,7 @@ import permissions.dispatcher.PermissionRequest;
 import permissions.dispatcher.RuntimePermissions;
 
 @RuntimePermissions
-public class VisitPhotoFragment extends ACBaseFragment<VisitPhotoContract.Presenter> implements VisitPhotoContract.View {
+public class UploadVisitPhotoFragment extends ACBaseFragment<UploadVisitPhotoContract.Presenter> implements UploadVisitPhotoContract.View {
 
     private ImageView visitImageView;
     private FloatingActionButton capturePhoto;
@@ -53,14 +53,16 @@ public class VisitPhotoFragment extends ACBaseFragment<VisitPhotoContract.Presen
     private Button uploadVisitPhotoButton;
     private File output;
     private final static int IMAGE_REQUEST = 1;
+    private EditText fileCaption;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_visit_photo, container, false);
+        View root = inflater.inflate(R.layout.fragment_upload_visit_photo, container, false);
         capturePhoto = (FloatingActionButton) root.findViewById(R.id.capture_photo);
         visitImageView = (ImageView) root.findViewById(R.id.visitPhoto);
         uploadVisitPhotoButton = (Button) root.findViewById(R.id.uploadVisitPhoto);
+        fileCaption = (EditText) root.findViewById(R.id.fileCaption);
         addListeners();
 
         return root;
@@ -69,14 +71,14 @@ public class VisitPhotoFragment extends ACBaseFragment<VisitPhotoContract.Presen
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        VisitPhotoFragmentPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+        UploadVisitPhotoFragmentPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
     }
 
     private void addListeners(){
         capturePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                VisitPhotoFragmentPermissionsDispatcher.capturePhotoWithCheck(VisitPhotoFragment.this);
+                UploadVisitPhotoFragmentPermissionsDispatcher.capturePhotoWithCheck(UploadVisitPhotoFragment.this);
             }
         });
 
@@ -101,18 +103,17 @@ public class VisitPhotoFragment extends ACBaseFragment<VisitPhotoContract.Presen
         uploadVisitPhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println(visitPhoto);
+                if(visitPhoto != null) {
+                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                    visitPhoto.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
 
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                visitPhoto.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
-                //intent.putExtra("photo", byteArrayOutputStream.toByteArray());
+                    MultipartBody.Part uploadFile = MultipartBody.Part.createFormData("file",
+                            output.getName(), RequestBody.create(MediaType.parse("image/*"), output));
 
-                MultipartBody.Part uploadFile = MultipartBody.Part.createFormData("file",
-                        output.getName(), RequestBody.create(MediaType.parse("image/*"), output));
-
-                mPresenter.getVisitPhoto().setRequest(uploadFile);
-
-                mPresenter.uploadImage();
+                    mPresenter.getVisitPhoto().setRequestImage(uploadFile);
+                    mPresenter.getVisitPhoto().setFileCaption(ViewUtils.getInput(fileCaption));
+                    mPresenter.uploadImage();
+                }
             }
         });
     }
@@ -212,7 +213,7 @@ public class VisitPhotoFragment extends ACBaseFragment<VisitPhotoContract.Presen
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
     }
 
-    public static VisitPhotoFragment newInstance(){
-        return new VisitPhotoFragment();
+    public static UploadVisitPhotoFragment newInstance(){
+        return new UploadVisitPhotoFragment();
     }
 }

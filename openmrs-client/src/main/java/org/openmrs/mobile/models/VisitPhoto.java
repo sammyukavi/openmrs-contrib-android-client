@@ -3,6 +3,7 @@ package org.openmrs.mobile.models;
 import com.google.gson.annotations.Expose;
 
 import okhttp3.MultipartBody;
+import okhttp3.ResponseBody;
 
 public class VisitPhoto extends BaseOpenmrsObject{
 
@@ -22,7 +23,9 @@ public class VisitPhoto extends BaseOpenmrsObject{
     private String instructions;
 
     @Expose
-    private MultipartBody.Part request;
+    private MultipartBody.Part requestImage;
+
+    private ResponseBody responseImage;
 
     public Visit getVisit() {
         return visit;
@@ -56,12 +59,12 @@ public class VisitPhoto extends BaseOpenmrsObject{
         this.fileCaption = fileCaption;
     }
 
-    public MultipartBody.Part getRequest() {
-        return request;
+    public MultipartBody.Part getRequestImage() {
+        return requestImage;
     }
 
-    public void setRequest(MultipartBody.Part request) {
-        this.request = request;
+    public void setRequestImage(MultipartBody.Part requestImage) {
+        this.requestImage = requestImage;
     }
 
     public String getInstructions() {
@@ -70,5 +73,13 @@ public class VisitPhoto extends BaseOpenmrsObject{
 
     public void setInstructions(String instructions) {
         this.instructions = instructions;
+    }
+
+    public ResponseBody getResponseImage() {
+        return responseImage;
+    }
+
+    public void setResponseImage(ResponseBody responseImage) {
+        this.responseImage = responseImage;
     }
 }

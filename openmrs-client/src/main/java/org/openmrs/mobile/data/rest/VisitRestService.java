@@ -31,6 +31,10 @@ public interface VisitRestService {
     Call<Visit> create(@Path(value = "restPath", encoded = true) String restPath, @Body Visit entity);
 
     @POST(RestConstants.UPDATE)
+    Call<Visit> endVisit(@Path(value = "restPath", encoded = true) String restPath,
+                         @Path("uuid") String uuid, @Body String stopDatetime);
+
+    @POST(RestConstants.UPDATE)
     Call<Visit> update(@Path(value = "restPath", encoded = true) String restPath,
                        @Path("uuid") String uuid, @Body Visit entity);
 

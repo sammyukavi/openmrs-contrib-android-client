@@ -18,6 +18,8 @@ import android.view.Menu;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
+import org.openmrs.mobile.activities.visitphoto.download.DownloadVisitPhotoFragment;
+import org.openmrs.mobile.activities.visitphoto.download.DownloadVisitPhotoPresenter;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.StringUtils;
@@ -48,6 +50,19 @@ public class AddEditVisitActivity extends ACBaseActivity{
                 }
 
                 addEditVisitPresenter = new AddEditVisitPresenter(addEditVisitFragment, patientUuid);
+
+                // download visitphotos.
+                DownloadVisitPhotoFragment visitPhotoFragment =
+                        (DownloadVisitPhotoFragment) getSupportFragmentManager().findFragmentById(R.id.photoDownloadsContentFrame);
+                if(visitPhotoFragment == null){
+                    visitPhotoFragment = DownloadVisitPhotoFragment.newInstance();
+                }
+
+                if(!visitPhotoFragment.isActive()){
+                    addFragmentToActivity(getSupportFragmentManager(), visitPhotoFragment, R.id.photoDownloadsContentFrame);
+                }
+
+                new DownloadVisitPhotoPresenter(visitPhotoFragment, patientUuid);
 
             } else {
                 ToastUtil.error(getString(R.string.no_patient_selected));

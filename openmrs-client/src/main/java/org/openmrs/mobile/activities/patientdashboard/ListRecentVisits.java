@@ -48,7 +48,7 @@ public class ListRecentVisits extends RecyclerView.Adapter<ListRecentVisits.Rece
 			@Override
 			public void onClick(View view) {
 				/*try {
-                    Fragment fragment = PatientDetails.class.newInstance();
+					Fragment fragment = PatientDetails.class.newInstance();
                     ///dataPasser.onPatientDataPass(patients.get(position));
                     Bundle bundle = new Bundle();
                     //bundle.putSerializable(ApplicationConstants.Tags.PATIENT_ID, patients.get(position));

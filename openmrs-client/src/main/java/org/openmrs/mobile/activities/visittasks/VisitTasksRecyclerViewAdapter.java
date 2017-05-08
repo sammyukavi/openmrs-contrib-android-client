@@ -20,11 +20,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 
 import org.openmrs.mobile.R;
-import org.openmrs.mobile.models.VisitTaskStatus;
 import org.openmrs.mobile.models.VisitTask;
+import org.openmrs.mobile.models.VisitTaskStatus;
 
 import java.util.List;
 
@@ -61,15 +62,16 @@ class VisitTasksRecyclerViewAdapter extends RecyclerView.Adapter<VisitTasksRecyc
 			holder.visitTasks.setText("");
 		}
 
-		/*holder.mRowLayout.setOnClickListener(new View.OnClickListener() {
+		holder.visitTasks.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(mContext, PatientDashboardActivity.class);
-				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_ID_BUNDLE, patient.getUuid());
-				mContext.startActivity(intent);
-				mContext.finish();
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				if (buttonView.isChecked()) {
+					view.setSelectedVisitTask(visitTask);
+				} else {
+					view.setUnSelectedVisitTask(visitTask);
+				}
 			}
-		});*/
+		});
 	}
 
 	@Override

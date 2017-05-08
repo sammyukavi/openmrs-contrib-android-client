@@ -25,8 +25,8 @@ import org.openmrs.mobile.data.impl.VisitTasksDataService;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitPredefinedTask;
-import org.openmrs.mobile.models.VisitTaskStatus;
 import org.openmrs.mobile.models.VisitTask;
+import org.openmrs.mobile.models.VisitTaskStatus;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.NetworkUtils;
 import org.openmrs.mobile.utilities.ToastUtil;
@@ -62,6 +62,7 @@ public class VisitTasksPresenter extends BasePresenter implements VisitTasksCont
 				@Override
 				public void onCompleted(List<VisitPredefinedTask> visitPredefinedTasks) {
 					if (visitPredefinedTasks.isEmpty()) {
+						visitTasksView.setPredefinedTasks(visitPredefinedTasks);
 						visitTasksView.showToast(ApplicationConstants.toastMessages.predefinedTaskInfo, ToastUtil.ToastType
 								.NOTICE);
 					} else {
@@ -160,6 +161,30 @@ public class VisitTasksPresenter extends BasePresenter implements VisitTasksCont
 				}
 			};
 			visitTasksDataService.create(visitTask1, getSingleCallback);
+		} else {
+			// get the users from the local storage.
+		}
+	}
+
+	public void updateVisitTask(VisitTask visitTask) {
+		if (NetworkUtils.hasNetwork()) {
+			DataService.GetSingleCallback<VisitTask> getSingleCallback = new DataService
+					.GetSingleCallback<VisitTask>() {
+
+				@Override
+				public void onCompleted(VisitTask entity) {
+					System.out.println("===============Updated Visit Task================");
+					System.out.print(entity);
+				}
+
+				@Override
+				public void onError(Throwable t) {
+					Log.e("Patient Error", "Error", t.fillInStackTrace());
+					visitTasksView
+							.showToast(ApplicationConstants.toastMessages.predefinedTaskError, ToastUtil.ToastType.ERROR);
+				}
+			};
+			visitTasksDataService.update(visitTask, getSingleCallback);
 		} else {
 			// get the users from the local storage.
 		}

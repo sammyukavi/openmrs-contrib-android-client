@@ -154,7 +154,7 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
         });*/
 
        /* mShowPassword.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
+			@Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked){
                     mPassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);

@@ -23,11 +23,6 @@ import android.view.View;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
-import org.openmrs.mobile.activities.addeditpatient.AddEditPatientActivity;
-import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
-import org.openmrs.mobile.activities.findpatientrecord.FindPatientRecordActivity;
-import org.openmrs.mobile.bundle.CustomDialogBundle;
-import org.openmrs.mobile.utilities.ApplicationConstants;
 
 public class VisitTasksActivity extends ACBaseActivity {
 

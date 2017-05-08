@@ -28,6 +28,7 @@ import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.models.VisitPredefinedTask;
 import org.openmrs.mobile.models.VisitTask;
+import org.openmrs.mobile.models.VisitTaskStatus;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.FontsUtil;
 import org.openmrs.mobile.utilities.ToastUtil;
@@ -41,6 +42,7 @@ public class VisitTasksFragment extends ACBaseFragment<VisitTasksContract.Presen
 	private LinearLayoutManager layoutManager;
 	private RecyclerView visitTasksRecyclerViewAdapter;
 	private List<VisitPredefinedTask> predefinedTasks;
+	private List<VisitTask> visitTasksLists;
 
 	public static VisitTasksFragment newInstance() {
 		return new VisitTasksFragment();
@@ -75,6 +77,7 @@ public class VisitTasksFragment extends ACBaseFragment<VisitTasksContract.Presen
 
 	@Override
 	public void getVisitTasks(List<VisitTask> visitTaskList) {
+		this.visitTasksLists = visitTaskList;
 		VisitTasksRecyclerViewAdapter adapter = new VisitTasksRecyclerViewAdapter(this.getActivity(), visitTaskList, this);
 		visitTasksRecyclerViewAdapter.setAdapter(adapter);
 		//visitTasksRecyclerViewAdapter.addOnScrollListener(recyclerViewOnScrollListener);
@@ -85,7 +88,7 @@ public class VisitTasksFragment extends ACBaseFragment<VisitTasksContract.Presen
 		CustomDialogBundle addVisitTasksDialog = new CustomDialogBundle();
 		addVisitTasksDialog.setTitleViewMessage(getString(R.string.add_visit_task_dialog_title));
 		addVisitTasksDialog.setRightButtonText(getString(R.string.action_submit));
-		addVisitTasksDialog.setAutoCompleteTextView(predefinedTasks);
+		addVisitTasksDialog.setAutoCompleteTextView(removeUsedPredefinedTasks(predefinedTasks, visitTasksLists));
 		addVisitTasksDialog.setRightButtonAction(CustomFragmentDialog.OnClickAction.ADD_VISIT_TASKS);
 		((VisitTasksActivity)this.getActivity())
 				.createAndShowDialog(addVisitTasksDialog, ApplicationConstants.DialogTAG.ADD_VISIT_TASK_DIALOG_TAG);
@@ -94,5 +97,38 @@ public class VisitTasksFragment extends ACBaseFragment<VisitTasksContract.Presen
 	@Override
 	public void setPredefinedTasks(List<VisitPredefinedTask> predefinedTasks) {
 		this.predefinedTasks = predefinedTasks;
+	}
+
+	@Override
+	public void setSelectedVisitTask(VisitTask visitTask) {
+		visitTask.setStatus(VisitTaskStatus.CLOSED);
+		mPresenter.updateVisitTask(visitTask);
+	}
+
+	@Override
+	public void setUnSelectedVisitTask(VisitTask visitTask) {
+		visitTask.setStatus(VisitTaskStatus.OPEN);
+		mPresenter.updateVisitTask(visitTask);
+	}
+
+	public List<VisitPredefinedTask> removeUsedPredefinedTasks(List<VisitPredefinedTask> visitPredefinedTask,
+			List<VisitTask> visitTask) {
+		String visitTasksName, predefinedTaskName;
+		VisitTaskStatus visitTaskStatus;
+
+		for (int q = 0; q < visitTask.size(); q++) {
+			visitTasksName = visitTask.get(q).getName();
+			visitTaskStatus = visitTask.get(q).getStatus();
+
+			for (int i = 0; i < visitPredefinedTask.size(); i++) {
+				predefinedTaskName = visitPredefinedTask.get(i).getName();
+
+				if ((predefinedTaskName.equals(visitTasksName)) && (visitTaskStatus.equals(VisitTaskStatus.OPEN))) {
+					visitPredefinedTask.remove(i);
+				}
+			}
+		}
+
+		return visitPredefinedTask;
 	}
 }

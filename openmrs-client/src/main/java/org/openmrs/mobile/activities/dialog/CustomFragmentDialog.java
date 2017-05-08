@@ -15,8 +15,6 @@
 package org.openmrs.mobile.activities.dialog;
 
 import android.app.Activity;
-import android.app.DatePickerDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -39,18 +37,14 @@ import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.joda.time.LocalDate;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
 import org.openmrs.mobile.activities.addeditpatient.AddEditPatientActivity;
-import org.openmrs.mobile.activities.addeditpatient.AddEditPatientFragment;
 import org.openmrs.mobile.activities.addeditpatient.SimilarPatientsRecyclerViewAdapter;
 import org.openmrs.mobile.activities.login.LoginActivity;
 import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
@@ -61,10 +55,9 @@ import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.VisitPredefinedTask;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.FontsUtil;
+import org.openmrs.mobile.utilities.StringUtils;
 
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -165,7 +158,7 @@ public class CustomFragmentDialog extends DialogFragment {
 						dismiss();
 					} else {
 					   /* ((FindPatientRecordFragment) getActivity()
-                                .getSupportFragmentManager()
+								.getSupportFragmentManager()
                                 .findFragmentById(R.id.loginContentFrame))
                                 .hideURLDialog();*/
 						dismiss();
@@ -248,7 +241,7 @@ public class CustomFragmentDialog extends DialogFragment {
 		return editText;
 	}
 
-	public AutoCompleteTextView addAutoCompleteTextView(List<VisitPredefinedTask> autoComplete){
+	public AutoCompleteTextView addAutoCompleteTextView(List<VisitPredefinedTask> autoComplete) {
 		LinearLayout field = (LinearLayout)mInflater.inflate(R.layout.openmrs_auto_complete_text_view_field, null);
 		AutoCompleteTextView autoCompleteText = (AutoCompleteTextView)field.findViewById(R.id
 				.openmrsAutoCompleteTextView);
@@ -270,9 +263,6 @@ public class CustomFragmentDialog extends DialogFragment {
 		mFieldsLayout.addView(field);
 		return autoCompleteText;
 	}
-
-
-
 
 	public TextView addTextField(String message) {
 		LinearLayout field = (LinearLayout)mInflater.inflate(R.layout.openmrs_text_view_field, null);
@@ -356,7 +346,7 @@ public class CustomFragmentDialog extends DialogFragment {
 			public void onClick(View v) {
 				switch (action) {
 					case DISMISS_URL_DIALOG:
-                        /*((FindPatientRecordFragment) getActivity()
+						/*((FindPatientRecordFragment) getActivity()
                                 .getSupportFragmentManager()
                                 .findFragmentById(R.id.loginContentFrame))
                                 .hideURLDialog();*/
@@ -412,9 +402,14 @@ public class CustomFragmentDialog extends DialogFragment {
 						activity.finish();
 						break;
 					case ADD_VISIT_TASKS:
-						((VisitTasksActivity)getActivity()).mPresenter.addVisitTasks(getAutoCompleteTextValue());
-						dismiss();
-						break;
+						if (StringUtils.notEmpty(getAutoCompleteTextValue())) {
+							((VisitTasksActivity)getActivity()).mPresenter.addVisitTasks(getAutoCompleteTextValue());
+							dismiss();
+							break;
+						} else {
+							dismiss();
+							break;
+						}
 					default:
 						break;
 				}

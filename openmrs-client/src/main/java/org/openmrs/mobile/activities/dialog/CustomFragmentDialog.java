@@ -56,6 +56,7 @@ import org.openmrs.mobile.models.VisitPredefinedTask;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.FontsUtil;
 import org.openmrs.mobile.utilities.StringUtils;
+import org.openmrs.mobile.utilities.ToastUtil;
 
 import java.util.Arrays;
 import java.util.List;

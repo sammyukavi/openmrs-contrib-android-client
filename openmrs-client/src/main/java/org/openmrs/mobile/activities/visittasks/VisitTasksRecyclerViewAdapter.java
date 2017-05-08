@@ -15,6 +15,7 @@
 package org.openmrs.mobile.activities.visittasks;
 
 import android.app.Activity;
+import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,18 +57,21 @@ class VisitTasksRecyclerViewAdapter extends RecyclerView.Adapter<VisitTasksRecyc
 			holder.visitTasks.setText(visitTask.getName());
 			if (visitTask.getStatus() == VisitTaskStatus.CLOSED) {
 				holder.visitTasks.setChecked(true);
-				holder.visitTasks.setEnabled(false);
+				holder.visitTasks.setPaintFlags(holder.visitTasks.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 			}
 		} catch (Exception e) {
 			holder.visitTasks.setText("");
+			holder.visitTasks.setEnabled(false);
 		}
 
 		holder.visitTasks.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				if (buttonView.isChecked()) {
+			public void onCheckedChanged(CompoundButton visitTaskCheckBox, boolean isChecked) {
+				if (visitTaskCheckBox.isChecked()) {
+					visitTaskCheckBox.setPaintFlags(visitTaskCheckBox.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 					view.setSelectedVisitTask(visitTask);
 				} else {
+					visitTaskCheckBox.setPaintFlags(visitTaskCheckBox.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
 					view.setUnSelectedVisitTask(visitTask);
 				}
 			}

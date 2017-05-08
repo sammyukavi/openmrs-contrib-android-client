@@ -227,7 +227,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 			}
 
 			@Override
-			public void onErrorResponse(String errorMessage) {
+			public void onErrorResponse(String fetchErrorMessage) {
 				registeringPatient = false;
 				mPatientInfoView.setProgressBarVisibility(false);
 			}

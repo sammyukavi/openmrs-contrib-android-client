@@ -121,7 +121,7 @@ public class VisitTasksFragment extends ACBaseFragment<VisitTasksContract.Presen
 			visitTaskStatus = visitTask.get(q).getStatus();
 
 			for (int i = 0; i < visitPredefinedTask.size(); i++) {
-				predefinedTaskName = visitPredefinedTask.get(i).getName();
+				predefinedTaskName = predefinedTasks.get(i).getName();
 
 				if ((predefinedTaskName.equals(visitTasksName)) && (visitTaskStatus.equals(VisitTaskStatus.OPEN))) {
 					visitPredefinedTask.remove(i);

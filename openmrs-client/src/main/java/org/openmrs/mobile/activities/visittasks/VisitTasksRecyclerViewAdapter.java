@@ -25,6 +25,7 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 
 import org.openmrs.mobile.R;
+import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitTask;
 import org.openmrs.mobile.models.VisitTaskStatus;
 
@@ -35,12 +36,14 @@ class VisitTasksRecyclerViewAdapter extends RecyclerView.Adapter<VisitTasksRecyc
 	private Activity mContext;
 	private List<VisitTask> visitTaskList;
 	private VisitTasksContract.View view;
+	private Visit visit;
 
 	VisitTasksRecyclerViewAdapter(Activity context,
-			List<VisitTask> visitTaskList, VisitTasksContract.View view) {
+			List<VisitTask> visitTaskList, Visit visit, VisitTasksContract.View view) {
 		this.mContext = context;
 		this.visitTaskList = visitTaskList;
 		this.view = view;
+		this.visit = visit;
 	}
 
 	@Override
@@ -59,6 +62,12 @@ class VisitTasksRecyclerViewAdapter extends RecyclerView.Adapter<VisitTasksRecyc
 				holder.visitTasks.setChecked(true);
 				holder.visitTasks.setPaintFlags(holder.visitTasks.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 			}
+			if (visit.getStopDatetime() != null) {
+				holder.visitTasks.setEnabled(false);
+			} else {
+				holder.visitTasks.setEnabled(true);
+			}
+
 		} catch (Exception e) {
 			holder.visitTasks.setText("");
 			holder.visitTasks.setEnabled(false);

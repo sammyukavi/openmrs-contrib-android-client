@@ -29,7 +29,7 @@ public abstract class ApplicationConstants {
 	public static final String DEFAULT_OPEN_MRS_URL = "http://10.1.1.2:8080/openmrs/";
 	public static final String CIVIL_STATUS_UUID = "1054AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 	public static final String PATIENT_UUID = "50133200-15c6-406c-b813-30b7f496a023";
-	public static final String VISIT_UUID = "2dd343e5-65e3-4b09-8fbb-ab9b3005d5ce";
+	public static final String VISIT_UUID = "24661b51-8097-4f39-bed4-56780a63905c";
 	//discuss on using the openhmis
 	// demo as the main test server to avoid changes here.
 
@@ -137,5 +137,6 @@ public abstract class ApplicationConstants {
 		public static final String ATTRIBUTE_TPYES  = "Attribute Type(s)";
 		public static final String IDENTIFIER_TPYES  = "Identifier Type(s)";
 		public static final String PREDEFINED_TASKS  = "Predefined task(s)";
+		public static final String VISITS  = "Visit(s)";
 	}
 }

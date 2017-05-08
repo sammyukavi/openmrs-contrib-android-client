@@ -20,6 +20,7 @@ import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
+import org.openmrs.mobile.data.impl.VisitDataService;
 import org.openmrs.mobile.data.impl.VisitPredefinedTasksDataService;
 import org.openmrs.mobile.data.impl.VisitTasksDataService;
 import org.openmrs.mobile.models.Patient;
@@ -38,6 +39,7 @@ public class VisitTasksPresenter extends BasePresenter implements VisitTasksCont
 	private VisitTasksContract.View visitTasksView;
 	private VisitPredefinedTasksDataService visitPredefinedTasksDataService;
 	private VisitTasksDataService visitTasksDataService;
+	private VisitDataService visitDataService;
 
 	private int page = 0;
 	private int limit = 10;
@@ -47,6 +49,7 @@ public class VisitTasksPresenter extends BasePresenter implements VisitTasksCont
 		this.visitTasksView.setPresenter(this);
 		this.visitPredefinedTasksDataService = new VisitPredefinedTasksDataService();
 		this.visitTasksDataService = new VisitTasksDataService();
+		this.visitDataService = new VisitDataService();
 	}
 
 	@Override
@@ -76,7 +79,7 @@ public class VisitTasksPresenter extends BasePresenter implements VisitTasksCont
 
 				@Override
 				public void onError(Throwable t) {
-					Log.e("Patient Error", "Error", t.fillInStackTrace());
+					Log.e("Predefined tasks Error", "Error", t.fillInStackTrace());
 					visitTasksView
 							.showToast(ApplicationConstants.entityName.PREDEFINED_TASKS + ApplicationConstants.toastMessages
 									.fetchErrorMessage, ToastUtil.ToastType.ERROR);
@@ -97,12 +100,12 @@ public class VisitTasksPresenter extends BasePresenter implements VisitTasksCont
 				@Override
 				public void onCompleted(List<VisitTask> visitTasksList) {
 					if (visitTasksList.isEmpty()) {
-						visitTasksView.getVisitTasks(visitTasksList);
+						visitTasksView.setVisitTasks(visitTasksList);
 						/*visitTasksView.showToast(ApplicationConstants.toastMessages.predefinedTaskInfo, ToastUtil
 						.ToastType
 								.NOTICE);*/
 					} else {
-						visitTasksView.getVisitTasks(visitTasksList);
+						visitTasksView.setVisitTasks(visitTasksList);
 						visitTasksView
 								.showToast(ApplicationConstants.entityName.VISIT_TASKS
 												+ ApplicationConstants.toastMessages.fetchSuccessMessage,
@@ -112,7 +115,7 @@ public class VisitTasksPresenter extends BasePresenter implements VisitTasksCont
 
 				@Override
 				public void onError(Throwable t) {
-					Log.e("Patient Error", "Error", t.fillInStackTrace());
+					Log.e("Visit Tasks Error", "Error", t.fillInStackTrace());
 					visitTasksView
 							.showToast(ApplicationConstants.entityName.VISIT_TASKS + ApplicationConstants.toastMessages
 									.fetchErrorMessage, ToastUtil.ToastType.ERROR);
@@ -149,7 +152,7 @@ public class VisitTasksPresenter extends BasePresenter implements VisitTasksCont
 
 				@Override
 				public void onError(Throwable t) {
-					Log.e("Patient Error", "Error", t.fillInStackTrace());
+					Log.e("Add Visit Task Error", "Error", t.fillInStackTrace());
 					visitTasksView
 							.showToast(ApplicationConstants.entityName.VISIT_TASKS + ApplicationConstants.toastMessages
 									.addErrorMessage, ToastUtil.ToastType.ERROR);
@@ -178,7 +181,7 @@ public class VisitTasksPresenter extends BasePresenter implements VisitTasksCont
 
 				@Override
 				public void onError(Throwable t) {
-					Log.e("Patient Error", "Error", t.fillInStackTrace());
+					Log.e("Update Visit task", "Error", t.fillInStackTrace());
 					visitTasksView
 							.showToast(ApplicationConstants.entityName.VISIT_TASKS + ApplicationConstants.toastMessages
 									.updateErrorMessage, ToastUtil.ToastType.ERROR);
@@ -206,5 +209,35 @@ public class VisitTasksPresenter extends BasePresenter implements VisitTasksCont
 		visitTaskEntity.setVisit(visit);
 
 		addVisitTasks(visitTaskEntity);
+	}
+
+	@Override
+	public void getVisit() {
+		if (NetworkUtils.hasNetwork()) {
+			DataService.GetSingleCallback<Visit> getSingleCallback = new DataService
+					.GetSingleCallback<Visit>() {
+
+				@Override
+				public void onCompleted(Visit entity) {
+					if (entity != null) {
+						visitTasksView.setVisit(entity);
+						visitTasksView
+								.showToast(ApplicationConstants.entityName.VISITS + ApplicationConstants.toastMessages
+										.fetchSuccessMessage, ToastUtil.ToastType.SUCCESS);
+					}
+				}
+
+				@Override
+				public void onError(Throwable t) {
+					Log.e("Visit Error", "Error", t.fillInStackTrace());
+					visitTasksView
+							.showToast(ApplicationConstants.entityName.VISITS + ApplicationConstants.toastMessages
+									.fetchErrorMessage, ToastUtil.ToastType.ERROR);
+				}
+			};
+			visitDataService.getByUUID(ApplicationConstants.VISIT_UUID, getSingleCallback);
+		} else {
+			// get the users from the local storage.
+		}
 	}
 }

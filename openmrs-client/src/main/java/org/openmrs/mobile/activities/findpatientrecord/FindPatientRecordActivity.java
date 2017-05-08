@@ -55,7 +55,7 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 		}
 
 		//adding
-		FloatingActionButton floatingActionButton = (FloatingActionButton)findViewById(R.id.fab);
+		FloatingActionButton floatingActionButton = (FloatingActionButton)findViewById(R.id.findPatientFab);
 		floatingActionButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {

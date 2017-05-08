@@ -16,6 +16,7 @@ package org.openmrs.mobile.activities.visittasks;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -27,6 +28,7 @@ import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
+import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitPredefinedTask;
 import org.openmrs.mobile.models.VisitTask;
 import org.openmrs.mobile.models.VisitTaskStatus;
@@ -44,6 +46,8 @@ public class VisitTasksFragment extends ACBaseFragment<VisitTasksContract.Presen
 	private RecyclerView visitTasksRecyclerViewAdapter;
 	private List<VisitPredefinedTask> predefinedTasks;
 	private List<VisitTask> visitTasksLists;
+	private Visit visit;
+	FloatingActionButton fab;
 
 	public static VisitTasksFragment newInstance() {
 		return new VisitTasksFragment();
@@ -61,6 +65,7 @@ public class VisitTasksFragment extends ACBaseFragment<VisitTasksContract.Presen
 
 		// Font config
 		FontsUtil.setFont((ViewGroup)this.getActivity().findViewById(android.R.id.content));
+		mPresenter.getVisit();
 		mPresenter.getPredefinedTasks();
 		mPresenter.getVisitTasks();
 
@@ -69,6 +74,7 @@ public class VisitTasksFragment extends ACBaseFragment<VisitTasksContract.Presen
 
 	private void resolveViews(View v) {
 		viewTasksRecyclerView = (RecyclerView)v.findViewById(R.id.visitTasksRecyclerView);
+		fab = (FloatingActionButton)v.findViewById(R.id.visitTaskFab);
 	}
 
 	@Override
@@ -77,11 +83,15 @@ public class VisitTasksFragment extends ACBaseFragment<VisitTasksContract.Presen
 	}
 
 	@Override
-	public void getVisitTasks(List<VisitTask> visitTaskList) {
+	public void setVisitTasks(List<VisitTask> visitTaskList) {
 		this.visitTasksLists = visitTaskList;
-		VisitTasksRecyclerViewAdapter adapter = new VisitTasksRecyclerViewAdapter(this.getActivity(), visitTaskList, this);
-		visitTasksRecyclerViewAdapter.setAdapter(adapter);
-		//visitTasksRecyclerViewAdapter.addOnScrollListener(recyclerViewOnScrollListener);
+		if (visit != null) {
+			VisitTasksRecyclerViewAdapter adapter =
+					new VisitTasksRecyclerViewAdapter(this.getActivity(), visitTaskList, visit, this);
+			visitTasksRecyclerViewAdapter.setAdapter(adapter);
+			//visitTasksRecyclerViewAdapter.addOnScrollListener(recyclerViewOnScrollListener);
+
+		}
 	}
 
 	@Override
@@ -116,6 +126,11 @@ public class VisitTasksFragment extends ACBaseFragment<VisitTasksContract.Presen
 	public void refresh() {
 		FragmentTransaction ft = getFragmentManager().beginTransaction();
 		ft.detach(this).attach(this).commit();
+	}
+
+	@Override
+	public void setVisit(Visit visit) {
+		this.visit = visit;
 	}
 
 	public List<VisitPredefinedTask> removeUsedPredefinedTasks(List<VisitPredefinedTask> visitPredefinedTask,

@@ -45,7 +45,7 @@ public class VisitTasksActivity extends ACBaseActivity {
 		}
 
 		//adding
-		FloatingActionButton floatingActionButton = (FloatingActionButton)findViewById(R.id.fab);
+		FloatingActionButton floatingActionButton = (FloatingActionButton)findViewById(R.id.visitTaskFab);
 		floatingActionButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {

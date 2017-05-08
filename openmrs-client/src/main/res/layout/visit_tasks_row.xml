@@ -22,7 +22,7 @@
 			android:id="@+id/cardView"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_margin="5dp"
+			android:layout_margin="2dp"
 			card_view:cardBackgroundColor="@color/white"
 			card_view:cardCornerRadius="4dp">
 			

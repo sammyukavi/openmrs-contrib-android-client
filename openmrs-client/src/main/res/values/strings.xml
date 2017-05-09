@@ -368,6 +368,7 @@
 	<string name="patient_emergency_contact_info_label">Emergency Contact Information</string>
 	<string name="patient_encounter_information_label">Encounter Information</string>
 	<string name="encounter_label">Encounter</string>
+	<string name="patient_metadata_label">Patient Metadata</string>
 	
 	<!--Matching Patient Activity-->
 	<string name="matching_patients_toolbar_title">Merge Patients</string>

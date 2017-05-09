@@ -79,7 +79,6 @@ public abstract class ApplicationConstants {
 
 	public abstract static class BundleKeys {
 		public static final String CUSTOM_DIALOG_BUNDLE = "customDialogBundle";
-		public static final String PATIENT_UUID_BUNDLE = "patientID";
 		public static final String PATIENT_ID_BUNDLE = "patientID";
 		public static final String PATIENTS_START_INDEX = "patientsStartIndex";
 		public static final String VISIT_ID = "visitID";
@@ -139,5 +138,15 @@ public abstract class ApplicationConstants {
 		public static final String IDENTIFIER_TPYES  = "Identifier Type(s)";
 		public static final String PREDEFINED_TASKS  = "Predefined task(s)";
 		public static final String VISITS  = "Visit(s)";
+	}
+
+	public static class unwatedPersonAttributes {
+		public static final String BIRTH_PLACE_UUID = "8d8718c2-c2cc-11de-8d13-0010c6dffd0f";
+		public static final	String HEALTH_CENTER_UUID = "8d87236c-c2cc-11de-8d13-0010c6dffd0f";
+		public static final String HEALTH_DISTRICT_UUID = "8d872150-c2cc-11de-8d13-0010c6dffd0f";
+		public static final String MOTHER_NAME_UUID = "8d871d18-c2cc-11de-8d13-0010c6dffd0f";
+		public static final String RACE_UUID = "8d871386-c2cc-11de-8d13-0010c6dffd0f";
+		public static final String UNKNOWN_PATIENT_UUID = "8b56eac7-5c76-4b9c-8c6f-1deab8d3fc47";
+		public static final String TEST_PATIENT_UUID = "4f07985c-88a5-4abd-aa0c-f3ec8324d8e7";
 	}
 }

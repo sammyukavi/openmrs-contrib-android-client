@@ -36,8 +36,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.Spinner;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 import org.joda.time.DateTime;
@@ -142,9 +140,9 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 
 	private Map<String, PersonAttribute> personAttributeMap = new HashMap<>();
 	private Map<View, PersonAttributeType> viewPersonAttributeTypeMap = new HashMap<>();
-	private static TableRow.LayoutParams marginParams;
 
-	private TableLayout personTableLayout;
+	private LinearLayout personLinearLayout;
+	private static LinearLayout.LayoutParams marginParams;
 
 	public static AddEditPatientFragment newInstance() {
 		return new AddEditPatientFragment();
@@ -159,7 +157,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		edyr = (EditText)v.findViewById(R.id.estyr);
 		edmonth = (EditText)v.findViewById(R.id.estmonth);
 		fileNumber = (EditText)v.findViewById(R.id.fileNumber);
-		occupation = (EditText)v.findViewById(R.id.occuapation);
+		/*occupation = (EditText)v.findViewById(R.id.occuapation);
 		county = (AutoCompleteTextView)v.findViewById(R.id.county);
 		subCounty = (AutoCompleteTextView)v.findViewById(R.id.sub_county);
 		nationality = (EditText)v.findViewById(R.id.nationality);
@@ -170,9 +168,9 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		kinName = (EditText)v.findViewById(R.id.kinName);
 		kinRelationship = (EditText)v.findViewById(R.id.kinRelationship);
 		kinPhonenumber = (EditText)v.findViewById(R.id.kinPhonenumber);
-		kinResidence = (EditText)v.findViewById(R.id.kinResidence);
+		kinResidence = (EditText)v.findViewById(R.id.kinResidence);*/
 
-		personTableLayout = (TableLayout)v.findViewById(R.id.personTableLayout);
+		personLinearLayout = (LinearLayout)v.findViewById(R.id.personAttributeLinearLayout);
 
 		gen = (RadioGroup)v.findViewById(R.id.gender);
 		progressBar = (ProgressBar)v.findViewById(R.id.progress_bar);
@@ -181,9 +179,9 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		lnameerror = (TextView)v.findViewById(R.id.lnameerror);
 		doberror = (TextView)v.findViewById(R.id.doberror);
 		gendererror = (TextView)v.findViewById(R.id.gendererror);
-		addrerror = (TextView)v.findViewById(R.id.addrerror);
+		//addrerror = (TextView)v.findViewById(R.id.addrerror);
 		fileNumberError = (TextView)v.findViewById(R.id.fileNumberError);
-		marriageStatusError = (TextView)v.findViewById(R.id.civilStatusError);
+		/*marriageStatusError = (TextView)v.findViewById(R.id.civilStatusError);
 		countyError = (TextView)v.findViewById(R.id.countyError);
 		subCountyError = (TextView)v.findViewById(R.id.sub_countError);
 		nationalityError = (TextView)v.findViewById(R.id.nationalityError);
@@ -195,10 +193,10 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		kinRelationshipError = (TextView)v.findViewById(R.id.kinRelationshipError);
 		kinPhonenumberError = (TextView)v.findViewById(R.id.kinPhonenumberError);
 		kinResidenceError = (TextView)v.findViewById(R.id.kinResidenceError);
-		occupationError = (TextView)v.findViewById(R.id.occupationError);
+		occupationError = (TextView)v.findViewById(R.id.occupationError);*/
 
 		submitConfirm = (Button)v.findViewById(R.id.submitConfirm);
-		civilStatus = (Spinner)v.findViewById(R.id.civilStatusSpinner);
+		//civilStatus = (Spinner)v.findViewById(R.id.civilStatusSpinner);
 	}
 
 	@Override
@@ -206,9 +204,13 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 			Bundle savedInstanceState) {
 		View root = inflater.inflate(R.layout.fragment_patient_info, container, false);
 		resolveViews(root);
-		addSuggestionsToAutoCompleteTextView();
+		//addSuggestionsToAutoCompleteTextView();
 		addListeners();
+		buildMarginLayout();
 		fillFields(mPresenter.getPatientToUpdate());
+		if (!mPresenter.isRegisteringPatient()) {
+			buildPersonAttributeValues();
+		}
 		return root;
 
 	}
@@ -264,6 +266,9 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		List<PersonAddress> addresses = new ArrayList<>();
 		addresses.add(address);
 		person.setAddresses(addresses);
+
+		List<PersonAttribute> personAttributeList = (List<PersonAttribute>)personAttributeMap;
+		person.setPersonAttributes(personAttributeList);
 
 		/*PersonAttribute personAttribute = new PersonAttribute();
 		personAttribute.setValue(ViewUtils.getInput(occupation));
@@ -367,7 +372,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 	@Override
 	public void startPatientDashboardActivity(Patient patient) {
 		Intent intent = new Intent(getActivity(), PatientDashboardActivity.class);
-		intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patient.getId());
+		intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_ID_BUNDLE, patient.getId());
 		startActivity(intent);
 	}
 
@@ -375,7 +380,6 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 	public void showUpgradeRegistrationModuleInfo() {
 		ToastUtil.notifyLong(getResources().getString(R.string.registration_core_info));
 	}
-
 
 	@Override
 	public void setPatientIdentifierType(PatientIdentifierType patientIdentifierType) {
@@ -390,69 +394,64 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 	@Override
 	public void loadPersonAttributeTypes(List<PersonAttributeType> personAttributeTypeList) {
 		for (PersonAttributeType personAttributeType : personAttributeTypeList) {
-			TableRow row = new TableRow(getContext());
-			row.setPadding(0, 20, 0, 10);
-			TextView label = new TextView(getContext());
-			label.setText(personAttributeType.getDisplay() + ":");
-			label.setTextSize(17);
-			label.setTextColor(getResources().getColor(R.color.dark_grey));
-			row.addView(label, 0);
+			LinearLayout personLayout = new LinearLayout(getContext());
+			personLayout.setOrientation(LinearLayout.VERTICAL);
 
 			String datatypeClass = personAttributeType.getFormat();
 			if (StringUtils.isBlank(datatypeClass)) {
 				continue;
 			}
 
-			if (datatypeClass.equalsIgnoreCase("org.openmrs.customdatatype.datatype.BooleanDatatype")) {
+			if (datatypeClass.equalsIgnoreCase("java.lang.Boolean")) {
 				RadioButton booleanType = new RadioButton(getContext());
 				booleanType.setLayoutParams(marginParams);
 
 				// set default value
 				Boolean defaultValue = mPresenter.searchPersonAttributeValueByType(personAttributeType);
-				if(defaultValue != null){
+				if (defaultValue != null) {
 					booleanType.setChecked(defaultValue);
 				}
 
-				row.addView(booleanType, 1);
+				personLayout.addView(booleanType);
 				viewPersonAttributeTypeMap.put(booleanType, personAttributeType);
 			} else if (datatypeClass.equalsIgnoreCase("org.openmrs.customdatatype.datatype.DateDatatype")) {
 				EditText dateType = new EditText(getContext());
 				dateType.setFocusable(true);
-				dateType.setTextSize(17);
+				dateType.setTextSize(14);
 				dateType.setLayoutParams(marginParams);
 
 				// set default value
 				String defaultValue = mPresenter.searchPersonAttributeValueByType(personAttributeType);
-				if(StringUtils.notEmpty(defaultValue)){
+				if (StringUtils.notEmpty(defaultValue)) {
 					dateType.setText(defaultValue);
 				}
-				row.addView(dateType, 1);
+				personLayout.addView(dateType);
 				viewPersonAttributeTypeMap.put(dateType, personAttributeType);
-			} else if (datatypeClass.equalsIgnoreCase("org.openmrs.module.coreapps.customdatatype.CodedConceptDatatype")) {
+			} else if (datatypeClass.equalsIgnoreCase("org.openmrs.Concept")) {
 				// get coded concept uuid
 				String conceptUuid = personAttributeType.getConcept().getUuid();
 				Spinner conceptAnswersDropdown = new Spinner(getContext());
 				conceptAnswersDropdown.setLayoutParams(marginParams);
 				mPresenter.getConceptNames(conceptUuid, conceptAnswersDropdown);
-				row.addView(conceptAnswersDropdown, 1);
+				personLayout.addView(conceptAnswersDropdown);
 				viewPersonAttributeTypeMap.put(conceptAnswersDropdown, personAttributeType);
-			} else if (datatypeClass.equalsIgnoreCase("org.openmrs.customdatatype.datatype.FreeTextDatatype")) {
+			} else if (datatypeClass.equalsIgnoreCase("java.lang.String")) {
 				EditText freeTextType = new EditText(getContext());
 				freeTextType.setFocusable(true);
-				freeTextType.setTextSize(17);
+				freeTextType.setTextSize(14);
+				freeTextType.setHint(personAttributeType.toString());
 				freeTextType.setLayoutParams(marginParams);
-
 				// set default value
 				String defaultValue = mPresenter.searchPersonAttributeValueByType(personAttributeType);
-				if(StringUtils.notEmpty(defaultValue)){
+				if (StringUtils.notEmpty(defaultValue)) {
 					freeTextType.setText(defaultValue);
 				}
 
-				row.addView(freeTextType, 1);
+				personLayout.addView(freeTextType);
 				viewPersonAttributeTypeMap.put(freeTextType, personAttributeType);
 			}
 
-			personTableLayout.addView(row);
+			personLinearLayout.addView(personLayout);
 		}
 	}
 
@@ -465,11 +464,11 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 
 		// set existing visit attribute if any
 		String visitTypeUuid = mPresenter.searchPersonAttributeValueByType(personAttributeType);
-		if(null != visitTypeUuid){
+		if (null != visitTypeUuid) {
 			setDefaultDropdownSelection(conceptNameArrayAdapter, visitTypeUuid, conceptNamesDropdown);
 		}
 
-		conceptNamesDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+		conceptNamesDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				ConceptName conceptName = conceptNames.get(position);
@@ -481,7 +480,8 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 			}
 
 			@Override
-			public void onNothingSelected(AdapterView<?> parent) {}
+			public void onNothingSelected(AdapterView<?> parent) {
+			}
 		});
 
 	}
@@ -556,7 +556,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 			}
 		});
 
-		county.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+		/*county.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
 				if (county.getText().length() >= county.getThreshold()) {
@@ -574,7 +574,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 			public void onFocusChange(View v, boolean hasFocus) {
 				addSuggestionsToSubCounties();
 			}
-		});
+		});*/
 
 		if (eddob != null) {
 			eddob.setOnClickListener(new View.OnClickListener() {
@@ -627,11 +627,38 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		edyr.addTextChangedListener(textWatcher);
 	}
 
-	private <T extends BaseOpenmrsObject> void setDefaultDropdownSelection(ArrayAdapter<T> arrayAdapter, String searchUuid, Spinner dropdown){
-		for(int count = 0; count < arrayAdapter.getCount(); count++){
-			if(arrayAdapter.getItem(count).getUuid().equalsIgnoreCase(searchUuid)){
+	private <T extends BaseOpenmrsObject> void setDefaultDropdownSelection(ArrayAdapter<T> arrayAdapter, String searchUuid,
+			Spinner dropdown) {
+		for (int count = 0; count < arrayAdapter.getCount(); count++) {
+			if (arrayAdapter.getItem(count).getUuid().equalsIgnoreCase(searchUuid)) {
 				dropdown.setSelection(count);
 			}
+		}
+	}
+
+	private void buildPersonAttributeValues() {
+		for (Map.Entry<View, PersonAttributeType> set : viewPersonAttributeTypeMap.entrySet()) {
+			View componentType = set.getKey();
+			PersonAttribute personAttribute = new PersonAttribute();
+			personAttribute.setPersonAttributeType(set.getValue());
+
+			if (componentType instanceof RadioButton) {
+				personAttribute.setValue(((RadioButton)componentType).isChecked());
+			} else if (componentType instanceof EditText) {
+				personAttribute.setValue(ViewUtils.getInput((EditText)componentType));
+			}
+
+			if (personAttribute.getValue() != null) {
+				personAttributeMap.put(set.getValue().getUuid(), personAttribute);
+			}
+		}
+	}
+
+	private void buildMarginLayout(){
+		if(marginParams == null) {
+			marginParams = new LinearLayout.LayoutParams(
+					LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+			marginParams.setMargins(25, 10, 25, 10);
 		}
 	}
 }

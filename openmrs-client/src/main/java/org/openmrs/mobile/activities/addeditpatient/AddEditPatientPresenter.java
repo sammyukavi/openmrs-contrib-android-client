@@ -113,9 +113,10 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 
 		patientRegistrationView
 				.setErrorsVisibility(familyNameError, lastNameError, dateOfBirthError, genderError, subCountyError,
-				countyError, patientFileNumberError, civilStatusError, occupationError, subCountyError, nationalityError,
-				patientIdNoError, clinicError, wardError, phonenumberError, kinNameError, kinRelationshipError,
-				kinPhonenumberError, kinResidenceError);
+						countyError, patientFileNumberError, civilStatusError, occupationError, subCountyError,
+						nationalityError,
+						patientIdNoError, clinicError, wardError, phonenumberError, kinNameError, kinRelationshipError,
+						kinPhonenumberError, kinResidenceError);
 
 		// Validate names
 		if (StringUtils.isBlank(patient.getPerson().getName().getGivenName())) {
@@ -280,8 +281,9 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 						@Override
 						public void onError(Throwable t) {
 							Log.e("Civil Status Error", "Error", t.fillInStackTrace());
-							patientRegistrationView.showToast(ApplicationConstants.entityName.CIVIL_STATUS + ApplicationConstants
-									.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
+							patientRegistrationView
+									.showToast(ApplicationConstants.entityName.CIVIL_STATUS + ApplicationConstants
+											.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 						}
 					};
 			conceptNameDataService.getByConceptUuid(uuid, getMultipleCallback);
@@ -327,7 +329,20 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 				@Override
 				public void onCompleted(List<PersonAttributeType> personAttributeTypes) {
 					if (!personAttributeTypes.isEmpty()) {
-
+						for (int i = 0; i < personAttributeTypes.size(); i++) {
+							String uuid = personAttributeTypes.get(i).getUuid();
+							if (uuid.equalsIgnoreCase(ApplicationConstants.unwatedPersonAttributes.TEST_PATIENT_UUID) ||
+									uuid.equalsIgnoreCase(ApplicationConstants.unwatedPersonAttributes.UNKNOWN_PATIENT_UUID)
+									|| uuid.equalsIgnoreCase(ApplicationConstants.unwatedPersonAttributes.RACE_UUID) || uuid
+									.equalsIgnoreCase(ApplicationConstants.unwatedPersonAttributes.HEALTH_CENTER_UUID)
+									|| uuid
+									.equalsIgnoreCase(ApplicationConstants.unwatedPersonAttributes.HEALTH_DISTRICT_UUID)
+									|| uuid
+									.equalsIgnoreCase(ApplicationConstants.unwatedPersonAttributes.MOTHER_NAME_UUID) || uuid
+									.equalsIgnoreCase(ApplicationConstants.unwatedPersonAttributes.BIRTH_PLACE_UUID)) {
+								personAttributeTypes.remove(i);
+							}
+						}
 						patientRegistrationView.loadPersonAttributeTypes(personAttributeTypes);
 					} else {
 						/*patientRegistrationView.showToast(ApplicationConstants.toastMessages.attributeTypeInfo, ToastUtil
@@ -365,8 +380,18 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 	}
 
 	@Override
+	public void setPatient(Patient patient) {
+		this.patient = patient;
+	}
+
+	@Override
 	public boolean isRegisteringPatient() {
 		return registeringPatient;
+	}
+
+	@Override
+	public void setRegistering(boolean registering) {
+		this.registeringPatient = registering;
 	}
 
 }

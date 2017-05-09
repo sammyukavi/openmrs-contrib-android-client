@@ -18,7 +18,6 @@ import android.widget.Spinner;
 
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
-import org.openmrs.mobile.models.ConceptAnswer;
 import org.openmrs.mobile.models.ConceptName;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.PatientIdentifierType;
@@ -69,6 +68,8 @@ public interface AddEditPatientContract {
 
 		boolean isRegisteringPatient();
 
+		void setRegistering(boolean processing);
+
 		void confirmRegister(Patient patient);
 
 		void confirmUpdate(Patient patient);
@@ -88,6 +89,8 @@ public interface AddEditPatientContract {
 		<T> T searchPersonAttributeValueByType(PersonAttributeType personAttributeType);
 
 		Patient getPatient();
+
+		void setPatient(Patient patient);
 	}
 
 }

@@ -70,7 +70,7 @@ public class SimilarPatientsRecyclerViewAdapter
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(mContext, PatientDashboardActivity.class);
-				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, getPatientUuid(patient));
+				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_ID_BUNDLE, getPatientUuid(patient));
 				mContext.startActivity(intent);
 				mContext.finish();
 			}

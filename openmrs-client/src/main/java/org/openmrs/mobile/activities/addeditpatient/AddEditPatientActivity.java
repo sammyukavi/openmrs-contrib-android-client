@@ -56,7 +56,7 @@ public class AddEditPatientActivity extends ACBaseActivity {
 		}
 		String patientID = "";
 		if (patientBundle != null) {
-			patientID = patientBundle.getString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
+			patientID = patientBundle.getString(ApplicationConstants.BundleKeys.PATIENT_ID_BUNDLE);
 		}
 
 		List<String> counties = Arrays.asList(getResources().getStringArray(R.array.countiesArray));

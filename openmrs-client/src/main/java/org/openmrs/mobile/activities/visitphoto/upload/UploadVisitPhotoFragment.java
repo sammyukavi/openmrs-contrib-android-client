@@ -26,6 +26,7 @@ import android.widget.ImageView;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
+import org.openmrs.mobile.utilities.StringUtils;
 import org.openmrs.mobile.utilities.ViewUtils;
 
 import java.io.ByteArrayOutputStream;
@@ -111,7 +112,8 @@ public class UploadVisitPhotoFragment extends ACBaseFragment<UploadVisitPhotoCon
                             output.getName(), RequestBody.create(MediaType.parse("image/*"), output));
 
                     mPresenter.getVisitPhoto().setRequestImage(uploadFile);
-                    mPresenter.getVisitPhoto().setFileCaption(ViewUtils.getInput(fileCaption));
+                    mPresenter.getVisitPhoto().setFileCaption(
+                            StringUtils.notEmpty(ViewUtils.getInput(fileCaption)) ? ViewUtils.getInput(fileCaption) : "Uploaded from android client");
                     mPresenter.uploadImage();
                 }
             }

@@ -16,23 +16,16 @@ package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 
-import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Id;
-import org.greenrobot.greendao.annotation.Transient;
-
+import java.util.Collection;
 import java.util.List;
-import org.greenrobot.greendao.annotation.Generated;
 
-@Entity
-public class Visit extends BaseOpenmrsEntity {
-    @Id
+public class Visit extends BaseOpenmrsEntity  {
+
     private Long id;
 
-    @Transient
     @Expose
     private VisitType visitType;
 
-    @Transient
     @Expose
     private Location location;
 
@@ -42,19 +35,21 @@ public class Visit extends BaseOpenmrsEntity {
     @Expose
     private String stopDatetime;
 
-    @Transient
     @Expose
     private List<Encounter> encounters;
 
-    @Generated(hash = 284896357)
-    public Visit(Long id, String startDatetime, String stopDatetime) {
-        this.id = id;
-        this.startDatetime = startDatetime;
-        this.stopDatetime = stopDatetime;
+    @Expose
+    private List<VisitAttribute> attributes;
+
+    @Expose
+    private Patient patient;
+
+    public Patient getPatient() {
+        return patient;
     }
 
-    @Generated(hash = 808752442)
-    public Visit() {
+    public void setPatient(Patient patient) {
+        this.patient = patient;
     }
 
     public Long getId() {
@@ -103,5 +98,13 @@ public class Visit extends BaseOpenmrsEntity {
 
     public void setEncounters(List<Encounter> encounters) {
         this.encounters = encounters;
+    }
+
+    public List<VisitAttribute> getAttributes() {
+        return attributes;
+    }
+
+    public void setAttributes(List<VisitAttribute> attributes) {
+        this.attributes = attributes;
     }
 }

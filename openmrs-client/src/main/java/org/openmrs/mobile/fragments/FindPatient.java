@@ -84,7 +84,7 @@ public class FindPatient extends Fragment {
         PatientDataService svc = new PatientDataService();
         svc.getByName("Test", null, new DataService.GetMultipleCallback<org.openmrs.mobile.models.Patient>() {
             @Override
-            public void onCompleted(List<org.openmrs.mobile.models.Patient> entities) {
+            public void onCompleted(List<org.openmrs.mobile.models.Patient> entities, int length) {
                 for (org.openmrs.mobile.models.Patient p : entities){
                     Log.d("Test", p.toString());
                 }

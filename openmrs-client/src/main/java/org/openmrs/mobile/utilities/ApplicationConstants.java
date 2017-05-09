@@ -14,7 +14,7 @@
 
 package org.openmrs.mobile.utilities;
 
-import org.openmrs.mobile.models.EncounterType;
+import org.openmrs.mobile.models.EncounterTypeEntity;
 
 public abstract class ApplicationConstants {
 
@@ -27,16 +27,16 @@ public abstract class ApplicationConstants {
     public static final String VISIT_TYPE_UUID = "visit_type_uuid";
     public static final String LAST_SESSION_TOKEN = "last_session_id";
     public static final String LAST_LOGIN_SERVER_URL = "last_login_server_url";
-    public static final String DEFAULT_OPEN_MRS_URL = "http://192.168.2.27:8080/openmrs/";
-
+    public static final String DEFAULT_OPEN_MRS_URL = "http://192.168.2.10:8080/openmrs/";
+    //public static final String DEFAULT_OPEN_MRS_URL = "http://192.168.0.102:8080/openmrs/";
 
     public abstract static class OpenMRSSharedPreferenceNames {
         public static final String SHARED_PREFERENCES_NAME = "shared_preferences";
     }
 
     public abstract static class API {
-        public static final String REST_ENDPOINT_V1 = "ws/rest/v1";
-        public static final String REST_ENDPOINT_V2 = "/ws/rest/v2";
+        public static final String REST_ENDPOINT_V1 = "ws/rest/v1/";
+        public static final String REST_ENDPOINT_V2 = "ws/rest/v2/";
         public static final String FULL = "full";
     }
 
@@ -75,7 +75,8 @@ public abstract class ApplicationConstants {
     public abstract static class BundleKeys {
         public static final String CUSTOM_DIALOG_BUNDLE = "customDialogBundle";
         public static final String PATIENT_ID_BUNDLE = "patientID";
-        public static final String VISIT_ID = "visitID";
+        public static final String VISIT_ID_BUNDLE = "visitID";
+        public static final String PROVIDER_ID_BUNDLE = "providerID";
         public static final String ENCOUNTERTYPE = "encounterType";
         public static final String VALUEREFERENCE = "valueReference";
         public static final String FORM_NAME = "formName";
@@ -99,7 +100,7 @@ public abstract class ApplicationConstants {
 
     public abstract static class EncounterTypes {
         public static final String VITALS = "67a71486-1a54-468f-ac3e-7091a9a79584";
-        public static String[] ENCOUNTER_TYPES_DISPLAYS = {EncounterType.VITALS, EncounterType.ADMISSION, EncounterType.DISCHARGE, EncounterType.VISIT_NOTE};
+        public static String[] ENCOUNTER_TYPES_DISPLAYS = {EncounterTypeEntity.VITALS, EncounterTypeEntity.ADMISSION, EncounterTypeEntity.DISCHARGE, EncounterTypeEntity.VISIT_NOTE};
     }
 
     public abstract static class Tags {

@@ -21,6 +21,8 @@ import java.util.List;
 
 public class Person extends BaseOpenmrsEntity implements Serializable {
 
+    private Integer personId;
+
     @SerializedName("names")
     @Expose
     private List<PersonName> names = new ArrayList<PersonName>();
@@ -41,6 +43,22 @@ public class Person extends BaseOpenmrsEntity implements Serializable {
     private List<PersonAttribute> attributes = new ArrayList<PersonAttribute>();
 
     private Bitmap photo;
+
+    @SerializedName("deathDate")
+    @Expose
+    private String deathDate;
+
+    @SerializedName("age")
+    @Expose
+    private Integer age;
+
+    public Integer getPersonId() {
+        return personId;
+    }
+
+    public void setPersonId(Integer personId) {
+        this.personId = personId;
+    }
 
     /**
      * 
@@ -174,5 +192,21 @@ public class Person extends BaseOpenmrsEntity implements Serializable {
 
     public void setPhoto(Bitmap patientPhoto) {
         this.photo = patientPhoto;
+    }
+
+    public String getDeathDate() {
+        return deathDate;
+    }
+
+    public void setDeathDate(String deathDate) {
+        this.deathDate = deathDate;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public Integer getAge() {
+        return age;
     }
 }

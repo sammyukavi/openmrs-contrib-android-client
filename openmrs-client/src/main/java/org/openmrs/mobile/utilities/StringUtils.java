@@ -103,4 +103,8 @@ public final class StringUtils {
         }
         return sb.toString();
     }
+
+    public static String stripHtmlTags(String htmlString){
+        return htmlString.replaceAll("\\<[^>]*>", "").replaceAll("\\s", " ");
+    }
 }

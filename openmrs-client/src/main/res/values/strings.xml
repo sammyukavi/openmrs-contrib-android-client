@@ -103,9 +103,11 @@
     <!-- End Visit dialog -->
     <string name="end_visit_dialog_title">End Visit</string>
     <string name="end_visit_dialog_message">Are you sure you want to end this visit?</string>
-    <!-- Start visit dialog -->
-    <string name="start_visit_dialog_title">Start Visit</string>
+    <!-- Start visit -->
+    <string name="start_visit_title">Start Visit</string>
     <string name="start_visit_dialog_message">Are you sure you want to start visit for %1$s now?</string>
+    <!-- Edit visit -->
+    <string name="edit_visit_title">Edit Visit</string>
     <!-- Start visit dialog unsuccessful-->
     <string name="start_visit_unsuccessful_dialog_title">Visit didn\'t start.</string>
     <string name="start_visit_unsuccessful_dialog_message">There are already active visits of %1$s. Try synchronizing patient or closing previous visits</string>
@@ -228,6 +230,7 @@
     <string name="toast_with_black_background">Toast with black background</string>
     <string name="edit_form">Edit form</string>
     <string name="patient_photo">Patient Photo</string>
+    <string name="visit_photo">Visit Photo</string>
     <string name="visit_encounter_icon">Visit encounter Icon</string>
     <string name="visit_status_icon">Status of visit</string>
     <string name="show_or_hide_visit_details">Show/Hide visit details</string>
@@ -258,7 +261,7 @@
     <string name="nav_active_visits">Active Visits</string>
     <string name="nav_capture_vitals">Capture Vitals</string>
     <string name="nav_register_patient">Register Patient</string>
-    <string name="nav_patient_lists">Patient Lists</string>
+    <string name="nav_patient_list">Patient List</string>
     <string name="nav_visit_tasks">Visit Tasks</string>
     <string name="nav_settings">Settings</string>
 
@@ -361,5 +364,18 @@
 
     <!--Activity Logs-->
     <string name="title_activity_logs">Logs</string>
+
+    <!-- Fragment_patient_list -->
+    <string name="no_patients_found">No patients found</string>
+    <string name="select_patient_list">Select Patient List:</string>
+    <string name="no_patient_list">No patient lists found!</string>
+    <string name="number_of_patients">%1$s patients found</string>
+
+    <!-- Add/edit visit -->
+    <string name="select_visit_type">Select Visit Type:</string>
+    <string name="visit_type">Visit Type:</string>
+    <string name="upload_image">Upload Image</string>
+    <string name="enter_caption">Enter caption</string>
+    <string name="view_images">View Images</string>
 
 </resources>

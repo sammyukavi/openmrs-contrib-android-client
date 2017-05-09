@@ -11,7 +11,7 @@
 package org.openmrs.mobile.api;
 
 import org.openmrs.mobile.models.Encounter;
-import org.openmrs.mobile.models.EncounterType;
+import org.openmrs.mobile.models.EncounterTypeEntity;
 import org.openmrs.mobile.models.Encountercreate;
 import org.openmrs.mobile.models.FormResource;
 import org.openmrs.mobile.models.IdGenPatientIdentifiers;
@@ -94,7 +94,7 @@ public interface RestApi {
     Call<Encounter> createEncounter(@Body Encountercreate encountercreate);
 
     @GET("encountertype")
-    Call<Results<EncounterType>> getEncounterTypes();
+    Call<Results<EncounterTypeEntity>> getEncounterTypes();
 
     @GET("session")
     Call<Session> getSession();

@@ -13,19 +13,25 @@ package org.openmrs.mobile.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Concept extends Resource{
+import java.util.List;
+
+public class Concept extends BaseOpenmrsObject{
 
     @SerializedName("datatype")
     @Expose
     private Datatype datatype;
 
-    @SerializedName("name")
+    @SerializedName("description")
     @Expose
-    private String name;
+    private String description;
 
     @SerializedName("conceptClass")
     @Expose
     private ConceptClass conceptClass;
+
+    @SerializedName("answers")
+    @Expose
+    private List<ConceptAnswer> answers;
 
     public Datatype getDatatype() {
         return datatype;
@@ -35,12 +41,12 @@ public class Concept extends Resource{
         this.datatype = datatype;
     }
 
-    public String getName() {
-        return name;
+    public String getDescription() {
+        return description;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public ConceptClass getConceptClass() {
@@ -51,4 +57,11 @@ public class Concept extends Resource{
         this.conceptClass = conceptClass;
     }
 
+    public List<ConceptAnswer> getAnswers() {
+        return answers;
+    }
+
+    public void setAnswers(List<ConceptAnswer> answers) {
+        this.answers = answers;
+    }
 }

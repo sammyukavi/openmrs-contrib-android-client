@@ -10,7 +10,7 @@
 
 package org.openmrs.mobile.models;
 
-public class VisitType extends Resource {
+public class VisitType extends BaseOpenmrsMetadata {
 
     public VisitType(String display) {
         this.display = display;
@@ -21,4 +21,8 @@ public class VisitType extends Resource {
         this.display = display;
     }
 
+    @Override
+    public String toString() {
+        return getName();
+    }
 }

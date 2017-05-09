@@ -8,13 +8,13 @@ import org.greenrobot.greendao.annotation.Transient;
 
 import java.io.Serializable;
 
-@Entity
+//@Entity
 public class BaseOpenmrsEntity extends BaseOpenmrsAuditableObject implements Serializable {
     private static final long serialVersionUID = 1;
 
     //@ToOne(joinProperty = "patientId")
-    @Transient
-    @Expose
+    //@Transient
+    /*@Expose
     private Patient patient;
 
     public Patient getPatient() {
@@ -23,5 +23,5 @@ public class BaseOpenmrsEntity extends BaseOpenmrsAuditableObject implements Ser
 
     public void setPatient(Patient patient) {
         this.patient = patient;
-    }
+    }*/
 }

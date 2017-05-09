@@ -11,7 +11,6 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-
 package org.openmrs.mobile.activities;
 
 import android.content.Intent;
@@ -37,11 +36,12 @@ import android.widget.TextView;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.activevisits.ActiveVisitsActivity;
 import org.openmrs.mobile.activities.addeditpatient.AddEditPatientActivity;
+import org.openmrs.mobile.activities.addeditvisit.AddEditVisitActivity;
 import org.openmrs.mobile.activities.capturevitals.CaptureVitalsActivity;
 import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
 import org.openmrs.mobile.activities.findpatientrecord.FindPatientRecordActivity;
 import org.openmrs.mobile.activities.login.LoginActivity;
-import org.openmrs.mobile.activities.patientlists.PatientListsActivity;
+import org.openmrs.mobile.activities.patientlist.PatientListActivity;
 import org.openmrs.mobile.activities.settings.SettingsActivity;
 import org.openmrs.mobile.activities.visittasks.VisitTasksActivity;
 import org.openmrs.mobile.application.OpenMRS;
@@ -77,7 +77,6 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
         intitializeNavigationDrawer();
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -97,6 +96,18 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.basic_menu, menu);
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
     }
 
     @Override
@@ -154,17 +165,6 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
         bundle.setRightButtonAction(CustomFragmentDialog.OnClickAction.DISMISS);
         bundle.setRightButtonText(getString(R.string.dialog_button_ok));
         createAndShowDialog(bundle, ApplicationConstants.DialogTAG.START_VISIT_IMPOSSIBLE_DIALOG_TAG);
-    }
-
-    public void showStartVisitDialog(CharSequence title) {
-        CustomDialogBundle bundle = new CustomDialogBundle();
-        bundle.setTitleViewMessage(getString(R.string.start_visit_dialog_title));
-        bundle.setTextViewMessage(getString(R.string.start_visit_dialog_message, title));
-        bundle.setRightButtonAction(CustomFragmentDialog.OnClickAction.START_VISIT);
-        bundle.setRightButtonText(getString(R.string.dialog_button_confirm));
-        bundle.setLeftButtonAction(CustomFragmentDialog.OnClickAction.DISMISS);
-        bundle.setLeftButtonText(getString(R.string.dialog_button_cancel));
-        createAndShowDialog(bundle, ApplicationConstants.DialogTAG.START_VISIT_DIALOG_TAG);
     }
 
     public void showDeletePatientDialog() {
@@ -263,7 +263,7 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
                 startActivity(new Intent(this, AddEditPatientActivity.class));
                 break;
             case R.id.navItemPatientLists:
-                startActivity(new Intent(this, PatientListsActivity.class));
+                startActivity(new Intent(this, PatientListActivity.class));
                 break;
             case R.id.navItemVisitTasks:
                 startActivity(new Intent(this, VisitTasksActivity.class));
@@ -271,7 +271,6 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
             case R.id.navItemSettings:
                 startActivity(new Intent(this, SettingsActivity.class));
                 break;
-
             default:
                 break;
         }

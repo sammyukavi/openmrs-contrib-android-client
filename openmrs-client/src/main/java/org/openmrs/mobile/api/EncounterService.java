@@ -22,7 +22,7 @@ import org.openmrs.mobile.dao.VisitDAO;
 import org.openmrs.mobile.listeners.retrofit.DefaultResponseCallbackListener;
 import org.openmrs.mobile.listeners.retrofit.StartVisitResponseListenerCallback;
 import org.openmrs.mobile.models.Encounter;
-import org.openmrs.mobile.models.EncounterType;
+import org.openmrs.mobile.models.EncounterTypeEntity;
 import org.openmrs.mobile.models.Encountercreate;
 import org.openmrs.mobile.utilities.NetworkUtils;
 import org.openmrs.mobile.utilities.ToastUtil;
@@ -152,7 +152,7 @@ public class EncounterService extends IntentService {
         visitDAO.getVisitByUuid(encounter.getVisit().getUuid())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(visit -> {
-                    encounter.setEncounterType(new EncounterType(formname));
+                    //encounter.setEncounterType(new EncounterTypeEntity(formname));
                     for (int i=0;i<encountercreate.getObservations().size();i++)
                     {
                         encounter.getObservations().get(i).setDisplayValue

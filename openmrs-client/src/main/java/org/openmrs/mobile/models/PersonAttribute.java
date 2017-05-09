@@ -20,9 +20,10 @@ public class PersonAttribute extends BaseOpenmrsObject implements Serializable {
     @SerializedName("attributeType")
     @Expose
     private PersonAttributeType attributeType;
+
     @SerializedName("value")
     @Expose
-    private String value;
+    private Object value;
 
     /**
      * 
@@ -47,7 +48,7 @@ public class PersonAttribute extends BaseOpenmrsObject implements Serializable {
      * @return
      *     The value
      */
-    public String getValue() {
+    public Object getValue() {
         return value;
     }
 
@@ -56,7 +57,7 @@ public class PersonAttribute extends BaseOpenmrsObject implements Serializable {
      * @param value
      *     The value
      */
-    public void setValue(String value) {
+    public void setValue(Object value) {
         this.value = value;
     }
 

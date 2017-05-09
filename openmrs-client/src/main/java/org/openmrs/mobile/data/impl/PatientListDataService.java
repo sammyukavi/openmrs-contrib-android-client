@@ -23,7 +23,7 @@ public class PatientListDataService extends BaseMetadataDataService<PatientList,
 
     @Override
     protected String getEntityName() {
-        return "patientList";
+        return "patientlist/list";
     }
 
     @Override

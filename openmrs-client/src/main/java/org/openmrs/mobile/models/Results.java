@@ -29,4 +29,16 @@ public class Results<T> implements Serializable {
     public void setResults(List<T> results) {
         this.results = results;
     }
+
+    @SerializedName("length")
+    @Expose
+    private int length;
+
+    public int getLength() {
+        return length;
+    }
+
+    public void setLength(int length) {
+        this.length = length;
+    }
 }

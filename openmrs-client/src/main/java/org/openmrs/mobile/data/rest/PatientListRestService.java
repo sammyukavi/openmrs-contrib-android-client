@@ -17,7 +17,7 @@ public interface PatientListRestService {
                                 @Query("v") String representation);
 
     @GET(RestConstants.GET_ALL)
-    Call<Results<PatientList>> getAll(@Path("restPath") String restPath,
+    Call<Results<PatientList>> getAll(@Path(value = "restPath", encoded = true) String restPath,
                                       @Query("v") String representation);
 
     @GET(RestConstants.GET_ALL)

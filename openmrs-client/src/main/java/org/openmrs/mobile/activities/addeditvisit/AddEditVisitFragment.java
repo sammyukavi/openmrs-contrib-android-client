@@ -95,7 +95,7 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), UploadVisitPhotoActivity.class);
-                intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_ID_BUNDLE,
+                intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE,
                        mPresenter.getPatient().getUuid());
                 intent.putExtra(ApplicationConstants.BundleKeys.VISIT_ID_BUNDLE,
                        mPresenter.getVisit().getUuid());
@@ -288,7 +288,7 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
     @Override
     public void showPatientDashboard() {
         Intent intent = new Intent(getContext(), PatientDashboardActivity.class);
-        intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_ID_BUNDLE,
+        intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE,
                 mPresenter.getPatient().getUuid());
         getContext().startActivity(intent);
     }

@@ -38,9 +38,9 @@ public class Person extends BaseOpenmrsEntity implements Serializable {
 	@SerializedName("addresses")
 	@Expose
 	private List<PersonAddress> addresses = new ArrayList<PersonAddress>();
-	@SerializedName("personAttributes")
+	@SerializedName("attributes")
 	@Expose
-	private List<PersonAttribute> personAttributes = new ArrayList<PersonAttribute>();
+	private List<PersonAttribute> attributes = new ArrayList<PersonAttribute>();
 
 	private Bitmap photo;
 
@@ -170,19 +170,19 @@ public class Person extends BaseOpenmrsEntity implements Serializable {
 	/**
 	 *
 	 * @return
-	 * The personAttributes
+	 * The attributes
 	 */
-	public List<PersonAttribute> getPersonAttributes() {
-		return personAttributes;
+	public List<PersonAttribute> getAttributes() {
+		return attributes;
 	}
 
 	/**
 	 *
-	 * @param personAttributes
-	 * The personAttributes
+	 * @param attributes
+	 * The attributes
 	 */
-	public void setPersonAttributes(List<PersonAttribute> personAttributes) {
-		this.personAttributes = personAttributes;
+	public void setAttributes(List<PersonAttribute> attributes) {
+		this.attributes = attributes;
 	}
 
 

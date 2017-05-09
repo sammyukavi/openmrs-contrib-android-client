@@ -24,16 +24,11 @@ import android.widget.TextView;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.addeditvisit.AddEditVisitActivity;
-import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
-import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.PatientListContextModel;
-import org.openmrs.mobile.models.Visit;
-import org.openmrs.mobile.models.VisitAttribute;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.StringUtils;
 
 import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * Display {@link PatientListContextModel}s
@@ -67,7 +62,7 @@ public class PatientListModelRecyclerViewAdapter extends RecyclerView.Adapter<Pa
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, AddEditVisitActivity.class);
-                intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_ID_BUNDLE,
+                intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE,
                         patientListContextModel.getPatient().getUuid());
                 context.startActivity(intent);
                 context.finish();

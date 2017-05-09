@@ -20,7 +20,6 @@ import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
 import org.openmrs.mobile.activities.visitphoto.download.DownloadVisitPhotoFragment;
 import org.openmrs.mobile.activities.visitphoto.download.DownloadVisitPhotoPresenter;
-import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.StringUtils;
 import org.openmrs.mobile.utilities.ToastUtil;
@@ -37,7 +36,7 @@ public class AddEditVisitActivity extends ACBaseActivity{
         Bundle extras = getIntent().getExtras();
         String patientUuid = "";
         if (extras != null) {
-            patientUuid = extras.getString(ApplicationConstants.BundleKeys.PATIENT_ID_BUNDLE);
+            patientUuid = extras.getString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
             if(StringUtils.notEmpty(patientUuid)){
                 AddEditVisitFragment addEditVisitFragment =
                         (AddEditVisitFragment) getSupportFragmentManager().findFragmentById(R.id.addeditVisitContentFrame);

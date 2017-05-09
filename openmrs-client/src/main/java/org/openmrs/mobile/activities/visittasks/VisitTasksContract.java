@@ -41,6 +41,7 @@ public interface VisitTasksContract {
 		void refresh();
 
 		void setVisit(Visit visit);
+
 	}
 
 	interface Presenter extends BasePresenterContract {

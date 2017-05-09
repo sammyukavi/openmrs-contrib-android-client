@@ -71,9 +71,6 @@ public class VisitTasksPresenter extends BasePresenter implements VisitTasksCont
 								.NOTICE);*/
 					} else {
 						visitTasksView.setPredefinedTasks(visitPredefinedTasks);
-						visitTasksView.showToast(
-								ApplicationConstants.entityName.PREDEFINED_TASKS + ApplicationConstants.toastMessages
-										.fetchSuccessMessage, ToastUtil.ToastType.SUCCESS);
 					}
 				}
 
@@ -221,9 +218,6 @@ public class VisitTasksPresenter extends BasePresenter implements VisitTasksCont
 				public void onCompleted(Visit entity) {
 					if (entity != null) {
 						visitTasksView.setVisit(entity);
-						visitTasksView
-								.showToast(ApplicationConstants.entityName.VISITS + ApplicationConstants.toastMessages
-										.fetchSuccessMessage, ToastUtil.ToastType.SUCCESS);
 					}
 				}
 

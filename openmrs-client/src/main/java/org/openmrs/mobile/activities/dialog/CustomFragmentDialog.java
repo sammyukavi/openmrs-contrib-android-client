@@ -246,6 +246,12 @@ public class CustomFragmentDialog extends DialogFragment {
 		LinearLayout field = (LinearLayout)mInflater.inflate(R.layout.openmrs_auto_complete_text_view_field, null);
 		AutoCompleteTextView autoCompleteText = (AutoCompleteTextView)field.findViewById(R.id
 				.openmrsAutoCompleteTextView);
+		if (mCustomDialogBundle.isDisableAutoCompleteText()) {
+			autoCompleteText.setEnabled(false);
+		} else {
+			autoCompleteText.setEnabled(true);
+		}
+
 		ArrayAdapter adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, autoComplete);
 		autoCompleteText.setAdapter(adapter);
 

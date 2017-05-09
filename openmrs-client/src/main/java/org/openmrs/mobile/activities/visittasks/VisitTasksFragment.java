@@ -17,7 +17,6 @@ package org.openmrs.mobile.activities.visittasks;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -100,6 +99,11 @@ public class VisitTasksFragment extends ACBaseFragment<VisitTasksContract.Presen
 		addVisitTasksDialog.setTitleViewMessage(getString(R.string.add_visit_task_dialog_title));
 		addVisitTasksDialog.setRightButtonText(getString(R.string.action_submit));
 		addVisitTasksDialog.setAutoCompleteTextView(removeUsedPredefinedTasks(predefinedTasks, visitTasksLists));
+		if (visit.getStopDatetime() != null) {
+			addVisitTasksDialog.setDisableAutoCompleteText(true);
+		} else {
+			addVisitTasksDialog.setDisableAutoCompleteText(false);
+		}
 		addVisitTasksDialog.setRightButtonAction(CustomFragmentDialog.OnClickAction.ADD_VISIT_TASKS);
 		((VisitTasksActivity)this.getActivity())
 				.createAndShowDialog(addVisitTasksDialog, ApplicationConstants.DialogTAG.ADD_VISIT_TASK_DIALOG_TAG);
@@ -124,8 +128,9 @@ public class VisitTasksFragment extends ACBaseFragment<VisitTasksContract.Presen
 
 	@Override
 	public void refresh() {
-		FragmentTransaction ft = getFragmentManager().beginTransaction();
-		ft.detach(this).attach(this).commit();
+		mPresenter.getVisit();
+		mPresenter.getPredefinedTasks();
+		mPresenter.getVisitTasks();
 	}
 
 	@Override

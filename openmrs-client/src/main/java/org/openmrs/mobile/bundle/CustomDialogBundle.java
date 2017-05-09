@@ -39,6 +39,7 @@ public class CustomDialogBundle implements Serializable {
 	private boolean progressDialog;
 	private List<VisitPredefinedTask> autoCompleteTextView;
 	private Context context;
+	private boolean disableAutoCompleteText;
 
 	public boolean hasProgressDialog() {
 		return progressDialog;
@@ -154,5 +155,13 @@ public class CustomDialogBundle implements Serializable {
 
 	public void setContext(Context context) {
 		this.context = context;
+	}
+
+	public boolean isDisableAutoCompleteText() {
+		return disableAutoCompleteText;
+	}
+
+	public void setDisableAutoCompleteText(boolean disableAutoCompleteText) {
+		this.disableAutoCompleteText = disableAutoCompleteText;
 	}
 }

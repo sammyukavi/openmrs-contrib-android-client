@@ -19,48 +19,40 @@ import java.util.List;
 
 public class Page implements Serializable {
 
-    @SerializedName("label")
-    @Expose
-    private String label;
+	@SerializedName("label")
+	@Expose
+	private String label;
 
-    @SerializedName("sections")
-    @Expose
-    private List<Section> sections = new ArrayList<Section>();
+	@SerializedName("sections")
+	@Expose
+	private List<Section> sections = new ArrayList<Section>();
 
-    /**
-     * 
-     * @return
-     *     The label
-     */
-    public String getLabel() {
-        return label;
-    }
+	/**
+	 * @return The label
+	 */
+	public String getLabel() {
+		return label;
+	}
 
-    /**
-     * 
-     * @param label
-     *     The label
-     */
-    public void setLabel(String label) {
-        this.label = label;
-    }
+	/**
+	 * @param label The label
+	 */
+	public void setLabel(String label) {
+		this.label = label;
+	}
 
-    /**
-     * 
-     * @return
-     *     The sections
-     */
-    public List<Section> getSections() {
-        return sections;
-    }
+	/**
+	 * @return The sections
+	 */
+	public List<Section> getSections() {
+		return sections;
+	}
 
-    /**
-     * 
-     * @param sections
-     *     The sections
-     */
-    public void setSections(List<Section> sections) {
-        this.sections = sections;
-    }
+	/**
+	 * @param sections The sections
+	 */
+	public void setSections(List<Section> sections) {
+		this.sections = sections;
+	}
 
 }

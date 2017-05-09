@@ -14,8 +14,9 @@
 
 package org.openmrs.mobile.activities.addeditpatient;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
+import android.support.v4.view.GravityCompat;
 import android.view.Menu;
 
 import org.openmrs.mobile.R;
@@ -27,58 +28,58 @@ import java.util.List;
 
 public class AddEditPatientActivity extends ACBaseActivity {
 
-    public AddEditPatientContract.Presenter mPresenter;
+	public AddEditPatientContract.Presenter mPresenter;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.activity_patient_info);
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		getLayoutInflater().inflate(R.layout.activity_patient_info, frameLayout);
+		setTitle(R.string.nav_register_patient);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		// Create fragment
+		AddEditPatientFragment addEditPatientFragment =
+				(AddEditPatientFragment)getSupportFragmentManager().findFragmentById(R.id.patientInfoContentFrame);
+		if (addEditPatientFragment == null) {
+			addEditPatientFragment = AddEditPatientFragment.newInstance();
+		}
+		if (!addEditPatientFragment.isActive()) {
+			addFragmentToActivity(getSupportFragmentManager(),
+					addEditPatientFragment, R.id.patientInfoContentFrame);
+		}
 
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+		//Check if bundle includes patient ID
+		Bundle patientBundle = savedInstanceState;
+		if (patientBundle != null) {
+			patientBundle.getString(ApplicationConstants.BundleKeys.PATIENT_ID_BUNDLE);
+		} else {
+			patientBundle = getIntent().getExtras();
+		}
+		String patientID = "";
+		if (patientBundle != null) {
+			patientID = patientBundle.getString(ApplicationConstants.BundleKeys.PATIENT_ID_BUNDLE);
+		}
 
-        // Create fragment
-        AddEditPatientFragment addEditPatientFragment =
-                (AddEditPatientFragment) getSupportFragmentManager().findFragmentById(R.id.patientInfoContentFrame);
-        if (addEditPatientFragment == null) {
-            addEditPatientFragment = AddEditPatientFragment.newInstance();
-        }
-        if (!addEditPatientFragment.isActive()) {
-            addFragmentToActivity(getSupportFragmentManager(),
-                    addEditPatientFragment, R.id.patientInfoContentFrame);
-        }
+		List<String> counties = Arrays.asList(getResources().getStringArray(R.array.countiesArray));
+		// Create the findPatientPresenter
+		mPresenter = new AddEditPatientPresenter(addEditPatientFragment, counties, patientID);
 
-        //Check if bundle includes patient ID
-        Bundle patientBundle = savedInstanceState;
-        if (patientBundle != null) {
-            patientBundle.getString(ApplicationConstants.BundleKeys.PATIENT_ID_BUNDLE);
-        } else {
-            patientBundle = getIntent().getExtras();
-        }
-        String patientID = "";
-        if (patientBundle != null) {
-            patientID = patientBundle.getString(ApplicationConstants.BundleKeys.PATIENT_ID_BUNDLE);
-        }
+	}
 
-        List<String> countries = Arrays.asList(getResources().getStringArray(R.array.countries_array));
-        // Create the mPresenter
-        mPresenter = new AddEditPatientPresenter(addEditPatientFragment, countries, patientID);
-    }
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		return true;
+	}
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        return true;
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (!mPresenter.isRegisteringPatient()) {
-            super.onBackPressed();
-        }
-    }
+	@Override
+	public void onBackPressed() {
+		if (drawer.isDrawerOpen(GravityCompat.START)) {
+			drawer.closeDrawer(GravityCompat.START);
+		} else {
+			Intent intent = new Intent(Intent.ACTION_MAIN);
+			intent.addCategory(Intent.CATEGORY_HOME);
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			startActivity(intent);
+		}
+	}
 }

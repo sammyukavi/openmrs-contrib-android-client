@@ -1,27 +1,11 @@
 package org.openmrs.mobile.activities.patientdashboard;
 
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.github.clans.fab.FloatingActionButton;
-import com.github.clans.fab.FloatingActionMenu;
-
-import org.json.JSONException;
-import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
-import org.openmrs.mobile.fragments.RecentVisits;
-import org.openmrs.mobile.sampledata.Patient;
-import org.openmrs.mobile.utilities.ApplicationConstants;
-
 
 public class PatientDashboardActivity extends ACBaseActivity {
 
    /* private FloatingActionMenu floatingActionMenu;
-    private FragmentManager fragmentManager;
+	private FragmentManager fragmentManager;
     private Patient patient;
     private String patientId;
 
@@ -71,7 +55,8 @@ public class PatientDashboardActivity extends ACBaseActivity {
             family_name.setText(patient.family_name);
             age.setText(String.valueOf(patient.age));
             id.setText(patient.id);
-            gender.setImageResource(String.valueOf(patient.gender).toLowerCase().equals("m") ? R.drawable.ic_male : R.drawable.ic_female);
+            gender.setImageResource(String.valueOf(patient.gender).toLowerCase().equals("m") ? R.drawable.ic_male : R
+            .drawable.ic_female);
             if (patient.active_visit == 1) {
                 active_visit.setVisibility(View.VISIBLE);
                 visitTasks.setVisibility(View.VISIBLE);
@@ -100,6 +85,5 @@ public class PatientDashboardActivity extends ACBaseActivity {
             e.printStackTrace();
         }
     }*/
-
 
 }

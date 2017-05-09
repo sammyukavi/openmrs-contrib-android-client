@@ -14,127 +14,154 @@
 
 package org.openmrs.mobile.bundle;
 
+import android.content.Context;
 
 import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
 import org.openmrs.mobile.models.Patient;
+import org.openmrs.mobile.models.VisitPredefinedTask;
 
 import java.io.Serializable;
 import java.util.List;
 
 public class CustomDialogBundle implements Serializable {
 
-    private CustomFragmentDialog.OnClickAction leftButtonAction;
-    private CustomFragmentDialog.OnClickAction rightButtonAction;
-    private String textViewMessage;
-    private String titleViewMessage;
-    private String editTextViewMessage;
-    private String leftButtonText;
-    private String rightButtonText;
-    private String progressViewMessage;
-    private List<Patient> patientsList;
-    private Patient newPatient;
-    private boolean loadingBar;
-    private boolean progressDialog;
+	private CustomFragmentDialog.OnClickAction leftButtonAction;
+	private CustomFragmentDialog.OnClickAction rightButtonAction;
+	private String textViewMessage;
+	private String titleViewMessage;
+	private String editTextViewMessage;
+	private String leftButtonText;
+	private String rightButtonText;
+	private String progressViewMessage;
+	private List<Patient> patientsList;
+	private Patient newPatient;
+	private boolean loadingBar;
+	private boolean progressDialog;
+	private List<VisitPredefinedTask> autoCompleteTextView;
+	private Context context;
+	private boolean disableAutoCompleteText;
 
-    public boolean hasProgressDialog() {
-        return progressDialog;
-    }
+	public boolean hasProgressDialog() {
+		return progressDialog;
+	}
 
-    public void setProgressDialog(boolean progressDialog) {
-        this.progressDialog = progressDialog;
-    }
+	public void setProgressDialog(boolean progressDialog) {
+		this.progressDialog = progressDialog;
+	}
 
+	public boolean hasLoadingBar() {
+		return loadingBar;
+	}
 
-    public boolean hasLoadingBar() {
-        return loadingBar;
-    }
+	public void setLoadingBar(boolean loadingBar) {
+		this.loadingBar = loadingBar;
+	}
 
-    public void setLoadingBar(boolean loadingBar) {
-        this.loadingBar = loadingBar;
-    }
+	public CustomFragmentDialog.OnClickAction getLeftButtonAction() {
+		return leftButtonAction;
+	}
 
-    public CustomFragmentDialog.OnClickAction getLeftButtonAction() {
-        return leftButtonAction;
-    }
+	public void setLeftButtonAction(CustomFragmentDialog.OnClickAction leftButtonAction) {
+		this.leftButtonAction = leftButtonAction;
+	}
 
-    public void setLeftButtonAction(CustomFragmentDialog.OnClickAction leftButtonAction) {
-        this.leftButtonAction = leftButtonAction;
-    }
+	public CustomFragmentDialog.OnClickAction getRightButtonAction() {
+		return rightButtonAction;
+	}
 
-    public CustomFragmentDialog.OnClickAction getRightButtonAction() {
-        return rightButtonAction;
-    }
+	public void setRightButtonAction(CustomFragmentDialog.OnClickAction rightButtonAction) {
+		this.rightButtonAction = rightButtonAction;
+	}
 
-    public void setRightButtonAction(CustomFragmentDialog.OnClickAction rightButtonAction) {
-        this.rightButtonAction = rightButtonAction;
-    }
+	public String getTextViewMessage() {
+		return textViewMessage;
+	}
 
-    public String getTextViewMessage() {
-        return textViewMessage;
-    }
+	public void setTextViewMessage(String textViewMessage) {
+		this.textViewMessage = textViewMessage;
+	}
 
-    public void setTextViewMessage(String textViewMessage) {
-        this.textViewMessage = textViewMessage;
-    }
+	public String getLeftButtonText() {
+		return leftButtonText;
+	}
 
-    public String getLeftButtonText() {
-        return leftButtonText;
-    }
+	public void setLeftButtonText(String leftButtonText) {
+		this.leftButtonText = leftButtonText;
+	}
 
-    public void setLeftButtonText(String leftButtonText) {
-        this.leftButtonText = leftButtonText;
-    }
+	public String getRightButtonText() {
+		return rightButtonText;
+	}
 
-    public String getRightButtonText() {
-        return rightButtonText;
-    }
+	public void setRightButtonText(String rightButtonText) {
+		this.rightButtonText = rightButtonText;
+	}
 
-    public void setRightButtonText(String rightButtonText) {
-        this.rightButtonText = rightButtonText;
-    }
+	public String getTitleViewMessage() {
+		return titleViewMessage;
+	}
 
-    public String getTitleViewMessage() {
-        return titleViewMessage;
-    }
+	public void setTitleViewMessage(String titleViewMessage) {
+		this.titleViewMessage = titleViewMessage;
+	}
 
-    public void setProgressViewMessage(String progressViewMessage) {
-        this.progressViewMessage = progressViewMessage;
-    }
+	public String getProgressViewMessage() {
+		return progressViewMessage;
+	}
 
-    public String getProgressViewMessage() {
-        return progressViewMessage;
-    }
+	public void setProgressViewMessage(String progressViewMessage) {
+		this.progressViewMessage = progressViewMessage;
+	}
 
-    public void setTitleViewMessage(String titleViewMessage) {
-        this.titleViewMessage = titleViewMessage;
-    }
+	public String getEditTextViewMessage() {
+		return editTextViewMessage;
+	}
 
-    public String getEditTextViewMessage() {
-        return editTextViewMessage;
-    }
+	public void setEditTextViewMessage(String editTextViewMessage) {
+		this.editTextViewMessage = editTextViewMessage;
+	}
 
-    public void setEditTextViewMessage(String editTextViewMessage) {
-        this.editTextViewMessage = editTextViewMessage;
-    }
+	public List<Patient> getPatientsList() {
+		return patientsList;
+	}
 
-    public List<Patient> getPatientsList() {
-        return patientsList;
-    }
+	public void setPatientsList(List<Patient> patientsList) {
+		this.patientsList = patientsList;
+	}
 
-    public boolean hasPatientList(){
-        return patientsList != null;
-    }
+	public boolean hasPatientList() {
+		return patientsList != null;
+	}
 
-    public void setPatientsList(List<Patient> patientsList) {
-        this.patientsList = patientsList;
-    }
+	public Patient getNewPatient() {
+		return newPatient;
+	}
 
-    public Patient getNewPatient() {
-        return newPatient;
-    }
+	public void setNewPatient(Patient newPatient) {
+		this.newPatient = newPatient;
+	}
 
-    public void setNewPatient(Patient newPatient) {
-        this.newPatient = newPatient;
-    }
+	public List<VisitPredefinedTask> getAutoCompleteTextView() {
+		return autoCompleteTextView;
+	}
 
+	public void setAutoCompleteTextView(List<VisitPredefinedTask> autoCompleteTextView) {
+		this.autoCompleteTextView = autoCompleteTextView;
+	}
+
+	public Context getContext() {
+		return context;
+	}
+
+	public void setContext(Context context) {
+		this.context = context;
+	}
+
+	public boolean isDisableAutoCompleteText() {
+		return disableAutoCompleteText;
+	}
+
+	public void setDisableAutoCompleteText(boolean disableAutoCompleteText) {
+		this.disableAutoCompleteText = disableAutoCompleteText;
+	}
 }

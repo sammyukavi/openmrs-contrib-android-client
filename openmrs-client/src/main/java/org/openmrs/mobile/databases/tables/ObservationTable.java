@@ -19,86 +19,85 @@ import org.openmrs.mobile.databases.OpenMRSDBOpenHelper;
 import org.openmrs.mobile.models.Observation;
 
 public class ObservationTable extends Table<Observation> {
-    public static final String TABLE_NAME = "observations";
+	public static final String TABLE_NAME = "observations";
 
-    /**
-     * Number of columns without ID column
-     * use as a param to
-     *
-     * @see Table#values(int)
-     */
-    private static final int INSERT_COLUMNS_COUNT = 9;
+	/**
+	 * Number of columns without ID column
+	 * use as a param to
+	 * @see Table#values(int)
+	 */
+	private static final int INSERT_COLUMNS_COUNT = 9;
 
-    @Override
-    public String createTableDefinition() {
-        return CREATE_TABLE + TABLE_NAME + "("
-                + Column.ID + PRIMARY_KEY
-                + Column.ENCOUNTER_KEY_ID  + Column.Type.INT_TYPE_NOT_NULL
-                + Column.UUID + Column.Type.TEXT_TYPE_NOT_NULL
-                + Column.DISPLAY + Column.Type.TEXT_TYPE_WITH_COMMA
-                + Column.DISPLAY_VALUE + Column.Type.TEXT_TYPE_WITH_COMMA
-                + Column.DIAGNOSIS_ORDER + Column.Type.TEXT_TYPE_WITH_COMMA
-                + Column.DIAGNOSIS_LIST + Column.Type.TEXT_TYPE_WITH_COMMA
-                + Column.DIAGNOSIS_CERTAINTY + Column.Type.TEXT_TYPE_WITH_COMMA
-                + Column.DIAGNOSIS_NOTE + Column.Type.TEXT_TYPE_WITH_COMMA
-                + Column.CONCEPT_UUID + Column.Type.TEXT_TYPE
-                + ");";
-    }
+	@Override
+	public String createTableDefinition() {
+		return CREATE_TABLE + TABLE_NAME + "("
+				+ Column.ID + PRIMARY_KEY
+				+ Column.ENCOUNTER_KEY_ID + Column.Type.INT_TYPE_NOT_NULL
+				+ Column.UUID + Column.Type.TEXT_TYPE_NOT_NULL
+				+ Column.DISPLAY + Column.Type.TEXT_TYPE_WITH_COMMA
+				+ Column.DISPLAY_VALUE + Column.Type.TEXT_TYPE_WITH_COMMA
+				+ Column.DIAGNOSIS_ORDER + Column.Type.TEXT_TYPE_WITH_COMMA
+				+ Column.DIAGNOSIS_LIST + Column.Type.TEXT_TYPE_WITH_COMMA
+				+ Column.DIAGNOSIS_CERTAINTY + Column.Type.TEXT_TYPE_WITH_COMMA
+				+ Column.DIAGNOSIS_NOTE + Column.Type.TEXT_TYPE_WITH_COMMA
+				+ Column.CONCEPT_UUID + Column.Type.TEXT_TYPE
+				+ ");";
+	}
 
-    @Override
-    public String insertIntoTableDefinition() {
-        return INSERT_INTO + TABLE_NAME + "("
-                + Column.ENCOUNTER_KEY_ID + Column.COMMA
-                + Column.UUID + Column.COMMA
-                + Column.DISPLAY + Column.COMMA
-                + Column.DISPLAY_VALUE + Column.COMMA
-                + Column.DIAGNOSIS_ORDER + Column.COMMA
-                + Column.DIAGNOSIS_LIST + Column.COMMA
-                + Column.DIAGNOSIS_CERTAINTY + Column.COMMA
-                + Column.DIAGNOSIS_NOTE + Column.COMMA
-                + Column.CONCEPT_UUID + ")"
-                + values(INSERT_COLUMNS_COUNT);
-    }
+	@Override
+	public String insertIntoTableDefinition() {
+		return INSERT_INTO + TABLE_NAME + "("
+				+ Column.ENCOUNTER_KEY_ID + Column.COMMA
+				+ Column.UUID + Column.COMMA
+				+ Column.DISPLAY + Column.COMMA
+				+ Column.DISPLAY_VALUE + Column.COMMA
+				+ Column.DIAGNOSIS_ORDER + Column.COMMA
+				+ Column.DIAGNOSIS_LIST + Column.COMMA
+				+ Column.DIAGNOSIS_CERTAINTY + Column.COMMA
+				+ Column.DIAGNOSIS_NOTE + Column.COMMA
+				+ Column.CONCEPT_UUID + ")"
+				+ values(INSERT_COLUMNS_COUNT);
+	}
 
-    @Override
-    public String dropTableDefinition() {
-        return DROP_TABLE_IF_EXISTS + TABLE_NAME;
-    }
+	@Override
+	public String dropTableDefinition() {
+		return DROP_TABLE_IF_EXISTS + TABLE_NAME;
+	}
 
-    @Override
-    public Long insert(Observation tableObject) {
-        DBOpenHelper helper = OpenMRSDBOpenHelper.getInstance().getDBOpenHelper();
-        return helper.insertObservation(helper.getWritableDatabase(), tableObject);
-    }
+	@Override
+	public Long insert(Observation tableObject) {
+		DBOpenHelper helper = OpenMRSDBOpenHelper.getInstance().getDBOpenHelper();
+		return helper.insertObservation(helper.getWritableDatabase(), tableObject);
+	}
 
-    @Override
-    public int update(long tableObjectID, Observation tableObject) {
-        DBOpenHelper helper = OpenMRSDBOpenHelper.getInstance().getDBOpenHelper();
-        return helper.updateObservation(helper.getWritableDatabase(), tableObjectID, tableObject);
-    }
+	@Override
+	public int update(long tableObjectID, Observation tableObject) {
+		DBOpenHelper helper = OpenMRSDBOpenHelper.getInstance().getDBOpenHelper();
+		return helper.updateObservation(helper.getWritableDatabase(), tableObjectID, tableObject);
+	}
 
-    @Override
-    public void delete(long tableObjectID) {
-        DBOpenHelper openHelper = OpenMRSDBOpenHelper.getInstance().getDBOpenHelper();
-        String where = String.format("%s = ?", Column.ID);
-        String[] whereArgs = new String[]{String.valueOf(tableObjectID)};
+	@Override
+	public void delete(long tableObjectID) {
+		DBOpenHelper openHelper = OpenMRSDBOpenHelper.getInstance().getDBOpenHelper();
+		String where = String.format("%s = ?", Column.ID);
+		String[] whereArgs = new String[] { String.valueOf(tableObjectID) };
 
-        openHelper.getWritableDatabase().delete(TABLE_NAME, where, whereArgs);
-    }
+		openHelper.getWritableDatabase().delete(TABLE_NAME, where, whereArgs);
+	}
 
-    public class Column extends MasterColumn {
-        public static final String ENCOUNTER_KEY_ID = "encounter_id";
-        public static final String DISPLAY_VALUE = "displayValue";
-        public static final String DIAGNOSIS_ORDER = "diagnosisOrder";
-        public static final String DIAGNOSIS_LIST = "diagnosisList";
-        public static final String DIAGNOSIS_CERTAINTY = "diagnosisCertainty";
-        public static final String DIAGNOSIS_NOTE = "diagnosisNote";
-        public static final String CONCEPT_UUID = "conceptUuid";
+	@Override
+	public String toString() {
+		return TABLE_NAME + createTableDefinition();
+	}
 
-    }
+	public class Column extends MasterColumn {
+		public static final String ENCOUNTER_KEY_ID = "encounter_id";
+		public static final String DISPLAY_VALUE = "displayValue";
+		public static final String DIAGNOSIS_ORDER = "diagnosisOrder";
+		public static final String DIAGNOSIS_LIST = "diagnosisList";
+		public static final String DIAGNOSIS_CERTAINTY = "diagnosisCertainty";
+		public static final String DIAGNOSIS_NOTE = "diagnosisNote";
+		public static final String CONCEPT_UUID = "conceptUuid";
 
-    @Override
-    public String toString() {
-        return TABLE_NAME + createTableDefinition();
-    }
+	}
 }

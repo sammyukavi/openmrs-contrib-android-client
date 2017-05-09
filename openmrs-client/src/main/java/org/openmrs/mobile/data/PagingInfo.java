@@ -5,6 +5,7 @@ package org.openmrs.mobile.data;
  * 1-based, defining either as 0 will cause paging to be ignored.
  */
 public class PagingInfo {
+
     private int page;
     private int pageSize;
 
@@ -41,6 +42,6 @@ public class PagingInfo {
     }
 
     public int getStartIndex() {
-        return (pageSize * page) - 1;
+        return ((page - 1) * pageSize) + 1;
     }
 }

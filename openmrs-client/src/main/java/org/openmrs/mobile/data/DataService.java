@@ -1,9 +1,9 @@
 package org.openmrs.mobile.data;
 
-import org.openmrs.mobile.models.BaseOpenmrsObject;
-
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+
+import org.openmrs.mobile.models.BaseOpenmrsObject;
 
 import java.util.List;
 
@@ -56,7 +56,7 @@ public interface DataService<E extends BaseOpenmrsObject> {
          * Called if the operation completes successfully.
          * @param entities The returned entities
          */
-        void onCompleted(List<E> entities);
+        void onCompleted(List<E> entities, int length);
 
         /**
          * Called if the operation fails.

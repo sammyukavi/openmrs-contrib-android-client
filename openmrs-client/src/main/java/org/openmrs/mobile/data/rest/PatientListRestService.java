@@ -11,13 +11,14 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface PatientListRestService {
+
     @GET(RestConstants.GET_BY_UUID)
     Call<PatientList> getByUuid(@Path("restPath") String restPath,
                                 @Path("uuid") String uuid,
                                 @Query("v") String representation);
 
     @GET(RestConstants.GET_ALL)
-    Call<Results<PatientList>> getAll(@Path("restPath") String restPath,
+    Call<Results<PatientList>> getAll(@Path(value = "restPath", encoded = true) String restPath,
                                       @Query("v") String representation);
 
     @GET(RestConstants.GET_ALL)

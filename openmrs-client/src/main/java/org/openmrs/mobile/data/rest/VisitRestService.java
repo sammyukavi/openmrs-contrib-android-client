@@ -4,6 +4,7 @@ import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.models.Visit;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
@@ -27,11 +28,15 @@ public interface VisitRestService {
                                 @Query("startIndex") int startIndex);
 
     @POST(RestConstants.CREATE)
-    Call<Visit> create(@Path(value = "restPath", encoded = true) String restPath, Visit entity);
+    Call<Visit> create(@Path(value = "restPath", encoded = true) String restPath, @Body Visit entity);
+
+    @POST(RestConstants.UPDATE)
+    Call<Visit> endVisit(@Path(value = "restPath", encoded = true) String restPath,
+                         @Path("uuid") String uuid, @Body String stopDatetime);
 
     @POST(RestConstants.UPDATE)
     Call<Visit> update(@Path(value = "restPath", encoded = true) String restPath,
-                       @Path("uuid") String uuid, Visit entity);
+                       @Path("uuid") String uuid, @Body Visit entity);
 
     @DELETE(RestConstants.PURGE)
     Call<Visit> purge(@Path(value = "restPath", encoded = true) String restPath,
@@ -40,12 +45,14 @@ public interface VisitRestService {
     @GET(RestConstants.REST_PATH)
     Call<Results<Visit>> getByPatient(@Path(value = "restPath", encoded = true) String restPath,
                                       @Query("patient") String patientUuid,
-                                      @Query("v") String representation);
+                                      @Query("v") String representation,
+                                      @Query("includeInactive") boolean includeInactive);
 
     @GET(RestConstants.REST_PATH)
     Call<Results<Visit>> getByPatient(@Path(value = "restPath", encoded = true) String restPath,
                                       @Query("patient") String patientUuid,
                                       @Query("v") String representation,
                                       @Query("limit") int limit,
-                                      @Query("startIndex") int startIndex);
+                                      @Query("startIndex") int startIndex,
+                                      @Query("includeInactive") boolean includeInactive);
 }

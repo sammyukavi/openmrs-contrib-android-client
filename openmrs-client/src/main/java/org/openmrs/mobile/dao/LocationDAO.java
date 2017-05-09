@@ -14,7 +14,6 @@
 
 package org.openmrs.mobile.dao;
 
-
 import net.sqlcipher.Cursor;
 
 import org.openmrs.mobile.application.OpenMRS;
@@ -32,68 +31,69 @@ import rx.Observable;
 import static org.openmrs.mobile.databases.DBOpenHelper.createObservableIO;
 
 public class LocationDAO {
-    public Observable<Long> saveLocation(Location location) {
-        return createObservableIO(() -> new LocationTable().insert(location));
-    }
+	public Observable<Long> saveLocation(Location location) {
+		return createObservableIO(() -> new LocationTable().insert(location));
+	}
 
-    public void deleteAllLocations() {
-        DBOpenHelper openHelper = OpenMRSDBOpenHelper.getInstance().getDBOpenHelper();
-        openHelper.getWritableDatabase().execSQL(new LocationTable().dropTableDefinition());
-        openHelper.getWritableDatabase().execSQL(new LocationTable().createTableDefinition());
-        OpenMRS.getInstance().getOpenMRSLogger().d("All Locations deleted");
-    }
+	public void deleteAllLocations() {
+		DBOpenHelper openHelper = OpenMRSDBOpenHelper.getInstance().getDBOpenHelper();
+		openHelper.getWritableDatabase().execSQL(new LocationTable().dropTableDefinition());
+		openHelper.getWritableDatabase().execSQL(new LocationTable().createTableDefinition());
+		OpenMRS.getInstance().getOpenMRSLogger().d("All Locations deleted");
+	}
 
-    public Observable<List<Location>> getLocations() {
-        return createObservableIO(() -> {
-            List<Location> locations = new ArrayList<Location>();
-            DBOpenHelper openHelper = OpenMRSDBOpenHelper.getInstance().getDBOpenHelper();
-            Cursor cursor = openHelper.getReadableDatabase().query(LocationTable.TABLE_NAME,
-                    null, null, null, null, null, null);
+	public Observable<List<Location>> getLocations() {
+		return createObservableIO(() -> {
+			List<Location> locations = new ArrayList<Location>();
+			DBOpenHelper openHelper = OpenMRSDBOpenHelper.getInstance().getDBOpenHelper();
+			Cursor cursor = openHelper.getReadableDatabase().query(LocationTable.TABLE_NAME,
+					null, null, null, null, null, null);
 
-            if (null != cursor) {
-                try {
-                    while (cursor.moveToNext()) {
-                        Location location = cursorToLocation(cursor);
-                        locations.add(location);
-                    }
-                } finally {
-                    cursor.close();
-                }
-            }
-            return locations;
-        });
-    }
+			if (null != cursor) {
+				try {
+					while (cursor.moveToNext()) {
+						Location location = cursorToLocation(cursor);
+						locations.add(location);
+					}
+				} finally {
+					cursor.close();
+				}
+			}
+			return locations;
+		});
+	}
 
-    public Location findLocationByName(String name) {
-        if(!StringUtils.notNull(name)){
-            return null;
-        }
-        Location location = new Location();
-        String where = String.format("%s = ?", LocationTable.Column.DISPLAY);
-        String[] whereArgs = new String[]{name};
+	public Location findLocationByName(String name) {
+		if (!StringUtils.notNull(name)) {
+			return null;
+		}
+		Location location = new Location();
+		String where = String.format("%s = ?", LocationTable.Column.DISPLAY);
+		String[] whereArgs = new String[] { name };
 
-        DBOpenHelper helper = OpenMRSDBOpenHelper.getInstance().getDBOpenHelper();
-        final Cursor cursor = helper.getReadableDatabase().query(LocationTable.TABLE_NAME, null, where, whereArgs, null, null, null);
-        if (null != cursor) {
-            try {
-                if (cursor.moveToFirst()) {
-                    location = cursorToLocation(cursor);
-                }
-            } finally {
-                cursor.close();
-            }
-        }
-        return location;
-    }
+		DBOpenHelper helper = OpenMRSDBOpenHelper.getInstance().getDBOpenHelper();
+		final Cursor cursor =
+				helper.getReadableDatabase().query(LocationTable.TABLE_NAME, null, where, whereArgs, null, null, null);
+		if (null != cursor) {
+			try {
+				if (cursor.moveToFirst()) {
+					location = cursorToLocation(cursor);
+				}
+			} finally {
+				cursor.close();
+			}
+		}
+		return location;
+	}
 
-    private Location cursorToLocation(Cursor cursor) {
-        Location location = new Location();
-        location.setId(cursor.getLong(cursor.getColumnIndex(LocationTable.Column.ID)));
-        location.setUuid(cursor.getString(cursor.getColumnIndex(LocationTable.Column.UUID)));
-        location.setDisplay(cursor.getString(cursor.getColumnIndex(LocationTable.Column.DISPLAY)));
-        location.setName(cursor.getString(cursor.getColumnIndex(LocationTable.Column.NAME)));
-        location.setDescription(cursor.getString(cursor.getColumnIndex(LocationTable.Column.DESCRIPTION)));
-        location.setParentLocationUuid(cursor.getString(cursor.getColumnIndex(LocationTable.Column.PARENT_LOCATION_UUID)));
-        return location;
-    }
+	private Location cursorToLocation(Cursor cursor) {
+		Location location = new Location();
+		location.setId(cursor.getLong(cursor.getColumnIndex(LocationTable.Column.ID)));
+		location.setUuid(cursor.getString(cursor.getColumnIndex(LocationTable.Column.UUID)));
+		location.setDisplay(cursor.getString(cursor.getColumnIndex(LocationTable.Column.DISPLAY)));
+		location.setName(cursor.getString(cursor.getColumnIndex(LocationTable.Column.NAME)));
+		location.setDescription(cursor.getString(cursor.getColumnIndex(LocationTable.Column.DESCRIPTION)));
+		location.setParentLocationUuid(cursor.getString(cursor.getColumnIndex(LocationTable.Column.PARENT_LOCATION_UUID)));
+		return location;
+	}
 }

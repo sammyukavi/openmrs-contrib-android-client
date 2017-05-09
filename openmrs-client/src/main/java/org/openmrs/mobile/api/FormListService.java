@@ -29,70 +29,68 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class FormListService extends IntentService {
-    private final RestApi apiService = RestServiceBuilder.createService(RestApi.class);
-    private List<FormResource> formresourcelist;
+	private final RestApi apiService = RestServiceBuilder.createService(RestApi.class);
+	private List<FormResource> formresourcelist;
 
-    public FormListService() {
-        super("Sync Form List");
-    }
+	public FormListService() {
+		super("Sync Form List");
+	}
 
-    @Override
-    protected void onHandleIntent(Intent intent) {
-        if(NetworkUtils.isOnline()) {
+	@Override
+	protected void onHandleIntent(Intent intent) {
+		if (NetworkUtils.isOnline()) {
 
-            Call<Results<FormResource>> call = apiService.getForms();
-            call.enqueue(new Callback<Results<FormResource>>() {
+			Call<Results<FormResource>> call = apiService.getForms();
+			call.enqueue(new Callback<Results<FormResource>>() {
 
-                @Override
-                public void onResponse(Call<Results<FormResource>> call, Response<Results<FormResource>> response) {
-                    if (response.isSuccessful()) {
-                        new Delete().from(FormResource.class).execute();
-                        formresourcelist=response.body().getResults();
-                        int size=formresourcelist.size();
-                        ActiveAndroid.beginTransaction();
-                        try {
-                            for (int i = 0; i < size; i++)
-                            {
-                                formresourcelist.get(i).setResourcelist();
-                                formresourcelist.get(i).save();
-                            }
-                            ActiveAndroid.setTransactionSuccessful();
-                        }
-                        finally {
-                            ActiveAndroid.endTransaction();
-                        }
+				@Override
+				public void onResponse(Call<Results<FormResource>> call, Response<Results<FormResource>> response) {
+					if (response.isSuccessful()) {
+						new Delete().from(FormResource.class).execute();
+						formresourcelist = response.body().getResults();
+						int size = formresourcelist.size();
+						ActiveAndroid.beginTransaction();
+						try {
+							for (int i = 0; i < size; i++) {
+								formresourcelist.get(i).setResourcelist();
+								formresourcelist.get(i).save();
+							}
+							ActiveAndroid.setTransactionSuccessful();
+						} finally {
+							ActiveAndroid.endTransaction();
+						}
 
-                    }
+					}
 
-                }
+				}
 
-                @Override
-                public void onFailure(Call<Results<FormResource>> call, Throwable t) {
-                    ToastUtil.error(t.getMessage());
-                }
-            });
+				@Override
+				public void onFailure(Call<Results<FormResource>> call, Throwable t) {
+					ToastUtil.error(t.getMessage());
+				}
+			});
 
-            Call<Results<EncounterType>> call2 = apiService.getEncounterTypes();
-            call2.enqueue(new Callback<Results<EncounterType>>() {
-                @Override
-                public void onResponse(Call<Results<EncounterType>> call, Response<Results<EncounterType>> response) {
-                    if (response.isSuccessful()) {
-                        new Delete().from(EncounterType.class).execute();
-                        Results<EncounterType> encountertypelist = response.body();
-                            for (EncounterType enctype : encountertypelist.getResults())
-                                enctype.save();
-                    }
+			Call<Results<EncounterType>> call2 = apiService.getEncounterTypes();
+			call2.enqueue(new Callback<Results<EncounterType>>() {
+				@Override
+				public void onResponse(Call<Results<EncounterType>> call, Response<Results<EncounterType>> response) {
+					/*if (response.isSuccessful()) {
+						new Delete().from(EncounterType.class).execute();
+						Results<EncounterType> encountertypelist = response.body();
+						for (EncounterType enctype : encountertypelist.getResults())
+							enctype.save();
+					}*/
 
-                }
+				}
 
-                @Override
-                public void onFailure(Call<Results<EncounterType>> call, Throwable t) {
-                    ToastUtil.error(t.getMessage());
+				@Override
+				public void onFailure(Call<Results<EncounterType>> call, Throwable t) {
+					ToastUtil.error(t.getMessage());
 
-                }
-            });
-        }
+				}
+			});
+		}
 
-    }
+	}
 
 }

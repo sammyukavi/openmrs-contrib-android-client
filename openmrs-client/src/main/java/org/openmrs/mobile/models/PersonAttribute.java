@@ -19,27 +19,18 @@ public class PersonAttribute extends BaseOpenmrsObject implements Serializable {
 
     @SerializedName("attributeType")
     @Expose
-    private PersonAttributeType attributeType;
+    private PersonAttributeType personAttributeType;
+
     @SerializedName("value")
     @Expose
-    private String value;
+    private Object value;
 
-    /**
-     * 
-     * @return
-     *     The attributeType
-     */
-    public PersonAttributeType getAttributeType() {
-        return attributeType;
+    public PersonAttributeType getPersonAttributeType() {
+        return personAttributeType;
     }
 
-    /**
-     * 
-     * @param attributeType
-     *     The attributeType
-     */
-    public void setAttributeType(PersonAttributeType attributeType) {
-        this.attributeType = attributeType;
+    public void setPersonAttributeType(PersonAttributeType personAttributeType) {
+        this.personAttributeType = personAttributeType;
     }
 
     /**
@@ -47,7 +38,7 @@ public class PersonAttribute extends BaseOpenmrsObject implements Serializable {
      * @return
      *     The value
      */
-    public String getValue() {
+    public Object getValue() {
         return value;
     }
 
@@ -56,8 +47,9 @@ public class PersonAttribute extends BaseOpenmrsObject implements Serializable {
      * @param value
      *     The value
      */
-    public void setValue(String value) {
+    public void setValue(Object value) {
         this.value = value;
     }
 
 }
+

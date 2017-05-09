@@ -64,17 +64,62 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
     private Location location;
 
     public AddEditVisitPresenter(@NotNull AddEditVisitContract.View addEditVisitView, String patientUuid) {
+        this(addEditVisitView, patientUuid, null, null, null, null, null, null, null);
+    }
+
+    public AddEditVisitPresenter(@NotNull AddEditVisitContract.View addEditVisitView, String patientUuid,
+                                 VisitDataService visitDataService, PatientDataService patientDataService,
+                                 VisitTypeDataService visitTypeDataService, VisitAttributeTypeDataService visitAttributeTypeDataService,
+                                 ConceptNameDataService conceptNameDataService, ProviderDataService providerDataService,
+                                 LocationDataService locationDataService){
         this.addEditVisitView = addEditVisitView;
         this.addEditVisitView.setPresenter(this);
         this.patientUuid = patientUuid;
-        this.visitAttributeTypeDataService = new VisitAttributeTypeDataService();
-        this.visitTypeDataService = new VisitTypeDataService();
-        this.patientDataService = new PatientDataService();
-        this.conceptNameDataService = new ConceptNameDataService();
-        this.visitDataService = new VisitDataService();
-        this.providerDataService = new ProviderDataService();
-        this.locationDataService = new LocationDataService();
+
+        if(visitDataService == null) {
+            this.visitDataService = new VisitDataService();
+        } else {
+            this.visitDataService = visitDataService;
+        }
+
+        if(visitAttributeTypeDataService == null) {
+            this.visitAttributeTypeDataService = new VisitAttributeTypeDataService();
+        } else {
+            this.visitAttributeTypeDataService = visitAttributeTypeDataService;
+        }
+
+        if(visitTypeDataService == null) {
+            this.visitTypeDataService = new VisitTypeDataService();
+        } else {
+            this.visitTypeDataService = visitTypeDataService;
+        }
+
+        if(patientDataService == null) {
+            this.patientDataService = new PatientDataService();
+        } else {
+            this.patientDataService = patientDataService;
+        }
+
+        if(conceptNameDataService == null) {
+            this.conceptNameDataService = new ConceptNameDataService();
+        } else {
+            this.conceptNameDataService = conceptNameDataService;
+        }
+
+        if(providerDataService == null) {
+            this.providerDataService = new ProviderDataService();
+        } else {
+            this.providerDataService = providerDataService;
+        }
+
+        if(locationDataService == null) {
+            this.locationDataService = new LocationDataService();
+        } else {
+            this.locationDataService = locationDataService;
+        }
+
         this.visit = new Visit();
+
     }
 
     /**
@@ -234,7 +279,10 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
     public void startVisit(List<VisitAttribute> attributes) {
         visit.setAttributes(attributes);
         visit.setPatient(patient);
-        visit.setLocation(location.getParentLocation());
+        if(null != location) {
+            visit.setLocation(location.getParentLocation());
+        }
+
         setProcessing(true);
 
         visitDataService.create(visit, new DataService.GetSingleCallback<Visit>() {

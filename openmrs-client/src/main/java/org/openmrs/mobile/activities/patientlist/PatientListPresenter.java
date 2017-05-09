@@ -94,6 +94,7 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
         setPage(page);
         setLoading(true);
         setViewBeforeLoadData();
+        setTotalNumberResults(0);
         PagingInfo pagingInfo = new PagingInfo(page, limit);
         patientListContextModelDataService.getAll(patientListUuid, pagingInfo, new DataService.GetMultipleCallback<PatientListContextModel>() {
             @Override

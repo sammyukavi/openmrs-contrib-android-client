@@ -15,7 +15,6 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-
 public class Observation extends BaseOpenmrsData implements Serializable {
 
     @SerializedName("concept")

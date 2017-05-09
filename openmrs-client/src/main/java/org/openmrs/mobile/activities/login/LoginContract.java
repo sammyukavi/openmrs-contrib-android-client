@@ -25,53 +25,53 @@ import java.util.List;
 
 public interface LoginContract {
 
-    interface View extends BaseView<Presenter> {
+	interface View extends BaseView<Presenter> {
 
-        void hideSoftKeys();
+		void hideSoftKeys();
 
-        void setPresenter(@NonNull Presenter presenter);
+		void setPresenter(@NonNull Presenter presenter);
 
-        void showWarningDialog();
+		void showWarningDialog();
 
-        void showLoadingAnimation();
+		void showLoadingAnimation();
 
-        void hideLoadingAnimation();
+		void hideLoadingAnimation();
 
-        void showLocationLoadingAnimation();
+		void showLocationLoadingAnimation();
 
-        void hideUrlLoadingAnimation();
+		void hideUrlLoadingAnimation();
 
-        void finishLoginActivity();
+		void finishLoginActivity();
 
-        void showInvalidURLSnackbar(String message);
+		void showInvalidURLSnackbar(String message);
 
-        void showInvalidLoginOrPasswordSnackbar();
+		void showInvalidLoginOrPasswordSnackbar();
 
-        void setLocationErrorOccurred(boolean errorOccurred);
+		void setLocationErrorOccurred(boolean errorOccurred);
 
-        void showToast(String message, ToastUtil.ToastType toastType);
+		void showToast(String message, ToastUtil.ToastType toastType);
 
-        void showToast(int textId, ToastUtil.ToastType toastType);
+		void showToast(int textId, ToastUtil.ToastType toastType);
 
-        void initLoginForm(List<Location> locationList, String url);
+		void initLoginForm(List<Location> locationList, String url);
 
-        void userAuthenticated();
+		void userAuthenticated();
 
-        void startFormListService();
+		void startFormListService();
 
-    }
+	}
 
-    interface Presenter extends BasePresenterContract {
+	interface Presenter extends BasePresenterContract {
 
-        void authenticateUser(final String username, final String password, final String url);
+		void authenticateUser(final String username, final String password, final String url);
 
-        void authenticateUser(final String username, final String password, final String url, boolean wipeDatabase);
+		void authenticateUser(final String username, final String password, final String url, boolean wipeDatabase);
 
-        void login(String username, String password, String url, String oldUrl);
+		void login(String username, String password, String url, String oldUrl);
 
-        void saveLocationsToDatabase(List<Location> locationList, String selectedLocation);
+		void saveLocationsToDatabase(List<Location> locationList, String selectedLocation);
 
-        void loadLocations(String url);
+		void loadLocations(String url);
 
-    }
+	}
 }

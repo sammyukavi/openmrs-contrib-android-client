@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string-array name="mombasa">
+		<item>changamwe</item>
+		<item>jomvu</item>
+		<item>kisauni</item>
+		<item>nyali</item>
+		<item>likoni</item>
+		<item>mvita</item>
+	</string-array>
+	<string-array name="kwale">
+		<item>msambweni</item>
+		<item>lungalunga</item>
+		<item>matuga</item>
+		<item>kinango</item>
+	</string-array>
+	<string-array name="kilifi">
+		<item>kilifi north</item>
+		<item>kaloleni</item>
+		<item>rabai</item>
+		<item>ganze</item>
+		<item>malindi</item>
+		<item>magarini</item>
+	</string-array>
+	<string-array name="tana_river">
+		<item>garsen</item>
+		<item>galole</item>
+		<item>bura</item>
+	</string-array>
+	<string-array name="lamu">
+		<item>lamu east</item>
+		<item>lamu west</item>
+	</string-array>
+	<string-array name="taita_taveta">
+		<item>taveta</item>
+		<item>wundanyi</item>
+		<item>mwatate</item>
+		<item>voi</item>
+	</string-array>
+	<string-array name="garissa">
+		<item>garissa township</item>
+		<item>balambala</item>
+		<item>lagdera</item>
+		<item>dadaab</item>
+		<item>fafi</item>
+		<item>ijara</item>
+	</string-array>
+	<string-array name="wajir">
+		<item>wajir north</item>
+		<item>wajir east</item>
+		<item>tarbaj</item>
+		<item>wajir west</item>
+		<item>eldas</item>
+		<item>wajir south</item>
+	</string-array>
+	<string-array name="mandera">
+		<item>mandera west</item>
+		<item>banissa</item>
+		<item>mandera north</item>
+		<item>mandera south</item>
+		<item>mandera east</item>
+		<item>lafey</item>
+	</string-array>
+	<string-array name="marsabit">
+		<item>moyale</item>
+		<item>north horr</item>
+		<item>saku</item>
+		<item>laisamis</item>
+	</string-array>
+	<string-array name="isiolo">
+		<item>isiolo north</item>
+		<item>isiolo south</item>
+	</string-array>
+	<string-array name="meru">
+		<item>igembe south</item>
+		<item>igembe central</item>
+		<item>igembe north</item>
+		<item>tigania west</item>
+		<item>tigania east</item>
+		<item>north imenti</item>
+		<item>buuri</item>
+		<item>central imenti</item>
+		<item>south imenti</item>
+	</string-array>
+	<string-array name="tharaka_nithi">
+		<item>maara</item>
+		<item>chuka/igambang\'om</item>
+		<item>tharaka</item>
+	</string-array>
+	<string-array name="embu">
+		<item>manyatta</item>
+		<item>runyenjes</item>
+		<item>mbeere south</item>
+		<item>mbeere north</item>
+	</string-array>
+	<string-array name="kitui">
+		<item>mwingi north</item>
+		<item>mwingi west</item>
+		<item>mwingi central</item>
+		<item>kitui west</item>
+		<item>kitui rural</item>
+		<item>kitui west</item>
+		<item>kitui central</item>
+		<item>kitui east</item>
+		<item>kitui south</item>
+	</string-array>
+	<string-array name="machakos">
+		<item>masinga</item>
+		<item>yatta</item>
+		<item>kangundo</item>
+		<item>matungulu</item>
+		<item>kathiani</item>
+		<item>mavoko</item>
+		<item>machakos town</item>
+		<item>mwala</item>
+	</string-array>
+	<string-array name="makueni">
+		<item>mbooni</item>
+		<item>kilome</item>
+		<item>kaiti</item>
+		<item>makueni</item>
+		<item>kibwezi west</item>
+		<item>kibwezi east</item>
+	</string-array>
+	<string-array name="nyandarua">
+		<item>kinangop</item>
+		<item>kipipiri</item>
+		<item>ol kalou</item>
+		<item>ndaragwa</item>
+	</string-array>
+	<string-array name="nyeri">
+		<item>tetu</item>
+		<item>kieni</item>
+		<item>mathira</item>
+		<item>othaya</item>
+		<item>mukurweini</item>
+		<item>nyeri town</item>
+	</string-array>
+	<string-array name="kirinyaga">
+		<item>mwea</item>
+		<item>gichugu</item>
+		<item>ndia</item>
+		<item>kirinyaga central</item>
+	</string-array>
+	<string-array name="muranga">
+		<item>kangema</item>
+		<item>mathioya</item>
+		<item>kiharu</item>
+		<item>kigumo</item>
+		<item>maragwa</item>
+		<item>kandara</item>
+		<item>gatanga</item>
+	</string-array>
+	<string-array name="kiambu">
+		<item>gatundu south</item>
+		<item>gatundu north</item>
+		<item>juja</item>
+		<item>thika town</item>
+		<item>ruiru</item>
+		<item>githunguri</item>
+		<item>kiambu</item>
+		<item>kiambaa</item>
+		<item>kikuyu</item>
+		<item>lari</item>
+	</string-array>
+	<string-array name="turkana">
+		<item>turkana north</item>
+		<item>turkana west</item>
+		<item>turkana central</item>
+		<item>loima</item>
+		<item>turkana south</item>
+		<item>turkana east</item>
+	</string-array>
+	<string-array name="west_pokot">
+		<item>kapenguria</item>
+		<item>sigor</item>
+		<item>kacheliba</item>
+		<item>pokot south</item>
+	</string-array>
+	<string-array name="samburu">
+		<item>samburu west</item>
+		<item>samburu north</item>
+		<item>samburu east</item>
+	</string-array>
+	<string-array name="trans_nzoia">
+		<item>kwanza</item>
+		<item>endebess</item>
+		<item>saboti</item>
+		<item>cherangany</item>
+	</string-array>
+	<string-array name="uasin_gishu">
+		<item>soy</item>
+		<item>turbo</item>
+		<item>moiben</item>
+		<item>ainabkoi</item>
+		<item>kapseret</item>
+		<item>kesses</item>
+	</string-array>
+	<string-array name="elgeyo_marakwet">
+		<item>marakwet east</item>
+		<item>marakwet west</item>
+		<item>keiyo north</item>
+		<item>keiyo south</item>
+	</string-array>
+	<string-array name="nandi">
+		<item>tinderet</item>
+		<item>aldai</item>
+		<item>chesumei</item>
+		<item>emgwen</item>
+		<item>mosop</item>
+	</string-array>
+	<string-array name="baringo">
+		<item>tiaty</item>
+		<item>baringo  north</item>
+		<item>baringo central</item>
+		<item>baringo south</item>
+		<item>mogotio</item>
+		<item>eldama ravine</item>
+	</string-array>
+	<string-array name="laikipia">
+		<item>laikipia west</item>
+		<item>laikipia east</item>
+		<item>laikipia north</item>
+	</string-array>
+	<string-array name="nakuru">
+		<item>molo</item>
+		<item>njoro</item>
+		<item>naivasha</item>
+		<item>gilgil</item>
+		<item>kuresoi south</item>
+		<item>subukia</item>
+		<item>rongai</item>
+		<item>bahati</item>
+		<item>nakuru town west</item>
+		<item>nakuru town east</item>
+	</string-array>
+	<string-array name="narok">
+		<item>kilgoris</item>
+		<item>emurua dikirr</item>
+		<item>narok north</item>
+		<item>narok east</item>
+		<item>narok south</item>
+		<item>narok west</item>
+	</string-array>
+	<string-array name="kajiado">
+		<item>kajiado north</item>
+		<item>kajiado central</item>
+		<item>kajiado east</item>
+		<item>kajiado west</item>
+		<item>kajiado south</item>
+	</string-array>
+	<string-array name="kericho">
+		<item>kipkelion east</item>
+		<item>kipkelion west</item>
+		<item>ainamoi</item>
+		<item>bureti</item>
+		<item>belgut</item>
+		<item>sigowet/soin</item>
+	</string-array>
+	<string-array name="bomet">
+		<item>sotik</item>
+		<item>chepalungu</item>
+		<item>bomet east</item>
+		<item>bomet central</item>
+		<item>konoin</item>
+	</string-array>
+	<string-array name="kakamega">
+		<item>lugari</item>
+		<item>likuyani</item>
+		<item>malava</item>
+		<item>lurambi</item>
+		<item>navakholo</item>
+		<item>mumias west</item>
+		<item>mumias east</item>
+		<item>matungu</item>
+		<item>butere</item>
+		<item>khwisero</item>
+		<item>shinyalu</item>
+		<item>ikolomani</item>
+	</string-array>
+	<string-array name="vihiga">
+		<item>vihiga</item>
+		<item>sabatia</item>
+		<item>hamisi</item>
+		<item>luanda</item>
+		<item>emuhaya</item>
+	</string-array>
+	<string-array name="bungoma">
+		<item>mt.elgon</item>
+		<item>sirisia</item>
+		<item>kabuchai</item>
+		<item>bumula</item>
+		<item>kanduyi</item>
+		<item>webuye east</item>
+		<item>webuye west</item>
+		<item>kimilili</item>
+		<item>tongaren</item>
+	</string-array>
+	<string-array name="busia">
+		<item>teso north</item>
+		<item>teso south</item>
+		<item>nambale</item>
+		<item>matayos</item>
+		<item>butula</item>
+		<item>funyula</item>
+		<item>budalangi</item>
+	</string-array>
+	<string-array name="siaya">
+		<item>ugenya</item>
+		<item>ugunja</item>
+		<item>alego usonga</item>
+		<item>gem</item>
+		<item>bondo</item>
+		<item>rarieda</item>
+	</string-array>
+	<string-array name="kisumu">
+		<item>kisumu east</item>
+		<item>kisumu west</item>
+		<item>kisumu central</item>
+		<item>seme</item>
+		<item>nyando</item>
+		<item>muhoroni</item>
+		<item>nyakach</item>
+	</string-array>
+	<string-array name="homa_bay">
+		<item>kasipul</item>
+		<item>kabondo kasipul</item>
+		<item>karachuonyo</item>
+		<item>rangwe</item>
+		<item>homa bay town</item>
+		<item>ndhiwa</item>
+		<item>mbita</item>
+		<item>suba</item>
+	</string-array>
+	<string-array name="migori">
+		<item>rongo</item>
+		<item>awendo</item>
+		<item>suna east</item>
+		<item>suna west</item>
+		<item>uriri</item>
+		<item>nyatike</item>
+		<item>kuria west</item>
+		<item>kuria east</item>
+	</string-array>
+	<string-array name="kisii">
+		<item>bonchari</item>
+		<item>south mugirangoo</item>
+		<item>bomachoge borabu</item>
+		<item>bobasi</item>
+		<item>uriri</item>
+		<item>bomachoge chache</item>
+		<item>nyaribari masaba</item>
+		<item>nyaribari chache</item>
+		<item>nkitutu chache north</item>
+		<item>kitutu chache south</item>
+	</string-array>
+	<string-array name="nyamira">
+		<item>kitutu masaba</item>
+		<item>west mugirango</item>
+		<item>north mugirango</item>
+		<item>borabu</item>
+	</string-array>
+	<string-array name="nairobi">
+		<item>westlands</item>
+		<item>dagoretti north</item>
+		<item>dagoretti south</item>
+		<item>langata</item>
+		<item>kibra</item>
+		<item>roysambu</item>
+		<item>kasarani</item>
+		<item>ruaraka</item>
+		<item>rmbakasi south</item>
+		<item>embakasi north</item>
+		<item>embakasi central</item>
+		<item>embakasi east</item>
+		<item>embakasi west</item>
+		<item>makadara</item>
+		<item>kamukunji</item>
+		<item>starehe</item>
+		<item>mathare</item>
+	</string-array>
+</resources>

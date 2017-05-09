@@ -44,159 +44,157 @@ import rx.android.schedulers.AndroidSchedulers;
 
 public class VisitApi {
 
-    private RestApi restApi;
-    private VisitDAO visitDAO;
-    private LocationDAO locationDAO;
-    private EncounterDAO encounterDAO;
+	private RestApi restApi;
+	private VisitDAO visitDAO;
+	private LocationDAO locationDAO;
+	private EncounterDAO encounterDAO;
 
-    public VisitApi() {
-        restApi = RestServiceBuilder.createService(RestApi.class);
-        visitDAO = new VisitDAO();
-        locationDAO = new LocationDAO();
-        encounterDAO = new EncounterDAO();
-    }
+	public VisitApi() {
+		restApi = RestServiceBuilder.createService(RestApi.class);
+		visitDAO = new VisitDAO();
+		locationDAO = new LocationDAO();
+		encounterDAO = new EncounterDAO();
+	}
 
-    public VisitApi(RestApi restApi, VisitDAO visitDAO, LocationDAO locationDAO, EncounterDAO encounterDAO) {
-        this.restApi = restApi;
-        this.visitDAO = visitDAO;
-        this.locationDAO = locationDAO;
-        this.encounterDAO = encounterDAO;
-    }
+	public VisitApi(RestApi restApi, VisitDAO visitDAO, LocationDAO locationDAO, EncounterDAO encounterDAO) {
+		this.restApi = restApi;
+		this.visitDAO = visitDAO;
+		this.locationDAO = locationDAO;
+		this.encounterDAO = encounterDAO;
+	}
 
-    public void syncVisitsData(@NonNull Patient patient) {
-        syncVisitsData(patient, null);
-    }
+	public void syncVisitsData(@NonNull Patient patient) {
+		syncVisitsData(patient, null);
+	}
 
-    public void syncVisitsData(@NonNull final Patient patient, @Nullable final DefaultResponseCallbackListener callbackListener) {
-        Call<Results<Visit>> call = restApi.findVisitsByPatientUUID(patient.getUuid(), "custom:(uuid,location:ref,visitType:ref,startDatetime,stopDatetime,encounters:full)");
-        call.enqueue(new Callback<Results<Visit>>() {
-            @Override
-            public void onResponse(Call<Results<Visit>> call, Response<Results<Visit>> response) {
-                if (response.isSuccessful()) {
-                    List<Visit> visits = response.body().getResults();
-                    Observable.just(visits)
-                            .flatMap(Observable::from)
-                            .forEach(visit ->
-                                    visitDAO.saveOrUpdate(visit, patient.getId())
-                                            .observeOn(AndroidSchedulers.mainThread())
-                                            .subscribe());
-                    if (callbackListener != null) {
-                        callbackListener.onResponse();
-                    }
-                }
-                else {
-                    if (callbackListener != null) {
-                        callbackListener.onErrorResponse(response.message());
-                    }
-                }
-            }
+	public void syncVisitsData(@NonNull final Patient patient,
+			@Nullable final DefaultResponseCallbackListener callbackListener) {
+		Call<Results<Visit>> call = restApi.findVisitsByPatientUUID(patient.getUuid(),
+				"custom:(uuid,location:ref,visitType:ref,startDatetime,stopDatetime,encounters:full)");
+		call.enqueue(new Callback<Results<Visit>>() {
+			@Override
+			public void onResponse(Call<Results<Visit>> call, Response<Results<Visit>> response) {
+				if (response.isSuccessful()) {
+					List<Visit> visits = response.body().getResults();
+					Observable.just(visits)
+							.flatMap(Observable::from)
+							.forEach(visit ->
+									visitDAO.saveOrUpdate(visit, patient.getId())
+											.observeOn(AndroidSchedulers.mainThread())
+											.subscribe());
+					if (callbackListener != null) {
+						callbackListener.onResponse();
+					}
+				} else {
+					if (callbackListener != null) {
+						callbackListener.onErrorResponse(response.message());
+					}
+				}
+			}
 
-            @Override
-            public void onFailure(Call<Results<Visit>> call, Throwable t) {
-                if (callbackListener != null) {
-                    callbackListener.onErrorResponse(t.getMessage());
-                }
-            }
+			@Override
+			public void onFailure(Call<Results<Visit>> call, Throwable t) {
+				if (callbackListener != null) {
+					callbackListener.onErrorResponse(t.getMessage());
+				}
+			}
 
-        });
-    }
+		});
+	}
 
-    public void getVisitType(final GetVisitTypeCallbackListener callbackListener) {
-        Call<Results<VisitType>> call = restApi.getVisitType();
-        call.enqueue(new Callback<Results<VisitType>>() {
+	public void getVisitType(final GetVisitTypeCallbackListener callbackListener) {
+		Call<Results<VisitType>> call = restApi.getVisitType();
+		call.enqueue(new Callback<Results<VisitType>>() {
 
-            @Override
-            public void onResponse(Call<Results<VisitType>> call, Response<Results<VisitType>> response) {
-                if (response.isSuccessful()) {
-                    callbackListener.onGetVisitTypeResponse(response.body().getResults().get(0));
-                }
-                else {
-                    callbackListener.onErrorResponse(response.message());
-                }
-            }
+			@Override
+			public void onResponse(Call<Results<VisitType>> call, Response<Results<VisitType>> response) {
+				if (response.isSuccessful()) {
+					callbackListener.onGetVisitTypeResponse(response.body().getResults().get(0));
+				} else {
+					callbackListener.onErrorResponse(response.message());
+				}
+			}
 
-            @Override
-            public void onFailure(Call<Results<VisitType>> call, Throwable t) {
-                callbackListener.onErrorResponse(t.getMessage());
-            }
+			@Override
+			public void onFailure(Call<Results<VisitType>> call, Throwable t) {
+				callbackListener.onErrorResponse(t.getMessage());
+			}
 
-        });
-    }
+		});
+	}
 
-    public void syncLastVitals(final String patientUuid) {
-        syncLastVitals(patientUuid, null);
-    }
+	public void syncLastVitals(final String patientUuid) {
+		syncLastVitals(patientUuid, null);
+	}
 
-    public void syncLastVitals(final String patientUuid, @Nullable final DefaultResponseCallbackListener callbackListener) {
-        Call<Results<Encounter>> call = restApi.getLastVitals(patientUuid, ApplicationConstants.EncounterTypes.VITALS, "full", 1,"desc");
-        call.enqueue(new Callback<Results<Encounter>>() {
-            @Override
-            public void onResponse(Call<Results<Encounter>> call, Response<Results<Encounter>> response) {
-                if (response.isSuccessful()) {
-                    if (!response.body().getResults().isEmpty()) {
-                        encounterDAO.saveLastVitalsEncounter(response.body().getResults().get(0), patientUuid);
-                    }
-                    if (callbackListener != null) {
-                        callbackListener.onResponse();
-                    }
-                }
-                else {
-                    if (callbackListener != null) {
-                        callbackListener.onErrorResponse(response.message());
-                    }
-                }
-            }
+	public void syncLastVitals(final String patientUuid, @Nullable final DefaultResponseCallbackListener callbackListener) {
+		Call<Results<Encounter>> call =
+				restApi.getLastVitals(patientUuid, ApplicationConstants.EncounterTypeEntitys.VITALS, "full", 1, "desc");
+		call.enqueue(new Callback<Results<Encounter>>() {
+			@Override
+			public void onResponse(Call<Results<Encounter>> call, Response<Results<Encounter>> response) {
+				if (response.isSuccessful()) {
+					if (!response.body().getResults().isEmpty()) {
+						encounterDAO.saveLastVitalsEncounter(response.body().getResults().get(0), patientUuid);
+					}
+					if (callbackListener != null) {
+						callbackListener.onResponse();
+					}
+				} else {
+					if (callbackListener != null) {
+						callbackListener.onErrorResponse(response.message());
+					}
+				}
+			}
 
-            @Override
-            public void onFailure(Call<Results<Encounter>> call, Throwable t) {
-                if (callbackListener != null) {
-                    callbackListener.onErrorResponse(t.getMessage());
-                }
-            }
-        });
-    }
+			@Override
+			public void onFailure(Call<Results<Encounter>> call, Throwable t) {
+				if (callbackListener != null) {
+					callbackListener.onErrorResponse(t.getMessage());
+				}
+			}
+		});
+	}
 
+	public void startVisit(final Patient patient) {
+		startVisit(patient, null);
+	}
 
-    public void startVisit(final Patient patient) {
-        startVisit(patient, null);
-    }
+	public void startVisit(final Patient patient, @Nullable final StartVisitResponseListenerCallback callbackListener) {
+		final Visit visit = new Visit();
+		visit.setStartDatetime(DateUtils.convertTime(System.currentTimeMillis(), DateUtils.OPEN_MRS_REQUEST_FORMAT));
+		visit.setPatient(patient);
+		visit.setLocation(locationDAO.findLocationByName(OpenMRS.getInstance().getLocation()));
 
-    public void startVisit(final Patient patient, @Nullable final StartVisitResponseListenerCallback callbackListener) {
-        final Visit visit = new Visit();
-        visit.setStartDatetime(DateUtils.convertTime(System.currentTimeMillis(), DateUtils.OPEN_MRS_REQUEST_FORMAT));
-        visit.setPatient(patient);
-        visit.setLocation(locationDAO.findLocationByName(OpenMRS.getInstance().getLocation()));
+		visit.setVisitType(new VisitType(null, OpenMRS.getInstance().getVisitTypeUUID()));
 
-        visit.setVisitType(new VisitType(null, OpenMRS.getInstance().getVisitTypeUUID()));
+		Call<Visit> call = restApi.startVisit(visit);
+		call.enqueue(new Callback<Visit>() {
+			@Override
+			public void onResponse(Call<Visit> call, Response<Visit> response) {
+				if (response.isSuccessful()) {
+					Visit newVisit = response.body();
+					visitDAO.saveOrUpdate(newVisit, patient.getId())
+							.observeOn(AndroidSchedulers.mainThread())
+							.subscribe(id -> {
+								if (callbackListener != null) {
+									callbackListener.onStartVisitResponse(id);
+								}
+							});
+				} else {
+					if (callbackListener != null) {
+						callbackListener.onErrorResponse(response.message());
+					}
+				}
+			}
 
-        Call<Visit> call = restApi.startVisit(visit);
-        call.enqueue(new Callback<Visit>() {
-            @Override
-            public void onResponse(Call<Visit> call, Response<Visit> response) {
-                if (response.isSuccessful()) {
-                    Visit newVisit = response.body();
-                    visitDAO.saveOrUpdate(newVisit, patient.getId())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(id -> {
-                                if(callbackListener != null) {
-                                    callbackListener.onStartVisitResponse(id);
-                                }
-                            });
-                }
-                else {
-                    if(callbackListener != null) {
-                        callbackListener.onErrorResponse(response.message());
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Visit> call, Throwable t) {
-                if(callbackListener != null) {
-                    callbackListener.onErrorResponse(t.getMessage());
-                }
-            }
-        });
-    }
+			@Override
+			public void onFailure(Call<Visit> call, Throwable t) {
+				if (callbackListener != null) {
+					callbackListener.onErrorResponse(t.getMessage());
+				}
+			}
+		});
+	}
 
 }

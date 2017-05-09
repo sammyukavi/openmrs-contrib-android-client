@@ -16,7 +16,7 @@ package org.openmrs.mobile.activities;
 
 public interface BasePresenterContract {
 
-    void subscribe();
+	void subscribe();
 
-    void unsubscribe();
+	void unsubscribe();
 }

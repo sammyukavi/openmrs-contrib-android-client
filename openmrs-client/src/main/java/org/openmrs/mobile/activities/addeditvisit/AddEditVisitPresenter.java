@@ -133,6 +133,8 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
                 @Override
                 public void onCompleted(List<Provider> entities, int length) {
                     for (Provider entity : entities) {
+                        System.out.println("===========================");
+                        System.out.println(entity);
                         if (personUuid.equalsIgnoreCase(entity.getPerson().getUuid())){
                             provider = entity;
                         }

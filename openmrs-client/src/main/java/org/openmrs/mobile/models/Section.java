@@ -19,48 +19,40 @@ import java.util.List;
 
 public class Section implements Serializable {
 
-    @SerializedName("label")
-    @Expose
-    private String label;
+	@SerializedName("label")
+	@Expose
+	private String label;
 
-    @SerializedName("questions")
-    @Expose
-    private List<Question> questions = new ArrayList<Question>();
+	@SerializedName("questions")
+	@Expose
+	private List<Question> questions = new ArrayList<Question>();
 
-    /**
-     * 
-     * @return
-     *     The label
-     */
-    public String getLabel() {
-        return label;
-    }
+	/**
+	 * @return The label
+	 */
+	public String getLabel() {
+		return label;
+	}
 
-    /**
-     * 
-     * @param label
-     *     The label
-     */
-    public void setLabel(String label) {
-        this.label = label;
-    }
+	/**
+	 * @param label The label
+	 */
+	public void setLabel(String label) {
+		this.label = label;
+	}
 
-    /**
-     * 
-     * @return
-     *     The questions
-     */
-    public List<Question> getQuestions() {
-        return questions;
-    }
+	/**
+	 * @return The questions
+	 */
+	public List<Question> getQuestions() {
+		return questions;
+	}
 
-    /**
-     * 
-     * @param questions
-     *     The questions
-     */
-    public void setQuestions(List<Question> questions) {
-        this.questions = questions;
-    }
+	/**
+	 * @param questions The questions
+	 */
+	public void setQuestions(List<Question> questions) {
+		this.questions = questions;
+	}
 
 }

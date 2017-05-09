@@ -1,9 +1,9 @@
 package org.openmrs.mobile.data;
 
-import org.openmrs.mobile.models.BaseOpenmrsObject;
-
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+
+import org.openmrs.mobile.models.BaseOpenmrsObject;
 
 import java.util.List;
 

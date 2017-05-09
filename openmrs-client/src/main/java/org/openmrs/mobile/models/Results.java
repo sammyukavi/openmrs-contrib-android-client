@@ -18,27 +18,27 @@ import java.util.List;
 
 public class Results<T> implements Serializable {
 
-    @SerializedName("results")
-    @Expose
-    private List<T> results = new ArrayList<T>();
+	@SerializedName("results")
+	@Expose
+	private List<T> results = new ArrayList<T>();
 
-    public List<T> getResults() {
-        return results;
-    }
+	@SerializedName("length")
+	@Expose
+	private int length;
 
-    public void setResults(List<T> results) {
-        this.results = results;
-    }
+	public List<T> getResults() {
+		return results;
+	}
 
-    @SerializedName("length")
-    @Expose
-    private int length;
+	public void setResults(List<T> results) {
+		this.results = results;
+	}
 
-    public int getLength() {
-        return length;
-    }
+	public int getLength() {
+		return length;
+	}
 
-    public void setLength(int length) {
-        this.length = length;
-    }
+	public void setLength(int length) {
+		this.length = length;
+	}
 }

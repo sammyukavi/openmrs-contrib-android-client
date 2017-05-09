@@ -14,97 +14,137 @@
 
 package org.openmrs.mobile.utilities;
 
-import org.openmrs.mobile.models.EncounterTypeEntity;
+import org.openmrs.mobile.models.EncounterType;
 
 public abstract class ApplicationConstants {
+	public static final String EMPTY_STRING = "";
+	public static final String SERVER_URL = "server_url";
+	public static final String SESSION_TOKEN = "session_id";
+	public static final String AUTHORIZATION_TOKEN = "authorisation";
+	public static final String SECRET_KEY = "secretKey";
+	public static final String LOCATION = "location";
+	public static final String VISIT_TYPE_UUID = "visit_type_uuid";
+	public static final String LAST_SESSION_TOKEN = "last_session_id";
+	public static final String LAST_LOGIN_SERVER_URL = "last_login_server_url";
+	public static final String DEFAULT_OPEN_MRS_URL = "http://192.168.2.34:9996/openmrs/";
+	public static final String PATIENT_UUID = "1027a3b6-6129-48e0-91c6-edb8ec7e8f3e";
+	public static final String VISIT_UUID = "98ba2669-802c-4d00-8a89-8b28e47823bf";
+	//discuss on using the openhmis
+	// demo as the main test server to avoid changes here.
 
-    public static final String EMPTY_STRING = "";
-    public static final String SERVER_URL = "server_url";
-    public static final String SESSION_TOKEN = "session_id";
-    public static final String AUTHORIZATION_TOKEN = "authorisation";
-    public static final String SECRET_KEY = "secretKey";
-    public static final String LOCATION = "location";
-    public static final String VISIT_TYPE_UUID = "visit_type_uuid";
-    public static final String LAST_SESSION_TOKEN = "last_session_id";
-    public static final String LAST_LOGIN_SERVER_URL = "last_login_server_url";
-    public static final String DEFAULT_OPEN_MRS_URL = "http://192.168.2.10:8080/openmrs/";
-    //public static final String DEFAULT_OPEN_MRS_URL = "http://192.168.0.102:8080/openmrs/";
+	public abstract static class OpenMRSSharedPreferenceNames {
+		public static final String SHARED_PREFERENCES_NAME = "shared_preferences";
+	}
 
-    public abstract static class OpenMRSSharedPreferenceNames {
-        public static final String SHARED_PREFERENCES_NAME = "shared_preferences";
-    }
+	public abstract static class API {
+		public static final String REST_ENDPOINT_V1 = "ws/rest/v1/";
+		public static final String REST_ENDPOINT_V2 = "ws/rest/v2/";
+		public static final String FULL = "full";
+	}
 
-    public abstract static class API {
-        public static final String REST_ENDPOINT_V1 = "ws/rest/v1/";
-        public static final String REST_ENDPOINT_V2 = "ws/rest/v2/";
-        public static final String FULL = "full";
-    }
+	public abstract static class UserKeys {
+		public static final String USER_NAME = "username";
+		public static final String PASSWORD = "password";
+		public static final String USER_PERSON_NAME = "userDisplay";
+		public static final String USER_UUID = "userUUID";
+		public static final String LOGIN = "login";
+	}
 
-    public abstract static class UserKeys {
-        public static final String USER_NAME = "username";
-        public static final String PASSWORD = "password";
-        public static final String USER_PERSON_NAME = "userDisplay";
-        public static final String USER_UUID = "userUUID";
-        public static final String LOGIN = "login";
-    }
+	public abstract static class DialogTAG {
+		public static final String AUTH_FAILED_DIALOG_TAG = "authFailedDialog";
+		public static final String CONN_TIMEOUT_DIALOG_TAG = "connectionTimeoutDialog";
+		public static final String NO_INTERNET_CONN_DIALOG_TAG = "noInternetConnectionDialog";
+		public static final String SERVER_UNAVAILABLE_DIALOG_TAG = "serverUnavailableDialog";
+		public static final String INVALID_URL_DIALOG_TAG = "invalidURLDialog";
+		public static final String LOGOUT_DIALOG_TAG = "logoutDialog";
+		public static final String END_VISIT_DIALOG_TAG = "endVisitDialogTag";
+		public static final String UNAUTHORIZED_DIALOG_TAG = "unauthorizedDialog";
+		public static final String SERVER_ERROR_DIALOG_TAG = "serverErrorDialog";
+		public static final String SOCKET_EXCEPTION_DIALOG_TAG = "socketExceptionDialog";
+		public static final String SERVER_NOT_SUPPORTED_DIALOG_TAG = "serverNotSupportedDialog";
+		public static final String START_VISIT_DIALOG_TAG = "startVisitDialog";
+		public static final String START_VISIT_IMPOSSIBLE_DIALOG_TAG = "startVisitImpossibleDialog";
+		public static final String WARNING_LOST_DATA_DIALOG_TAG = "warningLostDataDialog";
+		public static final String NO_VISIT_DIALOG_TAG = "noVisitDialogTag";
+		public static final String SIMILAR_PATIENTS_TAG = "similarPatientsDialogTag";
+		public static final String DELET_PATIENT_DIALOG_TAG = "deletePatientDialogTag";
+		public static final String ADD_VISIT_TASK_DIALOG_TAG = "addVisitTaskDialogTag";
+	}
 
-    public abstract static class DialogTAG {
-        public static final String AUTH_FAILED_DIALOG_TAG = "authFailedDialog";
-        public static final String CONN_TIMEOUT_DIALOG_TAG = "connectionTimeoutDialog";
-        public static final String NO_INTERNET_CONN_DIALOG_TAG = "noInternetConnectionDialog";
-        public static final String SERVER_UNAVAILABLE_DIALOG_TAG = "serverUnavailableDialog";
-        public static final String INVALID_URL_DIALOG_TAG = "invalidURLDialog";
-        public static final String LOGOUT_DIALOG_TAG = "logoutDialog";
-        public static final String END_VISIT_DIALOG_TAG = "endVisitDialogTag";
-        public static final String UNAUTHORIZED_DIALOG_TAG = "unauthorizedDialog";
-        public static final String SERVER_ERROR_DIALOG_TAG = "serverErrorDialog";
-        public static final String SOCKET_EXCEPTION_DIALOG_TAG = "socketExceptionDialog";
-        public static final String SERVER_NOT_SUPPORTED_DIALOG_TAG = "serverNotSupportedDialog";
-        public static final String START_VISIT_DIALOG_TAG = "startVisitDialog";
-        public static final String START_VISIT_IMPOSSIBLE_DIALOG_TAG = "startVisitImpossibleDialog";
-        public static final String WARNING_LOST_DATA_DIALOG_TAG = "warningLostDataDialog";
-        public static final String NO_VISIT_DIALOG_TAG = "noVisitDialogTag";
-        public static final String SIMILAR_PATIENTS_TAG = "similarPatientsDialogTag";
-        public static final String DELET_PATIENT_DIALOG_TAG = "deletePatientDialogTag";
-    }
+	public abstract static class RegisterPatientRequirements {
+		public static final int MAX_PATIENT_AGE = 120;
+	}
 
-    public abstract static class RegisterPatientRequirements {
-        public static final int MAX_PATIENT_AGE = 120;
-    }
+	public abstract static class CustomIntentActions {
+		public static final String ACTION_AUTH_FAILED_BROADCAST = "org.openmrs.mobile.intent.action.AUTH_FAILED_BROADCAST";
+		public static final String ACTION_UNAUTHORIZED_BROADCAST = "org.openmrs.mobile.intent.action"
+				+ ".UNAUTHORIZED_BROADCAST";
+		public static final String ACTION_CONN_TIMEOUT_BROADCAST = "org.openmrs.mobile.intent.action"
+				+ ".CONN_TIMEOUT_BROADCAST";
+		public static final String ACTION_NO_INTERNET_CONNECTION_BROADCAST =
+				"org.openmrs.mobile.intent.action.NO_INTERNET_CONNECTION_BROADCAST";
+		public static final String ACTION_SERVER_UNAVAILABLE_BROADCAST =
+				"org.openmrs.mobile.intent.action.SERVER_UNAVAILABLE_BROADCAST";
+		public static final String ACTION_SERVER_ERROR_BROADCAST = "org.openmrs.mobile.intent.action"
+				+ ".SERVER_ERROR_BROADCAST";
+		public static final String ACTION_SOCKET_EXCEPTION_BROADCAST =
+				"org.openmrs.mobile.intent.action.SOCKET_EXCEPTION_BROADCAST";
+		public static final String ACTION_SERVER_NOT_SUPPORTED_BROADCAST =
+				"org.openmrs.mobile.intent.action.SERVER_NOT_SUPPORTED_BROADCAST";
+	}
 
-    public abstract static class BundleKeys {
-        public static final String CUSTOM_DIALOG_BUNDLE = "customDialogBundle";
-        public static final String PATIENT_ID_BUNDLE = "patientID";
-        public static final String VISIT_ID_BUNDLE = "visitID";
-        public static final String PROVIDER_ID_BUNDLE = "providerID";
-        public static final String ENCOUNTERTYPE = "encounterType";
-        public static final String VALUEREFERENCE = "valueReference";
-        public static final String FORM_NAME = "formName";
-        public static final String CALCULATED_LOCALLY = "CALCULATED_LOCALLY";
-        public static final String PATIENTS_AND_MATCHES = "PATIENTS_AND_MATCHES";
-        public static final String FORM_FIELDS_BUNDLE = "formFieldsBundle";
-        public static final String FORM_FIELDS_LIST_BUNDLE = "formFieldsListBundle";
-        public static final String PATIENT_QUERY_BUNDLE = "patientQuery";
-    }
+	public abstract static class EncounterTypeEntitys {
+		public static final String VITALS = "67a71486-1a54-468f-ac3e-7091a9a79584";
+		/*public static String[] ENCOUNTER_TYPES_DISPLAYS =
+				{ EncounterType.VITALS, EncounterTypeEntity.ADMISSION, EncounterTypeEntity.DISCHARGE, EncounterTypeEntity.VISIT_NOTE };*/
+	}
 
-    public abstract static class CustomIntentActions {
-        public static final String ACTION_AUTH_FAILED_BROADCAST = "org.openmrs.mobile.intent.action.AUTH_FAILED_BROADCAST";
-        public static final String ACTION_UNAUTHORIZED_BROADCAST = "org.openmrs.mobile.intent.action.UNAUTHORIZED_BROADCAST";
-        public static final String ACTION_CONN_TIMEOUT_BROADCAST = "org.openmrs.mobile.intent.action.CONN_TIMEOUT_BROADCAST";
-        public static final String ACTION_NO_INTERNET_CONNECTION_BROADCAST = "org.openmrs.mobile.intent.action.NO_INTERNET_CONNECTION_BROADCAST";
-        public static final String ACTION_SERVER_UNAVAILABLE_BROADCAST = "org.openmrs.mobile.intent.action.SERVER_UNAVAILABLE_BROADCAST";
-        public static final String ACTION_SERVER_ERROR_BROADCAST = "org.openmrs.mobile.intent.action.SERVER_ERROR_BROADCAST";
-        public static final String ACTION_SOCKET_EXCEPTION_BROADCAST = "org.openmrs.mobile.intent.action.SOCKET_EXCEPTION_BROADCAST";
-        public static final String ACTION_SERVER_NOT_SUPPORTED_BROADCAST = "org.openmrs.mobile.intent.action.SERVER_NOT_SUPPORTED_BROADCAST";
-    }
+	public abstract static class BundleKeys {
+		public static final String CUSTOM_DIALOG_BUNDLE = "customDialogBundle";
+		public static final String PATIENT_ID_BUNDLE = "patientID";
+		public static final String VISIT_ID_BUNDLE = "visitID";
+		public static final String PROVIDER_ID_BUNDLE = "providerID";
+		public static final String EncounterTypeEntity = "EncounterTypeEntity";
+		public static final String VALUEREFERENCE = "valueReference";
+		public static final String FORM_NAME = "formName";
+		public static final String CALCULATED_LOCALLY = "CALCULATED_LOCALLY";
+		public static final String PATIENTS_AND_MATCHES = "PATIENTS_AND_MATCHES";
+		public static final String FORM_FIELDS_BUNDLE = "formFieldsBundle";
+		public static final String FORM_FIELDS_LIST_BUNDLE = "formFieldsListBundle";
+		public static final String PATIENT_QUERY_BUNDLE = "patientQuery";
+	}
 
-    public abstract static class EncounterTypes {
-        public static final String VITALS = "67a71486-1a54-468f-ac3e-7091a9a79584";
-        public static String[] ENCOUNTER_TYPES_DISPLAYS = {EncounterTypeEntity.VITALS, EncounterTypeEntity.ADMISSION, EncounterTypeEntity.DISCHARGE, EncounterTypeEntity.VISIT_NOTE};
-    }
+	public abstract static class Tags {
+		public static final String PATIENT_ID = "patient_ID";
+	}
 
-    public abstract static class Tags {
-        public static final String PATIENT_ID = "patient_ID";
-    }
+	public static class toastMessages {
+		public static final String addErrorMessage = " could not be added";
+		public static final String addSuccessMessage = " was added successfully";
+		public static final String updateErrorMessage = " could not be updated";
+		public static final String updateSuccessMessage = " update successfully";
+		public static final String fetchErrorMessage = " could not be fetched";
+		public static final String fetchSuccessMessage = " were loaded successfully";
+	}
 
+	public static class entityName {
+		public static final String VISIT_TASKS = "Visit Task(s)";
+		public static final String PATIENTS = "Patient(s)";
+		public static final String LAST_VIEWED_PATIENT = "Last Viewed Patient(s)";
+		public static final String CIVIL_STATUS = "Civil Status";
+		public static final String ATTRIBUTE_TPYES = "Attribute Type(s)";
+		public static final String IDENTIFIER_TPYES = "Identifier Type(s)";
+		public static final String PREDEFINED_TASKS = "Predefined task(s)";
+		public static final String VISITS = "Visit(s)";
+	}
+
+	public static class unwatedPersonAttributes {
+		public static final String BIRTH_PLACE_UUID = "8d8718c2-c2cc-11de-8d13-0010c6dffd0f";
+		public static final String HEALTH_CENTER_UUID = "8d87236c-c2cc-11de-8d13-0010c6dffd0f";
+		public static final String HEALTH_DISTRICT_UUID = "8d872150-c2cc-11de-8d13-0010c6dffd0f";
+		public static final String MOTHER_NAME_UUID = "8d871d18-c2cc-11de-8d13-0010c6dffd0f";
+		public static final String RACE_UUID = "8d871386-c2cc-11de-8d13-0010c6dffd0f";
+		public static final String UNKNOWN_PATIENT_UUID = "8b56eac7-5c76-4b9c-8c6f-1deab8d3fc47";
+		public static final String TEST_PATIENT_UUID = "4f07985c-88a5-4abd-aa0c-f3ec8324d8e7";
+	}
 }

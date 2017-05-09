@@ -21,7 +21,7 @@ import org.openmrs.mobile.databases.OpenMRSDBOpenHelper;
 import org.openmrs.mobile.databases.tables.EncounterTable;
 import org.openmrs.mobile.databases.tables.ObservationTable;
 import org.openmrs.mobile.models.Encounter;
-import org.openmrs.mobile.models.EncounterTypeEntity;
+import org.openmrs.mobile.models.EncounterType;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.utilities.DateUtils;
 import org.openmrs.mobile.utilities.FormService;
@@ -77,8 +77,8 @@ public class EncounterDAO {
         DBOpenHelper helper = OpenMRSDBOpenHelper.getInstance().getDBOpenHelper();
         Encounter encounter = null;
 
-        String where = String.format("%s = ? AND %s = ? ORDER BY %s DESC LIMIT 1", EncounterTable.Column.PATIENT_UUID, EncounterTable.Column.ENCOUNTER_TYPE, EncounterTable.Column.ENCOUNTER_DATETIME);
-        String[] whereArgs = new String[]{patientUUID, EncounterTypeEntity.VITALS};
+        /*String where = String.format("%s = ? AND %s = ? ORDER BY %s DESC LIMIT 1", EncounterTable.Column.PATIENT_UUID, EncounterTable.Column.ENCOUNTER_TYPE, EncounterTable.Column.ENCOUNTER_DATETIME);
+        //String[] whereArgs = new String[]{patientUUID, EncounterType.VITALS};
         final Cursor cursor = helper.getReadableDatabase().query(EncounterTable.TABLE_NAME, null, where, whereArgs, null, null, null);
         if (null != cursor) {
             try {
@@ -108,7 +108,7 @@ public class EncounterDAO {
             } finally {
                 cursor.close();
             }
-        }
+        }*/
         return encounter;
     }
 
@@ -158,7 +158,7 @@ public class EncounterDAO {
         return encounters;
     }
 
-    public List<Encounter> getAllEncountersByType(Long patientID, EncounterTypeEntity type) {
+    public List<Encounter> getAllEncountersByType(Long patientID, EncounterType type) {
         List<Encounter> encounters = new ArrayList<Encounter>();
         DBOpenHelper helper = OpenMRSDBOpenHelper.getInstance().getDBOpenHelper();
         String query = "SELECT e.* FROM observations AS o JOIN encounters AS e ON o.encounter_id = e._id " +

@@ -12,6 +12,7 @@ import retrofit2.Call;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+
 public abstract class BaseEntityDataService<E extends BaseOpenmrsEntity ,S> extends BaseDataService<E, S>
         implements EntityDataService<E> {
 

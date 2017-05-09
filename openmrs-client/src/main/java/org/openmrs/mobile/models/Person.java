@@ -21,192 +21,192 @@ import java.util.List;
 
 public class Person extends BaseOpenmrsEntity implements Serializable {
 
-    private Integer personId;
+	private Integer personId;
 
-    @SerializedName("names")
-    @Expose
-    private List<PersonName> names = new ArrayList<PersonName>();
-    @SerializedName("gender")
-    @Expose
-    private String gender;
-    @SerializedName("birthdate")
-    @Expose
-    private String birthdate;
-    @SerializedName("birthdateEstimated")
-    @Expose
-    private boolean birthdateEstimated;
-    @SerializedName("addresses")
-    @Expose
-    private List<PersonAddress> addresses = new ArrayList<PersonAddress>();
-    @SerializedName("attributes")
-    @Expose
-    private List<PersonAttribute> attributes = new ArrayList<PersonAttribute>();
+	@SerializedName("names")
+	@Expose
+	private List<PersonName> names = new ArrayList<PersonName>();
+	@SerializedName("gender")
+	@Expose
+	private String gender;
+	@SerializedName("birthdate")
+	@Expose
+	private String birthdate;
+	@SerializedName("birthdateEstimated")
+	@Expose
+	private boolean birthdateEstimated;
+	@SerializedName("addresses")
+	@Expose
+	private List<PersonAddress> addresses = new ArrayList<PersonAddress>();
+	@SerializedName("personAttributes")
+	@Expose
+	private List<PersonAttribute> personAttributes = new ArrayList<PersonAttribute>();
 
-    private Bitmap photo;
+	private Bitmap photo;
 
-    @SerializedName("deathDate")
-    @Expose
-    private String deathDate;
+	@SerializedName("deathDate")
+	@Expose
+	private String deathDate;
 
-    @SerializedName("age")
-    @Expose
-    private Integer age;
+	@SerializedName("age")
+	@Expose
+	private Integer age;
 
-    public Integer getPersonId() {
-        return personId;
-    }
+	public Integer getPersonId() {
+		return personId;
+	}
 
-    public void setPersonId(Integer personId) {
-        this.personId = personId;
-    }
+	public void setPersonId(Integer personId) {
+		this.personId = personId;
+	}
 
-    /**
-     * 
-     * @return
-     *     The names
-     */
-    public List<PersonName> getNames() {
-        return names;
-    }
+	/**
+	 *
+	 * @return
+	 * The names
+	 */
+	public List<PersonName> getNames() {
+		return names;
+	}
 
-    public PersonName getName() {
-        if (!names.isEmpty()) {
-            return names.get(0);
-        } else {
-            return null;
-        }
-    }
+	public PersonName getName() {
+		if (!names.isEmpty()) {
+			return names.get(0);
+		} else {
+			return null;
+		}
+	}
 
-    /**
-     * 
-     * @param names
-     *     The names
-     */
-    public void setNames(List<PersonName> names) {
-        this.names = names;
-    }
+	/**
+	 *
+	 * @param names
+	 * The names
+	 */
+	public void setNames(List<PersonName> names) {
+		this.names = names;
+	}
 
-    /**
-     * 
-     * @return
-     *     The gender
-     */
-    public String getGender() {
-        return gender;
-    }
+	/**
+	 *
+	 * @return
+	 * The gender
+	 */
+	public String getGender() {
+		return gender;
+	}
 
-    /**
-     * 
-     * @param gender
-     *     The gender
-     */
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
+	/**
+	 *
+	 * @param gender
+	 * The gender
+	 */
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
 
-    /**
-     * 
-     * @return
-     *     The birthdate
-     */
-    public String getBirthdate() {
-        return birthdate;
-    }
+	/**
+	 *
+	 * @return
+	 * The birthdate
+	 */
+	public String getBirthdate() {
+		return birthdate;
+	}
 
-    /**
-     * 
-     * @param birthdate
-     *     The birthdate
-     */
-    public void setBirthdate(String birthdate) {
-        this.birthdate = birthdate;
-    }
+	/**
+	 *
+	 * @param birthdate
+	 * The birthdate
+	 */
+	public void setBirthdate(String birthdate) {
+		this.birthdate = birthdate;
+	}
 
-    /**
-     *
-     * @return
-     *     The birthdateEstimated
-     */
-    public boolean getBirthdateEstimated() {
-        return birthdateEstimated;
-    }
+	/**
+	 *
+	 * @return
+	 * The birthdateEstimated
+	 */
+	public boolean getBirthdateEstimated() {
+		return birthdateEstimated;
+	}
 
-    /**
-     *
-     * @param birthdateEstimated
-     *     The birthdate
-     */
-    public void setBirthdateEstimated(boolean birthdateEstimated) {
-        this.birthdateEstimated = birthdateEstimated;
-    }
-
-
-    /**
-     * 
-     * @return
-     *     The addresses
-     */
-    public List<PersonAddress> getAddresses() {
-        return addresses;
-    }
-
-    public PersonAddress getAddress() {
-        if (!addresses.isEmpty()) {
-            return addresses.get(0);
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * 
-     * @param addresses
-     *     The addresses
-     */
-    public void setAddresses(List<PersonAddress> addresses) {
-        this.addresses = addresses;
-    }
-
-    /**
-     * 
-     * @return
-     *     The attributes
-     */
-    public List<PersonAttribute> getAttributes() {
-        return attributes;
-    }
-
-    /**
-     *
-     * @param attributes
-     *     The attributes
-     */
-    public void setAttributes(List<PersonAttribute> attributes) {
-        this.attributes = attributes;
-    }
+	/**
+	 *
+	 * @param birthdateEstimated
+	 * The birthdate
+	 */
+	public void setBirthdateEstimated(boolean birthdateEstimated) {
+		this.birthdateEstimated = birthdateEstimated;
+	}
 
 
-    public Bitmap getPhoto() {
-        return photo;
-    }
+	/**
+	 *
+	 * @return
+	 * The addresses
+	 */
+	public List<PersonAddress> getAddresses() {
+		return addresses;
+	}
 
-    public void setPhoto(Bitmap patientPhoto) {
-        this.photo = patientPhoto;
-    }
+	public PersonAddress getAddress() {
+		if (!addresses.isEmpty()) {
+			return addresses.get(0);
+		} else {
+			return null;
+		}
+	}
 
-    public String getDeathDate() {
-        return deathDate;
-    }
+	/**
+	 *
+	 * @param addresses
+	 * The addresses
+	 */
+	public void setAddresses(List<PersonAddress> addresses) {
+		this.addresses = addresses;
+	}
 
-    public void setDeathDate(String deathDate) {
-        this.deathDate = deathDate;
-    }
+	/**
+	 *
+	 * @return
+	 * The personAttributes
+	 */
+	public List<PersonAttribute> getPersonAttributes() {
+		return personAttributes;
+	}
 
-    public void setAge(Integer age) {
-        this.age = age;
-    }
+	/**
+	 *
+	 * @param personAttributes
+	 * The personAttributes
+	 */
+	public void setPersonAttributes(List<PersonAttribute> personAttributes) {
+		this.personAttributes = personAttributes;
+	}
 
-    public Integer getAge() {
-        return age;
-    }
+
+	public Bitmap getPhoto() {
+		return photo;
+	}
+
+	public void setPhoto(Bitmap patientPhoto) {
+		this.photo = patientPhoto;
+	}
+
+	public String getDeathDate() {
+		return deathDate;
+	}
+
+	public void setDeathDate(String deathDate) {
+		this.deathDate = deathDate;
+	}
+
+	public void setAge(Integer age) {
+		this.age = age;
+	}
+
+	public Integer getAge() {
+		return age;
+	}
 }

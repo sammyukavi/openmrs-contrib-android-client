@@ -12,19 +12,19 @@ import retrofit2.Call;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public abstract class BaseMetadataDataService<E extends BaseOpenmrsMetadata, S> extends BaseDataService<E, S>
-        implements MetadataDataService<E> {
+		implements MetadataDataService<E> {
 
-    protected abstract Call<Results<E>> _restGetByNameFragment(String restPath, PagingInfo pagingInfo, String name,
-                                                               String representation);
+	protected abstract Call<Results<E>> _restGetByNameFragment(String restPath, PagingInfo pagingInfo, String name,
+			String representation);
 
-    @Override
-    public void getByNameFragment(@NonNull String name, boolean includeInactive,
-                                  @Nullable PagingInfo pagingInfo,
-                                  @NonNull GetMultipleCallback<E> callback) {
-        checkNotNull(name);
-        checkNotNull(callback);
+	@Override
+	public void getByNameFragment(@NonNull String name, boolean includeInactive,
+			@Nullable PagingInfo pagingInfo,
+			@NonNull GetMultipleCallback<E> callback) {
+		checkNotNull(name);
+		checkNotNull(callback);
 
-        executeMultipleCallback(callback, pagingInfo,
-                () -> _restGetByNameFragment(buildRestRequestPath(), pagingInfo, name, RestConstants.Representations.FULL));
-    }
+		executeMultipleCallback(callback, pagingInfo,
+				() -> _restGetByNameFragment(buildRestRequestPath(), pagingInfo, name, RestConstants.Representations.FULL));
+	}
 }

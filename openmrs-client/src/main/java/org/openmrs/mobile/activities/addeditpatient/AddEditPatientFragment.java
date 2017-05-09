@@ -23,6 +23,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -31,9 +32,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.Spinner;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import org.joda.time.DateTime;
@@ -47,12 +51,14 @@ import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
 import org.openmrs.mobile.application.OpenMRSLogger;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.listeners.watcher.PatientBirthdateValidatorWatcher;
-import org.openmrs.mobile.models.ConceptAnswer;
+import org.openmrs.mobile.models.BaseOpenmrsObject;
+import org.openmrs.mobile.models.ConceptName;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.PatientIdentifier;
 import org.openmrs.mobile.models.PatientIdentifierType;
 import org.openmrs.mobile.models.Person;
 import org.openmrs.mobile.models.PersonAddress;
+import org.openmrs.mobile.models.PersonAttribute;
 import org.openmrs.mobile.models.PersonAttributeType;
 import org.openmrs.mobile.models.PersonName;
 import org.openmrs.mobile.utilities.ApplicationConstants;
@@ -134,7 +140,11 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 	private String[] patientCivilStatus;
 	private PatientIdentifierType patientIdentifierType;
 
+	private Map<String, PersonAttribute> personAttributeMap = new HashMap<>();
 	private Map<View, PersonAttributeType> viewPersonAttributeTypeMap = new HashMap<>();
+	private static TableRow.LayoutParams marginParams;
+
+	private TableLayout personTableLayout;
 
 	public static AddEditPatientFragment newInstance() {
 		return new AddEditPatientFragment();
@@ -161,6 +171,8 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		kinRelationship = (EditText)v.findViewById(R.id.kinRelationship);
 		kinPhonenumber = (EditText)v.findViewById(R.id.kinPhonenumber);
 		kinResidence = (EditText)v.findViewById(R.id.kinResidence);
+
+		personTableLayout = (TableLayout)v.findViewById(R.id.personTableLayout);
 
 		gen = (RadioGroup)v.findViewById(R.id.gender);
 		progressBar = (ProgressBar)v.findViewById(R.id.progress_bar);
@@ -364,12 +376,6 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		ToastUtil.notifyLong(getResources().getString(R.string.registration_core_info));
 	}
 
-	@Override
-	public void setCivilStatus(List<ConceptAnswer> answers) {
-		ArrayAdapter<ConceptAnswer> conceptAnswerArrayAdapter =
-				new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, answers);
-		civilStatus.setAdapter(conceptAnswerArrayAdapter);
-	}
 
 	@Override
 	public void setPatientIdentifierType(PatientIdentifierType patientIdentifierType) {
@@ -379,6 +385,105 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 	@Override
 	public void showToast(String message, ToastUtil.ToastType toastType) {
 		ToastUtil.showShortToast(getContext(), toastType, message);
+	}
+
+	@Override
+	public void loadPersonAttributeTypes(List<PersonAttributeType> personAttributeTypeList) {
+		for (PersonAttributeType personAttributeType : personAttributeTypeList) {
+			TableRow row = new TableRow(getContext());
+			row.setPadding(0, 20, 0, 10);
+			TextView label = new TextView(getContext());
+			label.setText(personAttributeType.getDisplay() + ":");
+			label.setTextSize(17);
+			label.setTextColor(getResources().getColor(R.color.dark_grey));
+			row.addView(label, 0);
+
+			String datatypeClass = personAttributeType.getFormat();
+			if (StringUtils.isBlank(datatypeClass)) {
+				continue;
+			}
+
+			if (datatypeClass.equalsIgnoreCase("org.openmrs.customdatatype.datatype.BooleanDatatype")) {
+				RadioButton booleanType = new RadioButton(getContext());
+				booleanType.setLayoutParams(marginParams);
+
+				// set default value
+				Boolean defaultValue = mPresenter.searchPersonAttributeValueByType(personAttributeType);
+				if(defaultValue != null){
+					booleanType.setChecked(defaultValue);
+				}
+
+				row.addView(booleanType, 1);
+				viewPersonAttributeTypeMap.put(booleanType, personAttributeType);
+			} else if (datatypeClass.equalsIgnoreCase("org.openmrs.customdatatype.datatype.DateDatatype")) {
+				EditText dateType = new EditText(getContext());
+				dateType.setFocusable(true);
+				dateType.setTextSize(17);
+				dateType.setLayoutParams(marginParams);
+
+				// set default value
+				String defaultValue = mPresenter.searchPersonAttributeValueByType(personAttributeType);
+				if(StringUtils.notEmpty(defaultValue)){
+					dateType.setText(defaultValue);
+				}
+				row.addView(dateType, 1);
+				viewPersonAttributeTypeMap.put(dateType, personAttributeType);
+			} else if (datatypeClass.equalsIgnoreCase("org.openmrs.module.coreapps.customdatatype.CodedConceptDatatype")) {
+				// get coded concept uuid
+				String conceptUuid = personAttributeType.getConcept().getUuid();
+				Spinner conceptAnswersDropdown = new Spinner(getContext());
+				conceptAnswersDropdown.setLayoutParams(marginParams);
+				mPresenter.getConceptNames(conceptUuid, conceptAnswersDropdown);
+				row.addView(conceptAnswersDropdown, 1);
+				viewPersonAttributeTypeMap.put(conceptAnswersDropdown, personAttributeType);
+			} else if (datatypeClass.equalsIgnoreCase("org.openmrs.customdatatype.datatype.FreeTextDatatype")) {
+				EditText freeTextType = new EditText(getContext());
+				freeTextType.setFocusable(true);
+				freeTextType.setTextSize(17);
+				freeTextType.setLayoutParams(marginParams);
+
+				// set default value
+				String defaultValue = mPresenter.searchPersonAttributeValueByType(personAttributeType);
+				if(StringUtils.notEmpty(defaultValue)){
+					freeTextType.setText(defaultValue);
+				}
+
+				row.addView(freeTextType, 1);
+				viewPersonAttributeTypeMap.put(freeTextType, personAttributeType);
+			}
+
+			personTableLayout.addView(row);
+		}
+	}
+
+	@Override
+	public void updateConceptNamesView(Spinner conceptNamesDropdown, List<ConceptName> conceptNames) {
+		PersonAttributeType personAttributeType = viewPersonAttributeTypeMap.get(conceptNamesDropdown);
+		ArrayAdapter<ConceptName> conceptNameArrayAdapter = new ArrayAdapter<ConceptName>(this.getActivity(),
+				android.R.layout.simple_spinner_dropdown_item, conceptNames);
+		conceptNamesDropdown.setAdapter(conceptNameArrayAdapter);
+
+		// set existing visit attribute if any
+		String visitTypeUuid = mPresenter.searchPersonAttributeValueByType(personAttributeType);
+		if(null != visitTypeUuid){
+			setDefaultDropdownSelection(conceptNameArrayAdapter, visitTypeUuid, conceptNamesDropdown);
+		}
+
+		conceptNamesDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				ConceptName conceptName = conceptNames.get(position);
+				PersonAttribute personAttribute = new PersonAttribute();
+				personAttribute.setValue(conceptName.getUuid());
+				personAttribute.setPersonAttributeType(personAttributeType);
+				personAttributeMap.clear();
+				personAttributeMap.put(conceptName.getUuid(), personAttribute);
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {}
+		});
+
 	}
 
 	private void fillFields(final Patient patient) {
@@ -520,5 +625,13 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		TextWatcher textWatcher = new PatientBirthdateValidatorWatcher(eddob, edmonth, edyr);
 		edmonth.addTextChangedListener(textWatcher);
 		edyr.addTextChangedListener(textWatcher);
+	}
+
+	private <T extends BaseOpenmrsObject> void setDefaultDropdownSelection(ArrayAdapter<T> arrayAdapter, String searchUuid, Spinner dropdown){
+		for(int count = 0; count < arrayAdapter.getCount(); count++){
+			if(arrayAdapter.getItem(count).getUuid().equalsIgnoreCase(searchUuid)){
+				dropdown.setSelection(count);
+			}
+		}
 	}
 }

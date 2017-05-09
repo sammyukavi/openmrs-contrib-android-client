@@ -15,6 +15,7 @@
 package org.openmrs.mobile.activities.addeditpatient;
 
 import android.util.Log;
+import android.widget.Spinner;
 
 import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.api.RestApi;
@@ -24,12 +25,14 @@ import org.openmrs.mobile.dao.PatientDAO;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.impl.ConceptDataService;
+import org.openmrs.mobile.data.impl.ConceptNameDataService;
 import org.openmrs.mobile.data.impl.PatientDataService;
 import org.openmrs.mobile.data.impl.PatientIdentifierTypeDataService;
 import org.openmrs.mobile.data.impl.PersonAttributeTypeDataService;
-import org.openmrs.mobile.models.Concept;
+import org.openmrs.mobile.models.ConceptName;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.PatientIdentifierType;
+import org.openmrs.mobile.models.PersonAttribute;
 import org.openmrs.mobile.models.PersonAttributeType;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.NetworkUtils;
@@ -40,14 +43,15 @@ import java.util.List;
 
 public class AddEditPatientPresenter extends BasePresenter implements AddEditPatientContract.Presenter {
 
-	private final AddEditPatientContract.View mPatientInfoView;
+	private final AddEditPatientContract.View patientRegistrationView;
 
 	private PatientDataService patientDataService;
 	private ConceptDataService conceptDataService;
 	private PersonAttributeTypeDataService personAttributeTypeDataService;
 	private PatientIdentifierTypeDataService patientIdentifierTypeDataService;
+	private ConceptNameDataService conceptNameDataService;
 	private RestApi restApi;
-	private Patient mPatient;
+	private Patient patient;
 	private String patientToUpdateId;
 	private List<String> mCounties;
 	private boolean registeringPatient = false;
@@ -55,33 +59,35 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 	private int page = 0;
 	private int limit = 10;
 
-	public AddEditPatientPresenter(AddEditPatientContract.View mPatientInfoView,
+	public AddEditPatientPresenter(AddEditPatientContract.View patientRegistrationView,
 			List<String> countries,
 			String patientToUpdateId) {
-		this.mPatientInfoView = mPatientInfoView;
-		this.mPatientInfoView.setPresenter(this);
+		this.patientRegistrationView = patientRegistrationView;
+		this.patientRegistrationView.setPresenter(this);
 		this.mCounties = countries;
 		this.patientToUpdateId = patientToUpdateId;
 		this.patientDataService = new PatientDataService();
 		this.conceptDataService = new ConceptDataService();
 		this.patientIdentifierTypeDataService = new PatientIdentifierTypeDataService();
 		this.personAttributeTypeDataService = new PersonAttributeTypeDataService();
+		this.conceptNameDataService = new ConceptNameDataService();
 		this.restApi = RestServiceBuilder.createService(RestApi.class);
 	}
 
-	public AddEditPatientPresenter(AddEditPatientContract.View mPatientInfoView, PatientApi patientApi,
+	public AddEditPatientPresenter(AddEditPatientContract.View patientRegistrationView, PatientApi patientApi,
 			Patient mPatient, String patientToUpdateId,
 			List<String> mCounties, RestApi restApi) {
-		this.mPatientInfoView = mPatientInfoView;
+		this.patientRegistrationView = patientRegistrationView;
 		this.patientDataService = new PatientDataService();
 		this.conceptDataService = new ConceptDataService();
-		this.mPatient = mPatient;
+		this.patient = mPatient;
 		this.patientToUpdateId = patientToUpdateId;
 		this.mCounties = mCounties;
 		this.restApi = restApi;
-		this.mPatientInfoView.setPresenter(this);
+		this.patientRegistrationView.setPresenter(this);
 		this.patientIdentifierTypeDataService = new PatientIdentifierTypeDataService();
 		this.personAttributeTypeDataService = new PersonAttributeTypeDataService();
+		this.conceptNameDataService = new ConceptNameDataService();
 	}
 
 	private boolean validate(Patient patient) {
@@ -105,7 +111,8 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		boolean kinPhonenumberError = false;
 		boolean kinResidenceError = false;
 
-		mPatientInfoView.setErrorsVisibility(familyNameError, lastNameError, dateOfBirthError, genderError, subCountyError,
+		patientRegistrationView
+				.setErrorsVisibility(familyNameError, lastNameError, dateOfBirthError, genderError, subCountyError,
 				countyError, patientFileNumberError, civilStatusError, occupationError, subCountyError, nationalityError,
 				patientIdNoError, clinicError, wardError, phonenumberError, kinNameError, kinRelationshipError,
 				kinPhonenumberError, kinResidenceError);
@@ -139,10 +146,10 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 						!nationalityError && !patientIdNoError && !clinicError && !wardError && !phonenumberError
 						&& !kinNameError && !kinRelationshipError && !kinPhonenumberError && !kinResidenceError;
 		if (result) {
-			mPatient = patient;
+			this.patient = patient;
 			return true;
 		} else {
-			mPatientInfoView.setErrorsVisibility(familyNameError, lastNameError, dateOfBirthError, genderError,
+			patientRegistrationView.setErrorsVisibility(familyNameError, lastNameError, dateOfBirthError, genderError,
 					subCountyError, countyError, patientFileNumberError, civilStatusError, occupationError, subCountyError,
 					nationalityError, patientIdNoError, clinicError, wardError, phonenumberError, kinNameError,
 					kinRelationshipError, kinPhonenumberError, kinResidenceError);
@@ -152,7 +159,6 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 
 	@Override
 	public void subscribe() {
-		getCivilStatus();
 		getPatientIdentifierTypes();
 		getPersonAttributeTypes();
 	}
@@ -166,50 +172,50 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 	@Override
 	public void confirmRegister(Patient patient) {
 		if (!registeringPatient && validate(patient)) {
-			mPatientInfoView.setProgressBarVisibility(true);
-			mPatientInfoView.hideSoftKeys();
+			patientRegistrationView.setProgressBarVisibility(true);
+			patientRegistrationView.hideSoftKeys();
 			registeringPatient = true;
 			findSimilarPatients(patient);
 		} else {
-			mPatientInfoView.scrollToTop();
+			patientRegistrationView.scrollToTop();
 		}
 	}
 
 	@Override
 	public void confirmUpdate(Patient patient) {
 		if (!registeringPatient && validate(patient)) {
-			mPatientInfoView.setProgressBarVisibility(true);
-			mPatientInfoView.hideSoftKeys();
+			patientRegistrationView.setProgressBarVisibility(true);
+			patientRegistrationView.hideSoftKeys();
 			registeringPatient = true;
 			updatePatient(patient);
 		} else {
-			mPatientInfoView.scrollToTop();
+			patientRegistrationView.scrollToTop();
 		}
 	}
 
 	@Override
 	public void finishAddPatientActivity() {
-		mPatientInfoView.finishAddPatientActivity();
+		patientRegistrationView.finishAddPatientActivity();
 	}
 
 	@Override
 	public void registerPatient(Patient patient) {
-		mPatientInfoView.setProgressBarVisibility(true);
+		patientRegistrationView.setProgressBarVisibility(true);
 		if (NetworkUtils.hasNetwork()) {
 			DataService.GetSingleCallback<Patient> getSingleCallback = new DataService.GetSingleCallback<Patient>() {
 				@Override
 				public void onCompleted(Patient entity) {
-					mPatientInfoView
+					patientRegistrationView
 							.showToast(ApplicationConstants.entityName.PATIENTS
 									+ ApplicationConstants.toastMessages.addSuccessMessage, ToastUtil.ToastType.SUCCESS);
-					mPatientInfoView.startPatientDashboardActivity(entity);
-					mPatientInfoView.finishAddPatientActivity();
+					patientRegistrationView.startPatientDashboardActivity(entity);
+					patientRegistrationView.finishAddPatientActivity();
 				}
 
 				@Override
 				public void onError(Throwable t) {
-					mPatientInfoView.setProgressBarVisibility(false);
-					mPatientInfoView
+					patientRegistrationView.setProgressBarVisibility(false);
+					patientRegistrationView
 							.showToast(ApplicationConstants.entityName.PATIENTS + ApplicationConstants.toastMessages
 									.addErrorMessage, ToastUtil.ToastType.ERROR);
 				}
@@ -223,13 +229,13 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 	/*	patientApi.updatePatient(patient, new DefaultResponseCallbackListener() {
 			@Override
 			public void onResponse() {
-				mPatientInfoView.finishAddPatientActivity();
+				patientRegistrationView.finishAddPatientActivity();
 			}
 
 			@Override
 			public void onErrorResponse(String fetchErrorMessage) {
 				registeringPatient = false;
-				mPatientInfoView.setProgressBarVisibility(false);
+				patientRegistrationView.setProgressBarVisibility(false);
 			}
 		});*/
 	}
@@ -243,14 +249,14 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 					if (patients.isEmpty()) {
 						registerPatient(patient);
 					} else {
-						mPatientInfoView.showSimilarPatientDialog(patients, patient);
+						patientRegistrationView.showSimilarPatientDialog(patients, patient);
 					}
 				}
 
 				@Override
 				public void onError(Throwable t) {
 					Log.e("User Error", "Error", t.fillInStackTrace());
-					mPatientInfoView.showToast(ApplicationConstants.entityName.PATIENTS + ApplicationConstants
+					patientRegistrationView.showToast(ApplicationConstants.entityName.PATIENTS + ApplicationConstants
 							.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 				}
 			};
@@ -261,22 +267,24 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		}
 	}
 
-	public void getCivilStatus() {
+	public void getConceptNames(String uuid, Spinner conceptAnswersDropdown) {
 		if (NetworkUtils.hasNetwork()) {
-			DataService.GetSingleCallback<Concept> getSingleCallback = new DataService.GetSingleCallback<Concept>() {
-				@Override
-				public void onCompleted(Concept entity) {
-					mPatientInfoView.setCivilStatus(entity.getAnswers());
-				}
+			DataService.GetMultipleCallback<ConceptName> getMultipleCallback =
+					new DataService.GetMultipleCallback<ConceptName>() {
 
-				@Override
-				public void onError(Throwable t) {
-					Log.e("Civil Status Error", "Error", t.fillInStackTrace());
-					mPatientInfoView.showToast(ApplicationConstants.entityName.CIVIL_STATUS + ApplicationConstants
-							.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
-				}
-			};
-			conceptDataService.getByUUID(ApplicationConstants.CIVIL_STATUS_UUID, getSingleCallback);
+						@Override
+						public void onCompleted(List<ConceptName> entities) {
+							patientRegistrationView.updateConceptNamesView(conceptAnswersDropdown, entities);
+						}
+
+						@Override
+						public void onError(Throwable t) {
+							Log.e("Civil Status Error", "Error", t.fillInStackTrace());
+							patientRegistrationView.showToast(ApplicationConstants.entityName.CIVIL_STATUS + ApplicationConstants
+									.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
+						}
+					};
+			conceptNameDataService.getByConceptUuid(uuid, getMultipleCallback);
 		} else {
 			// get the users from the local storage.
 		}
@@ -291,7 +299,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 					if (!entities.isEmpty()) {
 						for (int i = 0; i < entities.size(); i++) {
 							if (entities.get(i).getRequired()) {
-								mPatientInfoView.setPatientIdentifierType(entities.get(i));
+								patientRegistrationView.setPatientIdentifierType(entities.get(i));
 							}
 						}
 					}
@@ -300,7 +308,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 				@Override
 				public void onError(Throwable t) {
 					Log.e("Identifier Type Error", "Error", t.fillInStackTrace());
-					mPatientInfoView
+					patientRegistrationView
 							.showToast(ApplicationConstants.entityName.IDENTIFIER_TPYES + ApplicationConstants.toastMessages
 									.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 				}
@@ -319,9 +327,11 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 				@Override
 				public void onCompleted(List<PersonAttributeType> personAttributeTypes) {
 					if (!personAttributeTypes.isEmpty()) {
-						System.out.println(personAttributeTypes);
+
+						patientRegistrationView.loadPersonAttributeTypes(personAttributeTypes);
 					} else {
-						/*mPatientInfoView.showToast(ApplicationConstants.toastMessages.attributeTypeInfo, ToastUtil.ToastType
+						/*patientRegistrationView.showToast(ApplicationConstants.toastMessages.attributeTypeInfo, ToastUtil
+						.ToastType
 								.NOTICE);*/
 					}
 				}
@@ -329,12 +339,29 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 				@Override
 				public void onError(Throwable t) {
 					Log.e("Attribute Type Error", "Error", t.fillInStackTrace());
-					mPatientInfoView.showToast(ApplicationConstants.entityName.ATTRIBUTE_TPYES + ApplicationConstants
+					patientRegistrationView.showToast(ApplicationConstants.entityName.ATTRIBUTE_TPYES + ApplicationConstants
 							.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 				}
 			};
 			personAttributeTypeDataService.getAll(false, null, getMultipleCallback);
 		}
+	}
+
+	@Override
+	public <T> T searchPersonAttributeValueByType(PersonAttributeType personAttributeType) {
+		if (null != getPatient() && null != getPatient().getPerson().getPersonAttributes()) {
+			for (PersonAttribute personAttribute : getPatient().getPerson().getPersonAttributes()) {
+				if (personAttribute.getUuid().equalsIgnoreCase(personAttributeType.getUuid())) {
+					return (T)personAttribute.getValue();
+				}
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public Patient getPatient() {
+		return patient;
 	}
 
 	@Override

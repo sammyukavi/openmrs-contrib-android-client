@@ -32,9 +32,10 @@ public class Person extends BaseOpenmrsEntity {
 	@Transient
 	@Expose
 	private List<PersonAddress> addresses = new ArrayList<PersonAddress>();
+
 	@Transient
 	@Expose
-	private List<PersonAttribute> attributes = new ArrayList<PersonAttribute>();
+	private List<PersonAttribute> personAttributes;
 
 	/**
 	 * @return The names
@@ -122,17 +123,11 @@ public class Person extends BaseOpenmrsEntity {
 		}
 	}
 
-	/**
-	 * @return The attributes
-	 */
-	public List<PersonAttribute> getAttributes() {
-		return attributes;
+	public List<PersonAttribute> getPersonAttributes() {
+		return personAttributes;
 	}
 
-	/**
-	 * @param attributes The attributes
-	 */
-	public void setAttributes(List<PersonAttribute> attributes) {
-		this.attributes = attributes;
+	public void setPersonAttributes(List<PersonAttribute> personAttributes) {
+		this.personAttributes = personAttributes;
 	}
 }

@@ -28,6 +28,7 @@ public abstract class ApplicationConstants {
 	public static final String LAST_LOGIN_SERVER_URL = "last_login_server_url";
 	public static final String DEFAULT_OPEN_MRS_URL = "http://192.168.2.34:9996/openmrs/";
 	public static final String CIVIL_STATUS_UUID = "1054AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+	public static final String FAMILY_MEMBER_UUID = "1560AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 	public static final String PATIENT_UUID = "1027a3b6-6129-48e0-91c6-edb8ec7e8f3e";
 	public static final String VISIT_UUID = "591a39b0-d788-4d8d-b89c-8225b9185e18";
 	//discuss on using the openhmis

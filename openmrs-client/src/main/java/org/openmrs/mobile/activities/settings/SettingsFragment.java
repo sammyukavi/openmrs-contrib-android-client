@@ -26,19 +26,19 @@ import org.openmrs.mobile.utilities.FontsUtil;
 
 public class SettingsFragment extends ACBaseFragment<SettingsContract.Presenter> implements SettingsContract.View {
 
-    private View mRootView;
+	private View mRootView;
 
-    public static SettingsFragment newInstance() {
-        return new SettingsFragment();
-    }
+	public static SettingsFragment newInstance() {
+		return new SettingsFragment();
+	}
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mRootView = inflater.inflate(R.layout.fragment_settings, container, false);
-        // Font config
-        FontsUtil.setFont((ViewGroup) this.getActivity().findViewById(android.R.id.content));
+	@Override
+	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+		mRootView = inflater.inflate(R.layout.fragment_settings, container, false);
+		// Font config
+		FontsUtil.setFont((ViewGroup)this.getActivity().findViewById(android.R.id.content));
 
-        return mRootView;
-    }
+		return mRootView;
+	}
 
 }

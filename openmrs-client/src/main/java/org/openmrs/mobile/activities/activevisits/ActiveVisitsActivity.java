@@ -24,44 +24,45 @@ import org.openmrs.mobile.activities.ACBaseActivity;
 
 public class ActiveVisitsActivity extends ACBaseActivity {
 
-    public ActiveVisitsContract.Presenter mPresenter;
+	public ActiveVisitsContract.Presenter mPresenter;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getLayoutInflater().inflate(R.layout.activity_active_visits, frameLayout);
-        setTitle(R.string.nav_active_visits);
-        // Create fragment
-        ActiveVisitsFragment activeVisitsFragment = (ActiveVisitsFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
-        if (activeVisitsFragment == null) {
-            activeVisitsFragment = ActiveVisitsFragment.newInstance();
-        }
-        if (!activeVisitsFragment.isActive()) {
-            addFragmentToActivity(getSupportFragmentManager(), activeVisitsFragment, R.id.contentFrame);
-        }
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		getLayoutInflater().inflate(R.layout.activity_active_visits, frameLayout);
+		setTitle(R.string.nav_active_visits);
+		// Create fragment
+		ActiveVisitsFragment activeVisitsFragment =
+				(ActiveVisitsFragment)getSupportFragmentManager().findFragmentById(R.id.contentFrame);
+		if (activeVisitsFragment == null) {
+			activeVisitsFragment = ActiveVisitsFragment.newInstance();
+		}
+		if (!activeVisitsFragment.isActive()) {
+			addFragmentToActivity(getSupportFragmentManager(), activeVisitsFragment, R.id.contentFrame);
+		}
 
-        mPresenter = new ActiveVisitsPresenter(activeVisitsFragment, mOpenMRS);
-    }
+		mPresenter = new ActiveVisitsPresenter(activeVisitsFragment, mOpenMRS);
+	}
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-    }
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+	}
 
-    @Override
-    public void onBackPressed() {
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.addCategory(Intent.CATEGORY_HOME);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-        }
-    }
+	@Override
+	public void onBackPressed() {
+		if (drawer.isDrawerOpen(GravityCompat.START)) {
+			drawer.closeDrawer(GravityCompat.START);
+		} else {
+			Intent intent = new Intent(Intent.ACTION_MAIN);
+			intent.addCategory(Intent.CATEGORY_HOME);
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			startActivity(intent);
+		}
+	}
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return true;
-    }
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		return true;
+	}
 
 }

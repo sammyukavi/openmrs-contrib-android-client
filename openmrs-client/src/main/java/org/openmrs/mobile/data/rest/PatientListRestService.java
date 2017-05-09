@@ -11,6 +11,7 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface PatientListRestService {
+
     @GET(RestConstants.GET_BY_UUID)
     Call<PatientList> getByUuid(@Path("restPath") String restPath,
                                 @Path("uuid") String uuid,

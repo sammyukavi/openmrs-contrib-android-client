@@ -15,24 +15,24 @@
 package org.openmrs.mobile.utilities;
 
 public final class StringUtils {
-    private static final String NULL_AS_STRING = "null";
-    private static final String SPACE_CHAR = " ";
+	private static final String NULL_AS_STRING = "null";
+	private static final String SPACE_CHAR = " ";
 
-    public static boolean notNull(String string) {
-        return null != string && !NULL_AS_STRING.equals(string.trim());
-    }
+	public static boolean notNull(String string) {
+		return null != string && !NULL_AS_STRING.equals(string.trim());
+	}
 
-    public static boolean isBlank(String string) {
-        return null == string || SPACE_CHAR.equals(string);
-    }
+	public static boolean isBlank(String string) {
+		return null == string || SPACE_CHAR.equals(string);
+	}
 
-    public static boolean notEmpty(String string) {
-        return string != null && !string.isEmpty();
-    }
+	public static boolean notEmpty(String string) {
+		return string != null && !string.isEmpty();
+	}
 
-    public static String unescapeJavaString(String st) {
+	public static String unescapeJavaString(String st) {
 
-        StringBuilder sb = new StringBuilder(st.length());
+		StringBuilder sb = new StringBuilder(st.length());
 
         for (int i = 0; i < st.length(); i++) {
             char ch = st.charAt(i);

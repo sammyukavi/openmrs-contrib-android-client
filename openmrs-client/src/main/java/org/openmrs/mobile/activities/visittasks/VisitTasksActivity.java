@@ -16,52 +16,65 @@ package org.openmrs.mobile.activities.visittasks;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.GravityCompat;
 import android.view.Menu;
+import android.view.View;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
 
 public class VisitTasksActivity extends ACBaseActivity {
 
-    public VisitTasksContract.Presenter mPresenter;
+	public VisitTasksContract.Presenter mPresenter;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getLayoutInflater().inflate(R.layout.activity_visit_tasks, frameLayout);
-        setTitle(R.string.nav_visit_tasks);
-        // Create fragment
-        VisitTasksFragment visitTasksFragment = (VisitTasksFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
-        if (visitTasksFragment == null) {
-            visitTasksFragment = VisitTasksFragment.newInstance();
-        }
-        if (!visitTasksFragment.isActive()) {
-            addFragmentToActivity(getSupportFragmentManager(), visitTasksFragment, R.id.contentFrame);
-        }
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		getLayoutInflater().inflate(R.layout.activity_visit_tasks, frameLayout);
+		setTitle(R.string.nav_visit_tasks);
 
-        mPresenter = new VisitTasksPresenter(visitTasksFragment, mOpenMRS);
-    }
+		// Create fragment
+		VisitTasksFragment visitTasksFragment =
+				(VisitTasksFragment)getSupportFragmentManager().findFragmentById(R.id.contentFrame);
+		if (visitTasksFragment == null) {
+			visitTasksFragment = VisitTasksFragment.newInstance();
+		}
+		if (!visitTasksFragment.isActive()) {
+			addFragmentToActivity(getSupportFragmentManager(), visitTasksFragment, R.id.contentFrame);
+		}
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-    }
+		//adding
+		FloatingActionButton floatingActionButton = (FloatingActionButton)findViewById(R.id.visitTaskFab);
+		floatingActionButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mPresenter.displayAddTask(true);
+			}
+		});
 
-    @Override
-    public void onBackPressed() {
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.addCategory(Intent.CATEGORY_HOME);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-        }
-    }
+		mPresenter = new VisitTasksPresenter(visitTasksFragment, mOpenMRS);
+	}
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return true;
-    }
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (drawer.isDrawerOpen(GravityCompat.START)) {
+			drawer.closeDrawer(GravityCompat.START);
+		} else {
+			Intent intent = new Intent(Intent.ACTION_MAIN);
+			intent.addCategory(Intent.CATEGORY_HOME);
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			startActivity(intent);
+		}
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		return true;
+	}
 
 }

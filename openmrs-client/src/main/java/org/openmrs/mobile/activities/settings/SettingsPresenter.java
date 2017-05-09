@@ -19,16 +19,15 @@ import org.openmrs.mobile.application.OpenMRS;
 
 public class SettingsPresenter extends BasePresenter implements SettingsContract.Presenter {
 
+	private SettingsContract.View findPatientView;
 
-    private SettingsContract.View findPatientView;
+	public SettingsPresenter(SettingsContract.View view, OpenMRS openMRS) {
+		this.findPatientView = view;
+		this.findPatientView.setPresenter(this);
+	}
 
-    public SettingsPresenter(SettingsContract.View view, OpenMRS openMRS) {
-        this.findPatientView = view;
-        this.findPatientView.setPresenter(this);
-    }
+	@Override
+	public void subscribe() {
 
-    @Override
-    public void subscribe() {
-
-    }
+	}
 }

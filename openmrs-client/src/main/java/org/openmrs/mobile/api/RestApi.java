@@ -11,16 +11,16 @@
 package org.openmrs.mobile.api;
 
 import org.openmrs.mobile.models.Encounter;
-import org.openmrs.mobile.models.EncounterTypeEntity;
-import org.openmrs.mobile.models.Encountercreate;
+import org.openmrs.mobile.models.EncounterCreate;
+import org.openmrs.mobile.models.EncounterType;
 import org.openmrs.mobile.models.FormResource;
 import org.openmrs.mobile.models.IdGenPatientIdentifiers;
-import org.openmrs.mobile.models.IdentifierType;
 import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Module;
 import org.openmrs.mobile.models.Obscreate;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
+import org.openmrs.mobile.models.PatientIdentifierType;
 import org.openmrs.mobile.models.PatientPhoto;
 import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.models.Session;
@@ -42,94 +42,92 @@ import retrofit2.http.Url;
 
 public interface RestApi {
 
+	@GET("form?v=custom:(uuid,name,resources)")
+	Call<Results<FormResource>> getForms();
 
-    @GET("form?v=custom:(uuid,name,resources)")
-    Call<Results<FormResource>> getForms();
+	@GET("location?tag=Login%20Location")
+	Call<Results<Location>> getLocations(@Query("v") String representation);
 
-    @GET("location?tag=Login%20Location")
-    Call<Results<Location>> getLocations(@Query("v") String representation);
+	@GET()
+	Call<Results<Location>> getLocations(@Url String url,
+			@Query("tag") String tag,
+			@Query("v") String representation);
 
+	@GET("patientidentifiertype")
+	Call<Results<PatientIdentifierType>> getIdentifierTypes();
 
-    @GET()
-    Call<Results<Location>> getLocations(@Url String url,
-                                         @Query("tag") String tag,
-                                         @Query("v") String representation);
+	@GET("module/idgen/generateIdentifier.form?source=1")
+	Call<IdGenPatientIdentifiers> getPatientIdentifiers(@Query("username") String username,
+			@Query("password") String password);
 
-    @GET("patientidentifiertype")
-    Call<Results<IdentifierType>> getIdentifierTypes();
+	@GET("patient/{uuid}")
+	Call<Patient> getPatientByUUID(@Path("uuid") String uuid,
+			@Query("v") String representation);
 
-    @GET("module/idgen/generateIdentifier.form?source=1")
-    Call<IdGenPatientIdentifiers> getPatientIdentifiers(@Query("username") String username,
-                                                        @Query("password") String password);
+	@GET("patient?lastviewed&v=full")
+	Call<Results<Patient>> getLastViewedPatients();
 
-    @GET("patient/{uuid}")
-    Call<Patient> getPatientByUUID(@Path("uuid") String uuid,
-                                   @Query("v") String representation);
+	@POST("patient")
+	Call<Patient> createPatient(
+			@Body Patient patient);
 
-    @GET("patient?lastviewed&v=full")
-    Call<Results<Patient>> getLastViewedPatients();
+	@GET("patient")
+	Call<Results<Patient>> getPatients(@Query("q") String searchQuery,
+			@Query("v") String representation);
 
-    @POST("patient")
-    Call<Patient> createPatient(
-            @Body Patient patient);
+	@POST("personimage/{uuid}")
+	Call<PatientPhoto> uploadPatientPhoto(@Path("uuid") String uuid,
+			@Body PatientPhoto patientPhoto);
 
-    @GET("patient")
-    Call<Results<Patient>> getPatients(@Query("q") String searchQuery,
-                                       @Query("v") String representation);
+	@GET("personimage/{uuid}")
+	Call<ResponseBody> downloadPatientPhoto(@Path("uuid") String uuid);
 
-    @POST("personimage/{uuid}")
-    Call<PatientPhoto> uploadPatientPhoto(@Path("uuid") String uuid,
-                                          @Body PatientPhoto patientPhoto);
+	@GET("patient?matchSimilar=true&v=full")
+	Call<Results<Patient>> getSimilarPatients(@QueryMap Map<String, String> patientData);
 
-    @GET("personimage/{uuid}")
-    Call<ResponseBody> downloadPatientPhoto(@Path("uuid") String uuid);
+	@POST("obs")
+	Call<Observation> createObs(@Body Obscreate obscreate);
 
-    @GET("patient?matchSimilar=true&v=full")
-    Call<Results<Patient>> getSimilarPatients(@QueryMap Map<String, String> patientData);
+	@POST("encounter")
+	Call<Encounter> createEncounter(@Body EncounterCreate encounterCreate);
 
-    @POST("obs")
-    Call<Observation> createObs(@Body Obscreate obscreate);
+	@GET("encountertype")
+	Call<Results<EncounterType>> getEncounterTypes();
 
-    @POST("encounter")
-    Call<Encounter> createEncounter(@Body Encountercreate encountercreate);
+	@GET("session")
+	Call<Session> getSession();
 
-    @GET("encountertype")
-    Call<Results<EncounterTypeEntity>> getEncounterTypes();
+	@POST("visit/{uuid}")
+	Call<Visit> endVisitByUUID(@Path("uuid") String uuid, @Body Visit stopDatetime);
 
-    @GET("session")
-    Call<Session> getSession();
+	@POST("visit")
+	Call<Visit> startVisit(@Body Visit visit);
 
-    @POST("visit/{uuid}")
-    Call<Visit> endVisitByUUID(@Path("uuid") String uuid, @Body Visit stopDatetime);
+	@GET("visit")
+	Call<Results<Visit>> findVisitsByPatientUUID(@Query("patient") String patientUUID,
+			@Query("v") String representation);
 
-    @POST("visit")
-    Call<Visit> startVisit(@Body Visit visit);
+	@GET("visittype")
+	Call<Results<VisitType>> getVisitType();
 
-    @GET("visit")
-    Call<Results<Visit>> findVisitsByPatientUUID(@Query("patient") String patientUUID,
-                                                 @Query("v") String representation);
+	@GET("encounter")
+	Call<Results<Encounter>> getLastVitals(@Query("patient") String patientUUID,
+			@Query("encounterType") String encounterType,
+			@Query("v") String representation,
+			@Query("limit") int limit,
+			@Query("order") String order);
 
-    @GET("visittype")
-    Call<Results<VisitType>> getVisitType();
+	@POST("patient/{uuid}")
+	Call<Patient> updatePatient(@Body Patient patient, @Path("uuid") String uuid,
+			@Query("v") String representation);
 
-    @GET("encounter")
-    Call<Results<Encounter>> getLastVitals(@Query("patient") String patientUUID,
-                                           @Query("encounterType") String encounterType,
-                                           @Query("v") String representation,
-                                           @Query("limit") int limit,
-                                           @Query("order") String order);
+	@GET("module")
+	Call<Results<Module>> getModules(@Query("v") String representation);
 
-    @POST("patient/{uuid}")
-    Call<Patient> updatePatient(@Body Patient patient, @Path("uuid") String uuid,
-                                @Query("v") String representation);
+	@GET("user")
+	Call<Results<User>> getUserInfo(@Query("q") String username);
 
-    @GET("module")
-    Call<Results<Module>> getModules(@Query("v") String representation);
-
-    @GET("user")
-    Call<Results<User>> getUserInfo(@Query("q") String username);
-
-    @GET("user/{uuid}")
-    Call<User> getFullUserInfo(@Path("uuid") String uuid);
+	@GET("user/{uuid}")
+	Call<User> getFullUserInfo(@Path("uuid") String uuid);
 
 }

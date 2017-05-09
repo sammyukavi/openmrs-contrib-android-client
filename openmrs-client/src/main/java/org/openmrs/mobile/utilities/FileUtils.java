@@ -14,8 +14,6 @@
 
 package org.openmrs.mobile.utilities;
 
-
-
 import org.openmrs.mobile.application.OpenMRS;
 
 import java.io.ByteArrayOutputStream;
@@ -26,35 +24,35 @@ import java.io.InputStream;
 
 public final class FileUtils {
 
-    private FileUtils() {
+	private FileUtils() {
 
-    }
+	}
 
-    public static byte[] fileToByteArray(String path) {
-        byte[] buffer = new byte[4096];
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        InputStream ios = null;
-        int read = 0;
-        try {
-            ios = new FileInputStream(path);
-            while ((read = ios.read(buffer)) != -1) {
-                out.write(buffer, 0, read);
-            }
-        } catch (FileNotFoundException e) {
-            OpenMRS.getInstance().getOpenMRSLogger().d(e.toString());
-        } catch (IOException e) {
-            OpenMRS.getInstance().getOpenMRSLogger().d(e.toString());
-        } finally {
-            try {
-                if (ios != null) {
-                    ios.close();
-                }
-                out.close();
-            } catch (IOException e) {
-                OpenMRS.getInstance().getOpenMRSLogger().d(e.toString());
-            }
-        }
+	public static byte[] fileToByteArray(String path) {
+		byte[] buffer = new byte[4096];
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		InputStream ios = null;
+		int read = 0;
+		try {
+			ios = new FileInputStream(path);
+			while ((read = ios.read(buffer)) != -1) {
+				out.write(buffer, 0, read);
+			}
+		} catch (FileNotFoundException e) {
+			OpenMRS.getInstance().getOpenMRSLogger().d(e.toString());
+		} catch (IOException e) {
+			OpenMRS.getInstance().getOpenMRSLogger().d(e.toString());
+		} finally {
+			try {
+				if (ios != null) {
+					ios.close();
+				}
+				out.close();
+			} catch (IOException e) {
+				OpenMRS.getInstance().getOpenMRSLogger().d(e.toString());
+			}
+		}
 
-        return out.toByteArray();
-    }
+		return out.toByteArray();
+	}
 }

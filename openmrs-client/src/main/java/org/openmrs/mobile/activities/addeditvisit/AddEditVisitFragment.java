@@ -115,7 +115,7 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
             confirmMessage.setVisibility(View.GONE);
         }
 
-        setVisitTitleText(startVisit ? getString(R.string.start_visit_title) : getString(R.string.edit_visit_title));
+        setVisitTitleText(startVisit ? getString(R.string.label_start_visit) : getString(R.string.label_edit_visit));
         setSpinnerVisibility(false);
     }
 

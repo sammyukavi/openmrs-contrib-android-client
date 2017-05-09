@@ -15,53 +15,53 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class Concept extends BaseOpenmrsObject{
 
-    @SerializedName("datatype")
-    @Expose
-    private Datatype datatype;
+public class Concept extends BaseOpenmrsObject {
 
-    @SerializedName("description")
-    @Expose
-    private String description;
 
-    @SerializedName("conceptClass")
-    @Expose
-    private ConceptClass conceptClass;
+	@SerializedName("datatype")
+	@Expose
+	private Datatype datatype;
 
+	@SerializedName("description")
+	@Expose
+	private String description;
+
+	@SerializedName("conceptClass")
+	@Expose
+	private ConceptClass conceptClass;
     @SerializedName("answers")
     @Expose
     private List<ConceptAnswer> answers;
+	public Datatype getDatatype() {
+		return datatype;
+	}
 
-    public Datatype getDatatype() {
-        return datatype;
-    }
+	public void setDatatype(Datatype datatype) {
+		this.datatype = datatype;
+	}
 
-    public void setDatatype(Datatype datatype) {
-        this.datatype = datatype;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	public ConceptClass getConceptClass() {
+		return conceptClass;
+	}
 
-    public ConceptClass getConceptClass() {
-        return conceptClass;
-    }
+	public void setConceptClass(ConceptClass conceptClass) {
+		this.conceptClass = conceptClass;
+	}
 
-    public void setConceptClass(ConceptClass conceptClass) {
-        this.conceptClass = conceptClass;
-    }
+	public List<ConceptAnswer> getAnswers() {
+		return answers;
+	}
 
-    public List<ConceptAnswer> getAnswers() {
-        return answers;
-    }
-
-    public void setAnswers(List<ConceptAnswer> answers) {
-        this.answers = answers;
-    }
+	public void setAnswers(List<ConceptAnswer> answers) {
+		this.answers = answers;
+	}
 }

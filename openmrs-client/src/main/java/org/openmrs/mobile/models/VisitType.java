@@ -12,14 +12,14 @@ package org.openmrs.mobile.models;
 
 public class VisitType extends BaseOpenmrsMetadata {
 
-    public VisitType(String display) {
-        this.display = display;
-    }
+	public VisitType(String display) {
+		this.display = display;
+	}
 
-    public VisitType(String display, String uuid) {
-        this.uuid = uuid;
-        this.display = display;
-    }
+	public VisitType(String display, String uuid) {
+		this.uuid = uuid;
+		this.display = display;
+	}
 
     @Override
     public String toString() {

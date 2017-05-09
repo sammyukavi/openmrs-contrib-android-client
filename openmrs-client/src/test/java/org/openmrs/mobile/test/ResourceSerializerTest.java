@@ -22,7 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openmrs.mobile.models.IdentifierType;
+import org.openmrs.mobile.models.PatientIdentifierType;
 import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.PatientIdentifier;
@@ -125,7 +125,7 @@ public class ResourceSerializerTest {
 
     private PatientIdentifier generateIdentifier() {
         PatientIdentifier patientIdentifier = new PatientIdentifier();
-        IdentifierType identifierType = new IdentifierType();
+        PatientIdentifierType identifierType = new PatientIdentifierType();
         identifierType.setUuid("identifierTypeUUID");
         patientIdentifier.setIdentifierType(identifierType);
         Location location = new Location();

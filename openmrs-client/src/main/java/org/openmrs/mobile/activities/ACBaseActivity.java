@@ -11,7 +11,6 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-
 package org.openmrs.mobile.activities;
 
 import android.content.Intent;
@@ -40,7 +39,7 @@ import org.openmrs.mobile.activities.capturevitals.CaptureVitalsActivity;
 import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
 import org.openmrs.mobile.activities.findpatientrecord.FindPatientRecordActivity;
 import org.openmrs.mobile.activities.login.LoginActivity;
-import org.openmrs.mobile.activities.patientlists.PatientListsActivity;
+import org.openmrs.mobile.activities.patientlist.PatientListActivity;
 import org.openmrs.mobile.activities.settings.SettingsActivity;
 import org.openmrs.mobile.activities.visittasks.VisitTasksActivity;
 import org.openmrs.mobile.application.OpenMRS;
@@ -53,7 +52,6 @@ import org.openmrs.mobile.utilities.ApplicationConstants;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public abstract class ACBaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-
 	protected final OpenMRS mOpenMRS = OpenMRS.getInstance();
 	protected final OpenMRSLogger mOpenMRSLogger = mOpenMRS.getOpenMRSLogger();
 	protected FragmentManager mFragmentManager;
@@ -252,7 +250,7 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 				startActivity(new Intent(this, CaptureVitalsActivity.class));
 				break;
 			case R.id.navItemPatientLists:
-				startActivity(new Intent(this, PatientListsActivity.class));
+				startActivity(new Intent(this, PatientListActivity.class));
 				break;
 			case R.id.navItemVisitTasks:
 				startActivity(new Intent(this, VisitTasksActivity.class));
@@ -265,5 +263,4 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 				break;
 		}
 	}
-
 }

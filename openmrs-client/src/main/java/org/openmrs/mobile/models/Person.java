@@ -10,45 +10,63 @@
 
 package org.openmrs.mobile.models;
 
+import android.graphics.Bitmap;
+
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
-import org.greenrobot.greendao.annotation.Transient;
-
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Person extends BaseOpenmrsEntity {
+public class Person extends BaseOpenmrsEntity implements Serializable {
 
-	@Transient
+	private Integer personId;
+
+	@SerializedName("names")
 	@Expose
 	private List<PersonName> names = new ArrayList<PersonName>();
+	@SerializedName("gender")
 	@Expose
 	private String gender;
+	@SerializedName("birthdate")
 	@Expose
 	private String birthdate;
+	@SerializedName("birthdateEstimated")
 	@Expose
 	private boolean birthdateEstimated;
-
-	@Transient
+	@SerializedName("addresses")
 	@Expose
 	private List<PersonAddress> addresses = new ArrayList<PersonAddress>();
-
-	@Transient
+	@SerializedName("personAttributes")
 	@Expose
-	private List<PersonAttribute> personAttributes;
+	private List<PersonAttribute> personAttributes = new ArrayList<PersonAttribute>();
 
-	/**
-	 * @return The names
-	 */
-	public List<PersonName> getNames() {
-		return names;
+	private Bitmap photo;
+
+	@SerializedName("deathDate")
+	@Expose
+	private String deathDate;
+
+	@SerializedName("age")
+	@Expose
+	private Integer age;
+
+	public Integer getPersonId() {
+		return personId;
+	}
+
+	public void setPersonId(Integer personId) {
+		this.personId = personId;
 	}
 
 	/**
-	 * @param names The names
+	 *
+	 * @return
+	 * The names
 	 */
-	public void setNames(List<PersonName> names) {
-		this.names = names;
+	public List<PersonName> getNames() {
+		return names;
 	}
 
 	public PersonName getName() {
@@ -60,59 +78,76 @@ public class Person extends BaseOpenmrsEntity {
 	}
 
 	/**
-	 * @return The gender
+	 *
+	 * @param names
+	 * The names
+	 */
+	public void setNames(List<PersonName> names) {
+		this.names = names;
+	}
+
+	/**
+	 *
+	 * @return
+	 * The gender
 	 */
 	public String getGender() {
 		return gender;
 	}
 
 	/**
-	 * @param gender The gender
+	 *
+	 * @param gender
+	 * The gender
 	 */
 	public void setGender(String gender) {
 		this.gender = gender;
 	}
 
 	/**
-	 * @return The birthdate
+	 *
+	 * @return
+	 * The birthdate
 	 */
 	public String getBirthdate() {
 		return birthdate;
 	}
 
 	/**
-	 * @param birthdate The birthdate
+	 *
+	 * @param birthdate
+	 * The birthdate
 	 */
 	public void setBirthdate(String birthdate) {
 		this.birthdate = birthdate;
 	}
 
 	/**
-	 * @return The birthdateEstimated
+	 *
+	 * @return
+	 * The birthdateEstimated
 	 */
 	public boolean getBirthdateEstimated() {
 		return birthdateEstimated;
 	}
 
 	/**
-	 * @param birthdateEstimated The birthdate
+	 *
+	 * @param birthdateEstimated
+	 * The birthdate
 	 */
 	public void setBirthdateEstimated(boolean birthdateEstimated) {
 		this.birthdateEstimated = birthdateEstimated;
 	}
 
+
 	/**
-	 * @return The addresses
+	 *
+	 * @return
+	 * The addresses
 	 */
 	public List<PersonAddress> getAddresses() {
 		return addresses;
-	}
-
-	/**
-	 * @param addresses The addresses
-	 */
-	public void setAddresses(List<PersonAddress> addresses) {
-		this.addresses = addresses;
 	}
 
 	public PersonAddress getAddress() {
@@ -123,11 +158,55 @@ public class Person extends BaseOpenmrsEntity {
 		}
 	}
 
+	/**
+	 *
+	 * @param addresses
+	 * The addresses
+	 */
+	public void setAddresses(List<PersonAddress> addresses) {
+		this.addresses = addresses;
+	}
+
+	/**
+	 *
+	 * @return
+	 * The personAttributes
+	 */
 	public List<PersonAttribute> getPersonAttributes() {
 		return personAttributes;
 	}
 
+	/**
+	 *
+	 * @param personAttributes
+	 * The personAttributes
+	 */
 	public void setPersonAttributes(List<PersonAttribute> personAttributes) {
 		this.personAttributes = personAttributes;
+	}
+
+
+	public Bitmap getPhoto() {
+		return photo;
+	}
+
+	public void setPhoto(Bitmap patientPhoto) {
+		this.photo = patientPhoto;
+	}
+
+	public String getDeathDate() {
+		return deathDate;
+	}
+
+	public void setDeathDate(String deathDate) {
+		this.deathDate = deathDate;
+	}
+
+	public void setAge(Integer age) {
+		this.age = age;
+	}
+
+	public Integer getAge() {
+		return age;
 	}
 }

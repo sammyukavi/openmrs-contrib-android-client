@@ -12,52 +12,55 @@
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
 
+
 package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 public class ConceptAnswer extends BaseOpenmrsObject {
-	// Fields
-	private Integer conceptAnswerId;
 
-	/**
-	 * The question concept that this object is answering
-	 */
-	@Expose
-	private Concept concept;
+    // Fields
+    private Integer conceptAnswerId;
 
-	/**
-	 * The answer to the question
-	 */
-	@Expose
-	private Concept answerConcept;
+    /**
+     * The question concept that this object is answering
+     */
+    @Expose
+    private Concept concept;
 
-	public Integer getConceptAnswerId() {
-		return conceptAnswerId;
-	}
+    /**
+     * The answer to the question
+     */
+    @Expose
+    private Concept answerConcept;
 
-	public void setConceptAnswerId(Integer conceptAnswerId) {
-		this.conceptAnswerId = conceptAnswerId;
-	}
+    public Integer getConceptAnswerId() {
+        return conceptAnswerId;
+    }
 
-	public Concept getConcept() {
-		return concept;
-	}
+    public void setConceptAnswerId(Integer conceptAnswerId) {
+        this.conceptAnswerId = conceptAnswerId;
+    }
 
-	public void setConcept(Concept concept) {
-		this.concept = concept;
-	}
+    public Concept getConcept() {
+        return concept;
+    }
 
-	public Concept getAnswerConcept() {
-		return answerConcept;
-	}
+    public void setConcept(Concept concept) {
+        this.concept = concept;
+    }
 
-	public void setAnswerConcept(Concept answerConcept) {
-		this.answerConcept = answerConcept;
-	}
+    public Concept getAnswerConcept() {
+        return answerConcept;
+    }
 
-	@Override
-	public String toString() {
-		return getDisplay();
-	}
+    public void setAnswerConcept(Concept answerConcept) {
+        this.answerConcept = answerConcept;
+    }
+
+    @Override
+    public String toString() {
+        return getDisplay();
+    }
 }

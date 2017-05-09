@@ -22,11 +22,23 @@ public class Results<T> implements Serializable {
 	@Expose
 	private List<T> results = new ArrayList<T>();
 
+	@SerializedName("length")
+	@Expose
+	private int length;
+
 	public List<T> getResults() {
 		return results;
 	}
 
 	public void setResults(List<T> results) {
 		this.results = results;
+	}
+
+	public int getLength() {
+		return length;
+	}
+
+	public void setLength(int length) {
+		this.length = length;
 	}
 }

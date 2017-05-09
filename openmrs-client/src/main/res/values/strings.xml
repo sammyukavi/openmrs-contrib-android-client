@@ -280,7 +280,7 @@
 	<string name="nav_active_visits">Active Visits</string>
 	<string name="nav_capture_vitals">Capture Vitals</string>
 	<string name="nav_register_patient">Register Patient</string>
-	<string name="nav_patient_lists">Patient Lists</string>
+	<string name="nav_patient_list">Patient List</string>
 	<string name="nav_visit_tasks">Visit Tasks</string>
 	<string name="nav_settings">Settings</string>
 	
@@ -306,6 +306,7 @@
 	<string name="label_active">Active</string>
 	
 	<string name="label_start_visit">Start Visit</string>
+	<string name="label_edit_visit">Edit Visit</string>
 	<string name="label_end_visit">End Visit</string>
 	<string name="label_create_past_visit">Create Past Visit</string>
 	<string name="label_visit_tasks">Visit Tasks</string>
@@ -387,12 +388,26 @@
 	
 	<!--Activity Logs-->
 	<string name="title_activity_logs">Logs</string>
-	<string name="no_patients_found">No patient with the given name was found</string>
 	<string name="search_for_patients">Please type the first 3 characters of the patient name on the search bar for you to
 		view meaningful results</string>
-	<string name="number_of_patients">%1$s patients found</string>
+	
 	<string name="findPatientsTitle">Search to find patients</string>
 	<string name="patientNotFound">Patient not found</string>
 	<string name="patientsFoundTitle">No. of Patients Found</string>
+	
+	<!-- Fragment_patient_list -->
+	<string name="no_patients_found">No patients found</string>
+	<string name="select_patient_list">Select Patient List:</string>
+	<string name="no_patient_list">No patient lists found!</string>
+	<string name="number_of_patients">%1$s patients found</string>
+	
+	<!-- Add/edit visit -->
+	<string name="select_visit_type">Select Visit Type:</string>
+	<string name="visit_type">Visit Type:</string>
+	<string name="upload_image">Upload Image</string>
+	<string name="enter_caption">Enter caption</string>
+	<string name="view_images">View Images</string>
+	<string name="visit_photo">Visit Photo</string>
+
 
 </resources>

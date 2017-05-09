@@ -135,7 +135,7 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, S> implements
 		supplier.get().enqueue(new Callback<Results<E>>() {
 			@Override
 			public void onResponse(Call<Results<E>> call, Response<Results<E>> response) {
-				callback.onCompleted(response.body().getResults());
+				callback.onCompleted(response.body().getResults(),response.body().getLength());
 			}
 
 			@Override

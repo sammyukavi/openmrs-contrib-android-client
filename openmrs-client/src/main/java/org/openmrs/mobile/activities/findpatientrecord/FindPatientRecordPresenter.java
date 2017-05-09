@@ -67,7 +67,7 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 		if (NetworkUtils.hasNetwork()) {
 			DataService.GetMultipleCallback<Patient> getMultipleCallback = new DataService.GetMultipleCallback<Patient>() {
 				@Override
-				public void onCompleted(List<Patient> patients) {
+				public void onCompleted(List<Patient> patients, int length) {
 					findPatientView.setProgressBarVisibility(false);
 					if (patients.isEmpty()) {
 						findPatientView.setNumberOfPatientsView(0);
@@ -110,7 +110,7 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 			PagingInfo pagingInfo = new PagingInfo(page, limit);
 			DataService.GetMultipleCallback<Patient> getMultipleCallback = new DataService.GetMultipleCallback<Patient>() {
 				@Override
-				public void onCompleted(List<Patient> patients) {
+				public void onCompleted(List<Patient> patients, int length) {
 					findPatientView.setProgressBarVisibility(false);
 					if (!patients.isEmpty()) {
 						findPatientView.setNumberOfPatientsView(0);

@@ -246,7 +246,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 			PagingInfo pagingInfo = new PagingInfo(page, limit);
 			DataService.GetMultipleCallback<Patient> getMultipleCallback = new DataService.GetMultipleCallback<Patient>() {
 				@Override
-				public void onCompleted(List<Patient> patients) {
+				public void onCompleted(List<Patient> patients, int length) {
 					if (patients.isEmpty()) {
 						registerPatient(patient);
 					} else {
@@ -270,11 +270,10 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 
 	public void getConceptNames(String uuid, Spinner conceptAnswersDropdown) {
 		if (NetworkUtils.hasNetwork()) {
-			DataService.GetMultipleCallback<ConceptName> getMultipleCallback =
-					new DataService.GetMultipleCallback<ConceptName>() {
+			DataService.GetMultipleCallback<ConceptName> getMultipleCallback = new DataService.GetMultipleCallback<ConceptName>() {
 
 						@Override
-						public void onCompleted(List<ConceptName> entities) {
+						public void onCompleted(List<ConceptName> entities, int length) {
 							patientRegistrationView.updateConceptNamesView(conceptAnswersDropdown, entities);
 						}
 
@@ -294,10 +293,9 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 
 	public void getPatientIdentifierTypes() {
 		if (NetworkUtils.hasNetwork()) {
-			DataService.GetMultipleCallback<PatientIdentifierType> getMultipleCallback = new DataService
-					.GetMultipleCallback<PatientIdentifierType>() {
+			DataService.GetMultipleCallback<PatientIdentifierType> getMultipleCallback = new DataService.GetMultipleCallback<PatientIdentifierType>() {
 				@Override
-				public void onCompleted(List<PatientIdentifierType> entities) {
+				public void onCompleted(List<PatientIdentifierType> entities, int length) {
 					if (!entities.isEmpty()) {
 						for (int i = 0; i < entities.size(); i++) {
 							if (entities.get(i).getRequired()) {
@@ -323,11 +321,10 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 
 	public void getPersonAttributeTypes() {
 		if (NetworkUtils.hasNetwork()) {
-			DataService.GetMultipleCallback<PersonAttributeType> getMultipleCallback = new DataService
-					.GetMultipleCallback<PersonAttributeType>() {
+			DataService.GetMultipleCallback<PersonAttributeType> getMultipleCallback = new DataService.GetMultipleCallback<PersonAttributeType>() {
 
 				@Override
-				public void onCompleted(List<PersonAttributeType> personAttributeTypes) {
+				public void onCompleted(List<PersonAttributeType> personAttributeTypes, int length) {
 					if (!personAttributeTypes.isEmpty()) {
 						for (int i = 0; i < personAttributeTypes.size(); i++) {
 							String uuid = personAttributeTypes.get(i).getUuid();

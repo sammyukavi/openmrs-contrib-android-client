@@ -27,10 +27,8 @@ public abstract class ApplicationConstants {
 	public static final String LAST_SESSION_TOKEN = "last_session_id";
 	public static final String LAST_LOGIN_SERVER_URL = "last_login_server_url";
 	public static final String DEFAULT_OPEN_MRS_URL = "http://192.168.2.34:9996/openmrs/";
-	public static final String CIVIL_STATUS_UUID = "1054AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
-	public static final String FAMILY_MEMBER_UUID = "1560AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 	public static final String PATIENT_UUID = "1027a3b6-6129-48e0-91c6-edb8ec7e8f3e";
-	public static final String VISIT_UUID = "591a39b0-d788-4d8d-b89c-8225b9185e18";
+	public static final String VISIT_UUID = "98ba2669-802c-4d00-8a89-8b28e47823bf";
 	//discuss on using the openhmis
 	// demo as the main test server to avoid changes here.
 
@@ -77,21 +75,6 @@ public abstract class ApplicationConstants {
 		public static final int MAX_PATIENT_AGE = 120;
 	}
 
-	public abstract static class BundleKeys {
-		public static final String CUSTOM_DIALOG_BUNDLE = "customDialogBundle";
-		public static final String PATIENT_ID_BUNDLE = "patientID";
-		public static final String PATIENTS_START_INDEX = "patientsStartIndex";
-		public static final String VISIT_ID = "visitID";
-		public static final String ENCOUNTERTYPE = "encounterType";
-		public static final String VALUEREFERENCE = "valueReference";
-		public static final String FORM_NAME = "formName";
-		public static final String CALCULATED_LOCALLY = "CALCULATED_LOCALLY";
-		public static final String PATIENTS_AND_MATCHES = "PATIENTS_AND_MATCHES";
-		public static final String FORM_FIELDS_BUNDLE = "formFieldsBundle";
-		public static final String FORM_FIELDS_LIST_BUNDLE = "formFieldsListBundle";
-		public static final String PATIENT_QUERY_BUNDLE = "patientQuery";
-	}
-
 	public abstract static class CustomIntentActions {
 		public static final String ACTION_AUTH_FAILED_BROADCAST = "org.openmrs.mobile.intent.action.AUTH_FAILED_BROADCAST";
 		public static final String ACTION_UNAUTHORIZED_BROADCAST = "org.openmrs.mobile.intent.action"
@@ -110,10 +93,25 @@ public abstract class ApplicationConstants {
 				"org.openmrs.mobile.intent.action.SERVER_NOT_SUPPORTED_BROADCAST";
 	}
 
-	public abstract static class EncounterTypes {
+	public abstract static class EncounterTypeEntitys {
 		public static final String VITALS = "67a71486-1a54-468f-ac3e-7091a9a79584";
-		public static String[] ENCOUNTER_TYPES_DISPLAYS =
-				{ EncounterType.VITALS, EncounterType.ADMISSION, EncounterType.DISCHARGE, EncounterType.VISIT_NOTE };
+		/*public static String[] ENCOUNTER_TYPES_DISPLAYS =
+				{ EncounterType.VITALS, EncounterTypeEntity.ADMISSION, EncounterTypeEntity.DISCHARGE, EncounterTypeEntity.VISIT_NOTE };*/
+	}
+
+	public abstract static class BundleKeys {
+		public static final String CUSTOM_DIALOG_BUNDLE = "customDialogBundle";
+		public static final String PATIENT_ID_BUNDLE = "patientID";
+		public static final String VISIT_ID_BUNDLE = "visitID";
+		public static final String PROVIDER_ID_BUNDLE = "providerID";
+		public static final String EncounterTypeEntity = "EncounterTypeEntity";
+		public static final String VALUEREFERENCE = "valueReference";
+		public static final String FORM_NAME = "formName";
+		public static final String CALCULATED_LOCALLY = "CALCULATED_LOCALLY";
+		public static final String PATIENTS_AND_MATCHES = "PATIENTS_AND_MATCHES";
+		public static final String FORM_FIELDS_BUNDLE = "formFieldsBundle";
+		public static final String FORM_FIELDS_LIST_BUNDLE = "formFieldsListBundle";
+		public static final String PATIENT_QUERY_BUNDLE = "patientQuery";
 	}
 
 	public abstract static class Tags {
@@ -130,19 +128,19 @@ public abstract class ApplicationConstants {
 	}
 
 	public static class entityName {
-		public static final String VISIT_TASKS  = "Visit Task(s)";
-		public static final String PATIENTS  = "Patient(s)";
-		public static final String LAST_VIEWED_PATIENT  = "Last Viewed Patient(s)";
-		public static final String CIVIL_STATUS  = "Civil Status";
-		public static final String ATTRIBUTE_TPYES  = "Attribute Type(s)";
-		public static final String IDENTIFIER_TPYES  = "Identifier Type(s)";
-		public static final String PREDEFINED_TASKS  = "Predefined task(s)";
-		public static final String VISITS  = "Visit(s)";
+		public static final String VISIT_TASKS = "Visit Task(s)";
+		public static final String PATIENTS = "Patient(s)";
+		public static final String LAST_VIEWED_PATIENT = "Last Viewed Patient(s)";
+		public static final String CIVIL_STATUS = "Civil Status";
+		public static final String ATTRIBUTE_TPYES = "Attribute Type(s)";
+		public static final String IDENTIFIER_TPYES = "Identifier Type(s)";
+		public static final String PREDEFINED_TASKS = "Predefined task(s)";
+		public static final String VISITS = "Visit(s)";
 	}
 
 	public static class unwatedPersonAttributes {
 		public static final String BIRTH_PLACE_UUID = "8d8718c2-c2cc-11de-8d13-0010c6dffd0f";
-		public static final	String HEALTH_CENTER_UUID = "8d87236c-c2cc-11de-8d13-0010c6dffd0f";
+		public static final String HEALTH_CENTER_UUID = "8d87236c-c2cc-11de-8d13-0010c6dffd0f";
 		public static final String HEALTH_DISTRICT_UUID = "8d872150-c2cc-11de-8d13-0010c6dffd0f";
 		public static final String MOTHER_NAME_UUID = "8d871d18-c2cc-11de-8d13-0010c6dffd0f";
 		public static final String RACE_UUID = "8d871386-c2cc-11de-8d13-0010c6dffd0f";

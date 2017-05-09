@@ -23,7 +23,6 @@ import org.openmrs.mobile.listeners.retrofit.DefaultResponseCallbackListener;
 import org.openmrs.mobile.listeners.retrofit.StartVisitResponseListenerCallback;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.EncounterCreate;
-import org.openmrs.mobile.models.EncounterType;
 import org.openmrs.mobile.utilities.NetworkUtils;
 import org.openmrs.mobile.utilities.ToastUtil;
 
@@ -154,7 +153,7 @@ public class EncounterService extends IntentService {
 		visitDAO.getVisitByUuid(encounter.getVisit().getUuid())
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(visit -> {
-					encounter.setEncounterType(new EncounterType(formname));
+					//encounter.setEncounterType(new EncounterTypeEntity(formname));
 					for (int i = 0; i < encounterCreate.getObservations().size(); i++) {
 						encounter.getObservations().get(i).setDisplayValue
 								(encounterCreate.getObservations().get(i).getValue());
@@ -198,5 +197,4 @@ public class EncounterService extends IntentService {
 					"and will sync when internet connection is restored. ");
 		}
 	}
-
 }

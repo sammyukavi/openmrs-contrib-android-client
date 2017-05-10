@@ -14,8 +14,6 @@
 
 package org.openmrs.mobile.utilities;
 
-import org.openmrs.mobile.models.EncounterType;
-
 public abstract class ApplicationConstants {
 	public static final String EMPTY_STRING = "";
 	public static final String SERVER_URL = "server_url";
@@ -96,7 +94,8 @@ public abstract class ApplicationConstants {
 	public abstract static class EncounterTypeEntitys {
 		public static final String VITALS = "67a71486-1a54-468f-ac3e-7091a9a79584";
 		/*public static String[] ENCOUNTER_TYPES_DISPLAYS =
-				{ EncounterType.VITALS, EncounterTypeEntity.ADMISSION, EncounterTypeEntity.DISCHARGE, EncounterTypeEntity.VISIT_NOTE };*/
+				{ EncounterType.VITALS, EncounterTypeEntity.ADMISSION, EncounterTypeEntity.DISCHARGE, EncounterTypeEntity
+				.VISIT_NOTE };*/
 	}
 
 	public abstract static class BundleKeys {

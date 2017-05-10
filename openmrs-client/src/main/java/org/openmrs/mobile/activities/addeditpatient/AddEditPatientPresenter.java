@@ -202,15 +202,17 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 
 	@Override
 	public void registerPatient(Patient patient) {
-		patientRegistrationView.setProgressBarVisibility(true);
+		setRegistering(true);
 		if (NetworkUtils.hasNetwork()) {
 			DataService.GetSingleCallback<Patient> getSingleCallback = new DataService.GetSingleCallback<Patient>() {
 				@Override
 				public void onCompleted(Patient entity) {
+					setRegistering(false);
 					if (entity != null) {
 						patientRegistrationView
 								.showToast(ApplicationConstants.entityName.PATIENTS
-										+ ApplicationConstants.toastMessages.addSuccessMessage, ToastUtil.ToastType.SUCCESS);
+										+ ApplicationConstants.toastMessages.addSuccessMessage, ToastUtil.ToastType
+										.SUCCESS);
 						patientRegistrationView.startPatientDashboardActivity(entity);
 						patientRegistrationView.finishAddPatientActivity();
 					} else {
@@ -222,6 +224,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 
 				@Override
 				public void onError(Throwable t) {
+					setRegistering(false);
 					patientRegistrationView.setProgressBarVisibility(false);
 					patientRegistrationView
 							.showToast(ApplicationConstants.entityName.PATIENTS + ApplicationConstants.toastMessages

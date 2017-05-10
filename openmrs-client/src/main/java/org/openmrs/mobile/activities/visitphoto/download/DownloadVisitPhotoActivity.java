@@ -3,19 +3,16 @@ package org.openmrs.mobile.activities.visitphoto.download;
 import android.os.Bundle;
 import android.view.Menu;
 
-import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
-import org.openmrs.mobile.utilities.ApplicationConstants;
-import org.openmrs.mobile.utilities.StringUtils;
 
 public class DownloadVisitPhotoActivity extends ACBaseActivity {
 
-    public DownloadVisitPhotoContract.Presenter presenter;
+	public DownloadVisitPhotoContract.Presenter presenter;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        /*getLayoutInflater().inflate(R.layout.activity_addedit_visit, frameLayout);
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		/*getLayoutInflater().inflate(R.layout.activity_addedit_visit, frameLayout);
 
         Bundle extras = getIntent().getExtras();
         String patientUuid;
@@ -23,7 +20,8 @@ public class DownloadVisitPhotoActivity extends ACBaseActivity {
             patientUuid = extras.getString(ApplicationConstants.BundleKeys.PATIENT_ID_BUNDLE);
             if(StringUtils.notEmpty(patientUuid)){
                 DownloadVisitPhotoFragment visitPhotoFragment =
-                        (DownloadVisitPhotoFragment) getSupportFragmentManager().findFragmentById(R.id.photoDownloadsContentFrame);
+                        (DownloadVisitPhotoFragment) getSupportFragmentManager().findFragmentById(R.id
+                        .photoDownloadsContentFrame);
                 if(visitPhotoFragment == null){
                     visitPhotoFragment = DownloadVisitPhotoFragment.newInstance();
                 }
@@ -35,11 +33,11 @@ public class DownloadVisitPhotoActivity extends ACBaseActivity {
                 presenter = new DownloadVisitPhotoPresenter(visitPhotoFragment, patientUuid);
             }
         } */
-    }
+	}
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        return true;
-    }
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		return true;
+	}
 }

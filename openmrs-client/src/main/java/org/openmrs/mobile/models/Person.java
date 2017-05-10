@@ -61,12 +61,17 @@ public class Person extends BaseOpenmrsEntity implements Serializable {
 	}
 
 	/**
-	 *
-	 * @return
-	 * The names
+	 * @return The names
 	 */
 	public List<PersonName> getNames() {
 		return names;
+	}
+
+	/**
+	 * @param names The names
+	 */
+	public void setNames(List<PersonName> names) {
+		this.names = names;
 	}
 
 	public PersonName getName() {
@@ -78,76 +83,59 @@ public class Person extends BaseOpenmrsEntity implements Serializable {
 	}
 
 	/**
-	 *
-	 * @param names
-	 * The names
-	 */
-	public void setNames(List<PersonName> names) {
-		this.names = names;
-	}
-
-	/**
-	 *
-	 * @return
-	 * The gender
+	 * @return The gender
 	 */
 	public String getGender() {
 		return gender;
 	}
 
 	/**
-	 *
-	 * @param gender
-	 * The gender
+	 * @param gender The gender
 	 */
 	public void setGender(String gender) {
 		this.gender = gender;
 	}
 
 	/**
-	 *
-	 * @return
-	 * The birthdate
+	 * @return The birthdate
 	 */
 	public String getBirthdate() {
 		return birthdate;
 	}
 
 	/**
-	 *
-	 * @param birthdate
-	 * The birthdate
+	 * @param birthdate The birthdate
 	 */
 	public void setBirthdate(String birthdate) {
 		this.birthdate = birthdate;
 	}
 
 	/**
-	 *
-	 * @return
-	 * The birthdateEstimated
+	 * @return The birthdateEstimated
 	 */
 	public boolean getBirthdateEstimated() {
 		return birthdateEstimated;
 	}
 
 	/**
-	 *
-	 * @param birthdateEstimated
-	 * The birthdate
+	 * @param birthdateEstimated The birthdate
 	 */
 	public void setBirthdateEstimated(boolean birthdateEstimated) {
 		this.birthdateEstimated = birthdateEstimated;
 	}
 
-
 	/**
-	 *
-	 * @return
-	 * The addresses
+	 * @return The addresses
 	 */
 	public List<PersonAddress> getAddresses() {
 		return addresses;
+	}
+
+	/**
+	 * @param addresses The addresses
+	 */
+	public void setAddresses(List<PersonAddress> addresses) {
+		this.addresses = addresses;
 	}
 
 	public PersonAddress getAddress() {
@@ -159,32 +147,18 @@ public class Person extends BaseOpenmrsEntity implements Serializable {
 	}
 
 	/**
-	 *
-	 * @param addresses
-	 * The addresses
-	 */
-	public void setAddresses(List<PersonAddress> addresses) {
-		this.addresses = addresses;
-	}
-
-	/**
-	 *
-	 * @return
-	 * The attributes
+	 * @return The attributes
 	 */
 	public List<PersonAttribute> getAttributes() {
 		return attributes;
 	}
 
 	/**
-	 *
-	 * @param attributes
-	 * The attributes
+	 * @param attributes The attributes
 	 */
 	public void setAttributes(List<PersonAttribute> attributes) {
 		this.attributes = attributes;
 	}
-
 
 	public Bitmap getPhoto() {
 		return photo;
@@ -202,11 +176,11 @@ public class Person extends BaseOpenmrsEntity implements Serializable {
 		this.deathDate = deathDate;
 	}
 
-	public void setAge(Integer age) {
-		this.age = age;
-	}
-
 	public Integer getAge() {
 		return age;
+	}
+
+	public void setAge(Integer age) {
+		this.age = age;
 	}
 }

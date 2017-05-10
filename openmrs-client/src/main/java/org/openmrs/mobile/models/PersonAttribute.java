@@ -17,39 +17,35 @@ import java.io.Serializable;
 
 public class PersonAttribute extends BaseOpenmrsObject implements Serializable {
 
-    @SerializedName("attributeType")
-    @Expose
-    private PersonAttributeType attributeType;
+	@SerializedName("attributeType")
+	@Expose
+	private PersonAttributeType attributeType;
 
-    @SerializedName("value")
-    @Expose
-    private Object value;
+	@SerializedName("value")
+	@Expose
+	private Object value;
 
-    public PersonAttributeType getAttributeType() {
-        return attributeType;
-    }
+	public PersonAttributeType getAttributeType() {
+		return attributeType;
+	}
 
-    public void setAttributeType(PersonAttributeType attributeType) {
-        this.attributeType = attributeType;
-    }
+	public void setAttributeType(PersonAttributeType attributeType) {
+		this.attributeType = attributeType;
+	}
 
-    /**
-     * 
-     * @return
-     *     The value
-     */
-    public Object getValue() {
-        return value;
-    }
+	/**
+	 * @return The value
+	 */
+	public Object getValue() {
+		return value;
+	}
 
-    /**
-     * 
-     * @param value
-     *     The value
-     */
-    public void setValue(Object value) {
-        this.value = value;
-    }
+	/**
+	 * @param value The value
+	 */
+	public void setValue(Object value) {
+		this.value = value;
+	}
 
 }
 

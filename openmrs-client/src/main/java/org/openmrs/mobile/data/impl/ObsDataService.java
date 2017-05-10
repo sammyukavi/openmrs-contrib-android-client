@@ -12,51 +12,51 @@ import retrofit2.Call;
 
 public class ObsDataService extends BaseDataService<Observation, ObsRestService> {
 
-    @Override
-    protected Class<ObsRestService> getRestServiceClass() {
-        return ObsRestService.class;
-    }
+	@Override
+	protected Class<ObsRestService> getRestServiceClass() {
+		return ObsRestService.class;
+	}
 
-    @Override
-    protected String getRestPath() {
-        return ApplicationConstants.API.REST_ENDPOINT_V1;
-    }
+	@Override
+	protected String getRestPath() {
+		return ApplicationConstants.API.REST_ENDPOINT_V1;
+	}
 
-    @Override
-    protected String getEntityName() {
-        return "obs";
-    }
+	@Override
+	protected String getEntityName() {
+		return "obs";
+	}
 
-    @Override
-    protected Call<Observation> _restGetByUuid(String restPath, String uuid, String representation) {
-        return restService.getByUuid(restPath, uuid, representation);
-    }
+	@Override
+	protected Call<Observation> _restGetByUuid(String restPath, String uuid, String representation) {
+		return restService.getByUuid(restPath, uuid, representation);
+	}
 
-    @Override
-    protected Call<Results<Observation>> _restGetAll(String restPath, PagingInfo pagingInfo, String representation) {
-        return restService.getAll(restPath, representation);
-    }
+	@Override
+	protected Call<Results<Observation>> _restGetAll(String restPath, PagingInfo pagingInfo, String representation) {
+		return restService.getAll(restPath, representation);
+	}
 
-    @Override
-    protected Call<Observation> _restCreate(String restPath, Observation entity) {
-        return null;
-    }
+	@Override
+	protected Call<Observation> _restCreate(String restPath, Observation entity) {
+		return null;
+	}
 
-    @Override
-    protected Call<Observation> _restUpdate(String restPath, Observation entity) {
-        return null;
-    }
+	@Override
+	protected Call<Observation> _restUpdate(String restPath, Observation entity) {
+		return null;
+	}
 
-    @Override
-    protected Call<Observation> _restPurge(String restPath, String uuid) {
-        return null;
-    }
+	@Override
+	protected Call<Observation> _restPurge(String restPath, String uuid) {
+		return null;
+	}
 
-    public void getVisitDocumentsObsByPatientAndConceptList(String patientUuid, GetMultipleCallback<Observation> callback){
-        executeMultipleCallback(callback, null, () -> {
-            return restService.getVisitDocumentsObsByPatientAndConceptList(buildRestRequestPath(), patientUuid,
-                    "7cac8397-53cd-4f00-a6fe-028e8d743f8e,42ed45fd-f3f6-44b6-bfc2-8bde1bb41e00",
-                    RestConstants.Representations.FULL);
-        });
-    }
+	public void getVisitDocumentsObsByPatientAndConceptList(String patientUuid, GetMultipleCallback<Observation> callback) {
+		executeMultipleCallback(callback, null, () -> {
+			return restService.getVisitDocumentsObsByPatientAndConceptList(buildRestRequestPath(), patientUuid,
+					"7cac8397-53cd-4f00-a6fe-028e8d743f8e,42ed45fd-f3f6-44b6-bfc2-8bde1bb41e00",
+					RestConstants.Representations.FULL);
+		});
+	}
 }

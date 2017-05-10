@@ -39,6 +39,7 @@ import java.util.List;
 
 public class VisitTasksFragment extends ACBaseFragment<VisitTasksContract.Presenter> implements VisitTasksContract.View {
 
+	FloatingActionButton fab;
 	private View mRootView;
 	private RecyclerView viewTasksRecyclerView;
 	private LinearLayoutManager layoutManager;
@@ -46,7 +47,6 @@ public class VisitTasksFragment extends ACBaseFragment<VisitTasksContract.Presen
 	private List<VisitPredefinedTask> predefinedTasks;
 	private List<VisitTask> visitTasksLists;
 	private Visit visit;
-	FloatingActionButton fab;
 
 	public static VisitTasksFragment newInstance() {
 		return new VisitTasksFragment();
@@ -150,7 +150,8 @@ public class VisitTasksFragment extends ACBaseFragment<VisitTasksContract.Presen
 			for (int i = 0; i < visitPredefinedTask.size(); i++) {
 				predefinedTaskName = predefinedTasks.get(i).getName();
 
-				if ((predefinedTaskName.equalsIgnoreCase(visitTasksName)) && (visitTaskStatus.equals(VisitTaskStatus.OPEN))) {
+				if ((predefinedTaskName.equalsIgnoreCase(visitTasksName)) && (visitTaskStatus
+						.equals(VisitTaskStatus.OPEN))) {
 					visitPredefinedTask.remove(i);
 				}
 			}

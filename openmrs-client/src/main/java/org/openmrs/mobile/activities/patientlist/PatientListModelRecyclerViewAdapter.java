@@ -33,58 +33,59 @@ import java.util.List;
 /**
  * Display {@link PatientListContextModel}s
  */
-public class PatientListModelRecyclerViewAdapter extends RecyclerView.Adapter<PatientListModelRecyclerViewAdapter.PatientListModelViewHolder>{
+public class PatientListModelRecyclerViewAdapter
+		extends RecyclerView.Adapter<PatientListModelRecyclerViewAdapter.PatientListModelViewHolder> {
 
-    private Activity context;
-    private PatientListContract.View view;
-    private List<PatientListContextModel> items;
+	private Activity context;
+	private PatientListContract.View view;
+	private List<PatientListContextModel> items;
 
-    public PatientListModelRecyclerViewAdapter(Activity context,
-                                               List<PatientListContextModel> patientListModels, PatientListContract.View view) {
-        this.context = context;
-        this.items = patientListModels;
-        this.view = view;
-    }
+	public PatientListModelRecyclerViewAdapter(Activity context,
+			List<PatientListContextModel> patientListModels, PatientListContract.View view) {
+		this.context = context;
+		this.items = patientListModels;
+		this.view = view;
+	}
 
-    @Override
-    public PatientListModelViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.patient_list_model_row, parent, false);
-        return new PatientListModelViewHolder(itemView);
-    }
+	@Override
+	public PatientListModelViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+		View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.patient_list_model_row, parent, false);
+		return new PatientListModelViewHolder(itemView);
+	}
 
-    @Override
-    public void onBindViewHolder(PatientListModelViewHolder holder, int position) {
-        PatientListContextModel patientListContextModel = items.get(position);
+	@Override
+	public void onBindViewHolder(PatientListModelViewHolder holder, int position) {
+		PatientListContextModel patientListContextModel = items.get(position);
 
-        holder.headerContent.setText(StringUtils.stripHtmlTags(patientListContextModel.getHeaderContent()));
-        holder.bodyContent.setText(StringUtils.stripHtmlTags(patientListContextModel.getBodyContent()));
-        holder.rowLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, AddEditVisitActivity.class);
-                intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE,
-                        patientListContextModel.getPatient().getUuid());
-                context.startActivity(intent);
-                context.finish();
-            }
-        });
-    }
+		holder.headerContent.setText(StringUtils.stripHtmlTags(patientListContextModel.getHeaderContent()));
+		holder.bodyContent.setText(StringUtils.stripHtmlTags(patientListContextModel.getBodyContent()));
+		holder.rowLayout.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(context, AddEditVisitActivity.class);
+				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE,
+						patientListContextModel.getPatient().getUuid());
+				context.startActivity(intent);
+				context.finish();
+			}
+		});
+	}
 
-    @Override
-    public int getItemCount() {
-        return items.size();
-    }
+	@Override
+	public int getItemCount() {
+		return items.size();
+	}
 
-    class PatientListModelViewHolder extends RecyclerView.ViewHolder{
-        private LinearLayout rowLayout;
-        private TextView headerContent;
-        private TextView bodyContent;
+	class PatientListModelViewHolder extends RecyclerView.ViewHolder {
+		private LinearLayout rowLayout;
+		private TextView headerContent;
+		private TextView bodyContent;
 
-        public PatientListModelViewHolder(View itemView) {
-            super(itemView);
-            rowLayout = (LinearLayout) itemView;
-            headerContent = (TextView) itemView.findViewById(R.id.headerContent);
-            bodyContent = (TextView) itemView.findViewById(R.id.bodyContent);
-        }
-    }
+		public PatientListModelViewHolder(View itemView) {
+			super(itemView);
+			rowLayout = (LinearLayout)itemView;
+			headerContent = (TextView)itemView.findViewById(R.id.headerContent);
+			bodyContent = (TextView)itemView.findViewById(R.id.bodyContent);
+		}
+	}
 }

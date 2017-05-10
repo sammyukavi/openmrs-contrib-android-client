@@ -75,6 +75,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		implements AddEditPatientContract.View {
 
 	private final static int IMAGE_REQUEST = 1;
+	private static LinearLayout.LayoutParams marginParams;
 	private LinearLayout linearLayout;
 	private LocalDate birthdate, patientEncouterDate;
 	private DateTime bdt;
@@ -87,14 +88,12 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 	private EditText fileNumber;
 	private RadioGroup gen;
 	private ProgressBar progressBar;
-
 	private Button submitConfirm;
 	private String[] counties;
 	private ImageView patientImageView;
 	private String patientName;
 	private File output = null;
 	private OpenMRSLogger logger = new OpenMRSLogger();
-
 	/*
 	*TextViews defination
 	 *  */
@@ -105,12 +104,9 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 	private TextView addrerror;
 	private TextView fileNumberError;
 	private PatientIdentifierType patientIdentifierType;
-
 	private Map<String, PersonAttribute> personAttributeMap = new HashMap<>();
 	private Map<View, PersonAttributeType> viewPersonAttributeTypeMap = new HashMap<>();
-
 	private LinearLayout personLinearLayout;
-	private static LinearLayout.LayoutParams marginParams;
 
 	public static AddEditPatientFragment newInstance() {
 		return new AddEditPatientFragment();
@@ -286,7 +282,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		setProgressBarVisibility(false);
 		CustomDialogBundle similarPatientsDialog = new CustomDialogBundle();
 		similarPatientsDialog.setTitleViewMessage(getString(R.string.similar_patients_dialog_title));
-		similarPatientsDialog.setRightButtonText(getString(R.string.action_submit));
+		similarPatientsDialog.setRightButtonText(getString(R.string.dialog_button_register_new));
 		similarPatientsDialog.setRightButtonAction(CustomFragmentDialog.OnClickAction.REGISTER_PATIENT);
 		similarPatientsDialog.setPatientsList(patients);
 		similarPatientsDialog.setNewPatient(newPatient);

@@ -14,6 +14,7 @@
 
 package org.openmrs.mobile.activities.visittasks;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -26,6 +27,7 @@ import android.view.ViewGroup;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
+import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitPredefinedTask;
@@ -47,8 +49,7 @@ public class VisitTasksFragment extends ACBaseFragment<VisitTasksContract.Presen
 	private List<VisitPredefinedTask> predefinedTasks;
 	private List<VisitTask> visitTasksLists;
 	private Visit visit;
-	private Bundle extras;
-
+	private static OpenMRS instance = OpenMRS.getInstance();
 
 	public static VisitTasksFragment newInstance() {
 		return new VisitTasksFragment();
@@ -58,8 +59,6 @@ public class VisitTasksFragment extends ACBaseFragment<VisitTasksContract.Presen
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		mRootView = inflater.inflate(R.layout.fragment_visit_tasks, container, false);
 		resolveViews(mRootView);
-
-		extras = getActivity().getIntent().getExtras();
 
 		//Adding the Recycler view
 		layoutManager = new LinearLayoutManager(this.getActivity());
@@ -144,12 +143,16 @@ public class VisitTasksFragment extends ACBaseFragment<VisitTasksContract.Presen
 
 	@Override
 	public String getPatientUuid() {
-		return extras.getString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
+		SharedPreferences sharedPreferences = instance.getOpenMRSSharedPreferences();
+		return sharedPreferences.getString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, ApplicationConstants
+				.EMPTY_STRING);
 	}
 
 	@Override
 	public String getVisitUuid() {
-		return extras.getString(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE);
+		SharedPreferences sharedPreferences = instance.getOpenMRSSharedPreferences();
+		return sharedPreferences.getString(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, ApplicationConstants
+				.EMPTY_STRING);
 	}
 
 	public List<VisitPredefinedTask> removeUsedPredefinedTasks(List<VisitPredefinedTask> visitPredefinedTask,

@@ -188,15 +188,9 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		addresses.add(address);
 		person.setAddresses(addresses);
 
+		//Add person attributes
 		List<PersonAttribute> personAttributeList = new ArrayList<>(personAttributeMap.values());
 		person.setAttributes(personAttributeList);
-
-		/*PersonAttribute personAttribute = new PersonAttribute();
-		personAttribute.setValue(ViewUtils.getInput(occupation));
-
-		List<PersonAttribute> personAttributes = new ArrayList<>();
-		personAttributes.add(personAttribute);
-		person.setAttributes(personAttributes);*/
 
 		// Add names
 		PersonName name = new PersonName();

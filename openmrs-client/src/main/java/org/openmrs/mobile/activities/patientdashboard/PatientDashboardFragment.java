@@ -14,6 +14,9 @@
 
 package org.openmrs.mobile.activities.patientdashboard;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -37,6 +40,8 @@ import org.joda.time.DateTime;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
+import org.openmrs.mobile.activities.visittasks.VisitTasksActivity;
+import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Observation;
@@ -64,6 +69,10 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
     private Patient patient;
     private LinearLayout visitNoteContainer;
     private boolean isCurrentVisit = false;
+    private String visitdetailsText = "";
+    private String visitStartDateTime;
+    private String visitStopDateTime;
+	private static OpenMRS instance = OpenMRS.getInstance();
 
     public static PatientDashboardFragment newInstance() {
         return new PatientDashboardFragment();
@@ -73,10 +82,10 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         fragmentView = inflater.inflate(R.layout.fragment_patient_dashboard, container, false);
         visitNoteContainer = (LinearLayout)fragmentView.findViewById(R.id.visitNotesContainer);
-        String patientId = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
+        String patientUuid = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
         initViewFields();
         initializeListeners();
-        mPresenter.fetchPatientData(patientId);
+        mPresenter.fetchPatientData(patientUuid);
         FontsUtil.setFont((ViewGroup)this.getActivity().findViewById(android.R.id.content));
         return fragmentView;
     }
@@ -99,7 +108,6 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
         patientGender = (TextView)fragmentView.findViewById(R.id.fetchedPatientGender);
         patientAge = (TextView)fragmentView.findViewById(R.id.fetchedPatientAge);
         visitDetails = (TextView)fragmentView.findViewById(R.id.visitDetails);
-        //TextView moreLabel = (TextView) fragmentView.findViewById(R.id.more_label);
         floatingActionMenu = (FloatingActionMenu)getActivity().findViewById(R.id.floatingActionMenu);
         floatingActionMenu.setVisibility(View.VISIBLE);
         startAuditFormButton = (FloatingActionButton)getActivity().findViewById(R.id.audit_data_form);
@@ -121,17 +129,27 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
             DateTime date = DateUtils.convertTimeString(person.getBirthdate());
             patientAge.setText(DateUtils.calculateAge(date.getYear(), date.getMonthOfYear(), date.getDayOfMonth()));
             mPresenter.fetchVisits(patient);
+			setPatientUuid(patient);
         }
     }
 
+    public void setPatientUuid(Patient patient){
+		SharedPreferences.Editor editor = instance.getOpenMRSSharedPreferences().edit();
+		editor.putString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patient.getPerson().getUuid());
+		editor.commit();
+	}
+
+	public void setVisitUuid(Visit visit){
+		SharedPreferences.Editor editor = instance.getOpenMRSSharedPreferences().edit();
+		editor.putString(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visit.getUuid());
+		editor.commit();
+	}
+
     @Override
     public void updateVisitsCard(List<Visit> visits) {
-
-        if (visits.size() >= 1) {
-            String visitdetailsText = "";
-            String visitStartDateTime;
-            String visitStopDateTime;
+        if (!visits.isEmpty()) {
             mainVisit = visits.get(0);
+            setVisitUuid(mainVisit);
             visitStopDateTime = mainVisit.getStopDatetime();
             visitStartDateTime = mainVisit.getStartDatetime();
             if (!StringUtils.notNull(visitStopDateTime)) {
@@ -163,18 +181,6 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
                 }
 
             }
-
-            //LinearLayout previousVisitsContainer = (LinearLayout) fragmentView.findViewById(R.id.previous_visits_container);
-            ///LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            //layoutParams.gravity = Gravity.CENTER;
-            //Context context = getContext();
-            //visits.remove(0);
-            /*for (int counter = 1; counter < visits.size(); counter++) {
-                Visit visit = visits.get(counter);
-                TextView pastVisitTextView = new TextView(context);
-                pastVisitTextView.setText(DateUtils.convertTime1(visit.getStartDatetime(), DateUtils.PATIENT_DASHBOARD_DATE_FORMAT) + " - " + DateUtils.convertTime1(visit.getStopDatetime(), DateUtils.PATIENT_DASHBOARD_DATE_FORMAT));
-                previousVisitsContainer.addView(pastVisitTextView);
-            }*/
 
             RecyclerView previousVisits = (RecyclerView)fragmentView.findViewById(R.id.previousVisits);
 

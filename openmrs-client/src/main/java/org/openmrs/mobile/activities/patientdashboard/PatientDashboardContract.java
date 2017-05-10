@@ -27,26 +27,26 @@ import java.util.List;
 
 public interface PatientDashboardContract {
 
-    interface View extends BaseView<Presenter> {
-        void showSnack(String s);
+	interface View extends BaseView<Presenter> {
+		void showSnack(String s);
 
-        void updateContactCard(Patient patient);
+		void updateContactCard(Patient patient);
 
-        void updateVisitsCard(List<Visit> visits);
+		void updateActiveVisitCard(List<Visit> visits);
 
-        void updateVisitNote(Observation observation);
+		void updateActiveVisitObservationsCard(Observation observation);
 
-        LinearLayout getVisitNoteContainer();
-    }
+		LinearLayout getVisitNoteContainer();
+	}
 
-    interface Presenter extends BasePresenterContract {
+	interface Presenter extends BasePresenterContract {
 
-        void fetchPatientData(final String patientId);
+		void fetchPatientData(final String patientId);
 
-        void fetchVisits(Patient patient);
+		void fetchVisits(Patient patient);
 
-        void fetchEncounterObservations(Encounter encounter);
+		void fetchEncounterObservations(Encounter encounter);
 
-    }
+	}
 
 }

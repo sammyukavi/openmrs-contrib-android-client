@@ -32,7 +32,6 @@ public class PatientDashboardActivity extends ACBaseActivity {
         super.onCreate(savedInstanceState);
         getLayoutInflater().inflate(R.layout.activity_patient_dashboard, frameLayout);
         setTitle(R.string.title_patient_details);
-        // Create fragment
         PatientDashboardFragment patientDashboardFragment = (PatientDashboardFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
         if (patientDashboardFragment == null) {
             patientDashboardFragment = PatientDashboardFragment.newInstance();
@@ -42,11 +41,6 @@ public class PatientDashboardActivity extends ACBaseActivity {
         }
 
         mPresenter = new PatientDashboardPresenter(patientDashboardFragment);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-
     }
 
     @Override

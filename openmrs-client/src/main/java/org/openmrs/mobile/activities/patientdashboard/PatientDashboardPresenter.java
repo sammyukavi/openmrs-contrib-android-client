@@ -73,7 +73,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
         visitDataService.getByPatient(patient, true, new PagingInfo(0, 20), new DataService.GetMultipleCallback<Visit>() {
             @Override
             public void onCompleted(List<Visit> visits, int length) {
-                patientDashboardView.updateVisitsCard(visits);
+                patientDashboardView.updateActiveVisitCard(visits);
             }
 
             @Override
@@ -91,7 +91,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
             public void onCompleted(List<Observation> observations, int length) {
                 for (Observation observation : observations) {
                     if (observation.getDiagnosisNote() != null && !observation.getDiagnosisNote().equals(ApplicationConstants.EMPTY_STRING)) {
-                        patientDashboardView.updateVisitNote(observation);
+                        patientDashboardView.updateActiveVisitObservationsCard(observation);
                     }
                 }
             }

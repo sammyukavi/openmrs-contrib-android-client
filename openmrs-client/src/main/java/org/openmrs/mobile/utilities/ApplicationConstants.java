@@ -25,6 +25,7 @@ public abstract class ApplicationConstants {
 	public static final String LAST_SESSION_TOKEN = "last_session_id";
 	public static final String LAST_LOGIN_SERVER_URL = "last_login_server_url";
 	public static final String DEFAULT_OPEN_MRS_URL = "http://192.168.2.34:9996/openmrs/";
+
 	//discuss on using the openhmis
 	// demo as the main test server to avoid changes here.
 
@@ -96,6 +97,7 @@ public abstract class ApplicationConstants {
 		public static final String VISIT_NOTE = "Visit Note";
 		public static final String DISCHARGE = "Discharge";
 		public static final String ADMISSION = "Admission";
+
 	}
 
 	public abstract static class BundleKeys {

@@ -230,6 +230,7 @@
 	<!--Similar patient card strings-->
 	<string name="gender_hint">gender:</string>
 	<string name="birthdate_hint">birthdate:</string>
+	<string name="age_hint">Age:</string>
 	<string name="address_hint">address:</string>
 	<string name="demographics">Demographics</string>
 	<string name="unable_to_login">Unable to login?</string>
@@ -398,8 +399,6 @@
 	<string name="select_patient_list">Select Patient List:</string>
 	<string name="no_patient_list">No patient lists found!</string>
 	<string name="number_of_patients">%1$s patients found</string>
-
-
 	<string name="search_for_patients">Please type the first 3 characters of the patient name on the search bar for you to
 		view meaningful results</string>
 	<string name="patient_metadata_label">Patient Metadata</string>
@@ -414,8 +413,6 @@
 	<string name="label_visit_note">Visit Note</string>
 	<string name="label_admit_inpatient">Admit Inpatient</string>
 	<string name="label_capture_vitals">Capture Vitals</string>
-
-	<string name="default_file_caption_message">Uploaded from Android Client</string>
-
+	<string name="default_file_caption_message">Uploaded from android client</string>
 
 </resources>

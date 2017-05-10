@@ -86,4 +86,5 @@ public class ObsDataService extends BaseDataService<Observation, ObsRestService>
 				() -> _restGetByEncounter(buildRestRequestPath(), pagingInfo, encounter.getUuid(),
 						RestConstants.Representations.FULL));
 	}
+
 }

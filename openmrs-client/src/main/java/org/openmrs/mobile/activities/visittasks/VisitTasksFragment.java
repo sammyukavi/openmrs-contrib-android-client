@@ -49,6 +49,7 @@ public class VisitTasksFragment extends ACBaseFragment<VisitTasksContract.Presen
 	private Visit visit;
 	private Bundle extras;
 
+
 	public static VisitTasksFragment newInstance() {
 		return new VisitTasksFragment();
 	}

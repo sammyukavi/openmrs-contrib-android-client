@@ -64,6 +64,10 @@ public class VisitPhotoDataService extends BaseDataService<VisitPhoto, VisitPhot
 		});
 	}
 
+	public String createImageUrl(String obsUuid, String view){
+		return ApplicationConstants.DEFAULT_OPEN_MRS_URL + buildRestRequestPath() + "?view="+view+"&obs="+obsUuid;
+	}
+
 	@Override
 	protected Call<VisitPhoto> _restGetByUuid(String restPath, String uuid, String representation) {
 		return null;

@@ -10,7 +10,7 @@ public class DownloadVisitPhotoContract {
 
 	interface View extends BaseView<DownloadVisitPhotoContract.Presenter> {
 
-		void updateVisitImages(List<VisitPhoto> visitPhotos);
+		void updateVisitImages(List<String> urls);
 	}
 
 	interface Presenter extends BasePresenterContract {

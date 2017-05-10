@@ -21,7 +21,6 @@ public class DownloadVisitPhotoPresenter extends BasePresenter implements Downlo
 	private boolean loading;
 	private VisitPhotoDataService visitPhotoDataService;
 	private ObsDataService obsDataService;
-	private List<VisitPhoto> images = new ArrayList<>();
 
 	public DownloadVisitPhotoPresenter(DownloadVisitPhotoContract.View view, String patientUuid) {
 		this.view = view;
@@ -33,32 +32,33 @@ public class DownloadVisitPhotoPresenter extends BasePresenter implements Downlo
 
 	@Override
 	public void downloadImages() {
-		images.clear();
 		// get observations for patient.
 		obsDataService.getVisitDocumentsObsByPatientAndConceptList(patientUuid,
 				new DataService.GetMultipleCallback<Observation>() {
 					@Override
 					public void onCompleted(List<Observation> observations, int length) {
+						List<String> imageUrls = new ArrayList<String>();
 						for (Observation observation : observations) {
 							// download images
-							visitPhotoDataService.downloadPhoto(observation.getUuid(), THUMBNAIL_VIEW,
+							/*visitPhotoDataService.downloadPhoto(observation.getUuid(), THUMBNAIL_VIEW,
 									new DataService.GetSingleCallback<VisitPhoto>() {
 										@Override
 										public void onCompleted(VisitPhoto entity) {
+											System.out.println("COMMENT::::" + entity.getResponseImage());
 											entity.setFileCaption(observation.getComment());
-											images.add(entity);
-
-											if (observations.indexOf(observation) == observations.size() - 1) {
-												view.updateVisitImages(images);
-											}
+											setLoading(false);
+											view.updateVisitImage(entity);
 										}
 
 										@Override
 										public void onError(Throwable t) {
 											ToastUtil.error(t.getMessage());
 										}
-									});
+									});*/
+							imageUrls.add(visitPhotoDataService.createImageUrl(observation.getUuid(), THUMBNAIL_VIEW));
 						}
+
+						view.updateVisitImages(imageUrls);
 					}
 
 					@Override

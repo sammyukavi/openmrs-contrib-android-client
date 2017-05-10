@@ -1,7 +1,10 @@
 package org.openmrs.mobile.activities.visitphoto.download;
 
+import android.graphics.Bitmap;
+
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
+import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.models.VisitPhoto;
 
 import java.util.List;
@@ -10,12 +13,16 @@ public class DownloadVisitPhotoContract {
 
 	interface View extends BaseView<DownloadVisitPhotoContract.Presenter> {
 
-		void updateVisitImages(List<String> urls);
+		void updateVisitImageUrls(List<String> urls);
+
+		void downloadImage(String obsUuid, DataService.GetSingleCallback<Bitmap> callback);
 	}
 
 	interface Presenter extends BasePresenterContract {
 
-		void downloadImages();
+		void downloadImage(String obsUuid, DataService.GetSingleCallback<Bitmap> callback);
+
+		void loadVisitDocumentObservations();
 
 		boolean isLoading();
 

@@ -2,8 +2,6 @@ package org.openmrs.mobile.activities.visitphoto.download;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,11 +10,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
-
 import org.openmrs.mobile.R;
-import org.openmrs.mobile.models.VisitPhoto;
+import org.openmrs.mobile.data.DataService;
 
 import java.util.List;
 
@@ -42,28 +37,22 @@ public class DownloadVisitPhotoRecyclerViewAdapter
 
 	@Override
 	public void onBindViewHolder(DownloadVisitPhotoViewHolder holder, int position) {
-		String imageUrl = items.get(position);
-		if (imageUrl == null)
+		String obsUuid = items.get(position);
+		if (obsUuid == null)
 			return;
 
-		System.out.println("IMAGE:::::"+items.size() + ":" + position + ":" + imageUrl);
-		//holder.fileCaption.setText(visitPhoto.getFileCaption());
-
-		//Bitmap patientPhoto = BitmapFactory.decodeStream(visitPhoto.getResponseImage().byteStream());
-		//holder.image.setImageBitmap(patientPhoto);
-		//holder.image.invalidate();
-
-		Picasso.Builder builder = new Picasso.Builder(holder.image.getContext());
-		builder.listener(new Picasso.Listener() {
+		view.downloadImage(obsUuid, new DataService.GetSingleCallback<Bitmap>() {
 			@Override
-			public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
-				System.out.println("Unable:::" + exception.getMessage() + ":::" + imageUrl);
+			public void onCompleted(Bitmap entity) {
+				holder.image.setImageBitmap(entity);
+				holder.image.invalidate();
+			}
+
+			@Override
+			public void onError(Throwable t) {
+				holder.image.setVisibility(View.GONE);
 			}
 		});
-		builder.build()
-				.load(imageUrl)
-				.resize(200, 500)
-				.into(holder.image);
 	}
 
 	@Override

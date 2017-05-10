@@ -42,6 +42,10 @@ public interface VisitTasksContract {
 
 		void setVisit(Visit visit);
 
+		String getPatientUuid();
+
+		String getVisitUuid();
+
 	}
 
 	interface Presenter extends BasePresenterContract {

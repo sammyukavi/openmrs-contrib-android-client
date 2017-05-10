@@ -47,6 +47,8 @@ public class VisitTasksFragment extends ACBaseFragment<VisitTasksContract.Presen
 	private List<VisitPredefinedTask> predefinedTasks;
 	private List<VisitTask> visitTasksLists;
 	private Visit visit;
+	private Bundle extras;
+
 
 	public static VisitTasksFragment newInstance() {
 		return new VisitTasksFragment();
@@ -56,6 +58,8 @@ public class VisitTasksFragment extends ACBaseFragment<VisitTasksContract.Presen
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		mRootView = inflater.inflate(R.layout.fragment_visit_tasks, container, false);
 		resolveViews(mRootView);
+
+		extras = getActivity().getIntent().getExtras();
 
 		//Adding the Recycler view
 		layoutManager = new LinearLayoutManager(this.getActivity());
@@ -136,6 +140,16 @@ public class VisitTasksFragment extends ACBaseFragment<VisitTasksContract.Presen
 	@Override
 	public void setVisit(Visit visit) {
 		this.visit = visit;
+	}
+
+	@Override
+	public String getPatientUuid() {
+		return extras.getString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
+	}
+
+	@Override
+	public String getVisitUuid() {
+		return extras.getString(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE);
 	}
 
 	public List<VisitPredefinedTask> removeUsedPredefinedTasks(List<VisitPredefinedTask> visitPredefinedTask,

@@ -26,6 +26,7 @@ import android.widget.ImageView;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
+import org.openmrs.mobile.utilities.StringUtils;
 import org.openmrs.mobile.utilities.ViewUtils;
 
 import java.io.ByteArrayOutputStream;
@@ -45,178 +46,170 @@ import permissions.dispatcher.PermissionRequest;
 import permissions.dispatcher.RuntimePermissions;
 
 @RuntimePermissions
-public class UploadVisitPhotoFragment extends ACBaseFragment<UploadVisitPhotoContract.Presenter>
-		implements UploadVisitPhotoContract.View {
+public class UploadVisitPhotoFragment extends ACBaseFragment<UploadVisitPhotoContract.Presenter> implements UploadVisitPhotoContract.View {
 
-	private final static int IMAGE_REQUEST = 1;
-	private ImageView visitImageView;
-	private FloatingActionButton capturePhoto;
-	private Bitmap visitPhoto = null;
-	private Button uploadVisitPhotoButton;
-	private File output;
-	private EditText fileCaption;
+    private ImageView visitImageView;
+    private FloatingActionButton capturePhoto;
+    private Bitmap visitPhoto = null;
+    private Button uploadVisitPhotoButton;
+    private File output;
+    private final static int IMAGE_REQUEST = 1;
+    private EditText fileCaption;
 
-	public static Bitmap rotateImage(Bitmap source, float angle) {
-		Matrix matrix = new Matrix();
-		matrix.postRotate(angle);
-		return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
-	}
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View root = inflater.inflate(R.layout.fragment_upload_visit_photo, container, false);
+        capturePhoto = (FloatingActionButton) root.findViewById(R.id.capture_photo);
+        visitImageView = (ImageView) root.findViewById(R.id.visitPhoto);
+        uploadVisitPhotoButton = (Button) root.findViewById(R.id.uploadVisitPhoto);
+        fileCaption = (EditText) root.findViewById(R.id.fileCaption);
+        addListeners();
 
-	public static UploadVisitPhotoFragment newInstance() {
-		return new UploadVisitPhotoFragment();
-	}
+        return root;
+    }
 
-	@Nullable
-	@Override
-	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		View root = inflater.inflate(R.layout.fragment_upload_visit_photo, container, false);
-		capturePhoto = (FloatingActionButton)root.findViewById(R.id.capture_photo);
-		visitImageView = (ImageView)root.findViewById(R.id.visitPhoto);
-		uploadVisitPhotoButton = (Button)root.findViewById(R.id.uploadVisitPhoto);
-		fileCaption = (EditText)root.findViewById(R.id.fileCaption);
-		addListeners();
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        UploadVisitPhotoFragmentPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+    }
 
-		return root;
-	}
+    private void addListeners(){
+        capturePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                UploadVisitPhotoFragmentPermissionsDispatcher.capturePhotoWithCheck(UploadVisitPhotoFragment.this);
+            }
+        });
 
-	@Override
-	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-		UploadVisitPhotoFragmentPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
-	}
+        visitImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (output != null) {
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setDataAndType(Uri.fromFile(output), "image/jpeg");
+                    startActivity(i);
+                }
+            }
+        });
 
-	private void addListeners() {
-		capturePhoto.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				UploadVisitPhotoFragmentPermissionsDispatcher.capturePhotoWithCheck(UploadVisitPhotoFragment.this);
-			}
-		});
+        uploadVisitPhotoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(visitPhoto != null) {
+                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                    visitPhoto.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
 
-		visitImageView.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				if (output != null) {
-					Intent i = new Intent(Intent.ACTION_VIEW);
-					i.setDataAndType(Uri.fromFile(output), "image/jpeg");
-					startActivity(i);
-				} else if (visitPhoto != null) {
-				  /*  Intent intent = new Intent(getContext(), PatientPhotoActivity.class);
-					ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                    patientPhoto.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
-                    intent.putExtra("photo", byteArrayOutputStream.toByteArray());
-                    intent.putExtra("name", patientName);
-                    startActivity(intent);*/
-				}
-			}
-		});
+                    MultipartBody.Part uploadFile = MultipartBody.Part.createFormData("file",
+                            output.getName(), RequestBody.create(MediaType.parse("image/jpeg"), output));
 
-		uploadVisitPhotoButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (visitPhoto != null) {
-					ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-					visitPhoto.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+                    mPresenter.getVisitPhoto().setRequestImage(uploadFile);
+                    mPresenter.getVisitPhoto().setFileCaption(
+                            StringUtils.notEmpty(
+                                    ViewUtils.getInput(fileCaption)) ? ViewUtils.getInput(fileCaption) : getString(R.string.default_file_caption_message));
+                    mPresenter.uploadImage();
+                }
+            }
+        });
+    }
 
-					MultipartBody.Part uploadFile = MultipartBody.Part.createFormData("file",
-							output.getName(), RequestBody.create(MediaType.parse("image/*"), output));
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == IMAGE_REQUEST){
+            if(resultCode == Activity.RESULT_OK) {
+                visitPhoto = getPortraitImage(output.getPath());
+                Bitmap bitmap = ThumbnailUtils.extractThumbnail(visitPhoto, visitImageView.getWidth(), visitImageView.getHeight());
+                visitImageView.setImageBitmap(bitmap);
+                visitImageView.invalidate();
+            }else {
+                output = null;
+            }
+        }
+    }
 
-					mPresenter.getVisitPhoto().setRequestImage(uploadFile);
-					mPresenter.getVisitPhoto().setFileCaption(ViewUtils.getInput(fileCaption));
-					mPresenter.uploadImage();
-				}
-			}
-		});
-	}
+    @NeedsPermission({Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    public void capturePhoto() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getContext().getPackageManager()) != null) {
+            File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+            output = new File(dir, getUniqueImageFileName());
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(output));
+            startActivityForResult(takePictureIntent, IMAGE_REQUEST);
+        }
+    }
 
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == IMAGE_REQUEST) {
-			if (resultCode == Activity.RESULT_OK) {
-				visitPhoto = getPortraitImage(output.getPath());
-				Bitmap bitmap =
-						ThumbnailUtils.extractThumbnail(visitPhoto, visitImageView.getWidth(), visitImageView.getHeight());
-				visitImageView.setImageBitmap(bitmap);
-				visitImageView.invalidate();
-			} else {
-				output = null;
-			}
-		}
-	}
+    @OnShowRationale({Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    public void showRationaleForCamera(final PermissionRequest request) {
+        new AlertDialog.Builder(getActivity())
+                .setMessage(R.string.permission_camera_rationale)
+                .setPositiveButton(R.string.button_allow, (dialog, which) -> request.proceed())
+                .setNegativeButton(R.string.button_deny, (dialog, button) -> request.cancel())
+                .show();
+    }
 
-	@NeedsPermission({ Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE })
-	public void capturePhoto() {
-		Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-		if (takePictureIntent.resolveActivity(getContext().getPackageManager()) != null) {
-			File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
-			output = new File(dir, getUniqueImageFileName());
-			takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(output));
-			startActivityForResult(takePictureIntent, IMAGE_REQUEST);
-		}
-	}
+    @OnPermissionDenied({Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    public void showDeniedForCamera() {
+        createSnackbarLong(R.string.permission_camera_denied)
+                .show();
+    }
 
-	@OnShowRationale({ Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE })
-	public void showRationaleForCamera(final PermissionRequest request) {
-		new AlertDialog.Builder(getActivity())
-				.setMessage(R.string.permission_camera_rationale)
-				.setPositiveButton(R.string.button_allow, (dialog, which) -> request.proceed())
-				.setNegativeButton(R.string.button_deny, (dialog, button) -> request.cancel())
-				.show();
-	}
+    @OnNeverAskAgain({Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    public void showNeverAskForCamera() {
+        createSnackbarLong(R.string.permission_camera_neverask)
+                .show();
+    }
 
-	@OnPermissionDenied({ Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE })
-	public void showDeniedForCamera() {
-		createSnackbarLong(R.string.permission_camera_denied)
-				.show();
-	}
+    private String getUniqueImageFileName() {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        return timeStamp + "_" + ".jpg";
+    }
 
-	@OnNeverAskAgain({ Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE })
-	public void showNeverAskForCamera() {
-		createSnackbarLong(R.string.permission_camera_neverask)
-				.show();
-	}
+    private Snackbar createSnackbarLong(int stringId){
+        //Snackbar snackbar = Snackbar.make(linearLayout, stringId, Snackbar.LENGTH_LONG);
+        //View sbView = snackbar.getView();
+        //TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+        //textView.setTextColor(Color.WHITE);
+        //return snackbar;
+        return null;
+    }
 
-	private String getUniqueImageFileName() {
-		// Create an image file name
-		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-		return timeStamp + "_" + ".jpg";
-	}
+    private Bitmap getPortraitImage(String imagePath) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 4;
+        Bitmap photo = BitmapFactory.decodeFile(output.getPath(), options);
+        float rotateAngle;
+        try {
+            ExifInterface exifInterface = new ExifInterface(imagePath);
+            int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+            switch (orientation) {
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    rotateAngle = 270;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    rotateAngle = 180;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    rotateAngle = 90;
+                    break;
+                default:
+                    rotateAngle = 0;
+                    break;
+            }
+            return rotateImage(photo, rotateAngle);
+        } catch (IOException e) {
+            return photo;
+        }
+    }
 
-	private Snackbar createSnackbarLong(int stringId) {
-		//Snackbar snackbar = Snackbar.make(linearLayout, stringId, Snackbar.LENGTH_LONG);
-		//View sbView = snackbar.getView();
-		//TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
-		//textView.setTextColor(Color.WHITE);
-		//return snackbar;
-		return null;
-	}
+    public static Bitmap rotateImage(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+    }
 
-	private Bitmap getPortraitImage(String imagePath) {
-		BitmapFactory.Options options = new BitmapFactory.Options();
-		options.inSampleSize = 4;
-		Bitmap photo = BitmapFactory.decodeFile(output.getPath(), options);
-		float rotateAngle;
-		try {
-			ExifInterface exifInterface = new ExifInterface(imagePath);
-			int orientation =
-					exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
-			switch (orientation) {
-				case ExifInterface.ORIENTATION_ROTATE_270:
-					rotateAngle = 270;
-					break;
-				case ExifInterface.ORIENTATION_ROTATE_180:
-					rotateAngle = 180;
-					break;
-				case ExifInterface.ORIENTATION_ROTATE_90:
-					rotateAngle = 90;
-					break;
-				default:
-					rotateAngle = 0;
-					break;
-			}
-			return rotateImage(photo, rotateAngle);
-		} catch (IOException e) {
-			return photo;
-		}
-	}
+    public static UploadVisitPhotoFragment newInstance(){
+        return new UploadVisitPhotoFragment();
+    }
 }

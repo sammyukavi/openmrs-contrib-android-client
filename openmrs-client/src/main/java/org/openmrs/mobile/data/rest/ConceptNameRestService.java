@@ -10,12 +10,12 @@ import retrofit2.http.Query;
 
 public interface ConceptNameRestService {
 
-    @GET(RestConstants.GET_BY_UUID)
-    Call<ConceptName> getByUuid(@Path(value = "restPath", encoded = true) String restPath,
-                                @Path("uuid") String uuid,
-                                @Query("v") String representation);
+	@GET(RestConstants.GET_BY_UUID)
+	Call<ConceptName> getByUuid(@Path(value = "restPath", encoded = true) String restPath,
+			@Path("uuid") String uuid,
+			@Query("v") String representation);
 
-    @GET(RestConstants.REST_PATH)
-    Call<Results<ConceptName>> getByConceptUuid(@Path(value = "restPath", encoded = true) String restPath,
-                                                 @Query("conceptUuid") String uuid);
+	@GET(RestConstants.REST_PATH)
+	Call<Results<ConceptName>> getByConceptUuid(@Path(value = "restPath", encoded = true) String restPath,
+			@Query("conceptUuid") String uuid);
 }

@@ -22,67 +22,67 @@ import java.util.List;
 /**
  * Model class that represents a Patient List.
  */
-public class PatientList extends BaseOpenmrsMetadata implements Serializable{
-    private Long id;
+public class PatientList extends BaseOpenmrsMetadata implements Serializable {
+	private Long id;
 
-    @SerializedName("patientListConditions")
-    @Expose
-    private List<PatientListCondition> patientListConditions;
+	@SerializedName("patientListConditions")
+	@Expose
+	private List<PatientListCondition> patientListConditions;
 
-    @SerializedName("ordering")
-    @Expose
-    private List<PatientListOrder> ordering;
+	@SerializedName("ordering")
+	@Expose
+	private List<PatientListOrder> ordering;
 
-    @SerializedName("headerTemplate")
-    @Expose
-    private String headerTemplate;
+	@SerializedName("headerTemplate")
+	@Expose
+	private String headerTemplate;
 
-    @SerializedName("bodyTemplate")
-    @Expose
-    private String bodyTemplate;
+	@SerializedName("bodyTemplate")
+	@Expose
+	private String bodyTemplate;
 
-    public Long getId() {
-        return id;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public List<PatientListCondition> getPatientListConditions() {
-        return patientListConditions;
-    }
+	public List<PatientListCondition> getPatientListConditions() {
+		return patientListConditions;
+	}
 
-    public void setPatientListConditions(List<PatientListCondition> patientListConditions) {
-        this.patientListConditions = patientListConditions;
-    }
+	public void setPatientListConditions(List<PatientListCondition> patientListConditions) {
+		this.patientListConditions = patientListConditions;
+	}
 
-    public List<PatientListOrder> getOrdering() {
-        return ordering;
-    }
+	public List<PatientListOrder> getOrdering() {
+		return ordering;
+	}
 
-    public void setOrdering(List<PatientListOrder> ordering) {
-        this.ordering = ordering;
-    }
+	public void setOrdering(List<PatientListOrder> ordering) {
+		this.ordering = ordering;
+	}
 
-    public String getHeaderTemplate() {
-        return headerTemplate;
-    }
+	public String getHeaderTemplate() {
+		return headerTemplate;
+	}
 
-    public void setHeaderTemplate(String headerTemplate) {
-        this.headerTemplate = headerTemplate;
-    }
+	public void setHeaderTemplate(String headerTemplate) {
+		this.headerTemplate = headerTemplate;
+	}
 
-    public String getBodyTemplate() {
-        return bodyTemplate;
-    }
+	public String getBodyTemplate() {
+		return bodyTemplate;
+	}
 
-    public void setBodyTemplate(String bodyTemplate) {
-        this.bodyTemplate = bodyTemplate;
-    }
+	public void setBodyTemplate(String bodyTemplate) {
+		this.bodyTemplate = bodyTemplate;
+	}
 
-    @Override
-    public String toString() {
-        return getName();
-    }
+	@Override
+	public String toString() {
+		return getName();
+	}
 }

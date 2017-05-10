@@ -59,22 +59,22 @@ public class VisitDataService extends BaseEntityDataService<Visit, VisitRestServ
 		return restService.purge(restPath, uuid);
 	}
 
-    @Override
-    protected Call<Results<Visit>> _restGetByPatient(String restPath, PagingInfo pagingInfo, String patientUuid,
-                                                     boolean includeInactive,
-                                                     String representation) {
-        if (isPagingValid(pagingInfo)) {
-            return restService.getByPatient(restPath, patientUuid, representation,
-                    pagingInfo.getLimit(), pagingInfo.getStartIndex(), includeInactive);
-        } else {
-            return restService.getByPatient(restPath, patientUuid, representation, includeInactive);
-        }
-    }
+	@Override
+	protected Call<Results<Visit>> _restGetByPatient(String restPath, PagingInfo pagingInfo, String patientUuid,
+			boolean includeInactive,
+			String representation) {
+		if (isPagingValid(pagingInfo)) {
+			return restService.getByPatient(restPath, patientUuid, representation,
+					pagingInfo.getLimit(), pagingInfo.getStartIndex(), includeInactive);
+		} else {
+			return restService.getByPatient(restPath, patientUuid, representation, includeInactive);
+		}
+	}
 
-    public void endVisit(String uuid, String stopDatetime, GetSingleCallback<Visit> callback){
-        executeSingleCallback(callback, () -> {
-            return restService.endVisit(buildRestRequestPath(), uuid, stopDatetime);
-        });
-    }
+	public void endVisit(String uuid, String stopDatetime, GetSingleCallback<Visit> callback) {
+		executeSingleCallback(callback, () -> {
+			return restService.endVisit(buildRestRequestPath(), uuid, stopDatetime);
+		});
+	}
 }
 

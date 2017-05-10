@@ -23,52 +23,54 @@ import org.openmrs.mobile.utilities.ApplicationConstants;
 import retrofit2.Call;
 
 public class PatientListContextModelDataService extends BaseDataService<PatientListContextModel,
-        PatientListContextModelRestService> {
+		PatientListContextModelRestService> {
 
-    @Override
-    protected Class<PatientListContextModelRestService> getRestServiceClass() {
-        return PatientListContextModelRestService.class;
-    }
+	@Override
+	protected Class<PatientListContextModelRestService> getRestServiceClass() {
+		return PatientListContextModelRestService.class;
+	}
 
-    @Override
-    protected String getRestPath() {
-        return ApplicationConstants.API.REST_ENDPOINT_V2;
-    }
+	@Override
+	protected String getRestPath() {
+		return ApplicationConstants.API.REST_ENDPOINT_V2;
+	}
 
-    @Override
-    protected String getEntityName() {
-        return "patientlist/data";
-    }
+	@Override
+	protected String getEntityName() {
+		return "patientlist/data";
+	}
 
-    public void getAll(String patientListUuid, PagingInfo pagingInfo,
-                       GetMultipleCallback<PatientListContextModel> callback){
-        executeMultipleCallback(callback, pagingInfo, () -> {
-            return restService.getAll(buildRestRequestPath(), patientListUuid, pagingInfo.getStartIndex(), pagingInfo.getLimit());
-        });
-    }
+	public void getAll(String patientListUuid, PagingInfo pagingInfo,
+			GetMultipleCallback<PatientListContextModel> callback) {
+		executeMultipleCallback(callback, pagingInfo, () -> {
+			return restService
+					.getAll(buildRestRequestPath(), patientListUuid, pagingInfo.getStartIndex(), pagingInfo.getLimit());
+		});
+	}
 
-    @Override
-    protected Call<PatientListContextModel> _restGetByUuid(String restPath, String uuid, String representation) {
-        return null;
-    }
+	@Override
+	protected Call<PatientListContextModel> _restGetByUuid(String restPath, String uuid, String representation) {
+		return null;
+	}
 
-    @Override
-    protected Call<Results<PatientListContextModel>> _restGetAll(String restPath, PagingInfo pagingInfo, String representation) {
-        return null;
-    }
+	@Override
+	protected Call<Results<PatientListContextModel>> _restGetAll(String restPath, PagingInfo pagingInfo,
+			String representation) {
+		return null;
+	}
 
-    @Override
-    protected Call<PatientListContextModel> _restCreate(String restPath, PatientListContextModel entity) {
-        return null;
-    }
+	@Override
+	protected Call<PatientListContextModel> _restCreate(String restPath, PatientListContextModel entity) {
+		return null;
+	}
 
-    @Override
-    protected Call<PatientListContextModel> _restUpdate(String restPath, PatientListContextModel entity) {
-        return null;
-    }
+	@Override
+	protected Call<PatientListContextModel> _restUpdate(String restPath, PatientListContextModel entity) {
+		return null;
+	}
 
-    @Override
-    protected Call<PatientListContextModel> _restPurge(String restPath, String uuid) {
-        return null;
-    }
+	@Override
+	protected Call<PatientListContextModel> _restPurge(String restPath, String uuid) {
+		return null;
+	}
 }

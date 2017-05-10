@@ -12,47 +12,47 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface VisitRestService {
-    @GET(RestConstants.GET_BY_UUID)
-    Call<Visit> getByUuid(@Path(value = "restPath", encoded = true) String restPath,
-                          @Path("uuid") String uuid,
-                          @Query("v") String representation);
+	@GET(RestConstants.GET_BY_UUID)
+	Call<Visit> getByUuid(@Path(value = "restPath", encoded = true) String restPath,
+			@Path("uuid") String uuid,
+			@Query("v") String representation);
 
-    @GET(RestConstants.GET_ALL)
-    Call<Results<Visit>> getAll(@Path(value = "restPath", encoded = true) String restPath,
-                                @Query("v") String representation);
+	@GET(RestConstants.GET_ALL)
+	Call<Results<Visit>> getAll(@Path(value = "restPath", encoded = true) String restPath,
+			@Query("v") String representation);
 
-    @GET(RestConstants.GET_ALL)
-    Call<Results<Visit>> getAll(@Path(value = "restPath", encoded = true) String restPath,
-                                @Query("v") String representation,
-                                @Query("limit") int limit,
-                                @Query("startIndex") int startIndex);
+	@GET(RestConstants.GET_ALL)
+	Call<Results<Visit>> getAll(@Path(value = "restPath", encoded = true) String restPath,
+			@Query("v") String representation,
+			@Query("limit") int limit,
+			@Query("startIndex") int startIndex);
 
-    @POST(RestConstants.CREATE)
-    Call<Visit> create(@Path(value = "restPath", encoded = true) String restPath, @Body Visit entity);
+	@POST(RestConstants.CREATE)
+	Call<Visit> create(@Path(value = "restPath", encoded = true) String restPath, @Body Visit entity);
 
-    @POST(RestConstants.UPDATE)
-    Call<Visit> endVisit(@Path(value = "restPath", encoded = true) String restPath,
-                         @Path("uuid") String uuid, @Body String stopDatetime);
+	@POST(RestConstants.UPDATE)
+	Call<Visit> endVisit(@Path(value = "restPath", encoded = true) String restPath,
+			@Path("uuid") String uuid, @Body String stopDatetime);
 
-    @POST(RestConstants.UPDATE)
-    Call<Visit> update(@Path(value = "restPath", encoded = true) String restPath,
-                       @Path("uuid") String uuid, @Body Visit entity);
+	@POST(RestConstants.UPDATE)
+	Call<Visit> update(@Path(value = "restPath", encoded = true) String restPath,
+			@Path("uuid") String uuid, @Body Visit entity);
 
-    @DELETE(RestConstants.PURGE)
-    Call<Visit> purge(@Path(value = "restPath", encoded = true) String restPath,
-                      @Path("uuid") String uuid);
+	@DELETE(RestConstants.PURGE)
+	Call<Visit> purge(@Path(value = "restPath", encoded = true) String restPath,
+			@Path("uuid") String uuid);
 
-    @GET(RestConstants.REST_PATH)
-    Call<Results<Visit>> getByPatient(@Path(value = "restPath", encoded = true) String restPath,
-                                      @Query("patient") String patientUuid,
-                                      @Query("v") String representation,
-                                      @Query("includeInactive") boolean includeInactive);
+	@GET(RestConstants.REST_PATH)
+	Call<Results<Visit>> getByPatient(@Path(value = "restPath", encoded = true) String restPath,
+			@Query("patient") String patientUuid,
+			@Query("v") String representation,
+			@Query("includeInactive") boolean includeInactive);
 
-    @GET(RestConstants.REST_PATH)
-    Call<Results<Visit>> getByPatient(@Path(value = "restPath", encoded = true) String restPath,
-                                      @Query("patient") String patientUuid,
-                                      @Query("v") String representation,
-                                      @Query("limit") int limit,
-                                      @Query("startIndex") int startIndex,
-                                      @Query("includeInactive") boolean includeInactive);
+	@GET(RestConstants.REST_PATH)
+	Call<Results<Visit>> getByPatient(@Path(value = "restPath", encoded = true) String restPath,
+			@Query("patient") String patientUuid,
+			@Query("v") String representation,
+			@Query("limit") int limit,
+			@Query("startIndex") int startIndex,
+			@Query("includeInactive") boolean includeInactive);
 }

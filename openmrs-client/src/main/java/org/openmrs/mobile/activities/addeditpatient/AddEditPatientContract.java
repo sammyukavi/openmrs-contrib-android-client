@@ -33,7 +33,7 @@ public interface AddEditPatientContract {
 		void finishAddPatientActivity();
 
 		void setErrorsVisibility(boolean givenNameError, boolean familyNameError, boolean dayOfBirthError,
-				boolean addressError, boolean county_Error, boolean genderError, boolean patientFileNumberError,
+				boolean county_Error, boolean genderError, boolean patientFileNumberError,
 				boolean civilStatusError, boolean occupationError, boolean subCounty_Error, boolean nationality_Error,
 				boolean patientIdNo_Error, boolean clinic_Error, boolean ward_Error, boolean phonenumber_Error,
 				boolean kinName_Error, boolean kinRelationship_Error, boolean kinPhonenumber_Error,

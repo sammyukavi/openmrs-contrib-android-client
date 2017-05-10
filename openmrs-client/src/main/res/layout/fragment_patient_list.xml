@@ -12,88 +12,89 @@
   ~ Copyright (C) OpenHMIS.  All Rights Reserved.
   -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:focusable="true"
-    android:focusableInTouchMode="true"
-    android:orientation="vertical">
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:background="@drawable/card"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="5dp"
-            android:text="@string/select_patient_list"
-            android:textColor="@color/primary"
-            android:textSize="22sp" />
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/darker_gray"/>
-
-        <Spinner
-            android:id="@+id/patientListDropdown"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="5dp"
-            android:focusable="true"
-            android:textSize="18sp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:orientation="vertical">
-
-            <ProgressBar
-                android:id="@+id/patientListLoadingProgressBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:visibility="gone" />
-
-            <TextView
-                android:id="@+id/noPatientLists"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="@string/no_patient_list"
-                android:visibility="gone" />
-
-            <TextView
-                android:id="@+id/emptyPatientList"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="@string/no_patients_found"
-                android:visibility="gone" />
-
-            <TextView
-                android:id="@+id/numberOfPatients"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="10dp"
-                android:gravity="center"
-                android:text="@string/no_patients_found"
-                android:textColor="@color/light_teal"
-                android:visibility="gone" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/patientListModelRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="left|bottom" />
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:focusable="true"
+		android:focusableInTouchMode="true"
+		android:orientation="vertical">
+	
+	
+	<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_margin="5dp"
+			android:background="@drawable/card"
+			android:orientation="vertical">
+		
+		<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginBottom="5dp"
+				android:layout_marginLeft="5dp"
+				android:layout_marginTop="5dp"
+				android:text="@string/select_patient_list"
+				android:textColor="@color/primary"
+				android:textSize="22sp" />
+		
+		<View
+				android:layout_width="match_parent"
+				android:layout_height="1dp"
+				android:background="@android:color/darker_gray" />
+		
+		<Spinner
+				android:id="@+id/patientListDropdown"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginBottom="5dp"
+				android:layout_marginTop="5dp"
+				android:layout_marginLeft="5dp"
+				android:focusable="true"
+				android:textSize="18sp" />
+		
+		<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginLeft="5dp"
+				android:orientation="vertical">
+			
+			<ProgressBar
+					android:id="@+id/patientListLoadingProgressBar"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center"
+					android:visibility="gone" />
+			
+			<TextView
+					android:id="@+id/noPatientLists"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:gravity="center"
+					android:text="@string/no_patient_list"
+					android:visibility="gone" />
+			
+			<TextView
+					android:id="@+id/emptyPatientList"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:gravity="center"
+					android:text="@string/no_patients_found"
+					android:visibility="gone" />
+			
+			<TextView
+					android:id="@+id/numberOfPatients"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:layout_marginBottom="10dp"
+					android:gravity="center"
+					android:text="@string/no_patients_found"
+					android:textColor="@color/light_teal"
+					android:visibility="gone" />
+		</LinearLayout>
+	</LinearLayout>
+	
+	<android.support.v7.widget.RecyclerView
+			android:id="@+id/patientListModelRecyclerView"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_gravity="left|bottom" />
 </LinearLayout>

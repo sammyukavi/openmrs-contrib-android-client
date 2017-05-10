@@ -22,11 +22,10 @@ public class PatientListDataService extends BaseMetadataDataService<PatientList,
 		return ApplicationConstants.API.REST_ENDPOINT_V2;
 	}
 
-
-    @Override
-    protected String getEntityName() {
-        return "patientlist/list";
-    }
+	@Override
+	protected String getEntityName() {
+		return "patientlist/list";
+	}
 
 	@Override
 	protected Call<PatientList> _restGetByUuid(String restPath, String uuid, String representation) {

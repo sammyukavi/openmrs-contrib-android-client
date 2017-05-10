@@ -56,7 +56,6 @@ import org.openmrs.mobile.models.VisitPredefinedTask;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.FontsUtil;
 import org.openmrs.mobile.utilities.StringUtils;
-import org.openmrs.mobile.utilities.ToastUtil;
 
 import java.util.Arrays;
 import java.util.List;
@@ -354,13 +353,13 @@ public class CustomFragmentDialog extends DialogFragment {
 				switch (action) {
 					case DISMISS_URL_DIALOG:
 						/*((FindPatientRecordFragment) getActivity()
-                                .getSupportFragmentManager()
+								.getSupportFragmentManager()
                                 .findFragmentById(R.id.loginContentFrame))
                                 .hideURLDialog();*/
 						dismiss();
 						break;
 					case LOGIN:
-                        /*((FindPatientRecordFragment) getActivity()
+						/*((FindPatientRecordFragment) getActivity()
                                 .getSupportFragmentManager()
                                 .findFragmentById(R.id.loginContentFrame))
                                 .login(true);*/
@@ -395,7 +394,8 @@ public class CustomFragmentDialog extends DialogFragment {
 						dismiss();
 						break;
 					case REGISTER_PATIENT:
-						//((AddEditPatientActivity) getActivity()).mPresenter.registerPatient();
+						((AddEditPatientActivity)getActivity()).mPresenter
+								.registerPatient(mCustomDialogBundle.getNewPatient());
 						dismiss();
 						break;
 					case CANCEL_REGISTERING:
@@ -410,7 +410,8 @@ public class CustomFragmentDialog extends DialogFragment {
 						break;
 					case ADD_VISIT_TASKS:
 						if (StringUtils.notEmpty(getAutoCompleteTextValue())) {
-							((VisitTasksActivity)getActivity()).mPresenter.createVisitTasksObject(getAutoCompleteTextValue());
+							((VisitTasksActivity)getActivity()).mPresenter
+									.createVisitTasksObject(getAutoCompleteTextValue());
 							dismiss();
 							break;
 						} else {

@@ -21,63 +21,63 @@ import com.google.gson.annotations.SerializedName;
  */
 public class PatientListContextModel extends BaseOpenmrsObject {
 
-    @SerializedName("patient")
-    @Expose
-    private Patient patient;
+	@SerializedName("patient")
+	@Expose
+	private Patient patient;
 
-    @SerializedName("visit")
-    @Expose
-    private Visit visit;
+	@SerializedName("visit")
+	@Expose
+	private Visit visit;
 
-    @SerializedName("patientList")
-    @Expose
-    private PatientList patientList;
+	@SerializedName("patientList")
+	@Expose
+	private PatientList patientList;
 
-    @SerializedName("headerContent")
-    @Expose
-    private String headerContent;
+	@SerializedName("headerContent")
+	@Expose
+	private String headerContent;
 
-    @SerializedName("bodyContent")
-    @Expose
-    private String bodyContent;
+	@SerializedName("bodyContent")
+	@Expose
+	private String bodyContent;
 
-    public Patient getPatient() {
-        return patient;
-    }
+	public Patient getPatient() {
+		return patient;
+	}
 
-    public void setPatient(Patient patient) {
-        this.patient = patient;
-    }
+	public void setPatient(Patient patient) {
+		this.patient = patient;
+	}
 
-    public Visit getVisit() {
-        return visit;
-    }
+	public Visit getVisit() {
+		return visit;
+	}
 
-    public void setVisit(Visit visit) {
-        this.visit = visit;
-    }
+	public void setVisit(Visit visit) {
+		this.visit = visit;
+	}
 
-    public PatientList getPatientList() {
-        return patientList;
-    }
+	public PatientList getPatientList() {
+		return patientList;
+	}
 
-    public void setPatientList(PatientList patientList) {
-        this.patientList = patientList;
-    }
+	public void setPatientList(PatientList patientList) {
+		this.patientList = patientList;
+	}
 
-    public String getHeaderContent() {
-        return headerContent;
-    }
+	public String getHeaderContent() {
+		return headerContent;
+	}
 
-    public void setHeaderContent(String headerContent) {
-        this.headerContent = headerContent;
-    }
+	public void setHeaderContent(String headerContent) {
+		this.headerContent = headerContent;
+	}
 
-    public String getBodyContent() {
-        return bodyContent;
-    }
+	public String getBodyContent() {
+		return bodyContent;
+	}
 
-    public void setBodyContent(String bodyContent) {
-        this.bodyContent = bodyContent;
-    }
+	public void setBodyContent(String bodyContent) {
+		this.bodyContent = bodyContent;
+	}
 }

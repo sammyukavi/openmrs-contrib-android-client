@@ -23,10 +23,10 @@ import retrofit2.http.Query;
 
 public interface PatientListContextModelRestService {
 
-    @GET(RestConstants.REST_PATH)
-    Call<Results<PatientListContextModel>> getAll(@Path(value = "restPath", encoded = true) String restPath,
-                                                              @Query("uuid") String uuid,
-                                                              @Query("startIndex") int startIndex,
-                                                              @Query("limit") int limit);
+	@GET(RestConstants.REST_PATH)
+	Call<Results<PatientListContextModel>> getAll(@Path(value = "restPath", encoded = true) String restPath,
+			@Query("uuid") String uuid,
+			@Query("startIndex") int startIndex,
+			@Query("limit") int limit);
 
 }

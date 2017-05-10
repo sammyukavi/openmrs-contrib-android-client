@@ -20,15 +20,15 @@ import org.greenrobot.greendao.annotation.Generated;
 
 import java.util.List;
 
-public class Visit extends BaseOpenmrsEntity  {
+public class Visit extends BaseOpenmrsEntity {
 
-    private Long id;
+	private Long id;
 
-    @Expose
-    private VisitType visitType;
+	@Expose
+	private VisitType visitType;
 
-    @Expose
-    private Location location;
+	@Expose
+	private Location location;
 
 	@Expose
 	private String startDatetime;
@@ -36,22 +36,22 @@ public class Visit extends BaseOpenmrsEntity  {
 	@Expose
 	private String stopDatetime;
 
-    @Expose
-    private List<Encounter> encounters;
+	@Expose
+	private List<Encounter> encounters;
 
 	@Expose
 	private List<VisitAttribute> attributes;
 
-    @Generated(hash = 284896357)
-    public Visit(Long id, String startDatetime, String stopDatetime) {
-        this.id = id;
-        this.startDatetime = startDatetime;
-        this.stopDatetime = stopDatetime;
-    }
+	@Generated(hash = 284896357)
+	public Visit(Long id, String startDatetime, String stopDatetime) {
+		this.id = id;
+		this.startDatetime = startDatetime;
+		this.stopDatetime = stopDatetime;
+	}
 
-    @Generated(hash = 808752442)
-    public Visit() {
-    }
+	@Generated(hash = 808752442)
+	public Visit() {
+	}
 
 	public Long getId() {
 		return id;
@@ -97,15 +97,15 @@ public class Visit extends BaseOpenmrsEntity  {
 		return encounters;
 	}
 
-    public void setEncounters(List<Encounter> encounters) {
-        this.encounters = encounters;
-    }
+	public void setEncounters(List<Encounter> encounters) {
+		this.encounters = encounters;
+	}
 
-    public List<VisitAttribute> getAttributes() {
-        return attributes;
-    }
+	public List<VisitAttribute> getAttributes() {
+		return attributes;
+	}
 
-    public void setAttributes(List<VisitAttribute> attributes) {
-        this.attributes = attributes;
-    }
+	public void setAttributes(List<VisitAttribute> attributes) {
+		this.attributes = attributes;
+	}
 }

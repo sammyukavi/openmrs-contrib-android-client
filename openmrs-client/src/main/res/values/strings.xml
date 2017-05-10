@@ -234,6 +234,7 @@
 	<!--Similar patient card strings-->
 	<string name="gender_hint">gender:</string>
 	<string name="birthdate_hint">birthdate:</string>
+	<string name="age_hint">Age:</string>
 	<string name="address_hint">address:</string>
 	<string name="dateadded_hint">Date Added:</string>
 	<string name="demographics">Demographics</string>

@@ -21,7 +21,7 @@ import java.io.File;
 import pl.polidea.instrumentation.PolideaInstrumentationTestRunner;
 
 public class OpenMRSInstrumentationTestRunner extends PolideaInstrumentationTestRunner {
-	
+
 	@Override
 	public void onCreate(Bundle arguments) {
 		String appFilesDir = getTargetContext().getFilesDir().getAbsolutePath();

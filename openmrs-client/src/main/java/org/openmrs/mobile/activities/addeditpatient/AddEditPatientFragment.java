@@ -25,7 +25,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -67,7 +66,6 @@ import org.openmrs.mobile.utilities.ViewUtils;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -77,9 +75,10 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		implements AddEditPatientContract.View {
 
 	private final static int IMAGE_REQUEST = 1;
+	private static LinearLayout.LayoutParams marginParams;
 	private LinearLayout linearLayout;
 	private LocalDate birthdate, patientEncouterDate;
-	private DateTime bdt, enconterdate;
+	private DateTime bdt;
 	private EditText edfname;
 	private EditText edmname;
 	private EditText edlname;
@@ -87,29 +86,14 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 	private EditText edyr;
 	private EditText edmonth;
 	private EditText fileNumber;
-	private AutoCompleteTextView county;
-	private AutoCompleteTextView subCounty;
-	private EditText nationality;
-	private EditText patientIdNo;
-	private EditText clinic;
-	private EditText ward;
-	private EditText phonenumber;
-	private EditText kinName;
-	private EditText kinRelationship;
-	private EditText kinPhonenumber;
-	private EditText kinResidence;
 	private RadioGroup gen;
 	private ProgressBar progressBar;
-
 	private Button submitConfirm;
 	private String[] counties;
 	private ImageView patientImageView;
 	private String patientName;
 	private File output = null;
 	private OpenMRSLogger logger = new OpenMRSLogger();
-	private Spinner civilStatus;
-	private EditText occupation;
-
 	/*
 	*TextViews defination
 	 *  */
@@ -119,30 +103,10 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 	private TextView gendererror;
 	private TextView addrerror;
 	private TextView fileNumberError;
-	private TextView marriageStatusError;
-	private TextView occupationError;
-	private TextView countyError;
-	private TextView subCountyError;
-	private TextView nationalityError;
-	private TextView patientIdNoError;
-	private TextView clinicError;
-	private TextView wardError;
-	private TextView phonenumberError;
-	private TextView kinNameError;
-	private TextView kinRelationshipError;
-	private TextView kinPhonenumberError;
-	private TextView kinResidenceError;
-	private TextView encounterDateError;
-	private TextView encounterDeptError;
-	private TextView encounterProviderError;
-	private String[] patientCivilStatus;
 	private PatientIdentifierType patientIdentifierType;
-
 	private Map<String, PersonAttribute> personAttributeMap = new HashMap<>();
 	private Map<View, PersonAttributeType> viewPersonAttributeTypeMap = new HashMap<>();
-
 	private LinearLayout personLinearLayout;
-	private static LinearLayout.LayoutParams marginParams;
 
 	public static AddEditPatientFragment newInstance() {
 		return new AddEditPatientFragment();
@@ -157,18 +121,6 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		edyr = (EditText)v.findViewById(R.id.estyr);
 		edmonth = (EditText)v.findViewById(R.id.estmonth);
 		fileNumber = (EditText)v.findViewById(R.id.fileNumber);
-		/*occupation = (EditText)v.findViewById(R.id.occuapation);
-		county = (AutoCompleteTextView)v.findViewById(R.id.county);
-		subCounty = (AutoCompleteTextView)v.findViewById(R.id.sub_county);
-		nationality = (EditText)v.findViewById(R.id.nationality);
-		patientIdNo = (EditText)v.findViewById(R.id.patient_id_no);
-		clinic = (EditText)v.findViewById(R.id.clinic);
-		ward = (EditText)v.findViewById(R.id.ward);
-		phonenumber = (EditText)v.findViewById(R.id.phonenumber);
-		kinName = (EditText)v.findViewById(R.id.kinName);
-		kinRelationship = (EditText)v.findViewById(R.id.kinRelationship);
-		kinPhonenumber = (EditText)v.findViewById(R.id.kinPhonenumber);
-		kinResidence = (EditText)v.findViewById(R.id.kinResidence);*/
 
 		personLinearLayout = (LinearLayout)v.findViewById(R.id.personAttributeLinearLayout);
 
@@ -179,24 +131,9 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		lnameerror = (TextView)v.findViewById(R.id.lnameerror);
 		doberror = (TextView)v.findViewById(R.id.doberror);
 		gendererror = (TextView)v.findViewById(R.id.gendererror);
-		//addrerror = (TextView)v.findViewById(R.id.addrerror);
 		fileNumberError = (TextView)v.findViewById(R.id.fileNumberError);
-		/*marriageStatusError = (TextView)v.findViewById(R.id.civilStatusError);
-		countyError = (TextView)v.findViewById(R.id.countyError);
-		subCountyError = (TextView)v.findViewById(R.id.sub_countError);
-		nationalityError = (TextView)v.findViewById(R.id.nationalityError);
-		patientIdNoError = (TextView)v.findViewById(R.id.patient_id_noError);
-		clinicError = (TextView)v.findViewById(R.id.clinicError);
-		wardError = (TextView)v.findViewById(R.id.wardError);
-		phonenumberError = (TextView)v.findViewById(R.id.phonenumberError);
-		kinNameError = (TextView)v.findViewById(R.id.kinNameError);
-		kinRelationshipError = (TextView)v.findViewById(R.id.kinRelationshipError);
-		kinPhonenumberError = (TextView)v.findViewById(R.id.kinPhonenumberError);
-		kinResidenceError = (TextView)v.findViewById(R.id.kinResidenceError);
-		occupationError = (TextView)v.findViewById(R.id.occupationError);*/
 
 		submitConfirm = (Button)v.findViewById(R.id.submitConfirm);
-		//civilStatus = (Spinner)v.findViewById(R.id.civilStatusSpinner);
 	}
 
 	@Override
@@ -208,9 +145,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		addListeners();
 		buildMarginLayout();
 		fillFields(mPresenter.getPatientToUpdate());
-		if (!mPresenter.isRegisteringPatient()) {
-			buildPersonAttributeValues();
-		}
+
 		return root;
 
 	}
@@ -228,7 +163,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 
 	@Override
 	public void setErrorsVisibility(
-			boolean givenNameError, boolean familyNameError, boolean dayOfBirthError, boolean addressError,
+			boolean givenNameError, boolean familyNameError, boolean dayOfBirthError,
 			boolean county_Error, boolean genderError, boolean patientFileNumberError, boolean civilStatusError,
 			boolean occuaptionerror, boolean subCounty_Error, boolean nationality_Error, boolean patientIdNo_Error,
 			boolean clinic_Error, boolean ward_Error, boolean phonenumber_Error, boolean kinName_Error,
@@ -237,22 +172,8 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		fnameerror.setVisibility(givenNameError ? View.VISIBLE : View.INVISIBLE);
 		lnameerror.setVisibility(familyNameError ? View.VISIBLE : View.INVISIBLE);
 		doberror.setVisibility(dayOfBirthError ? View.VISIBLE : View.GONE);
-		addrerror.setVisibility(addressError ? View.VISIBLE : View.GONE);
-		countyError.setVisibility(county_Error ? View.VISIBLE : View.GONE);
 		gendererror.setVisibility(genderError ? View.VISIBLE : View.GONE);
 		fileNumberError.setVisibility(patientFileNumberError ? View.VISIBLE : View.GONE);
-		marriageStatusError.setVisibility(civilStatusError ? View.VISIBLE : View.GONE);
-		occupationError.setVisibility(occuaptionerror ? View.VISIBLE : View.GONE);
-		subCountyError.setVisibility(subCounty_Error ? View.VISIBLE : View.GONE);
-		nationalityError.setVisibility(nationality_Error ? View.VISIBLE : View.GONE);
-		patientIdNoError.setVisibility(patientIdNo_Error ? View.VISIBLE : View.GONE);
-		clinicError.setVisibility(clinic_Error ? View.VISIBLE : View.GONE);
-		wardError.setVisibility(ward_Error ? View.VISIBLE : View.GONE);
-		phonenumberError.setVisibility(phonenumber_Error ? View.VISIBLE : View.GONE);
-		kinNameError.setVisibility(kinName_Error ? View.VISIBLE : View.GONE);
-		kinRelationshipError.setVisibility(kinRelationship_Error ? View.VISIBLE : View.GONE);
-		kinPhonenumberError.setVisibility(kinPhonenumber_Error ? View.VISIBLE : View.GONE);
-		kinResidenceError.setVisibility(kinResidence_Error ? View.VISIBLE : View.GONE);
 
 	}
 
@@ -267,15 +188,15 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		addresses.add(address);
 		person.setAddresses(addresses);
 
-		List<PersonAttribute> personAttributeList = (List<PersonAttribute>)personAttributeMap;
-		person.setPersonAttributes(personAttributeList);
+		List<PersonAttribute> personAttributeList = new ArrayList<>(personAttributeMap.values());
+		person.setAttributes(personAttributeList);
 
 		/*PersonAttribute personAttribute = new PersonAttribute();
 		personAttribute.setValue(ViewUtils.getInput(occupation));
 
 		List<PersonAttribute> personAttributes = new ArrayList<>();
 		personAttributes.add(personAttribute);
-		person.setPersonAttributes(personAttributes);*/
+		person.setAttributes(personAttributes);*/
 
 		// Add names
 		PersonName name = new PersonName();
@@ -361,8 +282,8 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		setProgressBarVisibility(false);
 		CustomDialogBundle similarPatientsDialog = new CustomDialogBundle();
 		similarPatientsDialog.setTitleViewMessage(getString(R.string.similar_patients_dialog_title));
-		similarPatientsDialog.setLeftButtonText(getString(R.string.dialog_button_cancel));
-		similarPatientsDialog.setLeftButtonAction(CustomFragmentDialog.OnClickAction.CANCEL_REGISTERING);
+		similarPatientsDialog.setRightButtonText(getString(R.string.dialog_button_register_new));
+		similarPatientsDialog.setRightButtonAction(CustomFragmentDialog.OnClickAction.REGISTER_PATIENT);
 		similarPatientsDialog.setPatientsList(patients);
 		similarPatientsDialog.setNewPatient(newPatient);
 		((AddEditPatientActivity)this.getActivity())
@@ -372,7 +293,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 	@Override
 	public void startPatientDashboardActivity(Patient patient) {
 		Intent intent = new Intent(getActivity(), PatientDashboardActivity.class);
-		intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_ID_BUNDLE, patient.getId());
+		intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patient.getPerson().getUuid());
 		startActivity(intent);
 	}
 
@@ -474,7 +395,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 				ConceptName conceptName = conceptNames.get(position);
 				PersonAttribute personAttribute = new PersonAttribute();
 				personAttribute.setValue(conceptName.getUuid());
-				personAttribute.setPersonAttributeType(personAttributeType);
+				personAttribute.setAttributeType(personAttributeType);
 				personAttributeMap.clear();
 				personAttributeMap.put(conceptName.getUuid(), personAttribute);
 			}
@@ -523,15 +444,15 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 	}
 
 	private void addSuggestionsToAutoCompleteTextView() {
-		counties = getContext().getResources().getStringArray(R.array.countiesArray);
+		/*counties = getContext().getResources().getStringArray(R.array.countiesArray);
 		ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
 				android.R.layout.simple_dropdown_item_1line, counties);
-		county.setAdapter(adapter);
+		county.setAdapter(adapter);*/
 
 	}
 
 	private void addSuggestionsToSubCounties() {
-		String countyName = county.getText().toString();
+		/*String countyName = county.getText().toString();
 		countyName = countyName.replace("(", "");
 		countyName = countyName.replace(")", "");
 		countyName = countyName.replace(" ", "");
@@ -545,7 +466,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 			ArrayAdapter<String> countiesAdapter = new ArrayAdapter<>(getContext(),
 					android.R.layout.simple_dropdown_item_1line, subCounties);
 			subCounty.setAdapter(countiesAdapter);
-		}
+		}*/
 	}
 
 	private void addListeners() {
@@ -555,26 +476,6 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 				gendererror.setVisibility(View.GONE);
 			}
 		});
-
-		/*county.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-				if (county.getText().length() >= county.getThreshold()) {
-					county.showDropDown();
-				}
-				if (Arrays.asList(counties).contains(county.getText().toString())) {
-					county.dismissDropDown();
-				}
-			}
-		});
-
-		county.setThreshold(2);
-		subCounty.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-				addSuggestionsToSubCounties();
-			}
-		});*/
 
 		if (eddob != null) {
 			eddob.setOnClickListener(new View.OnClickListener() {
@@ -618,6 +519,9 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		submitConfirm.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
+				if (!mPresenter.isRegisteringPatient()) {
+					buildPersonAttributeValues();
+				}
 				mPresenter.confirmRegister(createPatient());
 			}
 		});
@@ -640,7 +544,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		for (Map.Entry<View, PersonAttributeType> set : viewPersonAttributeTypeMap.entrySet()) {
 			View componentType = set.getKey();
 			PersonAttribute personAttribute = new PersonAttribute();
-			personAttribute.setPersonAttributeType(set.getValue());
+			personAttribute.setAttributeType(set.getValue());
 
 			if (componentType instanceof RadioButton) {
 				personAttribute.setValue(((RadioButton)componentType).isChecked());
@@ -654,11 +558,11 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		}
 	}
 
-	private void buildMarginLayout(){
-		if(marginParams == null) {
+	private void buildMarginLayout() {
+		if (marginParams == null) {
 			marginParams = new LinearLayout.LayoutParams(
 					LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-			marginParams.setMargins(25, 10, 25, 10);
+			marginParams.setMargins(30, 10, 30, 20);
 		}
 	}
 }

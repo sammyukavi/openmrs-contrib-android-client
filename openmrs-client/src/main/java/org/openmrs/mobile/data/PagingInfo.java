@@ -6,42 +6,43 @@ package org.openmrs.mobile.data;
  */
 public class PagingInfo {
 
-    private int page;
-    private int pageSize;
+	private int page;
+	private int pageSize;
 
-    public PagingInfo() {}
+	public PagingInfo() {
+	}
 
-    /**
-     * Creates a new {@link PagingInfo} instance.
-     * @param page The 1-based number of the page being requested.
-     * @param pageSize The number of records to include on each page.
-     */
-    public PagingInfo(int page, int pageSize) {
-        this.page = page;
-        this.pageSize = pageSize;
-    }
+	/**
+	 * Creates a new {@link PagingInfo} instance.
+	 * @param page     The 1-based number of the page being requested.
+	 * @param pageSize The number of records to include on each page.
+	 */
+	public PagingInfo(int page, int pageSize) {
+		this.page = page;
+		this.pageSize = pageSize;
+	}
 
-    public int getPage() {
-        return page;
-    }
+	public int getPage() {
+		return page;
+	}
 
-    public void setPage(int page) {
-        this.page = page;
-    }
+	public void setPage(int page) {
+		this.page = page;
+	}
 
-    public int getPageSize() {
-        return pageSize;
-    }
+	public int getPageSize() {
+		return pageSize;
+	}
 
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
-    }
+	public void setPageSize(int pageSize) {
+		this.pageSize = pageSize;
+	}
 
-    public int getLimit() {
-        return pageSize;
-    }
+	public int getLimit() {
+		return pageSize;
+	}
 
-    public int getStartIndex() {
-        return ((page - 1) * pageSize) + 1;
-    }
+	public int getStartIndex() {
+		return ((page - 1) * pageSize) + 1;
+	}
 }

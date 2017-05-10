@@ -8,17 +8,17 @@ import java.util.List;
 
 public class DownloadVisitPhotoContract {
 
-    interface View extends BaseView<DownloadVisitPhotoContract.Presenter> {
+	interface View extends BaseView<DownloadVisitPhotoContract.Presenter> {
 
-        void updateVisitImages(List<VisitPhoto> visitPhotos);
-    }
+		void updateVisitImages(List<VisitPhoto> visitPhotos);
+	}
 
-    interface Presenter extends BasePresenterContract {
+	interface Presenter extends BasePresenterContract {
 
-        void downloadImages();
+		void downloadImages();
 
-        boolean isLoading();
+		boolean isLoading();
 
-        void setLoading(boolean loading);
-    }
+		void setLoading(boolean loading);
+	}
 }

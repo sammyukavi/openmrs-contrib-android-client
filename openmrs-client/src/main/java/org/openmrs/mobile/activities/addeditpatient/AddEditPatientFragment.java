@@ -282,8 +282,8 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		setProgressBarVisibility(false);
 		CustomDialogBundle similarPatientsDialog = new CustomDialogBundle();
 		similarPatientsDialog.setTitleViewMessage(getString(R.string.similar_patients_dialog_title));
-		similarPatientsDialog.setRightButtonText(getString(R.string.dialog_button_register_new));
-		similarPatientsDialog.setRightButtonAction(CustomFragmentDialog.OnClickAction.REGISTER_PATIENT);
+		similarPatientsDialog.setRightButtonText(getString(R.string.dialog_button_cancel));
+		similarPatientsDialog.setRightButtonAction(CustomFragmentDialog.OnClickAction.CANCEL_REGISTERING);
 		similarPatientsDialog.setPatientsList(patients);
 		similarPatientsDialog.setNewPatient(newPatient);
 		((AddEditPatientActivity)this.getActivity())
@@ -394,7 +394,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				ConceptName conceptName = conceptNames.get(position);
 				PersonAttribute personAttribute = new PersonAttribute();
-				personAttribute.setValue(conceptName.getUuid());
+				personAttribute.setValue(conceptName.getAnswer_concept());
 				personAttribute.setAttributeType(personAttributeType);
 				personAttributeMap.clear();
 				personAttributeMap.put(conceptName.getUuid(), personAttribute);

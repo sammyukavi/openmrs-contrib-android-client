@@ -32,24 +32,9 @@ public abstract class ApplicationConstants {
 	//discuss on using the openhmis
 	// demo as the main test server to avoid changes here.
 
-<<<<<<< HEAD
-    public static final String EMPTY_STRING = "";
-    public static final String SERVER_URL = "server_url";
-    public static final String SESSION_TOKEN = "session_id";
-    public static final String AUTHORIZATION_TOKEN = "authorisation";
-    public static final String SECRET_KEY = "secretKey";
-    public static final String LOCATION = "location";
-    public static final String VISIT_TYPE_UUID = "visit_type_uuid";
-    public static final String LAST_SESSION_TOKEN = "last_session_id";
-    public static final String LAST_LOGIN_SERVER_URL = "last_login_server_url";
-    //public static final String DEFAULT_OPEN_MRS_URL = "http://192.168.2.10:8080/openmrs/";
-    //public static final String DEFAULT_OPEN_MRS_URL = "http://192.168.0.102:8080/openmrs/";
-    public static final String DEFAULT_OPEN_MRS_URL = "http://192.168.2.34:9996/openmrs/";
-=======
 	public abstract static class OpenMRSSharedPreferenceNames {
 		public static final String SHARED_PREFERENCES_NAME = "shared_preferences";
 	}
->>>>>>> 5a93bff624b3703756d7810192ceebdcfa232866
 
 	public abstract static class API {
 		public static final String REST_ENDPOINT_V1 = "ws/rest/v1/";

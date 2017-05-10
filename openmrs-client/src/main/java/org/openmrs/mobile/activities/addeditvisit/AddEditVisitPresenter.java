@@ -315,7 +315,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
             }
         }
 
-        visit.setPatient(null);
+        //visit.setPatient(null);
         setProcessing(true);
         visitDataService.update(visit, new DataService.GetSingleCallback<Visit>() {
             @Override

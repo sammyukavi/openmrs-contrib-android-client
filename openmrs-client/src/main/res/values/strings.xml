@@ -408,6 +408,7 @@
 	<string name="enter_caption">Enter caption</string>
 	<string name="view_images">View Images</string>
 	<string name="visit_photo">Visit Photo</string>
+	<string name="default_file_caption_message">Uploaded from android client</string>
 
 
 </resources>

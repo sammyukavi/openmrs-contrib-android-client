@@ -90,13 +90,6 @@ public class UploadVisitPhotoFragment extends ACBaseFragment<UploadVisitPhotoCon
                     Intent i = new Intent(Intent.ACTION_VIEW);
                     i.setDataAndType(Uri.fromFile(output), "image/jpeg");
                     startActivity(i);
-                } else if (visitPhoto != null) {
-                  /*  Intent intent = new Intent(getContext(), PatientPhotoActivity.class);
-                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                    patientPhoto.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
-                    intent.putExtra("photo", byteArrayOutputStream.toByteArray());
-                    intent.putExtra("name", patientName);
-                    startActivity(intent);*/
                 }
             }
         });
@@ -109,11 +102,12 @@ public class UploadVisitPhotoFragment extends ACBaseFragment<UploadVisitPhotoCon
                     visitPhoto.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
 
                     MultipartBody.Part uploadFile = MultipartBody.Part.createFormData("file",
-                            output.getName(), RequestBody.create(MediaType.parse("image/*"), output));
+                            output.getName(), RequestBody.create(MediaType.parse("image/jpeg"), output));
 
                     mPresenter.getVisitPhoto().setRequestImage(uploadFile);
                     mPresenter.getVisitPhoto().setFileCaption(
-                            StringUtils.notEmpty(ViewUtils.getInput(fileCaption)) ? ViewUtils.getInput(fileCaption) : "Uploaded from android client");
+                            StringUtils.notEmpty(
+                                    ViewUtils.getInput(fileCaption)) ? ViewUtils.getInput(fileCaption) : getString(R.string.default_file_caption_message));
                     mPresenter.uploadImage();
                 }
             }

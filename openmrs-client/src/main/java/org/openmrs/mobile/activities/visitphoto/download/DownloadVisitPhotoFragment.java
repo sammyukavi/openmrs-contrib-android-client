@@ -1,7 +1,9 @@
 package org.openmrs.mobile.activities.visitphoto.download;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,6 +12,7 @@ import android.view.ViewGroup;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
+import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.models.VisitPhoto;
 
 import java.util.List;
@@ -19,6 +22,8 @@ public class DownloadVisitPhotoFragment extends ACBaseFragment<DownloadVisitPhot
 
 	private LinearLayoutManager layoutManager;
 	private RecyclerView recyclerView;
+	private DownloadVisitPhotoRecyclerViewAdapter adapter;
+
 
 	public static DownloadVisitPhotoFragment newInstance() {
 		return new DownloadVisitPhotoFragment();
@@ -34,10 +39,21 @@ public class DownloadVisitPhotoFragment extends ACBaseFragment<DownloadVisitPhot
 		return root;
 	}
 
+
 	@Override
-	public void updateVisitImages(List<VisitPhoto> entities) {
-		DownloadVisitPhotoRecyclerViewAdapter adapter =
-				new DownloadVisitPhotoRecyclerViewAdapter(this.getActivity(), entities, this);
+	public void updateVisitImageUrls(List<String> urls) {
+		if(adapter == null) {
+			adapter = new DownloadVisitPhotoRecyclerViewAdapter(this.getActivity(), urls, this);
+		}
+
+		RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), urls.size());
+		recyclerView.setLayoutManager(layoutManager);
+
 		recyclerView.setAdapter(adapter);
+	}
+
+	@Override
+	public void downloadImage(String obsUuid, DataService.GetSingleCallback<Bitmap> callback) {
+		mPresenter.downloadImage(obsUuid, callback);
 	}
 }

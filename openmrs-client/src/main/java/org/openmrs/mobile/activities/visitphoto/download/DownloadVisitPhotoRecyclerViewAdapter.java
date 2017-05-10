@@ -2,7 +2,6 @@ package org.openmrs.mobile.activities.visitphoto.download;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.openmrs.mobile.R;
-import org.openmrs.mobile.models.VisitPhoto;
+import org.openmrs.mobile.data.DataService;
 
 import java.util.List;
 
@@ -21,12 +20,12 @@ public class DownloadVisitPhotoRecyclerViewAdapter
 
 	private Activity context;
 	private DownloadVisitPhotoContract.View view;
-	private List<VisitPhoto> items;
+	private List<String> items;
 
 	public DownloadVisitPhotoRecyclerViewAdapter(Activity context,
-			List<VisitPhoto> entities, DownloadVisitPhotoContract.View view) {
+			List<String> items, DownloadVisitPhotoContract.View view) {
 		this.context = context;
-		this.items = entities;
+		this.items = items;
 		this.view = view;
 	}
 
@@ -38,14 +37,22 @@ public class DownloadVisitPhotoRecyclerViewAdapter
 
 	@Override
 	public void onBindViewHolder(DownloadVisitPhotoViewHolder holder, int position) {
-		VisitPhoto visitPhoto = items.get(position);
-		if (visitPhoto == null)
+		String obsUuid = items.get(position);
+		if (obsUuid == null)
 			return;
 
-		holder.fileCaption.setText(visitPhoto.getFileCaption());
+		view.downloadImage(obsUuid, new DataService.GetSingleCallback<Bitmap>() {
+			@Override
+			public void onCompleted(Bitmap entity) {
+				holder.image.setImageBitmap(entity);
+				holder.image.invalidate();
+			}
 
-		Bitmap patientPhoto = BitmapFactory.decodeStream(visitPhoto.getResponseImage().byteStream());
-		holder.image.setImageBitmap(patientPhoto);
+			@Override
+			public void onError(Throwable t) {
+				holder.image.setVisibility(View.GONE);
+			}
+		});
 	}
 
 	@Override

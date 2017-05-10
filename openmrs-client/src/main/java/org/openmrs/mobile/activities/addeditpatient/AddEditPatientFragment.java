@@ -50,6 +50,7 @@ import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.listeners.watcher.PatientBirthdateValidatorWatcher;
 import org.openmrs.mobile.models.BaseOpenmrsObject;
 import org.openmrs.mobile.models.ConceptName;
+import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.PatientIdentifier;
 import org.openmrs.mobile.models.PatientIdentifierType;
@@ -107,6 +108,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 	private Map<String, PersonAttribute> personAttributeMap = new HashMap<>();
 	private Map<View, PersonAttributeType> viewPersonAttributeTypeMap = new HashMap<>();
 	private LinearLayout personLinearLayout;
+	private Location loginLocation;
 
 	public static AddEditPatientFragment newInstance() {
 		return new AddEditPatientFragment();
@@ -240,6 +242,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		PatientIdentifier identifier = new PatientIdentifier();
 		identifier.setIdentifier(ViewUtils.getInput(fileNumber));
 		identifier.setIdentifierType(patientIdentifierType);
+		identifier.setLocation(loginLocation);
 
 		List<PatientIdentifier> patientIdentifierList = new ArrayList<>();
 		patientIdentifierList.add(identifier);
@@ -388,7 +391,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				ConceptName conceptName = conceptNames.get(position);
 				PersonAttribute personAttribute = new PersonAttribute();
-				personAttribute.setValue(conceptName.getAnswer_concept());
+				personAttribute.setValue(String.valueOf(conceptName.getAnswer_concept()));
 				personAttribute.setAttributeType(personAttributeType);
 				personAttributeMap.clear();
 				personAttributeMap.put(conceptName.getUuid(), personAttribute);
@@ -399,6 +402,11 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 			}
 		});
 
+	}
+
+	@Override
+	public void setLoginLocation(Location location) {
+		this.loginLocation = location;
 	}
 
 	private void fillFields(final Patient patient) {

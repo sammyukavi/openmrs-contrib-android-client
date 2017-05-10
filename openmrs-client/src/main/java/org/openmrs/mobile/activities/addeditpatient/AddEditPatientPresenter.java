@@ -21,15 +21,18 @@ import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.api.RestApi;
 import org.openmrs.mobile.api.RestServiceBuilder;
 import org.openmrs.mobile.api.retrofit.PatientApi;
+import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.dao.PatientDAO;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.impl.ConceptDataService;
 import org.openmrs.mobile.data.impl.ConceptNameDataService;
+import org.openmrs.mobile.data.impl.LocationDataService;
 import org.openmrs.mobile.data.impl.PatientDataService;
 import org.openmrs.mobile.data.impl.PatientIdentifierTypeDataService;
 import org.openmrs.mobile.data.impl.PersonAttributeTypeDataService;
 import org.openmrs.mobile.models.ConceptName;
+import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.PatientIdentifierType;
 import org.openmrs.mobile.models.PersonAttribute;
@@ -51,11 +54,14 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 	private PersonAttributeTypeDataService personAttributeTypeDataService;
 	private PatientIdentifierTypeDataService patientIdentifierTypeDataService;
 	private ConceptNameDataService conceptNameDataService;
+	private LocationDataService locationDataService;
 	private RestApi restApi;
 	private Patient patient;
 	private String patientToUpdateId;
 	private List<String> mCounties;
 	private boolean registeringPatient = false;
+	private OpenMRS instance = OpenMRS.getInstance();
+	private String locationUuid;
 
 	private int page = 0;
 	private int limit = 10;
@@ -73,6 +79,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		this.personAttributeTypeDataService = new PersonAttributeTypeDataService();
 		this.conceptNameDataService = new ConceptNameDataService();
 		this.restApi = RestServiceBuilder.createService(RestApi.class);
+		this.locationDataService = new LocationDataService();
 	}
 
 	public AddEditPatientPresenter(AddEditPatientContract.View patientRegistrationView, PatientApi patientApi,
@@ -89,6 +96,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		this.patientIdentifierTypeDataService = new PatientIdentifierTypeDataService();
 		this.personAttributeTypeDataService = new PersonAttributeTypeDataService();
 		this.conceptNameDataService = new ConceptNameDataService();
+		this.locationDataService = new LocationDataService();
 	}
 
 	private boolean validate(Patient patient) {
@@ -163,6 +171,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 	public void subscribe() {
 		getPatientIdentifierTypes();
 		getPersonAttributeTypes();
+		getLoginLocation();
 	}
 
 	@Override
@@ -396,6 +405,33 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public void getLoginLocation() {
+		if (NetworkUtils.hasNetwork()) {
+			if (!instance.getLocation().equalsIgnoreCase(null)) {
+				locationUuid = instance.getLocation();
+			}
+			DataService.GetSingleCallback<Location> getSingleCallback =
+					new DataService.GetSingleCallback<Location>() {
+						@Override
+						public void onCompleted(Location entity) {
+							if (entity != null) {
+								patientRegistrationView.setLoginLocation(entity);
+							}
+						}
+
+						@Override
+						public void onError(Throwable t) {
+							Log.e("LocationError", "Error", t.fillInStackTrace());
+							patientRegistrationView
+									.showToast(ApplicationConstants.entityName.LOCATION + ApplicationConstants
+											.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
+						}
+					};
+			locationDataService.getByUUID(locationUuid,getSingleCallback);
+		}
 	}
 
 	@Override

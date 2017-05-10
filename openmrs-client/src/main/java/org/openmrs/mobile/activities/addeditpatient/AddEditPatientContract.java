@@ -19,6 +19,7 @@ import android.widget.Spinner;
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
 import org.openmrs.mobile.models.ConceptName;
+import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.PatientIdentifierType;
 import org.openmrs.mobile.models.PersonAttributeType;
@@ -60,6 +61,8 @@ public interface AddEditPatientContract {
 
 		void updateConceptNamesView(Spinner conceptNamesDropdown, List<ConceptName> conceptNames);
 
+		void setLoginLocation(Location location);
+
 	}
 
 	interface Presenter extends BasePresenterContract {
@@ -91,6 +94,8 @@ public interface AddEditPatientContract {
 		Patient getPatient();
 
 		void setPatient(Patient patient);
+
+		void getLoginLocation();
 	}
 
 }

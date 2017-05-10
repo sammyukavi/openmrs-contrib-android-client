@@ -39,6 +39,7 @@ import java.util.List;
 
 public class VisitTasksFragment extends ACBaseFragment<VisitTasksContract.Presenter> implements VisitTasksContract.View {
 
+	FloatingActionButton fab;
 	private View mRootView;
 	private RecyclerView viewTasksRecyclerView;
 	private LinearLayoutManager layoutManager;
@@ -46,7 +47,7 @@ public class VisitTasksFragment extends ACBaseFragment<VisitTasksContract.Presen
 	private List<VisitPredefinedTask> predefinedTasks;
 	private List<VisitTask> visitTasksLists;
 	private Visit visit;
-	FloatingActionButton fab;
+	private Bundle extras;
 
 	public static VisitTasksFragment newInstance() {
 		return new VisitTasksFragment();
@@ -56,6 +57,8 @@ public class VisitTasksFragment extends ACBaseFragment<VisitTasksContract.Presen
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		mRootView = inflater.inflate(R.layout.fragment_visit_tasks, container, false);
 		resolveViews(mRootView);
+
+		extras = getActivity().getIntent().getExtras();
 
 		//Adding the Recycler view
 		layoutManager = new LinearLayoutManager(this.getActivity());
@@ -138,6 +141,16 @@ public class VisitTasksFragment extends ACBaseFragment<VisitTasksContract.Presen
 		this.visit = visit;
 	}
 
+	@Override
+	public String getPatientUuid() {
+		return extras.getString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
+	}
+
+	@Override
+	public String getVisitUuid() {
+		return extras.getString(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE);
+	}
+
 	public List<VisitPredefinedTask> removeUsedPredefinedTasks(List<VisitPredefinedTask> visitPredefinedTask,
 			List<VisitTask> visitTask) {
 		String visitTasksName, predefinedTaskName;
@@ -150,7 +163,8 @@ public class VisitTasksFragment extends ACBaseFragment<VisitTasksContract.Presen
 			for (int i = 0; i < visitPredefinedTask.size(); i++) {
 				predefinedTaskName = predefinedTasks.get(i).getName();
 
-				if ((predefinedTaskName.equals(visitTasksName)) && (visitTaskStatus.equals(VisitTaskStatus.OPEN))) {
+				if ((predefinedTaskName.equalsIgnoreCase(visitTasksName)) && (visitTaskStatus
+						.equals(VisitTaskStatus.OPEN))) {
 					visitPredefinedTask.remove(i);
 				}
 			}

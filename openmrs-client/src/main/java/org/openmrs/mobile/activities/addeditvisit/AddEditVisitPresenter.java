@@ -133,9 +133,8 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
                 @Override
                 public void onCompleted(List<Provider> entities, int length) {
                     for (Provider entity : entities) {
-                        System.out.println("===========================");
-                        System.out.println(entity);
-                        if (personUuid.equalsIgnoreCase(entity.getPerson().getUuid())){
+                        if (null != entity.getPerson() && personUuid.equalsIgnoreCase(entity.getPerson().getUuid())){
+
                             provider = entity;
                         }
                     }
@@ -316,7 +315,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
             }
         }
 
-        visit.setPatient(null);
+        //visit.setPatient(null);
         setProcessing(true);
         visitDataService.update(visit, new DataService.GetSingleCallback<Visit>() {
             @Override

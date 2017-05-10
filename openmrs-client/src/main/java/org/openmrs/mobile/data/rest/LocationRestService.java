@@ -10,12 +10,12 @@ import retrofit2.http.Query;
 
 public interface LocationRestService {
 
-    @GET(RestConstants.GET_ALL)
-    Call<Results<Location>> getAll(@Path(value = "restPath", encoded = true) String restPath,
-                                   @Query("v") String representation);
+	@GET(RestConstants.GET_ALL)
+	Call<Results<Location>> getAll(@Path(value = "restPath", encoded = true) String restPath,
+			@Query("v") String representation);
 
-    @GET(RestConstants.GET_BY_UUID)
-    Call<Location> getByUuid(@Path(value = "restPath", encoded = true) String restPath,
-                             @Path("uuid") String uuid,
-                             @Query("v") String representation);
+	@GET(RestConstants.GET_BY_UUID)
+	Call<Location> getByUuid(@Path(value = "restPath", encoded = true) String restPath,
+			@Path("uuid") String uuid,
+			@Query("v") String representation);
 }

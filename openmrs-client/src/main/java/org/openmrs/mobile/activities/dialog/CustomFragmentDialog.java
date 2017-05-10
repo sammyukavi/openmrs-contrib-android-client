@@ -51,12 +51,14 @@ import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
 import org.openmrs.mobile.activities.visittasks.VisitTasksActivity;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
+import org.openmrs.mobile.data.DataService;
+import org.openmrs.mobile.data.impl.ObsDataService;
+import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.VisitPredefinedTask;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.FontsUtil;
 import org.openmrs.mobile.utilities.StringUtils;
-import org.openmrs.mobile.utilities.ToastUtil;
 
 import java.util.Arrays;
 import java.util.List;
@@ -72,6 +74,7 @@ public class CustomFragmentDialog extends DialogFragment {
 	protected TextView mTextView;
 	protected TextView mTitleTextView;
 	protected EditText mEditText;
+	protected EditText mEditNoteText;
 	private Button mLeftButton;
 	private Button mRightButton;
 	private CustomDialogBundle mCustomDialogBundle;
@@ -220,6 +223,10 @@ public class CustomFragmentDialog extends DialogFragment {
 					.getAutoCompleteTextView());
 		}
 
+		if (null != mCustomDialogBundle.getEditNoteTextViewMessage()) {
+			mEditNoteText = addEditNoteTextField(mCustomDialogBundle.getEditNoteTextViewMessage());
+		}
+
 	}
 
 	private RecyclerView addRecycleView(List<Patient> patientsList, Patient newPatient) {
@@ -269,6 +276,16 @@ public class CustomFragmentDialog extends DialogFragment {
 
 		mFieldsLayout.addView(field);
 		return autoCompleteText;
+	}
+
+	public EditText addEditNoteTextField(String defaultMessage) {
+		LinearLayout field = (LinearLayout) mInflater.inflate(R.layout.openmrs_edit_note_text_field, null);
+		EditText editText = (EditText) field.findViewById(R.id.openmrsEditNoteText);
+		if (null != defaultMessage) {
+			editText.setText(defaultMessage);
+		}
+		mFieldsLayout.addView(field);
+		return editText;
 	}
 
 	public TextView addTextField(String message) {
@@ -334,6 +351,14 @@ public class CustomFragmentDialog extends DialogFragment {
 		return value;
 	}
 
+	public String getEditNoteTextValue() {
+		String value = "";
+		if (mEditNoteText != null) {
+			value = mEditNoteText.getText().toString();
+		}
+		return value;
+	}
+
 	public String getAutoCompleteTextValue() {
 		String value = "";
 		if (autoCompleteTextView != null) {
@@ -354,13 +379,13 @@ public class CustomFragmentDialog extends DialogFragment {
 				switch (action) {
 					case DISMISS_URL_DIALOG:
 						/*((FindPatientRecordFragment) getActivity()
-                                .getSupportFragmentManager()
+								.getSupportFragmentManager()
                                 .findFragmentById(R.id.loginContentFrame))
                                 .hideURLDialog();*/
 						dismiss();
 						break;
 					case LOGIN:
-                        /*((FindPatientRecordFragment) getActivity()
+						/*((FindPatientRecordFragment) getActivity()
                                 .getSupportFragmentManager()
                                 .findFragmentById(R.id.loginContentFrame))
                                 .login(true);*/
@@ -395,7 +420,8 @@ public class CustomFragmentDialog extends DialogFragment {
 						dismiss();
 						break;
 					case REGISTER_PATIENT:
-						//((AddEditPatientActivity) getActivity()).mPresenter.registerPatient();
+						((AddEditPatientActivity)getActivity()).mPresenter
+								.registerPatient(mCustomDialogBundle.getNewPatient());
 						dismiss();
 						break;
 					case CANCEL_REGISTERING:
@@ -410,13 +436,38 @@ public class CustomFragmentDialog extends DialogFragment {
 						break;
 					case ADD_VISIT_TASKS:
 						if (StringUtils.notEmpty(getAutoCompleteTextValue())) {
-							((VisitTasksActivity)getActivity()).mPresenter.createVisitTasksObject(getAutoCompleteTextValue());
+							((VisitTasksActivity)getActivity()).mPresenter
+									.createVisitTasksObject(getAutoCompleteTextValue());
 							dismiss();
 							break;
 						} else {
 							dismiss();
 							break;
 						}
+					case SAVE_VISIT_NOTE:
+
+						Bundle bundle = mCustomDialogBundle.getArguments();
+						Patient patient = (Patient) bundle.getSerializable(ApplicationConstants.BundleKeys.PATIENT);
+						Observation observation = (Observation) bundle.getSerializable(ApplicationConstants.BundleKeys.OBSERVATION);
+						observation.setValue(getEditNoteTextValue());
+
+						ObsDataService observationDataService = new ObsDataService();
+
+						observationDataService.update(observation, new DataService.GetSingleCallback<Observation>() {
+							@Override
+							public void onCompleted(Observation entity) {
+								((PatientDashboardActivity) getActivity()).mPresenter.fetchVisits(patient);
+								dismiss();
+							}
+
+							@Override
+							public void onError(Throwable t) {
+
+							}
+						});
+
+
+						break;
 					default:
 						break;
 				}
@@ -458,6 +509,7 @@ public class CustomFragmentDialog extends DialogFragment {
 		REGISTER_PATIENT,
 		CANCEL_REGISTERING,
 		DELETE_PATIENT,
-		ADD_VISIT_TASKS
+		ADD_VISIT_TASKS,
+		SAVE_VISIT_NOTE
 	}
 }

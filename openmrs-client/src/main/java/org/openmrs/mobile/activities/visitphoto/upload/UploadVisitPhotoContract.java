@@ -4,22 +4,20 @@ import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
 import org.openmrs.mobile.models.VisitPhoto;
 
-import java.util.List;
-
 public interface UploadVisitPhotoContract {
 
-    interface View extends BaseView<UploadVisitPhotoContract.Presenter> {
+	interface View extends BaseView<UploadVisitPhotoContract.Presenter> {
 
-    }
+	}
 
-    interface Presenter extends BasePresenterContract {
+	interface Presenter extends BasePresenterContract {
 
-        void uploadImage();
+		void uploadImage();
 
-        VisitPhoto getVisitPhoto();
+		VisitPhoto getVisitPhoto();
 
-        boolean isLoading();
+		boolean isLoading();
 
-        void setLoading(boolean loading);
-    }
+		void setLoading(boolean loading);
+	}
 }

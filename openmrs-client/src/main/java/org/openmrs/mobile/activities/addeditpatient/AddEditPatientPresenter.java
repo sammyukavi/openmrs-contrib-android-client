@@ -214,7 +214,8 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 										+ ApplicationConstants.toastMessages.addSuccessMessage, ToastUtil.ToastType
 										.SUCCESS);
 						patientRegistrationView.startPatientDashboardActivity(entity);
-						patientRegistrationView.finishAddPatientActivity();
+						//patientRegistrationView.finishAddPatientActivity();
+						updatePatient(entity);
 					} else {
 						patientRegistrationView
 								.showToast(ApplicationConstants.entityName.PATIENTS + ApplicationConstants.toastMessages
@@ -237,18 +238,30 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 
 	@Override
 	public void updatePatient(Patient patient) {
-	/*	patientApi.updatePatient(patient, new DefaultResponseCallbackListener() {
-			@Override
-			public void onResponse() {
-				patientRegistrationView.finishAddPatientActivity();
-			}
+		if (NetworkUtils.hasNetwork()) {
+			DataService.GetSingleCallback<Patient> getSingleCallback = new DataService.GetSingleCallback<Patient>() {
+				@Override
+				public void onCompleted(Patient entity) {
+					setRegistering(false);
+					if (entity != null) {
+					} else {
+						patientRegistrationView
+								.showToast(ApplicationConstants.entityName.PATIENTS + ApplicationConstants.toastMessages
+										.addWarningMessage, ToastUtil.ToastType.WARNING);
+					}
+				}
 
-			@Override
-			public void onErrorResponse(String fetchErrorMessage) {
-				registeringPatient = false;
-				patientRegistrationView.setProgressBarVisibility(false);
-			}
-		});*/
+				@Override
+				public void onError(Throwable t) {
+					setRegistering(false);
+					patientRegistrationView.setProgressBarVisibility(false);
+					patientRegistrationView
+							.showToast(ApplicationConstants.entityName.PATIENTS + ApplicationConstants.toastMessages
+									.addErrorMessage, ToastUtil.ToastType.ERROR);
+				}
+			};
+			patientDataService.update(patient, getSingleCallback);
+		}
 	}
 
 	public void findSimilarPatients(Patient patient) {
@@ -271,7 +284,8 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 							.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 				}
 			};
-			patientDataService.getByNameAndIdentifier(patient.getPerson().getName().getNameString(), pagingInfo,
+			//Just check if the identifier are the same. If not it saves the patient.
+			patientDataService.getByNameAndIdentifier(patient.getIdentifier().getIdentifier(), pagingInfo,
 					getMultipleCallback);
 		} else {
 			// get the users from the local storage.
@@ -348,9 +362,6 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 										String uuid = personAttributeTypes.get(i).getUuid();
 
 										if (uuid.equalsIgnoreCase(unwantedUuid)) {
-											personAttributeTypes.remove(i);
-										} else if (personAttributeTypes.get(i).getFormat().equalsIgnoreCase("org.openmrs"
-												+ ".Concept")) {
 											personAttributeTypes.remove(i);
 										}
 									}

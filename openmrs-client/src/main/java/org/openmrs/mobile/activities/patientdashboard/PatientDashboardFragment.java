@@ -15,6 +15,7 @@
 package org.openmrs.mobile.activities.patientdashboard;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -41,6 +42,7 @@ import org.openmrs.mobile.activities.addeditvisit.AddEditVisitActivity;
 import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
 import org.openmrs.mobile.activities.visitphoto.upload.UploadVisitPhotoActivity;
 import org.openmrs.mobile.activities.visittasks.VisitTasksActivity;
+import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Observation;
@@ -57,6 +59,9 @@ import java.util.List;
 public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardContract.Presenter>
 		implements PatientDashboardContract.View {
 
+	String visitdetailsText = "";
+	String visitStartDateTime;
+	String visitStopDateTime;
 	private View fragmentView;
 	private TextView patientDisplayName;
 	private TextView patientGender;
@@ -70,6 +75,8 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	private Patient patient;
 	private LinearLayout visitNoteContainer;
 	private boolean isCurrentVisit = false;
+	private OpenMRS instance = OpenMRS.getInstance();
+	SharedPreferences sharedPreferences = instance.getOpenMRSSharedPreferences();
 
 	public static PatientDashboardFragment newInstance() {
 		return new PatientDashboardFragment();
@@ -103,14 +110,18 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		switch (selectedId) {
 			case R.id.add_visit_image:
 				Intent intent = new Intent(getContext(), UploadVisitPhotoActivity.class);
-				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patient);
-				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, mainVisit);
+				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, sharedPreferences.getString
+						(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING));
+				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, sharedPreferences.getString
+						(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING));
 				startActivity(intent);
 				break;
 			case R.id.add_visit_task:
 				intent = new Intent(getContext(), VisitTasksActivity.class);
-				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patient);
-				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, mainVisit);
+				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, sharedPreferences.getString
+						(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING));
+				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, sharedPreferences.getString
+						(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING));
 				startActivity(intent);
 				break;
 			case R.id.audit_data_form:
@@ -121,14 +132,18 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 				break;
 			case R.id.start_visit:
 				intent = new Intent(getContext(), AddEditVisitActivity.class);
-				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patient);
-				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, mainVisit);
+				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, sharedPreferences.getString
+						(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING));
+				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, sharedPreferences.getString
+						(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING));
 				startActivity(intent);
 				break;
 			case R.id.end_visit:
 				intent = new Intent(getContext(), AddEditVisitActivity.class);
-				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patient);
-				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, mainVisit);
+				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, sharedPreferences.getString
+						(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING));
+				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, sharedPreferences.getString
+						(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING));
 				startActivity(intent);
 				break;
 		}
@@ -167,17 +182,16 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 			DateTime date = DateUtils.convertTimeString(person.getBirthdate());
 			patientAge.setText(DateUtils.calculateAge(date.getYear(), date.getMonthOfYear(), date.getDayOfMonth()));
 			mPresenter.fetchVisits(patient);
+			setPatientUuid(patient);
 		}
 	}
 
 	@Override
 	public void updateVisitsCard(List<Visit> visits) {
 
-		if (visits.size() >= 1) {
-			String visitdetailsText = "";
-			String visitStartDateTime;
-			String visitStopDateTime;
+		if (!visits.isEmpty()) {
 			mainVisit = visits.get(0);
+			setVisitUuid(mainVisit);
 			visitStopDateTime = mainVisit.getStopDatetime();
 			visitStartDateTime = mainVisit.getStartDatetime();
 			if (!StringUtils.notNull(visitStopDateTime)) {
@@ -188,7 +202,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 				visitdetailsText +=
 						"Visit:\n" + DateUtils.convertTime1(visitStartDateTime, DateUtils.PATIENT_DASHBOARD_DATE_FORMAT)
 								+ " - " + DateUtils.convertTime1(visitStopDateTime, DateUtils
-                                .PATIENT_DASHBOARD_DATE_FORMAT);
+								.PATIENT_DASHBOARD_DATE_FORMAT);
 			}
 			visitDetails.setText(visitdetailsText);
 			if (mainVisit != null) {
@@ -210,22 +224,6 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 				}
 
 			}
-
-			//LinearLayout previousVisitsContainer = (LinearLayout) fragmentView.findViewById(R.id
-            // .previous_visits_container);
-			///LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams
-			/// .MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-			//layoutParams.gravity = Gravity.CENTER;
-			//Context context = getContext();
-			//visits.remove(0);
-            /*for (int counter = 1; counter < visits.size(); counter++) {
-                Visit visit = visits.get(counter);
-                TextView pastVisitTextView = new TextView(context);
-                pastVisitTextView.setText(DateUtils.convertTime1(visit.getStartDatetime(), DateUtils
-                .PATIENT_DASHBOARD_DATE_FORMAT) + " - " + DateUtils.convertTime1(visit.getStopDatetime(), DateUtils
-                .PATIENT_DASHBOARD_DATE_FORMAT));
-                previousVisitsContainer.addView(pastVisitTextView);
-            }*/
 
 			RecyclerView previousVisits = (RecyclerView)fragmentView.findViewById(R.id.previousVisits);
 
@@ -261,12 +259,24 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
 	}
 
+	public void setPatientUuid(Patient patient) {
+		SharedPreferences.Editor editor = instance.getOpenMRSSharedPreferences().edit();
+		editor.putString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patient.getPerson().getUuid());
+		editor.commit();
+	}
+
+	public void setVisitUuid(Visit visit) {
+		SharedPreferences.Editor editor = instance.getOpenMRSSharedPreferences().edit();
+		editor.putString(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visit.getUuid());
+		editor.commit();
+	}
+
 	@Override
 	public void updateVisitNote(Observation observation) {
 
 		ViewGroup.LayoutParams linearLayoutParams =
 				new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams
-                        .WRAP_CONTENT,
+						.WRAP_CONTENT,
 						1.0f);
 		LinearLayout itemsContainer = new LinearLayout(getContext());
 		itemsContainer.setLayoutParams(linearLayoutParams);

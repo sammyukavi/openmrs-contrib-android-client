@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
 import org.openmrs.mobile.data.DataService;
-import org.openmrs.mobile.models.VisitPhoto;
 
 import java.util.List;
 

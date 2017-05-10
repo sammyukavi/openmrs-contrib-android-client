@@ -23,17 +23,17 @@ import android.preference.PreferenceManager;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
-import org.greenrobot.greendao.database.Database;
 import org.openmrs.mobile.api.FormListService;
 import org.openmrs.mobile.databases.OpenMRSDBOpenHelper;
-//import org.openmrs.mobile.models.DaoMaster;
-//import org.openmrs.mobile.models.DaoSession;
 import org.openmrs.mobile.security.SecretKeyGenerator;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+
+//import org.openmrs.mobile.models.DaoMaster;
+//import org.openmrs.mobile.models.DaoSession;
 
 public class OpenMRS extends Application {
 	private static final String OPENMRS_DIR_NAME = "OpenMRS";

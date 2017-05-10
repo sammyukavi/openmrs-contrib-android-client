@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.data.DataService;
-import org.openmrs.mobile.models.VisitPhoto;
 
 import java.util.List;
 
@@ -23,7 +22,6 @@ public class DownloadVisitPhotoFragment extends ACBaseFragment<DownloadVisitPhot
 	private LinearLayoutManager layoutManager;
 	private RecyclerView recyclerView;
 	private DownloadVisitPhotoRecyclerViewAdapter adapter;
-
 
 	public static DownloadVisitPhotoFragment newInstance() {
 		return new DownloadVisitPhotoFragment();
@@ -39,10 +37,9 @@ public class DownloadVisitPhotoFragment extends ACBaseFragment<DownloadVisitPhot
 		return root;
 	}
 
-
 	@Override
 	public void updateVisitImageUrls(List<String> urls) {
-		if(adapter == null) {
+		if (adapter == null) {
 			adapter = new DownloadVisitPhotoRecyclerViewAdapter(this.getActivity(), urls, this);
 		}
 

@@ -26,7 +26,6 @@ public abstract class ApplicationConstants {
 	public static final String LAST_LOGIN_SERVER_URL = "last_login_server_url";
 	public static final String DEFAULT_OPEN_MRS_URL = "http://192.168.2.34:9996/openmrs/";
 	public static final String THUMBNAIL_VIEW = "complexdata.view.thumbnail";
-
 	//discuss on using the openhmis
 	// demo as the main test server to avoid changes here.
 

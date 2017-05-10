@@ -41,6 +41,7 @@ import java.util.List;
 
 public class VisitTasksFragment extends ACBaseFragment<VisitTasksContract.Presenter> implements VisitTasksContract.View {
 
+	private static OpenMRS instance = OpenMRS.getInstance();
 	FloatingActionButton fab;
 	private View mRootView;
 	private RecyclerView viewTasksRecyclerView;
@@ -49,7 +50,6 @@ public class VisitTasksFragment extends ACBaseFragment<VisitTasksContract.Presen
 	private List<VisitPredefinedTask> predefinedTasks;
 	private List<VisitTask> visitTasksLists;
 	private Visit visit;
-	private static OpenMRS instance = OpenMRS.getInstance();
 
 	public static VisitTasksFragment newInstance() {
 		return new VisitTasksFragment();

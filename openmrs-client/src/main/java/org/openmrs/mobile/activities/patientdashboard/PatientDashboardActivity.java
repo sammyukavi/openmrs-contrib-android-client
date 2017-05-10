@@ -14,16 +14,13 @@
 
 package org.openmrs.mobile.activities.patientdashboard;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.view.Menu;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
-import org.openmrs.mobile.utilities.ApplicationConstants;
 
 public class PatientDashboardActivity extends ACBaseActivity {
 

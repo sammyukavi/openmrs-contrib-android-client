@@ -47,14 +47,6 @@
 				fab:fab_size="mini" />
 
 		<com.github.clans.fab.FloatingActionButton
-				android:id="@+id/add_diagnosis"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:src="@drawable/ic_start_visit"
-				fab:fab_label="@string/label_add_diagnosis"
-				fab:fab_size="mini" />
-
-		<com.github.clans.fab.FloatingActionButton
 				android:id="@+id/audit_data_form"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
@@ -63,7 +55,7 @@
 				fab:fab_size="mini" />
 
 		<com.github.clans.fab.FloatingActionButton
-				android:id="@+id/visit_tasks"
+				android:id="@+id/add_visit_image"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:src="@drawable/ic_start_visit"
@@ -79,11 +71,11 @@
 				fab:fab_size="mini" />
 
 		<com.github.clans.fab.FloatingActionButton
-				android:id="@+id/add_task"
+				android:id="@+id/add_visit_task"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:src="@drawable/ic_start_visit"
-				fab:fab_label="@string/label_add_task"
+				fab:fab_label="@string/add_visit_task_dialog_title"
 				fab:fab_size="mini" />
 
 

@@ -279,8 +279,8 @@ public class CustomFragmentDialog extends DialogFragment {
 	}
 
 	public EditText addEditNoteTextField(String defaultMessage) {
-		LinearLayout field = (LinearLayout) mInflater.inflate(R.layout.openmrs_edit_note_text_field, null);
-		EditText editText = (EditText) field.findViewById(R.id.openmrsEditNoteText);
+		LinearLayout field = (LinearLayout)mInflater.inflate(R.layout.openmrs_edit_note_text_field, null);
+		EditText editText = (EditText)field.findViewById(R.id.openmrsEditNoteText);
 		if (null != defaultMessage) {
 			editText.setText(defaultMessage);
 		}
@@ -386,7 +386,7 @@ public class CustomFragmentDialog extends DialogFragment {
 						break;
 					case LOGIN:
 						/*((FindPatientRecordFragment) getActivity()
-                                .getSupportFragmentManager()
+								.getSupportFragmentManager()
                                 .findFragmentById(R.id.loginContentFrame))
                                 .login(true);*/
 						dismiss();
@@ -447,8 +447,9 @@ public class CustomFragmentDialog extends DialogFragment {
 					case SAVE_VISIT_NOTE:
 
 						Bundle bundle = mCustomDialogBundle.getArguments();
-						Patient patient = (Patient) bundle.getSerializable(ApplicationConstants.BundleKeys.PATIENT);
-						Observation observation = (Observation) bundle.getSerializable(ApplicationConstants.BundleKeys.OBSERVATION);
+						Patient patient = (Patient)bundle.getSerializable(ApplicationConstants.BundleKeys.PATIENT);
+						Observation observation =
+								(Observation)bundle.getSerializable(ApplicationConstants.BundleKeys.OBSERVATION);
 						observation.setValue(getEditNoteTextValue());
 
 						ObsDataService observationDataService = new ObsDataService();
@@ -456,7 +457,7 @@ public class CustomFragmentDialog extends DialogFragment {
 						observationDataService.update(observation, new DataService.GetSingleCallback<Observation>() {
 							@Override
 							public void onCompleted(Observation entity) {
-								((PatientDashboardActivity) getActivity()).mPresenter.fetchVisits(patient);
+								((PatientDashboardActivity)getActivity()).mPresenter.fetchVisits(patient);
 								dismiss();
 							}
 
@@ -465,7 +466,6 @@ public class CustomFragmentDialog extends DialogFragment {
 
 							}
 						});
-
 
 						break;
 					default:

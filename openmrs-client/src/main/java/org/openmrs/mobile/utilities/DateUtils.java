@@ -29,13 +29,11 @@ import java.util.TimeZone;
 public final class DateUtils {
 	public static final String DEFAULT_DATE_FORMAT = "dd/MM/yyyy";
 	public static final String DATE_WITH_TIME_FORMAT = "dd/MM/yyyy HH:mm";
-
-	private static final String OPEN_MRS_RESPONSE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
 	public static final String OPEN_MRS_REQUEST_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
 	public static final String OPEN_MRS_REQUEST_PATIENT_FORMAT = "yyyy-MM-dd";
 	public static final String PATIENT_DASHBOARD_DATE_FORMAT = "dd.MM.yyyy HH:mm";
-
 	public static final Long ZERO = 0L;
+	private static final String OPEN_MRS_RESPONSE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
 
 	private DateUtils() {
 
@@ -77,7 +75,8 @@ public final class DateUtils {
 					formattedDate = parseString(dateAsString, new SimpleDateFormat(OPEN_MRS_REQUEST_PATIENT_FORMAT));
 					time = formattedDate.getTime();
 				} catch (ParseException e1) {
-					OpenMRS.getInstance().getOpenMRSLogger().w("Failed to parse date :" + dateAsString + " caused by " + e.toString());
+					OpenMRS.getInstance().getOpenMRSLogger()
+							.w("Failed to parse date :" + dateAsString + " caused by " + e.toString());
 				}
 			}
 		}
@@ -89,7 +88,8 @@ public final class DateUtils {
 		try {
 			formattedDate = format.parse(dateAsString);
 		} catch (NullPointerException e) {
-			OpenMRS.getInstance().getOpenMRSLogger().w("Failed to parse date :" + dateAsString + " caused by " + e.toString());
+			OpenMRS.getInstance().getOpenMRSLogger()
+					.w("Failed to parse date :" + dateAsString + " caused by " + e.toString());
 		}
 		return formattedDate;
 	}

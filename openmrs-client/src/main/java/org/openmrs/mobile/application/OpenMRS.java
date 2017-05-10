@@ -26,8 +26,8 @@ import net.sqlcipher.database.SQLiteDatabase;
 import org.greenrobot.greendao.database.Database;
 import org.openmrs.mobile.api.FormListService;
 import org.openmrs.mobile.databases.OpenMRSDBOpenHelper;
-import org.openmrs.mobile.models.DaoMaster;
-import org.openmrs.mobile.models.DaoSession;
+//import org.openmrs.mobile.models.DaoMaster;
+//import org.openmrs.mobile.models.DaoSession;
 import org.openmrs.mobile.security.SecretKeyGenerator;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 
@@ -72,9 +72,9 @@ public class OpenMRS extends Application {
 	}
 
 	protected void initializeDB() {
-		DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, ENCRYPTED ? "notes-db-encrypted" : "notes-db");
-		Database db = ENCRYPTED ? helper.getEncryptedWritableDb("super-secret") : helper.getWritableDb();
-		DaoSession daoSession = new DaoMaster(db).newSession();
+		//DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, ENCRYPTED ? "notes-db-encrypted" : "notes-db");
+		//Database db = ENCRYPTED ? helper.getEncryptedWritableDb("super-secret") : helper.getWritableDb();
+		//DaoSession daoSession = new DaoMaster(db).newSession();
 	}
 
 	public SharedPreferences getOpenMRSSharedPreferences() {

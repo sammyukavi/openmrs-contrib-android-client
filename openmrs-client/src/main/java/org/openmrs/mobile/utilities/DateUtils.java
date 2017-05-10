@@ -22,16 +22,20 @@ import org.openmrs.mobile.application.OpenMRS;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
 public final class DateUtils {
 	public static final String DEFAULT_DATE_FORMAT = "dd/MM/yyyy";
 	public static final String DATE_WITH_TIME_FORMAT = "dd/MM/yyyy HH:mm";
+
+	private static final String OPEN_MRS_RESPONSE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
 	public static final String OPEN_MRS_REQUEST_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
 	public static final String OPEN_MRS_REQUEST_PATIENT_FORMAT = "yyyy-MM-dd";
+	public static final String PATIENT_DASHBOARD_DATE_FORMAT = "dd.MM.yyyy HH:mm";
+
 	public static final Long ZERO = 0L;
-	private static final String OPEN_MRS_RESPONSE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
 
 	private DateUtils() {
 
@@ -73,8 +77,7 @@ public final class DateUtils {
 					formattedDate = parseString(dateAsString, new SimpleDateFormat(OPEN_MRS_REQUEST_PATIENT_FORMAT));
 					time = formattedDate.getTime();
 				} catch (ParseException e1) {
-					OpenMRS.getInstance().getOpenMRSLogger().w(
-							"Failed to parse date :" + dateAsString + " caused by " + e.toString());
+					OpenMRS.getInstance().getOpenMRSLogger().w("Failed to parse date :" + dateAsString + " caused by " + e.toString());
 				}
 			}
 		}
@@ -86,8 +89,7 @@ public final class DateUtils {
 		try {
 			formattedDate = format.parse(dateAsString);
 		} catch (NullPointerException e) {
-			OpenMRS.getInstance().getOpenMRSLogger().w(
-					"Failed to parse date :" + dateAsString + " caused by " + e.toString());
+			OpenMRS.getInstance().getOpenMRSLogger().w("Failed to parse date :" + dateAsString + " caused by " + e.toString());
 		}
 		return formattedDate;
 	}
@@ -108,4 +110,20 @@ public final class DateUtils {
 		return dateAsString;
 	}
 
+	public static String now(String format) {
+		return new SimpleDateFormat(format).format(new Date());
+	}
+
+	public static String calculateAge(int year, int month, int day) {
+		Calendar dob = Calendar.getInstance();
+		Calendar today = Calendar.getInstance();
+		dob.set(year, month, day);
+		int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
+		if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)) {
+			age--;
+		}
+		Integer ageInt = new Integer(age);
+		String ageS = ageInt.toString();
+		return ageS;
+	}
 }

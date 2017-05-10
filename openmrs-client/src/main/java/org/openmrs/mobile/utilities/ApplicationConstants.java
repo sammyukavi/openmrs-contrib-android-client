@@ -24,9 +24,8 @@ public abstract class ApplicationConstants {
 	public static final String VISIT_TYPE_UUID = "visit_type_uuid";
 	public static final String LAST_SESSION_TOKEN = "last_session_id";
 	public static final String LAST_LOGIN_SERVER_URL = "last_login_server_url";
-	public static final String DEFAULT_OPEN_MRS_URL = "http://10.1.1.2:8080/openmrs/";
-	public static final String PATIENT_UUID = "1027a3b6-6129-48e0-91c6-edb8ec7e8f3e";
-	public static final String VISIT_UUID = "98ba2669-802c-4d00-8a89-8b28e47823bf";
+	public static final String DEFAULT_OPEN_MRS_URL = "http://192.168.2.34:9996/openmrs/";
+
 	//discuss on using the openhmis
 	// demo as the main test server to avoid changes here.
 
@@ -67,6 +66,7 @@ public abstract class ApplicationConstants {
 		public static final String SIMILAR_PATIENTS_TAG = "similarPatientsDialogTag";
 		public static final String DELET_PATIENT_DIALOG_TAG = "deletePatientDialogTag";
 		public static final String ADD_VISIT_TASK_DIALOG_TAG = "addVisitTaskDialogTag";
+		public static final String VISIT_NOTE_TAG = "visitNoteTag";
 	}
 
 	public abstract static class RegisterPatientRequirements {
@@ -92,16 +92,18 @@ public abstract class ApplicationConstants {
 	}
 
 	public abstract static class EncounterTypeEntitys {
-		public static final String VITALS = "67a71486-1a54-468f-ac3e-7091a9a79584";
-		/*public static String[] ENCOUNTER_TYPES_DISPLAYS =
-				{ EncounterType.VITALS, EncounterTypeEntity.ADMISSION, EncounterTypeEntity.DISCHARGE, EncounterTypeEntity
-				.VISIT_NOTE };*/
+		public static final String VITALSS = "67a71486-1a54-468f-ac3e-7091a9a79584";
+		public static final String VITALS = "Vitals";
+		public static final String VISIT_NOTE = "Visit Note";
+		public static final String DISCHARGE = "Discharge";
+		public static final String ADMISSION = "Admission";
+
 	}
 
 	public abstract static class BundleKeys {
 		public static final String CUSTOM_DIALOG_BUNDLE = "customDialogBundle";
-		public static final String PATIENT_UUID_BUNDLE = "patientID";
-		public static final String VISIT_ID_BUNDLE = "visitID";
+		public static final String PATIENT_UUID_BUNDLE = "patientUUID";
+		public static final String VISIT_UUID_BUNDLE = "visitUUID";
 		public static final String PROVIDER_ID_BUNDLE = "providerID";
 		public static final String EncounterTypeEntity = "EncounterTypeEntity";
 		public static final String VALUEREFERENCE = "valueReference";
@@ -111,6 +113,9 @@ public abstract class ApplicationConstants {
 		public static final String FORM_FIELDS_BUNDLE = "formFieldsBundle";
 		public static final String FORM_FIELDS_LIST_BUNDLE = "formFieldsListBundle";
 		public static final String PATIENT_QUERY_BUNDLE = "patientQuery";
+		public static final String PATIENT = "patientTag";
+		public static final String OBSERVATION = "observationTag";
+		public static final String VISIT = "visitTag";
 	}
 
 	public abstract static class Tags {

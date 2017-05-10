@@ -129,7 +129,7 @@ public class VisitApi {
 
 	public void syncLastVitals(final String patientUuid, @Nullable final DefaultResponseCallbackListener callbackListener) {
 		Call<Results<Encounter>> call =
-				restApi.getLastVitals(patientUuid, ApplicationConstants.EncounterTypeEntitys.VITALS, "full", 1, "desc");
+				restApi.getLastVitals(patientUuid, ApplicationConstants.EncounterTypeEntitys.VITALSS, "full", 1, "desc");
 		call.enqueue(new Callback<Results<Encounter>>() {
 			@Override
 			public void onResponse(Call<Results<Encounter>> call, Response<Results<Encounter>> response) {

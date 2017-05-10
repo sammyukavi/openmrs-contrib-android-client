@@ -100,7 +100,7 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 				Intent intent = new Intent(getContext(), UploadVisitPhotoActivity.class);
 				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE,
 						mPresenter.getPatient().getUuid());
-				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_ID_BUNDLE,
+				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE,
 						mPresenter.getVisit().getUuid());
 				intent.putExtra(ApplicationConstants.BundleKeys.PROVIDER_ID_BUNDLE,
 						mPresenter.getProvider().getUuid());

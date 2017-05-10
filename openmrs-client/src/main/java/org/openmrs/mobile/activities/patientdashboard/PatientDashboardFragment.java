@@ -65,7 +65,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	private View fragmentView;
 	private TextView patientDisplayName;
 	private TextView patientGender;
-	private TextView patientAge;
+	private TextView patientAge, patientFecthedDob;
 	private TextView patientIdentifier;
 	private TextView visitDetails;
 	private FloatingActionMenu floatingActionMenu;
@@ -155,6 +155,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		patientGender = (TextView)fragmentView.findViewById(R.id.fetchedPatientGender);
 		patientAge = (TextView)fragmentView.findViewById(R.id.fetchedPatientAge);
 		visitDetails = (TextView)fragmentView.findViewById(R.id.visitDetails);
+		patientFecthedDob = (TextView)fragmentView.findViewById(R.id.fetchedPatientBirthDate);
 		//TextView moreLabel = (TextView) fragmentView.findViewById(R.id.more_label);
 		floatingActionMenu = (FloatingActionMenu)getActivity().findViewById(R.id.floatingActionMenu);
 		floatingActionMenu.setVisibility(View.VISIBLE);

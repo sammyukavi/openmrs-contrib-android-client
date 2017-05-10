@@ -126,4 +126,13 @@ public final class DateUtils {
 		String ageS = ageInt.toString();
 		return ageS;
 	}
+
+	public static String convertTimeStringDisplay(String dateAsString) {
+		DateTime date = null;
+		if (StringUtils.notNull(dateAsString)) {
+			DateTimeFormatter originalFormat = DateTimeFormat.forPattern(DateUtils.PATIENT_DASHBOARD_DATE_FORMAT);
+			date = originalFormat.parseDateTime(dateAsString);
+		}
+		return String.valueOf(date);
+	}
 }

@@ -16,6 +16,7 @@ public class UploadVisitPhotoActivity extends ACBaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getLayoutInflater().inflate(R.layout.activity_visit_photo, frameLayout);
+		setTitle(getString(R.string.upload_image));
 
 		Bundle extras = getIntent().getExtras();
 		String patientUuid;

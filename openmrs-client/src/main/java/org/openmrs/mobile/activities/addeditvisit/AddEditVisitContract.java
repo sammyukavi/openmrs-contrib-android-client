@@ -44,6 +44,7 @@ public interface AddEditVisitContract {
 		void updateConceptNamesView(Spinner conceptNamesDropdown, List<ConceptName> conceptNames);
 
 		void showPatientDashboard();
+
 	}
 
 	interface Presenter extends BasePresenterContract {
@@ -66,7 +67,7 @@ public interface AddEditVisitContract {
 
 		void setProcessing(boolean processing);
 
-		void endVisit(String uuid);
+		void endVisit();
 	}
 }
 

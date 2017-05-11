@@ -26,7 +26,7 @@ import org.openmrs.mobile.utilities.ToastUtil;
 
 public class AddEditVisitActivity extends ACBaseActivity {
 
-	private AddEditVisitContract.Presenter addEditVisitPresenter;
+	public AddEditVisitContract.Presenter addEditVisitPresenter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -75,4 +75,5 @@ public class AddEditVisitActivity extends ACBaseActivity {
 		super.onCreateOptionsMenu(menu);
 		return true;
 	}
+
 }

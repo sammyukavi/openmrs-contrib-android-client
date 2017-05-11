@@ -293,8 +293,11 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	}
 
 	@Override
-	public void endVisit(String uuid) {
-		visitDataService.endVisit(uuid,
+	public void endVisit() {
+		if(null == visit || null == visit.getUuid())
+			return;
+
+		visitDataService.endVisit(visit.getUuid(),
 				DateUtils.convertTime(System.currentTimeMillis(), DateUtils.OPEN_MRS_REQUEST_FORMAT),
 				new DataService.GetSingleCallback<Visit>() {
 					@Override

@@ -149,12 +149,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 				startActivity(intent);
 				break;
 			case R.id.end_visit:
-				intent = new Intent(getContext(), AddEditVisitActivity.class);
-				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, sharedPreferences.getString
-						(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING));
-				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, sharedPreferences.getString
-						(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING));
-				startActivity(intent);
+				((PatientDashboardActivity) getActivity()).showEndVisitDialog();
 				break;
 		}
 	}

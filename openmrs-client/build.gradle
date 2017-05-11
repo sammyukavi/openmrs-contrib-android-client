@@ -35,7 +35,7 @@ android {
         versionName buildVersionName
         versionCode buildNumber
 
-        minSdkVersion 16
+        minSdkVersion 14
         targetSdkVersion 23
 
         testApplicationId "org.openmrs.mobile.test"

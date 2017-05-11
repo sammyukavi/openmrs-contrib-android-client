@@ -19,6 +19,7 @@ import android.widget.Spinner;
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
 import org.openmrs.mobile.models.ConceptName;
+import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.PatientIdentifierType;
 import org.openmrs.mobile.models.PersonAttributeType;
@@ -33,7 +34,7 @@ public interface AddEditPatientContract {
 		void finishAddPatientActivity();
 
 		void setErrorsVisibility(boolean givenNameError, boolean familyNameError, boolean dayOfBirthError,
-				boolean addressError, boolean county_Error, boolean genderError, boolean patientFileNumberError,
+				boolean county_Error, boolean genderError, boolean patientFileNumberError,
 				boolean civilStatusError, boolean occupationError, boolean subCounty_Error, boolean nationality_Error,
 				boolean patientIdNo_Error, boolean clinic_Error, boolean ward_Error, boolean phonenumber_Error,
 				boolean kinName_Error, boolean kinRelationship_Error, boolean kinPhonenumber_Error,
@@ -59,6 +60,8 @@ public interface AddEditPatientContract {
 		void loadPersonAttributeTypes(List<PersonAttributeType> personAttributeTypeList);
 
 		void updateConceptNamesView(Spinner conceptNamesDropdown, List<ConceptName> conceptNames);
+
+		void setLoginLocation(Location location);
 
 	}
 
@@ -91,6 +94,8 @@ public interface AddEditPatientContract {
 		Patient getPatient();
 
 		void setPatient(Patient patient);
+
+		void getLoginLocation();
 	}
 
 }

@@ -50,247 +50,242 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
     @NonNull
     private AddEditVisitContract.View addEditVisitView;
 
-    private Patient patient;
-    private Visit visit;
-    private VisitAttributeTypeDataService visitAttributeTypeDataService;
-    private VisitTypeDataService visitTypeDataService;
-    private ConceptNameDataService conceptNameDataService;
-    private VisitDataService visitDataService;
-    private PatientDataService patientDataService;
-    private ProviderDataService providerDataService;
-    private LocationDataService locationDataService;
-    private boolean processing;
-    private String patientUuid;
-    private Provider provider;
-    private Location location;
+	private Patient patient;
+	private Visit visit;
+	private VisitAttributeTypeDataService visitAttributeTypeDataService;
+	private VisitTypeDataService visitTypeDataService;
+	private ConceptNameDataService conceptNameDataService;
+	private VisitDataService visitDataService;
+	private PatientDataService patientDataService;
+	private LocationDataService locationDataService;
+	private boolean processing;
+	private String patientUuid;
+	private Location location;
 
     public AddEditVisitPresenter(@NonNull AddEditVisitContract.View addEditVisitView, String patientUuid) {
-        this(addEditVisitView, patientUuid, null, null, null, null, null, null, null);
+        this(addEditVisitView, patientUuid, null, null, null, null, null, null);
     }
 
-    public AddEditVisitPresenter(@NonNull AddEditVisitContract.View addEditVisitView, String patientUuid,
-                                 VisitDataService visitDataService, PatientDataService patientDataService,
-                                 VisitTypeDataService visitTypeDataService, VisitAttributeTypeDataService visitAttributeTypeDataService,
-                                 ConceptNameDataService conceptNameDataService, ProviderDataService providerDataService,
-                                 LocationDataService locationDataService){
-        this.addEditVisitView = addEditVisitView;
-        this.addEditVisitView.setPresenter(this);
-        this.patientUuid = patientUuid;
+	public AddEditVisitPresenter(@NonNull AddEditVisitContract.View addEditVisitView, String patientUuid,
+			VisitDataService visitDataService, PatientDataService patientDataService,
+			VisitTypeDataService visitTypeDataService, VisitAttributeTypeDataService visitAttributeTypeDataService,
+			ConceptNameDataService conceptNameDataService, LocationDataService locationDataService) {
+		this.addEditVisitView = addEditVisitView;
+		this.addEditVisitView.setPresenter(this);
+		this.patientUuid = patientUuid;
 
-        if(visitDataService == null) {
-            this.visitDataService = new VisitDataService();
-        } else {
-            this.visitDataService = visitDataService;
-        }
+		if (visitDataService == null) {
+			this.visitDataService = new VisitDataService();
+		} else {
+			this.visitDataService = visitDataService;
+		}
 
-        if(visitAttributeTypeDataService == null) {
-            this.visitAttributeTypeDataService = new VisitAttributeTypeDataService();
-        } else {
-            this.visitAttributeTypeDataService = visitAttributeTypeDataService;
-        }
+		if (visitAttributeTypeDataService == null) {
+			this.visitAttributeTypeDataService = new VisitAttributeTypeDataService();
+		} else {
+			this.visitAttributeTypeDataService = visitAttributeTypeDataService;
+		}
 
-        if(visitTypeDataService == null) {
-            this.visitTypeDataService = new VisitTypeDataService();
-        } else {
-            this.visitTypeDataService = visitTypeDataService;
-        }
+		if (visitTypeDataService == null) {
+			this.visitTypeDataService = new VisitTypeDataService();
+		} else {
+			this.visitTypeDataService = visitTypeDataService;
+		}
 
-        if(patientDataService == null) {
-            this.patientDataService = new PatientDataService();
-        } else {
-            this.patientDataService = patientDataService;
-        }
+		if (patientDataService == null) {
+			this.patientDataService = new PatientDataService();
+		} else {
+			this.patientDataService = patientDataService;
+		}
 
-        if(conceptNameDataService == null) {
-            this.conceptNameDataService = new ConceptNameDataService();
-        } else {
-            this.conceptNameDataService = conceptNameDataService;
-        }
+		if (conceptNameDataService == null) {
+			this.conceptNameDataService = new ConceptNameDataService();
+		} else {
+			this.conceptNameDataService = conceptNameDataService;
+		}
 
-        if(providerDataService == null) {
-            this.providerDataService = new ProviderDataService();
-        } else {
-            this.providerDataService = providerDataService;
-        }
+		if (locationDataService == null) {
+			this.locationDataService = new LocationDataService();
+		} else {
+			this.locationDataService = locationDataService;
+		}
 
-        if(locationDataService == null) {
-            this.locationDataService = new LocationDataService();
-        } else {
-            this.locationDataService = locationDataService;
-        }
+		this.visit = new Visit();
 
-        this.visit = new Visit();
+	}
 
-    }
+	@Override
+	public void subscribe() {
+		loadPatient();
+		getLocation();
+	}
 
-    /**
-     * TODO: create a service to getProviderByPerson, move code to commons
-     */
-    private void getCurrentProvider(){
-        String personUuid = OpenMRS.getInstance().getCurrentLoggedInUserInfo().get(ApplicationConstants.UserKeys.USER_UUID);
-        if(StringUtils.notEmpty(personUuid)) {
+	private void loadPatient() {
+		if (StringUtils.notEmpty(patientUuid)) {
+			patientDataService.getByUUID(patientUuid, null, new DataService.GetCallback<Patient>() {
+				@Override
+				public void onCompleted(Patient entity) {
+					setPatient(entity);
+					loadVisit(entity);
+				}
 
-            providerDataService.getAll(new QueryOptions(false, false), null, new DataService.GetCallback<List<Provider>>() {
-                @Override
-                public void onCompleted(List<Provider> providers) {
-                    for (Provider entity : providers) {
-                        System.out.println("===========================");
-                        System.out.println(entity);
-                        if (personUuid.equalsIgnoreCase(entity.getPerson().getUuid())){
-                            provider = entity;
-                        }
-                    }
-                }
+				@Override
+				public void onError(Throwable t) {
+					ToastUtil.error(t.getMessage());
+				}
+			});
+		}
+	}
 
-                @Override
-                public void onError(Throwable t) {
-                    ToastUtil.error(t.getMessage());
-                }
-            });
-        }
-    }
+	private void loadVisit(Patient patient) {
+		visitDataService.getByPatient(patient, null, null, new DataService.GetCallback<List<Visit>>() {
+			@Override
+			public void onCompleted(List<Visit> entities) {
+				if (entities.size() > 0) {
+					visit = entities.get(0);
+					addEditVisitView.initView(false);
+				} else {
+					addEditVisitView.initView(true);
+				}
+
+				loadVisitTypes();
+
+				loadVisitAttributeTypes();
+			}
+
+			@Override
+			public void onError(Throwable t) {
+				ToastUtil.error(t.getMessage());
+			}
+		});
+	}
+
+	@Override
+	public List<VisitAttributeType> loadVisitAttributeTypes() {
+		final List<VisitAttributeType> visitAttributeTypes = new ArrayList<>();
+		visitAttributeTypeDataService
+				.getAll(null, new PagingInfo(), new DataService.GetCallback<List<VisitAttributeType>>() {
+					@Override
+					public void onCompleted(List<VisitAttributeType> entities) {
+						visitAttributeTypes.addAll(entities);
+						addEditVisitView.loadVisitAttributeTypeFields(visitAttributeTypes);
+						setProcessing(false);
+					}
+
+					@Override
+					public void onError(Throwable t) {
+						ToastUtil.error(t.getMessage());
+					}
+				});
+
+		return visitAttributeTypes;
+	}
+
+	public void loadVisitTypes() {
+		visitTypeDataService.getAll(null, null, new DataService.GetCallback<List<VisitType>>() {
+			@Override
+			public void onCompleted(List<VisitType> entities) {
+				addEditVisitView.updateVisitTypes(entities);
+			}
+
+			@Override
+			public void onError(Throwable t) {
+				ToastUtil.error(t.getMessage());
+			}
+		});
+	}
+
+	/**
+	 * TODO: Move to Base class
+	 */
+	public void getLocation() {
+		locationDataService.getByUUID(OpenMRS.getInstance().getLocation(), null, new DataService.GetCallback<Location>() {
+			@Override
+			public void onCompleted(Location entity) {
+				location = entity;
+			}
+
+			@Override
+			public void onError(Throwable t) {
+				ToastUtil.error(t.getMessage());
+			}
+		});
+	}
+
+	@Override
+	public void getConceptNames(String uuid, Spinner dropdown) {
+		conceptNameDataService.getByConceptUuid(uuid, new DataService.GetCallback<List<ConceptName>>() {
+			@Override
+			public void onCompleted(List<ConceptName> entities) {
+				addEditVisitView.updateConceptNamesView(dropdown, entities);
+			}
+
+			@Override
+			public void onError(Throwable t) {
+				ToastUtil.error(t.getMessage());
+			}
+		});
+	}
+
+	@Override
+	public Patient getPatient() {
+		return patient;
+	}
+
+	@Override
+	public void setPatient(Patient patient) {
+		this.patient = patient;
+	}
+
+	@Override
+	public Visit getVisit() {
+		return visit;
+	}
+
+	@Override
+	public void startVisit(List<VisitAttribute> attributes) {
+		visit.setAttributes(attributes);
+		visit.setPatient(patient);
+		if (null != location) {
+			visit.setLocation(location.getParentLocation());
+		}
+
+		setProcessing(true);
+
+		visitDataService.create(visit, new DataService.GetCallback<Visit>() {
+			@Override
+			public void onCompleted(Visit entity) {
+				setProcessing(false);
+				addEditVisitView.setSpinnerVisibility(false);
+				addEditVisitView.showPatientDashboard();
+			}
+
+			@Override
+			public void onError(Throwable t) {
+				setProcessing(false);
+				addEditVisitView.setSpinnerVisibility(false);
+				ToastUtil.error(t.getMessage());
+			}
+		});
+	}
 
     @Override
-    public void subscribe() {
-        loadPatient();
-        getCurrentProvider();
-        getLocation();
-    }
+	public void updateVisit(List<VisitAttribute> attributes) {
+		List<VisitAttribute> existingAttributes = visit.getAttributes();
 
-    private void loadPatient(){
-        if(StringUtils.notEmpty(patientUuid)){
-            patientDataService.getByUUID(patientUuid, null, new DataService.GetCallback<Patient>() {
-                @Override
-                public void onCompleted(Patient entity) {
-                    setPatient(entity);
-                    loadVisit(entity);
-                }
+		//void existing attributes
+		for (VisitAttribute visitAttribute : existingAttributes) {
+			visitAttribute.setUuid(null);
 
-                @Override
-                public void onError(Throwable t) {
-                    ToastUtil.error(t.getMessage());
-                }
-            });
-        }
-    }
+			if (attributes.contains(visitAttribute)) {
+				visitAttribute.setVoided(true);
+				visitAttribute.setDateVoided(new Date());
+			}
+		}
 
-    private void loadVisit(Patient patient){
-        visitDataService.getByPatient(patient, new QueryOptions(false, false), null,
-                new DataService.GetCallback<List<Visit>>() {
-            @Override
-            public void onCompleted(List<Visit> entities) {
-                if( entities.size() > 0){
-                    visit = entities.get(0);
-                    addEditVisitView.initView(false);
-                } else {
-                    addEditVisitView.initView(true);
-                }
-
-                loadVisitTypes();
-
-                loadVisitAttributeTypes();
-            }
-
-            @Override
-            public void onError(Throwable t) {
-                ToastUtil.error(t.getMessage());
-            }
-        });
-    }
-
-    @Override
-    public List<VisitAttributeType> loadVisitAttributeTypes() {
-        final List<VisitAttributeType> visitAttributeTypes = new ArrayList<>();
-        visitAttributeTypeDataService.getAll(new QueryOptions(false, false), null,
-				new DataService.GetCallback<List<VisitAttributeType>>() {
-            @Override
-            public void onCompleted(List<VisitAttributeType> entities) {
-                visitAttributeTypes.addAll(entities);
-                addEditVisitView.loadVisitAttributeTypeFields(visitAttributeTypes);
-                setProcessing(false);
-            }
-
-            @Override
-            public void onError(Throwable t) {
-                ToastUtil.error(t.getMessage());
-            }
-        });
-
-        return visitAttributeTypes;
-    }
-
-    public void loadVisitTypes() {
-        visitTypeDataService.getAll(new QueryOptions(false, false), null, new DataService.GetCallback<List<VisitType>>() {
-            @Override
-            public void onCompleted(List<VisitType> entities) {
-                addEditVisitView.updateVisitTypes(entities);
-            }
-
-            @Override
-            public void onError(Throwable t) {
-                ToastUtil.error(t.getMessage());
-            }
-        });
-    }
-
-    /**
-     * TODO: Move to Base class
-     */
-    public void getLocation(){
-        locationDataService.getByUUID(OpenMRS.getInstance().getLocation(), null, new DataService.GetCallback<Location>() {
-            @Override
-            public void onCompleted(Location entity) {
-                location = entity;
-            }
-
-            @Override
-            public void onError(Throwable t) {
-                ToastUtil.error(t.getMessage());
-            }
-        });
-    }
-
-    @Override
-    public void getConceptNames(String uuid, Spinner dropdown) {
-        conceptNameDataService.getByConceptUuid(uuid, new DataService.GetCallback<List<ConceptName>>() {
-            @Override
-            public void onCompleted(List<ConceptName> entities) {
-                addEditVisitView.updateConceptNamesView(dropdown, entities);
-            }
-
-            @Override
-            public void onError(Throwable t) {
-                ToastUtil.error(t.getMessage());
-            }
-        });
-    }
-
-    @Override
-    public Patient getPatient() {
-        return patient;
-    }
-
-    @Override
-    public void setPatient(Patient patient) {
-        this.patient = patient;
-    }
-
-    @Override
-    public Visit getVisit() {
-        return visit;
-    }
-
-    @Override
-    public void startVisit(List<VisitAttribute> attributes) {
-        visit.setAttributes(attributes);
-        visit.setPatient(patient);
-        if(null != location) {
-            visit.setLocation(location.getParentLocation());
-        }
-
+        //visit.setPatient(null);
         setProcessing(true);
-
-        visitDataService.create(visit, new DataService.GetCallback<Visit>() {
+        visitDataService.update(visit, new DataService.GetCallback<Visit>() {
             @Override
             public void onCompleted(Visit entity) {
                 setProcessing(false);
@@ -298,47 +293,14 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
                 addEditVisitView.showPatientDashboard();
             }
 
-            @Override
-            public void onError(Throwable t) {
-                setProcessing(false);
-                addEditVisitView.setSpinnerVisibility(false);
-                ToastUtil.error(t.getMessage());
-            }
-        });
-    }
-
-    @Override
-    public void updateVisit(List<VisitAttribute> attributes) {
-        List<VisitAttribute> existingAttributes = visit.getAttributes();
-
-		//void existing attributes
-        for (VisitAttribute visitAttribute : existingAttributes) {
-            visitAttribute.setUuid(null);
-
-			if (attributes.contains(visitAttribute)) {
-                visitAttribute.setVoided(true);
-                visitAttribute.setDateVoided(new Date());
-            }
-        }
-
-        visit.setPatient(null);
-        setProcessing(true);
-        visitDataService.update(visit, new DataService.GetCallback<Visit>() {
-            @Override
-            public void onCompleted(Visit entity) {
-                setProcessing(false);
-                addEditVisitView.setSpinnerVisibility(false);
-                //addEditVisitView.showPatientDashboard();
-            }
-
-            @Override
-            public void onError(Throwable t) {
-                setProcessing(false);
-                addEditVisitView.setSpinnerVisibility(false);
-                ToastUtil.error(t.getMessage());
-            }
-        });
-    }
+			@Override
+			public void onError(Throwable t) {
+				setProcessing(false);
+				addEditVisitView.setSpinnerVisibility(false);
+				ToastUtil.error(t.getMessage());
+			}
+		});
+	}
 
     @Override
     public void endVisit(String uuid) {
@@ -348,39 +310,34 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
                     @Override
                     public void onCompleted(Visit entity) {
 
-                    }
+					}
 
-                    @Override
-                    public void onError(Throwable t) {
-                        ToastUtil.error(t.getMessage());
-                    }
-        });
-    }
+					@Override
+					public void onError(Throwable t) {
+						ToastUtil.error(t.getMessage());
+					}
+				});
+	}
 
-    @Override
-    public boolean isProcessing() {
-        return processing;
-    }
+	@Override
+	public boolean isProcessing() {
+		return processing;
+	}
 
-    @Override
-    public void setProcessing(boolean processing) {
-        this.processing = processing;
-    }
+	@Override
+	public void setProcessing(boolean processing) {
+		this.processing = processing;
+	}
 
-    @Override
-    public <T> T searchVisitAttributeValueByType(VisitAttributeType visitAttributeType){
-        if(null != getVisit() && null != getVisit().getAttributes()) {
-            for (VisitAttribute visitAttribute : getVisit().getAttributes()) {
-                if (visitAttribute.getAttributeType().getUuid().equalsIgnoreCase(visitAttributeType.getUuid())) {
-                    return (T) visitAttribute.getValue();
-                }
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public Provider getProvider() {
-        return provider;
-    }
+	@Override
+	public <T> T searchVisitAttributeValueByType(VisitAttributeType visitAttributeType) {
+		if (null != getVisit() && null != getVisit().getAttributes()) {
+			for (VisitAttribute visitAttribute : getVisit().getAttributes()) {
+				if (visitAttribute.getAttributeType().getUuid().equalsIgnoreCase(visitAttributeType.getUuid())) {
+					return (T)visitAttribute.getValue();
+				}
+			}
+		}
+		return null;
+	}
 }

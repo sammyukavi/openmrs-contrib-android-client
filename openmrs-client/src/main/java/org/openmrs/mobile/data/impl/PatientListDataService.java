@@ -32,7 +32,7 @@ public class PatientListDataService
 
 	@Override
 	protected String getEntityName() {
-		return "patientList";
+		return "patientlist/list";
 	}
 
 	@Override

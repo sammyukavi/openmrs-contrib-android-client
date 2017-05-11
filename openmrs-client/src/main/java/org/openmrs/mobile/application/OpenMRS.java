@@ -32,6 +32,9 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+//import org.openmrs.mobile.models.DaoMaster;
+//import org.openmrs.mobile.models.DaoSession;
+
 public class OpenMRS extends Application {
 	private static final String OPENMRS_DIR_NAME = "OpenMRS";
 	private static final String OPENMRS_DIR_PATH = File.separator + OPENMRS_DIR_NAME;

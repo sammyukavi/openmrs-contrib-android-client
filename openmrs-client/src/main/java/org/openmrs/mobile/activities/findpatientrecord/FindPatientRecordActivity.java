@@ -93,6 +93,7 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
 		getMenuInflater().inflate(R.menu.menu_find_patient_record, menu);
 		MenuItem mFindPatientMenuItem = menu.findItem(R.id.action_search);
 
@@ -109,7 +110,7 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 				if (query.length() >= 3) {
 					findPatientPresenter.findPatient(query);
 				} else {
-					findPatientPresenter.getLastViewed();
+					findPatientPresenter.getLastViewed(findPatientPresenter.getPage());
 					findPatientRecordFragment.setSearchPatientVisibility(true);
 					findPatientRecordFragment.setNoPatientsVisibility(false);
 				}
@@ -122,7 +123,7 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 					findPatientPresenter.findPatient(query);
 				} else {
 					//findPatientPresenter.getLastViewed();
-					findPatientRecordFragment.setNumberOfPatientsView(0);
+					findPatientRecordFragment.setNumberOfPatientsView(1);
 					findPatientRecordFragment.setSearchPatientVisibility(true);
 					findPatientRecordFragment.setNoPatientsVisibility(false);
 				}

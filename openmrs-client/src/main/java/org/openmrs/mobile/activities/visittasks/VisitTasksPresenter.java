@@ -119,8 +119,8 @@ public class VisitTasksPresenter extends BasePresenter implements VisitTasksCont
 									.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 				}
 			};
-			visitTaskDataService.getAll(ApplicationConstants.EMPTY_STRING, ApplicationConstants.PATIENT_UUID,
-					ApplicationConstants.VISIT_UUID, null, pagingInfo, getMultipleCallback);
+			visitTaskDataService.getAll(ApplicationConstants.EMPTY_STRING, visitTasksView.getPatientUuid(),
+					visitTasksView.getVisitUuid(), null, pagingInfo, getMultipleCallback);
 		} else {
 			// get the users from the local storage.
 		}
@@ -192,10 +192,10 @@ public class VisitTasksPresenter extends BasePresenter implements VisitTasksCont
 	@Override
 	public void createVisitTasksObject(String visitTask) {
 		Patient patient = new Patient();
-		patient.setUuid(ApplicationConstants.PATIENT_UUID);
+		patient.setUuid(visitTasksView.getPatientUuid());
 
 		Visit visit = new Visit();
-		visit.setUuid(ApplicationConstants.VISIT_UUID);
+		visit.setUuid(visitTasksView.getVisitUuid());
 
 		VisitTask visitTaskEntity = new VisitTask();
 
@@ -227,7 +227,7 @@ public class VisitTasksPresenter extends BasePresenter implements VisitTasksCont
 									.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 				}
 			};
-			visitDataService.getByUUID(ApplicationConstants.VISIT_UUID, null, getSingleCallback);
+			visitDataService.getByUUID(visitTasksView.getVisitUuid(), null, getSingleCallback);
 		} else {
 			// get the users from the local storage.
 		}

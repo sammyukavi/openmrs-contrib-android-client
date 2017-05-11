@@ -14,6 +14,7 @@
 
 package org.openmrs.mobile.activities.visittasks;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -26,6 +27,7 @@ import android.view.ViewGroup;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
+import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitPredefinedTask;
@@ -39,6 +41,8 @@ import java.util.List;
 
 public class VisitTasksFragment extends ACBaseFragment<VisitTasksContract.Presenter> implements VisitTasksContract.View {
 
+	private static OpenMRS instance = OpenMRS.getInstance();
+	FloatingActionButton fab;
 	private View mRootView;
 	private RecyclerView viewTasksRecyclerView;
 	private LinearLayoutManager layoutManager;
@@ -46,7 +50,6 @@ public class VisitTasksFragment extends ACBaseFragment<VisitTasksContract.Presen
 	private List<VisitPredefinedTask> predefinedTasks;
 	private List<VisitTask> visitTasksLists;
 	private Visit visit;
-	FloatingActionButton fab;
 
 	public static VisitTasksFragment newInstance() {
 		return new VisitTasksFragment();
@@ -138,6 +141,20 @@ public class VisitTasksFragment extends ACBaseFragment<VisitTasksContract.Presen
 		this.visit = visit;
 	}
 
+	@Override
+	public String getPatientUuid() {
+		SharedPreferences sharedPreferences = instance.getOpenMRSSharedPreferences();
+		return sharedPreferences.getString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, ApplicationConstants
+				.EMPTY_STRING);
+	}
+
+	@Override
+	public String getVisitUuid() {
+		SharedPreferences sharedPreferences = instance.getOpenMRSSharedPreferences();
+		return sharedPreferences.getString(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, ApplicationConstants
+				.EMPTY_STRING);
+	}
+
 	public List<VisitPredefinedTask> removeUsedPredefinedTasks(List<VisitPredefinedTask> visitPredefinedTask,
 			List<VisitTask> visitTask) {
 		String visitTasksName, predefinedTaskName;
@@ -150,7 +167,8 @@ public class VisitTasksFragment extends ACBaseFragment<VisitTasksContract.Presen
 			for (int i = 0; i < visitPredefinedTask.size(); i++) {
 				predefinedTaskName = predefinedTasks.get(i).getName();
 
-				if ((predefinedTaskName.equals(visitTasksName)) && (visitTaskStatus.equals(VisitTaskStatus.OPEN))) {
+				if ((predefinedTaskName.equalsIgnoreCase(visitTasksName)) && (visitTaskStatus
+						.equals(VisitTaskStatus.OPEN))) {
 					visitPredefinedTask.remove(i);
 				}
 			}

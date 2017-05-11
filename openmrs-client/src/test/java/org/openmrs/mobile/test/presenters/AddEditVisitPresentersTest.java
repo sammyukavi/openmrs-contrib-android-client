@@ -14,7 +14,6 @@ import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.impl.ConceptNameDataService;
 import org.openmrs.mobile.data.impl.LocationDataService;
 import org.openmrs.mobile.data.impl.PatientDataService;
-import org.openmrs.mobile.data.impl.ProviderDataService;
 import org.openmrs.mobile.data.impl.VisitAttributeTypeDataService;
 import org.openmrs.mobile.data.impl.VisitDataService;
 import org.openmrs.mobile.data.impl.VisitTypeDataService;
@@ -53,8 +52,6 @@ public class AddEditVisitPresentersTest extends ACUnitTestBase {
     @Mock
     private ConceptNameDataService conceptNameDataService;
     @Mock
-    private ProviderDataService providerDataService;
-    @Mock
     private LocationDataService locationDataService;
     @Mock
     private OpenMRS openMRS;
@@ -68,13 +65,11 @@ public class AddEditVisitPresentersTest extends ACUnitTestBase {
     private Location location;
     private List<Visit> visits = new ArrayList<>();
     private List<VisitType> visitTypes = new ArrayList<>();
-    private List<Provider> providers = new ArrayList<>();
 
     @Before
     public void setUp(){
         presenter = new AddEditVisitPresenter(view, patientUuid, visitDataService,
-                patientDataService, visitTypeDataService, visitAttributeTypeDataService, conceptNameDataService,
-                providerDataService, locationDataService);
+                patientDataService, visitTypeDataService, visitAttributeTypeDataService, conceptNameDataService, locationDataService);
 
         patient = new Patient();
         patient.setUuid(patientUuid);
@@ -102,10 +97,6 @@ public class AddEditVisitPresentersTest extends ACUnitTestBase {
         visits.add(visit);
 
         visitTypes.add(new VisitType("Inpatient Kijabe", "547874"));
-
-        Provider provider = new Provider();
-        provider.setPerson(patient.getPerson());
-        providers.add(provider);
 
         PowerMockito.mockStatic(OpenMRS.class);
         PowerMockito.when(OpenMRS.getInstance()).thenReturn(openMRS);
@@ -144,15 +135,6 @@ public class AddEditVisitPresentersTest extends ACUnitTestBase {
             }
         }).when(visitTypeDataService).getAll(any(QueryOptions.class), any(PagingInfo.class),
 				any(DataService.GetCallback.class));
-
-        // load current provider callback
-        doAnswer(new Answer<Void>() {
-            @Override
-            public Void answer(InvocationOnMock invocation) throws Throwable {
-                ((DataService.GetCallback) invocation.getArguments()[2]).onCompleted(providers);
-                return null;
-            }
-        }).when(providerDataService).getAll(any(QueryOptions.class), any(PagingInfo.class), any(DataService.GetCallback.class));
 
         // load location callback
         doAnswer(new Answer<Void>() {

@@ -23,7 +23,7 @@ import java.util.List;
  */
 public interface PatientListCallbackListener extends DefaultResponseCallbackListener {
 
-    void onGetPatientList(List<PatientList> patientLists);
+	void onGetPatientList(List<PatientList> patientLists);
 
     void onGetPatientListData(List<PatientListContext> listContextModels);
 }

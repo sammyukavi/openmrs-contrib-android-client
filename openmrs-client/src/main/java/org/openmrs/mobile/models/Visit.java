@@ -18,15 +18,15 @@ import com.google.gson.annotations.Expose;
 
 import java.util.List;
 
-public class Visit extends BaseOpenmrsEntity  {
+public class Visit extends BaseOpenmrsEntity {
 
-    private Long id;
+	private Long id;
 
-    @Expose
-    private VisitType visitType;
+	@Expose
+	private VisitType visitType;
 
-    @Expose
-    private Location location;
+	@Expose
+	private Location location;
 
 	@Expose
 	private String startDatetime;
@@ -34,8 +34,8 @@ public class Visit extends BaseOpenmrsEntity  {
 	@Expose
 	private String stopDatetime;
 
-    @Expose
-    private List<Encounter> encounters;
+	@Expose
+	private List<Encounter> encounters;
 
 	@Expose
 	private List<VisitAttribute> attributes;
@@ -84,15 +84,15 @@ public class Visit extends BaseOpenmrsEntity  {
 		return encounters;
 	}
 
-    public void setEncounters(List<Encounter> encounters) {
-        this.encounters = encounters;
-    }
+	public void setEncounters(List<Encounter> encounters) {
+		this.encounters = encounters;
+	}
 
-    public List<VisitAttribute> getAttributes() {
-        return attributes;
-    }
+	public List<VisitAttribute> getAttributes() {
+		return attributes;
+	}
 
-    public void setAttributes(List<VisitAttribute> attributes) {
-        this.attributes = attributes;
-    }
+	public void setAttributes(List<VisitAttribute> attributes) {
+		this.attributes = attributes;
+	}
 }

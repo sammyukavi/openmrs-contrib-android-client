@@ -29,19 +29,19 @@ import java.util.List;
 
 public class PatientListPresenter extends BasePresenter implements PatientListContract.Presenter {
 
-    @NonNull
-    private PatientListContract.View patientListView;
-    private int limit = 10;
-    private int page = 1;
-    private int totalNumberResults;
-    private boolean loading;
+	@NonNull
+	private PatientListContract.View patientListView;
+	private int limit = 10;
+	private int page = 1;
+	private int totalNumberResults;
+	private boolean loading;
 
     private PatientListDataService patientListDataService;
     private PatientListContextDataService patientListContextDataService;
 
-    public PatientListPresenter(@NonNull PatientListContract.View patientListView) {
-        this(patientListView, null, null);
-    }
+	public PatientListPresenter(@NonNull PatientListContract.View patientListView) {
+		this(patientListView, null, null);
+	}
 
     public PatientListPresenter(@NonNull PatientListContract.View patientListView,
                                 PatientListDataService patientListDataService,
@@ -49,11 +49,11 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
         this.patientListView = patientListView;
         this.patientListView.setPresenter(this);
 
-        if(patientListDataService == null){
-            this.patientListDataService = new PatientListDataService();
-        } else {
-            this.patientListDataService = patientListDataService;
-        }
+		if (patientListDataService == null) {
+			this.patientListDataService = new PatientListDataService();
+		} else {
+			this.patientListDataService = patientListDataService;
+		}
 
         if(patientListContextDataService == null) {
             this.patientListContextDataService = new PatientListContextDataService();
@@ -62,11 +62,11 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
         }
     }
 
-    @Override
-    public void subscribe() {
-        // get all patient lists
-        getPatientList();
-    }
+	@Override
+	public void subscribe() {
+		// get all patient lists
+		getPatientList();
+	}
 
     @Override
     public void getPatientList(){
@@ -80,12 +80,12 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
                 patientListView.updatePatientLists(entities);
             }
 
-            @Override
-            public void onError(Throwable t) {
-                patientListView.setNoPatientListsVisibility(true);
-            }
-        });
-    }
+			@Override
+			public void onError(Throwable t) {
+				patientListView.setNoPatientListsVisibility(true);
+			}
+		});
+	}
 
     @Override
     public void getPatientListData(String patientListUuid, int page){
@@ -110,78 +110,78 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
                 setLoading(false);
             }
 
-            @Override
-            public void onError(Throwable t) {
-                patientListView.updatePatientListData(new ArrayList<>());
-                setViewAfterLoadData(true);
-                setLoading(false);
-            }
-        });
-    }
+					@Override
+					public void onError(Throwable t) {
+						patientListView.updatePatientListData(new ArrayList<>());
+						setViewAfterLoadData(true);
+						setLoading(false);
+					}
+				});
+	}
 
-    @Override
-    public void loadResults(String patientListUuid, boolean loadNextResults) {
-        getPatientListData(patientListUuid, computePage(loadNextResults));
-    }
+	@Override
+	public void loadResults(String patientListUuid, boolean loadNextResults) {
+		getPatientListData(patientListUuid, computePage(loadNextResults));
+	}
 
-    @Override
-    public void setPage(int page) {
-        this.page = page;
-    }
+	@Override
+	public int getPage() {
+		return page;
+	}
 
-    @Override
-    public int getPage() {
-        return page;
-    }
+	@Override
+	public void setPage(int page) {
+		this.page = page;
+	}
 
-    @Override
-    public void setTotalNumberResults(int totalNumberResults) {
-        this.totalNumberResults = totalNumberResults;
-    }
+	private int getTotalNumberResults() {
+		return totalNumberResults;
+	}
 
-    private int getTotalNumberResults(){
-        return totalNumberResults;
-    }
+	@Override
+	public void setTotalNumberResults(int totalNumberResults) {
+		this.totalNumberResults = totalNumberResults;
+	}
 
-    private int computePage(boolean next){
-        int tmpPage = getPage();
-        // check if pagination is required.
-        if(page < Math.round(getTotalNumberResults() / limit)){
-            if(next) {
-                // set next page
-                tmpPage += 1;
-            } else {
-                // set previous page.
-                 tmpPage -= 1;
-            }
-        } else {
-            tmpPage = -1;
-        }
+	private int computePage(boolean next) {
+		int tmpPage = getPage();
+		// check if pagination is required.
+		if (page < Math.round(getTotalNumberResults() / limit)) {
+			if (next) {
+				// set next page
+				tmpPage += 1;
+			} else {
+				// set previous page.
+				tmpPage -= 1;
+			}
+		} else {
+			tmpPage = -1;
+		}
 
-        return tmpPage;
-    }
+		return tmpPage;
+	}
 
-    @Override
-    public boolean isLoading() {
-        return loading;
-    }
+	@Override
+	public boolean isLoading() {
+		return loading;
+	}
 
-    @Override
-    public void setLoading(boolean loading) {
-        this.loading = loading;
-    }
+	@Override
+	public void setLoading(boolean loading) {
+		this.loading = loading;
+	}
 
-    @Override
-    public void refresh() {
-    }
+	@Override
+	public void refresh() {
+	}
 
-    private void setViewBeforeLoadData(){
-        patientListView.setSpinnerVisibility(true);
-        patientListView.setEmptyPatientListVisibility(false);
-    }
+	private void setViewBeforeLoadData() {
+		patientListView.setSpinnerVisibility(true);
+		patientListView.setEmptyPatientListVisibility(false);
+	}
 
-    private void setViewAfterLoadData(boolean visible){
-        patientListView.setSpinnerVisibility(false);
-        patientListView.setEmptyPatientListVisibility(visible);
-    }
+	private void setViewAfterLoadData(boolean visible) {
+		patientListView.setSpinnerVisibility(false);
+		patientListView.setEmptyPatientListVisibility(visible);
+	}
 }

@@ -28,4 +28,12 @@ public interface ObsRestService {
 			@Query("patient") String patientUuid,
 			@Query("conceptList") String conceptList,
 			@Query("v") String representation);
+
+	@GET(RestConstants.REST_PATH)
+	Call<Results<Observation>> getByEncounter(@Path(value = "restPath", encoded = true) String restPath,
+			@Query("encounter") String encounterUuid,
+			@Query("v") String representation,
+			@Query("includeAll") Boolean includeAll,
+			@Query("limit") Integer limit,
+			@Query("startIndex") Integer startIndex);
 }

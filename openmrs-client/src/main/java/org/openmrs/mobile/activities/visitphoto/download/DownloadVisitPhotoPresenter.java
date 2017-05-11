@@ -1,6 +1,8 @@
 package org.openmrs.mobile.activities.visitphoto.download;
 
 import android.support.annotation.NonNull;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.data.DataService;
@@ -8,6 +10,7 @@ import org.openmrs.mobile.data.impl.ObsDataService;
 import org.openmrs.mobile.data.impl.VisitPhotoDataService;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.VisitPhoto;
+import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.ToastUtil;
 
 import java.util.ArrayList;
@@ -15,71 +18,72 @@ import java.util.List;
 
 public class DownloadVisitPhotoPresenter extends BasePresenter implements DownloadVisitPhotoContract.Presenter {
 
-    private final String THUMBNAIL_VIEW = "complexdata.view.thumbnail";
-    @NonNull
-    private DownloadVisitPhotoContract.View view;
-    private String patientUuid;
-    private boolean loading;
-    private VisitPhotoDataService visitPhotoDataService;
-    private ObsDataService obsDataService;
-    private List<VisitPhoto> images = new ArrayList<>();
+	@NonNull
+	private DownloadVisitPhotoContract.View view;
+	private String patientUuid;
+	private boolean loading;
+	private VisitPhotoDataService visitPhotoDataService;
+	private ObsDataService obsDataService;
 
-    public DownloadVisitPhotoPresenter(DownloadVisitPhotoContract.View view, String patientUuid) {
-        this.view = view;
-        this.view.setPresenter(this);
-        this.patientUuid = patientUuid;
-        this.visitPhotoDataService = new VisitPhotoDataService();
-        this.obsDataService = new ObsDataService();
-    }
+	public DownloadVisitPhotoPresenter(DownloadVisitPhotoContract.View view, String patientUuid) {
+		this.view = view;
+		this.view.setPresenter(this);
+		this.patientUuid = patientUuid;
+		this.visitPhotoDataService = new VisitPhotoDataService();
+		this.obsDataService = new ObsDataService();
+	}
 
-    @Override
-    public void downloadImages() {
-        images.clear();
-        // get observations for patient.
-        obsDataService.getVisitDocumentsObsByPatientAndConceptList(patientUuid,
-                new DataService.GetCallback<List<Observation>>() {
-            @Override
-            public void onCompleted(List<Observation> observations) {
-                for (Observation observation : observations) {
-                    // download images
-                    visitPhotoDataService.downloadPhoto(observation.getUuid(), THUMBNAIL_VIEW, new DataService.GetCallback<VisitPhoto>() {
-                        @Override
-                        public void onCompleted(VisitPhoto entity) {
-                            entity.setFileCaption(observation.getComment());
-                            images.add(entity);
+	@Override
+	public void loadVisitDocumentObservations() {
+		// get obs for patient.
+		obsDataService.getVisitDocumentsObsByPatientAndConceptList(patientUuid,
+				new DataService.GetCallback<List<Observation>>() {
+					@Override
+					public void onCompleted(List<Observation> observations) {
+						List<String> imageUrls = new ArrayList<>();
+						for (Observation observation : observations) {
+							imageUrls.add(observation.getUuid());
+						}
 
-                            if (observations.indexOf(observation) == observations.size() - 1) {
-                                view.updateVisitImages(images);
-                            }
-                        }
+						view.updateVisitImageUrls(imageUrls);
+					}
 
-                        @Override
-                        public void onError(Throwable t) {
-                            ToastUtil.error(t.getMessage());
-                        }
-                    });
-                }
-            }
+					@Override
+					public void onError(Throwable t) {
+						ToastUtil.error(t.getMessage());
+					}
+				});
+	}
 
-            @Override
-            public void onError(Throwable t) {
-                ToastUtil.error(t.getMessage());
-            }
-        });
-    }
+	@Override
+	public void downloadImage(String obsUuid, DataService.GetCallback<Bitmap> callback) {
+		visitPhotoDataService.downloadPhoto(obsUuid, ApplicationConstants.THUMBNAIL_VIEW,
+				new DataService.GetCallback<VisitPhoto>() {
+					@Override
+					public void onCompleted(VisitPhoto entity) {
+						callback.onCompleted(BitmapFactory.decodeStream(entity.getResponseImage().byteStream()));
+					}
 
-    @Override
-    public void subscribe() {
-        downloadImages();
-    }
+					@Override
+					public void onError(Throwable t) {
+						callback.onError(t);
+						ToastUtil.error(t.getMessage());
+					}
+				});
+	}
 
-    @Override
-    public boolean isLoading() {
-        return loading;
-    }
+	@Override
+	public void subscribe() {
+		loadVisitDocumentObservations();
+	}
 
-    @Override
-    public void setLoading(boolean loading) {
-        this.loading = loading;
-    }
+	@Override
+	public boolean isLoading() {
+		return loading;
+	}
+
+	@Override
+	public void setLoading(boolean loading) {
+		this.loading = loading;
+	}
 }

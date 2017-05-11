@@ -29,48 +29,46 @@ import java.util.List;
 
 public interface AddEditVisitContract {
 
-    interface View extends BaseView<Presenter> {
+	interface View extends BaseView<Presenter> {
 
-        void setVisitTitleText(String text);
+		void setVisitTitleText(String text);
 
-        void initView(boolean startVisit);
+		void initView(boolean startVisit);
 
-        void setSpinnerVisibility(boolean visibility);
+		void setSpinnerVisibility(boolean visibility);
 
-        void loadVisitAttributeTypeFields(List<VisitAttributeType> visitAttributeTypes);
+		void loadVisitAttributeTypeFields(List<VisitAttributeType> visitAttributeTypes);
 
-        void updateVisitTypes(List<VisitType> visitTypes);
+		void updateVisitTypes(List<VisitType> visitTypes);
 
-        void updateConceptNamesView(Spinner conceptNamesDropdown, List<ConceptName> conceptNames);
+		void updateConceptNamesView(Spinner conceptNamesDropdown, List<ConceptName> conceptNames);
 
-        void showPatientDashboard();
-    }
+		void showPatientDashboard();
+	}
 
-    interface Presenter extends BasePresenterContract {
+	interface Presenter extends BasePresenterContract {
 
-        List<VisitAttributeType> loadVisitAttributeTypes();
+		List<VisitAttributeType> loadVisitAttributeTypes();
 
-        Patient getPatient();
+		Patient getPatient();
 
-        void setPatient(Patient patient);
+		void setPatient(Patient patient);
 
-        Visit getVisit();
+		Visit getVisit();
 
-        void startVisit(List<VisitAttribute> attributes);
+		void startVisit(List<VisitAttribute> attributes);
 
-        void updateVisit(List<VisitAttribute> attributes);
+		void updateVisit(List<VisitAttribute> attributes);
 
-        <T> T searchVisitAttributeValueByType(VisitAttributeType visitAttributeType);
+		<T> T searchVisitAttributeValueByType(VisitAttributeType visitAttributeType);
 
-        void getConceptNames(String uuid, Spinner conceptAnswersDropdown);
+		void getConceptNames(String uuid, Spinner conceptAnswersDropdown);
 
-        boolean isProcessing();
+		boolean isProcessing();
 
-        void setProcessing(boolean processing);
+		void setProcessing(boolean processing);
 
-        Provider getProvider();
-
-        void endVisit(String uuid);
-    }
+		void endVisit(String uuid);
+	}
 }
 

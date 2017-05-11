@@ -11,6 +11,11 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface VisitAttributeTypeRestService {
+
+	@GET(RestConstants.GET_ALL)
+	Call<Results<VisitAttributeType>> getAll(@Path(value = "restPath", encoded = true) String restPath,
+			@Query("v") String representation);
+
 	@GET(RestConstants.GET_ALL)
 	Call<Results<VisitAttributeType>> getAll(@Path(value = "restPath", encoded = true) String restPath,
 			@Query("v") String representation,

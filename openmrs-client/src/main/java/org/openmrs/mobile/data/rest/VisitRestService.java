@@ -19,6 +19,10 @@ public interface VisitRestService {
 
 	@GET(RestConstants.GET_ALL)
 	Call<Results<Visit>> getAll(@Path(value = "restPath", encoded = true) String restPath,
+			@Query("v") String representation);
+
+	@GET(RestConstants.GET_ALL)
+	Call<Results<Visit>> getAll(@Path(value = "restPath", encoded = true) String restPath,
 			@Query("v") String representation,
 			@Query("includeAll") Boolean includeAll,
 			@Query("limit") int limit,

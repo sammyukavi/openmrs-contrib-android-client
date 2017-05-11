@@ -37,126 +37,127 @@ import java.util.List;
 /**
  * Main Patient List UI screen.
  */
-public class PatientListFragment extends ACBaseFragment<PatientListContract.Presenter> implements PatientListContract.View{
+public class PatientListFragment extends ACBaseFragment<PatientListContract.Presenter> implements PatientListContract.View {
 
-    private ProgressBar patientListSpinner;
-    private Spinner patientListDropdown;
-    private TextView emptyPatientList;
-    private TextView noPatientLists;
-    private TextView numberOfPatients;
-    private RecyclerView patientListModelRecyclerView;
-    private LinearLayoutManager layoutManager;
+	private ProgressBar patientListSpinner;
+	private Spinner patientListDropdown;
+	private TextView emptyPatientList;
+	private TextView noPatientLists;
+	private TextView numberOfPatients;
+	private RecyclerView patientListModelRecyclerView;
+	private LinearLayoutManager layoutManager;
 
-    private PatientList selectedPatientList;
+	private PatientList selectedPatientList;
 
-    private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
+	private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
 
-        @Override
-        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-            super.onScrollStateChanged(recyclerView, newState);
-        }
+		@Override
+		public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+			super.onScrollStateChanged(recyclerView, newState);
+		}
 
-        @Override
-        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-            super.onScrolled(recyclerView, dx, dy);
-            if(!mPresenter.isLoading()){
-                if (!recyclerView.canScrollVertically(1)) {
-                    // load next page
-                    mPresenter.loadResults(selectedPatientList.getUuid(), true);
-                }
+		@Override
+		public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+			super.onScrolled(recyclerView, dx, dy);
+			if (!mPresenter.isLoading()) {
+				if (!recyclerView.canScrollVertically(1)) {
+					// load next page
+					mPresenter.loadResults(selectedPatientList.getUuid(), true);
+				}
 
-                if( !recyclerView.canScrollVertically(-1) && dy < 0){
-                    // load previous page
-                    mPresenter.loadResults(selectedPatientList.getUuid(), false);
-                }
-            }
-        }
-    };
+				if (!recyclerView.canScrollVertically(-1) && dy < 0) {
+					// load previous page
+					mPresenter.loadResults(selectedPatientList.getUuid(), false);
+				}
+			}
+		}
+	};
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        patientListModelRecyclerView.removeOnScrollListener(recyclerViewOnScrollListener);
-    }
+	public static PatientListFragment newInstance() {
+		return new PatientListFragment();
+	}
 
-    public static PatientListFragment newInstance(){
-        return new PatientListFragment();
-    }
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		patientListModelRecyclerView.removeOnScrollListener(recyclerViewOnScrollListener);
+	}
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_patient_list, container, false);
-        patientListSpinner = (ProgressBar) root.findViewById(R.id.patientListLoadingProgressBar);
-        patientListDropdown = (Spinner) root.findViewById(R.id.patientListDropdown);
-        emptyPatientList = (TextView) root.findViewById(R.id.emptyPatientList);
-        noPatientLists = (TextView) root.findViewById(R.id.noPatientLists);
-        numberOfPatients = (TextView) root.findViewById(R.id.numberOfPatients);
+	@Nullable
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		View root = inflater.inflate(R.layout.fragment_patient_list, container, false);
+		patientListSpinner = (ProgressBar)root.findViewById(R.id.patientListLoadingProgressBar);
+		patientListDropdown = (Spinner)root.findViewById(R.id.patientListDropdown);
+		emptyPatientList = (TextView)root.findViewById(R.id.emptyPatientList);
+		noPatientLists = (TextView)root.findViewById(R.id.noPatientLists);
+		numberOfPatients = (TextView)root.findViewById(R.id.numberOfPatients);
 
-        layoutManager = new LinearLayoutManager(this.getActivity());
-        patientListModelRecyclerView = (RecyclerView) root.findViewById(R.id.patientListModelRecyclerView);
-        patientListModelRecyclerView.setLayoutManager(layoutManager);
+		layoutManager = new LinearLayoutManager(this.getActivity());
+		patientListModelRecyclerView = (RecyclerView)root.findViewById(R.id.patientListModelRecyclerView);
+		patientListModelRecyclerView.setLayoutManager(layoutManager);
 
-        // Font config
-        FontsUtil.setFont((ViewGroup) this.getActivity().findViewById(android.R.id.content));
+		// Font config
+		FontsUtil.setFont((ViewGroup)this.getActivity().findViewById(android.R.id.content));
 
-        return root;
-    }
+		return root;
+	}
 
-    @Override
-    public void setEmptyPatientListVisibility(boolean visible) {
-        emptyPatientList.setVisibility(visible ? View.VISIBLE : View.GONE);
-    }
+	@Override
+	public void setEmptyPatientListVisibility(boolean visible) {
+		emptyPatientList.setVisibility(visible ? View.VISIBLE : View.GONE);
+	}
 
-    @Override
-    public void setNoPatientListsVisibility(boolean visible) {
-        noPatientLists.setVisibility(visible ? View.VISIBLE : View.GONE);
-    }
+	@Override
+	public void setNoPatientListsVisibility(boolean visible) {
+		noPatientLists.setVisibility(visible ? View.VISIBLE : View.GONE);
+	}
 
-    @Override
-    public void setSpinnerVisibility(boolean visible) {
-        patientListSpinner.setVisibility(visible ? View.VISIBLE : View.GONE);
-    }
+	@Override
+	public void setSpinnerVisibility(boolean visible) {
+		patientListSpinner.setVisibility(visible ? View.VISIBLE : View.GONE);
+	}
 
-    @Override
-    public void updatePatientLists(List<PatientList> patientLists) {
-        ArrayAdapter<PatientList> adapter = new ArrayAdapter<PatientList>(getContext(),
-                android.R.layout.simple_spinner_dropdown_item, patientLists);
-        patientListDropdown.setAdapter(adapter);
-        patientListDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                setSelectedPatientList(patientLists.get(position));
-                mPresenter.getPatientListData(selectedPatientList.getUuid(), mPresenter.getPage());
-            }
+	@Override
+	public void updatePatientLists(List<PatientList> patientLists) {
+		ArrayAdapter<PatientList> adapter = new ArrayAdapter<PatientList>(getContext(),
+				android.R.layout.simple_spinner_dropdown_item, patientLists);
+		patientListDropdown.setAdapter(adapter);
+		patientListDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				setSelectedPatientList(patientLists.get(position));
+				mPresenter.getPatientListData(selectedPatientList.getUuid(), mPresenter.getPage());
+			}
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
-    }
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+			}
+		});
+	}
 
-    @Override
-    public void setSelectedPatientList(PatientList selectedPatientList) {
-        this.selectedPatientList = selectedPatientList;
-    }
+	@Override
+	public void setSelectedPatientList(PatientList selectedPatientList) {
+		this.selectedPatientList = selectedPatientList;
+	}
 
     @Override
     public void updatePatientListData(List<PatientListContext> patientListData) {
-        PatientListModelRecyclerViewAdapter adapter = new PatientListModelRecyclerViewAdapter(this.getActivity(), patientListData, this);
-        patientListModelRecyclerView.setAdapter(adapter);
+		PatientListModelRecyclerViewAdapter adapter =
+				new PatientListModelRecyclerViewAdapter(this.getActivity(), patientListData, this);
+		patientListModelRecyclerView.setAdapter(adapter);
 
-        patientListModelRecyclerView.addOnScrollListener(recyclerViewOnScrollListener);
-    }
+		patientListModelRecyclerView.addOnScrollListener(recyclerViewOnScrollListener);
+	}
 
-    @Override
-    public void setNumberOfPatientsView(int length) {
-        numberOfPatients.setText(getString(R.string.number_of_patients, String.valueOf(length)));
-        numberOfPatients.setVisibility(length <= 0 ? View.GONE : View.VISIBLE);
-    }
+	@Override
+	public void setNumberOfPatientsView(int length) {
+		numberOfPatients.setText(getString(R.string.number_of_patients, String.valueOf(length)));
+		numberOfPatients.setVisibility(length <= 0 ? View.GONE : View.VISIBLE);
+	}
 
-    @Override
-    public boolean isActive() {
-        return isAdded();
-    }
+	@Override
+	public boolean isActive() {
+		return isAdded();
+	}
 }

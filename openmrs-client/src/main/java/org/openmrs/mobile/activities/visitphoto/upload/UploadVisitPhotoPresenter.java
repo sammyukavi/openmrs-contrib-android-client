@@ -10,7 +10,7 @@ import org.openmrs.mobile.models.Provider;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitPhoto;
 
-public class UploadVisitPhotoPresenter extends BasePresenter implements UploadVisitPhotoContract.Presenter{
+public class UploadVisitPhotoPresenter extends BasePresenter implements UploadVisitPhotoContract.Presenter {
 
     @NonNull
     private UploadVisitPhotoContract.View visitPhotoView;
@@ -19,36 +19,36 @@ public class UploadVisitPhotoPresenter extends BasePresenter implements UploadVi
     private VisitPhoto visitPhoto;
     private boolean loading;
 
-    public UploadVisitPhotoPresenter(UploadVisitPhotoContract.View visitPhotoView,
-                                     String patientUuid, String visitUuid, String providerUuid) {
-        this.visitPhotoView = visitPhotoView;
-        this.visitPhotoView.setPresenter(this);
-        this.patientUuid = patientUuid;
-        this.visitUuid = visitUuid;
-        this.providerUuid = providerUuid;
-        this.visitPhotoDataService = new VisitPhotoDataService();
-    }
+	public UploadVisitPhotoPresenter(UploadVisitPhotoContract.View visitPhotoView,
+			String patientUuid, String visitUuid, String providerUuid) {
+		this.visitPhotoView = visitPhotoView;
+		this.visitPhotoView.setPresenter(this);
+		this.patientUuid = patientUuid;
+		this.visitUuid = visitUuid;
+		this.providerUuid = providerUuid;
+		this.visitPhotoDataService = new VisitPhotoDataService();
+	}
 
-    @Override
-    public void subscribe() {
-        initVisitPhoto();
-    }
+	@Override
+	public void subscribe() {
+		initVisitPhoto();
+	}
 
-    private void initVisitPhoto(){
-        visitPhoto = new VisitPhoto();
-        Visit visit = new Visit();
-        visit.setUuid(visitUuid);
+	private void initVisitPhoto() {
+		visitPhoto = new VisitPhoto();
+		Visit visit = new Visit();
+		visit.setUuid(visitUuid);
 
-        Provider provider = new Provider();
-        provider.setUuid(providerUuid);
+		Provider provider = new Provider();
+		provider.setUuid(providerUuid);
 
-        Patient patient = new Patient();
-        patient.setUuid(patientUuid);
+		Patient patient = new Patient();
+		patient.setUuid(patientUuid);
 
-        visitPhoto.setVisit(visit);
-        visitPhoto.setProvider(provider);
-        visitPhoto.setPatient(patient);
-    }
+		visitPhoto.setVisit(visit);
+		visitPhoto.setProvider(provider);
+		visitPhoto.setPatient(patient);
+	}
 
     @Override
     public void uploadImage() {
@@ -58,25 +58,25 @@ public class UploadVisitPhotoPresenter extends BasePresenter implements UploadVi
                 System.out.println("image uploaded " + entity);
             }
 
-            @Override
-            public void onError(Throwable t) {
-                System.out.println(t.getMessage());
-            }
-        });
-    }
+			@Override
+			public void onError(Throwable t) {
+				System.out.println(t.getMessage());
+			}
+		});
+	}
 
-    @Override
-    public VisitPhoto getVisitPhoto() {
-        return visitPhoto;
-    }
+	@Override
+	public VisitPhoto getVisitPhoto() {
+		return visitPhoto;
+	}
 
-    @Override
-    public boolean isLoading() {
-        return loading;
-    }
+	@Override
+	public boolean isLoading() {
+		return loading;
+	}
 
-    @Override
-    public void setLoading(boolean loading) {
-        this.loading = loading;
-    }
+	@Override
+	public void setLoading(boolean loading) {
+		this.loading = loading;
+	}
 }

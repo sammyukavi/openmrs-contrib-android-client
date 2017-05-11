@@ -23,6 +23,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.AppCompatImageView;
+import android.support.v7.widget.AppCompatSpinner;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,7 +71,7 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 	private CheckBox mShowPassword;
 	private Button mLoginButton;
 	private ProgressBar mSpinner;
-	private Spinner mDropdownLocation;
+	private AppCompatSpinner mDropdownLocation;
 	private LinearLayout mLoginFormView;
 	private AppCompatImageView mLoginSyncButton;
 	private TextView mSyncStateLabel;
@@ -145,25 +146,6 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 						initialUrl);
 			}
 		});
-
-        /*mForgotPass.setOnClickListener(new View.OnClickListener() {
-			@Override
-            public void onClick(View v) {
-                forgotPassword();
-            }
-        });*/
-
-       /* mShowPassword.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-			@Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked){
-                    mPassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-                }
-                else {
-                    mPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                }
-            }
-        });*/
 	}
 
 	private void initViewFields(View root) {
@@ -177,7 +159,7 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 		//mLoginFormView = (LinearLayout) root.findViewById(R.id.loginFormView);
 		mLoginSyncButton = ((AppCompatImageView)root.findViewById(R.id.loginSyncButton));
 		mSyncStateLabel = ((TextView)root.findViewById(R.id.syncLabel));
-		mDropdownLocation = (Spinner)root.findViewById(R.id.locationSpinner);
+		mDropdownLocation = (AppCompatSpinner)root.findViewById(R.id.locationSpinner);
 		// mForgotPass = (TextView) root.findViewById(R.id.forgotPass);
 		mLocationLoadingProgressBar = (ProgressBar)root.findViewById(R.id.locationLoadingProgressBar);
 	}

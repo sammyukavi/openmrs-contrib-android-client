@@ -21,8 +21,8 @@ public class VisitType extends BaseOpenmrsMetadata {
 		this.display = display;
 	}
 
-    @Override
-    public String toString() {
-        return getName();
-    }
+	@Override
+	public String toString() {
+		return getName();
+	}
 }

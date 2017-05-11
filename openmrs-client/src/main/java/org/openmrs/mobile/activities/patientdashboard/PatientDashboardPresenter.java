@@ -55,7 +55,6 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 		getCurrentProvider();
 	}
 
-
 	@Override
 	public void fetchPatientData(String uuid) {
 		patientDataService.getByUUID(uuid, new DataService.GetSingleCallback<Patient>() {
@@ -93,22 +92,24 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
 	@Override
 	public void fetchEncounterObservations(Encounter encounter) {
-		observationDataService.getByEncounter(encounter, true, new PagingInfo(0, 20), new DataService.GetMultipleCallback<Observation>() {
-			@Override
-			public void onCompleted(List<Observation> observations, int length) {
-				for (Observation observation : observations) {
-					if (observation.getDiagnosisNote() != null && !observation.getDiagnosisNote().equals(ApplicationConstants.EMPTY_STRING)) {
-						patientDashboardView.updateActiveVisitObservationsCard(observation);
+		observationDataService
+				.getByEncounter(encounter, true, new PagingInfo(0, 20), new DataService.GetMultipleCallback<Observation>() {
+					@Override
+					public void onCompleted(List<Observation> observations, int length) {
+						for (Observation observation : observations) {
+							if (observation.getDiagnosisNote() != null && !observation.getDiagnosisNote()
+									.equals(ApplicationConstants.EMPTY_STRING)) {
+								patientDashboardView.updateActiveVisitObservationsCard(observation);
+							}
+						}
 					}
-				}
-			}
 
-			@Override
-			public void onError(Throwable t) {
-				patientDashboardView.showSnack("Error fetching observations");
-				t.printStackTrace();
-			}
-		});
+					@Override
+					public void onError(Throwable t) {
+						patientDashboardView.showSnack("Error fetching observations");
+						t.printStackTrace();
+					}
+				});
 	}
 
 	/**

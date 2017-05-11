@@ -19,10 +19,8 @@ import android.widget.Spinner;
 
 import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.api.RestApi;
-import org.openmrs.mobile.api.RestServiceBuilder;
 import org.openmrs.mobile.api.retrofit.PatientApi;
 import org.openmrs.mobile.application.OpenMRS;
-import org.openmrs.mobile.dao.PatientDAO;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.impl.ConceptDataService;
@@ -55,7 +53,6 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 	private PatientIdentifierTypeDataService patientIdentifierTypeDataService;
 	private ConceptNameDataService conceptNameDataService;
 	private LocationDataService locationDataService;
-	private RestApi restApi;
 	private Patient patient;
 	private String patientToUpdateId;
 	private List<String> mCounties;
@@ -78,7 +75,6 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		this.patientIdentifierTypeDataService = new PatientIdentifierTypeDataService();
 		this.personAttributeTypeDataService = new PersonAttributeTypeDataService();
 		this.conceptNameDataService = new ConceptNameDataService();
-		this.restApi = RestServiceBuilder.createService(RestApi.class);
 		this.locationDataService = new LocationDataService();
 	}
 
@@ -91,7 +87,6 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		this.patient = mPatient;
 		this.patientToUpdateId = patientToUpdateId;
 		this.mCounties = mCounties;
-		this.restApi = restApi;
 		this.patientRegistrationView.setPresenter(this);
 		this.patientIdentifierTypeDataService = new PatientIdentifierTypeDataService();
 		this.personAttributeTypeDataService = new PersonAttributeTypeDataService();
@@ -169,15 +164,36 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 
 	@Override
 	public void subscribe() {
-		getPatientIdentifierTypes();
-		getPersonAttributeTypes();
-		getLoginLocation();
 	}
 
 	@Override
-	public Patient getPatientToUpdate() {
-		//Patient patientToUpdate = new PatientDAO().findPatientByID(patientToUpdateId);
-		return null;
+	public void getPatientToUpdate(String uuid) {
+		if (NetworkUtils.hasNetwork()) {
+			DataService.GetSingleCallback<Patient> singleCallback = new DataService.GetSingleCallback<Patient>() {
+				@Override
+				public void onCompleted(Patient entity) {
+					if (entity != null) {
+						patientRegistrationView.fillFields(entity);
+						setPatient(entity);
+						getPersonAttributeTypes();
+					} else {
+						patientRegistrationView.showToast(ApplicationConstants.entityName.PATIENTS + ApplicationConstants
+								.toastMessages.fetchWarningMessage, ToastUtil.ToastType.WARNING);
+					}
+				}
+
+				@Override
+				public void onError(Throwable t) {
+					Log.e("User Error", "Error", t.fillInStackTrace());
+					patientRegistrationView.showToast(ApplicationConstants.entityName.PATIENTS + ApplicationConstants
+							.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
+				}
+			};
+			//Just check if the identifier are the same. If not it saves the patient.
+			patientDataService.getByUUID(uuid, singleCallback);
+		} else {
+			// get the users from the local storage.
+		}
 	}
 
 	@Override
@@ -246,12 +262,19 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 
 	@Override
 	public void updatePatient(Patient patient) {
+		setRegistering(true);
 		if (NetworkUtils.hasNetwork()) {
 			DataService.GetSingleCallback<Patient> getSingleCallback = new DataService.GetSingleCallback<Patient>() {
 				@Override
 				public void onCompleted(Patient entity) {
 					setRegistering(false);
 					if (entity != null) {
+						patientRegistrationView
+								.showToast(ApplicationConstants.entityName.PATIENTS
+										+ ApplicationConstants.toastMessages.updateSuccessMessage, ToastUtil.ToastType
+										.SUCCESS);
+						patientRegistrationView.startPatientDashboardActivity(entity);
+						patientRegistrationView.finishAddPatientActivity();
 					} else {
 						patientRegistrationView
 								.showToast(ApplicationConstants.entityName.PATIENTS + ApplicationConstants.toastMessages
@@ -398,7 +421,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 	public <T> T searchPersonAttributeValueByType(PersonAttributeType personAttributeType) {
 		if (null != getPatient() && null != getPatient().getPerson().getAttributes()) {
 			for (PersonAttribute personAttribute : getPatient().getPerson().getAttributes()) {
-				if (personAttribute.getUuid().equalsIgnoreCase(personAttributeType.getUuid())) {
+				if (personAttribute.getAttributeType().getUuid().equalsIgnoreCase(personAttributeType.getUuid())) {
 					return (T)personAttribute.getValue();
 				}
 			}
@@ -429,7 +452,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 											.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 						}
 					};
-			locationDataService.getByUUID(locationUuid,getSingleCallback);
+			locationDataService.getByUUID(locationUuid, getSingleCallback);
 		}
 	}
 

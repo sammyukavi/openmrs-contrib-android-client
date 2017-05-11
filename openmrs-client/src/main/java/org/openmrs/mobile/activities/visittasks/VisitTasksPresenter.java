@@ -40,6 +40,7 @@ public class VisitTasksPresenter extends BasePresenter implements VisitTasksCont
 	private VisitPredefinedTasksDataService visitPredefinedTasksDataService;
 	private VisitTasksDataService visitTasksDataService;
 	private VisitDataService visitDataService;
+	private OpenMRS instance = OpenMRS.getInstance();
 
 	private int page = 0;
 	private int limit = 10;
@@ -118,8 +119,8 @@ public class VisitTasksPresenter extends BasePresenter implements VisitTasksCont
 									.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 				}
 			};
-			visitTasksDataService.getAll(ApplicationConstants.EMPTY_STRING, visitTasksView.getPatientUuid(),
-					visitTasksView.getVisitUuid(), pagingInfo, getMultipleCallback);
+			visitTasksDataService.getAll(ApplicationConstants.EMPTY_STRING, instance.getPatientUuid(),
+					instance.getVisitUuid(), pagingInfo, getMultipleCallback);
 		} else {
 			// get the users from the local storage.
 		}
@@ -193,10 +194,10 @@ public class VisitTasksPresenter extends BasePresenter implements VisitTasksCont
 	@Override
 	public void createVisitTasksObject(String visitTask) {
 		Patient patient = new Patient();
-		patient.setUuid(visitTasksView.getPatientUuid());
+		patient.setUuid(instance.getPatientUuid());
 
 		Visit visit = new Visit();
-		visit.setUuid(visitTasksView.getVisitUuid());
+		visit.setUuid(instance.getVisitUuid());
 
 		VisitTask visitTaskEntity = new VisitTask();
 
@@ -229,7 +230,7 @@ public class VisitTasksPresenter extends BasePresenter implements VisitTasksCont
 									.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 				}
 			};
-			visitDataService.getByUUID(visitTasksView.getVisitUuid(), getSingleCallback);
+			visitDataService.getByUUID(instance.getVisitUuid(), getSingleCallback);
 		} else {
 			// get the users from the local storage.
 		}

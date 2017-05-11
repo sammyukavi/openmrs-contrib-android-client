@@ -55,7 +55,7 @@ public class ConceptNameDataService extends BaseDataService<ConceptName, Concept
 	}
 
 	public void getByConceptUuid(String conceptUuid, @NonNull GetCallback<List<ConceptName>> callback) {
-		executeMultipleCallback(callback,
+		executeMultipleCallback(callback, null,
 				() -> null,
 				() -> restService.getByConceptUuid(buildRestRequestPath(), conceptUuid));
 	}

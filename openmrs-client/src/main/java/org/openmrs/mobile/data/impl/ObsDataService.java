@@ -70,7 +70,7 @@ public class ObsDataService extends BaseDataService<Observation, ObsDbService, O
 	}
 
 	public void getVisitDocumentsObsByPatientAndConceptList(String patientUuid, GetCallback<List<Observation>> callback) {
-		executeMultipleCallback(callback,
+		executeMultipleCallback(callback, null,
 				() -> null,
 				() -> restService.getVisitDocumentsObsByPatientAndConceptList(
 						buildRestRequestPath(), patientUuid,
@@ -83,7 +83,7 @@ public class ObsDataService extends BaseDataService<Observation, ObsDbService, O
 		checkNotNull(encounter);
 		checkNotNull(callback);
 
-		executeMultipleCallback(callback,
+		executeMultipleCallback(callback, pagingInfo,
 				() -> null,
 				() -> restService.getByEncounter(buildRestRequestPath(), encounter.getUuid(),
 						QueryOptions.getRepresentation(options), QueryOptions.getIncludeInactive(options),

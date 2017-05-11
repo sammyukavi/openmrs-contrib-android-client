@@ -16,7 +16,7 @@ public class DynamicObsDataViews {
 	private ViewGroup.LayoutParams linearLayoutParams;
 	private LinearLayout observationHolder;
 	protected ImageView observationIcon;
-	protected TextView observationTextView;
+	protected TextView observationText;
 
 	public DynamicObsDataViews(Context context) {
 		this.linearLayoutParams =
@@ -30,24 +30,24 @@ public class DynamicObsDataViews {
 		observationIcon = new ImageView(context);
 		observationIcon.setImageDrawable(ContextCompat.getDrawable(context, android.R.drawable.ic_menu_edit));
 		observationIcon.setPadding(0, 0, 0, 0);
-		observationTextView = new TextView(context);
-		observationTextView.setPadding(10, 0, 10, 0);
-		observationTextView.setGravity(Gravity.LEFT);
-		observationTextView.setHintTextColor(ContextCompat.getColor(context, R.color.openmrs_color_grey));
-		observationTextView.setTextColor(ContextCompat.getColor(context, R.color.openmrs_color_grey));
+		observationText = new TextView(context);
+		observationText.setPadding(10, 0, 10, 0);
+		observationText.setGravity(Gravity.LEFT);
+		observationText.setHintTextColor(ContextCompat.getColor(context, R.color.openmrs_color_grey));
+		observationText.setTextColor(ContextCompat.getColor(context, R.color.openmrs_color_grey));
 	}
 
 	public void setHint(String hint) {
-		observationTextView.setHint(hint);
+		observationText.setHint(hint);
 	}
 
 	public void setText(String hint) {
-		observationTextView.setText(hint.toString());
+		observationText.setText(hint.toString());
 	}
 
 	public LinearLayout getLayoutView() {
 		observationHolder.addView(observationIcon);
-		observationHolder.addView(observationTextView);
+		observationHolder.addView(observationText);
 		return observationHolder;
 	}
 

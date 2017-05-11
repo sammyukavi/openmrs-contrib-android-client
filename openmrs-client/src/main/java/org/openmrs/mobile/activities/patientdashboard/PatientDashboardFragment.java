@@ -214,7 +214,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 				createEditVisitNoteDialog.setArguments(dialogBundle);
 
 				dynamicObsDataViews.observationIcon.setOnClickListener(switchToEditMode);
-				dynamicObsDataViews.observationTextView.setOnClickListener(switchToEditMode);
+				dynamicObsDataViews.observationText.setOnClickListener(switchToEditMode);
 			} else {
 				for (Encounter encounter : activeVisit.getEncounters()) {
 					switch (encounter.getEncounterType().getDisplay()) {
@@ -265,7 +265,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		dynamicObsDataViews = dynamicObsDataViews.instance(getContext());
 		dynamicObsDataViews.setText(observation.getDiagnosisNote());
 		dynamicObsDataViews.observationIcon.setOnClickListener(switchToEditMode);
-		dynamicObsDataViews.observationTextView.setOnClickListener(switchToEditMode);
+		dynamicObsDataViews.observationText.setOnClickListener(switchToEditMode);
 		observationsContainer.addView(dynamicObsDataViews.getLayoutView());
 
 		dialogBundle.putSerializable(ApplicationConstants.BundleKeys.OBSERVATION, newObs);

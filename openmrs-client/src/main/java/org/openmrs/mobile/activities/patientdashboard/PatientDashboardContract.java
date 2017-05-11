@@ -32,9 +32,9 @@ public interface PatientDashboardContract {
 
 		void updateContactCard(Patient patient);
 
-		void updateVisitsCard(List<Visit> visits);
+		void updateActiveVisitCard(List<Visit> visits);
 
-		void updateVisitNote(Observation observation);
+		void updateActiveVisitObservationsCard(Observation observation);
 
 		LinearLayout getVisitNoteContainer();
 	}

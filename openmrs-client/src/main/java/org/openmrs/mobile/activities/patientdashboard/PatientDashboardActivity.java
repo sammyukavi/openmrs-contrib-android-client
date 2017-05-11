@@ -44,11 +44,6 @@ public class PatientDashboardActivity extends ACBaseActivity {
 	}
 
 	@Override
-	public void onSaveInstanceState(Bundle outState) {
-
-	}
-
-	@Override
 	public void onBackPressed() {
 		if (drawer.isDrawerOpen(GravityCompat.START)) {
 			drawer.closeDrawer(GravityCompat.START);

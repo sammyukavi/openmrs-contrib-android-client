@@ -104,4 +104,9 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 		});
 	}
 
+	@Override
+	public Patient getPatient() {
+		return patientDashboardView.getPatient();
+	}
+
 }

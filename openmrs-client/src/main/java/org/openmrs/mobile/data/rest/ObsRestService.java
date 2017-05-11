@@ -4,7 +4,9 @@ import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Results;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -37,4 +39,8 @@ public interface ObsRestService {
 			@Query("v") String representation,
 			@Query("limit") int limit,
 			@Query("startIndex") int startIndex);
+
+	@POST(RestConstants.UPDATE)
+	Call<Observation> update(@Path(value = "restPath", encoded = true) String restPath,
+			@Path("uuid") String uuid, @Body Observation entity);
 }

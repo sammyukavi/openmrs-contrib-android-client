@@ -17,7 +17,6 @@ import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Transient;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Resource implements Serializable {
@@ -35,7 +34,7 @@ public class Resource implements Serializable {
 	@Transient
 	@SerializedName("links")
 	@Expose
-	protected List<Link> links = new ArrayList<Link>();
+	protected List<Link> links;
 
 	@Generated(hash = 561006165)
 	public Resource(String uuid) {

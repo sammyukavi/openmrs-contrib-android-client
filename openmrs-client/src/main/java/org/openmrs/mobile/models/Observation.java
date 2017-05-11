@@ -26,9 +26,15 @@ public class Observation extends BaseOpenmrsData implements Serializable {
 	@SerializedName("obsDatetime")
 	@Expose
 	private String obsDatetime;
+
+	/**
+	 * Before changing the line below please note:
+	 * if you change accessionNumber to an int it's appended on obs object,
+	 * obs wont save because rest sends and receives accessionNumber as String
+	 */
 	@SerializedName("accessionNumber")
 	@Expose
-	private int accessionNumber;
+	private String accessionNumber;
 	@SerializedName("obsGroup")
 	@Expose
 	private Observation obsGroup;
@@ -53,9 +59,9 @@ public class Observation extends BaseOpenmrsData implements Serializable {
 	@SerializedName("resourceVersion")
 	@Expose
 	private String resourceVersion;
+	@SerializedName("value")
 	@Expose
 	private String value;
-	@SerializedName("value")
 
 	private Long id;
 	private Long encounterID;
@@ -112,14 +118,14 @@ public class Observation extends BaseOpenmrsData implements Serializable {
 	/**
 	 * @return The accessionNumber
 	 */
-	public int getAccessionNumber() {
+	public String getAccessionNumber() {
 		return accessionNumber;
 	}
 
 	/**
 	 * @param accessionNumber The accessionNumber
 	 */
-	public void setAccessionNumber(int accessionNumber) {
+	public void setAccessionNumber(String accessionNumber) {
 		this.accessionNumber = accessionNumber;
 	}
 

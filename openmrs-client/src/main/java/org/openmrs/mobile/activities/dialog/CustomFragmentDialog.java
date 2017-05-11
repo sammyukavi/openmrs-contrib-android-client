@@ -48,6 +48,7 @@ import org.openmrs.mobile.activities.addeditpatient.AddEditPatientActivity;
 import org.openmrs.mobile.activities.addeditpatient.SimilarPatientsRecyclerViewAdapter;
 import org.openmrs.mobile.activities.login.LoginActivity;
 import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
+import org.openmrs.mobile.activities.patientdashboard.PatientDashboardContract;
 import org.openmrs.mobile.activities.visittasks.VisitTasksActivity;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
@@ -447,17 +448,16 @@ public class CustomFragmentDialog extends DialogFragment {
 					case SAVE_VISIT_NOTE:
 
 						Bundle bundle = mCustomDialogBundle.getArguments();
-						Patient patient = (Patient)bundle.getSerializable(ApplicationConstants.BundleKeys.PATIENT);
+						PatientDashboardContract.Presenter presenter =
+								((PatientDashboardActivity)getActivity()).mPresenter;
 						Observation observation =
 								(Observation)bundle.getSerializable(ApplicationConstants.BundleKeys.OBSERVATION);
 						observation.setValue(getEditNoteTextValue());
-
 						ObsDataService observationDataService = new ObsDataService();
-
 						observationDataService.update(observation, new DataService.GetSingleCallback<Observation>() {
 							@Override
 							public void onCompleted(Observation entity) {
-								((PatientDashboardActivity)getActivity()).mPresenter.fetchVisits(patient);
+								presenter.fetchVisits(presenter.getPatient());
 								dismiss();
 							}
 
@@ -482,7 +482,7 @@ public class CustomFragmentDialog extends DialogFragment {
 		if (activity instanceof PatientDashboardActivity) {
 			PatientDashboardActivity pda = ((PatientDashboardActivity)activity);
 			/*List<Fragment> fragments = pda.getSupportFragmentManager().getFragments();
-	        PatientVisitsFragment fragment = null;
+			PatientVisitsFragment fragment = null;
             for (Fragment frag : fragments) {
                 if (frag instanceof PatientVisitsFragment) {
                     fragment = (PatientVisitsFragment) frag;

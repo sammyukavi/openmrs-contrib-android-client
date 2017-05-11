@@ -37,6 +37,8 @@ public interface PatientDashboardContract {
 		void updateActiveVisitObservationsCard(Observation observation);
 
 		LinearLayout getVisitNoteContainer();
+
+		Patient getPatient();
 	}
 
 	interface Presenter extends BasePresenterContract {
@@ -47,6 +49,7 @@ public interface PatientDashboardContract {
 
 		void fetchEncounterObservations(Encounter encounter);
 
+		Patient getPatient();
 	}
 
 }

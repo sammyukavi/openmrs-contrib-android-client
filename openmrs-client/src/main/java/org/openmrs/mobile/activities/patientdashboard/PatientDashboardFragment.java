@@ -61,7 +61,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		implements PatientDashboardContract.View {
 
 	private View fragmentView;
-	private TextView patientDisplayName, patientGender, patientAge, patientIdentifier, visitDetails, observationTextView;
+	private TextView patientDisplayName, patientGender, patientAge, patientIdentifier, visitDetails, observationTextView, patientFecthedDob;
 	private Visit activeVisit;
 	private LinearLayout observationsContainer, observationHolder;
 	private ImageView observationIcon;
@@ -165,6 +165,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		patientGender = (TextView)fragmentView.findViewById(R.id.fetchedPatientGender);
 		patientAge = (TextView)fragmentView.findViewById(R.id.fetchedPatientAge);
 		visitDetails = (TextView)fragmentView.findViewById(R.id.visitDetails);
+		patientFecthedDob = (TextView)fragmentView.findViewById(R.id.fetchedPatientBirthDate);
 		addVisitImageButton = (FloatingActionButton)getActivity().findViewById(R.id.add_visit_image);
 		addVisitTaskButton = (FloatingActionButton)getActivity().findViewById(R.id.add_visit_task);
 		startAuditFormButton = (FloatingActionButton)getActivity().findViewById(R.id.audit_data_form);

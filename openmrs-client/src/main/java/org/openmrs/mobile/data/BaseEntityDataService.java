@@ -25,7 +25,7 @@ public abstract class BaseEntityDataService<E extends BaseOpenmrsEntity, DS exte
 		checkNotNull(patient);
 		checkNotNull(callback);
 
-		executeMultipleCallback(callback,
+		executeMultipleCallback(callback, pagingInfo,
 				() -> dbService.getByPatient(patient, options, pagingInfo),
 				() -> _restGetByPatient(buildRestRequestPath(), patient.getUuid(), options, pagingInfo));
 	}

@@ -11,12 +11,13 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-
 package org.openmrs.mobile.data.impl;
 
 import org.openmrs.mobile.data.BaseMetadataDataService;
 import org.openmrs.mobile.data.MetadataDataService;
 import org.openmrs.mobile.data.PagingInfo;
+import org.openmrs.mobile.data.QueryOptions;
+import org.openmrs.mobile.data.db.impl.VisitPredefinedTaskDbService;
 import org.openmrs.mobile.data.rest.VisitPredefinedTasksRestService;
 import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.models.VisitPredefinedTask;
@@ -24,22 +25,17 @@ import org.openmrs.mobile.utilities.ApplicationConstants;
 
 import retrofit2.Call;
 
-public class VisitPredefinedTasksDataService extends BaseMetadataDataService<VisitPredefinedTask,
-		VisitPredefinedTasksRestService> implements MetadataDataService<VisitPredefinedTask> {
-	@Override
-	protected Call<Results<VisitPredefinedTask>> _restGetByNameFragment(String restPath, PagingInfo pagingInfo, String
-			name,
-			String representation) {
-		if (isPagingValid(pagingInfo)) {
-			return restService.getByName(restPath, name, representation, pagingInfo.getLimit(), pagingInfo.getStartIndex());
-		} else {
-			return restService.getByName(restPath, name, representation);
-		}
-	}
-
+public class VisitPredefinedTaskDataService
+		extends BaseMetadataDataService<VisitPredefinedTask, VisitPredefinedTaskDbService, VisitPredefinedTasksRestService>
+		implements MetadataDataService<VisitPredefinedTask> {
 	@Override
 	protected Class<VisitPredefinedTasksRestService> getRestServiceClass() {
 		return VisitPredefinedTasksRestService.class;
+	}
+
+	@Override
+	protected VisitPredefinedTaskDbService getDbService() {
+		return new VisitPredefinedTaskDbService();
 	}
 
 	@Override
@@ -53,18 +49,15 @@ public class VisitPredefinedTasksDataService extends BaseMetadataDataService<Vis
 	}
 
 	@Override
-	protected Call<VisitPredefinedTask> _restGetByUuid(String restPath, String uuid, String representation) {
-		return restService.getByUuid(restPath, uuid, representation);
+	protected Call<VisitPredefinedTask> _restGetByUuid(String restPath, String uuid, QueryOptions options) {
+		return restService.getByUuid(restPath, uuid, QueryOptions.getRepresentation(options));
 	}
 
 	@Override
-	protected Call<Results<VisitPredefinedTask>> _restGetAll(String restPath, PagingInfo pagingInfo,
-			String representation) {
-		if (isPagingValid(pagingInfo)) {
-			return restService.getAll(restPath, representation, pagingInfo.getLimit(), pagingInfo.getStartIndex());
-		} else {
-			return restService.getAll(restPath, representation);
-		}
+	protected Call<Results<VisitPredefinedTask>> _restGetAll(String restPath, QueryOptions options, PagingInfo pagingInfo) {
+		return restService.getAll(restPath,
+				QueryOptions.getRepresentation(options), QueryOptions.getIncludeInactive(options),
+				pagingInfo.getLimit(), pagingInfo.getStartIndex());
 	}
 
 	@Override
@@ -80,5 +73,13 @@ public class VisitPredefinedTasksDataService extends BaseMetadataDataService<Vis
 	@Override
 	protected Call<VisitPredefinedTask> _restPurge(String restPath, String uuid) {
 		return null;
+	}
+
+	@Override
+	protected Call<Results<VisitPredefinedTask>> _restGetByNameFragment(String restPath, String name,
+			QueryOptions options, PagingInfo pagingInfo) {
+		return restService.getByName(restPath, name,
+				QueryOptions.getRepresentation(options), QueryOptions.getIncludeInactive(options),
+				PagingInfo.getLimit(pagingInfo), PagingInfo.getStartIndex(pagingInfo));
 	}
 }

@@ -17,6 +17,8 @@ package org.openmrs.mobile.data.impl;
 import org.openmrs.mobile.data.BaseMetadataDataService;
 import org.openmrs.mobile.data.MetadataDataService;
 import org.openmrs.mobile.data.PagingInfo;
+import org.openmrs.mobile.data.QueryOptions;
+import org.openmrs.mobile.data.db.impl.PatientIdentifierTypeDbService;
 import org.openmrs.mobile.data.rest.PatientIdentifierTypeRestService;
 import org.openmrs.mobile.models.PatientIdentifierType;
 import org.openmrs.mobile.models.Results;
@@ -25,22 +27,17 @@ import org.openmrs.mobile.utilities.ApplicationConstants;
 import retrofit2.Call;
 
 public class PatientIdentifierTypeDataService
-		extends BaseMetadataDataService<PatientIdentifierType, PatientIdentifierTypeRestService>
+		extends
+		BaseMetadataDataService<PatientIdentifierType, PatientIdentifierTypeDbService, PatientIdentifierTypeRestService>
 		implements MetadataDataService<PatientIdentifierType> {
-	@Override
-	protected Call<Results<PatientIdentifierType>> _restGetByNameFragment(String restPath, PagingInfo pagingInfo,
-			String name, String representation) {
-		if (isPagingValid(pagingInfo)) {
-			return restService
-					.getByNameFragment(restPath, name, representation, pagingInfo.getLimit(), pagingInfo.getStartIndex());
-		} else {
-			return restService.getByNameFragment(restPath, name, representation);
-		}
-	}
-
 	@Override
 	protected Class<PatientIdentifierTypeRestService> getRestServiceClass() {
 		return PatientIdentifierTypeRestService.class;
+	}
+
+	@Override
+	protected PatientIdentifierTypeDbService getDbService() {
+		return new PatientIdentifierTypeDbService();
 	}
 
 	@Override
@@ -54,19 +51,24 @@ public class PatientIdentifierTypeDataService
 	}
 
 	@Override
-	protected Call<PatientIdentifierType> _restGetByUuid(String restPath, String uuid, String representation) {
-		return restService.getByUuid(restPath, uuid, representation);
+	protected Call<Results<PatientIdentifierType>> _restGetByNameFragment(String restPath, String name,
+			QueryOptions options, PagingInfo pagingInfo) {
+		return restService.getByNameFragment(restPath, name, QueryOptions.getRepresentation(options),
+				QueryOptions.getIncludeInactive(options),
+				PagingInfo.getLimit(pagingInfo), PagingInfo.getStartIndex(pagingInfo));
 	}
 
 	@Override
-	protected Call<Results<PatientIdentifierType>> _restGetAll(String restPath, PagingInfo pagingInfo,
-			String representation) {
-		if (isPagingValid(pagingInfo)) {
-			return restService.getAll(restPath, representation, pagingInfo.getLimit(), pagingInfo.getStartIndex());
-		} else {
-			return restService.getAll(restPath, representation);
-		}
+	protected Call<PatientIdentifierType> _restGetByUuid(String restPath, String uuid, QueryOptions options) {
+		return restService.getByUuid(restPath, uuid, QueryOptions.getRepresentation(options));
+	}
 
+	@Override
+	protected Call<Results<PatientIdentifierType>> _restGetAll(String restPath, QueryOptions options,
+			PagingInfo pagingInfo) {
+		return restService.getAll(restPath, QueryOptions.getRepresentation(options),
+				QueryOptions.getIncludeInactive(options),
+				PagingInfo.getLimit(pagingInfo), PagingInfo.getStartIndex(pagingInfo));
 	}
 
 	@Override

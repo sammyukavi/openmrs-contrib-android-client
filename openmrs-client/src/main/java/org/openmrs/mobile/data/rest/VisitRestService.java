@@ -24,11 +24,12 @@ public interface VisitRestService {
 	@GET(RestConstants.GET_ALL)
 	Call<Results<Visit>> getAll(@Path(value = "restPath", encoded = true) String restPath,
 			@Query("v") String representation,
+			@Query("includeAll") Boolean includeAll,
 			@Query("limit") int limit,
 			@Query("startIndex") int startIndex);
 
 	@POST(RestConstants.CREATE)
-	Call<Visit> create(@Path(value = "restPath", encoded = true) String restPath, @Body Visit entity);
+	Call<Visit> create(@Path(value = "restPath", encoded = true) String restPath, Visit entity);
 
 	@POST(RestConstants.UPDATE)
 	Call<Visit> endVisit(@Path(value = "restPath", encoded = true) String restPath,
@@ -36,7 +37,7 @@ public interface VisitRestService {
 
 	@POST(RestConstants.UPDATE)
 	Call<Visit> update(@Path(value = "restPath", encoded = true) String restPath,
-			@Path("uuid") String uuid, @Body Visit entity);
+			@Path("uuid") String uuid, Visit entity);
 
 	@DELETE(RestConstants.PURGE)
 	Call<Visit> purge(@Path(value = "restPath", encoded = true) String restPath,
@@ -46,13 +47,7 @@ public interface VisitRestService {
 	Call<Results<Visit>> getByPatient(@Path(value = "restPath", encoded = true) String restPath,
 			@Query("patient") String patientUuid,
 			@Query("v") String representation,
-			@Query("includeInactive") boolean includeInactive);
-
-	@GET(RestConstants.REST_PATH)
-	Call<Results<Visit>> getByPatient(@Path(value = "restPath", encoded = true) String restPath,
-			@Query("patient") String patientUuid,
-			@Query("v") String representation,
+			@Query("includeAll") Boolean includeAll,
 			@Query("limit") int limit,
-			@Query("startIndex") int startIndex,
-			@Query("includeInactive") boolean includeInactive);
+			@Query("startIndex") int startIndex);
 }

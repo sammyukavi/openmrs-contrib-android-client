@@ -14,7 +14,6 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface VisitPhotoRestService {
-
 	@Multipart
 	@POST("{restPath}")
 	Call<VisitPhoto> uploadVisitPhoto(@Path(value = "restPath", encoded = true) String restPath,

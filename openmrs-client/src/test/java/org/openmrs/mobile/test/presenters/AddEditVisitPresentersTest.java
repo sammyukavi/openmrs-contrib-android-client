@@ -10,6 +10,7 @@ import org.openmrs.mobile.activities.addeditvisit.AddEditVisitPresenter;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
+import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.impl.ConceptNameDataService;
 import org.openmrs.mobile.data.impl.LocationDataService;
 import org.openmrs.mobile.data.impl.PatientDataService;
@@ -110,66 +111,67 @@ public class AddEditVisitPresentersTest extends ACUnitTestBase {
         doAnswer(new Answer<Void>() {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
-                ((DataService.GetSingleCallback) invocation.getArguments()[1]).onCompleted(patient);
+                ((DataService.GetCallback) invocation.getArguments()[1]).onCompleted(patient);
                 return null;
             }
-        }).when(patientDataService).getByUUID(anyString(), any(DataService.GetSingleCallback.class));
+        }).when(patientDataService).getByUUID(anyString(), any(QueryOptions.class), any(DataService.GetCallback.class));
 
         // load visit callback
         doAnswer(new Answer<Void>() {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
-                ((DataService.GetMultipleCallback) invocation.getArguments()[3]).onCompleted(visits, 1);
+                ((DataService.GetCallback) invocation.getArguments()[3]).onCompleted(visits);
                 return null;
             }
-        }).when(visitDataService).getByPatient(any(Patient.class), anyBoolean(), any(PagingInfo.class),
-                any(DataService.GetMultipleCallback.class));
+        }).when(visitDataService).getByPatient(any(Patient.class), any(QueryOptions.class), any(PagingInfo.class),
+                any(DataService.GetCallback.class));
 
         // load visit types callback
         doAnswer(new Answer<Void>() {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
-                ((DataService.GetMultipleCallback) invocation.getArguments()[2]).onCompleted(visitTypes, 1);
+                ((DataService.GetCallback) invocation.getArguments()[2]).onCompleted(visitTypes);
                 return null;
             }
-        }).when(visitTypeDataService).getAll(anyBoolean(), any(PagingInfo.class), any(DataService.GetMultipleCallback.class));
+        }).when(visitTypeDataService).getAll(any(QueryOptions.class), any(PagingInfo.class),
+				any(DataService.GetCallback.class));
 
         // load location callback
         doAnswer(new Answer<Void>() {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
-                ((DataService.GetSingleCallback) invocation.getArguments()[1]).onCompleted(location);
+                ((DataService.GetCallback) invocation.getArguments()[1]).onCompleted(location);
                 return null;
             }
-        }).when(locationDataService).getByUUID(anyString(), any(DataService.GetSingleCallback.class));
+        }).when(locationDataService).getByUUID(anyString(), any(QueryOptions.class), any(DataService.GetCallback.class));
 
         // create visit callback
         doAnswer(new Answer<Void>() {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
-                ((DataService.GetSingleCallback) invocation.getArguments()[1]).onCompleted(visit);
+                ((DataService.GetCallback) invocation.getArguments()[1]).onCompleted(visit);
                 return null;
             }
-        }).when(visitDataService).create(any(Visit.class), any(DataService.GetSingleCallback.class));
+        }).when(visitDataService).create(any(Visit.class), any(DataService.GetCallback.class));
 
 
         // update visit callback
         doAnswer(new Answer<Void>() {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
-                ((DataService.GetSingleCallback) invocation.getArguments()[1]).onCompleted(visit);
+                ((DataService.GetCallback) invocation.getArguments()[1]).onCompleted(visit);
                 return null;
             }
-        }).when(visitDataService).update(any(Visit.class), any(DataService.GetSingleCallback.class));
+        }).when(visitDataService).update(any(Visit.class), any(DataService.GetCallback.class));
 
         // end visit callback
         doAnswer(new Answer<Void>() {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
-                ((DataService.GetSingleCallback) invocation.getArguments()[2]).onCompleted(visit);
+                ((DataService.GetCallback) invocation.getArguments()[2]).onCompleted(visit);
                 return null;
             }
-        }).when(visitDataService).endVisit(anyString(), anyString(), any(DataService.GetSingleCallback.class));
+        }).when(visitDataService).endVisit(anyString(), anyString(), any(DataService.GetCallback.class));
 
     }
 

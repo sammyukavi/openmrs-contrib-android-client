@@ -95,6 +95,21 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 	}
 
 	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle item selection
+		switch (item.getItemId()) {
+			case R.id.actionLogout:
+				logout();
+				return true;
+			case R.id.actionSettings:
+				startActivity(new Intent(this, SettingsActivity.class));
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
+		}
+	}
+
+	@Override
 	public boolean onPrepareOptionsMenu(final Menu menu) {
 		MenuItem logoutMenuItem = menu.findItem(R.id.actionLogout);
 		if (logoutMenuItem != null) {

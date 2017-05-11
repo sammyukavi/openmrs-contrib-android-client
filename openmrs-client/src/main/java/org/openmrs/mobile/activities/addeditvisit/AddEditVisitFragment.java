@@ -23,7 +23,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.Spinner;
@@ -34,7 +33,6 @@ import android.widget.TextView;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
-import org.openmrs.mobile.activities.visitphoto.upload.UploadVisitPhotoActivity;
 import org.openmrs.mobile.models.BaseOpenmrsObject;
 import org.openmrs.mobile.models.ConceptName;
 import org.openmrs.mobile.models.VisitAttribute;
@@ -59,7 +57,6 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 	private TextView confirmMessage;
 	private Spinner visitTypeDropdown;
 	private Button visitSubmitButton;
-	private ImageView capturePhoto;
 	private Map<String, VisitAttribute> visitAttributeMap = new HashMap<>();
 	private Map<View, VisitAttributeType> viewVisitAttributeTypeMap = new HashMap<>();
 
@@ -72,7 +69,6 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View root = inflater.inflate(R.layout.fragment_addedit_visit, container, false);
 		visitTitle = (TextView)root.findViewById(R.id.visitTitle);
-		capturePhoto = (ImageView)root.findViewById(R.id.capture_photo);
 		visitTableLayout = (TableLayout)root.findViewById(R.id.visitTableLayout);
 		progressBar = (ProgressBar)root.findViewById(R.id.visitLoadingProgressBar);
 		confirmMessage = (TextView)root.findViewById(R.id.confirmMessage);
@@ -91,20 +87,6 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 				if (!mPresenter.isProcessing()) {
 					buildVisitAttributeValues();
 				}
-			}
-		});
-
-		capturePhoto.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(getContext(), UploadVisitPhotoActivity.class);
-				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE,
-						mPresenter.getPatient().getUuid());
-				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE,
-						mPresenter.getVisit().getUuid());
-				intent.putExtra(ApplicationConstants.BundleKeys.PROVIDER_ID_BUNDLE,
-						mPresenter.getProvider().getUuid());
-				getContext().startActivity(intent);
 			}
 		});
 	}

@@ -13,7 +13,7 @@ package org.openmrs.mobile.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class PatientIdentifier extends BaseOpenmrsData {
+public class PatientIdentifier extends BaseOpenmrsEntity {
 
 	@SerializedName("identifierType")
 	@Expose

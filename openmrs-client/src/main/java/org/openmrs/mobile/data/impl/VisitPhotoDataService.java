@@ -3,7 +3,10 @@ package org.openmrs.mobile.data.impl;
 import android.support.annotation.NonNull;
 
 import org.openmrs.mobile.data.BaseDataService;
+import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
+import org.openmrs.mobile.data.QueryOptions;
+import org.openmrs.mobile.data.db.impl.VisitPhotoDbService;
 import org.openmrs.mobile.data.rest.VisitPhotoRestService;
 import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.models.VisitPhoto;
@@ -17,11 +20,17 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class VisitPhotoDataService extends BaseDataService<VisitPhoto, VisitPhotoRestService> {
-
+public class VisitPhotoDataService
+		extends BaseDataService<VisitPhoto, VisitPhotoDbService, VisitPhotoRestService>
+		implements DataService<VisitPhoto> {
 	@Override
 	protected Class<VisitPhotoRestService> getRestServiceClass() {
 		return VisitPhotoRestService.class;
+	}
+
+	@Override
+	protected VisitPhotoDbService getDbService() {
+		return new VisitPhotoDbService();
 	}
 
 	@Override
@@ -34,19 +43,24 @@ public class VisitPhotoDataService extends BaseDataService<VisitPhoto, VisitPhot
 		return "photos";
 	}
 
-	public void uploadPhoto(VisitPhoto visitPhoto, @NonNull GetSingleCallback<VisitPhoto> callback) {
-		executeSingleCallback(callback, () -> {
-			RequestBody patient = RequestBody.create(MediaType.parse("text/plain"), visitPhoto.getPatient().getUuid());
-			RequestBody visit = RequestBody.create(MediaType.parse("text/plain"), visitPhoto.getVisit().getUuid());
-			RequestBody provider = RequestBody.create(MediaType.parse("text/plain"), visitPhoto.getProvider().getUuid());
-			RequestBody fileCaption = RequestBody.create(MediaType.parse("text/plain"), visitPhoto.getFileCaption());
+	public void uploadPhoto(VisitPhoto visitPhoto, @NonNull GetCallback<VisitPhoto> callback) {
+		executeSingleCallback(callback,
+				() -> null,
+				() -> {
+					RequestBody patient =
+							RequestBody.create(MediaType.parse("text/plain"), visitPhoto.getPatient().getUuid());
+					RequestBody visit = RequestBody.create(MediaType.parse("text/plain"), visitPhoto.getVisit().getUuid());
+					RequestBody provider =
+							RequestBody.create(MediaType.parse("text/plain"), visitPhoto.getProvider().getUuid());
+					RequestBody fileCaption = RequestBody.create(MediaType.parse("text/plain"), visitPhoto.getFileCaption
+							());
 
-			return restService.uploadVisitPhoto(buildRestRequestPath(), patient, visit,
-					provider, fileCaption, visitPhoto.getRequestImage());
-		});
+					return restService.uploadVisitPhoto(buildRestRequestPath(), patient, visit,
+							provider, fileCaption, visitPhoto.getRequestImage());
+				});
 	}
 
-	public void downloadPhoto(String obsUuid, String view, @NonNull GetSingleCallback<VisitPhoto> callback) {
+	public void downloadPhoto(String obsUuid, String view, @NonNull GetCallback<VisitPhoto> callback) {
 		final VisitPhoto visitPhoto = new VisitPhoto();
 		Call<ResponseBody> call = restService.downloadVisitPhoto(buildRestRequestPath(), obsUuid, view);
 		call.enqueue(new Callback<ResponseBody>() {
@@ -65,12 +79,12 @@ public class VisitPhotoDataService extends BaseDataService<VisitPhoto, VisitPhot
 	}
 
 	@Override
-	protected Call<VisitPhoto> _restGetByUuid(String restPath, String uuid, String representation) {
+	protected Call<VisitPhoto> _restGetByUuid(String restPath, String uuid, QueryOptions options) {
 		return null;
 	}
 
 	@Override
-	protected Call<Results<VisitPhoto>> _restGetAll(String restPath, PagingInfo pagingInfo, String representation) {
+	protected Call<Results<VisitPhoto>> _restGetAll(String restPath, QueryOptions options, PagingInfo pagingInfo) {
 		return null;
 	}
 

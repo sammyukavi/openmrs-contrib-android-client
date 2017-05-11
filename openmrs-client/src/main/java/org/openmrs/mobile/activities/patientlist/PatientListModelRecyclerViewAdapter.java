@@ -23,29 +23,29 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.openmrs.mobile.R;
-import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
-import org.openmrs.mobile.models.PatientListContextModel;
+import org.openmrs.mobile.activities.addeditvisit.AddEditVisitActivity;
+import org.openmrs.mobile.models.PatientListContext;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.StringUtils;
 
 import java.util.List;
 
 /**
- * Display {@link PatientListContextModel}s
+ * Display {@link PatientListContext}s
  */
 public class PatientListModelRecyclerViewAdapter
 		extends RecyclerView.Adapter<PatientListModelRecyclerViewAdapter.PatientListModelViewHolder> {
 
-	private Activity context;
-	private PatientListContract.View view;
-	private List<PatientListContextModel> items;
+    private Activity context;
+    private PatientListContract.View view;
+    private List<PatientListContext> items;
 
-	public PatientListModelRecyclerViewAdapter(Activity context,
-			List<PatientListContextModel> patientListModels, PatientListContract.View view) {
-		this.context = context;
-		this.items = patientListModels;
-		this.view = view;
-	}
+    public PatientListModelRecyclerViewAdapter(Activity context,
+                                               List<PatientListContext> patientListModels, PatientListContract.View view) {
+        this.context = context;
+        this.items = patientListModels;
+        this.view = view;
+    }
 
 	@Override
 	public PatientListModelViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -53,23 +53,23 @@ public class PatientListModelRecyclerViewAdapter
 		return new PatientListModelViewHolder(itemView);
 	}
 
-	@Override
-	public void onBindViewHolder(PatientListModelViewHolder holder, int position) {
-		PatientListContextModel patientListContextModel = items.get(position);
+    @Override
+    public void onBindViewHolder(PatientListModelViewHolder holder, int position) {
+        PatientListContext patientListContext = items.get(position);
 
-		holder.headerContent.setText(StringUtils.stripHtmlTags(patientListContextModel.getHeaderContent()));
-		holder.bodyContent.setText(StringUtils.stripHtmlTags(patientListContextModel.getBodyContent()));
-		holder.rowLayout.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(context, PatientDashboardActivity.class);
-				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE,
-						patientListContextModel.getPatient().getUuid());
-				context.startActivity(intent);
-				context.finish();
-			}
-		});
-	}
+        holder.headerContent.setText(StringUtils.stripHtmlTags(patientListContext.getHeaderContent()));
+        holder.bodyContent.setText(StringUtils.stripHtmlTags(patientListContext.getBodyContent()));
+        holder.rowLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, AddEditVisitActivity.class);
+                intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE,
+                        patientListContext.getPatient().getUuid());
+                context.startActivity(intent);
+                context.finish();
+            }
+        });
+    }
 
 	@Override
 	public int getItemCount() {

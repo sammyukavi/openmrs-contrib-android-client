@@ -3,7 +3,7 @@ package org.openmrs.mobile.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Settings extends BaseOpenmrsData {
+public class Settings extends BaseOpenmrsObject {
 
 	@Expose
 	@SerializedName("results")

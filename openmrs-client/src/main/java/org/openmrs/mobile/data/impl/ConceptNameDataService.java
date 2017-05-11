@@ -11,25 +11,32 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-
 package org.openmrs.mobile.data.impl;
 
 import android.support.annotation.NonNull;
 
 import org.openmrs.mobile.data.BaseDataService;
 import org.openmrs.mobile.data.PagingInfo;
+import org.openmrs.mobile.data.QueryOptions;
+import org.openmrs.mobile.data.db.impl.ConceptNameDbService;
 import org.openmrs.mobile.data.rest.ConceptNameRestSevice;
 import org.openmrs.mobile.models.ConceptName;
 import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 
+import java.util.List;
+
 import retrofit2.Call;
 
-public class ConceptNameDataService extends BaseDataService<ConceptName, ConceptNameRestSevice> {
-
+public class ConceptNameDataService extends BaseDataService<ConceptName, ConceptNameDbService, ConceptNameRestSevice> {
 	@Override
 	protected Class<ConceptNameRestSevice> getRestServiceClass() {
 		return ConceptNameRestSevice.class;
+	}
+
+	@Override
+	protected ConceptNameDbService getDbService() {
+		return new ConceptNameDbService();
 	}
 
 	@Override
@@ -43,18 +50,18 @@ public class ConceptNameDataService extends BaseDataService<ConceptName, Concept
 	}
 
 	@Override
-	protected Call<ConceptName> _restGetByUuid(String restPath, String uuid, String representation) {
-		return restService.getByUuid(restPath, uuid, representation);
+	protected Call<ConceptName> _restGetByUuid(String restPath, String uuid, QueryOptions options) {
+		return restService.getByUuid(restPath, uuid, QueryOptions.getRepresentation(options));
 	}
 
-	public void getByConceptUuid(String conceptUuid, @NonNull GetMultipleCallback<ConceptName> callback) {
-		executeMultipleCallback(callback, null, () -> {
-			return restService.getByConceptUuid(buildRestRequestPath(), conceptUuid);
-		});
+	public void getByConceptUuid(String conceptUuid, @NonNull GetCallback<List<ConceptName>> callback) {
+		executeMultipleCallback(callback,
+				() -> null,
+				() -> restService.getByConceptUuid(buildRestRequestPath(), conceptUuid));
 	}
 
 	@Override
-	protected Call<Results<ConceptName>> _restGetAll(String restPath, PagingInfo pagingInfo, String representation) {
+	protected Call<Results<ConceptName>> _restGetAll(String restPath, QueryOptions options, PagingInfo pagingInfo) {
 		return null;
 	}
 

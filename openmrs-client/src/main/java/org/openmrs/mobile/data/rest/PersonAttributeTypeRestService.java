@@ -25,25 +25,18 @@ import retrofit2.http.Query;
 public interface PersonAttributeTypeRestService {
 	@GET(RestConstants.GET_ALL)
 	Call<Results<PersonAttributeType>> getAll(@Path(value = "restPath", encoded = true) String restPath,
-			@Query("v") String representation);
-
-	@GET(RestConstants.GET_ALL)
-	Call<Results<PersonAttributeType>> getAll(@Path(value = "restPath", encoded = true) String restPath,
 			@Query("v") String representation,
-			@Query("limit") int limit,
-			@Query("startIndex") int startIndex);
-
-	@GET(RestConstants.REST_PATH)
-	Call<Results<PersonAttributeType>> getByName(@Path(value = "restPath", encoded = true) String restPath,
-			@Query("q") String name,
-			@Query("v") String representation);
+			@Query("includeAll") Boolean includeAll,
+			@Query("limit") Integer limit,
+			@Query("startIndex") Integer startIndex);
 
 	@GET(RestConstants.REST_PATH)
 	Call<Results<PersonAttributeType>> getByName(@Path(value = "restPath", encoded = true) String restPath,
 			@Query("q") String name,
 			@Query("v") String representation,
-			@Query("limit") int limit,
-			@Query("startIndex") int startIndex);
+			@Query("includeAll") Boolean includeAll,
+			@Query("limit") Integer limit,
+			@Query("startIndex") Integer startIndex);
 
 	@GET(RestConstants.GET_BY_UUID)
 	Call<PersonAttributeType> getByUuid(@Path(value = "restPath", encoded = true) String restPath,

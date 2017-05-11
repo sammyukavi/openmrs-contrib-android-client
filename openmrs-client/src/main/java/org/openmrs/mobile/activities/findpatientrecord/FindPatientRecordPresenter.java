@@ -66,9 +66,9 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 		findPatientView.setProgressBarVisibility(true);
 		findPatientView.setFetchedPatientsVisibility(0);
 		if (NetworkUtils.hasNetwork()) {
-			DataService.GetMultipleCallback<Patient> getMultipleCallback = new DataService.GetMultipleCallback<Patient>() {
+			DataService.GetCallback<List<Patient>> getMultipleCallback = new DataService.GetCallback<List<Patient>>() {
 				@Override
-				public void onCompleted(List<Patient> patients, int length) {
+				public void onCompleted(List<Patient> patients) {
 					findPatientView.setProgressBarVisibility(false);
 					if (patients.isEmpty()) {
 						findPatientView.setNumberOfPatientsView(0);
@@ -95,7 +95,7 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 									.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 				}
 			};
-			patientDataService.getByNameAndIdentifier(query, null, getMultipleCallback);
+			patientDataService.getByNameAndIdentifier(query, null, null, getMultipleCallback);
 		} else {
 			// get the users from the local storage.
 		}
@@ -114,10 +114,10 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 			setPage(page);
 			setTotalNumberResults(0);
 			PagingInfo pagingInfo = new PagingInfo(page, limit);
-			patientDataService.getLastViewed(ApplicationConstants.EMPTY_STRING, pagingInfo,
-					new DataService.GetMultipleCallback<Patient>() {
+			patientDataService.getLastViewed(ApplicationConstants.EMPTY_STRING, null, pagingInfo,
+					new DataService.GetCallback<List<Patient>>() {
 						@Override
-						public void onCompleted(List<Patient> patients, int length) {
+						public void onCompleted(List<Patient> patients) {
 							findPatientView.setProgressBarVisibility(false);
 
 							if (!patients.isEmpty()) {
@@ -137,7 +137,7 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 										.NOTICE);*/
 							}
 							setLoading(false);
-							setTotalNumberResults(length);
+							setTotalNumberResults(pagingInfo.getTotalRecordCount());
 						}
 
 						@Override

@@ -15,7 +15,7 @@ import com.google.gson.annotations.SerializedName;
 
 import org.openmrs.mobile.utilities.StringUtils;
 
-public class PersonAddress extends BaseOpenmrsData {
+public class PersonAddress extends BaseOpenmrsEntity {
 
 	@SerializedName("preferred")
 	@Expose

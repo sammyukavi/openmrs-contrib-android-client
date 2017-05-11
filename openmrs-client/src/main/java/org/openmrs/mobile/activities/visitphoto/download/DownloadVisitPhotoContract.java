@@ -14,12 +14,12 @@ public class DownloadVisitPhotoContract {
 
 		void updateVisitImageUrls(List<String> urls);
 
-		void downloadImage(String obsUuid, DataService.GetSingleCallback<Bitmap> callback);
+		void downloadImage(String obsUuid, DataService.GetCallback<Bitmap> callback);
 	}
 
 	interface Presenter extends BasePresenterContract {
 
-		void downloadImage(String obsUuid, DataService.GetSingleCallback<Bitmap> callback);
+		void downloadImage(String obsUuid, DataService.GetCallback<Bitmap> callback);
 
 		void loadVisitDocumentObservations();
 

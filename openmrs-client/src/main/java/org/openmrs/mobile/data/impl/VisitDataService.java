@@ -1,24 +1,24 @@
 package org.openmrs.mobile.data.impl;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
-import org.openmrs.mobile.data.BaseDataService;
 import org.openmrs.mobile.data.BaseEntityDataService;
-import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.EntityDataService;
 import org.openmrs.mobile.data.PagingInfo;
-import org.openmrs.mobile.data.rest.RestConstants;
+import org.openmrs.mobile.data.QueryOptions;
+import org.openmrs.mobile.data.db.impl.VisitDbService;
 import org.openmrs.mobile.data.rest.VisitRestService;
-import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 
 import retrofit2.Call;
 
-public class VisitDataService extends BaseDataService<Visit, VisitRestService>
-		implements DataService<Visit> {
+public class VisitDataService extends BaseEntityDataService<Visit, VisitDbService, VisitRestService>
+		implements EntityDataService<Visit> {
+	@Override
+	protected VisitDbService getDbService() {
+		return new VisitDbService();
+	}
+
 	@Override
 	protected Class<VisitRestService> getRestServiceClass() {
 		return VisitRestService.class;
@@ -37,17 +37,15 @@ public class VisitDataService extends BaseDataService<Visit, VisitRestService>
 	// Begin Retrofit Workaround
 
 	@Override
-	protected Call<Visit> _restGetByUuid(String restPath, String uuid, String representation) {
-		return restService.getByUuid(restPath, uuid, RestConstants.Representations.FULL);
+	protected Call<Visit> _restGetByUuid(String restPath, String uuid, QueryOptions options) {
+		return restService.getByUuid(restPath, uuid, QueryOptions.getRepresentation(options));
 	}
 
 	@Override
-	protected Call<Results<Visit>> _restGetAll(String restPath, PagingInfo pagingInfo, String representation) {
-		if (isPagingValid(pagingInfo)) {
-			return restService.getAll(restPath, representation, pagingInfo.getLimit(), pagingInfo.getStartIndex());
-		} else {
-			return restService.getAll(restPath, representation);
-		}
+	protected Call<Results<Visit>> _restGetAll(String restPath, QueryOptions options, PagingInfo pagingInfo) {
+		return restService.getAll(restPath, QueryOptions.getRepresentation(options),
+				QueryOptions.getIncludeInactive(options), PagingInfo.getLimit(pagingInfo),
+				PagingInfo.getStartIndex(pagingInfo));
 	}
 
 	@Override
@@ -65,35 +63,19 @@ public class VisitDataService extends BaseDataService<Visit, VisitRestService>
 		return restService.purge(restPath, uuid);
 	}
 
-	protected Call<Results<Visit>> _restGetByPatient(String restPath, PagingInfo pagingInfo, String patientUuid,
-			boolean includeInactive,
-			String representation) {
-		if (isPagingValid(pagingInfo)) {
-			return restService.getByPatient(restPath, patientUuid, representation,
-					pagingInfo.getLimit(), pagingInfo.getStartIndex(), includeInactive);
-		} else {
-			return restService.getByPatient(restPath, patientUuid, representation, includeInactive);
-		}
+	@Override
+	protected Call<Results<Visit>> _restGetByPatient(String restPath, String patientUuid, QueryOptions options,
+			PagingInfo pagingInfo) {
+		return restService.getByPatient(restPath, patientUuid, QueryOptions.getRepresentation(options),
+				QueryOptions.getIncludeInactive(options), PagingInfo.getLimit(pagingInfo),
+				PagingInfo.getStartIndex(pagingInfo));
 	}
 
-	public void getByPatient(@NonNull Patient patient, boolean includeInactive,
-			@Nullable PagingInfo pagingInfo,
-			@NonNull GetMultipleCallback<Visit> callback) {
-		executeMultipleCallback(callback, pagingInfo, () -> {
-			if (isPagingValid(pagingInfo)) {
-				return restService.getByPatient(buildRestRequestPath(), patient.getUuid(), RestConstants.Representations.FULL,
-						pagingInfo.getLimit(), pagingInfo.getStartIndex(), includeInactive);
-			} else {
-				return restService.getByPatient(buildRestRequestPath(), patient.getUuid(), RestConstants.Representations.FULL,
-						includeInactive);
-			}
-		});
-	}
+	// End Retrofit Workaround
 
-	public void endVisit(String uuid, String stopDatetime, GetSingleCallback<Visit> callback) {
-		executeSingleCallback(callback, () -> {
-			return restService.endVisit(buildRestRequestPath(), uuid, stopDatetime);
-		});
+	public void endVisit(String uuid, String stopDatetime, GetCallback<Visit> callback) {
+		executeSingleCallback(callback,
+				() -> null,
+				() -> restService.endVisit(buildRestRequestPath(), uuid, stopDatetime));
 	}
 }
-

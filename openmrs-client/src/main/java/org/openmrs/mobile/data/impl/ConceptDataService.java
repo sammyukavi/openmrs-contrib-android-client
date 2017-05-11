@@ -16,6 +16,8 @@ package org.openmrs.mobile.data.impl;
 
 import org.openmrs.mobile.data.BaseDataService;
 import org.openmrs.mobile.data.PagingInfo;
+import org.openmrs.mobile.data.QueryOptions;
+import org.openmrs.mobile.data.db.impl.ConceptDbService;
 import org.openmrs.mobile.data.rest.ConceptRestService;
 import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.Results;
@@ -23,10 +25,15 @@ import org.openmrs.mobile.utilities.ApplicationConstants;
 
 import retrofit2.Call;
 
-public class ConceptDataService extends BaseDataService<Concept, ConceptRestService> {
+public class ConceptDataService extends BaseDataService<Concept, ConceptDbService, ConceptRestService> {
 	@Override
 	protected Class<ConceptRestService> getRestServiceClass() {
 		return ConceptRestService.class;
+	}
+
+	@Override
+	protected ConceptDbService getDbService() {
+		return new ConceptDbService();
 	}
 
 	@Override
@@ -40,12 +47,12 @@ public class ConceptDataService extends BaseDataService<Concept, ConceptRestServ
 	}
 
 	@Override
-	protected Call<Concept> _restGetByUuid(String restPath, String uuid, String representation) {
-		return restService.getByUuid(restPath, uuid, representation);
+	protected Call<Concept> _restGetByUuid(String restPath, String uuid, QueryOptions options) {
+		return restService.getByUuid(restPath, uuid, QueryOptions.getRepresentation(options));
 	}
 
 	@Override
-	protected Call<Results<Concept>> _restGetAll(String restPath, PagingInfo pagingInfo, String representation) {
+	protected Call<Results<Concept>> _restGetAll(String restPath, QueryOptions options, PagingInfo pagingInfo) {
 		return null;
 	}
 

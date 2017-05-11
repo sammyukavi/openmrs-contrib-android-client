@@ -18,6 +18,7 @@ import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
+import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.impl.ObsDataService;
 import org.openmrs.mobile.data.impl.PatientDataService;
 import org.openmrs.mobile.data.impl.ProviderDataService;
@@ -58,7 +59,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
 	@Override
 	public void fetchPatientData(String uuid) {
-		patientDataService.getByUUID(uuid, new DataService.GetSingleCallback<Patient>() {
+		patientDataService.getByUUID(uuid, null, new DataService.GetCallback<Patient>() {
 			@Override
 			public void onCompleted(Patient patient) {
 				if (patient != null) {
@@ -77,9 +78,10 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	@Override
 	public void fetchVisits(Patient patient) {
 		patientDashboardView.getVisitNoteContainer().removeAllViews();
-		visitDataService.getByPatient(patient, true, new PagingInfo(0, 20), new DataService.GetMultipleCallback<Visit>() {
+		visitDataService.getByPatient(patient, QueryOptions.INCLUDE_INACTIVE, new PagingInfo(0, 20),
+				new DataService.GetCallback<List<Visit>>() {
 			@Override
-			public void onCompleted(List<Visit> visits, int length) {
+			public void onCompleted(List<Visit> visits) {
 				patientDashboardView.updateActiveVisitCard(visits);
 			}
 
@@ -93,9 +95,10 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
 	@Override
 	public void fetchEncounterObservations(Encounter encounter) {
-		observationDataService.getByEncounter(encounter, true, new PagingInfo(0, 20), new DataService.GetMultipleCallback<Observation>() {
+		observationDataService.getByEncounter(encounter, QueryOptions.INCLUDE_INACTIVE, new PagingInfo(0, 20),
+				new DataService.GetCallback<List<Observation>>() {
 			@Override
-			public void onCompleted(List<Observation> observations, int length) {
+			public void onCompleted(List<Observation> observations) {
 				for (Observation observation : observations) {
 					if (observation.getDiagnosisNote() != null && !observation.getDiagnosisNote().equals(ApplicationConstants.EMPTY_STRING)) {
 						patientDashboardView.updateActiveVisitObservationsCard(observation);
@@ -118,9 +121,9 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 		String personUuid = OpenMRS.getInstance().getCurrentLoggedInUserInfo().get(ApplicationConstants.UserKeys.USER_UUID);
 		if (StringUtils.notEmpty(personUuid)) {
 
-			providerDataService.getAll(false, null, new DataService.GetMultipleCallback<Provider>() {
+			providerDataService.getAll(null, null, new DataService.GetCallback<List<Provider>>() {
 				@Override
-				public void onCompleted(List<Provider> entities, int length) {
+				public void onCompleted(List<Provider> entities) {
 					for (Provider entity : entities) {
 						if (null != entity.getPerson() && personUuid.equalsIgnoreCase(entity.getPerson().getUuid())) {
 							patientDashboardView.setProviderUuid(entity.getUuid());

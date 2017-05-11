@@ -2,7 +2,7 @@ package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 
-public class VisitAttribute extends BaseOpenmrsData {
+public class VisitAttribute extends BaseOpenmrsEntity {
 
 	@Expose
 	private Visit visit;

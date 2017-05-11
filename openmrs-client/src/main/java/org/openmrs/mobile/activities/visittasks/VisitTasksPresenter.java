@@ -20,9 +20,10 @@ import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
+import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.impl.VisitDataService;
-import org.openmrs.mobile.data.impl.VisitPredefinedTasksDataService;
-import org.openmrs.mobile.data.impl.VisitTasksDataService;
+import org.openmrs.mobile.data.impl.VisitPredefinedTaskDataService;
+import org.openmrs.mobile.data.impl.VisitTaskDataService;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitPredefinedTask;
@@ -37,8 +38,8 @@ import java.util.List;
 public class VisitTasksPresenter extends BasePresenter implements VisitTasksContract.Presenter {
 
 	private VisitTasksContract.View visitTasksView;
-	private VisitPredefinedTasksDataService visitPredefinedTasksDataService;
-	private VisitTasksDataService visitTasksDataService;
+	private VisitPredefinedTaskDataService visitPredefinedTaskDataService;
+	private VisitTaskDataService visitTaskDataService;
 	private VisitDataService visitDataService;
 	private OpenMRS instance = OpenMRS.getInstance();
 
@@ -48,8 +49,8 @@ public class VisitTasksPresenter extends BasePresenter implements VisitTasksCont
 	public VisitTasksPresenter(VisitTasksContract.View view, OpenMRS openMRS) {
 		this.visitTasksView = view;
 		this.visitTasksView.setPresenter(this);
-		this.visitPredefinedTasksDataService = new VisitPredefinedTasksDataService();
-		this.visitTasksDataService = new VisitTasksDataService();
+		this.visitPredefinedTaskDataService = new VisitPredefinedTaskDataService();
+		this.visitTaskDataService = new VisitTaskDataService();
 		this.visitDataService = new VisitDataService();
 	}
 
@@ -61,10 +62,10 @@ public class VisitTasksPresenter extends BasePresenter implements VisitTasksCont
 	@Override
 	public void getPredefinedTasks() {
 		if (NetworkUtils.hasNetwork()) {
-			DataService.GetMultipleCallback<VisitPredefinedTask> getMultipleCallback = new DataService
-					.GetMultipleCallback<VisitPredefinedTask>() {
+			DataService.GetCallback<List<VisitPredefinedTask>> callback = new DataService
+					.GetCallback<List<VisitPredefinedTask>>() {
 				@Override
-				public void onCompleted(List<VisitPredefinedTask> visitPredefinedTasks, int length) {
+				public void onCompleted(List<VisitPredefinedTask> visitPredefinedTasks) {
 					if (visitPredefinedTasks.isEmpty()) {
 						visitTasksView.setPredefinedTasks(visitPredefinedTasks);
 						/*visitTasksView.showToast(ApplicationConstants.toastMessages.predefinedTaskInfo, ToastUtil
@@ -83,7 +84,7 @@ public class VisitTasksPresenter extends BasePresenter implements VisitTasksCont
 									.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 				}
 			};
-			visitPredefinedTasksDataService.getAll(false, null, getMultipleCallback);
+			visitPredefinedTaskDataService.getAll(new QueryOptions(false, false), null, callback);
 		} else {
 			// get the users from the local storage.
 		}
@@ -93,34 +94,35 @@ public class VisitTasksPresenter extends BasePresenter implements VisitTasksCont
 	public void getVisitTasks() {
 		PagingInfo pagingInfo = new PagingInfo(page, limit);
 		if (NetworkUtils.hasNetwork()) {
-			DataService.GetMultipleCallback<VisitTask> getMultipleCallback = new DataService
-					.GetMultipleCallback<VisitTask>() {
-				@Override
-				public void onCompleted(List<VisitTask> visitTasksList, int length) {
-					if (visitTasksList.isEmpty()) {
-						visitTasksView.setVisitTasks(visitTasksList);
+			DataService.GetCallback<List<VisitTask>> getMultipleCallback =
+					new DataService.GetCallback<List<VisitTask>>() {
+						@Override
+						public void onCompleted(List<VisitTask> visitTasksList) {
+							if (visitTasksList.isEmpty()) {
+								visitTasksView.setVisitTasks(visitTasksList);
 						/*visitTasksView.showToast(ApplicationConstants.toastMessages.predefinedTaskInfo, ToastUtil
 						.ToastType
 								.NOTICE);*/
-					} else {
-						visitTasksView.setVisitTasks(visitTasksList);
-						visitTasksView
-								.showToast(ApplicationConstants.entityName.VISIT_TASKS
-												+ ApplicationConstants.toastMessages.fetchSuccessMessage,
-										ToastUtil.ToastType.SUCCESS);
-					}
-				}
+							} else {
+								visitTasksView.setVisitTasks(visitTasksList);
+								visitTasksView
+										.showToast(ApplicationConstants.entityName.VISIT_TASKS
+														+ ApplicationConstants.toastMessages.fetchSuccessMessage,
+												ToastUtil.ToastType.SUCCESS);
+							}
+						}
 
-				@Override
-				public void onError(Throwable t) {
-					Log.e("Visit Tasks Error", "Error", t.fillInStackTrace());
-					visitTasksView
-							.showToast(ApplicationConstants.entityName.VISIT_TASKS + ApplicationConstants.toastMessages
-									.fetchErrorMessage, ToastUtil.ToastType.ERROR);
-				}
-			};
-			visitTasksDataService.getAll(ApplicationConstants.EMPTY_STRING, instance.getPatientUuid(),
-					instance.getVisitUuid(), pagingInfo, getMultipleCallback);
+						@Override
+						public void onError(Throwable t) {
+							Log.e("Visit Tasks Error", "Error", t.fillInStackTrace());
+							visitTasksView
+									.showToast(
+											ApplicationConstants.entityName.VISIT_TASKS + ApplicationConstants.toastMessages
+													.fetchErrorMessage, ToastUtil.ToastType.ERROR);
+						}
+					};
+			visitTaskDataService.getAll(ApplicationConstants.EMPTY_STRING, instance.getPatientUuid(),
+					instance.getVisitUuid(), new QueryOptions(false, false), pagingInfo, getMultipleCallback);
 		} else {
 			// get the users from the local storage.
 		}
@@ -134,29 +136,29 @@ public class VisitTasksPresenter extends BasePresenter implements VisitTasksCont
 	@Override
 	public void addVisitTasks(VisitTask visitTask) {
 		if (NetworkUtils.hasNetwork()) {
-			DataService.GetSingleCallback<VisitTask> getSingleCallback = new DataService
-					.GetSingleCallback<VisitTask>() {
+			DataService.GetCallback<VisitTask> getSingleCallback =
+					new DataService.GetCallback<VisitTask>() {
+						@Override
+						public void onCompleted(VisitTask entity) {
+							if (entity != null) {
+								visitTasksView
+										.showToast(ApplicationConstants.entityName.VISIT_TASKS
+												+ ApplicationConstants.toastMessages.addSuccessMessage, ToastUtil.ToastType
+												.SUCCESS);
+								visitTasksView.refresh();
+							}
+						}
 
-				@Override
-				public void onCompleted(VisitTask entity) {
-					if (entity != null) {
-						visitTasksView
-								.showToast(ApplicationConstants.entityName.VISIT_TASKS
-										+ ApplicationConstants.toastMessages.addSuccessMessage, ToastUtil.ToastType
-										.SUCCESS);
-						visitTasksView.refresh();
-					}
-				}
-
-				@Override
-				public void onError(Throwable t) {
-					Log.e("Add Visit Task Error", "Error", t.fillInStackTrace());
-					visitTasksView
-							.showToast(ApplicationConstants.entityName.VISIT_TASKS + ApplicationConstants.toastMessages
-									.addErrorMessage, ToastUtil.ToastType.ERROR);
-				}
-			};
-			visitTasksDataService.create(visitTask, getSingleCallback);
+						@Override
+						public void onError(Throwable t) {
+							Log.e("Add Visit Task Error", "Error", t.fillInStackTrace());
+							visitTasksView
+									.showToast(
+											ApplicationConstants.entityName.VISIT_TASKS + ApplicationConstants.toastMessages
+													.addErrorMessage, ToastUtil.ToastType.ERROR);
+						}
+					};
+			visitTaskDataService.create(visitTask, getSingleCallback);
 		} else {
 			// get the users from the local storage.
 		}
@@ -164,9 +166,8 @@ public class VisitTasksPresenter extends BasePresenter implements VisitTasksCont
 
 	public void updateVisitTask(VisitTask visitTask) {
 		if (NetworkUtils.hasNetwork()) {
-			DataService.GetSingleCallback<VisitTask> getSingleCallback = new DataService
-					.GetSingleCallback<VisitTask>() {
-
+			DataService.GetCallback<VisitTask> getSingleCallback = new DataService
+					.GetCallback<VisitTask>() {
 				@Override
 				public void onCompleted(VisitTask entity) {
 					if (entity != null) {
@@ -185,7 +186,7 @@ public class VisitTasksPresenter extends BasePresenter implements VisitTasksCont
 									.updateErrorMessage, ToastUtil.ToastType.ERROR);
 				}
 			};
-			visitTasksDataService.update(visitTask, getSingleCallback);
+			visitTaskDataService.update(visitTask, getSingleCallback);
 		} else {
 			// get the users from the local storage.
 		}
@@ -212,25 +213,24 @@ public class VisitTasksPresenter extends BasePresenter implements VisitTasksCont
 	@Override
 	public void getVisit() {
 		if (NetworkUtils.hasNetwork()) {
-			DataService.GetSingleCallback<Visit> getSingleCallback = new DataService
-					.GetSingleCallback<Visit>() {
+			DataService.GetCallback<Visit> getSingleCallback =
+					new DataService.GetCallback<Visit>() {
+						@Override
+						public void onCompleted(Visit entity) {
+							if (entity != null) {
+								visitTasksView.setVisit(entity);
+							}
+						}
 
-				@Override
-				public void onCompleted(Visit entity) {
-					if (entity != null) {
-						visitTasksView.setVisit(entity);
-					}
-				}
-
-				@Override
-				public void onError(Throwable t) {
-					Log.e("Visit Error", "Error", t.fillInStackTrace());
-					visitTasksView
-							.showToast(ApplicationConstants.entityName.VISITS + ApplicationConstants.toastMessages
-									.fetchErrorMessage, ToastUtil.ToastType.ERROR);
-				}
-			};
-			visitDataService.getByUUID(instance.getVisitUuid(), getSingleCallback);
+						@Override
+						public void onError(Throwable t) {
+							Log.e("Visit Error", "Error", t.fillInStackTrace());
+							visitTasksView
+									.showToast(ApplicationConstants.entityName.VISITS + ApplicationConstants.toastMessages
+											.fetchErrorMessage, ToastUtil.ToastType.ERROR);
+						}
+					};
+			visitDataService.getByUUID(instance.getVisitUuid(), new QueryOptions(false, false), getSingleCallback);
 		} else {
 			// get the users from the local storage.
 		}

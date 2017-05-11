@@ -13,9 +13,9 @@
  */
 package org.openmrs.mobile.activities.addeditvisit;
 
+import android.support.annotation.NonNull;
 import android.widget.Spinner;
 
-import org.greenrobot.greendao.annotation.NotNull;
 import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.DataService;
@@ -43,7 +43,7 @@ import java.util.List;
 
 public class AddEditVisitPresenter extends BasePresenter implements AddEditVisitContract.Presenter {
 
-	@NotNull
+	@NonNull
 	private AddEditVisitContract.View addEditVisitView;
 
 	private Patient patient;
@@ -58,11 +58,11 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	private String patientUuid;
 	private Location location;
 
-	public AddEditVisitPresenter(@NotNull AddEditVisitContract.View addEditVisitView, String patientUuid) {
+	public AddEditVisitPresenter(@NonNull AddEditVisitContract.View addEditVisitView, String patientUuid) {
 		this(addEditVisitView, patientUuid, null, null, null, null, null, null);
 	}
 
-	public AddEditVisitPresenter(@NotNull AddEditVisitContract.View addEditVisitView, String patientUuid,
+	public AddEditVisitPresenter(@NonNull AddEditVisitContract.View addEditVisitView, String patientUuid,
 			VisitDataService visitDataService, PatientDataService patientDataService,
 			VisitTypeDataService visitTypeDataService, VisitAttributeTypeDataService visitAttributeTypeDataService,
 			ConceptNameDataService conceptNameDataService, LocationDataService locationDataService) {
@@ -118,7 +118,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 
 	private void loadPatient() {
 		if (StringUtils.notEmpty(patientUuid)) {
-			patientDataService.getByUUID(patientUuid, new DataService.GetSingleCallback<Patient>() {
+			patientDataService.getByUUID(patientUuid, null, new DataService.GetCallback<Patient>() {
 				@Override
 				public void onCompleted(Patient entity) {
 					setPatient(entity);
@@ -134,9 +134,9 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	}
 
 	private void loadVisit(Patient patient) {
-		visitDataService.getByPatient(patient, false, null, new DataService.GetMultipleCallback<Visit>() {
+		visitDataService.getByPatient(patient, null, null, new DataService.GetCallback<List<Visit>>() {
 			@Override
-			public void onCompleted(List<Visit> entities, int length) {
+			public void onCompleted(List<Visit> entities) {
 				if (entities.size() > 0) {
 					visit = entities.get(0);
 					addEditVisitView.initView(false);
@@ -160,9 +160,9 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	public List<VisitAttributeType> loadVisitAttributeTypes() {
 		final List<VisitAttributeType> visitAttributeTypes = new ArrayList<>();
 		visitAttributeTypeDataService
-				.getAll(false, new PagingInfo(), new DataService.GetMultipleCallback<VisitAttributeType>() {
+				.getAll(null, new PagingInfo(), new DataService.GetCallback<List<VisitAttributeType>>() {
 					@Override
-					public void onCompleted(List<VisitAttributeType> entities, int length) {
+					public void onCompleted(List<VisitAttributeType> entities) {
 						visitAttributeTypes.addAll(entities);
 						addEditVisitView.loadVisitAttributeTypeFields(visitAttributeTypes);
 						setProcessing(false);
@@ -178,9 +178,9 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	}
 
 	public void loadVisitTypes() {
-		visitTypeDataService.getAll(false, null, new DataService.GetMultipleCallback<VisitType>() {
+		visitTypeDataService.getAll(null, null, new DataService.GetCallback<List<VisitType>>() {
 			@Override
-			public void onCompleted(List<VisitType> entities, int length) {
+			public void onCompleted(List<VisitType> entities) {
 				addEditVisitView.updateVisitTypes(entities);
 			}
 
@@ -195,7 +195,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	 * TODO: Move to Base class
 	 */
 	public void getLocation() {
-		locationDataService.getByUUID(OpenMRS.getInstance().getLocation(), new DataService.GetSingleCallback<Location>() {
+		locationDataService.getByUUID(OpenMRS.getInstance().getLocation(), null, new DataService.GetCallback<Location>() {
 			@Override
 			public void onCompleted(Location entity) {
 				location = entity;
@@ -210,9 +210,9 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 
 	@Override
 	public void getConceptNames(String uuid, Spinner dropdown) {
-		conceptNameDataService.getByConceptUuid(uuid, new DataService.GetMultipleCallback<ConceptName>() {
+		conceptNameDataService.getByConceptUuid(uuid, new DataService.GetCallback<List<ConceptName>>() {
 			@Override
-			public void onCompleted(List<ConceptName> entities, int length) {
+			public void onCompleted(List<ConceptName> entities) {
 				addEditVisitView.updateConceptNamesView(dropdown, entities);
 			}
 
@@ -248,7 +248,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 
 		setProcessing(true);
 
-		visitDataService.create(visit, new DataService.GetSingleCallback<Visit>() {
+		visitDataService.create(visit, new DataService.GetCallback<Visit>() {
 			@Override
 			public void onCompleted(Visit entity) {
 				setProcessing(false);
@@ -268,9 +268,11 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	@Override
 	public void updateVisit(List<VisitAttribute> attributes) {
 		List<VisitAttribute> existingAttributes = visit.getAttributes();
+
 		//void existing attributes
 		for (VisitAttribute visitAttribute : existingAttributes) {
 			visitAttribute.setUuid(null);
+
 			if (attributes.contains(visitAttribute)) {
 				visitAttribute.setVoided(true);
 				visitAttribute.setDateVoided(new Date());
@@ -279,7 +281,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 
 		//visit.setPatient(null);
 		setProcessing(true);
-		visitDataService.update(visit, new DataService.GetSingleCallback<Visit>() {
+		visitDataService.update(visit, new DataService.GetCallback<Visit>() {
 			@Override
 			public void onCompleted(Visit entity) {
 				setProcessing(false);
@@ -300,7 +302,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	public void endVisit(String uuid) {
 		visitDataService.endVisit(uuid,
 				DateUtils.convertTime(System.currentTimeMillis(), DateUtils.OPEN_MRS_REQUEST_FORMAT),
-				new DataService.GetSingleCallback<Visit>() {
+				new DataService.GetCallback<Visit>() {
 					@Override
 					public void onCompleted(Visit entity) {
 

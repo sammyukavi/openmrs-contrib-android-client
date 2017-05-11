@@ -454,7 +454,7 @@ public class CustomFragmentDialog extends DialogFragment {
 
 						ObsDataService observationDataService = new ObsDataService();
 
-						observationDataService.update(observation, new DataService.GetSingleCallback<Observation>() {
+						observationDataService.update(observation, new DataService.GetCallback<Observation>() {
 							@Override
 							public void onCompleted(Observation entity) {
 								((PatientDashboardActivity)getActivity()).mPresenter.fetchVisits(patient);

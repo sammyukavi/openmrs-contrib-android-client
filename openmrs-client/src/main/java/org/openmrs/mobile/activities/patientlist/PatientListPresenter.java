@@ -18,10 +18,11 @@ import android.support.annotation.NonNull;
 import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
-import org.openmrs.mobile.data.impl.PatientListContextModelDataService;
+import org.openmrs.mobile.data.QueryOptions;
+import org.openmrs.mobile.data.impl.PatientListContextDataService;
 import org.openmrs.mobile.data.impl.PatientListDataService;
 import org.openmrs.mobile.models.PatientList;
-import org.openmrs.mobile.models.PatientListContextModel;
+import org.openmrs.mobile.models.PatientListContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +37,7 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 	private boolean loading;
 
 	private PatientListDataService patientListDataService;
-	private PatientListContextModelDataService patientListContextModelDataService;
+	private PatientListContextDataService patientListContextDataService;
 
 	public PatientListPresenter(@NonNull PatientListContract.View patientListView) {
 		this(patientListView, null, null);
@@ -44,7 +45,7 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 
 	public PatientListPresenter(@NonNull PatientListContract.View patientListView,
 			PatientListDataService patientListDataService,
-			PatientListContextModelDataService patientListContextModelDataService) {
+			PatientListContextDataService patientListContextDataService) {
 		this.patientListView = patientListView;
 		this.patientListView.setPresenter(this);
 
@@ -54,10 +55,10 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 			this.patientListDataService = patientListDataService;
 		}
 
-		if (patientListContextModelDataService == null) {
-			this.patientListContextModelDataService = new PatientListContextModelDataService();
+		if (patientListContextDataService == null) {
+			this.patientListContextDataService = new PatientListContextDataService();
 		} else {
-			this.patientListContextModelDataService = patientListContextModelDataService;
+			this.patientListContextDataService = patientListContextDataService;
 		}
 	}
 
@@ -71,18 +72,19 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 	public void getPatientList() {
 		setPage(1);
 		PagingInfo pagingInfo = new PagingInfo();
-		patientListDataService.getAll(false, pagingInfo, new DataService.GetMultipleCallback<PatientList>() {
-			@Override
-			public void onCompleted(List<PatientList> entities, int length) {
-				patientListView.setNoPatientListsVisibility(false);
-				patientListView.updatePatientLists(entities);
-			}
+		patientListDataService.getAll(new QueryOptions(false, false), pagingInfo,
+				new DataService.GetCallback<List<PatientList>>() {
+					@Override
+					public void onCompleted(List<PatientList> entities) {
+						patientListView.setNoPatientListsVisibility(false);
+						patientListView.updatePatientLists(entities);
+					}
 
-			@Override
-			public void onError(Throwable t) {
-				patientListView.setNoPatientListsVisibility(true);
-			}
-		});
+					@Override
+					public void onError(Throwable t) {
+						patientListView.setNoPatientListsVisibility(true);
+					}
+				});
 	}
 
 	@Override
@@ -95,15 +97,15 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 		setViewBeforeLoadData();
 		setTotalNumberResults(0);
 		PagingInfo pagingInfo = new PagingInfo(page, limit);
-		patientListContextModelDataService
-				.getAll(patientListUuid, pagingInfo, new DataService.GetMultipleCallback<PatientListContextModel>() {
+		patientListContextDataService.getListPatients(patientListUuid, null, pagingInfo,
+				new DataService.GetCallback<List<PatientListContext>>() {
 					@Override
-					public void onCompleted(List<PatientListContextModel> entities, int length) {
+					public void onCompleted(List<PatientListContext> entities) {
 						setViewAfterLoadData(false);
 						patientListView.updatePatientListData(entities);
-						setTotalNumberResults(length);
-						if (length > 0) {
-							patientListView.setNumberOfPatientsView(length);
+						setTotalNumberResults(pagingInfo.getTotalRecordCount());
+						if (pagingInfo.getTotalRecordCount() > 0) {
+							patientListView.setNumberOfPatientsView(pagingInfo.getTotalRecordCount());
 						}
 						setLoading(false);
 					}

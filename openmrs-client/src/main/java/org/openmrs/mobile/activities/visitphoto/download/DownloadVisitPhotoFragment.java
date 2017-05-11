@@ -50,7 +50,7 @@ public class DownloadVisitPhotoFragment extends ACBaseFragment<DownloadVisitPhot
 	}
 
 	@Override
-	public void downloadImage(String obsUuid, DataService.GetSingleCallback<Bitmap> callback) {
+	public void downloadImage(String obsUuid, DataService.GetCallback<Bitmap> callback) {
 		mPresenter.downloadImage(obsUuid, callback);
 	}
 }

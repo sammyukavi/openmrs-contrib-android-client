@@ -1,11 +1,10 @@
 package org.openmrs.mobile.data.impl;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
 import org.openmrs.mobile.data.BaseDataService;
+import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
-import org.openmrs.mobile.data.rest.RestConstants;
+import org.openmrs.mobile.data.QueryOptions;
+import org.openmrs.mobile.data.db.impl.VisitAttributeTypeDbServie;
 import org.openmrs.mobile.data.rest.VisitAttributeTypeRestService;
 import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.models.VisitAttributeType;
@@ -13,11 +12,17 @@ import org.openmrs.mobile.utilities.ApplicationConstants;
 
 import retrofit2.Call;
 
-public class VisitAttributeTypeDataService extends BaseDataService<VisitAttributeType, VisitAttributeTypeRestService> {
-
+public class VisitAttributeTypeDataService
+		extends BaseDataService<VisitAttributeType, VisitAttributeTypeDbServie, VisitAttributeTypeRestService>
+		implements DataService<VisitAttributeType> {
 	@Override
 	protected Class<VisitAttributeTypeRestService> getRestServiceClass() {
 		return VisitAttributeTypeRestService.class;
+	}
+
+	@Override
+	protected VisitAttributeTypeDbServie getDbService() {
+		return new VisitAttributeTypeDbServie();
 	}
 
 	@Override
@@ -31,13 +36,15 @@ public class VisitAttributeTypeDataService extends BaseDataService<VisitAttribut
 	}
 
 	@Override
-	protected Call<VisitAttributeType> _restGetByUuid(String restPath, String uuid, String representation) {
-		return restService.getByUuid(restPath, uuid, representation);
+	protected Call<VisitAttributeType> _restGetByUuid(String restPath, String uuid, QueryOptions options) {
+		return restService.getByUuid(restPath, uuid, QueryOptions.getRepresentation(options));
 	}
 
 	@Override
-	protected Call<Results<VisitAttributeType>> _restGetAll(String restPath, PagingInfo pagingInfo, String representation) {
-		return restService.getAll(restPath, representation);
+	protected Call<Results<VisitAttributeType>> _restGetAll(String restPath, QueryOptions options, PagingInfo pagingInfo) {
+		return restService.getAll(restPath,
+				QueryOptions.getRepresentation(options), QueryOptions.getIncludeInactive(options),
+				PagingInfo.getLimit(pagingInfo), PagingInfo.getStartIndex(pagingInfo));
 	}
 
 	@Override
@@ -53,19 +60,5 @@ public class VisitAttributeTypeDataService extends BaseDataService<VisitAttribut
 	@Override
 	protected Call<VisitAttributeType> _restPurge(String restPath, String uuid) {
 		return restService.purge(restPath, uuid);
-	}
-
-	@Override
-	public void getAll(boolean includeInactive, @Nullable PagingInfo pagingInfo,
-			@NonNull GetMultipleCallback<VisitAttributeType> callback) {
-		executeMultipleCallback(callback, null, () -> {
-			if (isPagingValid(pagingInfo)) {
-				return restService.getAll(buildRestRequestPath(),
-						RestConstants.Representations.FULL,
-						pagingInfo.getLimit(), pagingInfo.getStartIndex());
-			} else {
-				return restService.getAll(buildRestRequestPath(), RestConstants.Representations.FULL);
-			}
-		});
 	}
 }

@@ -29,7 +29,7 @@ import android.widget.TextView;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.models.PatientList;
-import org.openmrs.mobile.models.PatientListContextModel;
+import org.openmrs.mobile.models.PatientListContext;
 import org.openmrs.mobile.utilities.FontsUtil;
 
 import java.util.List;
@@ -142,7 +142,7 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 	}
 
 	@Override
-	public void updatePatientListData(List<PatientListContextModel> patientListData) {
+	public void updatePatientListData(List<PatientListContext> patientListData) {
 		PatientListModelRecyclerViewAdapter adapter =
 				new PatientListModelRecyclerViewAdapter(this.getActivity(), patientListData, this);
 		patientListModelRecyclerView.setAdapter(adapter);

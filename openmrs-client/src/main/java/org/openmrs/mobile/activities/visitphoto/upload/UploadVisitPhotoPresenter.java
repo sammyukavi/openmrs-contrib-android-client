@@ -1,6 +1,7 @@
 package org.openmrs.mobile.activities.visitphoto.upload;
 
-import org.greenrobot.greendao.annotation.NotNull;
+import android.support.annotation.NonNull;
+
 import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.impl.VisitPhotoDataService;
@@ -11,7 +12,7 @@ import org.openmrs.mobile.models.VisitPhoto;
 
 public class UploadVisitPhotoPresenter extends BasePresenter implements UploadVisitPhotoContract.Presenter {
 
-	@NotNull
+	@NonNull
 	private UploadVisitPhotoContract.View visitPhotoView;
 	private VisitPhotoDataService visitPhotoDataService;
 	private String patientUuid, visitUuid, providerUuid;
@@ -51,7 +52,7 @@ public class UploadVisitPhotoPresenter extends BasePresenter implements UploadVi
 
 	@Override
 	public void uploadImage() {
-		visitPhotoDataService.uploadPhoto(visitPhoto, new DataService.GetSingleCallback<VisitPhoto>() {
+		visitPhotoDataService.uploadPhoto(visitPhoto, new DataService.GetCallback<VisitPhoto>() {
 			@Override
 			public void onCompleted(VisitPhoto entity) {
 				System.out.println("image uploaded " + entity);

@@ -16,7 +16,7 @@ package org.openmrs.mobile.activities.patientlist;
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
 import org.openmrs.mobile.models.PatientList;
-import org.openmrs.mobile.models.PatientListContextModel;
+import org.openmrs.mobile.models.PatientListContext;
 
 import java.util.List;
 
@@ -34,7 +34,7 @@ public interface PatientListContract {
 
 		void updatePatientLists(List<PatientList> patientList);
 
-		void updatePatientListData(List<PatientListContextModel> patientListData);
+		void updatePatientListData(List<PatientListContext> patientListData);
 
 		void setSpinnerVisibility(boolean visibility);
 

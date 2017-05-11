@@ -19,8 +19,9 @@ public interface VisitAttributeTypeRestService {
 	@GET(RestConstants.GET_ALL)
 	Call<Results<VisitAttributeType>> getAll(@Path(value = "restPath", encoded = true) String restPath,
 			@Query("v") String representation,
-			@Query("limit") int limit,
-			@Query("startIndex") int startIndex);
+			@Query("includeAll") Boolean includeAll,
+			@Query("limit") Integer limit,
+			@Query("startIndex") Integer startIndex);
 
 	@GET(RestConstants.GET_BY_UUID)
 	Call<VisitAttributeType> getByUuid(@Path(value = "restPath", encoded = true) String restPath,

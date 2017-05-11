@@ -7,7 +7,6 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-
 package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
@@ -16,7 +15,6 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class Concept extends BaseOpenmrsObject {
-
 	@SerializedName("datatype")
 	@Expose
 	private Datatype datatype;

@@ -17,7 +17,7 @@ package org.openmrs.mobile.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class VisitTask extends BaseOpenmrsData {
+public class VisitTask extends BaseOpenmrsEntity {
 
 	@SerializedName("status")
 	@Expose
@@ -27,21 +27,9 @@ public class VisitTask extends BaseOpenmrsData {
 	@Expose
 	private Visit visit;
 
-	@SerializedName("patient")
-	@Expose
-	private Patient patient;
-
 	@SerializedName("name")
 	@Expose
 	private String name;
-
-	public Patient getPatient() {
-		return patient;
-	}
-
-	public void setPatient(Patient patient) {
-		this.patient = patient;
-	}
 
 	public VisitTaskStatus getStatus() {
 		return status;

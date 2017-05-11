@@ -22,12 +22,13 @@ import org.openmrs.mobile.activities.patientlist.PatientListContract;
 import org.openmrs.mobile.activities.patientlist.PatientListPresenter;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
-import org.openmrs.mobile.data.impl.PatientListContextModelDataService;
+import org.openmrs.mobile.data.QueryOptions;
+import org.openmrs.mobile.data.impl.PatientListContextDataService;
 import org.openmrs.mobile.data.impl.PatientListDataService;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.PatientList;
 import org.openmrs.mobile.models.PatientListCondition;
-import org.openmrs.mobile.models.PatientListContextModel;
+import org.openmrs.mobile.models.PatientListContext;
 import org.openmrs.mobile.models.Person;
 import org.openmrs.mobile.test.ACUnitTestBase;
 
@@ -45,16 +46,16 @@ public class PatientListPresenterTest extends ACUnitTestBase{
     @Mock
     private PatientListDataService patientListDataService;
     @Mock
-    private PatientListContextModelDataService patientListContextModelDataService;
+    private PatientListContextDataService patientListContextDataService;
     @Mock
     private PatientListContract.View view;
     private PatientListPresenter presenter;
     private List<PatientList> patientLists = new ArrayList<>();
-    private List<PatientListContextModel> patientListData;
+    private List<PatientListContext> patientListData;
 
     @Before
     public void setUp(){
-        presenter = new PatientListPresenter(view, patientListDataService, patientListContextModelDataService);
+        presenter = new PatientListPresenter(view, patientListDataService, patientListContextDataService);
 
         PatientList list1 = new PatientList();
         list1.setUuid("11-22-33");
@@ -75,7 +76,7 @@ public class PatientListPresenterTest extends ACUnitTestBase{
 
         // populate patient list data
         patientListData = new ArrayList<>();
-        PatientListContextModel data = new PatientListContextModel();
+        PatientListContext data = new PatientListContext();
         data.setPatientList(list1);
 
         Patient patient = new Patient();
@@ -95,10 +96,11 @@ public class PatientListPresenterTest extends ACUnitTestBase{
         doAnswer(new Answer<Void>() {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
-                ((DataService.GetMultipleCallback) invocation.getArguments()[2]).onCompleted(patientLists, 1);
+                ((DataService.GetCallback) invocation.getArguments()[2]).onCompleted(patientLists);
                 return null;
             }
-        }).when(patientListDataService).getAll(anyBoolean(), any(PagingInfo.class), any(DataService.GetMultipleCallback.class));
+        }).when(patientListDataService).getAll(any(QueryOptions.class), any(PagingInfo.class),
+				any(DataService.GetCallback.class));
 
         presenter.getPatientList();
         verify(view).setNoPatientListsVisibility(false);
@@ -110,10 +112,11 @@ public class PatientListPresenterTest extends ACUnitTestBase{
         doAnswer(new Answer<Void>() {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
-                ((DataService.GetMultipleCallback) invocation.getArguments()[2]).onError(new Throwable("error"));
+                ((DataService.GetCallback) invocation.getArguments()[2]).onError(new Throwable("error"));
                 return null;
             }
-        }).when(patientListDataService).getAll(anyBoolean(), any(PagingInfo.class), any(DataService.GetMultipleCallback.class));
+        }).when(patientListDataService).getAll(any(QueryOptions.class), any(PagingInfo.class),
+				any(DataService.GetCallback.class));
 
         presenter.getPatientList();
         verify(view).setNoPatientListsVisibility(true);
@@ -124,10 +127,11 @@ public class PatientListPresenterTest extends ACUnitTestBase{
         doAnswer(new Answer<Void>() {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
-                ((DataService.GetMultipleCallback) invocation.getArguments()[2]).onCompleted(patientListData, 1);
+                ((DataService.GetCallback) invocation.getArguments()[2]).onCompleted(patientListData);
                 return null;
             }
-        }).when(patientListContextModelDataService).getAll(anyString(), any(PagingInfo.class), any(DataService.GetMultipleCallback.class));
+        }).when(patientListContextDataService).getListPatients(anyString(), any(QueryOptions.class), any(PagingInfo.class),
+				any(DataService.GetCallback.class));
 
         presenter.getPatientListData("11-22-33", 1);
         verify(view).updatePatientListData(patientListData);
@@ -140,10 +144,11 @@ public class PatientListPresenterTest extends ACUnitTestBase{
         doAnswer(new Answer<Void>() {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
-                ((DataService.GetMultipleCallback) invocation.getArguments()[2]).onError(new Throwable("error"));
+                ((DataService.GetCallback) invocation.getArguments()[2]).onError(new Throwable("error"));
                 return null;
             }
-        }).when(patientListContextModelDataService).getAll(anyString(), any(PagingInfo.class), any(DataService.GetMultipleCallback.class));
+        }).when(patientListContextDataService).getListPatients(anyString(), any(QueryOptions.class), any(PagingInfo.class),
+				any(DataService.GetCallback.class));
 
         presenter.getPatientListData("11-22-33", 1);
         verify(view).setSpinnerVisibility(false);

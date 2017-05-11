@@ -41,7 +41,7 @@ public class DownloadVisitPhotoRecyclerViewAdapter
 		if (obsUuid == null)
 			return;
 
-		view.downloadImage(obsUuid, new DataService.GetSingleCallback<Bitmap>() {
+		view.downloadImage(obsUuid, new DataService.GetCallback<Bitmap>() {
 			@Override
 			public void onCompleted(Bitmap entity) {
 				holder.image.setImageBitmap(entity);

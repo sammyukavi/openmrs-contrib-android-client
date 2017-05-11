@@ -56,22 +56,19 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	private ConceptNameDataService conceptNameDataService;
 	private VisitDataService visitDataService;
 	private PatientDataService patientDataService;
-	private ProviderDataService providerDataService;
 	private LocationDataService locationDataService;
 	private boolean processing;
 	private String patientUuid;
-	private Provider provider;
 	private Location location;
 
 	public AddEditVisitPresenter(@NotNull AddEditVisitContract.View addEditVisitView, String patientUuid) {
-		this(addEditVisitView, patientUuid, null, null, null, null, null, null, null);
+		this(addEditVisitView, patientUuid, null, null, null, null, null, null);
 	}
 
 	public AddEditVisitPresenter(@NotNull AddEditVisitContract.View addEditVisitView, String patientUuid,
 			VisitDataService visitDataService, PatientDataService patientDataService,
 			VisitTypeDataService visitTypeDataService, VisitAttributeTypeDataService visitAttributeTypeDataService,
-			ConceptNameDataService conceptNameDataService, ProviderDataService providerDataService,
-			LocationDataService locationDataService) {
+			ConceptNameDataService conceptNameDataService, LocationDataService locationDataService) {
 		this.addEditVisitView = addEditVisitView;
 		this.addEditVisitView.setPresenter(this);
 		this.patientUuid = patientUuid;
@@ -106,12 +103,6 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 			this.conceptNameDataService = conceptNameDataService;
 		}
 
-		if (providerDataService == null) {
-			this.providerDataService = new ProviderDataService();
-		} else {
-			this.providerDataService = providerDataService;
-		}
-
 		if (locationDataService == null) {
 			this.locationDataService = new LocationDataService();
 		} else {
@@ -122,36 +113,9 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 
 	}
 
-	/**
-	 * TODO: create a service to getProviderByPerson, move code to commons
-	 */
-	private void getCurrentProvider() {
-		String personUuid = OpenMRS.getInstance().getCurrentLoggedInUserInfo().get(ApplicationConstants.UserKeys.USER_UUID);
-		if (StringUtils.notEmpty(personUuid)) {
-
-			providerDataService.getAll(false, null, new DataService.GetMultipleCallback<Provider>() {
-				@Override
-				public void onCompleted(List<Provider> entities, int length) {
-					for (Provider entity : entities) {
-						if (null != entity.getPerson() && personUuid.equalsIgnoreCase(entity.getPerson().getUuid())) {
-
-							provider = entity;
-						}
-					}
-				}
-
-				@Override
-				public void onError(Throwable t) {
-					ToastUtil.error(t.getMessage());
-				}
-			});
-		}
-	}
-
 	@Override
 	public void subscribe() {
 		loadPatient();
-		getCurrentProvider();
 		getLocation();
 	}
 
@@ -372,10 +336,5 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 			}
 		}
 		return null;
-	}
-
-	@Override
-	public Provider getProvider() {
-		return provider;
 	}
 }

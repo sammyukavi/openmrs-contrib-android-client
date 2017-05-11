@@ -15,16 +15,21 @@
 package org.openmrs.mobile.activities.patientdashboard;
 
 import org.openmrs.mobile.activities.BasePresenter;
+import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.impl.ObsDataService;
 import org.openmrs.mobile.data.impl.PatientDataService;
+import org.openmrs.mobile.data.impl.ProviderDataService;
 import org.openmrs.mobile.data.impl.VisitDataService;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
+import org.openmrs.mobile.models.Provider;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
+import org.openmrs.mobile.utilities.StringUtils;
+import org.openmrs.mobile.utilities.ToastUtil;
 
 import java.util.List;
 
@@ -34,6 +39,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	private PatientDataService patientDataService;
 	private VisitDataService visitDataService;
 	private ObsDataService observationDataService;
+	private ProviderDataService providerDataService;
 
 	public PatientDashboardPresenter(PatientDashboardContract.View view) {
 		this.patientDashboardView = view;
@@ -41,11 +47,12 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 		this.patientDataService = new PatientDataService();
 		this.visitDataService = new VisitDataService();
 		this.observationDataService = new ObsDataService();
+		this.providerDataService = new ProviderDataService();
 	}
 
 	@Override
 	public void subscribe() {
-
+		getCurrentProvider();
 	}
 
 
@@ -104,4 +111,28 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 		});
 	}
 
+	/**
+	 * TODO: create a service to getProviderByPerson, move code to commons
+	 */
+	private void getCurrentProvider() {
+		String personUuid = OpenMRS.getInstance().getCurrentLoggedInUserInfo().get(ApplicationConstants.UserKeys.USER_UUID);
+		if (StringUtils.notEmpty(personUuid)) {
+
+			providerDataService.getAll(false, null, new DataService.GetMultipleCallback<Provider>() {
+				@Override
+				public void onCompleted(List<Provider> entities, int length) {
+					for (Provider entity : entities) {
+						if (null != entity.getPerson() && personUuid.equalsIgnoreCase(entity.getPerson().getUuid())) {
+							patientDashboardView.setProviderUuid(entity.getUuid());
+						}
+					}
+				}
+
+				@Override
+				public void onError(Throwable t) {
+					ToastUtil.error(t.getMessage());
+				}
+			});
+		}
+	}
 }

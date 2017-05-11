@@ -15,8 +15,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-
-public class Observation extends Resource implements Serializable {
+public class Observation extends BaseOpenmrsEntity implements Serializable {
 
     @SerializedName("concept")
     @Expose
@@ -45,9 +44,6 @@ public class Observation extends Resource implements Serializable {
     @SerializedName("encounter")
     @Expose
     private Encounter encounter=null;
-    @SerializedName("voided")
-    @Expose
-    private Boolean voided;
     @SerializedName("formFieldPath")
     @Expose
     private String formFieldPath;
@@ -228,24 +224,6 @@ public class Observation extends Resource implements Serializable {
      */
     public void setEncounter(Encounter encounter) {
         this.encounter = encounter;
-    }
-
-    /**
-     *
-     * @return
-     *     The voided
-     */
-    public Boolean getVoided() {
-        return voided;
-    }
-
-    /**
-     *
-     * @param voided
-     *     The voided
-     */
-    public void setVoided(Boolean voided) {
-        this.voided = voided;
     }
 
     /**

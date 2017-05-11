@@ -19,22 +19,22 @@ import rx.subscriptions.CompositeSubscription;
 
 public abstract class BasePresenter implements BasePresenterContract {
 
-    private CompositeSubscription mSubscription;
+	private CompositeSubscription mSubscription;
 
-    public BasePresenter() {
-        mSubscription = new CompositeSubscription();
-    }
+	public BasePresenter() {
+		mSubscription = new CompositeSubscription();
+	}
 
-    public void addSubscription(Subscription subscription) {
-        if(mSubscription != null) {
-            mSubscription.add(subscription);
-        }
-    }
+	public void addSubscription(Subscription subscription) {
+		if (mSubscription != null) {
+			mSubscription.add(subscription);
+		}
+	}
 
-    @Override
-    public void unsubscribe() {
-        if(mSubscription != null) {
-            mSubscription.clear();
-        }
-    }
+	@Override
+	public void unsubscribe() {
+		if (mSubscription != null) {
+			mSubscription.clear();
+		}
+	}
 }

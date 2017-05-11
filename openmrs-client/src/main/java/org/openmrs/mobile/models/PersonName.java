@@ -7,96 +7,70 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
+
 package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.io.Serializable;
+public class PersonName extends BaseOpenmrsEntity {
 
-public class PersonName extends BaseOpenmrsObject implements Serializable {
-    private static final long serialVersionUID = 1L;
+	@SerializedName("givenName")
+	@Expose
+	private String givenName;
+	@SerializedName("middleName")
+	@Expose
+	private String middleName;
+	@SerializedName("familyName")
+	@Expose
+	private String familyName;
 
-    private String personUuid;
+	/**
+	 * @return The givenName
+	 */
+	public String getGivenName() {
+		return givenName;
+	}
 
-    @SerializedName("givenName")
-    @Expose
-    private String givenName;
-    @SerializedName("middleName")
-    @Expose
-    private String middleName;
-    @SerializedName("familyName")
-    @Expose
-    private String familyName;
+	/**
+	 * @param givenName The givenName
+	 */
+	public void setGivenName(String givenName) {
+		this.givenName = givenName;
+	}
 
-    public String getPersonUuid() {
-        return personUuid;
-    }
+	/**
+	 * @return The familyName
+	 */
+	public String getFamilyName() {
+		return familyName;
+	}
 
-    public void setPersonUuid(String personUuid) {
-        this.personUuid = personUuid;
-    }
+	/**
+	 * @param familyName The familyName
+	 */
+	public void setFamilyName(String familyName) {
+		this.familyName = familyName;
+	}
 
-    /**
-     * 
-     * @return
-     *     The givenName
-     */
-    public String getGivenName() {
-        return givenName;
-    }
+	/**
+	 * @return The middleName
+	 */
+	public String getMiddleName() {
+		return middleName;
+	}
 
-    /**
-     * 
-     * @param givenName
-     *     The givenName
-     */
-    public void setGivenName(String givenName) {
-        this.givenName = givenName;
-    }
+	/**
+	 * @param middleName The middleName
+	 */
+	public void setMiddleName(String middleName) {
+		this.middleName = middleName;
+	}
 
-    /**
-     * 
-     * @return
-     *     The familyName
-     */
-    public String getFamilyName() {
-        return familyName;
-    }
-
-    /**
-     * 
-     * @param familyName
-     *     The familyName
-     */
-    public void setFamilyName(String familyName) {
-        this.familyName = familyName;
-    }
-
-    /**
-     *
-     * @return
-     *     The middleName
-     */
-    public String getMiddleName() {
-        return middleName;
-    }
-
-    /**
-     *
-     * @param middleName
-     *     The middleName
-     */
-    public void setMiddleName(String middleName) {
-        this.middleName = middleName;
-    }
-
-
-    public String getNameString()
-    {
-        if (middleName==null || middleName.equals("null"))
-            return givenName+" "+familyName;
-        else
-            return givenName+" "+middleName+" "+familyName;
-    }
+	public String getNameString() {
+		if (middleName == null || middleName.equals("null"))
+			return givenName + " " + familyName;
+		else
+			return givenName + " " + middleName + " " + familyName;
+	}
 }

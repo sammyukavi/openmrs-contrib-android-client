@@ -14,53 +14,83 @@
 
 package org.openmrs.mobile.activities.addeditpatient;
 
+import android.widget.Spinner;
+
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
+import org.openmrs.mobile.models.ConceptName;
 import org.openmrs.mobile.models.Patient;
+import org.openmrs.mobile.models.PatientIdentifierType;
+import org.openmrs.mobile.models.PersonAttributeType;
+import org.openmrs.mobile.utilities.ToastUtil;
 
 import java.util.List;
 
 public interface AddEditPatientContract {
 
-    interface View extends BaseView<Presenter> {
+	interface View extends BaseView<Presenter> {
 
-        void finishPatientInfoActivity();
+		void finishAddPatientActivity();
 
-        void setErrorsVisibility(boolean givenNameError,
-                                 boolean familyNameError,
-                                 boolean dayOfBirthError,
-                                 boolean addressError,
-                                 boolean countryError,
-                                 boolean genderError);
+		void setErrorsVisibility(boolean givenNameError, boolean familyNameError, boolean dayOfBirthError,
+				boolean addressError, boolean county_Error, boolean genderError, boolean patientFileNumberError,
+				boolean civilStatusError, boolean occupationError, boolean subCounty_Error, boolean nationality_Error,
+				boolean patientIdNo_Error, boolean clinic_Error, boolean ward_Error, boolean phonenumber_Error,
+				boolean kinName_Error, boolean kinRelationship_Error, boolean kinPhonenumber_Error,
+				boolean kinResidence_Error
+		);
 
-        void scrollToTop();
+		void scrollToTop();
 
-        void hideSoftKeys();
+		void hideSoftKeys();
 
-        void setProgressBarVisibility(boolean visibility);
+		void setProgressBarVisibility(boolean visibility);
 
-        void showSimilarPatientDialog(List<Patient> patients, Patient newPatient);
+		void showSimilarPatientDialog(List<Patient> patients, Patient newPatient);
 
-        void startPatientDashbordActivity(Patient patient);
+		void startPatientDashboardActivity(Patient patient);
 
-        void showUpgradeRegistrationModuleInfo();
-    }
+		void showUpgradeRegistrationModuleInfo();
 
-    interface Presenter extends BasePresenterContract {
+		void setPatientIdentifierType(PatientIdentifierType patientIdentifierType);
 
-        Patient getPatientToUpdate();
+		void showToast(String message, ToastUtil.ToastType toastType);
 
-        boolean isRegisteringPatient();
+		void loadPersonAttributeTypes(List<PersonAttributeType> personAttributeTypeList);
 
-        void confirmRegister(Patient patient);
+		void updateConceptNamesView(Spinner conceptNamesDropdown, List<ConceptName> conceptNames);
 
-        void confirmUpdate(Patient patient);
+	}
 
-        void finishPatientInfoActivity();
+	interface Presenter extends BasePresenterContract {
 
-        void registerPatient();
+		Patient getPatientToUpdate();
 
-        void updatePatient(Patient patient);
-    }
+		boolean isRegisteringPatient();
+
+		void setRegistering(boolean processing);
+
+		void confirmRegister(Patient patient);
+
+		void confirmUpdate(Patient patient);
+
+		void finishAddPatientActivity();
+
+		void registerPatient(Patient patient);
+
+		void updatePatient(Patient patient);
+
+		void getConceptNames(String uuid, Spinner conceptAnswersDropdown);
+
+		void getPatientIdentifierTypes();
+
+		void getPersonAttributeTypes();
+
+		<T> T searchPersonAttributeValueByType(PersonAttributeType personAttributeType);
+
+		Patient getPatient();
+
+		void setPatient(Patient patient);
+	}
 
 }

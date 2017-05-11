@@ -14,8 +14,6 @@
 
 package org.openmrs.mobile.dao;
 
-import com.activeandroid.query.Select;
-
 import net.sqlcipher.Cursor;
 
 import org.openmrs.mobile.databases.DBOpenHelper;
@@ -79,8 +77,8 @@ public class EncounterDAO {
         DBOpenHelper helper = OpenMRSDBOpenHelper.getInstance().getDBOpenHelper();
         Encounter encounter = null;
 
-        String where = String.format("%s = ? AND %s = ? ORDER BY %s DESC LIMIT 1", EncounterTable.Column.PATIENT_UUID, EncounterTable.Column.ENCOUNTER_TYPE, EncounterTable.Column.ENCOUNTER_DATETIME);
-        String[] whereArgs = new String[]{patientUUID, EncounterType.VITALS};
+        /*String where = String.format("%s = ? AND %s = ? ORDER BY %s DESC LIMIT 1", EncounterTable.Column.PATIENT_UUID, EncounterTable.Column.ENCOUNTER_TYPE, EncounterTable.Column.ENCOUNTER_DATETIME);
+        //String[] whereArgs = new String[]{patientUUID, EncounterType.VITALS};
         final Cursor cursor = helper.getReadableDatabase().query(EncounterTable.TABLE_NAME, null, where, whereArgs, null, null, null);
         if (null != cursor) {
             try {
@@ -102,7 +100,7 @@ public class EncounterDAO {
                     encounter.setUuid(uuid);
                     encounter.setDisplay(display);
                     encounter.setEncounterDatetime(DateUtils.convertTime(datetime,DateUtils.OPEN_MRS_REQUEST_FORMAT));
-                    encounter.setEncounterType((EncounterType)new Select().from(EncounterType.class).where("display = ?", EncounterType.VITALS).executeSingle());
+                    //encounter.setEncounterType((EncounterTypeEntity)new Select().from(EncounterTypeEntity.class).where("display = ?", EncounterTypeEntity.VITALS).executeSingle());
                     encounter.setObservations(new ObservationDAO().findObservationByEncounterID(id));
                     encounter.setForm(FormService.getFormByUuid(formUuid));
                     encounter.setPatient(new PatientDAO().findPatientByUUID(patientUuid));
@@ -110,7 +108,7 @@ public class EncounterDAO {
             } finally {
                 cursor.close();
             }
-        }
+        }*/
         return encounter;
     }
 
@@ -142,7 +140,7 @@ public class EncounterDAO {
                     String formUuid = cursor.getString(formUuid_CI);
                     String typeDisplay = cursor.getString(encounterType_CI);
                     Encounter encounter = new Encounter();
-                    encounter.setEncounterType(new EncounterType(typeDisplay));
+                    //encounter.setEncounterType(new EncounterTypeEntity(typeDisplay));
                     encounter.setId(id);
                     encounter.setVisitID(visitID);
                     encounter.setUuid(uuid);
@@ -187,7 +185,7 @@ public class EncounterDAO {
                     encounter.setUuid(uuid);
                     encounter.setDisplay(display);
                     encounter.setEncounterDatetime(DateUtils.convertTime(datetime,DateUtils.OPEN_MRS_REQUEST_FORMAT));
-                    encounter.setEncounterType(type);
+                    //encounter.setEncounterType(type);
                     encounter.setObservations(new ObservationDAO().findObservationByEncounterID(id));
                     encounter.setForm(FormService.getFormByUuid(formUuid));
                     encounters.add(encounter);

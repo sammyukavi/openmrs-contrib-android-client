@@ -7,101 +7,64 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
+
 package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class PatientIdentifier extends BaseOpenmrsObject {
-    private String patientUuid;
-    private String identifierTypeUuid;
-    private String locationUuid;
+public class PatientIdentifier extends BaseOpenmrsEntity {
 
-    @SerializedName("identifierType")
-    @Expose
-    private IdentifierType identifierType;
+	@SerializedName("identifierType")
+	@Expose
+	private PatientIdentifierType identifierType;
+	@SerializedName("identifier")
+	@Expose
+	private String identifier;
+	@SerializedName("location")
+	@Expose
+	private Location location;
 
-    @SerializedName("identifier")
-    @Expose
-    private String identifier;
+	/**
+	 * @return The identifierType
+	 */
+	public PatientIdentifierType getIdentifierType() {
+		return identifierType;
+	}
 
-    @SerializedName("location")
-    @Expose
-    private Location location;
+	/**
+	 * @param identifierType The identifierType
+	 */
+	public void setIdentifierType(PatientIdentifierType identifierType) {
+		this.identifierType = identifierType;
+	}
 
-    @Override
-    public void refreshDaoProperties() {
-        super.refreshDaoProperties();
+	/**
+	 * @return The identifier
+	 */
+	public String getIdentifier() {
+		return identifier;
+	}
 
-        if (identifierType != null) {
-            identifierTypeUuid = identifierType.getUuid();
-        }
+	/**
+	 * @param identifier The identifier
+	 */
+	public void setIdentifier(String identifier) {
+		this.identifier = identifier;
+	}
 
-        if (location == null) {
-            locationUuid = location.getUuid();
-        }
-    }
+	/**
+	 * @return The location
+	 */
+	public Location getLocation() {
+		return location;
+	}
 
-    public String getPatientUuid() {
-        return patientUuid;
-    }
-
-    public void setPatientUuid(String patientUuid) {
-        this.patientUuid = patientUuid;
-    }
-
-    /**
-     * 
-     * @return
-     *     The identifierType
-     */
-    public IdentifierType getIdentifierType() {
-        return identifierType;
-    }
-
-    /**
-     * 
-     * @param identifierType
-     *     The identifierType
-     */
-    public void setIdentifierType(IdentifierType identifierType) {
-        this.identifierType = identifierType;
-    }
-
-    /**
-     * 
-     * @return
-     *     The identifier
-     */
-    public String getIdentifier() {
-        return identifier;
-    }
-
-    /**
-     * 
-     * @param identifier
-     *     The identifier
-     */
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
-    }
-
-    /**
-     * 
-     * @return
-     *     The location
-     */
-    public Location getLocation() {
-        return location;
-    }
-
-    /**
-     * 
-     * @param location
-     *     The location
-     */
-    public void setLocation(Location location) {
-        this.location = location;
-    }
+	/**
+	 * @param location The location
+	 */
+	public void setLocation(Location location) {
+		this.location = location;
+	}
 
 }

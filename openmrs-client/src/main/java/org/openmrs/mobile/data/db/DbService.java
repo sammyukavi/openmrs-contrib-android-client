@@ -12,9 +12,11 @@ public interface DbService<E extends BaseOpenmrsObject> {
 	E getByUuid(String uuid, QueryOptions options);
 
 	List<E> saveAll(List<E> entities);
+
 	E save(E entity);
 
 	void delete(E entity);
+
 	void delete(String uuid);
 
 }

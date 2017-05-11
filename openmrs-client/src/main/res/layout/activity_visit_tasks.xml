@@ -1,14 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:focusable="true"
-    android:focusableInTouchMode="true"
-    android:orientation="vertical">
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:tools="http://schemas.android.com/tools"
+		xmlns:app="http://schemas.android.com/apk/res-auto"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		style="@style/BackgroundThemeEEE"
+		android:orientation="vertical"
+		android:fitsSystemWindows="true"
+		tools:context=".activities.findpatientrecord.FindPatientRecordActivity">
+	
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:focusable="true"
+			android:focusableInTouchMode="true"
+			android:orientation="vertical">
+		
+		<FrameLayout
+				android:id="@+id/contentFrame"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content" />
+	</LinearLayout>
+	
+	<android.support.design.widget.FloatingActionButton
+			android:id="@+id/visitTaskFab"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="bottom|end"
+			android:layout_margin="@dimen/fab_margin"
+			app:backgroundTint="@color/color_primary"
+			android:src="@drawable/ic_add" />
 
-    <FrameLayout
-        android:id="@+id/contentFrame"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

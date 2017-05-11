@@ -22,45 +22,36 @@ import android.preference.PreferenceManager;
 
 import org.openmrs.mobile.application.OpenMRS;
 
-
 public final class NetworkUtils {
 
+	public static boolean hasNetwork() {
+		ConnectivityManager connectivityManager
+				= (ConnectivityManager)OpenMRS.getInstance().getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+		return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
+	}
 
-    public static boolean hasNetwork(){
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) OpenMRS.getInstance().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
-    }
+	public static boolean isOnline() {
 
+		final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(OpenMRS.getInstance());
+		boolean toggle = prefs.getBoolean("sync", true);
 
-    public static boolean isOnline() {
+		if (toggle) {
+			ConnectivityManager connectivityManager
+					= (ConnectivityManager)OpenMRS.getInstance().getSystemService(Context.CONNECTIVITY_SERVICE);
+			NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+			boolean isConnected = activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
+			if (isConnected)
+				return true;
+			else {
+				SharedPreferences.Editor editor = prefs.edit();
+				editor.putBoolean("sync", false);
+				editor.commit();
+				return false;
+			}
 
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(OpenMRS.getInstance());
-        boolean toggle=prefs.getBoolean("sync", true);
+		} else
+			return false;
 
-        if(toggle) {
-            ConnectivityManager connectivityManager
-                    = (ConnectivityManager) OpenMRS.getInstance().getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-            boolean isConnected = activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
-            if(isConnected)
-                return true;
-            else
-            {
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.putBoolean("sync", false);
-                editor.commit();
-                return false;
-            }
-
-        }
-        else
-            return false;
-
-    }
-
-    public static boolean isServerAvailable() {
-        return true;
-    }
+	}
 }

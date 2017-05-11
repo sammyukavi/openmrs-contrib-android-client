@@ -28,129 +28,125 @@ import org.openmrs.mobile.application.OpenMRSLogger;
 import org.openmrs.mobile.utilities.StringUtils;
 
 public abstract class OpenMRSSQLiteOpenHelper extends SQLiteOpenHelper {
-    protected OpenMRSLogger mLogger = OpenMRS.getInstance().getOpenMRSLogger();
+	public static final String DATABASE_NAME = OpenMRS.getInstance().
+			getResources().getString(R.string.dbname);
+	protected OpenMRSLogger mLogger = OpenMRS.getInstance().getOpenMRSLogger();
+	private String mSecretKey;
 
-    public static final String DATABASE_NAME = OpenMRS.getInstance().
-            getResources().getString(R.string.dbname);
+	public OpenMRSSQLiteOpenHelper(Context context, SQLiteDatabase.CursorFactory factory, int version,
+			SQLiteDatabaseHook hook) {
+		super(context, DATABASE_NAME, factory, version, hook);
+	}
 
-    private String mSecretKey;
+	public OpenMRSSQLiteOpenHelper(Context context, SQLiteDatabase.CursorFactory factory, int version) {
+		super(context, DATABASE_NAME, factory, version, new OpenMRSDefaultDBHook());
+	}
 
-    public OpenMRSSQLiteOpenHelper(Context context, SQLiteDatabase.CursorFactory factory, int version, SQLiteDatabaseHook hook) {
-        super(context, DATABASE_NAME, factory, version, hook);
-    }
+	public OpenMRSSQLiteOpenHelper(Context context, SQLiteDatabase.CursorFactory factory, int version, String secretKey) {
+		this(context, factory, version);
+		mSecretKey = secretKey;
+	}
 
-    public OpenMRSSQLiteOpenHelper(Context context, SQLiteDatabase.CursorFactory factory, int version) {
-        super(context, DATABASE_NAME, factory, version, new OpenMRSDefaultDBHook());
-    }
+	public String getSecretKey() {
+		return mSecretKey != null ? mSecretKey : OpenMRS.getInstance().getSecretKey();
+	}
 
-    public OpenMRSSQLiteOpenHelper(Context context, SQLiteDatabase.CursorFactory factory, int version, String secretKey) {
-        this(context, factory, version);
-        mSecretKey = secretKey;
-    }
+	public synchronized SQLiteDatabase getWritableDatabase() {
+		SQLiteDatabase db;
+		try {
+			db = getWritableDatabase(getSecretKey());
+		} catch (SQLiteException e) {
+			db = openDatabaseWithoutSecretKey(true);
+		}
+		return db;
+	}
 
-    public String getSecretKey() {
-        return mSecretKey != null ? mSecretKey : OpenMRS.getInstance().getSecretKey();
-    }
+	public synchronized SQLiteDatabase getReadableDatabase() {
+		SQLiteDatabase db;
+		try {
+			db = getReadableDatabase(getSecretKey());
+		} catch (SQLiteException e) {
+			db = openDatabaseWithoutSecretKey(false);
+		}
+		return db;
+	}
 
     //TODO: Refactor to remove exception to control program flow
-    public synchronized SQLiteDatabase getWritableDatabase() {
-        SQLiteDatabase db;
-        try {
-            db = getWritableDatabase(getSecretKey());
-        } catch (SQLiteException e) {
-            db = openDatabaseWithoutSecretKey(true);
-        }
-        return db;
-    }
+	private SQLiteDatabase openDatabaseWithoutSecretKey(boolean writable) {
+		SQLiteDatabase db;
+		mLogger.w("Can't open database with secret key. Trying to open without key (may be not encrypted).");
+		if (writable) {
+			db = getWritableDatabase("");
+		} else {
+			db = getReadableDatabase("");
+		}
+		mLogger.w("Database opened but is not encrypted!");
+		return db;
+	}
 
-    public synchronized SQLiteDatabase getReadableDatabase() {
-        SQLiteDatabase db;
-        try {
-            db = getReadableDatabase(getSecretKey());
-        } catch (SQLiteException e) {
-            db = openDatabaseWithoutSecretKey(false);
-        }
-        return db;
-    }
+	/**
+	 * Null safe wrapper method for
+	 * @param columnIndex
+	 * @param columnValue
+	 * @param statement
+	 * @see net.sqlcipher.database.SQLiteStatement#bindString(int, String)
+	 */
+	public void bindString(int columnIndex, String columnValue, SQLiteStatement statement) {
+		if (StringUtils.notNull(columnValue)) {
+			statement.bindString(columnIndex, columnValue);
+		}
+	}
 
-    private SQLiteDatabase openDatabaseWithoutSecretKey(boolean writable) {
-        SQLiteDatabase db;
-        mLogger.w("Can't open database with secret key. Trying to open without key (may be not encrypted).");
-        if (writable) {
-            db = getWritableDatabase("");
-        } else {
-            db = getReadableDatabase("");
-        }
-        mLogger.w("Database opened but is not encrypted!");
-        return db;
-    }
+	/**
+	 * Null safe wrapper method for
+	 * @param columnIndex
+	 * @param columnValue
+	 * @param statement
+	 * @see net.sqlcipher.database.SQLiteStatement#bindLong(int, long)
+	 */
+	public void bindLong(int columnIndex, Long columnValue, SQLiteStatement statement) {
+		if (null != columnValue) {
+			statement.bindLong(columnIndex, columnValue);
+		}
+	}
 
-    public static class OpenMRSDefaultDBHook implements SQLiteDatabaseHook {
+	/**
+	 * Null safe wrapper method for
+	 * @param columnIndex
+	 * @param columnValue
+	 * @param statement
+	 * @see net.sqlcipher.database.SQLiteStatement#bindDouble(int, double)
+	 */
+	public void bindDouble(int columnIndex, Double columnValue, SQLiteStatement statement) {
+		if (null != columnValue) {
+			statement.bindDouble(columnIndex, columnValue);
+		}
+	}
 
-        @Override
-        public void preKey(SQLiteDatabase sqLiteDatabase) {
-            sqLiteDatabase.execSQL("PRAGMA cipher_default_kdf_iter = '4000'");
-        }
+	/**
+	 * Null safe wrapper method for
+	 * @param columnIndex
+	 * @param columnValue
+	 * @param statement
+	 * @see net.sqlcipher.database.SQLiteStatement#bindBlob(int, byte[])
+	 */
+	public void bindBlob(int columnIndex, byte[] columnValue, SQLiteStatement statement) {
+		if (null != columnValue) {
+			statement.bindBlob(columnIndex, columnValue);
+		}
+	}
 
-        @Override
-        public void postKey(SQLiteDatabase sqLiteDatabase) {
-            // This method is intentionally empty
-        }
+	public static class OpenMRSDefaultDBHook implements SQLiteDatabaseHook {
 
-    }
+		@Override
+		public void preKey(SQLiteDatabase sqLiteDatabase) {
+			sqLiteDatabase.execSQL("PRAGMA cipher_default_kdf_iter = '4000'");
+		}
 
-    /**
-     * Null safe wrapper method for
-     * @see net.sqlcipher.database.SQLiteStatement#bindString(int, String)
-     *
-     * @param columnIndex
-     * @param columnValue
-     * @param statement
-     */
-    public void bindString(int columnIndex, String columnValue, SQLiteStatement statement) {
-        if (StringUtils.notNull(columnValue)) {
-            statement.bindString(columnIndex, columnValue);
-        }
-    }
+		@Override
+		public void postKey(SQLiteDatabase sqLiteDatabase) {
+			// This method is intentionally empty
+		}
 
-    /**
-     * Null safe wrapper method for
-     * @see net.sqlcipher.database.SQLiteStatement#bindLong(int, long)
-     *
-     * @param columnIndex
-     * @param columnValue
-     * @param statement
-     */
-    public void bindLong(int columnIndex, Long columnValue, SQLiteStatement statement) {
-        if (null != columnValue) {
-            statement.bindLong(columnIndex, columnValue);
-        }
-    }
-    /**
-     * Null safe wrapper method for
-     * @see net.sqlcipher.database.SQLiteStatement#bindDouble(int, double)
-     *
-     * @param columnIndex
-     * @param columnValue
-     * @param statement
-     */
-    public void bindDouble(int columnIndex, Double columnValue, SQLiteStatement statement) {
-        if (null != columnValue) {
-            statement.bindDouble(columnIndex, columnValue);
-        }
-    }
-
-    /**
-     * Null safe wrapper method for
-     * @see net.sqlcipher.database.SQLiteStatement#bindBlob(int, byte[])
-     *
-     * @param columnIndex
-     * @param columnValue
-     * @param statement
-     */
-    public void bindBlob(int columnIndex, byte[] columnValue, SQLiteStatement statement) {
-        if (null != columnValue) {
-            statement.bindBlob(columnIndex, columnValue);
-        }
-    }
+	}
 }

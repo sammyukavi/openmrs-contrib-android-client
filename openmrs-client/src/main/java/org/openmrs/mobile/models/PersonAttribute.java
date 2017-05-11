@@ -7,6 +7,7 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
+
 package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
@@ -15,53 +16,21 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 public class PersonAttribute extends BaseOpenmrsObject implements Serializable {
-    private static final long serialVersionUID = 1L;
-
-    private String personUuid;
-
-    private String attributeTypeUuid;
 
     @SerializedName("attributeType")
     @Expose
-    private PersonAttributeType attributeType;
+    private PersonAttributeType personAttributeType;
 
     @SerializedName("value")
     @Expose
-    private String value;
+    private Object value;
 
-    @Override
-    public void refreshDaoProperties() {
-        super.refreshDaoProperties();
-
-        if (attributeType != null) {
-            attributeTypeUuid = attributeType.getUuid();
-        }
+    public PersonAttributeType getPersonAttributeType() {
+        return personAttributeType;
     }
 
-    public String getPersonUuid() {
-        return personUuid;
-    }
-
-    public void setPersonUuid(String personUuid) {
-        this.personUuid = personUuid;
-    }
-
-    /**
-     * 
-     * @return
-     *     The attributeType
-     */
-    public PersonAttributeType getAttributeType() {
-        return attributeType;
-    }
-
-    /**
-     * 
-     * @param attributeType
-     *     The attributeType
-     */
-    public void setAttributeType(PersonAttributeType attributeType) {
-        this.attributeType = attributeType;
+    public void setPersonAttributeType(PersonAttributeType personAttributeType) {
+        this.personAttributeType = personAttributeType;
     }
 
     /**
@@ -69,7 +38,7 @@ public class PersonAttribute extends BaseOpenmrsObject implements Serializable {
      * @return
      *     The value
      */
-    public String getValue() {
+    public Object getValue() {
         return value;
     }
 
@@ -78,8 +47,9 @@ public class PersonAttribute extends BaseOpenmrsObject implements Serializable {
      * @param value
      *     The value
      */
-    public void setValue(String value) {
+    public void setValue(Object value) {
         this.value = value;
     }
 
 }
+

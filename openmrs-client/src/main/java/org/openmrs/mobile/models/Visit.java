@@ -11,18 +11,16 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
+
 package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 
-import java.io.Serializable;
 import java.util.List;
 
-public class Visit extends BaseOpenmrsEntity implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class Visit extends BaseOpenmrsEntity  {
 
-    private String visitTypeUuid;
-    private String locationUuid;
+    private Long id;
 
     @Expose
     private VisitType visitType;
@@ -30,65 +28,71 @@ public class Visit extends BaseOpenmrsEntity implements Serializable {
     @Expose
     private Location location;
 
-    @Expose
-    private String startDatetime;
+	@Expose
+	private String startDatetime;
 
-    @Expose
-    private String stopDatetime;
+	@Expose
+	private String stopDatetime;
 
     @Expose
     private List<Encounter> encounters;
 
-    @Override
-    public void refreshDaoProperties() {
-        super.refreshDaoProperties();
+	@Expose
+	private List<VisitAttribute> attributes;
 
-        if (visitType != null) {
-            visitTypeUuid = visitType.getUuid();
-        }
+	public Long getId() {
+		return id;
+	}
 
-        if (location != null) {
-            locationUuid = location.getUuid();
-        }
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public VisitType getVisitType() {
-        return visitType;
-    }
+	public VisitType getVisitType() {
+		return visitType;
+	}
 
-    public void setVisitType(VisitType visitType) {
-        this.visitType = visitType;
-    }
+	public void setVisitType(VisitType visitType) {
+		this.visitType = visitType;
+	}
 
-    public Location getLocation() {
-        return location;
-    }
+	public Location getLocation() {
+		return location;
+	}
 
-    public void setLocation(Location location) {
-        this.location = location;
-    }
+	public void setLocation(Location location) {
+		this.location = location;
+	}
 
-    public String getStartDatetime() {
-        return startDatetime;
-    }
+	public String getStartDatetime() {
+		return startDatetime;
+	}
 
-    public void setStartDatetime(String startDatetime) {
-        this.startDatetime = startDatetime;
-    }
+	public void setStartDatetime(String startDatetime) {
+		this.startDatetime = startDatetime;
+	}
 
-    public String getStopDatetime() {
-        return stopDatetime;
-    }
+	public String getStopDatetime() {
+		return stopDatetime;
+	}
 
-    public void setStopDatetime(String stopDatetime) {
-        this.stopDatetime = stopDatetime;
-    }
+	public void setStopDatetime(String stopDatetime) {
+		this.stopDatetime = stopDatetime;
+	}
 
-    public List<Encounter> getEncounters() {
-        return encounters;
-    }
+	public List<Encounter> getEncounters() {
+		return encounters;
+	}
 
     public void setEncounters(List<Encounter> encounters) {
         this.encounters = encounters;
+    }
+
+    public List<VisitAttribute> getAttributes() {
+        return attributes;
+    }
+
+    public void setAttributes(List<VisitAttribute> attributes) {
+        this.attributes = attributes;
     }
 }

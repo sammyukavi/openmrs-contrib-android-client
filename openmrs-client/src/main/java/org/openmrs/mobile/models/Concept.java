@@ -7,48 +7,57 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-
 package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Concept extends Resource{
+import java.util.List;
 
-    @SerializedName("datatype")
+public class Concept extends BaseOpenmrsObject {
+	@SerializedName("datatype")
+	@Expose
+	private Datatype datatype;
+
+	@SerializedName("description")
+	@Expose
+	private String description;
+
+	@SerializedName("conceptClass")
+	@Expose
+	private ConceptClass conceptClass;
+    @SerializedName("answers")
     @Expose
-    private Datatype datatype;
+    private List<ConceptAnswer> answers;
+	public Datatype getDatatype() {
+		return datatype;
+	}
 
-    @SerializedName("name")
-    @Expose
-    private String name;
+	public void setDatatype(Datatype datatype) {
+		this.datatype = datatype;
+	}
 
-    @SerializedName("conceptClass")
-    @Expose
-    private ConceptClass conceptClass;
+	public String getDescription() {
+		return description;
+	}
 
-    public Datatype getDatatype() {
-        return datatype;
-    }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    public void setDatatype(Datatype datatype) {
-        this.datatype = datatype;
-    }
+	public ConceptClass getConceptClass() {
+		return conceptClass;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public void setConceptClass(ConceptClass conceptClass) {
+		this.conceptClass = conceptClass;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public List<ConceptAnswer> getAnswers() {
+		return answers;
+	}
 
-    public ConceptClass getConceptClass() {
-        return conceptClass;
-    }
-
-    public void setConceptClass(ConceptClass conceptClass) {
-        this.conceptClass = conceptClass;
-    }
-
+	public void setAnswers(List<ConceptAnswer> answers) {
+		this.answers = answers;
+	}
 }

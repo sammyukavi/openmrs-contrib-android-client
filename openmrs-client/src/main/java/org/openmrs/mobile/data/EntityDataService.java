@@ -13,14 +13,14 @@ import java.util.List;
  * @param <E> The entity class
  */
 public interface EntityDataService<E extends BaseOpenmrsEntity> extends DataService<E> {
-    /**
-     * Gets entities associated with the specified patient.
-     * @param patient The patient to search for
-     * @param options The {@link QueryOptions} settings to use for this operation
-     * @param pagingInfo The paging information or null to exclude paging
-     * @param callback
-     */
-    void getByPatient(@NonNull Patient patient, @Nullable QueryOptions options,
-                      @Nullable PagingInfo pagingInfo,
-                      @NonNull GetCallback<List<E>> callback);
+	/**
+	 * Gets entities associated with the specified patient.
+	 * @param patient    The patient to search for
+	 * @param options    The {@link QueryOptions} settings to use for this operation
+	 * @param pagingInfo The paging information or null to exclude paging
+	 * @param callback
+	 */
+	void getByPatient(@NonNull Patient patient, @Nullable QueryOptions options,
+			@Nullable PagingInfo pagingInfo,
+			@NonNull GetCallback<List<E>> callback);
 }

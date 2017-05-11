@@ -15,15 +15,12 @@ package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 
-public class Location extends BaseOpenmrsObject {
+public class Location extends BaseOpenmrsMetadata {
     @Expose
     private Long id;
-    @Expose
-    private String name;
+
     @Expose
     private String parentLocationUuid;
-    @Expose
-    private String description;
     @Expose
     private String address2;
     @Expose
@@ -36,7 +33,8 @@ public class Location extends BaseOpenmrsObject {
     private String country;
     @Expose
     private String postalCode;
-
+    @Expose
+    private Location parentLocation;
 
     public Location() {}
 
@@ -46,9 +44,9 @@ public class Location extends BaseOpenmrsObject {
 
     public Location(Long id, String name, String parentLocationUuid, String description, String address2, String address1, String cityVillage, String stateProvince, String country, String postalCode) {
         this.id = id;
-        this.name = name;
+        setName(name);
         this.parentLocationUuid = parentLocationUuid;
-        this.description = description;
+        setDescription(description);
         this.address2 = address2;
         this.address1 = address1;
         this.cityVillage = cityVillage;
@@ -65,28 +63,12 @@ public class Location extends BaseOpenmrsObject {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getParentLocationUuid() {
         return parentLocationUuid;
     }
 
     public void setParentLocationUuid(String parentLocationUuid) {
         this.parentLocationUuid = parentLocationUuid;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public String getAddress2() {
@@ -135,5 +117,13 @@ public class Location extends BaseOpenmrsObject {
 
     public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
+    }
+
+    public Location getParentLocation() {
+        return parentLocation;
+    }
+
+    public void setParentLocation(Location parentLocation) {
+        this.parentLocation = parentLocation;
     }
 }

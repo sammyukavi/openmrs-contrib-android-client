@@ -38,11 +38,14 @@
         <activity android:name=".activities.activevisits.ActiveVisitsActivity" />
         <activity android:name=".activities.capturevitals.CaptureVitalsActivity" />
         <activity android:name=".activities.addeditpatient.AddEditPatientActivity" />
-        <activity android:name=".activities.patientlists.PatientListsActivity" />
+        <activity android:name=".activities.patientlist.PatientListActivity" />
         <activity android:name=".activities.visittasks.VisitTasksActivity" />
         <activity android:name=".activities.settings.SettingsActivity" />
         <activity android:name=".activities.patientdashboard.PatientDashboardActivity" />
         <activity android:name=".activities.login.LoginActivity" />
+        <activity android:name=".activities.addeditvisit.AddEditVisitActivity" />
+        <activity android:name=".activities.visitphoto.upload.UploadVisitPhotoActivity" />
+        <activity android:name=".activities.visitphoto.download.DownloadVisitPhotoActivity" />
     </application>
 
 </manifest>

@@ -7,12 +7,18 @@ import org.openmrs.mobile.data.rest.RestConstants;
 public class QueryOptions {
 	public static final boolean DEFAULT_INCLUDE_INACTIVE = false;
 	public static final boolean DEFAULT_LOAD_RELATED_OBJECTS = false;
-
+	public static final QueryOptions INCLUDE_INACTIVE = new QueryOptions(true, false);
+	public static final QueryOptions LOAD_RELATED_OBJECTS = new QueryOptions(false, true);
 	private boolean includeInactive = DEFAULT_INCLUDE_INACTIVE;
 	private boolean loadRelatedObjects = DEFAULT_LOAD_RELATED_OBJECTS;
 
-	public static final QueryOptions INCLUDE_INACTIVE = new QueryOptions(true, false);
-	public static final QueryOptions LOAD_RELATED_OBJECTS = new QueryOptions(false, true);
+	public QueryOptions() {
+	}
+
+	public QueryOptions(boolean includeInactive, boolean loadRelatedObjects) {
+		this.includeInactive = includeInactive;
+		this.loadRelatedObjects = loadRelatedObjects;
+	}
 
 	public static boolean getIncludeInactive(@Nullable QueryOptions options) {
 		return options == null ? DEFAULT_INCLUDE_INACTIVE : options.includeInactive();
@@ -24,13 +30,6 @@ public class QueryOptions {
 
 	public static String getRepresentation(@Nullable QueryOptions options) {
 		return getLoadRelatedObjects(options) ? RestConstants.Representations.FULL : RestConstants.Representations.DEFAULT;
-	}
-
-	public QueryOptions() { }
-
-	public QueryOptions(boolean includeInactive, boolean loadRelatedObjects) {
-		this.includeInactive = includeInactive;
-		this.loadRelatedObjects = loadRelatedObjects;
 	}
 
 	public boolean includeInactive() {

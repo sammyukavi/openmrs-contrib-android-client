@@ -7,50 +7,130 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
+
 package org.openmrs.mobile.models;
 
-import java.io.Serializable;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
-public class PersonAttributeType extends BaseOpenmrsObject implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class PersonAttributeType extends BaseOpenmrsMetadata {
 
-    private String format;
+	@Expose
+	@SerializedName("concept")
+	private Concept concept;
 
-    private Integer foreignKey;
+	@SerializedName("format")
+	@Expose
+	private String format;
 
-    private Double sortWeight;
+	@Expose
+	@SerializedName("foreignKey")
+	private Integer foreignKey;
 
-    private Boolean searchable = false;
+	@Expose
+	@SerializedName("sortWeight")
+	private Double sortWeight;
 
-    public String getFormat() {
-        return format;
-    }
+	@Expose
+	@SerializedName("searchable")
+	private Boolean searchable = false;
 
-    public void setFormat(String format) {
-        this.format = format;
-    }
+	@Expose
+	@SerializedName("editPrivilege")
+	private Privilege editPrivilege;
 
-    public Integer getForeignKey() {
-        return foreignKey;
-    }
+	public Concept getConcept() {
+		return concept;
+	}
 
-    public void setForeignKey(Integer foreignKey) {
-        this.foreignKey = foreignKey;
-    }
+	public void setConcept(Concept concept) {
+		this.concept = concept;
+	}
 
-    public Double getSortWeight() {
-        return sortWeight;
-    }
+	/**
+	 * @return Returns the format.
+	 */
+	public String getFormat() {
+		return format;
+	}
 
-    public void setSortWeight(Double sortWeight) {
-        this.sortWeight = sortWeight;
-    }
+	/**
+	 * @param format The format to set.
+	 */
+	public void setFormat(String format) {
+		this.format = format;
+	}
 
-    public Boolean getSearchable() {
-        return searchable;
-    }
+	/**
+	 * @return the foreignKey
+	 */
+	public Integer getForeignKey() {
+		return foreignKey;
+	}
 
-    public void setSearchable(Boolean searchable) {
-        this.searchable = searchable;
-    }
+	/**
+	 * @param foreignKey the foreignKey to set
+	 */
+	public void setForeignKey(Integer foreignKey) {
+		this.foreignKey = foreignKey;
+	}
+
+	/**
+	 * @return the sortWeight
+	 */
+	public Double getSortWeight() {
+		return sortWeight;
+	}
+
+	/**
+	 * @param sortWeight the formOrder to set
+	 */
+	public void setSortWeight(Double sortWeight) {
+		this.sortWeight = sortWeight;
+	}
+
+	/**
+	 * @return the searchable status
+	 */
+	public Boolean isSearchable() {
+		return getSearchable();
+	}
+
+	public Boolean getSearchable() {
+		return searchable;
+	}
+
+	/**
+	 * @param searchable the searchable to set
+	 */
+	public void setSearchable(Boolean searchable) {
+		this.searchable = searchable;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString() {
+		return getName();
+	}
+
+	/**
+	 * The privilege required in order to edit this attribute
+	 * @return Returns the required privilege
+	 * @since 1.5
+	 */
+	public Privilege getEditPrivilege() {
+		return editPrivilege;
+	}
+
+	/**
+	 * The privilege required in order to edit this attribute If <code>editPrivilege</code> is null,
+	 * no extra permissions are required to edit this type
+	 * @param editPrivilege
+	 * @since 1.5
+	 */
+	public void setEditPrivilege(Privilege editPrivilege) {
+		this.editPrivilege = editPrivilege;
+	}
+
 }

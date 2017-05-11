@@ -11,56 +11,43 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
+
 package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 
-import java.io.Serializable;
+public class User extends Resource {
 
-public class User extends BaseOpenmrsObject implements Serializable {
-    private static final long serialVersionUID = 1L;
+	@Expose
+	private String username;
 
-    private String personUuid;
+	@Expose
+	private String systemId;
 
-    @Expose
-    private String username;
+	@Expose
+	private Person person;
 
-    @Expose
-    private String systemId;
+	public String getUsername() {
+		return username;
+	}
 
-    @Expose
-    private Person person;
+	public void setUsername(String username) {
+		this.username = username;
+	}
 
-    @Override
-    public void refreshDaoProperties() {
-        super.refreshDaoProperties();
+	public String getSystemId() {
+		return systemId;
+	}
 
-        if (person != null) {
-            personUuid = person.getUuid();
-        }
-    }
+	public void setSystemId(String systemId) {
+		this.systemId = systemId;
+	}
 
-    public String getUsername() {
-        return username;
-    }
+	public Person getPerson() {
+		return person;
+	}
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getSystemId() {
-        return systemId;
-    }
-
-    public void setSystemId(String systemId) {
-        this.systemId = systemId;
-    }
-
-    public Person getPerson() {
-        return person;
-    }
-
-    public void setPerson(Person person) {
-        this.person = person;
-    }
+	public void setPerson(Person person) {
+		this.person = person;
+	}
 }

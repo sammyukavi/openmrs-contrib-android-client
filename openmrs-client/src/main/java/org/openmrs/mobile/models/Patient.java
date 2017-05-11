@@ -164,19 +164,4 @@ public class Patient extends BaseOpenmrsAuditableObject implements Serializable{
             map.put(key, value);
         }
     }
-
-    @Override
-    public void refreshDaoProperties() {
-        super.refreshDaoProperties();
-
-        if (identifiers != null) {
-            for (PatientIdentifier identifier : identifiers) {
-                identifier.setPatientUuid(this.uuid);
-            }
-        }
-
-        if (person != null) {
-            this.personUuid = person.getUuid();
-        }
-    }
 }

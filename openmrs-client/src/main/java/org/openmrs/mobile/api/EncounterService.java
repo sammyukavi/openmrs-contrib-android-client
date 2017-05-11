@@ -22,8 +22,7 @@ import org.openmrs.mobile.dao.VisitDAO;
 import org.openmrs.mobile.listeners.retrofit.DefaultResponseCallbackListener;
 import org.openmrs.mobile.listeners.retrofit.StartVisitResponseListenerCallback;
 import org.openmrs.mobile.models.Encounter;
-import org.openmrs.mobile.models.EncounterType;
-import org.openmrs.mobile.models.Encountercreate;
+import org.openmrs.mobile.models.EncounterCreate;
 import org.openmrs.mobile.utilities.NetworkUtils;
 import org.openmrs.mobile.utilities.ToastUtil;
 
@@ -36,169 +35,166 @@ import rx.android.schedulers.AndroidSchedulers;
 
 public class EncounterService extends IntentService {
 
-    private final RestApi apiService = RestServiceBuilder.createService(RestApi.class);
+	private final RestApi apiService = RestServiceBuilder.createService(RestApi.class);
 
-    public EncounterService() {
-        super("Save Encounter");
-    }
+	public EncounterService() {
+		super("Save Encounter");
+	}
 
-    public void addEncounter(final Encountercreate encountercreate, @Nullable DefaultResponseCallbackListener callbackListener) {
+	public void addEncounter(final EncounterCreate encounterCreate,
+			@Nullable DefaultResponseCallbackListener callbackListener) {
 
-        if(NetworkUtils.isOnline()) {
-            new VisitDAO().getActiveVisitByPatientId(encountercreate.getPatientId())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(visit -> {
-                        if (visit != null) {
-                            encountercreate.setVisit(visit.getUuid());
-                            if (callbackListener != null) {
-                                syncEncounter(encountercreate, callbackListener);
-                            }
-                            else {
-                                syncEncounter(encountercreate);
-                            }
-                        } else {
+		if (NetworkUtils.isOnline()) {
+			new VisitDAO().getActiveVisitByPatientId(encounterCreate.getPatientId())
+					.observeOn(AndroidSchedulers.mainThread())
+					.subscribe(visit -> {
+						if (visit != null) {
+							encounterCreate.setVisit(visit.getUuid());
+							if (callbackListener != null) {
+								syncEncounter(encounterCreate, callbackListener);
+							} else {
+								syncEncounter(encounterCreate);
+							}
+						} else {
 
-                            startNewVisitForEncounter(encountercreate);
-                        }
-                    });
-        }
-        else
-            ToastUtil.error("No internet connection. Form data is saved locally " +
-                    "and will sync when internet connection is restored. ");
-    }
+							startNewVisitForEncounter(encounterCreate);
+						}
+					});
+		} else
+			ToastUtil.error("No internet connection. Form data is saved locally " +
+					"and will sync when internet connection is restored. ");
+	}
 
-    public void addEncounter(final Encountercreate encountercreate) {
-        addEncounter(encountercreate, null);
-    }
+	public void addEncounter(final EncounterCreate encounterCreate) {
+		addEncounter(encounterCreate, null);
+	}
 
-        private void startNewVisitForEncounter(final Encountercreate encountercreate, @Nullable final DefaultResponseCallbackListener callbackListener) {
-        new VisitApi().startVisit(new PatientDAO().findPatientByUUID(encountercreate.getPatient()),
-                new StartVisitResponseListenerCallback() {
-                    @Override
-                    public void onStartVisitResponse(long id) {
-                        new VisitDAO().getVisitByID(id)
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(visit -> {
-                                    encountercreate.setVisit(visit.getUuid());
-                                    if (callbackListener != null) {
-                                        syncEncounter(encountercreate, callbackListener);
-                                    }
-                                    else {
-                                        syncEncounter(encountercreate);
-                                    }
-                                });
-                    }
-                    @Override
-                    public void onResponse() {
-                        // This method is intentionally empty
-                    }
-                    @Override
-                    public void onErrorResponse(String errorMessage) {
-                        ToastUtil.error(errorMessage);
-                    }
-                });
-    }
+	private void startNewVisitForEncounter(final EncounterCreate encounterCreate,
+			@Nullable final DefaultResponseCallbackListener callbackListener) {
+		new VisitApi().startVisit(new PatientDAO().findPatientByUUID(encounterCreate.getPatient()),
+				new StartVisitResponseListenerCallback() {
+					@Override
+					public void onStartVisitResponse(long id) {
+						new VisitDAO().getVisitByID(id)
+								.observeOn(AndroidSchedulers.mainThread())
+								.subscribe(visit -> {
+									encounterCreate.setVisit(visit.getUuid());
+									if (callbackListener != null) {
+										syncEncounter(encounterCreate, callbackListener);
+									} else {
+										syncEncounter(encounterCreate);
+									}
+								});
+					}
 
-    public void startNewVisitForEncounter(final Encountercreate encountercreate) {
-        startNewVisitForEncounter(encountercreate, null);
-    }
+					@Override
+					public void onResponse() {
+						// This method is intentionally empty
+					}
 
-    public void syncEncounter(final Encountercreate encountercreate, @Nullable final DefaultResponseCallbackListener callbackListener) {
+					@Override
+					public void onErrorResponse(String errorMessage) {
+						ToastUtil.error(errorMessage);
+					}
+				});
+	}
 
-        if (NetworkUtils.isOnline()) {
+	public void startNewVisitForEncounter(final EncounterCreate encounterCreate) {
+		startNewVisitForEncounter(encounterCreate, null);
+	}
 
-            encountercreate.pullObslist();
-            Call<Encounter> call = apiService.createEncounter(encountercreate);
-            call.enqueue(new Callback<Encounter>() {
-                @Override
-                public void onResponse(Call<Encounter> call, Response<Encounter> response) {
-                    if (response.isSuccessful()) {
-                        Encounter encounter = response.body();
-                        linkvisit(encountercreate.getPatientId(),encountercreate.getFormname(), encounter, encountercreate);
-                        encountercreate.setSynced(true);
-                        encountercreate.save();
-                        new VisitApi().syncLastVitals(encountercreate.getPatient());
-                        if (callbackListener != null) {
-                            callbackListener.onResponse();
-                        }
-                    } else {
-                        if (callbackListener != null) {
-                            callbackListener.onErrorResponse(response.errorBody().toString());
-                        }
-                    }
-                }
+	public void syncEncounter(final EncounterCreate encounterCreate,
+			@Nullable final DefaultResponseCallbackListener callbackListener) {
 
-                @Override
-                public void onFailure(Call<Encounter> call, Throwable t) {
-                    if (callbackListener != null) {
-                        callbackListener.onErrorResponse(t.getLocalizedMessage());
-                    }
-                }
-            });
+		if (NetworkUtils.isOnline()) {
 
-        } else {
-            ToastUtil.error("Sync is off. Turn on sync to save form data.");
-        }
+			encounterCreate.pullObslist();
+			Call<Encounter> call = apiService.createEncounter(encounterCreate);
+			call.enqueue(new Callback<Encounter>() {
+				@Override
+				public void onResponse(Call<Encounter> call, Response<Encounter> response) {
+					if (response.isSuccessful()) {
+						Encounter encounter = response.body();
+						linkvisit(encounterCreate.getPatientId(), encounterCreate.getFormname(), encounter,
+								encounterCreate);
+						encounterCreate.setSynced(true);
+						encounterCreate.save();
+						new VisitApi().syncLastVitals(encounterCreate.getPatient());
+						if (callbackListener != null) {
+							callbackListener.onResponse();
+						}
+					} else {
+						if (callbackListener != null) {
+							callbackListener.onErrorResponse(response.errorBody().toString());
+						}
+					}
+				}
 
-    }
+				@Override
+				public void onFailure(Call<Encounter> call, Throwable t) {
+					if (callbackListener != null) {
+						callbackListener.onErrorResponse(t.getLocalizedMessage());
+					}
+				}
+			});
 
-    public void syncEncounter(final Encountercreate encountercreate) {
-        syncEncounter(encountercreate, null);
-    }
+		} else {
+			ToastUtil.error("Sync is off. Turn on sync to save form data.");
+		}
 
-    private void linkvisit(Long patientid, String formname, Encounter encounter, Encountercreate encountercreate)
-    {
-        VisitDAO visitDAO = new VisitDAO();
-        visitDAO.getVisitByUuid(encounter.getVisit().getUuid())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(visit -> {
-                    encounter.setEncounterType(new EncounterType(formname));
-                    for (int i=0;i<encountercreate.getObservations().size();i++)
-                    {
-                        encounter.getObservations().get(i).setDisplayValue
-                                (encountercreate.getObservations().get(i).getValue());
-                    }
-                    List<Encounter> encounterList=visit.getEncounters();
-                    encounterList.add(encounter);
-                    visitDAO.saveOrUpdate(visit, patientid)
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(id ->
-                                    ToastUtil.success(formname+" data saved successfully"));
-                });
-    }
+	}
 
-    @Override
-    protected void onHandleIntent(Intent intent) {
-        if(NetworkUtils.isOnline()) {
+	public void syncEncounter(final EncounterCreate encounterCreate) {
+		syncEncounter(encounterCreate, null);
+	}
 
-            List<Encountercreate> encountercreatelist = new Select()
-                    .from(Encountercreate.class)
-                    .execute();
+	private void linkvisit(Long patientid, String formname, Encounter encounter, EncounterCreate encounterCreate) {
+		VisitDAO visitDAO = new VisitDAO();
+		visitDAO.getVisitByUuid(encounter.getVisit().getUuid())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(visit -> {
+					//encounter.setEncounterType(new EncounterTypeEntity(formname));
+					for (int i = 0; i < encounterCreate.getObservations().size(); i++) {
+						encounter.getObservations().get(i).setDisplayValue
+								(encounterCreate.getObservations().get(i).getValue());
+					}
+					List<Encounter> encounterList = visit.getEncounters();
+					encounterList.add(encounter);
+					visitDAO.saveOrUpdate(visit, patientid)
+							.observeOn(AndroidSchedulers.mainThread())
+							.subscribe(id ->
+									ToastUtil.success(formname + " data saved successfully"));
+				});
+	}
 
-            for(final Encountercreate encountercreate:encountercreatelist)
-            {
-                if(!encountercreate.getSynced() &&
-                        new PatientDAO().findPatientByID(Long.toString(encountercreate.getPatientId())).isSynced())
-                {
-                    new VisitDAO().getActiveVisitByPatientId(encountercreate.getPatientId())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(visit -> {
-                                if (visit != null) {
-                                    encountercreate.setVisit(visit.getUuid());
-                                    syncEncounter(encountercreate);
+	@Override
+	protected void onHandleIntent(Intent intent) {
+		if (NetworkUtils.isOnline()) {
 
-                                } else {
-                                    startNewVisitForEncounter(encountercreate);
-                                }
-                            });
-                }
-            }
+			List<EncounterCreate> encountercreatelist = new Select()
+					.from(EncounterCreate.class)
+					.execute();
 
+			for (final EncounterCreate encounterCreate : encountercreatelist) {
+				if (!encounterCreate.getSynced() &&
+						new PatientDAO().findPatientByID(Long.toString(encounterCreate.getPatientId())).isSynced()) {
+					new VisitDAO().getActiveVisitByPatientId(encounterCreate.getPatientId())
+							.observeOn(AndroidSchedulers.mainThread())
+							.subscribe(visit -> {
+								if (visit != null) {
+									encounterCreate.setVisit(visit.getUuid());
+									syncEncounter(encounterCreate);
 
-        } else {
-            ToastUtil.error("No internet connection. Form data is saved locally " +
-                    "and will sync when internet connection is restored. ");
-        }
-    }
+								} else {
+									startNewVisitForEncounter(encounterCreate);
+								}
+							});
+				}
+			}
 
+		} else {
+			ToastUtil.error("No internet connection. Form data is saved locally " +
+					"and will sync when internet connection is restored. ");
+		}
+	}
 }

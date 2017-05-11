@@ -7,8 +7,24 @@ import android.support.annotation.Nullable;
  * 1-based, defining either as 0 will cause paging to be ignored.
  */
 public class PagingInfo {
-    private int page;
-    private int pageSize;
+
+	private int page;
+	private int pageSize;
+	private Integer totalRecordCount;
+	private boolean loadRecordCount;
+
+	public PagingInfo() {
+	}
+
+	/**
+	 * Creates a new {@link PagingInfo} instance.
+	 * @param page     The 1-based number of the page being requested.
+	 * @param pageSize The number of records to include on each page.
+	 */
+	public PagingInfo(int page, int pageSize) {
+		this.page = page;
+		this.pageSize = pageSize;
+	}
 
 	public static Integer getPage(@Nullable PagingInfo pagingInfo) {
 		return pagingInfo == null ? null : pagingInfo.getPage();
@@ -18,7 +34,7 @@ public class PagingInfo {
 		return pagingInfo == null ? null : pagingInfo.getPageSize();
 	}
 
-    public static Integer getLimit(@Nullable PagingInfo pagingInfo) {
+	public static Integer getLimit(@Nullable PagingInfo pagingInfo) {
 		return pagingInfo == null ? null : pagingInfo.getLimit();
 	}
 
@@ -26,39 +42,50 @@ public class PagingInfo {
 		return pagingInfo == null ? null : pagingInfo.getStartIndex();
 	}
 
-    public PagingInfo() {}
+	public int getPage() {
+		return page;
+	}
 
-    /**
-     * Creates a new {@link PagingInfo} instance.
-     * @param page The 1-based number of the page being requested.
-     * @param pageSize The number of records to include on each page.
-     */
-    public PagingInfo(int page, int pageSize) {
-        this.page = page;
-        this.pageSize = pageSize;
-    }
+	public void setPage(int page) {
+		this.page = page;
+	}
 
-    public int getPage() {
-        return page;
-    }
+	public int getPageSize() {
+		return pageSize;
+	}
 
-    public void setPage(int page) {
-        this.page = page;
-    }
+	public void setPageSize(int pageSize) {
+		this.pageSize = pageSize;
+	}
 
-    public int getPageSize() {
-        return pageSize;
-    }
+	public int getLimit() {
+		return pageSize;
+	}
 
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
-    }
+	public int getStartIndex() {
+		return ((page - 1) * pageSize) + 1;
+	}
 
-    public int getLimit() {
-        return pageSize;
-    }
+	public Integer getTotalRecordCount() {
+		return totalRecordCount;
+	}
 
-    public int getStartIndex() {
-        return (pageSize * page) - 1;
-    }
+	public void setTotalRecordCount(Integer totalRecordCount) {
+		this.totalRecordCount = totalRecordCount;
+
+		// If the total records is set to anything other than null, than don't reload the count
+		this.loadRecordCount = totalRecordCount == null;
+	}
+
+	public boolean shouldLoadRecordCount() {
+		return loadRecordCount;
+	}
+
+	public void setLoadRecordCount(boolean loadRecordCount) {
+		this.loadRecordCount = loadRecordCount;
+	}
+
+	public Boolean hasMoreResults() {
+		return (page * pageSize) < totalRecordCount;
+	}
 }

@@ -1,9 +1,9 @@
 package org.openmrs.mobile.data;
 
-import org.openmrs.mobile.models.BaseOpenmrsObject;
-
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+
+import org.openmrs.mobile.models.BaseOpenmrsObject;
 
 import java.util.List;
 
@@ -12,85 +12,85 @@ import java.util.List;
  * @param <E> The entity class
  */
 public interface DataService<E extends BaseOpenmrsObject> {
-    /**
-     * Callback interface for operations with no return value.
-     */
-    interface VoidCallback {
-        /**
-         * Called if the operation completes successfully.
-         */
-        void onCompleted();
+	/**
+	 * Gets a single entity with the specified UUID.
+	 * @param uuid     The entity UUID
+	 * @param callback
+	 */
+	void getByUUID(@NonNull String uuid, @Nullable QueryOptions options, @NonNull GetCallback<E> callback);
 
-        /**
-         * Called if the operation fails.
-         * @param t The exception information
-         */
-        void onError(Throwable t);
-    }
+	/**
+	 * Gets all entities.
+	 * @param options    The {@link QueryOptions} settings to use for this operation
+	 * @param pagingInfo The paging information or null to exclude paging
+	 * @param callback
+	 */
+	void getAll(@Nullable QueryOptions options, @Nullable PagingInfo pagingInfo,
+			@NonNull GetCallback<List<E>> callback);
 
-    /**
-     * Callback interface for data service methods
-     * @param <TResult> The result of the function execution
-     */
-    interface GetCallback<TResult> {
-        /**
-         * Called if the operation completes successfully.
-         * @param result The returned result
-         */
-        void onCompleted(TResult result);
+	/**
+	 * Performs a template-based search. Doesn't actually work at this point, unless you search
+	 * for something which should return no results.
+	 * @param template   The entity template to create the search values from
+	 * @param pagingInfo The paging information or null to exclude paging
+	 * @param callback
+	 */
+	void search(@NonNull E template, @Nullable QueryOptions options, @Nullable PagingInfo pagingInfo,
+			@NonNull GetCallback<List<E>> callback);
 
-        /**
-         * Called if the operations fails.
-         * @param t The exception information
-         */
-        void onError(Throwable t);
-    }
+	/**
+	 * Saves a newly created entity.
+	 * @param entity   The new entity to save
+	 * @param callback
+	 */
+	void create(@NonNull E entity, @NonNull GetCallback<E> callback);
 
-    /**
-     * Gets a single entity with the specified UUID.
-     * @param uuid The entity UUID
-     * @param callback
-     */
-    void getByUUID(@NonNull String uuid, @Nullable QueryOptions options, @NonNull GetCallback<E> callback);
+	/**
+	 * Saves an updated entity.
+	 * @param entity   The entity to save
+	 * @param callback
+	 */
+	void update(@NonNull E entity, @NonNull GetCallback<E> callback);
 
-    /**
-     * Gets all entities.
-     * @param options The {@link QueryOptions} settings to use for this operation
-     * @param pagingInfo The paging information or null to exclude paging
-     * @param callback
-     */
-    void getAll(@Nullable QueryOptions options, @Nullable PagingInfo pagingInfo,
-                @NonNull GetCallback<List<E>> callback);
+	/**
+	 * Completely deletes the entity.
+	 * @param entity   The entity to purge
+	 * @param callback
+	 */
+	void purge(@NonNull E entity, @NonNull VoidCallback callback);
 
-    /**
-     * Performs a template-based search. Doesn't actually work at this point, unless you search
-     * for something which should return no results.
-     * @param template The entity template to create the search values from
-     * @param pagingInfo The paging information or null to exclude paging
-     * @param callback
-     */
-    void search(@NonNull E template, @Nullable QueryOptions options, @Nullable PagingInfo pagingInfo,
-                @NonNull GetCallback<List<E>> callback);
+	/**
+	 * Callback interface for operations with no return value.
+	 */
+	interface VoidCallback {
+		/**
+		 * Called if the operation completes successfully.
+		 */
+		void onCompleted();
 
-    /**
-     * Saves a newly created entity.
-     * @param entity The new entity to save
-     * @param callback
-     */
-    void create(@NonNull E entity, @NonNull GetCallback<E> callback);
+		/**
+		 * Called if the operation fails.
+		 * @param t The exception information
+		 */
+		void onError(Throwable t);
+	}
 
-    /**
-     * Saves an updated entity.
-     * @param entity The entity to save
-     * @param callback
-     */
-    void update(@NonNull E entity, @NonNull GetCallback<E> callback);
+	/**
+	 * Callback interface for data service methods
+	 * @param <TResult> The result of the function execution
+	 */
+	interface GetCallback<TResult> {
+		/**
+		 * Called if the operation completes successfully.
+		 * @param result The returned result
+		 */
+		void onCompleted(TResult result);
 
-    /**
-     * Completely deletes the entity.
-     * @param entity The entity to purge
-     * @param callback
-     */
-    void purge(@NonNull E entity, @NonNull VoidCallback callback);
+		/**
+		 * Called if the operations fails.
+		 * @param t The exception information
+		 */
+		void onError(Throwable t);
+	}
 }
 

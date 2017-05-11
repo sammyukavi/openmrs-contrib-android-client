@@ -15,18 +15,18 @@ import retrofit2.Call;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public abstract class BaseEntityDataService<E extends BaseOpenmrsEntity, DS extends BaseEntityDbService<E>, RS>
-        extends BaseDataService<E, DS, RS> implements EntityDataService<E> {
-    protected abstract Call<Results<E>> _restGetByPatient(String restPath, String patientUuid, QueryOptions options,
+		extends BaseDataService<E, DS, RS> implements EntityDataService<E> {
+	protected abstract Call<Results<E>> _restGetByPatient(String restPath, String patientUuid, QueryOptions options,
 			PagingInfo pagingInfo);
 
-    @Override
-    public void getByPatient(@NonNull Patient patient, @Nullable QueryOptions options, @Nullable PagingInfo pagingInfo,
-                             @NonNull GetCallback<List<E>> callback) {
-        checkNotNull(patient);
-        checkNotNull(callback);
+	@Override
+	public void getByPatient(@NonNull Patient patient, @Nullable QueryOptions options, @Nullable PagingInfo pagingInfo,
+			@NonNull GetCallback<List<E>> callback) {
+		checkNotNull(patient);
+		checkNotNull(callback);
 
-        executeMultipleCallback(callback,
-                () -> dbService.getByPatient(patient, options, pagingInfo),
-                () -> _restGetByPatient(buildRestRequestPath(), patient.getUuid(), options, pagingInfo));
-    }
+		executeMultipleCallback(callback,
+				() -> dbService.getByPatient(patient, options, pagingInfo),
+				() -> _restGetByPatient(buildRestRequestPath(), patient.getUuid(), options, pagingInfo));
+	}
 }

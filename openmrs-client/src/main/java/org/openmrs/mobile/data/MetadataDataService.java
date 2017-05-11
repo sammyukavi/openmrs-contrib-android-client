@@ -12,14 +12,14 @@ import java.util.List;
  * @param <E> The entity class
  */
 public interface MetadataDataService<E extends BaseOpenmrsMetadata> extends DataService<E> {
-    /**
-     * Gets entities with the specified name fragment.
-     * @param name The name to search for
-     * @param options The {@link QueryOptions} settings to use for this operation
-     * @param pagingInfo The paging information or null to exclude paging
-     * @param callback
-     */
-    void getByNameFragment(@NonNull String name, @Nullable QueryOptions options,
-                           @Nullable PagingInfo pagingInfo,
-                           @NonNull GetCallback<List<E>> callback);
+	/**
+	 * Gets entities with the specified name fragment.
+	 * @param name       The name to search for
+	 * @param options    The {@link QueryOptions} settings to use for this operation
+	 * @param pagingInfo The paging information or null to exclude paging
+	 * @param callback
+	 */
+	void getByNameFragment(@NonNull String name, @Nullable QueryOptions options,
+			@Nullable PagingInfo pagingInfo,
+			@NonNull GetCallback<List<E>> callback);
 }

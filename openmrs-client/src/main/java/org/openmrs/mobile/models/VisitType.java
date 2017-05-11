@@ -7,22 +7,22 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
+
 package org.openmrs.mobile.models;
 
-import java.io.Serializable;
+public class VisitType extends BaseOpenmrsMetadata {
 
-public class VisitType extends BaseOpenmrsMetadata implements Serializable {
-    private static final long serialVersionUID = 1L;
+	public VisitType(String display) {
+		this.display = display;
+	}
 
-    private boolean temp;
+	public VisitType(String display, String uuid) {
+		this.uuid = uuid;
+		this.display = display;
+	}
 
-    public VisitType(String display) {
-        this.display = display;
+    @Override
+    public String toString() {
+        return getName();
     }
-
-    public VisitType(String display, String uuid) {
-        this.uuid = uuid;
-        this.display = display;
-    }
-
 }

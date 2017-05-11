@@ -50,15 +50,13 @@ public interface AddEditVisitContract {
 
 		List<VisitAttributeType> loadVisitAttributeTypes();
 
-		Patient getPatient();
-
-		void setPatient(Patient patient);
-
 		Visit getVisit();
 
 		void startVisit(List<VisitAttribute> attributes);
 
 		void updateVisit(List<VisitAttribute> attributes);
+
+		Patient getPatient();
 
 		<T> T searchVisitAttributeValueByType(VisitAttributeType visitAttributeType);
 

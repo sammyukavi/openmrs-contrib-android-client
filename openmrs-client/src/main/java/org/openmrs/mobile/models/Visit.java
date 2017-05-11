@@ -20,7 +20,7 @@ import org.greenrobot.greendao.annotation.Generated;
 
 import java.util.List;
 
-public class Visit extends BaseOpenmrsEntity {
+public class Visit extends BaseOpenmrsData {
 
 	private Long id;
 
@@ -41,6 +41,9 @@ public class Visit extends BaseOpenmrsEntity {
 
 	@Expose
 	private List<VisitAttribute> attributes;
+
+	@Expose
+	private Patient patient;
 
 	@Generated(hash = 284896357)
 	public Visit(Long id, String startDatetime, String stopDatetime) {
@@ -107,5 +110,13 @@ public class Visit extends BaseOpenmrsEntity {
 
 	public void setAttributes(List<VisitAttribute> attributes) {
 		this.attributes = attributes;
+	}
+
+	public Patient getPatient() {
+		return patient;
+	}
+
+	public void setPatient(Patient patient) {
+		this.patient = patient;
 	}
 }

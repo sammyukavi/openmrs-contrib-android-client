@@ -1,18 +1,24 @@
 package org.openmrs.mobile.data.impl;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import org.openmrs.mobile.data.BaseDataService;
 import org.openmrs.mobile.data.BaseEntityDataService;
+import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.EntityDataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.rest.RestConstants;
 import org.openmrs.mobile.data.rest.VisitRestService;
+import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 
 import retrofit2.Call;
 
-public class VisitDataService extends BaseEntityDataService<Visit, VisitRestService>
-		implements EntityDataService<Visit> {
+public class VisitDataService extends BaseDataService<Visit, VisitRestService>
+		implements DataService<Visit> {
 	@Override
 	protected Class<VisitRestService> getRestServiceClass() {
 		return VisitRestService.class;
@@ -59,7 +65,6 @@ public class VisitDataService extends BaseEntityDataService<Visit, VisitRestServ
 		return restService.purge(restPath, uuid);
 	}
 
-	@Override
 	protected Call<Results<Visit>> _restGetByPatient(String restPath, PagingInfo pagingInfo, String patientUuid,
 			boolean includeInactive,
 			String representation) {
@@ -69,6 +74,20 @@ public class VisitDataService extends BaseEntityDataService<Visit, VisitRestServ
 		} else {
 			return restService.getByPatient(restPath, patientUuid, representation, includeInactive);
 		}
+	}
+
+	public void getByPatient(@NonNull Patient patient, boolean includeInactive,
+			@Nullable PagingInfo pagingInfo,
+			@NonNull GetMultipleCallback<Visit> callback) {
+		executeMultipleCallback(callback, pagingInfo, () -> {
+			if (isPagingValid(pagingInfo)) {
+				return restService.getByPatient(buildRestRequestPath(), patient.getUuid(), RestConstants.Representations.FULL,
+						pagingInfo.getLimit(), pagingInfo.getStartIndex(), includeInactive);
+			} else {
+				return restService.getByPatient(buildRestRequestPath(), patient.getUuid(), RestConstants.Representations.FULL,
+						includeInactive);
+			}
+		});
 	}
 
 	public void endVisit(String uuid, String stopDatetime, GetSingleCallback<Visit> callback) {

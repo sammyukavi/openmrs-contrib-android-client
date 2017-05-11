@@ -23,19 +23,16 @@ import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.impl.ConceptNameDataService;
 import org.openmrs.mobile.data.impl.LocationDataService;
 import org.openmrs.mobile.data.impl.PatientDataService;
-import org.openmrs.mobile.data.impl.ProviderDataService;
 import org.openmrs.mobile.data.impl.VisitAttributeTypeDataService;
 import org.openmrs.mobile.data.impl.VisitDataService;
 import org.openmrs.mobile.data.impl.VisitTypeDataService;
 import org.openmrs.mobile.models.ConceptName;
 import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Patient;
-import org.openmrs.mobile.models.Provider;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitAttribute;
 import org.openmrs.mobile.models.VisitAttributeType;
 import org.openmrs.mobile.models.VisitType;
-import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.DateUtils;
 import org.openmrs.mobile.utilities.StringUtils;
 import org.openmrs.mobile.utilities.ToastUtil;
@@ -49,7 +46,6 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	@NotNull
 	private AddEditVisitContract.View addEditVisitView;
 
-	private Patient patient;
 	private Visit visit;
 	private VisitAttributeTypeDataService visitAttributeTypeDataService;
 	private VisitTypeDataService visitTypeDataService;
@@ -124,7 +120,6 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 			patientDataService.getByUUID(patientUuid, new DataService.GetSingleCallback<Patient>() {
 				@Override
 				public void onCompleted(Patient entity) {
-					setPatient(entity);
 					loadVisit(entity);
 				}
 
@@ -144,6 +139,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 					visit = entities.get(0);
 					addEditVisitView.initView(false);
 				} else {
+					visit.setPatient(patient);
 					addEditVisitView.initView(true);
 				}
 
@@ -228,12 +224,10 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 
 	@Override
 	public Patient getPatient() {
-		return patient;
-	}
-
-	@Override
-	public void setPatient(Patient patient) {
-		this.patient = patient;
+		if(null != visit && null != visit.getPatient()){
+			return visit.getPatient();
+		}
+		return null;
 	}
 
 	@Override
@@ -244,7 +238,6 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	@Override
 	public void startVisit(List<VisitAttribute> attributes) {
 		visit.setAttributes(attributes);
-		visit.setPatient(patient);
 		if (null != location) {
 			visit.setLocation(location.getParentLocation());
 		}

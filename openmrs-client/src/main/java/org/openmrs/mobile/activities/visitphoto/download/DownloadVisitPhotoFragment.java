@@ -39,6 +39,9 @@ public class DownloadVisitPhotoFragment extends ACBaseFragment<DownloadVisitPhot
 
 	@Override
 	public void updateVisitImageUrls(List<String> urls) {
+		if(urls.size() == 0)
+			return;
+
 		if (adapter == null) {
 			adapter = new DownloadVisitPhotoRecyclerViewAdapter(this.getActivity(), urls, this);
 		}

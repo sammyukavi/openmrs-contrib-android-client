@@ -176,8 +176,8 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 
 	@Override
 	public Patient getPatientToUpdate() {
-		Patient patientToUpdate = new PatientDAO().findPatientByID(patientToUpdateId);
-		return patientToUpdate;
+		//Patient patientToUpdate = new PatientDAO().findPatientByID(patientToUpdateId);
+		return null;
 	}
 
 	@Override
@@ -223,8 +223,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 										+ ApplicationConstants.toastMessages.addSuccessMessage, ToastUtil.ToastType
 										.SUCCESS);
 						patientRegistrationView.startPatientDashboardActivity(entity);
-						//patientRegistrationView.finishAddPatientActivity();
-						updatePatient(entity);
+						patientRegistrationView.finishAddPatientActivity();
 					} else {
 						patientRegistrationView
 								.showToast(ApplicationConstants.entityName.PATIENTS + ApplicationConstants.toastMessages

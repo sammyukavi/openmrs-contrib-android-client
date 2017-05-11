@@ -18,48 +18,46 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.view.Menu;
-import android.view.View;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
 
 public class PatientDashboardActivity extends ACBaseActivity {
 
-    public PatientDashboardContract.Presenter mPresenter;
+	public PatientDashboardContract.Presenter mPresenter;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getLayoutInflater().inflate(R.layout.activity_patient_dashboard, frameLayout);
-        setTitle(R.string.title_patient_details);
-        PatientDashboardFragment patientDashboardFragment = (PatientDashboardFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
-        if (patientDashboardFragment == null) {
-            patientDashboardFragment = PatientDashboardFragment.newInstance();
-        }
-        if (!patientDashboardFragment.isActive()) {
-            addFragmentToActivity(getSupportFragmentManager(), patientDashboardFragment, R.id.contentFrame);
-        }
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		getLayoutInflater().inflate(R.layout.activity_patient_dashboard, frameLayout);
+		setTitle(R.string.title_patient_details);
+		// Create fragment
+		PatientDashboardFragment patientDashboardFragment =
+				(PatientDashboardFragment)getSupportFragmentManager().findFragmentById(R.id.contentFrame);
+		if (patientDashboardFragment == null) {
+			patientDashboardFragment = PatientDashboardFragment.newInstance();
+		}
+		if (!patientDashboardFragment.isActive()) {
+			addFragmentToActivity(getSupportFragmentManager(), patientDashboardFragment, R.id.contentFrame);
+		}
+		mPresenter = new PatientDashboardPresenter(patientDashboardFragment);
+	}
 
-        mPresenter = new PatientDashboardPresenter(patientDashboardFragment);
-    }
+	@Override
+	public void onBackPressed() {
+		if (drawer.isDrawerOpen(GravityCompat.START)) {
+			drawer.closeDrawer(GravityCompat.START);
+		} else {
+			Intent intent = new Intent(Intent.ACTION_MAIN);
+			intent.addCategory(Intent.CATEGORY_HOME);
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			startActivity(intent);
+		}
+	}
 
-    @Override
-    public void onBackPressed() {
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.addCategory(Intent.CATEGORY_HOME);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return true;
-    }
-
-
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		return true;
+	}
 
 }

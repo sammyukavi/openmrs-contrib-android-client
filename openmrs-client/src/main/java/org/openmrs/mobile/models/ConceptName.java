@@ -21,6 +21,9 @@ public class ConceptName extends BaseOpenmrsMetadata {
 	@Expose
 	private Long id;
 
+	@Expose
+	private int answer_concept;
+
 	public Long getId() {
 		return id;
 	}
@@ -34,4 +37,11 @@ public class ConceptName extends BaseOpenmrsMetadata {
 		return getName();
 	}
 
+	public int getAnswer_concept() {
+		return answer_concept;
+	}
+
+	public void setAnswer_concept(int answer_concept) {
+		this.answer_concept = answer_concept;
+	}
 }

@@ -15,100 +15,98 @@ import org.openmrs.mobile.models.Visit;
 
 import java.util.List;
 
-
 public class VisitsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private final int VIEW_TYPE_ITEM = 0;
-    private final int VIEW_TYPE_LOADING = 1;
-    private OnLoadMoreListener onLoadMoreListener;
-    private boolean isLoading;
-    private Activity activity;
-    private List<Visit> visits;
-    private int visibleThreshold = 5;
-    private int lastVisibleItem, totalItemCount;
+	private final int VIEW_TYPE_ITEM = 0;
+	private final int VIEW_TYPE_LOADING = 1;
+	private OnLoadMoreListener onLoadMoreListener;
+	private boolean isLoading;
+	private Activity activity;
+	private List<Visit> visits;
+	private int visibleThreshold = 5;
+	private int lastVisibleItem, totalItemCount;
 
-    private class LoadingViewHolder extends RecyclerView.ViewHolder {
-        public ProgressBar progressBar;
+	public VisitsAdapter(RecyclerView recyclerView, List<Visit> visits, Activity activity) {
+		this.visits = visits;
+		this.activity = activity;
 
-        public LoadingViewHolder(View view) {
-            super(view);
-            progressBar = (ProgressBar) view.findViewById(R.id.progressBar1);
-        }
-    }
+		final LinearLayoutManager linearLayoutManager = (LinearLayoutManager)recyclerView.getLayoutManager();
+		recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+			@Override
+			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+				super.onScrolled(recyclerView, dx, dy);
+				totalItemCount = linearLayoutManager.getItemCount();
+				lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
+				if (!isLoading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
+					if (onLoadMoreListener != null) {
+						onLoadMoreListener.onLoadMore();
+					}
+					isLoading = true;
+				}
+			}
+		});
+	}
 
-    private class visitViewHolder extends RecyclerView.ViewHolder {
-        public TextView visitDetails;
-        public LinearLayout visitNotesContainer;
+	public void setOnLoadMoreListener(OnLoadMoreListener mOnLoadMoreListener) {
+		this.onLoadMoreListener = mOnLoadMoreListener;
+	}
 
-        public visitViewHolder(View view) {
-            super(view);
-            visitDetails = (TextView) view.findViewById(R.id.visitDetails);
-            visitNotesContainer = (LinearLayout) view.findViewById(R.id.visitNotesContainer);
-        }
-    }
+	@Override
+	public int getItemViewType(int position) {
+		return visits.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
+	}
 
-    public VisitsAdapter(RecyclerView recyclerView, List<Visit> visits, Activity activity) {
-        this.visits = visits;
-        this.activity = activity;
+	@Override
+	public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+		if (viewType == VIEW_TYPE_ITEM) {
+			View view = LayoutInflater.from(activity).inflate(R.layout.previous_visits_row, parent, false);
+			return new visitViewHolder(view);
+		} else if (viewType == VIEW_TYPE_LOADING) {
+			View view = LayoutInflater.from(activity).inflate(R.layout.previous_visits_loading, parent, false);
+			return new LoadingViewHolder(view);
+		}
+		return null;
+	}
 
-        final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                totalItemCount = linearLayoutManager.getItemCount();
-                lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
-                if (!isLoading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
-                    if (onLoadMoreListener != null) {
-                        onLoadMoreListener.onLoadMore();
-                    }
-                    isLoading = true;
-                }
-            }
-        });
-    }
+	@Override
+	public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+		if (holder instanceof visitViewHolder) {
+			Visit visit = visits.get(position);
+			visitViewHolder visitViewHolder = (visitViewHolder)holder;
+			//visitViewHolder.visitDetails.setText(visit.getEmail());
+			//visitViewHolder.visitNotesContainer.setText(visit.getPhone());
+		} else if (holder instanceof LoadingViewHolder) {
+			LoadingViewHolder loadingViewHolder = (LoadingViewHolder)holder;
+			loadingViewHolder.progressBar.setIndeterminate(true);
+		}
+	}
 
-    public void setOnLoadMoreListener(OnLoadMoreListener mOnLoadMoreListener) {
-        this.onLoadMoreListener = mOnLoadMoreListener;
-    }
+	@Override
+	public int getItemCount() {
+		return visits == null ? 0 : visits.size();
+	}
 
-    @Override
-    public int getItemViewType(int position) {
-        return visits.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
-    }
+	public void setLoaded() {
+		isLoading = false;
+	}
 
-    @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == VIEW_TYPE_ITEM) {
-            View view = LayoutInflater.from(activity).inflate(R.layout.previous_visits_row, parent, false);
-            return new visitViewHolder(view);
-        } else if (viewType == VIEW_TYPE_LOADING) {
-            View view = LayoutInflater.from(activity).inflate(R.layout.previous_visits_loading, parent, false);
-            return new LoadingViewHolder(view);
-        }
-        return null;
-    }
+	private class LoadingViewHolder extends RecyclerView.ViewHolder {
+		public ProgressBar progressBar;
 
-    @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof visitViewHolder) {
-            Visit visit = visits.get(position);
-            visitViewHolder visitViewHolder = (visitViewHolder) holder;
-            //visitViewHolder.visitDetails.setText(visit.getEmail());
-            //visitViewHolder.visitNotesContainer.setText(visit.getPhone());
-        } else if (holder instanceof LoadingViewHolder) {
-            LoadingViewHolder loadingViewHolder = (LoadingViewHolder) holder;
-            loadingViewHolder.progressBar.setIndeterminate(true);
-        }
-    }
+		public LoadingViewHolder(View view) {
+			super(view);
+			progressBar = (ProgressBar)view.findViewById(R.id.progressBar1);
+		}
+	}
 
-    @Override
-    public int getItemCount() {
-        return visits == null ? 0 : visits.size();
-    }
+	private class visitViewHolder extends RecyclerView.ViewHolder {
+		public TextView visitDetails;
+		public LinearLayout visitNotesContainer;
 
-    public void setLoaded() {
-        isLoading = false;
-    }
-
+		public visitViewHolder(View view) {
+			super(view);
+			visitDetails = (TextView)view.findViewById(R.id.visitDetails);
+			visitNotesContainer = (LinearLayout)view.findViewById(R.id.visitNotesContainer);
+		}
+	}
 
 }

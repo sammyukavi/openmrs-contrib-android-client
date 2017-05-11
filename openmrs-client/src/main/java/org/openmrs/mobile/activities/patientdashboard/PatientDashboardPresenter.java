@@ -30,78 +30,78 @@ import java.util.List;
 
 public class PatientDashboardPresenter extends BasePresenter implements PatientDashboardContract.Presenter {
 
-    private PatientDashboardContract.View patientDashboardView;
-    private PatientDataService patientDataService;
-    private VisitDataService visitDataService;
-    private ObsDataService observationDataService;
+	private PatientDashboardContract.View patientDashboardView;
+	private PatientDataService patientDataService;
+	private VisitDataService visitDataService;
+	private ObsDataService observationDataService;
 
-    public PatientDashboardPresenter(PatientDashboardContract.View view) {
-        this.patientDashboardView = view;
-        this.patientDashboardView.setPresenter(this);
-        this.patientDataService = new PatientDataService();
-        this.visitDataService = new VisitDataService();
-        this.observationDataService = new ObsDataService();
-    }
+	public PatientDashboardPresenter(PatientDashboardContract.View view) {
+		this.patientDashboardView = view;
+		this.patientDashboardView.setPresenter(this);
+		this.patientDataService = new PatientDataService();
+		this.visitDataService = new VisitDataService();
+		this.observationDataService = new ObsDataService();
+	}
 
-    @Override
-    public void subscribe() {
+	@Override
+	public void subscribe() {
 
-    }
+	}
 
 
-    @Override
-    public void fetchPatientData(String uuid) {
-        patientDataService.getByUUID(uuid, new DataService.GetSingleCallback<Patient>() {
-            @Override
-            public void onCompleted(Patient patient) {
-                if (patient != null) {
-                    patientDashboardView.updateContactCard(patient);
-                }
-            }
+	@Override
+	public void fetchPatientData(String uuid) {
+		patientDataService.getByUUID(uuid, new DataService.GetSingleCallback<Patient>() {
+			@Override
+			public void onCompleted(Patient patient) {
+				if (patient != null) {
+					patientDashboardView.updateContactCard(patient);
+				}
+			}
 
-            @Override
-            public void onError(Throwable t) {
-                t.printStackTrace();
-                patientDashboardView.showSnack("Error occured: Unable to reach searver");
-            }
-        });
-    }
+			@Override
+			public void onError(Throwable t) {
+				t.printStackTrace();
+				patientDashboardView.showSnack("Error occured: Unable to reach searver");
+			}
+		});
+	}
 
-    @Override
-    public void fetchVisits(Patient patient) {
-        patientDashboardView.getVisitNoteContainer().removeAllViews();
-        visitDataService.getByPatient(patient, true, new PagingInfo(0, 20), new DataService.GetMultipleCallback<Visit>() {
-            @Override
-            public void onCompleted(List<Visit> visits, int length) {
-                patientDashboardView.updateActiveVisitCard(visits);
-            }
+	@Override
+	public void fetchVisits(Patient patient) {
+		patientDashboardView.getVisitNoteContainer().removeAllViews();
+		visitDataService.getByPatient(patient, true, new PagingInfo(0, 20), new DataService.GetMultipleCallback<Visit>() {
+			@Override
+			public void onCompleted(List<Visit> visits, int length) {
+				patientDashboardView.updateActiveVisitCard(visits);
+			}
 
-            @Override
-            public void onError(Throwable t) {
-                t.printStackTrace();
-                patientDashboardView.showSnack("Error occured: Unable to reach searver");
-            }
-        });
-    }
+			@Override
+			public void onError(Throwable t) {
+				t.printStackTrace();
+				patientDashboardView.showSnack("Error occured: Unable to reach searver");
+			}
+		});
+	}
 
-    @Override
-    public void fetchEncounterObservations(Encounter encounter) {
-        observationDataService.getByEncounter(encounter, true, new PagingInfo(0, 20), new DataService.GetMultipleCallback<Observation>() {
-            @Override
-            public void onCompleted(List<Observation> observations, int length) {
-                for (Observation observation : observations) {
-                    if (observation.getDiagnosisNote() != null && !observation.getDiagnosisNote().equals(ApplicationConstants.EMPTY_STRING)) {
-                        patientDashboardView.updateActiveVisitObservationsCard(observation);
-                    }
-                }
-            }
+	@Override
+	public void fetchEncounterObservations(Encounter encounter) {
+		observationDataService.getByEncounter(encounter, true, new PagingInfo(0, 20), new DataService.GetMultipleCallback<Observation>() {
+			@Override
+			public void onCompleted(List<Observation> observations, int length) {
+				for (Observation observation : observations) {
+					if (observation.getDiagnosisNote() != null && !observation.getDiagnosisNote().equals(ApplicationConstants.EMPTY_STRING)) {
+						patientDashboardView.updateActiveVisitObservationsCard(observation);
+					}
+				}
+			}
 
-            @Override
-            public void onError(Throwable t) {
-                patientDashboardView.showSnack("Error fetching observations");
-                t.printStackTrace();
-            }
-        });
-    }
+			@Override
+			public void onError(Throwable t) {
+				patientDashboardView.showSnack("Error fetching observations");
+				t.printStackTrace();
+			}
+		});
+	}
 
 }

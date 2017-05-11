@@ -18,11 +18,6 @@ public interface VisitRestService {
 
     @GET(RestConstants.GET_ALL)
     Call<Results<Visit>> getAll(@Path(value = "restPath", encoded = true) String restPath,
-            @Query("v") String representation,
-            @Query("includeAll") Boolean includeAll);
-
-    @GET(RestConstants.GET_ALL)
-    Call<Results<Visit>> getAll(@Path(value = "restPath", encoded = true) String restPath,
 			@Query("v") String representation,
 			@Query("includeAll") Boolean includeAll,
 			@Query("limit") int limit,
@@ -38,12 +33,6 @@ public interface VisitRestService {
     @DELETE(RestConstants.PURGE)
     Call<Visit> purge(@Path(value = "restPath", encoded = true) String restPath,
 			@Path("uuid") String uuid);
-
-    @GET(RestConstants.REST_PATH)
-    Call<Results<Visit>> getByPatient(@Path(value = "restPath", encoded = true) String restPath,
-			@Query("patient") String patientUuid,
-			@Query("v") String representation,
-			@Query("includeAll") Boolean includeAll);
 
     @GET(RestConstants.REST_PATH)
     Call<Results<Visit>> getByPatient(@Path(value = "restPath", encoded = true) String restPath,

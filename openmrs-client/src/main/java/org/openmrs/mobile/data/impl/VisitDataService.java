@@ -47,13 +47,9 @@ public class VisitDataService extends BaseEntityDataService<Visit, VisitDbServic
 
     @Override
     protected Call<Results<Visit>> _restGetAll(String restPath, QueryOptions options, PagingInfo pagingInfo) {
-        if (isPagingValid(pagingInfo)) {
-            return restService.getAll(restPath, QueryOptions.getRepresentation(options),
-					QueryOptions.getIncludeInactive(options), pagingInfo.getLimit(), pagingInfo.getStartIndex());
-        } else {
-            return restService.getAll(restPath, QueryOptions.getRepresentation(options),
-					QueryOptions.getIncludeInactive(options));
-        }
+        return restService.getAll(restPath, QueryOptions.getRepresentation(options),
+                QueryOptions.getIncludeInactive(options), PagingInfo.getLimit(pagingInfo),
+				PagingInfo.getStartIndex(pagingInfo));
     }
 
     @Override
@@ -74,13 +70,9 @@ public class VisitDataService extends BaseEntityDataService<Visit, VisitDbServic
     @Override
     protected Call<Results<Visit>> _restGetByPatient(String restPath, String patientUuid, QueryOptions options,
 			PagingInfo pagingInfo) {
-        if (isPagingValid(pagingInfo)) {
-            return restService.getByPatient(restPath, patientUuid, QueryOptions.getRepresentation(options),
-					QueryOptions.getIncludeInactive(options), pagingInfo.getLimit(), pagingInfo.getStartIndex());
-        } else {
-            return restService.getByPatient(restPath, patientUuid, QueryOptions.getRepresentation(options),
-					QueryOptions.getIncludeInactive(options));
-        }
+		return restService.getByPatient(restPath, patientUuid, QueryOptions.getRepresentation(options),
+				QueryOptions.getIncludeInactive(options), PagingInfo.getLimit(pagingInfo),
+				PagingInfo.getStartIndex(pagingInfo));
     }
 
     // End Retrofit Workaround

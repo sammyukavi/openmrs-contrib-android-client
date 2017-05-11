@@ -43,13 +43,9 @@ public class PatientListDataService
 
     @Override
     protected Call<Results<PatientList>> _restGetAll(String restPath, QueryOptions options, PagingInfo pagingInfo) {
-        if (isPagingValid(pagingInfo)) {
-            return restService.getAll(restPath, QueryOptions.getRepresentation(options),
-                    QueryOptions.getIncludeInactive(options), pagingInfo.getLimit(), pagingInfo.getStartIndex());
-        } else {
-            return restService.getAll(restPath, QueryOptions.getRepresentation(options),
-                    QueryOptions.getIncludeInactive(options));
-        }
+        return restService.getAll(restPath, QueryOptions.getRepresentation(options),
+                QueryOptions.getIncludeInactive(options), PagingInfo.getLimit(pagingInfo),
+                PagingInfo.getStartIndex(pagingInfo));
     }
 
     @Override
@@ -70,12 +66,8 @@ public class PatientListDataService
     @Override
     protected Call<Results<PatientList>> _restGetByNameFragment(String restPath, String name, QueryOptions options,
             PagingInfo pagingInfo) {
-        if (isPagingValid(pagingInfo)) {
-            return restService.getByNameFragment(restPath, name, QueryOptions.getRepresentation(options),
-                    QueryOptions.getIncludeInactive(options), pagingInfo.getLimit(), pagingInfo.getStartIndex());
-        } else {
-            return restService.getByNameFragment(restPath, name, QueryOptions.getRepresentation(options),
-                    QueryOptions.getIncludeInactive(options));
-        }
+        return restService.getByNameFragment(restPath, name, QueryOptions.getRepresentation(options),
+                QueryOptions.getIncludeInactive(options), PagingInfo.getLimit(pagingInfo),
+                PagingInfo.getStartIndex(pagingInfo));
     }
 }

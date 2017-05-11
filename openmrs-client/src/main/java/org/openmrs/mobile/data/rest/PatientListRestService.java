@@ -20,11 +20,6 @@ public interface PatientListRestService {
     @GET(RestConstants.GET_ALL)
     Call<Results<PatientList>> getAll(@Path("restPath") String restPath,
             @Query("v") String representation,
-            @Query("includeAll") Boolean includeAll);
-
-    @GET(RestConstants.GET_ALL)
-    Call<Results<PatientList>> getAll(@Path("restPath") String restPath,
-            @Query("v") String representation,
             @Query("includeAll") Boolean includeAll,
             @Query("limit") int limit,
             @Query("startIndex") int startIndex);
@@ -39,12 +34,6 @@ public interface PatientListRestService {
     @DELETE(RestConstants.PURGE)
     Call<PatientList> purge(@Path("restPath") String restPath,
             @Path("uuid") String uuid);
-
-    @GET(RestConstants.REST_PATH)
-    Call<Results<PatientList>> getByNameFragment(@Path("restPath") String restPath,
-            @Query("q") String name,
-            @Query("v") String representation,
-            @Query("includeAll") Boolean includeAll);
 
     @GET(RestConstants.REST_PATH)
     Call<Results<PatientList>> getByNameFragment(@Path("restPath") String restPath,

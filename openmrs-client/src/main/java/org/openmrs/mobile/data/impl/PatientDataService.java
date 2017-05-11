@@ -80,13 +80,9 @@ public class PatientDataService extends BaseDataService<Patient, PatientDbServic
         executeMultipleCallback(callback,
                 () -> dbService.getByName(name, options, pagingInfo),
                 () -> {
-                    if (isPagingValid(pagingInfo)) {
-                        return restService.getByName(buildRestRequestPath(), name, QueryOptions.getRepresentation(options),
-								QueryOptions.getIncludeInactive(options), pagingInfo.getLimit(), pagingInfo.getStartIndex());
-                    } else {
-                        return restService.getByName(buildRestRequestPath(), name, QueryOptions.getRepresentation(options),
-								QueryOptions.getIncludeInactive(options));
-                    }
+                    return restService.getByName(buildRestRequestPath(), name, QueryOptions.getRepresentation(options),
+                            QueryOptions.getIncludeInactive(options), PagingInfo.getLimit(pagingInfo),
+                            PagingInfo.getStartIndex(pagingInfo));
                 });
     }
 }

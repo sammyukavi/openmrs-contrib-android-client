@@ -32,12 +32,6 @@ public interface PatientRestService  {
     Call<Results<Patient>> getByName(@Path(value = "restPath", encoded = true) String restPath,
 			@Query("q") String name,
 			@Query("v") String representation,
-			@Query("includeAll") Boolean includeAll);
-
-    @GET(RestConstants.REST_PATH)
-    Call<Results<Patient>> getByName(@Path(value = "restPath", encoded = true) String restPath,
-			@Query("q") String name,
-			@Query("v") String representation,
 			@Query("includeAll") Boolean includeAll,
 			@Query("limit") int limit,
 			@Query("startIndex") int startIndex);

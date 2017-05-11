@@ -96,7 +96,7 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 			@NonNull GetCallback<List<E>> callback) {
 		checkNotNull(callback);
 
-		executeMultipleCallback(callback,
+		executeMultipleCallback(callback, pagingInfo,
 				() -> dbService.getAll(options, pagingInfo),
 				() -> _restGetAll(buildRestRequestPath(), options, pagingInfo));
 	}
@@ -219,22 +219,24 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 	 * Executes a data operation which can return multiple results. Results returned from the REST query will be saved to
 	 * the db.
 	 * @param callback  The operation callback
+	 * @param pagingInfo  The optional paging information
 	 * @param dbQuery   The database query operation to perform
 	 * @param restQuery The REST query operation to perform
 	 */
-	protected void executeMultipleCallback(@NonNull GetCallback<List<E>> callback,
+	protected void executeMultipleCallback(@NonNull GetCallback<List<E>> callback, @Nullable PagingInfo pagingInfo,
 			@NonNull Supplier<List<E>> dbQuery, @NonNull Supplier<Call<Results<E>>> restQuery) {
-		executeMultipleCallback(callback, dbQuery, restQuery, (e) -> dbService.saveAll(e));
+		executeMultipleCallback(callback, pagingInfo, dbQuery, restQuery, (e) -> dbService.saveAll(e));
 	}
 
 	/**
 	 * Executes a data operation which can return multiple results.
 	 * @param callback    The operation callback
+	 * @param pagingInfo  The optional paging information
 	 * @param dbQuery     The database query operation to perform
 	 * @param restQuery   The REST query operation to perform
 	 * @param dbOperation The database operation to perform when results are returned from the REST query
 	 */
-	protected void executeMultipleCallback(@NonNull GetCallback<List<E>> callback,
+	protected void executeMultipleCallback(@NonNull GetCallback<List<E>> callback, @Nullable PagingInfo pagingInfo,
 			@NonNull Supplier<List<E>> dbQuery, @NonNull Supplier<Call<Results<E>>> restQuery,
 			@NonNull Consumer<List<E>> dbOperation) {
 		checkNotNull(callback);
@@ -243,7 +245,13 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 		checkNotNull(dbOperation);
 
 		performCallback(callback, dbQuery, restQuery,
-				(Results<E> results) -> results.getResults(),
+				(Results<E> results) -> {
+					if (pagingInfo != null) {
+						pagingInfo.setTotalRecordCount(results.getLength());
+					}
+
+					return results.getResults();
+				},
 				dbOperation);
 	}
 

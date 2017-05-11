@@ -53,7 +53,7 @@ public class PatientListContextDataService
 
 	public void getListPatients(String patientListUuid, QueryOptions options, PagingInfo pagingInfo,
 			GetCallback<List<PatientListContext>> callback) {
-		executeMultipleCallback(callback,
+		executeMultipleCallback(callback, pagingInfo,
 				() -> null,
 				() -> restService.getAll(buildRestRequestPath(), patientListUuid,
 						QueryOptions.getRepresentation(options), QueryOptions.getIncludeInactive(options),

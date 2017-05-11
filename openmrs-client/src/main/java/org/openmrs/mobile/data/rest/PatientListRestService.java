@@ -12,7 +12,7 @@ import retrofit2.http.Query;
 
 public interface PatientListRestService {
 	@GET(RestConstants.GET_BY_UUID)
-	Call<PatientList> getByUuid(@Path("restPath") String restPath,
+	Call<PatientList> getByUuid(@Path(value = "restPath", encoded = true) String restPath,
 			@Path("uuid") String uuid,
 			@Query("v") String representation,
 			@Query("includeAll") Boolean includeAll);
@@ -25,18 +25,18 @@ public interface PatientListRestService {
 			@Query("startIndex") Integer startIndex);
 
 	@POST(RestConstants.CREATE)
-	Call<PatientList> create(@Path("restPath") String restPath, PatientList entity);
+	Call<PatientList> create(@Path(value = "restPath", encoded = true) String restPath, PatientList entity);
 
 	@POST(RestConstants.UPDATE)
-	Call<PatientList> update(@Path("restPath") String restPath,
+	Call<PatientList> update(@Path(value = "restPath", encoded = true) String restPath,
 			@Path("uuid") String uuid, PatientList entity);
 
 	@DELETE(RestConstants.PURGE)
-	Call<PatientList> purge(@Path("restPath") String restPath,
+	Call<PatientList> purge(@Path(value = "restPath", encoded = true) String restPath,
 			@Path("uuid") String uuid);
 
 	@GET(RestConstants.REST_PATH)
-	Call<Results<PatientList>> getByNameFragment(@Path("restPath") String restPath,
+	Call<Results<PatientList>> getByNameFragment(@Path(value = "restPath", encoded = true) String restPath,
 			@Query("q") String name,
 			@Query("v") String representation,
 			@Query("includeAll") Boolean includeAll,

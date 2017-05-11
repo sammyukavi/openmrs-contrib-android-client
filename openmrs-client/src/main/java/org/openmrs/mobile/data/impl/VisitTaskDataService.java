@@ -84,7 +84,7 @@ public class VisitTaskDataService
 
 	public void getByName(String status, String query, String patient_uuid, String visit_uuid,
 			QueryOptions options, PagingInfo pagingInfo, GetCallback<List<VisitTask>> callback) {
-		executeMultipleCallback(callback,
+		executeMultipleCallback(callback, pagingInfo,
 				() -> null,
 				() -> restService.getByName(buildRestRequestPath(), status, query, patient_uuid, visit_uuid,
 						QueryOptions.getRepresentation(options), QueryOptions.getIncludeInactive(options),
@@ -95,7 +95,7 @@ public class VisitTaskDataService
 
 	public void getAll(String status, String patient_uuid, String visit_uuid,
 			QueryOptions options, PagingInfo pagingInfo, GetCallback<List<VisitTask>> callback) {
-		executeMultipleCallback(callback,
+		executeMultipleCallback(callback, pagingInfo,
 				() -> null,
 				() -> restService.getAll(buildRestRequestPath(), status, patient_uuid, visit_uuid,
 						QueryOptions.getRepresentation(options), QueryOptions.getIncludeInactive(options),

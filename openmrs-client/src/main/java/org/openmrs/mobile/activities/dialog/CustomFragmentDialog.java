@@ -466,7 +466,6 @@ public class CustomFragmentDialog extends DialogFragment {
 
 							}
 						});
-
 						break;
 					case CREATE_VISIT_NOTE:
 						break;
@@ -483,7 +482,7 @@ public class CustomFragmentDialog extends DialogFragment {
 		if (activity instanceof PatientDashboardActivity) {
 			PatientDashboardActivity pda = ((PatientDashboardActivity)activity);
 			/*List<Fragment> fragments = pda.getSupportFragmentManager().getFragments();
-            PatientVisitsFragment fragment = null;
+	        PatientVisitsFragment fragment = null;
             for (Fragment frag : fragments) {
                 if (frag instanceof PatientVisitsFragment) {
                     fragment = (PatientVisitsFragment) frag;

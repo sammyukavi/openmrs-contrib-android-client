@@ -48,6 +48,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
 	}
 
+
 	@Override
 	public void fetchPatientData(String uuid) {
 		patientDataService.getByUUID(uuid, new DataService.GetSingleCallback<Patient>() {
@@ -72,7 +73,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 		visitDataService.getByPatient(patient, true, new PagingInfo(0, 20), new DataService.GetMultipleCallback<Visit>() {
 			@Override
 			public void onCompleted(List<Visit> visits, int length) {
-				patientDashboardView.updateVisitsCard(visits);
+				patientDashboardView.updateActiveVisitCard(visits);
 			}
 
 			@Override
@@ -85,24 +86,22 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
 	@Override
 	public void fetchEncounterObservations(Encounter encounter) {
-		observationDataService
-				.getByEncounter(encounter, true, new PagingInfo(0, 20), new DataService.GetMultipleCallback<Observation>() {
-					@Override
-					public void onCompleted(List<Observation> observations, int length) {
-						for (Observation observation : observations) {
-							if (observation.getDiagnosisNote() != null && !observation.getDiagnosisNote()
-									.equals(ApplicationConstants.EMPTY_STRING)) {
-								patientDashboardView.updateVisitNote(observation);
-							}
-						}
+		observationDataService.getByEncounter(encounter, true, new PagingInfo(0, 20), new DataService.GetMultipleCallback<Observation>() {
+			@Override
+			public void onCompleted(List<Observation> observations, int length) {
+				for (Observation observation : observations) {
+					if (observation.getDiagnosisNote() != null && !observation.getDiagnosisNote().equals(ApplicationConstants.EMPTY_STRING)) {
+						patientDashboardView.updateActiveVisitObservationsCard(observation);
 					}
+				}
+			}
 
-					@Override
-					public void onError(Throwable t) {
-						patientDashboardView.showSnack("Error fetching observations");
-						t.printStackTrace();
-					}
-				});
+			@Override
+			public void onError(Throwable t) {
+				patientDashboardView.showSnack("Error fetching observations");
+				t.printStackTrace();
+			}
+		});
 	}
 
 }

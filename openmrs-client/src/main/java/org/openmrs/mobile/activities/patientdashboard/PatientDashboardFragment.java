@@ -59,22 +59,16 @@ import java.util.List;
 public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardContract.Presenter>
 		implements PatientDashboardContract.View {
 
-	String visitdetailsText = "";
-	String visitStartDateTime;
-	String visitStopDateTime;
 	private View fragmentView;
-	private TextView patientDisplayName;
-	private TextView patientGender;
-	private TextView patientAge, patientFecthedDob;
-	private TextView patientIdentifier;
-	private TextView visitDetails;
-	private FloatingActionMenu floatingActionMenu;
+	private TextView patientDisplayName, patientGender, patientAge, patientIdentifier, visitDetails, observationTextView, patientFecthedDob;
+	private Visit activeVisit;
+	private LinearLayout observationsContainer, observationHolder;
+	private ImageView observationIcon;
+	private CustomDialogBundle createEditVisitNoteDialog;
+	private Bundle dialogBundle;
 	private FloatingActionButton startAuditFormButton, addVisitImageButton,
 			addVisitTaskButton, startVisitButton, endVisitButton;
-	private Visit mainVisit;
 	private Patient patient;
-	private LinearLayout visitNoteContainer;
-	private boolean isCurrentVisit = false;
 	private OpenMRS instance = OpenMRS.getInstance();
 	SharedPreferences sharedPreferences = instance.getOpenMRSSharedPreferences();
 
@@ -82,10 +76,18 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		return new PatientDashboardFragment();
 	}
 
+	View.OnClickListener switchToEditMode = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			((PatientDashboardActivity)getActivity())
+					.createAndShowDialog(createEditVisitNoteDialog, ApplicationConstants.DialogTAG.VISIT_NOTE_TAG);
+		}
+	};
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		fragmentView = inflater.inflate(R.layout.fragment_patient_dashboard, container, false);
-		visitNoteContainer = (LinearLayout)fragmentView.findViewById(R.id.visitNotesContainer);
+		observationsContainer = (LinearLayout)fragmentView.findViewById(R.id.observationsContainer);
 		String patientId = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
 		initViewFields();
 		initializeListeners(startAuditFormButton, addVisitImageButton, addVisitTaskButton, startVisitButton,
@@ -156,15 +158,35 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		patientAge = (TextView)fragmentView.findViewById(R.id.fetchedPatientAge);
 		visitDetails = (TextView)fragmentView.findViewById(R.id.visitDetails);
 		patientFecthedDob = (TextView)fragmentView.findViewById(R.id.fetchedPatientBirthDate);
-		//TextView moreLabel = (TextView) fragmentView.findViewById(R.id.more_label);
-		floatingActionMenu = (FloatingActionMenu)getActivity().findViewById(R.id.floatingActionMenu);
-		floatingActionMenu.setVisibility(View.VISIBLE);
-
 		addVisitImageButton = (FloatingActionButton)getActivity().findViewById(R.id.add_visit_image);
 		addVisitTaskButton = (FloatingActionButton)getActivity().findViewById(R.id.add_visit_task);
 		startAuditFormButton = (FloatingActionButton)getActivity().findViewById(R.id.audit_data_form);
 		startVisitButton = (FloatingActionButton)getActivity().findViewById(R.id.start_visit);
 		endVisitButton = (FloatingActionButton)getActivity().findViewById(R.id.end_visit);
+		//TextView moreLabel = (TextView) fragmentView.findViewById(R.id.more_label);
+		FloatingActionMenu floatingActionMenu = (FloatingActionMenu)getActivity().findViewById(R.id.floatingActionMenu);
+		floatingActionMenu.setVisibility(View.VISIBLE);
+		startAuditFormButton = (FloatingActionButton)getActivity().findViewById(R.id.audit_data_form);
+		ViewGroup.LayoutParams linearLayoutParams =
+				new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams
+						.WRAP_CONTENT,
+						1.0f);
+		observationHolder = new LinearLayout(getContext());
+		observationHolder.setLayoutParams(linearLayoutParams);
+		observationHolder.setOrientation(LinearLayout.HORIZONTAL);
+		observationHolder.setPadding(0, 0, 0, 0);
+		observationIcon = new ImageView(getContext());
+		observationIcon.setImageDrawable(ContextCompat.getDrawable(getActivity(), android.R.drawable.ic_menu_edit));
+		observationIcon.setPadding(0, 0, 0, 0);
+		observationTextView = new TextView(getContext());
+		observationTextView.setPadding(10, 0, 10, 0);
+		observationTextView.setGravity(Gravity.LEFT);
+		observationTextView.setHintTextColor(ContextCompat.getColor(getContext(), R.color.openmrs_color_grey));
+		observationTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.openmrs_color_grey));
+		createEditVisitNoteDialog = new CustomDialogBundle();
+		createEditVisitNoteDialog.setTitleViewMessage(getString(R.string.visit_note));
+		createEditVisitNoteDialog.setRightButtonText(getString(R.string.label_save));
+		dialogBundle = new Bundle();
 	}
 
 	@Override
@@ -174,90 +196,100 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
 	@Override
 	public void updateContactCard(Patient patient) {
-		if (patient != null) {
-			this.patient = patient;
-			Person person = patient.getPerson();
-			patientDisplayName.setText(person.getName().getNameString());
-			patientGender.setText(person.getGender());
-			patientIdentifier.setText(patient.getIdentifier().getIdentifier());
-			DateTime date = DateUtils.convertTimeString(person.getBirthdate());
-			patientAge.setText(DateUtils.calculateAge(date.getYear(), date.getMonthOfYear(), date.getDayOfMonth()));
-			mPresenter.fetchVisits(patient);
-			setPatientUuid(patient);
-		}
+		this.patient = patient;
+		Person person = patient.getPerson();
+		patientDisplayName.setText(person.getName().getNameString());
+		patientGender.setText(person.getGender());
+		patientIdentifier.setText(patient.getIdentifier().getIdentifier());
+		DateTime date = DateUtils.convertTimeString(person.getBirthdate());
+		patientAge.setText(DateUtils.calculateAge(date.getYear(), date.getMonthOfYear(), date.getDayOfMonth()));
+		mPresenter.fetchVisits(patient);
+		setPatientUuid(patient);
 	}
 
 	@Override
-	public void updateVisitsCard(List<Visit> visits) {
-
-		if (!visits.isEmpty()) {
-			mainVisit = visits.get(0);
-			setVisitUuid(mainVisit);
-			visitStopDateTime = mainVisit.getStopDatetime();
-			visitStartDateTime = mainVisit.getStartDatetime();
-			if (!StringUtils.notNull(visitStopDateTime)) {
-				this.isCurrentVisit = true;
-				visitdetailsText += getString(R.string.active_visit_label) + ": " + DateUtils
-						.convertTime1(visitStartDateTime, DateUtils.PATIENT_DASHBOARD_DATE_FORMAT);
+	public void updateActiveVisitCard(List<Visit> visits) {
+		for (Visit visit : visits) {
+			if (!StringUtils.notNull(visit.getStopDatetime())) {
+				this.activeVisit = visit;
+				setVisitUuid(visit);
+				visits.remove(visit);
+				break;
+			}
+		}
+		if (activeVisit != null) {
+			fragmentView.findViewById(R.id.visitDetailsCardView).setVisibility(View.VISIBLE);
+			fragmentView.findViewById(R.id.observationsCardView).setVisibility(View.VISIBLE);
+			visitDetails.setText(getString(R.string.active_visit_label) + ": " + DateUtils
+					.convertTime1(activeVisit.getStartDatetime(), DateUtils.PATIENT_DASHBOARD_DATE_FORMAT));
+			if (activeVisit.getEncounters().size() == 0) {
+				//We add a view to create a visit note
+				observationTextView.setHint(getResources().getString(R.string.add_a_note));
+				observationHolder.addView(observationIcon);
+				observationHolder.addView(observationTextView);
+				observationsContainer.addView(observationHolder);
+				createEditVisitNoteDialog.setEditNoteTextViewMessage("");
+				createEditVisitNoteDialog.setRightButtonAction(CustomFragmentDialog.OnClickAction.CREATE_VISIT_NOTE);
+				createEditVisitNoteDialog.setArguments(dialogBundle);
+				observationIcon.setOnClickListener(switchToEditMode);
+				observationTextView.setOnClickListener(switchToEditMode);
 			} else {
-				visitdetailsText +=
-						"Visit:\n" + DateUtils.convertTime1(visitStartDateTime, DateUtils.PATIENT_DASHBOARD_DATE_FORMAT)
-								+ " - " + DateUtils.convertTime1(visitStopDateTime, DateUtils
-								.PATIENT_DASHBOARD_DATE_FORMAT);
-			}
-			visitDetails.setText(visitdetailsText);
-			if (mainVisit != null) {
-				if (mainVisit.getEncounters().size() == 0) {
-					/*****
-					 *
-					 * Create new encounter
-					 *
-					 */
-				} else {
-					for (Encounter encounter : mainVisit.getEncounters()) {
-						switch (encounter.getEncounterType().getDisplay()) {
-							case ApplicationConstants.EncounterTypeEntitys.VISIT_NOTE:
-								mPresenter.fetchEncounterObservations(encounter);
-								break;
-						}
-					}
-
-				}
-
-			}
-
-			RecyclerView previousVisits = (RecyclerView)fragmentView.findViewById(R.id.previousVisits);
-
-			previousVisits.setLayoutManager(new LinearLayoutManager(getContext()));
-			VisitsAdapter visitsAdapter = new VisitsAdapter(previousVisits, visits, getActivity());
-			previousVisits.setAdapter(visitsAdapter);
-
-			visitsAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
-				@Override
-				public void onLoadMore() {
-					if (visits.size() <= 2) {
-						visits.add(null);
-						visitsAdapter.notifyItemInserted(visits.size() - 1);
-						new Handler().postDelayed(new Runnable() {
-							@Override
-							public void run() {
-								visits.remove(visits.size() - 1);
-								visitsAdapter.notifyItemRemoved(visits.size());
-
-								//Load more from server here
-								visitsAdapter.notifyDataSetChanged();
-								visitsAdapter.setLoaded();
-
-							}
-						}, 5000);
-					} else {
-						Toast.makeText(getContext(), "Loading data completed", Toast.LENGTH_SHORT).show();
+				for (Encounter encounter : activeVisit.getEncounters()) {
+					switch (encounter.getEncounterType().getDisplay()) {
+						case ApplicationConstants.EncounterTypeEntitys.VISIT_NOTE:
+							mPresenter.fetchEncounterObservations(encounter);
+							break;
 					}
 				}
-			});
-
+			}
 		}
 
+		RecyclerView previousVisits = (RecyclerView)fragmentView.findViewById(R.id.previousVisits);
+		previousVisits.setLayoutManager(new LinearLayoutManager(getContext()));
+		VisitsAdapter visitsAdapter = new VisitsAdapter(previousVisits, visits, getActivity());
+		previousVisits.setAdapter(visitsAdapter);
+
+		visitsAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
+			@Override
+			public void onLoadMore() {
+				if (visits.size() <= 2) {
+					visits.add(null);
+					visitsAdapter.notifyItemInserted(visits.size() - 1);
+					new Handler().postDelayed(new Runnable() {
+						@Override
+						public void run() {
+							visits.remove(visits.size() - 1);
+							visitsAdapter.notifyItemRemoved(visits.size());
+							//Load more from server here
+							visitsAdapter.notifyDataSetChanged();
+							visitsAdapter.setLoaded();
+						}
+					}, 5000);
+				} else {
+					Toast.makeText(getContext(), "Loading data completed", Toast.LENGTH_SHORT).show();
+				}
+			}
+		});
+	}
+
+	@Override
+	public void updateActiveVisitObservationsCard(Observation observation) {
+		observationTextView.setText(observation.getDiagnosisNote());
+		observationHolder.addView(observationIcon);
+		observationHolder.addView(observationTextView);
+		observationsContainer.addView(observationHolder);
+		createEditVisitNoteDialog.setRightButtonAction(CustomFragmentDialog.OnClickAction.SAVE_VISIT_NOTE);
+		createEditVisitNoteDialog.setEditNoteTextViewMessage(observation.getDiagnosisNote());
+		dialogBundle.putSerializable(ApplicationConstants.BundleKeys.OBSERVATION, observation);
+		dialogBundle.putSerializable(ApplicationConstants.BundleKeys.PATIENT, patient);
+		createEditVisitNoteDialog.setArguments(dialogBundle);
+		observationIcon.setOnClickListener(switchToEditMode);
+		observationTextView.setOnClickListener(switchToEditMode);
+	}
+
+	@Override
+	public LinearLayout getVisitNoteContainer() {
+		return observationsContainer;
 	}
 
 	public void setPatientUuid(Patient patient) {
@@ -270,58 +302,6 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		SharedPreferences.Editor editor = instance.getOpenMRSSharedPreferences().edit();
 		editor.putString(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visit.getUuid());
 		editor.commit();
-	}
-
-	@Override
-	public void updateVisitNote(Observation observation) {
-
-		ViewGroup.LayoutParams linearLayoutParams =
-				new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams
-						.WRAP_CONTENT,
-						1.0f);
-		LinearLayout itemsContainer = new LinearLayout(getContext());
-		itemsContainer.setLayoutParams(linearLayoutParams);
-		itemsContainer.setOrientation(LinearLayout.HORIZONTAL);
-		itemsContainer.setPadding(0, 0, 0, 0);
-		ImageView editIcon = new ImageView(getContext());
-		editIcon.setImageDrawable(ContextCompat.getDrawable(getActivity(), android.R.drawable.ic_menu_edit));
-		editIcon.setPadding(0, 0, 0, 0);
-		TextView editText = new TextView(getContext());
-		editText.setPadding(10, 0, 10, 0);
-		editText.setText(observation.getDiagnosisNote());
-		editText.setGravity(Gravity.LEFT);
-		itemsContainer.addView(editIcon);
-		itemsContainer.addView(editText);
-		visitNoteContainer = (LinearLayout)fragmentView.findViewById(R.id.visitNotesContainer);
-		visitNoteContainer.addView(itemsContainer);
-		CustomDialogBundle createEditVisitNote = new CustomDialogBundle();
-		createEditVisitNote.setTitleViewMessage(getString(R.string.visit_note));
-		createEditVisitNote.setRightButtonText(getString(R.string.label_save));
-		createEditVisitNote.setRightButtonAction(CustomFragmentDialog.OnClickAction.SAVE_VISIT_NOTE);
-		createEditVisitNote.setEditNoteTextViewMessage(observation.getDiagnosisNote());
-
-		Bundle bundle = new Bundle();
-		bundle.putSerializable(ApplicationConstants.BundleKeys.OBSERVATION, observation);
-		bundle.putSerializable(ApplicationConstants.BundleKeys.PATIENT, patient);
-		createEditVisitNote.setArguments(bundle);
-		View.OnClickListener switchToEditMode = new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (isCurrentVisit) {
-					((PatientDashboardActivity)getActivity())
-							.createAndShowDialog(createEditVisitNote, ApplicationConstants.DialogTAG.VISIT_NOTE_TAG);
-				} else {
-					showSnack("Edit of past visits is disabled");
-				}
-			}
-		};
-		editIcon.setOnClickListener(switchToEditMode);
-		editText.setOnClickListener(switchToEditMode);
-
-	}
-
-	public LinearLayout getVisitNoteContainer() {
-		return visitNoteContainer;
 	}
 
 }

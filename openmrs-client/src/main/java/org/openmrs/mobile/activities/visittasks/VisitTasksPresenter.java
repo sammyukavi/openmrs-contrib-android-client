@@ -43,7 +43,7 @@ public class VisitTasksPresenter extends BasePresenter implements VisitTasksCont
 	private VisitDataService visitDataService;
 	private OpenMRS instance = OpenMRS.getInstance();
 
-	private int page = 0;
+	private int page = 1;
 	private int limit = 10;
 
 	public VisitTasksPresenter(VisitTasksContract.View view, OpenMRS openMRS) {
@@ -61,6 +61,7 @@ public class VisitTasksPresenter extends BasePresenter implements VisitTasksCont
 
 	@Override
 	public void getPredefinedTasks() {
+		PagingInfo pagingInfo = new PagingInfo(page,100);
 		if (NetworkUtils.hasNetwork()) {
 			DataService.GetCallback<List<VisitPredefinedTask>> callback = new DataService
 					.GetCallback<List<VisitPredefinedTask>>() {
@@ -84,7 +85,7 @@ public class VisitTasksPresenter extends BasePresenter implements VisitTasksCont
 									.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 				}
 			};
-			visitPredefinedTaskDataService.getAll(new QueryOptions(false, false), null, callback);
+			visitPredefinedTaskDataService.getAll(QueryOptions.LOAD_RELATED_OBJECTS, pagingInfo, callback);
 		} else {
 			// get the users from the local storage.
 		}
@@ -121,8 +122,10 @@ public class VisitTasksPresenter extends BasePresenter implements VisitTasksCont
 													.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 						}
 					};
+					System.out.println(instance.getPatientUuid() + "Patient Uuid ");
+					System.out.println("9279f05e-24d9-4d68-bdf0-884b432a2cb0" +  "Visit uuid");
 			visitTaskDataService.getAll(ApplicationConstants.EMPTY_STRING, instance.getPatientUuid(),
-					instance.getVisitUuid(), new QueryOptions(false, false), pagingInfo, getMultipleCallback);
+					"9279f05e-24d9-4d68-bdf0-884b432a2cb0", QueryOptions.LOAD_RELATED_OBJECTS, pagingInfo, getMultipleCallback);
 		} else {
 			// get the users from the local storage.
 		}
@@ -230,7 +233,7 @@ public class VisitTasksPresenter extends BasePresenter implements VisitTasksCont
 											.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 						}
 					};
-			visitDataService.getByUUID(instance.getVisitUuid(), new QueryOptions(false, false), getSingleCallback);
+			visitDataService.getByUUID("9279f05e-24d9-4d68-bdf0-884b432a2cb0", QueryOptions.LOAD_RELATED_OBJECTS, getSingleCallback);
 		} else {
 			// get the users from the local storage.
 		}

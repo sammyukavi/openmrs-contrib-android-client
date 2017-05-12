@@ -41,6 +41,8 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	private VisitDataService visitDataService;
 	private ObsDataService observationDataService;
 	private ProviderDataService providerDataService;
+	private final static int page = 1;
+	private final static int limit = 10;
 
 	public PatientDashboardPresenter(PatientDashboardContract.View view) {
 		this.patientDashboardView = view;
@@ -58,7 +60,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
 	@Override
 	public void fetchPatientData(String uuid) {
-		patientDataService.getByUUID(uuid, null, new DataService.GetCallback<Patient>() {
+		patientDataService.getByUUID(uuid, QueryOptions.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Patient>() {
 			@Override
 			public void onCompleted(Patient patient) {
 				if (patient != null) {
@@ -77,24 +79,29 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	@Override
 	public void fetchVisits(Patient patient) {
 		patientDashboardView.getVisitNoteContainer().removeAllViews();
-		visitDataService.getByPatient(patient, QueryOptions.INCLUDE_INACTIVE, new PagingInfo(0, 20),
+		visitDataService.getByPatient(patient, new QueryOptions(true,true), new PagingInfo(page, limit),
 				new DataService.GetCallback<List<Visit>>() {
 					@Override
 					public void onCompleted(List<Visit> visits) {
-						patientDashboardView.updateActiveVisitCard(visits);
+						if (!visits.isEmpty()) {
+							patientDashboardView.updateActiveVisitCard(visits);
+							patientDashboardView.showSnack("Visits found");
+						} else {
+							patientDashboardView.showSnack("No visits found");
+						}
 					}
 
 					@Override
 					public void onError(Throwable t) {
 						t.printStackTrace();
-						patientDashboardView.showSnack("Error occured: Unable to reach searver");
+						patientDashboardView.showSnack("Visit fetch error");
 					}
 				});
 	}
 
 	@Override
 	public void fetchEncounterObservations(Encounter encounter) {
-		observationDataService.getByEncounter(encounter, QueryOptions.INCLUDE_INACTIVE, new PagingInfo(0, 20),
+		observationDataService.getByEncounter(encounter, QueryOptions.INCLUDE_INACTIVE, new PagingInfo(page, limit),
 				new DataService.GetCallback<List<Observation>>() {
 
 					@Override
@@ -119,24 +126,27 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	 * TODO: create a service to getProviderByPerson, move code to commons
 	 */
 	private void getCurrentProvider() {
+
 		String personUuid = OpenMRS.getInstance().getCurrentLoggedInUserInfo().get(ApplicationConstants.UserKeys.USER_UUID);
 		if (StringUtils.notEmpty(personUuid)) {
 
-			providerDataService.getAll(null, null, new DataService.GetCallback<List<Provider>>() {
-				@Override
-				public void onCompleted(List<Provider> entities) {
-					for (Provider entity : entities) {
-						if (null != entity.getPerson() && personUuid.equalsIgnoreCase(entity.getPerson().getUuid())) {
-							patientDashboardView.setProviderUuid(entity.getUuid());
+			providerDataService.getAll(QueryOptions.LOAD_RELATED_OBJECTS, new PagingInfo(page, limit),
+					new DataService.GetCallback<List<Provider>>() {
+						@Override
+						public void onCompleted(List<Provider> entities) {
+							for (Provider entity : entities) {
+								if (null != entity.getPerson() && personUuid
+										.equalsIgnoreCase(entity.getPerson().getUuid())) {
+									patientDashboardView.setProviderUuid(entity.getUuid());
+								}
+							}
 						}
-					}
-				}
 
-				@Override
-				public void onError(Throwable t) {
-					ToastUtil.error(t.getMessage());
-				}
-			});
+						@Override
+						public void onError(Throwable t) {
+							ToastUtil.error(t.getMessage());
+						}
+					});
 		}
 	}
 }

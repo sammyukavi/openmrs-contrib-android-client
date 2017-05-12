@@ -191,7 +191,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 				}
 			};
 			//Just check if the identifier are the same. If not it saves the patient.
-			patientDataService.getByUUID(uuid, new QueryOptions(false, false), singleCallback);
+			patientDataService.getByUUID(uuid, new QueryOptions(false, true), singleCallback);
 		} else {
 			// get the users from the local storage.
 		}
@@ -317,8 +317,9 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 				}
 			};
 			//Just check if the identifier are the same. If not it saves the patient.
-			patientDataService.getByNameAndIdentifier(patient.getPerson().getName().getNameString(), null, pagingInfo,
-					callback);
+			patientDataService
+					.getByNameAndIdentifier(patient.getPerson().getName().getNameString(), QueryOptions
+									.LOAD_RELATED_OBJECTS, pagingInfo, callback);
 		} else {
 			// get the users from the local storage.
 		}
@@ -371,7 +372,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 											.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 						}
 					};
-			patientIdentifierTypeDataService.getAll(new QueryOptions(false, false), null, callback);
+			patientIdentifierTypeDataService.getAll(QueryOptions.LOAD_RELATED_OBJECTS, null, callback);
 		} else {
 			// get the users from the local storage.
 		}
@@ -406,14 +407,12 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 
 						@Override
 						public void onError(Throwable t) {
-							Log.e("Attribute Type Error", "Error", t.fillInStackTrace());
-
 							patientRegistrationView
 									.showToast(ApplicationConstants.entityName.ATTRIBUTE_TPYES + ApplicationConstants
 											.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 						}
 					};
-			personAttributeTypeDataService.getAll(new QueryOptions(false, false), null, getMultipleCallback);
+			personAttributeTypeDataService.getAll(QueryOptions.LOAD_RELATED_OBJECTS, null, getMultipleCallback);
 		}
 	}
 
@@ -446,13 +445,12 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 
 						@Override
 						public void onError(Throwable t) {
-							Log.e("LocationError", "Error", t.fillInStackTrace());
 							patientRegistrationView
 									.showToast(ApplicationConstants.entityName.LOCATION + ApplicationConstants
 											.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 						}
 					};
-			locationDataService.getByUUID(locationUuid, null, getSingleCallback);
+			locationDataService.getByUUID(locationUuid, QueryOptions.LOAD_RELATED_OBJECTS, getSingleCallback);
 		}
 	}
 

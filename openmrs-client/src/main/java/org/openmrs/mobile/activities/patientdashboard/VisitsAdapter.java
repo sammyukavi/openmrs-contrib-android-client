@@ -15,7 +15,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.openmrs.mobile.R;
+import org.openmrs.mobile.data.DataService;
+import org.openmrs.mobile.data.PagingInfo;
+import org.openmrs.mobile.data.impl.ObsDataService;
 import org.openmrs.mobile.models.Encounter;
+import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.DateUtils;
@@ -32,10 +36,12 @@ public class VisitsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 	private int visibleThreshold = 5;
 	private int lastVisibleItem, totalItemCount;
 	LinearLayout.LayoutParams linearLayoutParams;
+	private ObsDataService observationDataService;
 
 	public VisitsAdapter(RecyclerView recyclerView, List<Visit> visits, Context context) {
 		this.visits = visits;
 		this.context = context;
+		observationDataService = new ObsDataService();
 		this.linearLayoutParams =
 				new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams
 						.WRAP_CONTENT,
@@ -129,7 +135,7 @@ public class VisitsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 			Visit visit = visits.get(position);
 			VisitViewHolder viewHolder = (VisitViewHolder)holder;
 			LayoutInflater layoutInflater = LayoutInflater.from(context);
-			View singleVisitView = layoutInflater.inflate(R.layout.previous_visits_row_item, null);
+			View singleVisitView = layoutInflater.inflate(R.layout.previous_visits_card, null);
 			LinearLayout observationsContainer = (LinearLayout)singleVisitView.findViewById(R.id.observationsContainer);
 			TextView visitTitle = (TextView)singleVisitView.findViewById(R.id.visitTitle);
 			visitTitle.setText("Visit: " + DateUtils
@@ -141,14 +147,33 @@ public class VisitsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 				@Override
 				public void onClick(View v) {
 					expandCollapse(observationsContainer);
-					//observationsContainer.scrollTo(0, 100);
 				}
 			});
 			for (Encounter encounter : visit.getEncounters()) {
 				switch (encounter.getEncounterType().getDisplay()) {
 					case ApplicationConstants.EncounterTypeEntitys.VISIT_NOTE:
-						View row = layoutInflater.inflate(R.layout.previous_visits_dynamic_row, null);
-						observationsContainer.addView(row);
+						observationDataService.getByEncounter(encounter, true, new PagingInfo(0, 20),
+								new DataService.GetMultipleCallback<Observation>() {
+									@Override
+									public void onCompleted(List<Observation> observations, int length) {
+										for (Observation observation : observations) {
+											if (observation.getDiagnosisNote() != null && !observation.getDiagnosisNote()
+													.equals(ApplicationConstants.EMPTY_STRING)) {
+												View row = layoutInflater
+														.inflate(R.layout.previous_visits_obervation_row, null);
+												((TextView)row.findViewById(R.id.text))
+														.setText(observation.getDiagnosisNote());
+												observationsContainer.addView(row);
+											}
+										}
+									}
+
+									@Override
+									public void onError(Throwable t) {
+										//patientDashboardView.showSnack("Error fetching observations");
+										t.printStackTrace();
+									}
+								});
 						break;
 				}
 			}

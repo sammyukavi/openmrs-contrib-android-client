@@ -25,7 +25,9 @@ import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.impl.PatientListContextDataService;
 import org.openmrs.mobile.data.impl.PatientListDataService;
+import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Patient;
+import org.openmrs.mobile.models.PatientIdentifier;
 import org.openmrs.mobile.models.PatientList;
 import org.openmrs.mobile.models.PatientListCondition;
 import org.openmrs.mobile.models.PatientListContext;
@@ -96,7 +98,7 @@ public class PatientListPresenterTest extends ACUnitTestBase{
         doAnswer(new Answer<Void>() {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
-                ((DataService.GetCallback) invocation.getArguments()[2]).onCompleted(patientLists);
+                ((DataService.GetCallback<List<PatientList>>)invocation.getArguments()[2]).onCompleted(patientLists);
                 return null;
             }
         }).when(patientListDataService).getAll(any(QueryOptions.class), any(PagingInfo.class),
@@ -112,7 +114,7 @@ public class PatientListPresenterTest extends ACUnitTestBase{
         doAnswer(new Answer<Void>() {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
-                ((DataService.GetCallback) invocation.getArguments()[2]).onError(new Throwable("error"));
+                ((DataService.GetCallback<PatientList>)invocation.getArguments()[2]).onError(new Throwable("error"));
                 return null;
             }
         }).when(patientListDataService).getAll(any(QueryOptions.class), any(PagingInfo.class),
@@ -127,7 +129,8 @@ public class PatientListPresenterTest extends ACUnitTestBase{
         doAnswer(new Answer<Void>() {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
-                ((DataService.GetCallback) invocation.getArguments()[2]).onCompleted(patientListData);
+                ((DataService.GetCallback<List<PatientListContext>>) invocation.getArguments()[2]).onCompleted
+                        (patientListData);
                 return null;
             }
         }).when(patientListContextDataService).getListPatients(anyString(), any(QueryOptions.class), any(PagingInfo.class),
@@ -144,7 +147,7 @@ public class PatientListPresenterTest extends ACUnitTestBase{
         doAnswer(new Answer<Void>() {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
-                ((DataService.GetCallback) invocation.getArguments()[2]).onError(new Throwable("error"));
+                ((DataService.GetCallback<PatientListContext>) invocation.getArguments()[2]).onError(new Throwable("error"));
                 return null;
             }
         }).when(patientListContextDataService).getListPatients(anyString(), any(QueryOptions.class), any(PagingInfo.class),

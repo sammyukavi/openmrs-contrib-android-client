@@ -20,6 +20,7 @@ import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
+import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.impl.ConceptNameDataService;
 import org.openmrs.mobile.data.impl.LocationDataService;
 import org.openmrs.mobile.data.impl.PatientDataService;
@@ -118,7 +119,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 
 	private void loadPatient() {
 		if (StringUtils.notEmpty(patientUuid)) {
-			patientDataService.getByUUID(patientUuid, null, new DataService.GetCallback<Patient>() {
+			patientDataService.getByUUID(patientUuid, QueryOptions.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Patient>() {
 				@Override
 				public void onCompleted(Patient entity) {
 					setPatient(entity);
@@ -195,7 +196,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	 * TODO: Move to Base class
 	 */
 	public void getLocation() {
-		locationDataService.getByUUID(OpenMRS.getInstance().getLocation(), null, new DataService.GetCallback<Location>() {
+		locationDataService.getByUUID(OpenMRS.getInstance().getLocation(), QueryOptions.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Location>() {
 			@Override
 			public void onCompleted(Location entity) {
 				location = entity;

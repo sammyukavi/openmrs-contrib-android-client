@@ -39,6 +39,9 @@ public interface PatientDashboardContract {
 		LinearLayout getVisitNoteContainer();
 
 		Patient getPatient();
+
+		void setProviderUuid(String providerUuid);
+
 	}
 
 	interface Presenter extends BasePresenterContract {
@@ -51,5 +54,4 @@ public interface PatientDashboardContract {
 
 		Patient getPatient();
 	}
-
 }

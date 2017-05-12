@@ -13,7 +13,7 @@ package org.openmrs.mobile.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class PersonName extends BaseOpenmrsData {
+public class PersonName extends BaseOpenmrsEntity {
 
 	@SerializedName("givenName")
 	@Expose

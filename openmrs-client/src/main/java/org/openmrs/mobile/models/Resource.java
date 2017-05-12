@@ -7,83 +7,92 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-
 package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import org.greenrobot.greendao.annotation.Generated;
-import org.greenrobot.greendao.annotation.Transient;
-
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Resource implements Serializable {
-	private static final long serialVersionUID = 1;
 
-	@SerializedName("uuid")
-	@Expose
-	protected String uuid;
+    private static final long serialVersionUID = 1;
 
-	@Transient
-	@SerializedName("display")
-	@Expose
-	protected String display;
+    private Long id;
 
-	@Transient
-	@SerializedName("links")
-	@Expose
-	protected List<Link> links;
+    public Long getId() {
+        return id;
+    }
 
-	@Generated(hash = 561006165)
-	public Resource(String uuid) {
-		this.uuid = uuid;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	@Generated(hash = 632359988)
-	public Resource() {
-	}
+    @SerializedName("uuid")
+    @Expose
+    protected String uuid;
 
-	/**
-	 * @return The uuid
-	 */
-	public String getUuid() {
-		return uuid;
-	}
+    @SerializedName("display")
+    @Expose
+    protected String display;
 
-	/**
-	 * @param uuid The uuid
-	 */
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
-	}
+    @SerializedName("links")
+    @Expose
+    protected List<Link> links;
 
-	/**
-	 * @return The display
-	 */
-	public String getDisplay() {
-		return display;
-	}
+    /**
+     *
+     * @return
+     *     The uuid
+     */
+    public String getUuid() {
+        return uuid;
+    }
 
-	/**
-	 * @param display The display
-	 */
-	public void setDisplay(String display) {
-		this.display = display;
-	}
+    /**
+     *
+     * @param uuid
+     *     The uuid
+     */
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
 
-	/**
-	 * @return The links
-	 */
-	public List<Link> getLinks() {
-		return links;
-	}
+    /**
+     *
+     * @return
+     *     The display
+     */
+    public String getDisplay() {
+        return display;
+    }
 
-	/**
-	 * @param links The links
-	 */
-	public void setLinks(List<Link> links) {
-		this.links = links;
-	}
+    /**
+     *
+     * @param display
+     *     The display
+     */
+    public void setDisplay(String display) {
+        this.display = display;
+    }
+
+    /**
+     *
+     * @return
+     *     The links
+     */
+    public List<Link> getLinks() {
+        return links;
+    }
+
+    /**
+     *
+     * @param links
+     *     The links
+     */
+    public void setLinks(List<Link> links) {
+        this.links = links;
+    }
 }

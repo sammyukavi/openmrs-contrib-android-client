@@ -25,6 +25,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:orientation="vertical"
+				android:layout_gravity="center"
 				android:paddingLeft="24dp"
 				android:paddingRight="24dp">
 
@@ -82,14 +83,14 @@
 						android:hint="@string/password"
 						android:inputType="textPassword" />
 			</android.support.design.widget.TextInputLayout>
-
-			<Spinner
+			
+			<android.support.v7.widget.AppCompatSpinner
 					android:id="@+id/locationSpinner"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:layout_marginLeft="20dp"
-					android:layout_marginRight="20dp"
-					android:layout_marginTop="10dp" />
+					android:layout_marginLeft="10dp"
+					android:layout_marginRight="10dp"
+					android:layout_marginTop="20dp" />
 
 			<LinearLayout
 					android:layout_width="wrap_content"
@@ -123,7 +124,10 @@
 					android:layout_marginBottom="24dp"
 					android:layout_marginTop="24dp"
 					android:padding="12dp"
-					android:text="@string/login" />
+					android:textColor="@color/color_white"
+					android:background="@drawable/button_apply"
+					android:text="@string/login"
+					style="@style/Widget.AppCompat.Button.Borderless"/>
 
 			<TextView
 					android:id="@+id/link_signup"

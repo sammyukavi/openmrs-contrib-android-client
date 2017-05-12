@@ -16,8 +16,6 @@ package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 
-import org.greenrobot.greendao.annotation.Generated;
-
 import java.util.List;
 
 public class Visit extends BaseOpenmrsEntity {
@@ -41,17 +39,6 @@ public class Visit extends BaseOpenmrsEntity {
 
 	@Expose
 	private List<VisitAttribute> attributes;
-
-	@Generated(hash = 284896357)
-	public Visit(Long id, String startDatetime, String stopDatetime) {
-		this.id = id;
-		this.startDatetime = startDatetime;
-		this.stopDatetime = stopDatetime;
-	}
-
-	@Generated(hash = 808752442)
-	public Visit() {
-	}
 
 	public Long getId() {
 		return id;

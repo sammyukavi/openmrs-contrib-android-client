@@ -454,7 +454,7 @@ public class CustomFragmentDialog extends DialogFragment {
 								(Observation)bundle.getSerializable(ApplicationConstants.BundleKeys.OBSERVATION);
 						observation.setValue(getEditNoteTextValue());
 						ObsDataService observationDataService = new ObsDataService();
-						observationDataService.update(observation, new DataService.GetSingleCallback<Observation>() {
+						observationDataService.update(observation, new DataService.GetCallback<Observation>() {
 							@Override
 							public void onCompleted(Observation entity) {
 								presenter.fetchVisits(presenter.getPatient());

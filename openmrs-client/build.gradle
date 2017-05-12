@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'org.greenrobot.greendao'
 apply plugin: 'android-apt'
 
 buildscript {
@@ -15,7 +14,6 @@ buildscript {
 }
 
 apply plugin: 'com.github.triplet.play'
-apply plugin: 'me.tatarka.retrolambda'
 
 def version = "2.6.1-beta"
 
@@ -100,7 +98,7 @@ dependencies {
             'com.jayway.android.robotium:robotium-solo:4.2'
     )
     androidTestCompile files('libs/the-missing-android-xml-junit-test-runner-release-1.3_2.jar')
-    compile 'org.greenrobot:greendao:3.2.2'
+
     compile 'com.google.guava:guava:18.0'
     compile 'com.android.support:appcompat-v7:25.0.0'
     compile 'com.android.support:gridlayout-v7:25.0.0'
@@ -150,8 +148,4 @@ play {
 
     serviceAccountEmail = System.getenv("PUBLISHER_ACCOUNT_ID")
     jsonFile = rootProject.file('google_play.json')
-}
-
-greendao {
-    schemaVersion 2
 }

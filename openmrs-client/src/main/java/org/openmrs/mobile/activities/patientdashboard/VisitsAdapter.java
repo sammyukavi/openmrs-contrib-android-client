@@ -152,8 +152,8 @@ public class VisitsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 			for (Encounter encounter : visit.getEncounters()) {
 				switch (encounter.getEncounterType().getDisplay()) {
 					case ApplicationConstants.EncounterTypeEntitys.VISIT_NOTE:
-						observationDataService.getByEncounter(encounter, true, new PagingInfo(0, 20),
-								new DataService.GetMultipleCallback<Observation>() {
+						/*observationDataService.getByEncounter(encounter, true, new PagingInfo(0, 20),
+								new DataService.GetCallback<Observation>() {
 									@Override
 									public void onCompleted(List<Observation> observations, int length) {
 										for (Observation observation : observations) {
@@ -173,7 +173,7 @@ public class VisitsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 										//patientDashboardView.showSnack("Error fetching observations");
 										t.printStackTrace();
 									}
-								});
+								});*/
 						break;
 				}
 			}

@@ -24,7 +24,7 @@ public abstract class ApplicationConstants {
 	public static final String VISIT_TYPE_UUID = "visit_type_uuid";
 	public static final String LAST_SESSION_TOKEN = "last_session_id";
 	public static final String LAST_LOGIN_SERVER_URL = "last_login_server_url";
-	public static final String DEFAULT_OPEN_MRS_URL = "http://192.168.1.100:8080/openmrs/";
+	public static final String DEFAULT_OPEN_MRS_URL = "http://192.168.2.34:9996/openmrs/";
 	public static final String THUMBNAIL_VIEW = "complexdata.view.thumbnail";
 	//discuss on using the openhmis
 	// demo as the main test server to avoid changes here.
@@ -104,7 +104,7 @@ public abstract class ApplicationConstants {
 		public static final String CUSTOM_DIALOG_BUNDLE = "customDialogBundle";
 		public static final String PATIENT_UUID_BUNDLE = "patientUUID";
 		public static final String VISIT_UUID_BUNDLE = "visitUUID";
-		public static final String PROVIDER_ID_BUNDLE = "providerID";
+		public static final String PROVIDER_UUID_BUNDLE = "providerUUID";
 		public static final String EncounterTypeEntity = "EncounterTypeEntity";
 		public static final String VALUEREFERENCE = "valueReference";
 		public static final String FORM_NAME = "formName";
@@ -143,6 +143,7 @@ public abstract class ApplicationConstants {
 		public static final String IDENTIFIER_TPYES = "Identifier Type(s)";
 		public static final String PREDEFINED_TASKS = "Predefined task(s)";
 		public static final String VISITS = "Visit(s)";
+		public static final String LOCATION = "Location(s)";
 	}
 
 	public static class unwantedPersonAttributes {

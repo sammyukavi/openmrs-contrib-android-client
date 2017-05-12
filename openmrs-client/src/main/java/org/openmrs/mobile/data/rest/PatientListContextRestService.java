@@ -13,7 +13,7 @@
  */
 package org.openmrs.mobile.data.rest;
 
-import org.openmrs.mobile.models.PatientListContextModel;
+import org.openmrs.mobile.models.PatientListContext;
 import org.openmrs.mobile.models.Results;
 
 import retrofit2.Call;
@@ -21,12 +21,12 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
-public interface PatientListContextModelRestService {
-
+public interface PatientListContextRestService {
 	@GET(RestConstants.REST_PATH)
-	Call<Results<PatientListContextModel>> getAll(@Path(value = "restPath", encoded = true) String restPath,
+	Call<Results<PatientListContext>> getAll(@Path(value = "restPath", encoded = true) String restPath,
 			@Query("uuid") String uuid,
-			@Query("startIndex") int startIndex,
-			@Query("limit") int limit);
-
+			@Query("v") String representation,
+			@Query("includeAll") Boolean includeAll,
+			@Query("limit") Integer limit,
+			@Query("startIndex") Integer startIndex);
 }

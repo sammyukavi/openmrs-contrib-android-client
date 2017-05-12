@@ -61,19 +61,6 @@
 							android:maxLines="1"
 							android:textStyle="bold" />
 
-					<ImageView
-							android:id="@+id/capture_photo"
-							android:layout_width="20dp"
-							android:layout_height="wrap_content"
-							android:layout_marginBottom="10dp"
-							android:layout_marginTop="5dp"
-							android:gravity="end"
-							android:maxLines="1"
-							android:layout_weight="1"
-							android:layout_centerInParent="true"
-							android:background="@color/fragment_background"
-							android:src="@drawable/ic_photo_camera_white_48dp" />
-
 				</LinearLayout>
 
 				<View

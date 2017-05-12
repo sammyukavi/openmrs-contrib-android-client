@@ -1,9 +1,9 @@
 package org.openmrs.mobile.activities.visitphoto.download;
 
+import android.support.annotation.NonNull;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import org.greenrobot.greendao.annotation.NotNull;
 import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.impl.ObsDataService;
@@ -18,7 +18,7 @@ import java.util.List;
 
 public class DownloadVisitPhotoPresenter extends BasePresenter implements DownloadVisitPhotoContract.Presenter {
 
-	@NotNull
+	@NonNull
 	private DownloadVisitPhotoContract.View view;
 	private String patientUuid;
 	private boolean loading;
@@ -37,9 +37,9 @@ public class DownloadVisitPhotoPresenter extends BasePresenter implements Downlo
 	public void loadVisitDocumentObservations() {
 		// get obs for patient.
 		obsDataService.getVisitDocumentsObsByPatientAndConceptList(patientUuid,
-				new DataService.GetMultipleCallback<Observation>() {
+				new DataService.GetCallback<List<Observation>>() {
 					@Override
-					public void onCompleted(List<Observation> observations, int length) {
+					public void onCompleted(List<Observation> observations) {
 						List<String> imageUrls = new ArrayList<>();
 						for (Observation observation : observations) {
 							imageUrls.add(observation.getUuid());
@@ -56,9 +56,9 @@ public class DownloadVisitPhotoPresenter extends BasePresenter implements Downlo
 	}
 
 	@Override
-	public void downloadImage(String obsUuid, DataService.GetSingleCallback<Bitmap> callback) {
+	public void downloadImage(String obsUuid, DataService.GetCallback<Bitmap> callback) {
 		visitPhotoDataService.downloadPhoto(obsUuid, ApplicationConstants.THUMBNAIL_VIEW,
-				new DataService.GetSingleCallback<VisitPhoto>() {
+				new DataService.GetCallback<VisitPhoto>() {
 					@Override
 					public void onCompleted(VisitPhoto entity) {
 						callback.onCompleted(BitmapFactory.decodeStream(entity.getResponseImage().byteStream()));

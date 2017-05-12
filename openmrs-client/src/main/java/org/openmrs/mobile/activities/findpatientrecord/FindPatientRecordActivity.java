@@ -93,6 +93,7 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
 		getMenuInflater().inflate(R.menu.menu_find_patient_record, menu);
 		MenuItem mFindPatientMenuItem = menu.findItem(R.id.action_search);
 

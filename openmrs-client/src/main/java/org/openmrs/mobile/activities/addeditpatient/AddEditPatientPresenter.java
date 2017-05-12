@@ -21,15 +21,19 @@ import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.api.RestApi;
 import org.openmrs.mobile.api.RestServiceBuilder;
 import org.openmrs.mobile.api.retrofit.PatientApi;
+import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.dao.PatientDAO;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
+import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.impl.ConceptDataService;
 import org.openmrs.mobile.data.impl.ConceptNameDataService;
+import org.openmrs.mobile.data.impl.LocationDataService;
 import org.openmrs.mobile.data.impl.PatientDataService;
 import org.openmrs.mobile.data.impl.PatientIdentifierTypeDataService;
 import org.openmrs.mobile.data.impl.PersonAttributeTypeDataService;
 import org.openmrs.mobile.models.ConceptName;
+import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.PatientIdentifierType;
 import org.openmrs.mobile.models.PersonAttribute;
@@ -51,11 +55,14 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 	private PersonAttributeTypeDataService personAttributeTypeDataService;
 	private PatientIdentifierTypeDataService patientIdentifierTypeDataService;
 	private ConceptNameDataService conceptNameDataService;
+	private LocationDataService locationDataService;
 	private RestApi restApi;
 	private Patient patient;
 	private String patientToUpdateId;
 	private List<String> mCounties;
 	private boolean registeringPatient = false;
+	private OpenMRS instance = OpenMRS.getInstance();
+	private String locationUuid;
 
 	private int page = 0;
 	private int limit = 10;
@@ -73,6 +80,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		this.personAttributeTypeDataService = new PersonAttributeTypeDataService();
 		this.conceptNameDataService = new ConceptNameDataService();
 		this.restApi = RestServiceBuilder.createService(RestApi.class);
+		this.locationDataService = new LocationDataService();
 	}
 
 	public AddEditPatientPresenter(AddEditPatientContract.View patientRegistrationView, PatientApi patientApi,
@@ -89,6 +97,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		this.patientIdentifierTypeDataService = new PatientIdentifierTypeDataService();
 		this.personAttributeTypeDataService = new PersonAttributeTypeDataService();
 		this.conceptNameDataService = new ConceptNameDataService();
+		this.locationDataService = new LocationDataService();
 	}
 
 	private boolean validate(Patient patient) {
@@ -163,6 +172,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 	public void subscribe() {
 		getPatientIdentifierTypes();
 		getPersonAttributeTypes();
+		getLoginLocation();
 	}
 
 	@Override
@@ -204,7 +214,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 	public void registerPatient(Patient patient) {
 		setRegistering(true);
 		if (NetworkUtils.hasNetwork()) {
-			DataService.GetSingleCallback<Patient> getSingleCallback = new DataService.GetSingleCallback<Patient>() {
+			DataService.GetCallback<Patient> getSingleCallback = new DataService.GetCallback<Patient>() {
 				@Override
 				public void onCompleted(Patient entity) {
 					setRegistering(false);
@@ -239,7 +249,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 	@Override
 	public void updatePatient(Patient patient) {
 		if (NetworkUtils.hasNetwork()) {
-			DataService.GetSingleCallback<Patient> getSingleCallback = new DataService.GetSingleCallback<Patient>() {
+			DataService.GetCallback<Patient> getSingleCallback = new DataService.GetCallback<Patient>() {
 				@Override
 				public void onCompleted(Patient entity) {
 					setRegistering(false);
@@ -267,9 +277,9 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 	public void findSimilarPatients(Patient patient) {
 		if (NetworkUtils.hasNetwork()) {
 			PagingInfo pagingInfo = new PagingInfo(page, limit);
-			DataService.GetMultipleCallback<Patient> getMultipleCallback = new DataService.GetMultipleCallback<Patient>() {
+			DataService.GetCallback<List<Patient>> callback = new DataService.GetCallback<List<Patient>>() {
 				@Override
-				public void onCompleted(List<Patient> patients, int length) {
+				public void onCompleted(List<Patient> patients) {
 					if (patients.isEmpty()) {
 						registerPatient(patient);
 					} else {
@@ -285,8 +295,8 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 				}
 			};
 			//Just check if the identifier are the same. If not it saves the patient.
-			patientDataService.getByNameAndIdentifier(patient.getIdentifier().getIdentifier(), pagingInfo,
-					getMultipleCallback);
+			patientDataService.getByNameAndIdentifier(patient.getPerson().getName().getNameString(), null, pagingInfo,
+					callback);
 		} else {
 			// get the users from the local storage.
 		}
@@ -294,11 +304,10 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 
 	public void getConceptNames(String uuid, Spinner conceptAnswersDropdown) {
 		if (NetworkUtils.hasNetwork()) {
-			DataService.GetMultipleCallback<ConceptName> getMultipleCallback =
-					new DataService.GetMultipleCallback<ConceptName>() {
-
+			DataService.GetCallback<List<ConceptName>> callback =
+					new DataService.GetCallback<List<ConceptName>>() {
 						@Override
-						public void onCompleted(List<ConceptName> entities, int length) {
+						public void onCompleted(List<ConceptName> entities) {
 							patientRegistrationView.updateConceptNamesView(conceptAnswersDropdown, entities);
 						}
 
@@ -310,7 +319,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 											.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 						}
 					};
-			conceptNameDataService.getByConceptUuid(uuid, getMultipleCallback);
+			conceptNameDataService.getByConceptUuid(uuid, callback);
 		} else {
 			// get the users from the local storage.
 		}
@@ -318,14 +327,14 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 
 	public void getPatientIdentifierTypes() {
 		if (NetworkUtils.hasNetwork()) {
-			DataService.GetMultipleCallback<PatientIdentifierType> getMultipleCallback =
-					new DataService.GetMultipleCallback<PatientIdentifierType>() {
-						@Override
-						public void onCompleted(List<PatientIdentifierType> entities, int length) {
-							if (!entities.isEmpty()) {
-								for (int i = 0; i < entities.size(); i++) {
-									if (entities.get(i).getRequired()) {
-										patientRegistrationView.setPatientIdentifierType(entities.get(i));
+			DataService.GetCallback<List<PatientIdentifierType>> callback =
+					new DataService.GetCallback<List<PatientIdentifierType>>() {
+				@Override
+				public void onCompleted(List<PatientIdentifierType> entities) {
+					if (!entities.isEmpty()) {
+						for (int i = 0; i < entities.size(); i++) {
+							if (entities.get(i).getRequired()) {
+								patientRegistrationView.setPatientIdentifierType(entities.get(i));
 									}
 								}
 							}
@@ -337,10 +346,10 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 							patientRegistrationView
 									.showToast(ApplicationConstants.entityName.IDENTIFIER_TPYES
 											+ ApplicationConstants.toastMessages
-											.fetchErrorMessage, ToastUtil.ToastType.ERROR);
-						}
-					};
-			patientIdentifierTypeDataService.getAll(false, null, getMultipleCallback);
+									.fetchErrorMessage, ToastUtil.ToastType.ERROR);
+				}
+			};
+			patientIdentifierTypeDataService.getAll(new QueryOptions(false, false), null, callback);
 		} else {
 			// get the users from the local storage.
 		}
@@ -348,19 +357,18 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 
 	public void getPersonAttributeTypes() {
 		if (NetworkUtils.hasNetwork()) {
-			DataService.GetMultipleCallback<PersonAttributeType> getMultipleCallback =
-					new DataService.GetMultipleCallback<PersonAttributeType>() {
+			DataService.GetCallback<List<PersonAttributeType>> getMultipleCallback =
+					new DataService.GetCallback<List<PersonAttributeType>>() {
 
-						@Override
-						public void onCompleted(List<PersonAttributeType> personAttributeTypes, int length) {
-							if (!personAttributeTypes.isEmpty()) {
+				@Override
+				public void onCompleted(List<PersonAttributeType> personAttributeTypes) {
+					if (!personAttributeTypes.isEmpty()) {
 
 								for (int q = 0; q < createUnwantedPersonAttributes().size(); q++) {
 									String unwantedUuid = createUnwantedPersonAttributes().get(q);
 
 									for (int i = 0; i < personAttributeTypes.size(); i++) {
 										String uuid = personAttributeTypes.get(i).getUuid();
-
 										if (uuid.equalsIgnoreCase(unwantedUuid)) {
 											personAttributeTypes.remove(i);
 										}
@@ -377,12 +385,12 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 						@Override
 						public void onError(Throwable t) {
 							Log.e("Attribute Type Error", "Error", t.fillInStackTrace());
-							patientRegistrationView
-									.showToast(ApplicationConstants.entityName.ATTRIBUTE_TPYES + ApplicationConstants
-											.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
-						}
-					};
-			personAttributeTypeDataService.getAll(false, null, getMultipleCallback);
+
+					patientRegistrationView.showToast(ApplicationConstants.entityName.ATTRIBUTE_TPYES + ApplicationConstants
+							.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
+				}
+			};
+			personAttributeTypeDataService.getAll(new QueryOptions(false, false), null, getMultipleCallback);
 		}
 	}
 
@@ -396,6 +404,33 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public void getLoginLocation() {
+		if (NetworkUtils.hasNetwork()) {
+			if (!instance.getLocation().equalsIgnoreCase(null)) {
+				locationUuid = instance.getLocation();
+			}
+			DataService.GetCallback<Location> getSingleCallback =
+					new DataService.GetCallback<Location>() {
+						@Override
+						public void onCompleted(Location entity) {
+							if (entity != null) {
+								patientRegistrationView.setLoginLocation(entity);
+							}
+						}
+
+						@Override
+						public void onError(Throwable t) {
+							Log.e("LocationError", "Error", t.fillInStackTrace());
+							patientRegistrationView
+									.showToast(ApplicationConstants.entityName.LOCATION + ApplicationConstants
+											.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
+						}
+					};
+			locationDataService.getByUUID(locationUuid, null, getSingleCallback);
+		}
 	}
 
 	@Override

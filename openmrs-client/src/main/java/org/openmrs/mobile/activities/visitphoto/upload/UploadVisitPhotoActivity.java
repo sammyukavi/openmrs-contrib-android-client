@@ -24,7 +24,7 @@ public class UploadVisitPhotoActivity extends ACBaseActivity {
 		if (extras != null) {
 			patientUuid = extras.getString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
 			visitUuid = extras.getString(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE);
-			providerUuid = extras.getString(ApplicationConstants.BundleKeys.PROVIDER_ID_BUNDLE);
+			providerUuid = extras.getString(ApplicationConstants.BundleKeys.PROVIDER_UUID_BUNDLE);
 			if (StringUtils.notEmpty(patientUuid) && StringUtils.notEmpty(visitUuid) && StringUtils.notEmpty
 					(providerUuid)) {
 				UploadVisitPhotoFragment visitPhotoFragment =

@@ -11,6 +11,7 @@ public class RestConstants {
 
 	public class Representations {
 		public static final String FULL = "full";
+		public static final String DEFAULT = "default";
 		public static final String REF = "ref";
 	}
 }

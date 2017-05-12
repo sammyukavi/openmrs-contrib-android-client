@@ -228,10 +228,10 @@
 	<string name="page_format">Hello World from section: %1$d</string>
 	<string name="save_form_as">Name this form</string>
 	<!--Similar patient card strings-->
-	<string name="gender_hint">gender:</string>
-	<string name="birthdate_hint">birthdate:</string>
+	<string name="gender_hint">Gender:</string>
+	<string name="birthdate_hint">Birthdate:</string>
 	<string name="age_hint">Age:</string>
-	<string name="address_hint">address:</string>
+	<string name="address_hint">Address:</string>
 	<string name="demographics">Demographics</string>
 	<string name="unable_to_login">Unable to login?</string>
 	<string name="no_patient_selected">No patient selected</string>
@@ -415,5 +415,6 @@
 	<string name="label_capture_vitals">Capture Vitals</string>
 	<string name="default_file_caption_message">Uploaded from android client</string>
 	<string name="visit">Visit</string>
-
+	<string name="patient_identifier_label">File Number : </string>
+	<string name="edit_patient">Edit Patient</string>
 </resources>

@@ -35,6 +35,7 @@ import com.github.clans.fab.FloatingActionMenu;
 import org.joda.time.DateTime;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
+import org.openmrs.mobile.activities.addeditpatient.AddEditPatientActivity;
 import org.openmrs.mobile.activities.addeditvisit.AddEditVisitActivity;
 import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
 import org.openmrs.mobile.activities.visitphoto.upload.UploadVisitPhotoActivity;
@@ -62,9 +63,16 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	private Visit activeVisit;
 	private LinearLayout observationsContainer;
 	private CustomDialogBundle createEditVisitNoteDialog;
+	View.OnClickListener switchToEditMode = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			((PatientDashboardActivity)getActivity())
+					.createAndShowDialog(createEditVisitNoteDialog, ApplicationConstants.DialogTAG.VISIT_NOTE_TAG);
+		}
+	};
 	private Bundle dialogBundle;
 	private FloatingActionButton startAuditFormButton, addVisitImageButton,
-			addVisitTaskButton, startVisitButton, editVisitButton, endVisitButton;
+			addVisitTaskButton, startVisitButton, editVisitButton, endVisitButton, editPatient;
 	private Patient patient;
 	private OpenMRS instance = OpenMRS.getInstance();
 	private DynamicObsDataViews dynamicObsDataViews;
@@ -74,14 +82,6 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		return new PatientDashboardFragment();
 	}
 
-	View.OnClickListener switchToEditMode = new View.OnClickListener() {
-		@Override
-		public void onClick(View v) {
-			((PatientDashboardActivity)getActivity())
-					.createAndShowDialog(createEditVisitNoteDialog, ApplicationConstants.DialogTAG.VISIT_NOTE_TAG);
-		}
-	};
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		fragmentView = inflater.inflate(R.layout.fragment_patient_dashboard, container, false);
@@ -89,8 +89,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		String patientId = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
 		initViewFields();
 		initializeListeners(startAuditFormButton, addVisitImageButton, addVisitTaskButton, startVisitButton,
-				editVisitButton,
-				endVisitButton);
+				editVisitButton, endVisitButton, editVisitButton, endVisitButton, editPatient);
 		mPresenter.fetchPatientData(patientId);
 		FontsUtil.setFont((ViewGroup)this.getActivity().findViewById(android.R.id.content));
 		return fragmentView;
@@ -155,6 +154,12 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 						(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING));
 				startActivity(intent);
 				break;
+			case R.id.edit_Patient:
+				intent = new Intent(getContext(), AddEditPatientActivity.class);
+				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, instance.getPatientUuid());
+				startActivity(intent);
+
+				break;
 		}
 	}
 
@@ -171,6 +176,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		startVisitButton = (FloatingActionButton)getActivity().findViewById(R.id.start_visit);
 		editVisitButton = (FloatingActionButton)getActivity().findViewById(R.id.edit_visit);
 		endVisitButton = (FloatingActionButton)getActivity().findViewById(R.id.end_visit);
+		editPatient = (FloatingActionButton)getActivity().findViewById(R.id.edit_Patient);
 		//TextView moreLabel = (TextView) fragmentView.findViewById(R.id.more_label);
 		FloatingActionMenu floatingActionMenu = (FloatingActionMenu)getActivity().findViewById(R.id.floatingActionMenu);
 		floatingActionMenu.setVisibility(View.VISIBLE);
@@ -243,23 +249,23 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
 		RecyclerView previousVisits = (RecyclerView)fragmentView.findViewById(R.id.previousVisits);
 		previousVisits.setLayoutManager(new LinearLayoutManager(getContext()));
-		VisitsAdapter visitsAdapter = new VisitsAdapter(previousVisits, visits, getActivity());
-		previousVisits.setAdapter(visitsAdapter);
+		PastVisitsAdapter pastVisitsAdapter = new PastVisitsAdapter(previousVisits, visits, getActivity());
+		previousVisits.setAdapter(pastVisitsAdapter);
 
-		visitsAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
+		pastVisitsAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
 			@Override
 			public void onLoadMore() {
 				if (visits.size() <= 2) {
 					visits.add(null);
-					visitsAdapter.notifyItemInserted(visits.size() - 1);
+					pastVisitsAdapter.notifyItemInserted(visits.size() - 1);
 					new Handler().postDelayed(new Runnable() {
 						@Override
 						public void run() {
 							visits.remove(visits.size() - 1);
-							visitsAdapter.notifyItemRemoved(visits.size());
+							pastVisitsAdapter.notifyItemRemoved(visits.size());
 							//Load more from server here
-							visitsAdapter.notifyDataSetChanged();
-							visitsAdapter.setLoaded();
+							pastVisitsAdapter.notifyDataSetChanged();
+							pastVisitsAdapter.setLoaded();
 						}
 					}, 5000);
 				} else {

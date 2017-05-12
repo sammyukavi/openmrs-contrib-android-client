@@ -17,6 +17,7 @@ import android.widget.TextView;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
+import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.impl.ObsDataService;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Observation;
@@ -26,7 +27,7 @@ import org.openmrs.mobile.utilities.DateUtils;
 
 import java.util.List;
 
-public class VisitsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class PastVisitsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 	private final int VIEW_TYPE_ITEM = 0;
 	private final int VIEW_TYPE_LOADING = 1;
 	private OnLoadMoreListener onLoadMoreListener;
@@ -38,7 +39,7 @@ public class VisitsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 	LinearLayout.LayoutParams linearLayoutParams;
 	private ObsDataService observationDataService;
 
-	public VisitsAdapter(RecyclerView recyclerView, List<Visit> visits, Context context) {
+	public PastVisitsAdapter(RecyclerView recyclerView, List<Visit> visits, Context context) {
 		this.visits = visits;
 		this.context = context;
 		observationDataService = new ObsDataService();
@@ -101,7 +102,7 @@ public class VisitsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 			@Override
 			protected void applyTransformation(float interpolatedTime, Transformation t) {
 				if (expand) {
-					view.getLayoutParams().height = 10;
+					view.getLayoutParams().height = 1;
 					view.setVisibility(View.VISIBLE);
 					if (interpolatedTime == 1) {
 						view.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -152,28 +153,21 @@ public class VisitsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 			for (Encounter encounter : visit.getEncounters()) {
 				switch (encounter.getEncounterType().getDisplay()) {
 					case ApplicationConstants.EncounterTypeEntitys.VISIT_NOTE:
-						/*observationDataService.getByEncounter(encounter, true, new PagingInfo(0, 20),
-								new DataService.GetCallback<Observation>() {
+						QueryOptions qo = new QueryOptions();
+						QueryOptions options = new QueryOptions();
+						PagingInfo pagininfo = new PagingInfo(0, 20);
+						observationDataService.getByEncounter(encounter, options, pagininfo,
+								new DataService.GetCallback<List<Observation>>() {
 									@Override
-									public void onCompleted(List<Observation> observations, int length) {
-										for (Observation observation : observations) {
-											if (observation.getDiagnosisNote() != null && !observation.getDiagnosisNote()
-													.equals(ApplicationConstants.EMPTY_STRING)) {
-												View row = layoutInflater
-														.inflate(R.layout.previous_visits_obervation_row, null);
-												((TextView)row.findViewById(R.id.text))
-														.setText(observation.getDiagnosisNote());
-												observationsContainer.addView(row);
-											}
-										}
+									public void onCompleted(List<Observation> observations) {
+
 									}
 
 									@Override
 									public void onError(Throwable t) {
-										//patientDashboardView.showSnack("Error fetching observations");
-										t.printStackTrace();
+
 									}
-								});*/
+								});
 						break;
 				}
 			}

@@ -1,3 +1,4 @@
 /build
 /src/main/java/org/openmrs/mobile/utilities/ConsoleLogger.java
 *.log
+/src/main/java/org/openmrs/mobile/utilities/ApplicationConstants.java

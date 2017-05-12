@@ -12,12 +12,12 @@ import org.openmrs.mobile.models.VisitPhoto;
 
 public class UploadVisitPhotoPresenter extends BasePresenter implements UploadVisitPhotoContract.Presenter {
 
-    @NonNull
-    private UploadVisitPhotoContract.View visitPhotoView;
-    private VisitPhotoDataService visitPhotoDataService;
-    private String patientUuid, visitUuid, providerUuid;
-    private VisitPhoto visitPhoto;
-    private boolean loading;
+	@NonNull
+	private UploadVisitPhotoContract.View visitPhotoView;
+	private VisitPhotoDataService visitPhotoDataService;
+	private String patientUuid, visitUuid, providerUuid;
+	private VisitPhoto visitPhoto;
+	private boolean loading;
 
 	public UploadVisitPhotoPresenter(UploadVisitPhotoContract.View visitPhotoView,
 			String patientUuid, String visitUuid, String providerUuid) {
@@ -50,13 +50,13 @@ public class UploadVisitPhotoPresenter extends BasePresenter implements UploadVi
 		visitPhoto.setPatient(patient);
 	}
 
-    @Override
-    public void uploadImage() {
-        visitPhotoDataService.uploadPhoto(visitPhoto, new DataService.GetCallback<VisitPhoto>() {
-            @Override
-            public void onCompleted(VisitPhoto entity) {
-                System.out.println("image uploaded " + entity);
-            }
+	@Override
+	public void uploadImage() {
+		visitPhotoDataService.uploadPhoto(visitPhoto, new DataService.GetCallback<VisitPhoto>() {
+			@Override
+			public void onCompleted(VisitPhoto entity) {
+				System.out.println("image uploaded " + entity);
+			}
 
 			@Override
 			public void onError(Throwable t) {

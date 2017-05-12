@@ -20,23 +20,19 @@ import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
-import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.impl.ConceptNameDataService;
 import org.openmrs.mobile.data.impl.LocationDataService;
 import org.openmrs.mobile.data.impl.PatientDataService;
-import org.openmrs.mobile.data.impl.ProviderDataService;
 import org.openmrs.mobile.data.impl.VisitAttributeTypeDataService;
 import org.openmrs.mobile.data.impl.VisitDataService;
 import org.openmrs.mobile.data.impl.VisitTypeDataService;
 import org.openmrs.mobile.models.ConceptName;
 import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Patient;
-import org.openmrs.mobile.models.Provider;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitAttribute;
 import org.openmrs.mobile.models.VisitAttributeType;
 import org.openmrs.mobile.models.VisitType;
-import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.DateUtils;
 import org.openmrs.mobile.utilities.StringUtils;
 import org.openmrs.mobile.utilities.ToastUtil;
@@ -47,8 +43,8 @@ import java.util.List;
 
 public class AddEditVisitPresenter extends BasePresenter implements AddEditVisitContract.Presenter {
 
-    @NonNull
-    private AddEditVisitContract.View addEditVisitView;
+	@NonNull
+	private AddEditVisitContract.View addEditVisitView;
 
 	private Patient patient;
 	private Visit visit;
@@ -62,9 +58,9 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	private String patientUuid;
 	private Location location;
 
-    public AddEditVisitPresenter(@NonNull AddEditVisitContract.View addEditVisitView, String patientUuid) {
-        this(addEditVisitView, patientUuid, null, null, null, null, null, null);
-    }
+	public AddEditVisitPresenter(@NonNull AddEditVisitContract.View addEditVisitView, String patientUuid) {
+		this(addEditVisitView, patientUuid, null, null, null, null, null, null);
+	}
 
 	public AddEditVisitPresenter(@NonNull AddEditVisitContract.View addEditVisitView, String patientUuid,
 			VisitDataService visitDataService, PatientDataService patientDataService,
@@ -269,7 +265,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 		});
 	}
 
-    @Override
+	@Override
 	public void updateVisit(List<VisitAttribute> attributes) {
 		List<VisitAttribute> existingAttributes = visit.getAttributes();
 
@@ -283,15 +279,15 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 			}
 		}
 
-        //visit.setPatient(null);
-        setProcessing(true);
-        visitDataService.update(visit, new DataService.GetCallback<Visit>() {
-            @Override
-            public void onCompleted(Visit entity) {
-                setProcessing(false);
-                addEditVisitView.setSpinnerVisibility(false);
-                addEditVisitView.showPatientDashboard();
-            }
+		//visit.setPatient(null);
+		setProcessing(true);
+		visitDataService.update(visit, new DataService.GetCallback<Visit>() {
+			@Override
+			public void onCompleted(Visit entity) {
+				setProcessing(false);
+				addEditVisitView.setSpinnerVisibility(false);
+				addEditVisitView.showPatientDashboard();
+			}
 
 			@Override
 			public void onError(Throwable t) {
@@ -302,13 +298,13 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 		});
 	}
 
-    @Override
-    public void endVisit(String uuid) {
-        visitDataService.endVisit(uuid,
-                DateUtils.convertTime(System.currentTimeMillis(), DateUtils.OPEN_MRS_REQUEST_FORMAT),
-                new DataService.GetCallback<Visit>() {
-                    @Override
-                    public void onCompleted(Visit entity) {
+	@Override
+	public void endVisit(String uuid) {
+		visitDataService.endVisit(uuid,
+				DateUtils.convertTime(System.currentTimeMillis(), DateUtils.OPEN_MRS_REQUEST_FORMAT),
+				new DataService.GetCallback<Visit>() {
+					@Override
+					public void onCompleted(Visit entity) {
 
 					}
 

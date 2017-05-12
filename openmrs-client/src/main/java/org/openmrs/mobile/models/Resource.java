@@ -13,86 +13,74 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Resource implements Serializable {
 
-    private static final long serialVersionUID = 1;
+	private static final long serialVersionUID = 1;
 
-    private Long id;
+	private Long id;
 
-    public Long getId() {
-        return id;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    @SerializedName("uuid")
-    @Expose
-    protected String uuid;
+	@SerializedName("uuid")
+	@Expose
+	protected String uuid;
 
-    @SerializedName("display")
-    @Expose
-    protected String display;
+	@SerializedName("display")
+	@Expose
+	protected String display;
 
-    @SerializedName("links")
-    @Expose
-    protected List<Link> links;
+	@SerializedName("links")
+	@Expose
+	protected List<Link> links;
 
-    /**
-     *
-     * @return
-     *     The uuid
-     */
-    public String getUuid() {
-        return uuid;
-    }
+	/**
+	 * @return The uuid
+	 */
+	public String getUuid() {
+		return uuid;
+	}
 
-    /**
-     *
-     * @param uuid
-     *     The uuid
-     */
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
+	/**
+	 * @param uuid The uuid
+	 */
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
 
-    /**
-     *
-     * @return
-     *     The display
-     */
-    public String getDisplay() {
-        return display;
-    }
+	/**
+	 * @return The display
+	 */
+	public String getDisplay() {
+		return display;
+	}
 
-    /**
-     *
-     * @param display
-     *     The display
-     */
-    public void setDisplay(String display) {
-        this.display = display;
-    }
+	/**
+	 * @param display The display
+	 */
+	public void setDisplay(String display) {
+		this.display = display;
+	}
 
-    /**
-     *
-     * @return
-     *     The links
-     */
-    public List<Link> getLinks() {
-        return links;
-    }
+	/**
+	 * @return The links
+	 */
+	public List<Link> getLinks() {
+		return links;
+	}
 
-    /**
-     *
-     * @param links
-     *     The links
-     */
-    public void setLinks(List<Link> links) {
-        this.links = links;
-    }
+	/**
+	 * @param links The links
+	 */
+	public void setLinks(List<Link> links) {
+		this.links = links;
+	}
+
 }

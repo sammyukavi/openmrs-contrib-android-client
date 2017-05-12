@@ -71,7 +71,7 @@ public abstract class OpenMRSSQLiteOpenHelper extends SQLiteOpenHelper {
 		return db;
 	}
 
-    //TODO: Refactor to remove exception to control program flow
+	//TODO: Refactor to remove exception to control program flow
 	private SQLiteDatabase openDatabaseWithoutSecretKey(boolean writable) {
 		SQLiteDatabase db;
 		mLogger.w("Can't open database with secret key. Trying to open without key (may be not encrypted).");

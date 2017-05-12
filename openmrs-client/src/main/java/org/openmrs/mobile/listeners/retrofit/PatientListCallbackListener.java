@@ -25,5 +25,5 @@ public interface PatientListCallbackListener extends DefaultResponseCallbackList
 
 	void onGetPatientList(List<PatientList> patientLists);
 
-    void onGetPatientListData(List<PatientListContext> listContextModels);
+	void onGetPatientListData(List<PatientListContext> listContextModels);
 }

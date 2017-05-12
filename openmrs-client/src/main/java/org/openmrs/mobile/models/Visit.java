@@ -16,9 +16,10 @@ package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Visit extends BaseOpenmrsEntity {
+public class Visit extends BaseOpenmrsEntity implements Serializable {
 
 	private Long id;
 

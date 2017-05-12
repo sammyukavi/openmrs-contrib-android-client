@@ -70,7 +70,6 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 
     @Override
     public void getPatientList(){
-	    System.out.println("PATIENT LIST::");
         setPage(1);
         patientListDataService.getAll(new QueryOptions(false, false), new PagingInfo(1, 100),
 				new DataService.GetCallback<List<PatientList>>() {
@@ -97,15 +96,13 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
         setViewBeforeLoadData();
         setTotalNumberResults(0);
         PagingInfo pagingInfo = new PagingInfo(page, limit);
-        patientListContextDataService.getListPatients(patientListUuid, null, pagingInfo,
+        patientListContextDataService.getListPatients(patientListUuid, new QueryOptions(false, false), pagingInfo,
 				new DataService.GetCallback<List<PatientListContext>>() {
             @Override
             public void onCompleted(List<PatientListContext> entities) {
-	            System.out.println("TOTALRECORDS::" + pagingInfo.getTotalRecordCount());
                 setViewAfterLoadData(false);
                 patientListView.updatePatientListData(entities);
-	            pagingInfo.setTotalRecordCount(entities.size());
-	            setTotalNumberResults(pagingInfo.getTotalRecordCount());
+				setTotalNumberResults(pagingInfo.getTotalRecordCount());
                 if (pagingInfo.getTotalRecordCount() > 0) {
                     patientListView.setNumberOfPatientsView(pagingInfo.getTotalRecordCount());
                 }

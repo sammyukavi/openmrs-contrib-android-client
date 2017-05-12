@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.addeditvisit.AddEditVisitActivity;
+import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
 import org.openmrs.mobile.models.PatientListContext;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.StringUtils;
@@ -62,7 +63,7 @@ public class PatientListModelRecyclerViewAdapter
         holder.rowLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, AddEditVisitActivity.class);
+                Intent intent = new Intent(context, PatientDashboardActivity.class);
                 intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE,
                         patientListContext.getPatient().getUuid());
                 context.startActivity(intent);

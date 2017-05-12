@@ -59,7 +59,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
 	@Override
 	public void fetchPatientData(String uuid) {
-		patientDataService.getByUUID(uuid, null, new DataService.GetCallback<Patient>() {
+		patientDataService.getByUUID(uuid, new QueryOptions(false, true), new DataService.GetCallback<Patient>() {
 			@Override
 			public void onCompleted(Patient patient) {
 				if (patient != null) {
@@ -78,7 +78,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	@Override
 	public void fetchVisits(Patient patient) {
 		patientDashboardView.getVisitNoteContainer().removeAllViews();
-		visitDataService.getByPatient(patient, QueryOptions.INCLUDE_INACTIVE, new PagingInfo(0, 20),
+		visitDataService.getByPatient(patient, QueryOptions.INCLUDE_INACTIVE, new PagingInfo(1, 20),
 				new DataService.GetCallback<List<Visit>>() {
 			@Override
 			public void onCompleted(List<Visit> visits) {
@@ -121,7 +121,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 		String personUuid = OpenMRS.getInstance().getCurrentLoggedInUserInfo().get(ApplicationConstants.UserKeys.USER_UUID);
 		if (StringUtils.notEmpty(personUuid)) {
 
-			providerDataService.getAll(null, null, new DataService.GetCallback<List<Provider>>() {
+			providerDataService.getAll(new QueryOptions(false, true), null, new DataService.GetCallback<List<Provider>>() {
 				@Override
 				public void onCompleted(List<Provider> entities) {
 					for (Provider entity : entities) {

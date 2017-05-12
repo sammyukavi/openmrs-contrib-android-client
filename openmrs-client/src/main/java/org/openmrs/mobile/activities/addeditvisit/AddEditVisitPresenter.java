@@ -133,8 +133,8 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	}
 
 	private void loadVisit(Patient patient) {
-		visitDataService.getByPatient(patient, new QueryOptions(true, true), null, new DataService.GetCallback<List<Visit>>
-				() {
+		visitDataService.getByPatient(patient, new QueryOptions(true, true), new PagingInfo(1, 10),
+				new DataService.GetCallback<List<Visit>>() {
 			@Override
 			public void onCompleted(List<Visit> entities) {
 				if (entities.size() > 0) {
@@ -161,7 +161,8 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	public List<VisitAttributeType> loadVisitAttributeTypes() {
 		final List<VisitAttributeType> visitAttributeTypes = new ArrayList<>();
 		visitAttributeTypeDataService
-				.getAll(null, new PagingInfo(), new DataService.GetCallback<List<VisitAttributeType>>() {
+				.getAll(new QueryOptions(false, false), new PagingInfo(1, 100), new DataService
+						.GetCallback<List<VisitAttributeType>>() {
 					@Override
 					public void onCompleted(List<VisitAttributeType> entities) {
 						visitAttributeTypes.addAll(entities);
@@ -179,7 +180,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	}
 
 	public void loadVisitTypes() {
-		visitTypeDataService.getAll(null, null, new DataService.GetCallback<List<VisitType>>() {
+		visitTypeDataService.getAll(new QueryOptions(false, false), null, new DataService.GetCallback<List<VisitType>>() {
 			@Override
 			public void onCompleted(List<VisitType> entities) {
 				addEditVisitView.updateVisitTypes(entities);

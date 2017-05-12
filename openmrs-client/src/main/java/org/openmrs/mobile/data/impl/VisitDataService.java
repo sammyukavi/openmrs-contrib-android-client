@@ -67,8 +67,7 @@ public class VisitDataService extends BaseEntityDataService<Visit, VisitDbServic
 	protected Call<Results<Visit>> _restGetByPatient(String restPath, String patientUuid, QueryOptions options,
 			PagingInfo pagingInfo) {
 		return restService.getByPatient(restPath, patientUuid, QueryOptions.getRepresentation(options),
-				QueryOptions.getIncludeInactive(options), PagingInfo.getLimit(pagingInfo),
-				PagingInfo.getStartIndex(pagingInfo));
+				QueryOptions.getIncludeInactive(options));
 	}
 
 	// End Retrofit Workaround

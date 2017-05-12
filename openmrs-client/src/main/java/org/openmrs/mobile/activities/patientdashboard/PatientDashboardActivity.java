@@ -21,10 +21,13 @@ import android.view.Menu;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
+import org.openmrs.mobile.activities.addeditvisit.AddEditVisitContract;
 
 public class PatientDashboardActivity extends ACBaseActivity {
 
 	public PatientDashboardContract.Presenter mPresenter;
+
+	public AddEditVisitContract.Presenter addEditVisitPresenter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

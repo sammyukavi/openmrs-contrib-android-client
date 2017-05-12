@@ -401,7 +401,7 @@
 	<string name="number_of_patients">%1$s patients found</string>
 	<string name="search_for_patients">Please type the first 3 characters of the patient name on the search bar for you to
 		view meaningful results</string>
-	<string name="patient_metadata_label">Patient Metadata</string>
+	<string name="patient_metadata_label">Patient Contact Information</string>
 	<string name="add_visit_task_dialog_title">Add Visit Task</string>
 	<string name="visit_tasks_dialog_message">add a visit task</string>
 	<string name="nav_patient_list">Patient List</string>

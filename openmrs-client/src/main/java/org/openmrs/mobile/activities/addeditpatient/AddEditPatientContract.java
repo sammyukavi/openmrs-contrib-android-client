@@ -63,11 +63,13 @@ public interface AddEditPatientContract {
 
 		void setLoginLocation(Location location);
 
+		void fillFields(Patient patient);
+
 	}
 
 	interface Presenter extends BasePresenterContract {
 
-		Patient getPatientToUpdate();
+		void getPatientToUpdate(String patientUuid);
 
 		boolean isRegisteringPatient();
 
@@ -96,6 +98,7 @@ public interface AddEditPatientContract {
 		void setPatient(Patient patient);
 
 		void getLoginLocation();
+
 	}
 
 }

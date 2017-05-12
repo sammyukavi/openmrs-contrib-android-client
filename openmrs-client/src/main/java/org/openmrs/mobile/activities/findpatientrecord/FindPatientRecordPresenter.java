@@ -21,6 +21,7 @@ import android.util.Log;
 import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
+import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.impl.PatientDataService;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.utilities.ApplicationConstants;
@@ -65,6 +66,7 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 	public void findPatient(String query) {
 		findPatientView.setProgressBarVisibility(true);
 		findPatientView.setFetchedPatientsVisibility(0);
+		PagingInfo pagingInfo = new PagingInfo(page, limit);
 		if (NetworkUtils.hasNetwork()) {
 			DataService.GetCallback<List<Patient>> getMultipleCallback = new DataService.GetCallback<List<Patient>>() {
 				@Override
@@ -89,20 +91,18 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 				@Override
 				public void onError(Throwable t) {
 					findPatientView.setProgressBarVisibility(false);
-					Log.e("Patient Error", "Error", t.fillInStackTrace());
 					findPatientView
 							.showToast(ApplicationConstants.entityName.PATIENTS + ApplicationConstants.toastMessages
 									.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 				}
 			};
-			patientDataService.getByNameAndIdentifier(query, null, null, getMultipleCallback);
+			patientDataService.getByNameAndIdentifier(query, QueryOptions.LOAD_RELATED_OBJECTS, pagingInfo, getMultipleCallback);
 		} else {
 			// get the users from the local storage.
 		}
 	}
 
 	public void getLastViewed(int page) {
-		System.out.println(page + "Last viewed===================");
 		findPatientView.setProgressBarVisibility(true);
 		findPatientView.setFetchedPatientsVisibility(0);
 
@@ -114,7 +114,7 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 			setPage(page);
 			setTotalNumberResults(0);
 			PagingInfo pagingInfo = new PagingInfo(page, limit);
-			patientDataService.getLastViewed(ApplicationConstants.EMPTY_STRING, null, pagingInfo,
+			patientDataService.getLastViewed(ApplicationConstants.EMPTY_STRING, QueryOptions.LOAD_RELATED_OBJECTS, pagingInfo,
 					new DataService.GetCallback<List<Patient>>() {
 						@Override
 						public void onCompleted(List<Patient> patients) {

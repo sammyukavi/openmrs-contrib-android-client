@@ -6,60 +6,60 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class BaseOpenmrsEntity extends BaseOpenmrsAuditableObject implements Serializable {
-    private static final long serialVersionUID = 1;
+	private static final long serialVersionUID = 1;
 
-    @Expose
-    private Boolean voided = Boolean.FALSE;
+	@Expose
+	private Boolean voided = Boolean.FALSE;
 
-    @Expose
-    private Date dateVoided;
+	@Expose
+	private Date dateVoided;
 
-    @Expose
-    private User voidedBy;
+	@Expose
+	private User voidedBy;
 
-    @Expose
-    private String voidReason;
+	@Expose
+	private String voidReason;
 
-    public Boolean getVoided() {
-        return getActive();
-    }
+	public Boolean getVoided() {
+		return getActive();
+	}
 
-    public void setVoided(Boolean voided) {
-        setActive(voided);
-    }
+	public void setVoided(Boolean voided) {
+		setActive(voided);
+	}
 
-    public Date getDateVoided() {
-        return dateVoided;
-    }
+	public Date getDateVoided() {
+		return dateVoided;
+	}
 
-    public void setDateVoided(Date dateVoided) {
-        this.dateVoided = dateVoided;
-    }
+	public void setDateVoided(Date dateVoided) {
+		this.dateVoided = dateVoided;
+	}
 
-    public User getVoidedBy() {
-        return voidedBy;
-    }
+	public User getVoidedBy() {
+		return voidedBy;
+	}
 
-    public void setVoidedBy(User voidedBy) {
-        this.voidedBy = voidedBy;
-    }
+	public void setVoidedBy(User voidedBy) {
+		this.voidedBy = voidedBy;
+	}
 
-    public String getVoidReason() {
-        return voidReason;
-    }
+	public String getVoidReason() {
+		return voidReason;
+	}
 
-    public void setVoidReason(String voidReason) {
+	public void setVoidReason(String voidReason) {
 		this.voidReason = voidReason;
 	}
 
-    @Expose
-    private Patient patient;
+	@Expose
+	private Patient patient;
 
-    public Patient getPatient() {
-        return patient;
-    }
+	public Patient getPatient() {
+		return patient;
+	}
 
-    public void setPatient(Patient patient) {
-        this.patient = patient;
-    }
+	public void setPatient(Patient patient) {
+		this.patient = patient;
+	}
 }

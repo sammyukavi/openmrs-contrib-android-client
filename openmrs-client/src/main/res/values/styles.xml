@@ -27,7 +27,11 @@
 		<item name="windowActionBar">false</item> <!-- For 2.x version  -->
 		<item name="colorPrimary">@color/color_primary</item>
 		<item name="colorPrimaryDark">@color/color_primary_dark</item>
-		<item name="colorAccent">@color/color_accent</item>
+		<item name="colorAccent">@color/color_primary</item>
+	</style>
+	
+	<style name="textInputLayoutHintColor" parent="Theme.AppCompat.Light.NoActionBar">
+		<item name="colorPrimaryDark">@color/color_primary_dark</item>
 	</style>
 	
 	<style name="ToggleSwitchTheme" parent="ThemeOverlay.AppCompat.Light">

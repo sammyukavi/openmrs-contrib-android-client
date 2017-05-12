@@ -14,7 +14,6 @@
 
 package org.openmrs.mobile.activities.visittasks;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -139,20 +138,6 @@ public class VisitTasksFragment extends ACBaseFragment<VisitTasksContract.Presen
 	@Override
 	public void setVisit(Visit visit) {
 		this.visit = visit;
-	}
-
-	@Override
-	public String getPatientUuid() {
-		SharedPreferences sharedPreferences = instance.getOpenMRSSharedPreferences();
-		return sharedPreferences.getString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, ApplicationConstants
-				.EMPTY_STRING);
-	}
-
-	@Override
-	public String getVisitUuid() {
-		SharedPreferences sharedPreferences = instance.getOpenMRSSharedPreferences();
-		return sharedPreferences.getString(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, ApplicationConstants
-				.EMPTY_STRING);
 	}
 
 	public List<VisitPredefinedTask> removeUsedPredefinedTasks(List<VisitPredefinedTask> visitPredefinedTask,

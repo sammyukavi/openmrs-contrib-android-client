@@ -66,7 +66,7 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 	public void findPatient(String query) {
 		findPatientView.setProgressBarVisibility(true);
 		findPatientView.setFetchedPatientsVisibility(0);
-		PagingInfo pagingInfo = new PagingInfo(page, limit);
+		PagingInfo pagingInfo = new PagingInfo(page, 100);
 		if (NetworkUtils.hasNetwork()) {
 			DataService.GetCallback<List<Patient>> getMultipleCallback = new DataService.GetCallback<List<Patient>>() {
 				@Override
@@ -113,7 +113,7 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 			}
 			setPage(page);
 			setTotalNumberResults(0);
-			PagingInfo pagingInfo = new PagingInfo(page, limit);
+			PagingInfo pagingInfo = new PagingInfo(page, 100);
 			patientDataService.getLastViewed(ApplicationConstants.EMPTY_STRING, QueryOptions.LOAD_RELATED_OBJECTS, pagingInfo,
 					new DataService.GetCallback<List<Patient>>() {
 						@Override

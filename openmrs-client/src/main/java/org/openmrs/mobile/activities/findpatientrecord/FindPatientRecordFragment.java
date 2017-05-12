@@ -113,7 +113,7 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 		FontsUtil.setFont((ViewGroup)this.getActivity().findViewById(android.R.id.content));
 		authorizationManager = new AuthorizationManager();
 		if (authorizationManager.isUserLoggedIn()) {
-			//mPresenter.getLastViewed(mPresenter.getPage());
+			mPresenter.getLastViewed(mPresenter.getPage());
 		}
 		return mRootView;
 	}
@@ -139,7 +139,7 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 	public void fetchPatients(List<Patient> patients) {
 		FindPatientRecyclerViewAdapter adapter = new FindPatientRecyclerViewAdapter(this.getActivity(), patients, this);
 		findPatientRecyclerView.setAdapter(adapter);
-		findPatientRecyclerView.addOnScrollListener(recyclerViewOnScrollListener);
+		//findPatientRecyclerView.addOnScrollListener(recyclerViewOnScrollListener);
 	}
 
 	@Override

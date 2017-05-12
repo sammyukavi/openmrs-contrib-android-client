@@ -14,6 +14,7 @@ buildscript {
 }
 
 apply plugin: 'com.github.triplet.play'
+apply plugin: 'me.tatarka.retrolambda'
 
 def version = "2.6.1-beta"
 

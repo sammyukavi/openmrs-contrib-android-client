@@ -1,15 +1,13 @@
 package org.openmrs.mobile.activities.patientdashboard;
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.content.Context;
-import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.Interpolator;
-import android.view.animation.Transformation;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -27,7 +25,7 @@ import org.openmrs.mobile.utilities.DateUtils;
 
 import java.util.List;
 
-public class PastVisitsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class PastVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 	private final int VIEW_TYPE_ITEM = 0;
 	private final int VIEW_TYPE_LOADING = 1;
 	private OnLoadMoreListener onLoadMoreListener;
@@ -39,7 +37,7 @@ public class PastVisitsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 	LinearLayout.LayoutParams linearLayoutParams;
 	private ObsDataService observationDataService;
 
-	public PastVisitsAdapter(RecyclerView recyclerView, List<Visit> visits, Context context) {
+	public PastVisitsRecyclerAdapter(RecyclerView recyclerView, List<Visit> visits, Context context) {
 		this.visits = visits;
 		this.context = context;
 		observationDataService = new ObsDataService();
@@ -86,48 +84,55 @@ public class PastVisitsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 	}
 
 	public void expandCollapse(View view) {
+		if (view.getVisibility() == View.GONE) {
+			view.setVisibility(View.VISIBLE);
+			final int widthSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+			final int heightSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+			view.measure(widthSpec, heightSpec);
+			ValueAnimator mAnimator = slideAnimator(view, 0, view.getMeasuredHeight());
+			mAnimator.start();
+		} else {
+			int finalHeight = view.getHeight();
+			ValueAnimator mAnimator = slideAnimator(view, finalHeight, 0);
+			mAnimator.addListener(new Animator.AnimatorListener() {
+				@Override
+				public void onAnimationStart(Animator animation) {
 
-		boolean expand = view.getVisibility() == View.GONE;
-		Interpolator easeInOutQuart = PathInterpolatorCompat.create(0.77f, 0f, 0.175f, 1f);
-
-		view.measure(
-				View.MeasureSpec.makeMeasureSpec(((View)view.getParent()).getWidth(), View.MeasureSpec.EXACTLY),
-				View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
-		);
-
-		int height = view.getMeasuredHeight();
-		int duration = (int)(height / view.getContext().getResources().getDisplayMetrics().density);
-
-		Animation animation = new Animation() {
-			@Override
-			protected void applyTransformation(float interpolatedTime, Transformation t) {
-				if (expand) {
-					view.getLayoutParams().height = 1;
-					view.setVisibility(View.VISIBLE);
-					if (interpolatedTime == 1) {
-						view.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
-					} else {
-						view.getLayoutParams().height = (int)(height * interpolatedTime);
-					}
-					view.requestLayout();
-				} else {
-					if (interpolatedTime == 1) {
-						view.setVisibility(View.GONE);
-					} else {
-						view.getLayoutParams().height = height - (int)(height * interpolatedTime);
-						view.requestLayout();
-					}
 				}
-			}
 
+				@Override
+				public void onAnimationEnd(Animator animator) {
+					view.setVisibility(View.GONE);
+				}
+
+				@Override
+				public void onAnimationCancel(Animator animation) {
+
+				}
+
+				@Override
+				public void onAnimationRepeat(Animator animation) {
+
+				}
+
+			});
+			mAnimator.start();
+		}
+
+	}
+
+	private ValueAnimator slideAnimator(View view, int start, int end) {
+		ValueAnimator animator = ValueAnimator.ofInt(start, end);
+		animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 			@Override
-			public boolean willChangeBounds() {
-				return true;
+			public void onAnimationUpdate(ValueAnimator valueAnimator) {
+				int value = (Integer)valueAnimator.getAnimatedValue();
+				ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+				layoutParams.height = value;
+				view.setLayoutParams(layoutParams);
 			}
-		};
-		animation.setInterpolator(easeInOutQuart);
-		animation.setDuration(duration);
-		view.startAnimation(animation);
+		});
+		return animator;
 	}
 
 	@Override
@@ -153,14 +158,22 @@ public class PastVisitsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 			for (Encounter encounter : visit.getEncounters()) {
 				switch (encounter.getEncounterType().getDisplay()) {
 					case ApplicationConstants.EncounterTypeEntitys.VISIT_NOTE:
-						QueryOptions qo = new QueryOptions();
 						QueryOptions options = new QueryOptions();
-						PagingInfo pagininfo = new PagingInfo(0, 20);
+						PagingInfo pagininfo = new PagingInfo(1, 100);//TODO set this to null after Wes has fixed his issues
 						observationDataService.getByEncounter(encounter, options, pagininfo,
 								new DataService.GetCallback<List<Observation>>() {
 									@Override
 									public void onCompleted(List<Observation> observations) {
-
+										for (Observation observation : observations) {
+											if (observation.getDiagnosisNote() != null && !observation.getDiagnosisNote()
+													.equals(ApplicationConstants.EMPTY_STRING)) {
+												View row = layoutInflater
+														.inflate(R.layout.previous_visits_obervation_row, null);
+												((TextView)row.findViewById(R.id.text))
+														.setText(observation.getDiagnosisNote());
+												observationsContainer.addView(row);
+											}
+										}
 									}
 
 									@Override
@@ -198,7 +211,6 @@ public class PastVisitsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 	}
 
 	private class VisitViewHolder extends RecyclerView.ViewHolder {
-		protected TextView visitDetails;
 		protected LinearLayout observationsContainer;
 
 		public VisitViewHolder(View view) {

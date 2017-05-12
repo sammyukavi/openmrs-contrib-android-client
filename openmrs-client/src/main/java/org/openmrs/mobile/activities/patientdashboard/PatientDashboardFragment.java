@@ -249,23 +249,24 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
 		RecyclerView previousVisits = (RecyclerView)fragmentView.findViewById(R.id.previousVisits);
 		previousVisits.setLayoutManager(new LinearLayoutManager(getContext()));
-		PastVisitsAdapter pastVisitsAdapter = new PastVisitsAdapter(previousVisits, visits, getActivity());
-		previousVisits.setAdapter(pastVisitsAdapter);
+		PastVisitsRecyclerAdapter
+				pastVisitsRecyclerAdapter = new PastVisitsRecyclerAdapter(previousVisits, visits, getActivity());
+		previousVisits.setAdapter(pastVisitsRecyclerAdapter);
 
-		pastVisitsAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
+		pastVisitsRecyclerAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
 			@Override
 			public void onLoadMore() {
 				if (visits.size() <= 2) {
 					visits.add(null);
-					pastVisitsAdapter.notifyItemInserted(visits.size() - 1);
+					pastVisitsRecyclerAdapter.notifyItemInserted(visits.size() - 1);
 					new Handler().postDelayed(new Runnable() {
 						@Override
 						public void run() {
 							visits.remove(visits.size() - 1);
-							pastVisitsAdapter.notifyItemRemoved(visits.size());
+							pastVisitsRecyclerAdapter.notifyItemRemoved(visits.size());
 							//Load more from server here
-							pastVisitsAdapter.notifyDataSetChanged();
-							pastVisitsAdapter.setLoaded();
+							pastVisitsRecyclerAdapter.notifyDataSetChanged();
+							pastVisitsRecyclerAdapter.setLoaded();
 						}
 					}, 5000);
 				} else {

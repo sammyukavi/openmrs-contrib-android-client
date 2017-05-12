@@ -5,14 +5,18 @@ import android.support.annotation.Nullable;
 import org.openmrs.mobile.data.rest.RestConstants;
 
 public class QueryOptions {
-	public static final boolean DEFAULT_INCLUDE_INACTIVE = false;
-	public static final boolean DEFAULT_LOAD_RELATED_OBJECTS = false;
+	private static final boolean DEFAULT_INCLUDE_INACTIVE = false;
+	private static final boolean DEFAULT_LOAD_RELATED_OBJECTS = false;
+
+	public static final QueryOptions DEFAULT = new QueryOptions(false, false);
 	public static final QueryOptions INCLUDE_INACTIVE = new QueryOptions(true, false);
 	public static final QueryOptions LOAD_RELATED_OBJECTS = new QueryOptions(false, true);
+
 	private boolean includeInactive = DEFAULT_INCLUDE_INACTIVE;
 	private boolean loadRelatedObjects = DEFAULT_LOAD_RELATED_OBJECTS;
 
 	public QueryOptions() {
+		this(DEFAULT_INCLUDE_INACTIVE, DEFAULT_LOAD_RELATED_OBJECTS);
 	}
 
 	public QueryOptions(boolean includeInactive, boolean loadRelatedObjects) {

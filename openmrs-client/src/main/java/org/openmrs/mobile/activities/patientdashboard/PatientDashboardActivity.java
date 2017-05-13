@@ -22,6 +22,10 @@ import android.view.Menu;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
 import org.openmrs.mobile.activities.addeditvisit.AddEditVisitContract;
+import org.openmrs.mobile.activities.visitphoto.download.DownloadVisitPhotoFragment;
+import org.openmrs.mobile.activities.visitphoto.download.DownloadVisitPhotoPresenter;
+import org.openmrs.mobile.utilities.ApplicationConstants;
+import org.openmrs.mobile.utilities.StringUtils;
 
 public class PatientDashboardActivity extends ACBaseActivity {
 
@@ -44,6 +48,27 @@ public class PatientDashboardActivity extends ACBaseActivity {
 			addFragmentToActivity(getSupportFragmentManager(), patientDashboardFragment, R.id.contentFrame);
 		}
 		mPresenter = new PatientDashboardPresenter(patientDashboardFragment);
+
+		Bundle extras = getIntent().getExtras();
+		String patientUuid = "";
+		if (extras != null) {
+			patientUuid = extras.getString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
+			if (StringUtils.notEmpty(patientUuid)) {
+				// download visit photos.
+				DownloadVisitPhotoFragment visitPhotoFragment =
+						(DownloadVisitPhotoFragment)getSupportFragmentManager()
+								.findFragmentById(R.id.photoDownloadsContentFrame);
+				if (visitPhotoFragment == null) {
+					visitPhotoFragment = DownloadVisitPhotoFragment.newInstance();
+				}
+
+				if (!visitPhotoFragment.isActive()) {
+					addFragmentToActivity(getSupportFragmentManager(), visitPhotoFragment, R.id.photoDownloadsContentFrame);
+				}
+
+				new DownloadVisitPhotoPresenter(visitPhotoFragment, patientUuid);
+			}
+		}
 	}
 
 	@Override

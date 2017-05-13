@@ -36,18 +36,18 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 	private int totalNumberResults;
 	private boolean loading;
 
-    private PatientListDataService patientListDataService;
-    private PatientListContextDataService patientListContextDataService;
+	private PatientListDataService patientListDataService;
+	private PatientListContextDataService patientListContextDataService;
 
 	public PatientListPresenter(@NonNull PatientListContract.View patientListView) {
 		this(patientListView, null, null);
 	}
 
-    public PatientListPresenter(@NonNull PatientListContract.View patientListView,
-                                PatientListDataService patientListDataService,
-                                PatientListContextDataService patientListContextDataService) {
-        this.patientListView = patientListView;
-        this.patientListView.setPresenter(this);
+	public PatientListPresenter(@NonNull PatientListContract.View patientListView,
+			PatientListDataService patientListDataService,
+			PatientListContextDataService patientListContextDataService) {
+		this.patientListView = patientListView;
+		this.patientListView.setPresenter(this);
 
 		if (patientListDataService == null) {
 			this.patientListDataService = new PatientListDataService();
@@ -55,12 +55,12 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 			this.patientListDataService = patientListDataService;
 		}
 
-        if(patientListContextDataService == null) {
-            this.patientListContextDataService = new PatientListContextDataService();
-        } else {
-            this.patientListContextDataService = patientListContextDataService;
-        }
-    }
+		if (patientListContextDataService == null) {
+			this.patientListContextDataService = new PatientListContextDataService();
+		} else {
+			this.patientListContextDataService = patientListContextDataService;
+		}
+	}
 
 	@Override
 	public void subscribe() {
@@ -98,16 +98,16 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
         PagingInfo pagingInfo = new PagingInfo(page, limit);
         patientListContextDataService.getListPatients(patientListUuid, new QueryOptions(false, false), pagingInfo,
 				new DataService.GetCallback<List<PatientListContext>>() {
-            @Override
-            public void onCompleted(List<PatientListContext> entities) {
-                setViewAfterLoadData(false);
-                patientListView.updatePatientListData(entities);
-				setTotalNumberResults(pagingInfo.getTotalRecordCount());
-                if (pagingInfo.getTotalRecordCount() > 0) {
-                    patientListView.setNumberOfPatientsView(pagingInfo.getTotalRecordCount());
-                }
-                setLoading(false);
-            }
+					@Override
+					public void onCompleted(List<PatientListContext> entities) {
+						setViewAfterLoadData(false);
+						patientListView.updatePatientListData(entities);
+						setTotalNumberResults(pagingInfo.getTotalRecordCount());
+						if (pagingInfo.getTotalRecordCount() > 0) {
+							patientListView.setNumberOfPatientsView(pagingInfo.getTotalRecordCount());
+						}
+						setLoading(false);
+					}
 
 					@Override
 					public void onError(Throwable t) {

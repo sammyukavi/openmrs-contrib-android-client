@@ -21,7 +21,6 @@ import org.openmrs.mobile.activities.BaseView;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
-import org.openmrs.mobile.models.Provider;
 import org.openmrs.mobile.models.Visit;
 
 import java.util.List;

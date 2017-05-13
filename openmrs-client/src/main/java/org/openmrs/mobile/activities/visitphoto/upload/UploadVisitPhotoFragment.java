@@ -26,6 +26,8 @@ import android.widget.ImageView;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
+import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
+import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.StringUtils;
 import org.openmrs.mobile.utilities.ViewUtils;
 
@@ -140,6 +142,13 @@ public class UploadVisitPhotoFragment extends ACBaseFragment<UploadVisitPhotoCon
 				output = null;
 			}
 		}
+	}
+
+	@Override
+	public void showPatientDashboard(String patientUuid) {
+		Intent intent = new Intent(getContext(), PatientDashboardActivity.class);
+		intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
+		getContext().startActivity(intent);
 	}
 
 	@NeedsPermission({ Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE })

@@ -38,6 +38,7 @@ import com.github.clans.fab.FloatingActionMenu;
 import org.joda.time.DateTime;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
+import org.openmrs.mobile.activities.addeditpatient.AddEditPatientActivity;
 import org.openmrs.mobile.activities.addeditvisit.AddEditVisitActivity;
 import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
 import org.openmrs.mobile.activities.visitphoto.upload.UploadVisitPhotoActivity;
@@ -48,7 +49,6 @@ import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Person;
-import org.openmrs.mobile.models.Provider;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.DateUtils;
@@ -61,14 +61,22 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		implements PatientDashboardContract.View {
 
 	private View fragmentView;
-	private TextView patientDisplayName, patientGender, patientAge, patientIdentifier, visitDetails, observationTextView, patientFecthedDob;
+	private TextView patientDisplayName, patientGender, patientAge, patientIdentifier, visitDetails, observationTextView,
+			patientFecthedDob;
 	private Visit activeVisit;
 	private LinearLayout observationsContainer, observationHolder;
 	private ImageView observationIcon;
 	private CustomDialogBundle createEditVisitNoteDialog;
+	View.OnClickListener switchToEditMode = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			((PatientDashboardActivity)getActivity())
+					.createAndShowDialog(createEditVisitNoteDialog, ApplicationConstants.DialogTAG.VISIT_NOTE_TAG);
+		}
+	};
 	private Bundle dialogBundle;
 	private FloatingActionButton startAuditFormButton, addVisitImageButton,
-			addVisitTaskButton, startVisitButton, editVisitButton, endVisitButton;
+			addVisitTaskButton, startVisitButton, editVisitButton, endVisitButton, editPatient;
 	private Patient patient;
 	private OpenMRS instance = OpenMRS.getInstance();
 	SharedPreferences sharedPreferences = instance.getOpenMRSSharedPreferences();
@@ -77,21 +85,14 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		return new PatientDashboardFragment();
 	}
 
-	View.OnClickListener switchToEditMode = new View.OnClickListener() {
-		@Override
-		public void onClick(View v) {
-			((PatientDashboardActivity)getActivity())
-					.createAndShowDialog(createEditVisitNoteDialog, ApplicationConstants.DialogTAG.VISIT_NOTE_TAG);
-		}
-	};
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		fragmentView = inflater.inflate(R.layout.fragment_patient_dashboard, container, false);
 		observationsContainer = (LinearLayout)fragmentView.findViewById(R.id.observationsContainer);
 		String patientId = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
 		initViewFields();
-		initializeListeners(startAuditFormButton, addVisitImageButton, addVisitTaskButton, startVisitButton, editVisitButton, endVisitButton);
+		initializeListeners(startAuditFormButton, addVisitImageButton, addVisitTaskButton, startVisitButton,
+				editVisitButton, endVisitButton, editPatient);
 		mPresenter.fetchPatientData(patientId);
 		FontsUtil.setFont((ViewGroup)this.getActivity().findViewById(android.R.id.content));
 		return fragmentView;
@@ -134,13 +135,13 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 				//intent.putExtra(ApplicationConstants.BundleKeys.VISIT, mainVisit);
 				//startActivity(intent);
 				break;
-			case R.id.start_visit :
+			case R.id.start_visit:
 				intent = new Intent(getContext(), AddEditVisitActivity.class);
 				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, sharedPreferences.getString
 						(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING));
 				startActivity(intent);
 				break;
-			case R.id.edit_visit :
+			case R.id.edit_visit:
 				intent = new Intent(getContext(), AddEditVisitActivity.class);
 				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, sharedPreferences.getString
 						(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING));
@@ -156,6 +157,12 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 						(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING));
 				intent.putExtra(ApplicationConstants.BundleKeys.END_VISIT_TAG, true);
 				startActivity(intent);
+				break;
+			case R.id.edit_Patient:
+				intent = new Intent(getContext(), AddEditPatientActivity.class);
+				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, instance.getPatientUuid());
+				startActivity(intent);
+
 				break;
 		}
 	}
@@ -173,6 +180,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		startVisitButton = (FloatingActionButton)getActivity().findViewById(R.id.start_visit);
 		editVisitButton = (FloatingActionButton)getActivity().findViewById(R.id.edit_visit);
 		endVisitButton = (FloatingActionButton)getActivity().findViewById(R.id.end_visit);
+		editPatient = (FloatingActionButton)getActivity().findViewById(R.id.edit_Patient);
 		//TextView moreLabel = (TextView) fragmentView.findViewById(R.id.more_label);
 		FloatingActionMenu floatingActionMenu = (FloatingActionMenu)getActivity().findViewById(R.id.floatingActionMenu);
 		floatingActionMenu.setVisibility(View.VISIBLE);
@@ -230,6 +238,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		if (activeVisit != null) {
 			startVisitButton.setVisibility(View.GONE);
 			editVisitButton.setVisibility(View.VISIBLE);
+			endVisitButton.setVisibility(View.VISIBLE);
 			fragmentView.findViewById(R.id.visitDetailsCardView).setVisibility(View.VISIBLE);
 			fragmentView.findViewById(R.id.observationsCardView).setVisibility(View.VISIBLE);
 			visitDetails.setText(getString(R.string.active_visit_label) + ": " + DateUtils
@@ -318,7 +327,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
 	@Override
 	public void setProviderUuid(String providerUuid) {
-		if(StringUtils.isBlank(providerUuid))
+		if (StringUtils.isBlank(providerUuid))
 			return;
 
 		SharedPreferences.Editor editor = instance.getOpenMRSSharedPreferences().edit();

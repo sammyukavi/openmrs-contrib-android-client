@@ -37,16 +37,16 @@ import java.util.List;
 public class PatientListModelRecyclerViewAdapter
 		extends RecyclerView.Adapter<PatientListModelRecyclerViewAdapter.PatientListModelViewHolder> {
 
-    private Activity context;
-    private PatientListContract.View view;
-    private List<PatientListContext> items;
+	private Activity context;
+	private PatientListContract.View view;
+	private List<PatientListContext> items;
 
-    public PatientListModelRecyclerViewAdapter(Activity context,
-                                               List<PatientListContext> patientListModels, PatientListContract.View view) {
-        this.context = context;
-        this.items = patientListModels;
-        this.view = view;
-    }
+	public PatientListModelRecyclerViewAdapter(Activity context,
+			List<PatientListContext> patientListModels, PatientListContract.View view) {
+		this.context = context;
+		this.items = patientListModels;
+		this.view = view;
+	}
 
 	@Override
 	public PatientListModelViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -54,9 +54,9 @@ public class PatientListModelRecyclerViewAdapter
 		return new PatientListModelViewHolder(itemView);
 	}
 
-    @Override
-    public void onBindViewHolder(PatientListModelViewHolder holder, int position) {
-        PatientListContext patientListContext = items.get(position);
+	@Override
+	public void onBindViewHolder(PatientListModelViewHolder holder, int position) {
+		PatientListContext patientListContext = items.get(position);
 
         holder.headerContent.setText(StringUtils.stripHtmlTags(patientListContext.getHeaderContent()));
         holder.bodyContent.setText(StringUtils.stripHtmlTags(patientListContext.getBodyContent()));

@@ -52,23 +52,7 @@ public class AddEditVisitActivity extends ACBaseActivity {
 
 				if(extras.getBoolean(ApplicationConstants.BundleKeys.END_VISIT_TAG, false)){
 					showEndVisitDialog();
-					//extras.pu
 				}
-
-				/*// download visitphotos.
-				DownloadVisitPhotoFragment visitPhotoFragment =
-						(DownloadVisitPhotoFragment)getSupportFragmentManager()
-								.findFragmentById(R.id.photoDownloadsContentFrame);
-				if (visitPhotoFragment == null) {
-					visitPhotoFragment = DownloadVisitPhotoFragment.newInstance();
-				}
-
-				if (!visitPhotoFragment.isActive()) {
-					addFragmentToActivity(getSupportFragmentManager(), visitPhotoFragment, R.id.photoDownloadsContentFrame);
-				}
-
-				new DownloadVisitPhotoPresenter(visitPhotoFragment, patientUuid); */
-
 			} else {
 				ToastUtil.error(getString(R.string.no_patient_selected));
 			}

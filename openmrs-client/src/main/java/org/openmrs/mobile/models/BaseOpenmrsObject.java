@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 public class BaseOpenmrsObject extends Resource implements Serializable {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	@SerializedName("active")
 	@Expose
@@ -18,9 +18,9 @@ public class BaseOpenmrsObject extends Resource implements Serializable {
 
 	public void setActive(Boolean active) {
 		this.active = active;
-    }
+	}
 
-    public void refreshDaoProperties() {
-        // This base method does nothing but should be overriden by models that have links to other models
+	public void refreshDaoProperties() {
+		// This base method does nothing but should be overriden by models that have links to other models
 	}
 }

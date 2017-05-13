@@ -122,8 +122,8 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 				if (query.length() >= 3) {
 					findPatientPresenter.findPatient(query);
 				} else {
-					//findPatientPresenter.getLastViewed();
-					findPatientRecordFragment.setNumberOfPatientsView(1);
+					findPatientPresenter.getLastViewed(findPatientPresenter.getPage());
+					findPatientRecordFragment.setNumberOfPatientsView(0);
 					findPatientRecordFragment.setSearchPatientVisibility(true);
 					findPatientRecordFragment.setNoPatientsVisibility(false);
 				}

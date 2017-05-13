@@ -239,6 +239,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 			startVisitButton.setVisibility(View.GONE);
 			editVisitButton.setVisibility(View.VISIBLE);
 			endVisitButton.setVisibility(View.VISIBLE);
+			addVisitTaskButton.setVisibility(View.VISIBLE);
 			fragmentView.findViewById(R.id.visitDetailsCardView).setVisibility(View.VISIBLE);
 			fragmentView.findViewById(R.id.observationsCardView).setVisibility(View.VISIBLE);
 			visitDetails.setText(getString(R.string.active_visit_label) + ": " + DateUtils

@@ -229,191 +229,197 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 	@Override
 	public void registerPatient(Patient patient) {
 		setRegistering(true);
-		if (NetworkUtils.hasNetwork()) {
-			DataService.GetCallback<Patient> getSingleCallback = new DataService.GetCallback<Patient>() {
-				@Override
-				public void onCompleted(Patient entity) {
-					setRegistering(false);
-					if (entity != null) {
-						patientRegistrationView
-								.showToast(ApplicationConstants.entityName.PATIENTS
-										+ ApplicationConstants.toastMessages.addSuccessMessage, ToastUtil.ToastType
-										.SUCCESS);
-						patientRegistrationView.startPatientDashboardActivity(entity);
-						patientRegistrationView.finishAddPatientActivity();
-					} else {
-						patientRegistrationView
-								.showToast(ApplicationConstants.entityName.PATIENTS + ApplicationConstants.toastMessages
-										.addWarningMessage, ToastUtil.ToastType.WARNING);
-					}
-				}
-
-				@Override
-				public void onError(Throwable t) {
-					setRegistering(false);
-					patientRegistrationView.setProgressBarVisibility(false);
+		DataService.GetCallback<Patient> getSingleCallback = new DataService.GetCallback<Patient>() {
+			@Override
+			public void onCompleted(Patient entity) {
+				setRegistering(false);
+				if (entity != null) {
+					patientRegistrationView
+							.showToast(ApplicationConstants.entityName.PATIENTS
+									+ ApplicationConstants.toastMessages.addSuccessMessage, ToastUtil.ToastType
+									.SUCCESS);
+					patientRegistrationView.startPatientDashboardActivity(entity);
+					patientRegistrationView.finishAddPatientActivity();
+				} else {
 					patientRegistrationView
 							.showToast(ApplicationConstants.entityName.PATIENTS + ApplicationConstants.toastMessages
-									.addErrorMessage, ToastUtil.ToastType.ERROR);
+									.addWarningMessage, ToastUtil.ToastType.WARNING);
 				}
-			};
-			patientDataService.create(patient, getSingleCallback);
-		}
+			}
+
+			@Override
+			public void onError(Throwable t) {
+				setRegistering(false);
+				patientRegistrationView.setProgressBarVisibility(false);
+				patientRegistrationView
+						.showToast(ApplicationConstants.entityName.PATIENTS + ApplicationConstants.toastMessages
+								.addErrorMessage, ToastUtil.ToastType.ERROR);
+			}
+		};
+		patientDataService.create(patient, getSingleCallback);
 	}
 
 	@Override
 	public void updatePatient(Patient patient) {
 		setRegistering(true);
-		if (NetworkUtils.hasNetwork()) {
-			DataService.GetCallback<Patient> getSingleCallback = new DataService.GetCallback<Patient>() {
-				@Override
-				public void onCompleted(Patient entity) {
-					setRegistering(false);
-					if (entity != null) {
-						patientRegistrationView
-								.showToast(ApplicationConstants.entityName.PATIENTS
-										+ ApplicationConstants.toastMessages.updateSuccessMessage, ToastUtil.ToastType
-										.SUCCESS);
-						patientRegistrationView.startPatientDashboardActivity(entity);
-						patientRegistrationView.finishAddPatientActivity();
-					} else {
-						patientRegistrationView
-								.showToast(ApplicationConstants.entityName.PATIENTS + ApplicationConstants.toastMessages
-										.addWarningMessage, ToastUtil.ToastType.WARNING);
-					}
-				}
-
-				@Override
-				public void onError(Throwable t) {
-					setRegistering(false);
-					patientRegistrationView.setProgressBarVisibility(false);
+		DataService.GetCallback<Patient> getSingleCallback = new DataService.GetCallback<Patient>() {
+			@Override
+			public void onCompleted(Patient entity) {
+				setRegistering(false);
+				if (entity != null) {
+					patientRegistrationView
+							.showToast(ApplicationConstants.entityName.PATIENTS
+									+ ApplicationConstants.toastMessages.updateSuccessMessage, ToastUtil.ToastType
+									.SUCCESS);
+					patientRegistrationView.startPatientDashboardActivity(entity);
+					patientRegistrationView.finishAddPatientActivity();
+				} else {
 					patientRegistrationView
 							.showToast(ApplicationConstants.entityName.PATIENTS + ApplicationConstants.toastMessages
-									.addErrorMessage, ToastUtil.ToastType.ERROR);
+									.addWarningMessage, ToastUtil.ToastType.WARNING);
 				}
-			};
-			patientDataService.update(patient, getSingleCallback);
-		}
+			}
+
+			@Override
+			public void onError(Throwable t) {
+				setRegistering(false);
+				patientRegistrationView.setProgressBarVisibility(false);
+				patientRegistrationView
+						.showToast(ApplicationConstants.entityName.PATIENTS + ApplicationConstants.toastMessages
+								.addErrorMessage, ToastUtil.ToastType.ERROR);
+			}
+		};
+		patientDataService.update(patient, getSingleCallback);
 	}
 
 	public void findSimilarPatients(Patient patient) {
-		if (NetworkUtils.hasNetwork()) {
-			PagingInfo pagingInfo = new PagingInfo(page, limit);
-			DataService.GetCallback<List<Patient>> callback = new DataService.GetCallback<List<Patient>>() {
-				@Override
-				public void onCompleted(List<Patient> patients) {
-					if (patients.isEmpty()) {
-						registerPatient(patient);
-					} else {
-						patientRegistrationView.showSimilarPatientDialog(patients, patient);
-					}
+		PagingInfo pagingInfo = new PagingInfo(page, limit);
+		DataService.GetCallback<List<Patient>> callback = new DataService.GetCallback<List<Patient>>() {
+			@Override
+			public void onCompleted(List<Patient> patients) {
+				if (patients.isEmpty()) {
+					registerPatient(patient);
+				} else {
+					patientRegistrationView.showSimilarPatientDialog(patients, patient);
 				}
+			}
 
-				@Override
-				public void onError(Throwable t) {
-					Log.e("User Error", "Error", t.fillInStackTrace());
-					patientRegistrationView.showToast(ApplicationConstants.entityName.PATIENTS + ApplicationConstants
-							.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
-				}
-			};
-			//Just check if the identifier are the same. If not it saves the patient.
-			patientDataService
-					.getByNameAndIdentifier(patient.getPerson().getName().getNameString(), QueryOptions
-									.LOAD_RELATED_OBJECTS, pagingInfo, callback);
-		} else {
-			// get the users from the local storage.
-		}
+			@Override
+			public void onError(Throwable t) {
+				Log.e("User Error", "Error", t.fillInStackTrace());
+				patientRegistrationView.showToast(ApplicationConstants.entityName.PATIENTS + ApplicationConstants
+						.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
+			}
+		};
+		//Just check if the identifier are the same. If not it saves the patient.
+		patientDataService
+				.getByNameAndIdentifier(patient.getPerson().getName().getNameString(), QueryOptions
+						.LOAD_RELATED_OBJECTS, pagingInfo, callback);
 	}
 
 	public void getConceptNames(String uuid, Spinner conceptAnswersDropdown) {
-		if (NetworkUtils.hasNetwork()) {
-			DataService.GetCallback<List<ConceptName>> callback =
-					new DataService.GetCallback<List<ConceptName>>() {
-						@Override
-						public void onCompleted(List<ConceptName> entities) {
-							patientRegistrationView.updateConceptNamesView(conceptAnswersDropdown, entities);
-						}
+		DataService.GetCallback<List<ConceptName>> callback =
+				new DataService.GetCallback<List<ConceptName>>() {
+					@Override
+					public void onCompleted(List<ConceptName> entities) {
+						patientRegistrationView.updateConceptNamesView(conceptAnswersDropdown, entities);
+					}
 
-						@Override
-						public void onError(Throwable t) {
-							Log.e("Concept Answers Error", "Error", t.fillInStackTrace());
-							patientRegistrationView
-									.showToast(ApplicationConstants.entityName.CIVIL_STATUS + ApplicationConstants
-											.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
-						}
-					};
-			conceptNameDataService.getByConceptUuid(uuid, callback);
-		} else {
-			// get the users from the local storage.
-		}
+					@Override
+					public void onError(Throwable t) {
+						Log.e("Concept Answers Error", "Error", t.fillInStackTrace());
+						patientRegistrationView
+								.showToast(ApplicationConstants.entityName.CIVIL_STATUS + ApplicationConstants
+										.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
+					}
+				};
+		conceptNameDataService.getByConceptUuid(uuid, callback);
 	}
 
 	public void getPatientIdentifierTypes() {
-		if (NetworkUtils.hasNetwork()) {
-			DataService.GetCallback<List<PatientIdentifierType>> callback =
-					new DataService.GetCallback<List<PatientIdentifierType>>() {
-						@Override
-						public void onCompleted(List<PatientIdentifierType> entities) {
-							if (!entities.isEmpty()) {
-								for (int i = 0; i < entities.size(); i++) {
-									if (entities.get(i).getRequired()) {
-										patientRegistrationView.setPatientIdentifierType(entities.get(i));
-									}
+		DataService.GetCallback<List<PatientIdentifierType>> callback =
+				new DataService.GetCallback<List<PatientIdentifierType>>() {
+					@Override
+					public void onCompleted(List<PatientIdentifierType> entities) {
+						if (!entities.isEmpty()) {
+							for (int i = 0; i < entities.size(); i++) {
+								if (entities.get(i).getRequired()) {
+									patientRegistrationView.setPatientIdentifierType(entities.get(i));
 								}
 							}
 						}
+					}
 
-						@Override
-						public void onError(Throwable t) {
-							Log.e("Identifier Type Error", "Error", t.fillInStackTrace());
-							patientRegistrationView
-									.showToast(ApplicationConstants.entityName.IDENTIFIER_TPYES
-											+ ApplicationConstants.toastMessages
-											.fetchErrorMessage, ToastUtil.ToastType.ERROR);
-						}
-					};
-			patientIdentifierTypeDataService.getAll(QueryOptions.LOAD_RELATED_OBJECTS, null, callback);
-		} else {
-			// get the users from the local storage.
-		}
+					@Override
+					public void onError(Throwable t) {
+						Log.e("Identifier Type Error", "Error", t.fillInStackTrace());
+						patientRegistrationView
+								.showToast(ApplicationConstants.entityName.IDENTIFIER_TPYES
+										+ ApplicationConstants.toastMessages
+										.fetchErrorMessage, ToastUtil.ToastType.ERROR);
+					}
+				};
+		patientIdentifierTypeDataService.getAll(QueryOptions.LOAD_RELATED_OBJECTS, null, callback);
 	}
 
 	public void getPersonAttributeTypes() {
-		if (NetworkUtils.hasNetwork()) {
-			DataService.GetCallback<List<PersonAttributeType>> getMultipleCallback =
-					new DataService.GetCallback<List<PersonAttributeType>>() {
+		DataService.GetCallback<List<PersonAttributeType>> getMultipleCallback =
+				new DataService.GetCallback<List<PersonAttributeType>>() {
 
-						@Override
-						public void onCompleted(List<PersonAttributeType> personAttributeTypes) {
-							if (!personAttributeTypes.isEmpty()) {
+					@Override
+					public void onCompleted(List<PersonAttributeType> personAttributeTypes) {
+						if (!personAttributeTypes.isEmpty()) {
 
-								for (int q = 0; q < createUnwantedPersonAttributes().size(); q++) {
-									String unwantedUuid = createUnwantedPersonAttributes().get(q);
+							for (int q = 0; q < createUnwantedPersonAttributes().size(); q++) {
+								String unwantedUuid = createUnwantedPersonAttributes().get(q);
 
-									for (int i = 0; i < personAttributeTypes.size(); i++) {
-										String uuid = personAttributeTypes.get(i).getUuid();
-										if (uuid.equalsIgnoreCase(unwantedUuid)) {
-											personAttributeTypes.remove(i);
-										}
+								for (int i = 0; i < personAttributeTypes.size(); i++) {
+									String uuid = personAttributeTypes.get(i).getUuid();
+									if (uuid.equalsIgnoreCase(unwantedUuid)) {
+										personAttributeTypes.remove(i);
 									}
 								}
-								patientRegistrationView.loadPersonAttributeTypes(personAttributeTypes);
-							} else {
-								patientRegistrationView
-										.showToast(ApplicationConstants.entityName.ATTRIBUTE_TPYES + ApplicationConstants
-												.toastMessages.fetchWarningMessage, ToastUtil.ToastType.WARNING);
 							}
-						}
-
-						@Override
-						public void onError(Throwable t) {
+							patientRegistrationView.loadPersonAttributeTypes(personAttributeTypes);
+						} else {
 							patientRegistrationView
 									.showToast(ApplicationConstants.entityName.ATTRIBUTE_TPYES + ApplicationConstants
-											.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
+											.toastMessages.fetchWarningMessage, ToastUtil.ToastType.WARNING);
 						}
-					};
-			personAttributeTypeDataService.getAll(QueryOptions.LOAD_RELATED_OBJECTS, null, getMultipleCallback);
+					}
+
+					@Override
+					public void onError(Throwable t) {
+						patientRegistrationView
+								.showToast(ApplicationConstants.entityName.ATTRIBUTE_TPYES + ApplicationConstants
+										.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
+					}
+				};
+		personAttributeTypeDataService.getAll(QueryOptions.LOAD_RELATED_OBJECTS, null, getMultipleCallback);
+	}
+
+	@Override
+	public void getLoginLocation() {
+		if (!instance.getLocation().equalsIgnoreCase(null)) {
+			locationUuid = instance.getLocation();
 		}
+		DataService.GetCallback<Location> getSingleCallback =
+				new DataService.GetCallback<Location>() {
+					@Override
+					public void onCompleted(Location entity) {
+						if (entity != null) {
+							patientRegistrationView.setLoginLocation(entity);
+						}
+					}
+
+					@Override
+					public void onError(Throwable t) {
+						patientRegistrationView
+								.showToast(ApplicationConstants.entityName.LOCATION + ApplicationConstants
+										.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
+					}
+				};
+		locationDataService.getByUUID(locationUuid, QueryOptions.LOAD_RELATED_OBJECTS, getSingleCallback);
 	}
 
 	@Override
@@ -426,32 +432,6 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 			}
 		}
 		return null;
-	}
-
-	@Override
-	public void getLoginLocation() {
-		if (NetworkUtils.hasNetwork()) {
-			if (!instance.getLocation().equalsIgnoreCase(null)) {
-				locationUuid = instance.getLocation();
-			}
-			DataService.GetCallback<Location> getSingleCallback =
-					new DataService.GetCallback<Location>() {
-						@Override
-						public void onCompleted(Location entity) {
-							if (entity != null) {
-								patientRegistrationView.setLoginLocation(entity);
-							}
-						}
-
-						@Override
-						public void onError(Throwable t) {
-							patientRegistrationView
-									.showToast(ApplicationConstants.entityName.LOCATION + ApplicationConstants
-											.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
-						}
-					};
-			locationDataService.getByUUID(locationUuid, QueryOptions.LOAD_RELATED_OBJECTS, getSingleCallback);
-		}
 	}
 
 	@Override

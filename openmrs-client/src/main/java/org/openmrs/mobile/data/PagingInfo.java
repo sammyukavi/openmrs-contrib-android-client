@@ -3,13 +3,13 @@ package org.openmrs.mobile.data;
 import android.support.annotation.Nullable;
 
 /**
- * This class contains the paging information used by the entity services to paginate results. Both page and pageSize are
- * 1-based, defining either as 0 will cause paging to be ignored.
+ * This class contains the paging information used by the entity services to paginate results. It has been modified to allow
+ * startIndex and limit to be defined as 0.
  */
 public class PagingInfo {
 
-	private int page;
-	private int pageSize;
+	private int startIndex;
+	private int limit;
 	private Integer totalRecordCount;
 	private boolean loadRecordCount;
 
@@ -18,52 +18,38 @@ public class PagingInfo {
 
 	/**
 	 * Creates a new {@link PagingInfo} instance.
-	 * @param page     The 1-based number of the page being requested.
-	 * @param pageSize The number of records to include on each page.
+	 * @param startIndex The number of the startIndex being requested.
+	 * @param limit      The number of records to return from the start index
 	 */
-	public PagingInfo(int page, int pageSize) {
-		this.page = page;
-		this.pageSize = pageSize;
+	public PagingInfo(int startIndex, int limit) {
+		this.startIndex = startIndex;
+		this.limit = limit;
 	}
 
-	public static Integer getPage(@Nullable PagingInfo pagingInfo) {
-		return pagingInfo == null ? null : pagingInfo.getPage();
+	public static int getStartIndex(@Nullable PagingInfo pagingInfo) {
+		return pagingInfo == null ? null : pagingInfo.getStartIndex();
 	}
 
-	public static Integer getPageSize(@Nullable PagingInfo pagingInfo) {
-		return pagingInfo == null ? null : pagingInfo.getPageSize();
+	public int getStartIndex() {
+		//The line below returns a negative if you set the index to zero
+		//return ((page - 1) * pageSize) + 1;
+		return 0;
+	}
+
+	public void setStartIndex(int startIndex) {
+		this.startIndex = startIndex;
 	}
 
 	public static Integer getLimit(@Nullable PagingInfo pagingInfo) {
 		return pagingInfo == null ? null : pagingInfo.getLimit();
 	}
 
-	public static Integer getStartIndex(@Nullable PagingInfo pagingInfo) {
-		return pagingInfo == null ? null : pagingInfo.getStartIndex();
-	}
-
-	public int getPage() {
-		return page;
-	}
-
-	public void setPage(int page) {
-		this.page = page;
-	}
-
-	public int getPageSize() {
-		return pageSize;
-	}
-
-	public void setPageSize(int pageSize) {
-		this.pageSize = pageSize;
-	}
-
 	public int getLimit() {
-		return pageSize;
+		return limit;
 	}
 
-	public int getStartIndex() {
-		return ((page - 1) * pageSize) + 1;
+	public void setLimit(int limit) {
+		this.limit = limit;
 	}
 
 	public Integer getTotalRecordCount() {
@@ -75,17 +61,5 @@ public class PagingInfo {
 
 		// If the total records is set to anything other than null, than don't reload the count
 		this.loadRecordCount = totalRecordCount == null;
-	}
-
-	public boolean shouldLoadRecordCount() {
-		return loadRecordCount;
-	}
-
-	public void setLoadRecordCount(boolean loadRecordCount) {
-		this.loadRecordCount = loadRecordCount;
-	}
-
-	public Boolean hasMoreResults() {
-		return (page * pageSize) < totalRecordCount;
 	}
 }

@@ -34,29 +34,33 @@ public class PastVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 	private List<Visit> visits;
 	private int visibleThreshold = 5;
 	private int lastVisibleItem, totalItemCount;
-	LinearLayout.LayoutParams linearLayoutParams;
 	private ObsDataService observationDataService;
 
 	public PastVisitsRecyclerAdapter(RecyclerView recyclerView, List<Visit> visits, Context context) {
 		this.visits = visits;
 		this.context = context;
 		observationDataService = new ObsDataService();
-		this.linearLayoutParams =
-				new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams
-						.WRAP_CONTENT,
-						1.0f);
-		final LinearLayoutManager linearLayoutManager = (LinearLayoutManager)recyclerView.getLayoutManager();
+		LinearLayoutManager layoutManager = (LinearLayoutManager)recyclerView.getLayoutManager();
 		recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+			@Override
+			public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+				super.onScrollStateChanged(recyclerView, newState);
+			}
+
 			@Override
 			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
 				super.onScrolled(recyclerView, dx, dy);
-				totalItemCount = linearLayoutManager.getItemCount();
-				lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
+				/*totalItemCount = layoutManager.getItemCount();
+				lastVisibleItem = layoutManager.findLastVisibleItemPosition();
 				if (!isLoading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
 					if (onLoadMoreListener != null) {
 						onLoadMoreListener.onLoadMore();
 					}
 					isLoading = true;
+				}*/
+				if (!isLoading && onLoadMoreListener != null) {
+					isLoading = true;
+					onLoadMoreListener.onLoadMore();
 				}
 			}
 		});

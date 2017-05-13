@@ -17,7 +17,6 @@ package org.openmrs.mobile.activities.patientdashboard;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,7 +26,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
@@ -48,6 +46,7 @@ import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Person;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
+import org.openmrs.mobile.utilities.ConsoleLogger;
 import org.openmrs.mobile.utilities.DateUtils;
 import org.openmrs.mobile.utilities.FontsUtil;
 import org.openmrs.mobile.utilities.StringUtils;
@@ -76,7 +75,9 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	private Patient patient;
 	private OpenMRS instance = OpenMRS.getInstance();
 	private DynamicObsDataViews dynamicObsDataViews;
-	SharedPreferences sharedPreferences = instance.getOpenMRSSharedPreferences();
+	private SharedPreferences sharedPreferences = instance.getOpenMRSSharedPreferences();
+	private int visitsStartIndex = 0;
+	private int visitsStartLimit = 100;
 
 	public static PatientDashboardFragment newInstance() {
 		return new PatientDashboardFragment();
@@ -202,12 +203,15 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		patientIdentifier.setText(patient.getIdentifier().getIdentifier());
 		DateTime date = DateUtils.convertTimeString(person.getBirthdate());
 		patientAge.setText(DateUtils.calculateAge(date.getYear(), date.getMonthOfYear(), date.getDayOfMonth()));
+		mPresenter.setStartIndex(visitsStartIndex);
+		mPresenter.setLimit(visitsStartLimit);
 		mPresenter.fetchVisits(patient);
 		setPatientUuid(patient);
 	}
 
 	@Override
 	public void updateActiveVisitCard(List<Visit> visits) {
+		ConsoleLogger.dump("Total visits: " + visits.size());
 		for (Visit visit : visits) {
 			if (!StringUtils.notNull(visit.getStopDatetime())) {
 				this.activeVisit = visit;
@@ -247,31 +251,22 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 			}
 		}
 
-		RecyclerView previousVisits = (RecyclerView)fragmentView.findViewById(R.id.previousVisits);
-		previousVisits.setLayoutManager(new LinearLayoutManager(getContext()));
+		RecyclerView pastVisits = (RecyclerView)fragmentView.findViewById(R.id.pastVisits);
+		pastVisits.setLayoutManager(new LinearLayoutManager(getContext()));
 		PastVisitsRecyclerAdapter
-				pastVisitsRecyclerAdapter = new PastVisitsRecyclerAdapter(previousVisits, visits, getActivity());
-		previousVisits.setAdapter(pastVisitsRecyclerAdapter);
+				pastVisitsRecyclerAdapter = new PastVisitsRecyclerAdapter(pastVisits, visits, getActivity());
+		pastVisits.setAdapter(pastVisitsRecyclerAdapter);
 
 		pastVisitsRecyclerAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
 			@Override
 			public void onLoadMore() {
-				if (visits.size() <= 2) {
-					visits.add(null);
-					pastVisitsRecyclerAdapter.notifyItemInserted(visits.size() - 1);
-					new Handler().postDelayed(new Runnable() {
-						@Override
-						public void run() {
-							visits.remove(visits.size() - 1);
-							pastVisitsRecyclerAdapter.notifyItemRemoved(visits.size());
-							//Load more from server here
-							pastVisitsRecyclerAdapter.notifyDataSetChanged();
-							pastVisitsRecyclerAdapter.setLoaded();
-						}
-					}, 5000);
-				} else {
-					Toast.makeText(getContext(), "Loading data completed", Toast.LENGTH_SHORT).show();
-				}
+				//pastVisitsRecyclerAdapter.notifyItemRemoved();
+				/**
+				 * Load more here
+				 */
+				ConsoleLogger.dump("Loading more");
+				//pastVisitsRecyclerAdapter.notifyDataSetChanged();
+				//pastVisitsRecyclerAdapter.setLoaded();
 			}
 		});
 	}

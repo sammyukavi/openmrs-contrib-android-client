@@ -353,10 +353,6 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 		});
 	}
 
-	protected boolean isPagingValid(PagingInfo pagingInfo) {
-		return !(pagingInfo == null || pagingInfo.getPage() == 0);
-	}
-
 	private interface Consumer<T> {
 		void accept(T value);
 	}

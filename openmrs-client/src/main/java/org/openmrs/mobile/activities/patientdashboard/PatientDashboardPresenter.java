@@ -41,8 +41,8 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	private VisitDataService visitDataService;
 	private ObsDataService observationDataService;
 	private ProviderDataService providerDataService;
-	private final static int page = 1;
-	private final static int limit = 10;
+	private int startIndex = 0;
+	private int limit = 5;
 
 	public PatientDashboardPresenter(PatientDashboardContract.View view) {
 		this.patientDashboardView = view;
@@ -56,6 +56,15 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	@Override
 	public void subscribe() {
 		getCurrentProvider();
+	}
+
+	public void setStartIndex(int startIndex) {
+		this.startIndex = startIndex;
+	}
+
+	@Override
+	public void setLimit(int limit) {
+		this.limit = limit;
 	}
 
 	@Override
@@ -79,13 +88,12 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	@Override
 	public void fetchVisits(Patient patient) {
 		patientDashboardView.getVisitNoteContainer().removeAllViews();
-		visitDataService.getByPatient(patient, new QueryOptions(true, true), new PagingInfo(page, limit),
+		visitDataService.getByPatient(patient, new QueryOptions(true, true), new PagingInfo(startIndex, limit),
 				new DataService.GetCallback<List<Visit>>() {
 					@Override
 					public void onCompleted(List<Visit> visits) {
 						if (!visits.isEmpty()) {
 							patientDashboardView.updateActiveVisitCard(visits);
-							patientDashboardView.showSnack("Visits found");
 						} else {
 							patientDashboardView.showSnack("No visits found");
 						}
@@ -101,7 +109,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
 	@Override
 	public void fetchEncounterObservations(Encounter encounter) {
-		observationDataService.getByEncounter(encounter, QueryOptions.INCLUDE_INACTIVE, new PagingInfo(page, limit),
+		observationDataService.getByEncounter(encounter, QueryOptions.INCLUDE_INACTIVE, new PagingInfo(startIndex, limit),
 				new DataService.GetCallback<List<Observation>>() {
 					@Override
 					public void onCompleted(List<Observation> observations) {
@@ -134,7 +142,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 		String personUuid = OpenMRS.getInstance().getCurrentLoggedInUserInfo().get(ApplicationConstants.UserKeys.USER_UUID);
 		if (StringUtils.notEmpty(personUuid)) {
 
-			providerDataService.getAll(QueryOptions.LOAD_RELATED_OBJECTS, new PagingInfo(page, limit),
+			providerDataService.getAll(QueryOptions.LOAD_RELATED_OBJECTS, new PagingInfo(startIndex, limit),
 					new DataService.GetCallback<List<Provider>>() {
 						@Override
 						public void onCompleted(List<Provider> entities) {

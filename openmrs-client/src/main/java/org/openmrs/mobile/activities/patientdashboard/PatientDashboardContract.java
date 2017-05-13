@@ -53,5 +53,9 @@ public interface PatientDashboardContract {
 		void fetchEncounterObservations(Encounter encounter);
 
 		Patient getPatient();
+
+		void setStartIndex(int startIndex);
+
+		void setLimit(int limit);
 	}
 }

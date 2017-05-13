@@ -46,6 +46,7 @@ import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
 import org.openmrs.mobile.activities.addeditpatient.AddEditPatientActivity;
 import org.openmrs.mobile.activities.addeditpatient.SimilarPatientsRecyclerViewAdapter;
+import org.openmrs.mobile.activities.addeditvisit.AddEditVisitActivity;
 import org.openmrs.mobile.activities.login.LoginActivity;
 import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
 import org.openmrs.mobile.activities.visittasks.VisitTasksActivity;
@@ -413,6 +414,7 @@ public class CustomFragmentDialog extends DialogFragment {
 						break;
 					case END_VISIT:
 						//((VisitDashboardActivity) getActivity()).findPatientPresenter.endVisit();
+						((AddEditVisitActivity) getActivity()).addEditVisitPresenter.endVisit();
 						dismiss();
 						break;
 					case START_VISIT:

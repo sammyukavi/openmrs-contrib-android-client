@@ -29,15 +29,15 @@ public interface VisitRestService {
 			@Query("startIndex") int startIndex);
 
 	@POST(RestConstants.CREATE)
-	Call<Visit> create(@Path(value = "restPath", encoded = true) String restPath, Visit entity);
+	Call<Visit> create(@Path(value = "restPath", encoded = true) String restPath, @Body Visit entity);
 
 	@POST(RestConstants.UPDATE)
 	Call<Visit> endVisit(@Path(value = "restPath", encoded = true) String restPath,
-			@Path("uuid") String uuid, @Body String stopDatetime);
+			@Path("uuid") String uuid, @Body Visit stopDatetime);
 
 	@POST(RestConstants.UPDATE)
 	Call<Visit> update(@Path(value = "restPath", encoded = true) String restPath,
-			@Path("uuid") String uuid, Visit entity);
+			@Path("uuid") String uuid, @Body Visit entity);
 
 	@DELETE(RestConstants.PURGE)
 	Call<Visit> purge(@Path(value = "restPath", encoded = true) String restPath,
@@ -47,7 +47,8 @@ public interface VisitRestService {
 	Call<Results<Visit>> getByPatient(@Path(value = "restPath", encoded = true) String restPath,
 			@Query("patient") String patientUuid,
 			@Query("v") String representation,
-			@Query("includeAll") Boolean includeAll,
-			@Query("limit") int limit,
-			@Query("startIndex") int startIndex);
+			@Query("includeInactive") Boolean includeAll);
+			// Fails to work with paging info
+			/*@Query("limit") int limit,
+			@Query("startIndex") int startIndex); */
 }

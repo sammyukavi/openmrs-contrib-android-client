@@ -155,6 +155,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 						(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING));
 				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, sharedPreferences.getString
 						(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING));
+				intent.putExtra(ApplicationConstants.BundleKeys.END_VISIT_TAG, true);
 				startActivity(intent);
 				break;
 			case R.id.edit_Patient:
@@ -237,6 +238,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		if (activeVisit != null) {
 			startVisitButton.setVisibility(View.GONE);
 			editVisitButton.setVisibility(View.VISIBLE);
+			endVisitButton.setVisibility(View.VISIBLE);
 			fragmentView.findViewById(R.id.visitDetailsCardView).setVisibility(View.VISIBLE);
 			fragmentView.findViewById(R.id.observationsCardView).setVisibility(View.VISIBLE);
 			visitDetails.setText(getString(R.string.active_visit_label) + ": " + DateUtils

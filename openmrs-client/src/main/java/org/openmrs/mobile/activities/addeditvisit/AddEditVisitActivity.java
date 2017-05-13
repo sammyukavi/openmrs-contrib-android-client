@@ -26,7 +26,7 @@ import org.openmrs.mobile.utilities.ToastUtil;
 
 public class AddEditVisitActivity extends ACBaseActivity {
 
-	private AddEditVisitContract.Presenter addEditVisitPresenter;
+	public AddEditVisitContract.Presenter addEditVisitPresenter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,20 +50,9 @@ public class AddEditVisitActivity extends ACBaseActivity {
 
 				addEditVisitPresenter = new AddEditVisitPresenter(addEditVisitFragment, patientUuid);
 
-				// download visitphotos.
-				DownloadVisitPhotoFragment visitPhotoFragment =
-						(DownloadVisitPhotoFragment)getSupportFragmentManager()
-								.findFragmentById(R.id.photoDownloadsContentFrame);
-				if (visitPhotoFragment == null) {
-					visitPhotoFragment = DownloadVisitPhotoFragment.newInstance();
+				if(extras.getBoolean(ApplicationConstants.BundleKeys.END_VISIT_TAG, false)){
+					showEndVisitDialog();
 				}
-
-				if (!visitPhotoFragment.isActive()) {
-					addFragmentToActivity(getSupportFragmentManager(), visitPhotoFragment, R.id.photoDownloadsContentFrame);
-				}
-
-				new DownloadVisitPhotoPresenter(visitPhotoFragment, patientUuid);
-
 			} else {
 				ToastUtil.error(getString(R.string.no_patient_selected));
 			}
@@ -75,4 +64,5 @@ public class AddEditVisitActivity extends ACBaseActivity {
 		super.onCreateOptionsMenu(menu);
 		return true;
 	}
+
 }

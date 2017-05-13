@@ -9,6 +9,7 @@ import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Provider;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitPhoto;
+import org.openmrs.mobile.utilities.ToastUtil;
 
 public class UploadVisitPhotoPresenter extends BasePresenter implements UploadVisitPhotoContract.Presenter {
 
@@ -55,11 +56,12 @@ public class UploadVisitPhotoPresenter extends BasePresenter implements UploadVi
 		visitPhotoDataService.uploadPhoto(visitPhoto, new DataService.GetCallback<VisitPhoto>() {
 			@Override
 			public void onCompleted(VisitPhoto entity) {
-				System.out.println("image uploaded " + entity);
+				visitPhotoView.showPatientDashboard(patientUuid);
 			}
 
 			@Override
 			public void onError(Throwable t) {
+				ToastUtil.error(t.getMessage());
 				System.out.println(t.getMessage());
 			}
 		});

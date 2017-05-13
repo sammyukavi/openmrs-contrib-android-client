@@ -7,7 +7,7 @@ import org.openmrs.mobile.models.VisitPhoto;
 public interface UploadVisitPhotoContract {
 
 	interface View extends BaseView<UploadVisitPhotoContract.Presenter> {
-
+		void showPatientDashboard(String patientUuid);
 	}
 
 	interface Presenter extends BasePresenterContract {

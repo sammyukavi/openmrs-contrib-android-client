@@ -1,6 +1,7 @@
 package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -50,16 +51,5 @@ public class BaseOpenmrsEntity extends BaseOpenmrsAuditableObject implements Ser
 
 	public void setVoidReason(String voidReason) {
 		this.voidReason = voidReason;
-	}
-
-	@Expose
-	private Patient patient;
-
-	public Patient getPatient() {
-		return patient;
-	}
-
-	public void setPatient(Patient patient) {
-		this.patient = patient;
 	}
 }

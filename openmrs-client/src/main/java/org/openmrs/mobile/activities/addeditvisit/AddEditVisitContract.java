@@ -43,21 +43,20 @@ public interface AddEditVisitContract {
 		void updateConceptNamesView(Spinner conceptNamesDropdown, List<ConceptName> conceptNames);
 
 		void showPatientDashboard();
+
 	}
 
 	interface Presenter extends BasePresenterContract {
 
 		List<VisitAttributeType> loadVisitAttributeTypes();
 
-		Patient getPatient();
-
-		void setPatient(Patient patient);
-
 		Visit getVisit();
 
 		void startVisit(List<VisitAttribute> attributes);
 
 		void updateVisit(List<VisitAttribute> attributes);
+
+		Patient getPatient();
 
 		<T> T searchVisitAttributeValueByType(VisitAttributeType visitAttributeType);
 
@@ -67,7 +66,7 @@ public interface AddEditVisitContract {
 
 		void setProcessing(boolean processing);
 
-		void endVisit(String uuid);
+		void endVisit();
 	}
 }
 

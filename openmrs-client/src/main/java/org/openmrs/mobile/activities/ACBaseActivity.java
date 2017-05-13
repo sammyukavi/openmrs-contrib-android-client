@@ -151,6 +151,17 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 		createAndShowDialog(bundle, ApplicationConstants.DialogTAG.LOGOUT_DIALOG_TAG);
 	}
 
+	public void showEndVisitDialog() {
+		CustomDialogBundle bundle = new CustomDialogBundle();
+		bundle.setTitleViewMessage(getString(R.string.end_visit_dialog_title));
+		bundle.setTextViewMessage(getString(R.string.end_visit_dialog_message));
+		bundle.setRightButtonAction(CustomFragmentDialog.OnClickAction.END_VISIT);
+		bundle.setRightButtonText(getString(R.string.dialog_button_confirm));
+		//bundle.setLeftButtonAction(CustomFragmentDialog.OnClickAction.DISMISS);
+		//bundle.setLeftButtonText(getString(R.string.dialog_button_cancel));
+		createAndShowDialog(bundle, ApplicationConstants.DialogTAG.END_VISIT_DIALOG_TAG);
+	}
+
 	public void showStartVisitImpossibleDialog(CharSequence title) {
 		CustomDialogBundle bundle = new CustomDialogBundle();
 		bundle.setTitleViewMessage(getString(R.string.start_visit_unsuccessful_dialog_title));

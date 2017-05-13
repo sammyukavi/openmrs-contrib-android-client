@@ -79,7 +79,8 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	@Override
 	public void fetchVisits(Patient patient) {
 		patientDashboardView.getVisitNoteContainer().removeAllViews();
-		visitDataService.getByPatient(patient, new QueryOptions(true,true), new PagingInfo(page, limit),
+		visitDataService.getByPatient(patient, QueryOptions.INCLUDE_INACTIVE, new PagingInfo(1, 20),
+
 				new DataService.GetCallback<List<Visit>>() {
 					@Override
 					public void onCompleted(List<Visit> visits) {
@@ -130,7 +131,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 		String personUuid = OpenMRS.getInstance().getCurrentLoggedInUserInfo().get(ApplicationConstants.UserKeys.USER_UUID);
 		if (StringUtils.notEmpty(personUuid)) {
 
-			providerDataService.getAll(QueryOptions.LOAD_RELATED_OBJECTS, new PagingInfo(page, limit),
+			providerDataService.getAll(QueryOptions.LOAD_RELATED_OBJECTS, new PagingInfo(page, 100),
 					new DataService.GetCallback<List<Provider>>() {
 						@Override
 						public void onCompleted(List<Provider> entities) {

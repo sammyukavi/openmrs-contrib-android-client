@@ -85,10 +85,6 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 					public void onCompleted(List<Visit> visits) {
 						if (!visits.isEmpty()) {
 							patientDashboardView.updateActiveVisitCard(visits);
-							patientDashboardView.showSnack("Visits found");
-							for (int i = 0; i < visits.size(); i++) {
-								System.out.println(visits.get(i).getDisplay() + "===========" + visits.get(i).getUuid());
-							}
 						} else {
 							patientDashboardView.showSnack("No visits found");
 						}

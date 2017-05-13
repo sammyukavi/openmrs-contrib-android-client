@@ -123,9 +123,9 @@ public class VisitTasksPresenter extends BasePresenter implements VisitTasksCont
 						}
 					};
 					System.out.println(instance.getPatientUuid() + "Patient Uuid ");
-					System.out.println("9279f05e-24d9-4d68-bdf0-884b432a2cb0" +  "Visit uuid");
+					System.out.println(instance.getVisitUuid() +  "Visit uuid");
 			visitTaskDataService.getAll(ApplicationConstants.EMPTY_STRING, instance.getPatientUuid(),
-					"9279f05e-24d9-4d68-bdf0-884b432a2cb0", QueryOptions.LOAD_RELATED_OBJECTS, pagingInfo, getMultipleCallback);
+					instance.getVisitUuid(), QueryOptions.LOAD_RELATED_OBJECTS, pagingInfo, getMultipleCallback);
 		} else {
 			// get the users from the local storage.
 		}
@@ -233,7 +233,7 @@ public class VisitTasksPresenter extends BasePresenter implements VisitTasksCont
 											.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 						}
 					};
-			visitDataService.getByUUID("9279f05e-24d9-4d68-bdf0-884b432a2cb0", QueryOptions.LOAD_RELATED_OBJECTS, getSingleCallback);
+			visitDataService.getByUUID(instance.getVisitUuid(), QueryOptions.LOAD_RELATED_OBJECTS, getSingleCallback);
 		} else {
 			// get the users from the local storage.
 		}

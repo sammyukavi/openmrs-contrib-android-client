@@ -51,15 +51,4 @@ public class BaseOpenmrsEntity extends BaseOpenmrsAuditableObject implements Ser
 	public void setVoidReason(String voidReason) {
 		this.voidReason = voidReason;
 	}
-
-	@Expose
-	private Patient patient;
-
-	public Patient getPatient() {
-		return patient;
-	}
-
-	public void setPatient(Patient patient) {
-		this.patient = patient;
-	}
 }

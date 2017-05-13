@@ -15,6 +15,7 @@
 package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
@@ -39,6 +40,10 @@ public class Visit extends BaseOpenmrsEntity {
 
 	@Expose
 	private List<VisitAttribute> attributes;
+
+	@SerializedName("patient")
+	@Expose
+	private Patient patient;
 
 	public Long getId() {
 		return id;
@@ -94,5 +99,13 @@ public class Visit extends BaseOpenmrsEntity {
 
 	public void setAttributes(List<VisitAttribute> attributes) {
 		this.attributes = attributes;
+	}
+
+	public Patient getPatient() {
+		return patient;
+	}
+
+	public void setPatient(Patient patient) {
+		this.patient = patient;
 	}
 }

@@ -16,8 +16,8 @@ package org.openmrs.mobile.models;
 import com.google.gson.annotations.Expose;
 
 public class Location extends BaseOpenmrsMetadata {
-	@Expose
-	private Long id;
+	//@Expose
+	//private Long id;
 
 	@Expose
 	private String parentLocationUuid;
@@ -45,7 +45,7 @@ public class Location extends BaseOpenmrsMetadata {
 
 	public Location(Long id, String name, String parentLocationUuid, String description, String address2, String address1,
 			String cityVillage, String stateProvince, String country, String postalCode) {
-		this.id = id;
+		//this.id = id;
 		setName(name);
 		this.parentLocationUuid = parentLocationUuid;
 		setDescription(description);
@@ -57,13 +57,13 @@ public class Location extends BaseOpenmrsMetadata {
 		this.postalCode = postalCode;
 	}
 
-	public Long getId() {
+	/*public Long getId() {
 		return id;
 	}
 
 	public void setId(Long id) {
 		this.id = id;
-	}
+	}*/
 
 	public String getParentLocationUuid() {
 		return parentLocationUuid;

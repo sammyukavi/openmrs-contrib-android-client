@@ -10,70 +10,67 @@
 
 package org.openmrs.mobile.models;
 
-import com.activeandroid.Model;
-import com.activeandroid.annotation.Table;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-@Table(name = "obscreate")
-public class Obscreate extends Model implements Serializable {
+public class Obscreate extends BaseOpenmrsAuditableObject implements Serializable {
+
+	@SerializedName("formFieldPath")
+	@Expose
+	private String formFieldPath;
+
+	@SerializedName("concept")
+	@Expose
+	private String concept;
 
 	@SerializedName("person")
 	@Expose
 	private String person;
+
+	@SerializedName("order")
+	@Expose
+	private String order;
+
+	@SerializedName("location")
+	@Expose
+	private String location;
+
 	@SerializedName("obsDatetime")
 	@Expose
 	private String obsDatetime;
-	@SerializedName("concept")
+
+	@SerializedName("formFieldNamespace")
 	@Expose
-	private String concept;
+	private String formFieldNamespace;
+
+	@SerializedName("groupMembers")
+	@Expose
+	private String groupMembers;
+
 	@SerializedName("value")
 	@Expose
 	private String value;
+
+	@SerializedName("accessionNumber")
+	@Expose
+	private String accessionNumber;
+
 	@SerializedName("encounter")
 	@Expose
 	private String encounter;
 
-	public String getPerson() {
-		return person;
-	}
+	@SerializedName("comment")
+	@Expose
+	private String comment;
 
-	public void setPerson(String person) {
-		this.person = person;
-	}
+	@SerializedName("valueModifier")
+	@Expose
+	private String valueModifier;
 
-	public String getObsDatetime() {
-		return obsDatetime;
-	}
-
-	public void setObsDatetime(String obsDatetime) {
-		this.obsDatetime = obsDatetime;
-	}
-
-	public String getConcept() {
-		return concept;
-	}
-
-	public void setConcept(String concept) {
-		this.concept = concept;
-	}
-
-	public String getEncounter() {
-		return encounter;
-	}
-
-	public void setEncounter(String encounter) {
-		this.encounter = encounter;
-	}
-
-	public String getValue() {
-		return value;
-	}
-
-	public void setValue(String value) {
-		this.value = value;
-	}
+	@SerializedName("valueCodedName")
+	@Expose
+	private String valueCodedName;
 
 }

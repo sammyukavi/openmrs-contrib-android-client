@@ -42,7 +42,9 @@ import org.openmrs.mobile.activities.visitphoto.upload.UploadVisitPhotoActivity;
 import org.openmrs.mobile.activities.visittasks.VisitTasksActivity;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
+import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.Encounter;
+import org.openmrs.mobile.models.EncounterCreate;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Person;
@@ -53,6 +55,7 @@ import org.openmrs.mobile.utilities.DateUtils;
 import org.openmrs.mobile.utilities.FontsUtil;
 import org.openmrs.mobile.utilities.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardContract.Presenter>
@@ -232,14 +235,29 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 				TextView visitNote = (TextView)row.findViewById(R.id.text);
 				ImageView visitNoteIcon = (ImageView)row.findViewById(R.id.icon);
 				visitNote.setHint(getResources().getString(R.string.add_a_note));
-				observationsContainer.addView(row);
 
+				//visitNote.setOnClickListener(switchToEditMode);
+				//visitNoteIcon.setOnClickListener(switchToEditMode);
+
+				Observation observation = new Observation();
+				observation.setConcept(new Concept());
+				observation.setPerson(patient.getPerson());
+				observation.setObsDatetime(DateUtils.now(DateUtils.OPEN_MRS_REQUEST_FORMAT));
+
+				ArrayList<Observation> observations = new ArrayList<>();
+				observations.add(observation);
+				EncounterCreate encounterCreate = new EncounterCreate();
+				encounterCreate.setPatient(patient.getUuid());
+				encounterCreate.setEncounterType(ApplicationConstants.EncounterTypeEntitys.VISIT_NOTE);
+				encounterCreate.setObs(observations);
+
+				ConsoleLogger.dumpToJson(encounterCreate);
+
+				observationsContainer.addView(row);
 				createEditVisitNoteDialog.setEditNoteTextViewMessage("");
 				createEditVisitNoteDialog.setRightButtonAction(CustomFragmentDialog.OnClickAction.CREATE_VISIT_NOTE);
 				createEditVisitNoteDialog.setArguments(dialogBundle);
 
-				visitNote.setOnClickListener(switchToEditMode);
-				visitNoteIcon.setOnClickListener(switchToEditMode);
 			} else {
 				for (Encounter encounter : activeVisit.getEncounters()) {
 					switch (encounter.getEncounterType().getDisplay()) {
@@ -264,7 +282,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 				/**
 				 * Load more here
 				 */
-				ConsoleLogger.dump("Loading more");
+				//ConsoleLogger.dump("Loading more");
 				//pastVisitsRecyclerAdapter.notifyDataSetChanged();
 				//pastVisitsRecyclerAdapter.setLoaded();
 			}
@@ -277,7 +295,6 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		newObs.setUuid(observation.getUuid());
 		newObs.setConcept(observation.getConcept());
 		newObs.setPerson(patient.getPerson());
-		newObs.setObsDatetime(DateUtils.now(DateUtils.OPEN_MRS_REQUEST_FORMAT));
 
 		View row = LayoutInflater.from(getContext()).inflate(R.layout.visits_obervation_row, null);
 		TextView visitNote = (TextView)row.findViewById(R.id.text);

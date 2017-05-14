@@ -63,7 +63,7 @@ public class Observation extends BaseOpenmrsEntity implements Serializable {
 	@Expose
 	private String value;
 
-	private Long id;
+	//private Long id;
 	private Long encounterID;
 	private String displayValue;
 
@@ -239,14 +239,6 @@ public class Observation extends BaseOpenmrsEntity implements Serializable {
 	 */
 	public void setResourceVersion(String resourceVersion) {
 		this.resourceVersion = resourceVersion;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public Long getEncounterID() {

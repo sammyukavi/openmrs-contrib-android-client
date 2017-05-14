@@ -6,6 +6,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Date;
 
 public class BaseOpenmrsAuditableObject extends BaseOpenmrsObject {
+	
 	@SerializedName("creator")
 	@Expose
 	private User creator;

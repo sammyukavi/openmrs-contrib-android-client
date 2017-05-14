@@ -20,8 +20,6 @@ import java.util.List;
 
 public class Visit extends BaseOpenmrsEntity {
 
-	private Long id;
-
 	@Expose
 	private VisitType visitType;
 
@@ -40,13 +38,13 @@ public class Visit extends BaseOpenmrsEntity {
 	@Expose
 	private List<VisitAttribute> attributes;
 
-	public Long getId() {
+	/*public Long getId() {
 		return id;
 	}
 
 	public void setId(Long id) {
 		this.id = id;
-	}
+	}*/
 
 	public VisitType getVisitType() {
 		return visitType;

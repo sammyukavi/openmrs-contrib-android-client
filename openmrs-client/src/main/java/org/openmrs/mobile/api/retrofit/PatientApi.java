@@ -308,7 +308,7 @@ public class PatientApi extends RetrofitApi {
 		return deferredObject.promise();
 	}*/
 	private void addEncounters(Patient patient) {
-		/*String enc = patient.getEncounters();
+		String enc = patient.getEncounters();
 		List<Long> list = new ArrayList<>();
 		for (String s : enc.split(","))
 			list.add(Long.parseLong(s));
@@ -321,7 +321,7 @@ public class PatientApi extends RetrofitApi {
 			encounterCreate.setPatient(patient.getUuid());
 			encounterCreate.save();
 			new EncounterService().addEncounter(encounterCreate);
-		}*/
+		}
 	}
 
 	private SimplePromise<String> getIdGenPatientIdentifier() {

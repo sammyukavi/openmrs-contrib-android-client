@@ -33,7 +33,7 @@ public final class URLValidator {
 		Matcher matcher = urlPattern.matcher(trimLastSpace(ensuredUrl));
 		String validURL = trimLastSpace(ensuredUrl);
 		if (matcher.matches()) {
-			//validURL = trimLastSlash(validURL);
+			validURL = trimLastSlash(validURL);
 			validURL = toLowerCase(validURL);
 			result = new ValidationResult(true, validURL);
 		} else {

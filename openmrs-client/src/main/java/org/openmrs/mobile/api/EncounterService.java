@@ -14,11 +14,24 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 
+import com.activeandroid.query.Select;
+
+import org.openmrs.mobile.api.retrofit.VisitApi;
+import org.openmrs.mobile.dao.PatientDAO;
+import org.openmrs.mobile.dao.VisitDAO;
 import org.openmrs.mobile.listeners.retrofit.DefaultResponseCallbackListener;
+import org.openmrs.mobile.listeners.retrofit.StartVisitResponseListenerCallback;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.EncounterCreate;
 import org.openmrs.mobile.utilities.NetworkUtils;
 import org.openmrs.mobile.utilities.ToastUtil;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import rx.android.schedulers.AndroidSchedulers;
 
 public class EncounterService extends IntentService {
 
@@ -32,7 +45,7 @@ public class EncounterService extends IntentService {
 			@Nullable DefaultResponseCallbackListener callbackListener) {
 
 		if (NetworkUtils.isOnline()) {
-			/*new VisitDAO().getActiveVisitByPatientId(encounterCreate.getPatientId())
+			new VisitDAO().getActiveVisitByPatientId(encounterCreate.getPatientId())
 					.observeOn(AndroidSchedulers.mainThread())
 					.subscribe(visit -> {
 						if (visit != null) {
@@ -46,7 +59,7 @@ public class EncounterService extends IntentService {
 
 							startNewVisitForEncounter(encounterCreate);
 						}
-					});*/
+					});
 		} else
 			ToastUtil.error("No internet connection. Form data is saved locally " +
 					"and will sync when internet connection is restored. ");
@@ -58,7 +71,7 @@ public class EncounterService extends IntentService {
 
 	private void startNewVisitForEncounter(final EncounterCreate encounterCreate,
 			@Nullable final DefaultResponseCallbackListener callbackListener) {
-		/*new VisitApi().startVisit(new PatientDAO().findPatientByUUID(encounterCreate.getPatient()),
+		new VisitApi().startVisit(new PatientDAO().findPatientByUUID(encounterCreate.getPatient()),
 				new StartVisitResponseListenerCallback() {
 					@Override
 					public void onStartVisitResponse(long id) {
@@ -83,7 +96,7 @@ public class EncounterService extends IntentService {
 					public void onErrorResponse(String errorMessage) {
 						ToastUtil.error(errorMessage);
 					}
-				});*/
+				});
 	}
 
 	public void startNewVisitForEncounter(final EncounterCreate encounterCreate) {
@@ -95,7 +108,7 @@ public class EncounterService extends IntentService {
 
 		if (NetworkUtils.isOnline()) {
 
-			/*encounterCreate.pullObslist();
+			encounterCreate.pullObslist();
 			Call<Encounter> call = apiService.createEncounter(encounterCreate);
 			call.enqueue(new Callback<Encounter>() {
 				@Override
@@ -105,7 +118,7 @@ public class EncounterService extends IntentService {
 						linkvisit(encounterCreate.getPatientId(), encounterCreate.getFormname(), encounter,
 								encounterCreate);
 						encounterCreate.setSynced(true);
-						//encounterCreate.save();
+						encounterCreate.save();
 						new VisitApi().syncLastVitals(encounterCreate.getPatient());
 						if (callbackListener != null) {
 							callbackListener.onResponse();
@@ -123,7 +136,7 @@ public class EncounterService extends IntentService {
 						callbackListener.onErrorResponse(t.getLocalizedMessage());
 					}
 				}
-			});*/
+			});
 
 		} else {
 			ToastUtil.error("Sync is off. Turn on sync to save form data.");
@@ -135,7 +148,7 @@ public class EncounterService extends IntentService {
 		syncEncounter(encounterCreate, null);
 	}
 
-	private void linkvisit(Long patientid, String formname, Encounter encounter, EncounterCreate encounterCreate) {/*
+	private void linkvisit(Long patientid, String formname, Encounter encounter, EncounterCreate encounterCreate) {
 		VisitDAO visitDAO = new VisitDAO();
 		visitDAO.getVisitByUuid(encounter.getVisit().getUuid())
 				.observeOn(AndroidSchedulers.mainThread())
@@ -151,14 +164,14 @@ public class EncounterService extends IntentService {
 							.observeOn(AndroidSchedulers.mainThread())
 							.subscribe(id ->
 									ToastUtil.success(formname + " data saved successfully"));
-				});*/
+				});
 	}
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		if (NetworkUtils.isOnline()) {
 
-			/*List<EncounterCreate> encountercreatelist = new Select()
+			List<EncounterCreate> encountercreatelist = new Select()
 					.from(EncounterCreate.class)
 					.execute();
 
@@ -178,7 +191,7 @@ public class EncounterService extends IntentService {
 							});
 				}
 			}
-*/
+
 		} else {
 			ToastUtil.error("No internet connection. Form data is saved locally " +
 					"and will sync when internet connection is restored. ");

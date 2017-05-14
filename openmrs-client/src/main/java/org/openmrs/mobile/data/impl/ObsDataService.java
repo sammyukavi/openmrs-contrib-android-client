@@ -61,7 +61,7 @@ public class ObsDataService extends BaseDataService<Observation, ObsDbService, O
 
 	@Override
 	protected Call<Observation> _restUpdate(String restPath, Observation entity) {
-		return restService.update(restPath, entity.getUuid(), entity);
+		return null;
 	}
 
 	@Override
@@ -91,4 +91,3 @@ public class ObsDataService extends BaseDataService<Observation, ObsDbService, O
 		);
 	}
 }
-

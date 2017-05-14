@@ -21,6 +21,8 @@ import java.util.List;
 
 public class Encounter extends BaseOpenmrsAuditableObject implements Serializable {
 
+	private Long id;
+
 	@SerializedName("encounterDatetime")
 	@Expose
 	private String encounterDatetime;
@@ -57,6 +59,14 @@ public class Encounter extends BaseOpenmrsAuditableObject implements Serializabl
 
 	private Long visitID;
 	private String patientUUID;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public Long getVisitID() {
 		return visitID;

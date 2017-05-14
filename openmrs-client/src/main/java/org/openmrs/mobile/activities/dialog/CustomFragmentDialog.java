@@ -46,9 +46,9 @@ import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
 import org.openmrs.mobile.activities.addeditpatient.AddEditPatientActivity;
 import org.openmrs.mobile.activities.addeditpatient.SimilarPatientsRecyclerViewAdapter;
+import org.openmrs.mobile.activities.addeditvisit.AddEditVisitActivity;
 import org.openmrs.mobile.activities.login.LoginActivity;
 import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
-import org.openmrs.mobile.activities.patientdashboard.PatientDashboardContract;
 import org.openmrs.mobile.activities.visittasks.VisitTasksActivity;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
@@ -58,7 +58,6 @@ import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.VisitPredefinedTask;
 import org.openmrs.mobile.utilities.ApplicationConstants;
-import org.openmrs.mobile.utilities.DateUtils;
 import org.openmrs.mobile.utilities.FontsUtil;
 import org.openmrs.mobile.utilities.StringUtils;
 
@@ -415,6 +414,7 @@ public class CustomFragmentDialog extends DialogFragment {
 						break;
 					case END_VISIT:
 						//((VisitDashboardActivity) getActivity()).findPatientPresenter.endVisit();
+						((AddEditVisitActivity) getActivity()).addEditVisitPresenter.endVisit();
 						dismiss();
 						break;
 					case START_VISIT:
@@ -449,17 +449,17 @@ public class CustomFragmentDialog extends DialogFragment {
 					case SAVE_VISIT_NOTE:
 
 						Bundle bundle = mCustomDialogBundle.getArguments();
-						PatientDashboardContract.Presenter mPresenter =
-								((PatientDashboardActivity)getActivity()).mPresenter;
+						Patient patient = (Patient)bundle.getSerializable(ApplicationConstants.BundleKeys.PATIENT);
 						Observation observation =
 								(Observation)bundle.getSerializable(ApplicationConstants.BundleKeys.OBSERVATION);
 						observation.setValue(getEditNoteTextValue());
-						observation.setObsDatetime(DateUtils.now(DateUtils.OPEN_MRS_REQUEST_FORMAT));
+
 						ObsDataService observationDataService = new ObsDataService();
+
 						observationDataService.update(observation, new DataService.GetCallback<Observation>() {
 							@Override
 							public void onCompleted(Observation entity) {
-								mPresenter.fetchVisits(mPresenter.getPatient());
+								((PatientDashboardActivity)getActivity()).mPresenter.fetchVisits(patient);
 								dismiss();
 							}
 

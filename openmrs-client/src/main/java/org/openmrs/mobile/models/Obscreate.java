@@ -10,67 +10,70 @@
 
 package org.openmrs.mobile.models;
 
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Table;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class Obscreate extends BaseOpenmrsAuditableObject implements Serializable {
-
-	@SerializedName("formFieldPath")
-	@Expose
-	private String formFieldPath;
-
-	@SerializedName("concept")
-	@Expose
-	private String concept;
+@Table(name = "obscreate")
+public class Obscreate extends Model implements Serializable {
 
 	@SerializedName("person")
 	@Expose
 	private String person;
-
-	@SerializedName("order")
-	@Expose
-	private String order;
-
-	@SerializedName("location")
-	@Expose
-	private String location;
-
 	@SerializedName("obsDatetime")
 	@Expose
 	private String obsDatetime;
-
-	@SerializedName("formFieldNamespace")
+	@SerializedName("concept")
 	@Expose
-	private String formFieldNamespace;
-
-	@SerializedName("groupMembers")
-	@Expose
-	private String groupMembers;
-
+	private String concept;
 	@SerializedName("value")
 	@Expose
 	private String value;
-
-	@SerializedName("accessionNumber")
-	@Expose
-	private String accessionNumber;
-
 	@SerializedName("encounter")
 	@Expose
 	private String encounter;
 
-	@SerializedName("comment")
-	@Expose
-	private String comment;
+	public String getPerson() {
+		return person;
+	}
 
-	@SerializedName("valueModifier")
-	@Expose
-	private String valueModifier;
+	public void setPerson(String person) {
+		this.person = person;
+	}
 
-	@SerializedName("valueCodedName")
-	@Expose
-	private String valueCodedName;
+	public String getObsDatetime() {
+		return obsDatetime;
+	}
+
+	public void setObsDatetime(String obsDatetime) {
+		this.obsDatetime = obsDatetime;
+	}
+
+	public String getConcept() {
+		return concept;
+	}
+
+	public void setConcept(String concept) {
+		this.concept = concept;
+	}
+
+	public String getEncounter() {
+		return encounter;
+	}
+
+	public void setEncounter(String encounter) {
+		this.encounter = encounter;
+	}
+
+	public String getValue() {
+		return value;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
+	}
 
 }

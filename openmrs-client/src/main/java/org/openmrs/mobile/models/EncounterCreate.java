@@ -10,88 +10,68 @@
 
 package org.openmrs.mobile.models;
 
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.Serializable;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 
-public class EncounterCreate extends Resource implements Serializable {
+@Table(name = "encountercreate")
+public class EncounterCreate extends Model implements Serializable {
 
-	@SerializedName("obs")
-	@Expose
-	private ArrayList<Observation> obs;
+	private Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+	private Type obscreatetype = new TypeToken<List<Obscreate>>() {
+	}.getType();
 
-	@SerializedName("patient")
-	@Expose
-	private String patient;
-
-	@SerializedName("form")
-	@Expose
-	private String form;
-
-	@SerializedName("location")
-	@Expose
-	private String location;
-
-	@SerializedName("voided")
-	@Expose
-	private String voided;
-
+	@Column(name = "visit")
 	@SerializedName("visit")
 	@Expose
 	private String visit;
 
-	@SerializedName("orders")
+	@Column(name = "patient")
+	@SerializedName("patient")
 	@Expose
-	private String orders;
+	private String patient;
 
-	@SerializedName("encounterProviders")
-	@Expose
-	private String encounterProviders;
+	@Column(name = "patientid")
+	private Long patientId;
 
-	@SerializedName("auditInfo")
-	@Expose
-	private String auditInfo;
-
+	@Column(name = "encounterType")
 	@SerializedName("encounterType")
 	@Expose
 	private String encounterType;
 
-	@SerializedName("encounterDatetime")
+	@SerializedName("form")
 	@Expose
-	private String encounterDatetime;
+	private String formUuid;
 
-	public String getPatient() {
-		return patient;
+	@Column(name = "formname")
+	private String formname;
+
+	@Column(name = "synced")
+	private boolean synced = false;
+
+	@SerializedName("obs")
+	@Expose
+	private List<Obscreate> observations = new ArrayList<>();
+
+	@Column(name = "obs")
+	private String obslist;
+
+	public String getFormUuid() {
+		return formUuid;
 	}
 
-	public void setPatient(String patient) {
-		this.patient = patient;
-	}
-
-	public String getForm() {
-		return form;
-	}
-
-	public void setForm(String form) {
-		this.form = form;
-	}
-
-	public String getLocation() {
-		return location;
-	}
-
-	public void setLocation(String location) {
-		this.location = location;
-	}
-
-	public String getVoided() {
-		return voided;
-	}
-
-	public void setVoided(String voided) {
-		this.voided = voided;
+	public void setFormUuid(String formUuid) {
+		this.formUuid = formUuid;
 	}
 
 	public String getVisit() {
@@ -102,28 +82,20 @@ public class EncounterCreate extends Resource implements Serializable {
 		this.visit = visit;
 	}
 
-	public String getOrders() {
-		return orders;
+	public Long getPatientId() {
+		return patientId;
 	}
 
-	public void setOrders(String orders) {
-		this.orders = orders;
+	public void setPatientId(Long patientId) {
+		this.patientId = patientId;
 	}
 
-	public String getEncounterProviders() {
-		return encounterProviders;
+	public String getPatient() {
+		return patient;
 	}
 
-	public void setEncounterProviders(String encounterProviders) {
-		this.encounterProviders = encounterProviders;
-	}
-
-	public String getAuditInfo() {
-		return auditInfo;
-	}
-
-	public void setAuditInfo(String auditInfo) {
-		this.auditInfo = auditInfo;
+	public void setPatient(String patient) {
+		this.patient = patient;
 	}
 
 	public String getEncounterType() {
@@ -134,19 +106,38 @@ public class EncounterCreate extends Resource implements Serializable {
 		this.encounterType = encounterType;
 	}
 
-	public String getEncounterDatetime() {
-		return encounterDatetime;
+	public String getFormname() {
+		return formname;
 	}
 
-	public void setEncounterDatetime(String encounterDatetime) {
-		this.encounterDatetime = encounterDatetime;
+	public void setFormname(String formname) {
+		this.formname = formname;
 	}
 
-	public ArrayList<Observation> getObs() {
-		return obs;
+	public Boolean getSynced() {
+		return synced;
 	}
 
-	public void setObs(ArrayList<Observation> obs) {
-		this.obs = obs;
+	public void setSynced(Boolean synced) {
+		this.synced = synced;
 	}
+
+	public List<Obscreate> getObservations() {
+		return observations;
+	}
+
+	public void setObservations(List<Obscreate> observations) {
+		this.observations = observations;
+	}
+
+	public void setObslist() {
+		this.obslist = gson.toJson(observations, obscreatetype);
+	}
+
+	public void pullObslist() {
+
+		List<Obscreate> obscreateList = gson.fromJson(this.obslist, obscreatetype);
+		this.observations = obscreateList;
+	}
+
 }

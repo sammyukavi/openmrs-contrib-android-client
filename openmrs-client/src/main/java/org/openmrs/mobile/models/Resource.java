@@ -13,10 +13,10 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Resource implements Serializable {
-
 	private static final long serialVersionUID = 1;
 
 	private Long id;
@@ -39,7 +39,7 @@ public class Resource implements Serializable {
 
 	@SerializedName("links")
 	@Expose
-	protected List<Link> links;
+	protected List<Link> links = new ArrayList<Link>();
 
 	/**
 	 * @return The uuid

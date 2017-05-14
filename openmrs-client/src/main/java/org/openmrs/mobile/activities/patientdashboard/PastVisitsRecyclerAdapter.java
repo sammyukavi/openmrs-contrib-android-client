@@ -78,10 +78,10 @@ public class PastVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 	@Override
 	public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		if (viewType == VIEW_TYPE_ITEM) {
-			View view = LayoutInflater.from(context).inflate(R.layout.previous_visits_row, parent, false);
+			View view = LayoutInflater.from(context).inflate(R.layout.past_visits_row, parent, false);
 			return new VisitViewHolder(view);
 		} else if (viewType == VIEW_TYPE_LOADING) {
-			View view = LayoutInflater.from(context).inflate(R.layout.previous_visits_loading, parent, false);
+			View view = LayoutInflater.from(context).inflate(R.layout.past_visits_loading, parent, false);
 			return new LoadingViewHolder(view);
 		}
 		return null;
@@ -145,14 +145,14 @@ public class PastVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 			Visit visit = visits.get(position);
 			VisitViewHolder viewHolder = (VisitViewHolder)holder;
 			LayoutInflater layoutInflater = LayoutInflater.from(context);
-			View singleVisitView = layoutInflater.inflate(R.layout.previous_visits_card, null);
+			View singleVisitView = layoutInflater.inflate(R.layout.past_visits_card, null);
 			LinearLayout observationsContainer = (LinearLayout)singleVisitView.findViewById(R.id.observationsContainer);
 			TextView visitTitle = (TextView)singleVisitView.findViewById(R.id.visitTitle);
 			visitTitle.setText("Visit: " + DateUtils
 					.convertTime1(visit.getStopDatetime(), DateUtils
-							.PATIENT_DASHBOARD_DATE_FORMAT) + " - " + DateUtils
+							.PATIENT_DASHBOARD_VISIT_DATE_FORMAT) + " - " + DateUtils
 					.convertTime1(visit.getStartDatetime(), DateUtils
-							.PATIENT_DASHBOARD_DATE_FORMAT));
+							.PATIENT_DASHBOARD_VISIT_DATE_FORMAT));
 			visitTitle.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -172,7 +172,7 @@ public class PastVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 											if (observation.getDiagnosisNote() != null && !observation.getDiagnosisNote()
 													.equals(ApplicationConstants.EMPTY_STRING)) {
 												View row = layoutInflater
-														.inflate(R.layout.previous_visits_obervation_row, null);
+														.inflate(R.layout.visits_obervation_row, null);
 												((TextView)row.findViewById(R.id.text))
 														.setText(observation.getDiagnosisNote());
 												observationsContainer.addView(row);

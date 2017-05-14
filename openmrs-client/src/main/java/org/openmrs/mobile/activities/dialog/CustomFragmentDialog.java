@@ -448,7 +448,7 @@ public class CustomFragmentDialog extends DialogFragment {
 					case SAVE_VISIT_NOTE:
 
 						Bundle bundle = mCustomDialogBundle.getArguments();
-						PatientDashboardContract.Presenter presenter =
+						PatientDashboardContract.Presenter mPresenter =
 								((PatientDashboardActivity)getActivity()).mPresenter;
 						Observation observation =
 								(Observation)bundle.getSerializable(ApplicationConstants.BundleKeys.OBSERVATION);
@@ -457,7 +457,7 @@ public class CustomFragmentDialog extends DialogFragment {
 						observationDataService.update(observation, new DataService.GetCallback<Observation>() {
 							@Override
 							public void onCompleted(Observation entity) {
-								presenter.fetchVisits(presenter.getPatient());
+								mPresenter.fetchVisits(mPresenter.getPatient());
 								dismiss();
 							}
 

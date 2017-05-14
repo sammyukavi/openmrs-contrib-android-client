@@ -21,6 +21,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -283,6 +284,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		ImageView visitNoteIcon = (ImageView)row.findViewById(R.id.icon);
 		visitNote.setHint(getResources().getString(R.string.add_a_note));
 		visitNote.setText(observation.getDiagnosisNote());
+		visitNote.setMovementMethod(new ScrollingMovementMethod());
 
 		visitNoteIcon.setOnClickListener(switchToEditMode);
 		//visitNote.setOnClickListener(switchToEditMode);

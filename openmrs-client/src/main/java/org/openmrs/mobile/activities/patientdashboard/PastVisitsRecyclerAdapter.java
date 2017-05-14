@@ -1,6 +1,5 @@
 package org.openmrs.mobile.activities.patientdashboard;
 
-import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
@@ -90,13 +89,17 @@ public class PastVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 	public void expandCollapse(View view) {
 		if (view.getVisibility() == View.GONE) {
 			view.setVisibility(View.VISIBLE);
+			//int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+			//ConsoleLogger.dump(heightMeasureSpec);
+			/*
 			final int widthSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
 			final int heightSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
 			view.measure(widthSpec, heightSpec);
 			ValueAnimator mAnimator = slideAnimator(view, 0, view.getMeasuredHeight());
-			mAnimator.start();
+			mAnimator.start();*/
 		} else {
-			int finalHeight = view.getHeight();
+			view.setVisibility(View.GONE);
+			/*int finalHeight = view.getHeight();
 			ValueAnimator mAnimator = slideAnimator(view, finalHeight, 0);
 			mAnimator.addListener(new Animator.AnimatorListener() {
 				@Override
@@ -120,7 +123,7 @@ public class PastVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 				}
 
 			});
-			mAnimator.start();
+			mAnimator.start();*/
 		}
 
 	}

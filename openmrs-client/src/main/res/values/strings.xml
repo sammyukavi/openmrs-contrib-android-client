@@ -435,7 +435,7 @@
 	<string name="inpatient_service_type">Type of inpatient service</string>
 	<string name="discharge_diagnosis">Discharge Diagnosis:</string>
 
-	<string-array name="inpatient_service_type">
+	<string-array name="inpatient_service_types">
 		<item></item>
 		<item>General medicine service</item>
 		<item>Surgery service</item>

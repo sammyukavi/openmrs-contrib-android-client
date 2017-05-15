@@ -434,6 +434,7 @@
 	<string name="hba1c">HbA1c:</string>
 	<string name="inpatient_service_type">Type of inpatient service</string>
 	<string name="discharge_diagnosis">Discharge Diagnosis:</string>
+	<string name="unknown">Unknown</string>
 
 	<string-array name="inpatient_service_types">
 		<item></item>

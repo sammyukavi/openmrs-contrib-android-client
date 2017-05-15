@@ -2,7 +2,6 @@ package org.openmrs.mobile.activities.visitphoto.download;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,7 +15,6 @@ import android.widget.TextView;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.data.DataService;
-import org.openmrs.mobile.utilities.ApplicationConstants;
 
 import java.util.HashMap;
 import java.util.List;
@@ -66,7 +64,7 @@ public class DownloadVisitPhotoRecyclerViewAdapter
 		holder.image.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View imageView) {
-				if(map.containsKey(imageView)) {
+				if (map.containsKey(imageView)) {
 					Dialog settingsDialog = new Dialog(context);
 					settingsDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 					RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(1000, 800);

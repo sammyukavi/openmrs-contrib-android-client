@@ -23,8 +23,6 @@ import org.openmrs.mobile.data.impl.ObsDataService;
 import org.openmrs.mobile.data.impl.PatientDataService;
 import org.openmrs.mobile.data.impl.ProviderDataService;
 import org.openmrs.mobile.data.impl.VisitDataService;
-import org.openmrs.mobile.models.Encounter;
-import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Provider;
 import org.openmrs.mobile.models.Visit;
@@ -42,9 +40,8 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	private ObsDataService observationDataService;
 	private ProviderDataService providerDataService;
 	private final static int page = 1;
-	private int startIndex = 1;
+	private final int startIndex = 0;
 	private int limit = 5;
-
 
 	public PatientDashboardPresenter(PatientDashboardContract.View view) {
 		this.patientDashboardView = view;
@@ -60,10 +57,6 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 		getCurrentProvider();
 	}
 
-	public void setStartIndex(int startIndex) {
-		this.startIndex = startIndex;
-	}
-
 	@Override
 	public void setLimit(int limit) {
 		this.limit = limit;
@@ -71,6 +64,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
 	@Override
 	public void fetchPatientData(String uuid) {
+
 		patientDataService.getByUUID(uuid, QueryOptions.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Patient>() {
 			@Override
 			public void onCompleted(Patient patient) {
@@ -89,7 +83,6 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
 	@Override
 	public void fetchVisits(Patient patient) {
-		patientDashboardView.getVisitNoteContainer().removeAllViews();
 		visitDataService.getByPatient(patient, new QueryOptions(true, true), new PagingInfo(startIndex, limit),
 				new DataService.GetCallback<List<Visit>>() {
 					@Override
@@ -105,28 +98,6 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 					public void onError(Throwable t) {
 						t.printStackTrace();
 						patientDashboardView.showSnack("Visit fetch error");
-					}
-				});
-	}
-
-	@Override
-	public void fetchEncounterObservations(Encounter encounter) {
-		observationDataService.getByEncounter(encounter, QueryOptions.INCLUDE_INACTIVE, new PagingInfo(startIndex, limit),
-				new DataService.GetCallback<List<Observation>>() {
-					@Override
-					public void onCompleted(List<Observation> observations) {
-						for (Observation observation : observations) {
-							if (observation.getDiagnosisNote() != null && !observation.getDiagnosisNote()
-									.equals(ApplicationConstants.EMPTY_STRING)) {
-								patientDashboardView.updateActiveVisitObservationsCard(observation);
-							}
-						}
-					}
-
-					@Override
-					public void onError(Throwable t) {
-						patientDashboardView.showSnack("Error fetching observations");
-						t.printStackTrace();
 					}
 				});
 	}

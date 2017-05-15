@@ -34,7 +34,7 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 	@NonNull
 	private FindPatientRecordContract.View findPatientView;
 	private int totalNumberResults;
-	private int page = 1;
+	private int page = 0;
 	private int limit = 10;
 	private PatientDataService patientDataService;
 	private boolean loading;
@@ -62,7 +62,7 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 
 	public void findPatient(String query) {
 		findPatientView.setProgressBarVisibility(true);
-		findPatientView.setFetchedPatientsVisibility(0);
+		findPatientView.setFetchedPatientsVisibility(false);
 		PagingInfo pagingInfo = new PagingInfo(page, 100);
 		DataService.GetCallback<List<Patient>> getMultipleCallback = new DataService.GetCallback<List<Patient>>() {
 			@Override
@@ -72,12 +72,12 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 					findPatientView.setNumberOfPatientsView(0);
 					findPatientView.setSearchPatientVisibility(false);
 					findPatientView.setNoPatientsVisibility(true);
-					findPatientView.setFetchedPatientsVisibility(0);
+					findPatientView.setFetchedPatientsVisibility(false);
 				} else {
 					findPatientView.setNoPatientsVisibility(false);
 					findPatientView.setSearchPatientVisibility(false);
 					findPatientView.setNumberOfPatientsView(patients.size());
-					findPatientView.setFetchedPatientsVisibility(patients.size());
+					findPatientView.setFetchedPatientsVisibility(true);
 					findPatientView.fetchPatients(patients);
 					findPatientView.showToast(ApplicationConstants.entityName.PATIENTS + ApplicationConstants
 							.toastMessages.fetchSuccessMessage, ToastUtil.ToastType.SUCCESS);
@@ -96,15 +96,10 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 				getMultipleCallback);
 	}
 
-	public void getLastViewed(int page) {
+	public void getLastViewed() {
 		findPatientView.setProgressBarVisibility(true);
-		findPatientView.setFetchedPatientsVisibility(0);
-		if (page <= 0) {
-			return;
-		}
-		setPage(page);
+		findPatientView.setFetchedPatientsVisibility(false);
 		setLoading(true);
-		setTotalNumberResults(0);
 		PagingInfo pagingInfo = new PagingInfo(page, limit);
 		patientDataService.getLastViewed(ApplicationConstants.EMPTY_STRING, QueryOptions.LOAD_RELATED_OBJECTS, pagingInfo,
 				new DataService.GetCallback<List<Patient>>() {
@@ -113,9 +108,8 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 						findPatientView.setProgressBarVisibility(false);
 
 						if (!patients.isEmpty()) {
-							findPatientView.setNumberOfPatientsView(pagingInfo.getTotalRecordCount());
-							findPatientView.setFetchedPatientsVisibility(pagingInfo.getTotalRecordCount());
-
+							findPatientView.setNumberOfPatientsView(0);
+							findPatientView.setFetchedPatientsVisibility(true);
 							findPatientView.fetchPatients(patients);
 							findPatientView
 									.showToast(ApplicationConstants.entityName.LAST_VIEWED_PATIENT +
@@ -123,11 +117,10 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 															.toastMessages.fetchSuccessMessage,
 											ToastUtil.ToastType.SUCCESS);
 						} else {
-							findPatientView.setNumberOfPatientsView(pagingInfo.getTotalRecordCount());
-							findPatientView.setFetchedPatientsVisibility(pagingInfo.getTotalRecordCount());
+							findPatientView.setNumberOfPatientsView(patients.size());
+							findPatientView.setFetchedPatientsVisibility(false);
 						}
 						setLoading(false);
-						setTotalNumberResults(pagingInfo.getTotalRecordCount());
 					}
 
 					@Override
@@ -182,7 +175,7 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 
 	@Override
 	public void loadResults(boolean loadNextResults) {
-		getLastViewed(computePage(loadNextResults));
+		getLastViewed();
 	}
 
 	@Override

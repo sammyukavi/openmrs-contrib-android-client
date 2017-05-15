@@ -39,7 +39,6 @@ import org.openmrs.mobile.utilities.StringUtils;
 import org.openmrs.mobile.utilities.ToastUtil;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class AddEditVisitPresenter extends BasePresenter implements AddEditVisitContract.Presenter {
@@ -118,17 +117,18 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 
 	private void loadPatient() {
 		if (StringUtils.notEmpty(patientUuid)) {
-			patientDataService.getByUUID(patientUuid, QueryOptions.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Patient>() {
-				@Override
-				public void onCompleted(Patient entity) {
-					loadVisit(entity);
-				}
+			patientDataService
+					.getByUUID(patientUuid, QueryOptions.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Patient>() {
+						@Override
+						public void onCompleted(Patient entity) {
+							loadVisit(entity);
+						}
 
-				@Override
-				public void onError(Throwable t) {
-					ToastUtil.error(t.getMessage());
-				}
-			});
+						@Override
+						public void onError(Throwable t) {
+							ToastUtil.error(t.getMessage());
+						}
+					});
 		}
 	}
 
@@ -197,17 +197,18 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	 * TODO: Move to Base class
 	 */
 	public void getLocation() {
-		locationDataService.getByUUID(OpenMRS.getInstance().getLocation(), QueryOptions.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Location>() {
-			@Override
-			public void onCompleted(Location entity) {
-				location = entity;
-			}
+		locationDataService.getByUUID(OpenMRS.getInstance().getLocation(), QueryOptions.LOAD_RELATED_OBJECTS,
+				new DataService.GetCallback<Location>() {
+					@Override
+					public void onCompleted(Location entity) {
+						location = entity;
+					}
 
-			@Override
-			public void onError(Throwable t) {
-				ToastUtil.error(t.getMessage());
-			}
-		});
+					@Override
+					public void onError(Throwable t) {
+						ToastUtil.error(t.getMessage());
+					}
+				});
 	}
 
 	@Override

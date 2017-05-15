@@ -23,7 +23,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.openmrs.mobile.R;
-import org.openmrs.mobile.activities.addeditvisit.AddEditVisitActivity;
 import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
 import org.openmrs.mobile.models.PatientListContext;
 import org.openmrs.mobile.utilities.ApplicationConstants;
@@ -58,19 +57,19 @@ public class PatientListModelRecyclerViewAdapter
 	public void onBindViewHolder(PatientListModelViewHolder holder, int position) {
 		PatientListContext patientListContext = items.get(position);
 
-        holder.headerContent.setText(StringUtils.stripHtmlTags(patientListContext.getHeaderContent()));
-        holder.bodyContent.setText(StringUtils.stripHtmlTags(patientListContext.getBodyContent()));
-        holder.rowLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, PatientDashboardActivity.class);
-                intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE,
-                        patientListContext.getPatient().getUuid());
-                context.startActivity(intent);
-                context.finish();
-            }
-        });
-    }
+		holder.headerContent.setText(StringUtils.stripHtmlTags(patientListContext.getHeaderContent()));
+		holder.bodyContent.setText(StringUtils.stripHtmlTags(patientListContext.getBodyContent()));
+		holder.rowLayout.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(context, PatientDashboardActivity.class);
+				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE,
+						patientListContext.getPatient().getUuid());
+				context.startActivity(intent);
+				context.finish();
+			}
+		});
+	}
 
 	@Override
 	public int getItemCount() {

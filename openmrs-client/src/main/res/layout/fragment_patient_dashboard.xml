@@ -159,44 +159,6 @@
 				android:layout_height="wrap_content"
 				android:orientation="vertical">
 
-			<android.support.v7.widget.CardView
-					android:id="@+id/observationsCardView"
-					android:visibility="gone"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:layout_margin="10dp"
-					card_view:cardBackgroundColor="@color/white"
-					card_view:cardCornerRadius="4dp">
-
-				<LinearLayout
-						android:layout_width="match_parent"
-						android:layout_marginLeft="@dimen/patient_card_margin"
-						android:layout_marginEnd="@dimen/patient_card_margin"
-						android:layout_marginStart="@dimen/patient_card_margin"
-						android:layout_marginRight="@dimen/patient_card_margin"
-						android:layout_height="wrap_content"
-						android:paddingTop="10dp"
-						android:orientation="vertical">
-
-					<TextView
-							android:id="@+id/visitDetails"
-							android:layout_width="match_parent"
-							android:layout_height="wrap_content"
-							android:layout_gravity="start"
-							android:gravity="start"
-							android:textColor="@color/openmrs_color_grey"
-							android:textStyle="bold" />
-
-
-					<LinearLayout
-							android:id="@+id/observationsContainer"
-							android:layout_width="match_parent"
-							android:layout_height="wrap_content"
-							android:orientation="vertical"></LinearLayout>
-
-				</LinearLayout>
-			</android.support.v7.widget.CardView>
-
 			<android.support.v7.widget.RecyclerView
 					android:id="@+id/pastVisits"
 					android:layout_width="match_parent"

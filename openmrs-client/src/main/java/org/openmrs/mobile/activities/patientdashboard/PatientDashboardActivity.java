@@ -24,11 +24,8 @@ import org.openmrs.mobile.activities.ACBaseActivity;
 import org.openmrs.mobile.activities.addeditvisit.AddEditVisitContract;
 import org.openmrs.mobile.activities.visitphoto.download.DownloadVisitPhotoFragment;
 import org.openmrs.mobile.activities.visitphoto.download.DownloadVisitPhotoPresenter;
-import org.openmrs.mobile.activities.visittasks.VisitTasksActivity;
-import org.openmrs.mobile.activities.visittasks.VisitTasksContract;
 import org.openmrs.mobile.activities.visittasks.VisitTasksFragment;
 import org.openmrs.mobile.activities.visittasks.VisitTasksPresenter;
-import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.StringUtils;
 
@@ -77,12 +74,12 @@ public class PatientDashboardActivity extends ACBaseActivity {
 		//Adding the visit tasks fragment on the dashboard
 		VisitTasksFragment visitTasksFragment = (VisitTasksFragment)getSupportFragmentManager().findFragmentById(R.id
 				.visitTaskContentFrame);
-		if (visitTasksFragment == null){
+		if (visitTasksFragment == null) {
 			visitTasksFragment = VisitTasksFragment.newInstance();
 		}
 
-		if (!visitTasksFragment.isActive()){
-			addFragmentToActivity(getSupportFragmentManager(), visitTasksFragment,R.id.visitTaskContentFrame);
+		if (!visitTasksFragment.isActive()) {
+			addFragmentToActivity(getSupportFragmentManager(), visitTasksFragment, R.id.visitTaskContentFrame);
 		}
 		new VisitTasksPresenter(visitTasksFragment);
 	}

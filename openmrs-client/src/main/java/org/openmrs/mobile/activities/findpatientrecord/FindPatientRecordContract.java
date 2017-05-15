@@ -31,7 +31,7 @@ public interface FindPatientRecordContract {
 
 		void setNoPatientsVisibility(boolean visibility);
 
-		void setFetchedPatientsVisibility(int length);
+		void setFetchedPatientsVisibility(boolean visibility);
 
 		void fetchPatients(List<Patient> patients);
 
@@ -51,7 +51,7 @@ public interface FindPatientRecordContract {
 
 		void findPatient(String name);
 
-		void getLastViewed(int page);
+		void getLastViewed();
 
 		boolean isLoading();
 

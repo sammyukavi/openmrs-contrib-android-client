@@ -26,9 +26,11 @@ public class Observation extends BaseOpenmrsEntity implements Serializable {
 	@SerializedName("obsDatetime")
 	@Expose
 	private String obsDatetime;
+
 	@SerializedName("accessionNumber")
 	@Expose
-	private int accessionNumber;
+	private String accessionNumber;
+
 	@SerializedName("obsGroup")
 	@Expose
 	private Observation obsGroup;
@@ -112,14 +114,14 @@ public class Observation extends BaseOpenmrsEntity implements Serializable {
 	/**
 	 * @return The accessionNumber
 	 */
-	public int getAccessionNumber() {
+	public String getAccessionNumber() {
 		return accessionNumber;
 	}
 
 	/**
 	 * @param accessionNumber The accessionNumber
 	 */
-	public void setAccessionNumber(int accessionNumber) {
+	public void setAccessionNumber(String accessionNumber) {
 		this.accessionNumber = accessionNumber;
 	}
 

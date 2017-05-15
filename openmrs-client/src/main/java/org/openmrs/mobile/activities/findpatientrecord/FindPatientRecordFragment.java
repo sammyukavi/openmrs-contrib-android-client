@@ -14,6 +14,7 @@
 
 package org.openmrs.mobile.activities.findpatientrecord;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -114,7 +115,7 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 		FontsUtil.setFont((ViewGroup)this.getActivity().findViewById(android.R.id.content));
 		authorizationManager = new AuthorizationManager();
 		if (authorizationManager.isUserLoggedIn()) {
-			mPresenter.getLastViewed(mPresenter.getPage());
+			mPresenter.getLastViewed();
 		}
 		return mRootView;
 	}
@@ -131,9 +132,8 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 	}
 
 	@Override
-	public void setFetchedPatientsVisibility(int length) {
-		numberOfFetchedPatients.setText(getString(R.string.number_of_patients, String.valueOf(length)));
-		patientListLayout.setVisibility(length <= 0 ? View.GONE : View.VISIBLE);
+	public void setFetchedPatientsVisibility(boolean visibility) {
+		patientListLayout.setVisibility(visibility ? View.VISIBLE: View.GONE);
 	}
 
 	@Override
@@ -155,7 +155,10 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 
 	@Override
 	public void showToast(String message, ToastUtil.ToastType toastType) {
-		ToastUtil.showShortToast(getContext(), toastType, message);
+		Context context = getContext();
+		if (context != null) {
+			ToastUtil.showShortToast(getContext(), toastType, message);
+		}
 	}
 
 	@Override

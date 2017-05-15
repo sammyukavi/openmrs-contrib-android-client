@@ -31,17 +31,9 @@ public class VisitTask extends BaseOpenmrsEntity {
 	@Expose
 	private String name;
 
-	@Expose
 	@SerializedName("patient")
+	@Expose
 	private Patient patient;
-
-	public Patient getPatient() {
-		return patient;
-	}
-
-	public void setPatient(Patient patient) {
-		this.patient = patient;
-	}
 
 	public VisitTaskStatus getStatus() {
 		return status;
@@ -65,5 +57,13 @@ public class VisitTask extends BaseOpenmrsEntity {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Patient getPatient() {
+		return patient;
+	}
+
+	public void setPatient(Patient patient) {
+		this.patient = patient;
 	}
 }

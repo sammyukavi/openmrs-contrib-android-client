@@ -24,6 +24,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.github.clans.fab.FloatingActionButton;
@@ -36,8 +37,9 @@ import org.openmrs.mobile.activities.addeditpatient.AddEditPatientActivity;
 import org.openmrs.mobile.activities.addeditvisit.AddEditVisitActivity;
 import org.openmrs.mobile.activities.auditdata.AuditDataActivity;
 import org.openmrs.mobile.activities.visitphoto.upload.UploadVisitPhotoActivity;
-import org.openmrs.mobile.activities.visittasks.VisitTasksActivity;
+import org.openmrs.mobile.activities.visittasks.VisitTasksContract;
 import org.openmrs.mobile.application.OpenMRS;
+import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Person;
 import org.openmrs.mobile.models.Visit;
@@ -55,6 +57,19 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	private TextView patientDisplayName, patientGender, patientAge, patientIdentifier,
 			patientDob;
 	private Visit activeVisit;
+	private LinearLayout observationsContainer;
+	private CustomDialogBundle createEditVisitNoteDialog;
+
+	public VisitTasksContract.Presenter visitTasksPresenter;
+
+	View.OnClickListener switchToEditMode = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			((PatientDashboardActivity)getActivity())
+					.createAndShowDialog(createEditVisitNoteDialog, ApplicationConstants.DialogTAG.VISIT_NOTE_TAG);
+		}
+	};
+	private Bundle dialogBundle;
 	private FloatingActionButton startAuditFormButton, addVisitImageButton,
 			addVisitTaskButton, startVisitButton, editVisitButton, endVisitButton, editPatient;
 	private Patient patient;
@@ -102,12 +117,9 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 				startActivity(intent);
 				break;
 			case R.id.add_visit_task:
-				intent = new Intent(getContext(), VisitTasksActivity.class);
-				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, sharedPreferences.getString
-						(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING));
-				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, sharedPreferences.getString
-						(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING));
-				startActivity(intent);
+				if (activeVisit != null) {
+
+				}
 				break;
 			case R.id.audit_data_form:
 				intent = new Intent(getContext(), AuditDataActivity.class);

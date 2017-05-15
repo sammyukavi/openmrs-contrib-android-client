@@ -2,6 +2,7 @@ package org.openmrs.mobile.activities.patientdashboard;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.openmrs.mobile.R;
+import org.openmrs.mobile.activities.auditdata.AuditDataActivity;
 import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.data.DataService;
@@ -191,6 +193,20 @@ public class PastVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 				@Override
 				public void onClick(View view) {
 					expandCollapse(observationsContainer);
+				}
+			});
+
+			ImageView loadAuditForm =
+					(ImageView)singleVisitView.findViewById(R.id.loadAuditForm);
+
+			loadAuditForm.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent(context, AuditDataActivity
+							.class);
+					intent.putExtra(ApplicationConstants.BundleKeys
+							.VISIT_UUID_BUNDLE, visit.getUuid());
+					context.startActivity(intent);
 				}
 			});
 

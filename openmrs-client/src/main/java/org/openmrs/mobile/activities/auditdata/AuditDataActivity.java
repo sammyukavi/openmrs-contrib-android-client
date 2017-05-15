@@ -48,7 +48,7 @@ public class AuditDataActivity extends ACBaseActivity {
 	public void onSaveInstanceState(Bundle outState) {
 	}
 
-	@Override
+	/*@Override
 	public void onBackPressed() {
 		if (drawer.isDrawerOpen(GravityCompat.START)) {
 			drawer.closeDrawer(GravityCompat.START);
@@ -58,7 +58,7 @@ public class AuditDataActivity extends ACBaseActivity {
 			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			startActivity(intent);
 		}
-	}
+	}*/
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

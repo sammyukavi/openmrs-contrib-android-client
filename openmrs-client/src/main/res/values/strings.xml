@@ -437,7 +437,6 @@
 	<string name="unknown">Unknown</string>
 
 	<string-array name="inpatient_service_types">
-		<item></item>
 		<item>General medicine service</item>
 		<item>Surgery service</item>
 		<item>Orthopedic department</item>

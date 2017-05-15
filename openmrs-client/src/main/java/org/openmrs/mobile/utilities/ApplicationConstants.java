@@ -97,6 +97,16 @@ public abstract class ApplicationConstants {
 		public static final String VISIT_NOTE = "Visit Note";
 		public static final String DISCHARGE = "Discharge";
 		public static final String ADMISSION = "Admission";
+		public static final String AuditData = "Audit Data";
+	}
+
+	public abstract static class ObserVationUuId {
+		public static final String VITALSS = "67a71486-1a54-468f-ac3e-7091a9a79584";
+		public static final String VITALS = "Vitals";
+		public static final String VISIT_NOTE = "Visit Note";
+		public static final String DISCHARGE = "Discharge";
+		public static final String ADMISSION = "Admission";
+		public static final String AuditData = "Audit Data";
 
 	}
 

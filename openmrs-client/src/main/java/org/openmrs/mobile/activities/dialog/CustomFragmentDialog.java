@@ -414,7 +414,7 @@ public class CustomFragmentDialog extends DialogFragment {
 						break;
 					case END_VISIT:
 						//((VisitDashboardActivity) getActivity()).findPatientPresenter.endVisit();
-						((AddEditVisitActivity) getActivity()).addEditVisitPresenter.endVisit();
+						((AddEditVisitActivity)getActivity()).addEditVisitPresenter.endVisit();
 						dismiss();
 						break;
 					case START_VISIT:
@@ -449,7 +449,6 @@ public class CustomFragmentDialog extends DialogFragment {
 					case SAVE_VISIT_NOTE:
 
 						Bundle bundle = mCustomDialogBundle.getArguments();
-						Patient patient = (Patient)bundle.getSerializable(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
 						Observation observation =
 								(Observation)bundle.getSerializable(ApplicationConstants.BundleKeys.OBSERVATION);
 						observation.setValue(getEditNoteTextValue());
@@ -459,7 +458,9 @@ public class CustomFragmentDialog extends DialogFragment {
 						observationDataService.update(observation, new DataService.GetCallback<Observation>() {
 							@Override
 							public void onCompleted(Observation entity) {
-								((PatientDashboardActivity)getActivity()).mPresenter.fetchVisits(patient);
+								((PatientDashboardActivity)getActivity()).mPresenter
+										.fetchPatientData(bundle.getString(ApplicationConstants
+												.BundleKeys.PATIENT_UUID_BUNDLE));
 								dismiss();
 							}
 

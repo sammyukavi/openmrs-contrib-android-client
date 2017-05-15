@@ -90,6 +90,7 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 
 				@Override
 				public void onError(Throwable t) {
+					t.printStackTrace();
 					findPatientView.setProgressBarVisibility(false);
 					findPatientView
 							.showToast(ApplicationConstants.entityName.PATIENTS + ApplicationConstants.toastMessages

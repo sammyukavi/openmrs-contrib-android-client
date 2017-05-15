@@ -471,6 +471,27 @@ public class CustomFragmentDialog extends DialogFragment {
 						});
 						break;
 					case CREATE_VISIT_NOTE:
+
+						bundle = mCustomDialogBundle.getArguments();
+						observation =
+								(Observation)bundle.getSerializable(ApplicationConstants.BundleKeys.OBSERVATION);
+						observation.setValue(getEditNoteTextValue());
+						observationDataService = new ObsDataService();
+						observationDataService.create(observation, new DataService.GetCallback<Observation>() {
+							@Override
+							public void onCompleted(Observation entity) {
+								((PatientDashboardActivity)getActivity()).mPresenter
+										.fetchPatientData(bundle.getString(ApplicationConstants
+												.BundleKeys.PATIENT_UUID_BUNDLE));
+								dismiss();
+							}
+
+							@Override
+							public void onError(Throwable t) {
+
+							}
+						});
+
 						break;
 					default:
 						break;

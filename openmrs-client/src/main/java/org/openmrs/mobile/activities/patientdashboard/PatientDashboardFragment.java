@@ -78,12 +78,8 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
 	private void initializeListeners(FloatingActionButton... params) {
 		for (FloatingActionButton patientActionButtons : params) {
-			patientActionButtons.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					startSelectedPatientDashboardActivity(patientActionButtons.getId());
-				}
-			});
+			patientActionButtons.setOnClickListener(
+					view -> startSelectedPatientDashboardActivity(patientActionButtons.getId()));
 		}
 	}
 

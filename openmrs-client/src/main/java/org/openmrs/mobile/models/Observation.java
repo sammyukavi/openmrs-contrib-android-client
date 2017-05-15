@@ -42,7 +42,7 @@ public class Observation extends BaseOpenmrsEntity implements Serializable {
 	private String comment;
 	@SerializedName("location")
 	@Expose
-	private Resource location = null;
+	private String location = null;
 	@SerializedName("encounter")
 	@Expose
 	private Encounter encounter = null;
@@ -170,14 +170,14 @@ public class Observation extends BaseOpenmrsEntity implements Serializable {
 	/**
 	 * @return The location
 	 */
-	public Resource getLocation() {
+	public String getLocation() {
 		return location;
 	}
 
 	/**
 	 * @param location The location
 	 */
-	public void setLocation(Resource location) {
+	public void setLocation(String location) {
 		this.location = location;
 	}
 

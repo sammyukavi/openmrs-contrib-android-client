@@ -43,4 +43,8 @@ public interface ObsRestService {
 	Call<Observation> update(@Path(value = "restPath", encoded = true) String restPath,
 			@Path("uuid") String uuid, @Body Observation entity);
 
+	@POST(RestConstants.CREATE)
+	Call<Observation> create(@Path(value = "restPath", encoded = true) String restPath,
+			@Body Observation entity);
+
 }

@@ -23,7 +23,9 @@ import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.impl.ObsDataService;
+import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.Encounter;
+import org.openmrs.mobile.models.EncounterType;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Visit;
@@ -202,42 +204,63 @@ public class PastVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 			loadAuditForm.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
+
 					Intent intent = new Intent(context, AuditDataActivity
 							.class);
+
 					intent.putExtra(ApplicationConstants.BundleKeys
 							.VISIT_UUID_BUNDLE, visit.getUuid());
+
+					intent.putExtra(ApplicationConstants.BundleKeys
+							.PATIENT_UUID_BUNDLE, patient.getUuid());
+
 					context.startActivity(intent);
 				}
 			});
 
 			if (visit.getEncounters().size() == 0) {
 				//We add a view to create a visit note
-				/*View row = LayoutInflater.from(context).inflate(R.layout.visit_obervation_row, null);
+				View row = LayoutInflater.from(context).inflate(R.layout.visit_obervation_row, null);
 				TextView visitNote = (TextView)row.findViewById(R.id.text);
 				ImageView visitNoteIcon = (ImageView)row.findViewById(R.id.icon);
 				visitNote.setHint(context.getResources().getString(R.string.add_a_note));
 
 				//visitNote.setOnClickListener(switchToEditMode);
-				//visitNoteIcon.setOnClickListener(switchToEditMode);
+				visitNoteIcon.setOnClickListener(switchToEditMode);
+
+				Concept concept = new Concept();
+				concept.setUuid("162169AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+
+				EncounterType encounterType = new EncounterType();
+				encounterType.setUuid("d7151f82-c1f3-4152-a605-2f9ea7414a79");
+
+				Encounter encounter = new Encounter();
+				encounter.setEncounterType(encounterType);
+				encounter.setVisit(visit);
+				//encounter.setUuid("2d334257-2f9a-4698-b48c-63e07c4c80fd");
 
 				Observation observation = new Observation();
-				observation.setConcept(new Concept());
+				observation.setConcept(concept);
 				observation.setPerson(patient.getPerson());
 				observation.setObsDatetime(DateUtils.now(DateUtils.OPEN_MRS_REQUEST_FORMAT));
-
-				ArrayList<Observation> observations = new ArrayList<>();
-				observations.add(observation);
-				EncounterCreate encounterCreate = new EncounterCreate();
-				encounterCreate.setPatient(patient.getUuid());
-				encounterCreate.setEncounterType(ApplicationConstants.EncounterTypeEntitys.VISIT_NOTE);
-				encounterCreate.setObs(observations);
+				observation.setLocation("7fdfa2cb-bc95-405a-88c6-32b7673c0453");
+				observation.setEncounter(encounter);
 
 				//ConsoleLogger.dumpToJson(encounterCreate);
 
 				observationsContainer.addView(row);
+
 				createEditVisitNoteDialog.setEditNoteTextViewMessage("");
 				createEditVisitNoteDialog.setRightButtonAction(CustomFragmentDialog.OnClickAction.CREATE_VISIT_NOTE);
-				createEditVisitNoteDialog.setArguments(dialogBundle);*/
+
+				Bundle dialogBundle = new Bundle();
+				dialogBundle
+						.putString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE,
+								patient.getUuid());
+				dialogBundle.putSerializable(ApplicationConstants.BundleKeys
+								.OBSERVATION,
+						observation);
+				createEditVisitNoteDialog.setArguments(dialogBundle);
 
 			} else {
 				for (Encounter encounter : visit.getEncounters()) {

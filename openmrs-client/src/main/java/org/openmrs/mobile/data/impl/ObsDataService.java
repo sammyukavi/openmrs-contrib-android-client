@@ -56,7 +56,7 @@ public class ObsDataService extends BaseDataService<Observation, ObsDbService, O
 
 	@Override
 	protected Call<Observation> _restCreate(String restPath, Observation entity) {
-		return null;
+		return restService.create(restPath, entity);
 	}
 
 	@Override

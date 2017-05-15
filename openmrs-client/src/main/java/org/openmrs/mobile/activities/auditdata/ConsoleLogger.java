@@ -1,4 +1,4 @@
-package org.openmrs.mobile.activities.patientdashboard;
+package org.openmrs.mobile.activities.auditdata;
 
 import com.google.gson.Gson;
 

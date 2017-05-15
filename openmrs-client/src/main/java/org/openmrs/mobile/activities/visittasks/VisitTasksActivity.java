@@ -49,11 +49,11 @@ public class VisitTasksActivity extends ACBaseActivity {
 		floatingActionButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mPresenter.displayAddTask(true);
+
 			}
 		});
 
-		mPresenter = new VisitTasksPresenter(visitTasksFragment, mOpenMRS);
+		mPresenter = new VisitTasksPresenter(visitTasksFragment);
 	}
 
 	@Override

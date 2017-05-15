@@ -43,7 +43,7 @@ public class VisitTasksPresenter extends BasePresenter implements VisitTasksCont
 	private int page = 1;
 	private int limit = 10;
 
-	public VisitTasksPresenter(VisitTasksContract.View view, OpenMRS openMRS) {
+	public VisitTasksPresenter(VisitTasksContract.View view) {
 		this.visitTasksView = view;
 		this.visitTasksView.setPresenter(this);
 		this.visitPredefinedTaskDataService = new VisitPredefinedTaskDataService();

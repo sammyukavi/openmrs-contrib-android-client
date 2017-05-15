@@ -84,7 +84,7 @@
 				android:id="@+id/add_visit_task"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:src="@drawable/ic_playlist_add_white_48dp"
+				android:src="@drawable/ic_playlist_add_white"
 				fab:fab_label="@string/add_visit_task_dialog_title"
 				fab:fab_size="mini"
 				android:visibility="gone" />

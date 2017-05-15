@@ -48,6 +48,7 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 	private LinearLayout findPatientLayout, noPatientsFoundLayout, foundPatientsLayout, patientListLayout, progessBarLayout;
 	private OpenMRS openMRS = OpenMRS.getInstance();
 	private AuthorizationManager authorizationManager;
+
 	private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
 
 		@Override
@@ -59,12 +60,12 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 		public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
 			super.onScrolled(recyclerView, dx, dy);
 			if (!mPresenter.isLoading()) {
-				if (!findPatientRecyclerView.canScrollVertically(1)) {
+				if (!recyclerView.canScrollVertically(1)) {
 					// load next page
 					mPresenter.loadResults(true);
 				}
 
-				if (!findPatientRecyclerView.canScrollVertically(-1) && dy < 0) {
+				if (!recyclerView.canScrollVertically(-1) && dy < 0) {
 					// load previous page
 					mPresenter.loadResults(false);
 				}

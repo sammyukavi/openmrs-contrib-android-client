@@ -18,8 +18,6 @@ import android.util.Log;
 import android.widget.Spinner;
 
 import org.openmrs.mobile.activities.BasePresenter;
-import org.openmrs.mobile.api.RestApi;
-import org.openmrs.mobile.api.retrofit.PatientApi;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
@@ -37,7 +35,6 @@ import org.openmrs.mobile.models.PatientIdentifierType;
 import org.openmrs.mobile.models.PersonAttribute;
 import org.openmrs.mobile.models.PersonAttributeType;
 import org.openmrs.mobile.utilities.ApplicationConstants;
-import org.openmrs.mobile.utilities.NetworkUtils;
 import org.openmrs.mobile.utilities.StringUtils;
 import org.openmrs.mobile.utilities.ToastUtil;
 
@@ -79,9 +76,8 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		this.locationDataService = new LocationDataService();
 	}
 
-	public AddEditPatientPresenter(AddEditPatientContract.View patientRegistrationView, PatientApi patientApi,
-			Patient mPatient, String patientToUpdateId,
-			List<String> mCounties, RestApi restApi) {
+	public AddEditPatientPresenter(AddEditPatientContract.View patientRegistrationView, Patient mPatient,
+			String patientToUpdateId, List<String> mCounties) {
 		this.patientRegistrationView = patientRegistrationView;
 		this.patientDataService = new PatientDataService();
 		this.conceptDataService = new ConceptDataService();
@@ -169,32 +165,28 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 
 	@Override
 	public void getPatientToUpdate(String uuid) {
-		if (NetworkUtils.hasNetwork()) {
-			DataService.GetCallback<Patient> singleCallback = new DataService.GetCallback<Patient>() {
-				@Override
-				public void onCompleted(Patient entity) {
-					if (entity != null) {
-						patientRegistrationView.fillFields(entity);
-						setPatient(entity);
-						getPersonAttributeTypes();
-					} else {
-						patientRegistrationView.showToast(ApplicationConstants.entityName.PATIENTS + ApplicationConstants
-								.toastMessages.fetchWarningMessage, ToastUtil.ToastType.WARNING);
-					}
-				}
-
-				@Override
-				public void onError(Throwable t) {
-					Log.e("User Error", "Error", t.fillInStackTrace());
+		DataService.GetCallback<Patient> singleCallback = new DataService.GetCallback<Patient>() {
+			@Override
+			public void onCompleted(Patient entity) {
+				if (entity != null) {
+					patientRegistrationView.fillFields(entity);
+					setPatient(entity);
+					getPersonAttributeTypes();
+				} else {
 					patientRegistrationView.showToast(ApplicationConstants.entityName.PATIENTS + ApplicationConstants
-							.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
+							.toastMessages.fetchWarningMessage, ToastUtil.ToastType.WARNING);
 				}
-			};
-			//Just check if the identifier are the same. If not it saves the patient.
-			patientDataService.getByUUID(uuid, new QueryOptions(false, true), singleCallback);
-		} else {
-			// get the users from the local storage.
-		}
+			}
+
+			@Override
+			public void onError(Throwable t) {
+				Log.e("User Error", "Error", t.fillInStackTrace());
+				patientRegistrationView.showToast(ApplicationConstants.entityName.PATIENTS + ApplicationConstants
+						.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
+			}
+		};
+		//Just check if the identifier are the same. If not it saves the patient.
+		patientDataService.getByUUID(uuid, new QueryOptions(false, true), singleCallback);
 	}
 
 	@Override

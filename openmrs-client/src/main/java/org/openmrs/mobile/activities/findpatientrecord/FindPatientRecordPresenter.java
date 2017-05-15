@@ -35,15 +35,13 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 	private FindPatientRecordContract.View findPatientView;
 	private int totalNumberResults;
 	private int page = 1;
-	private int limit = 5;
+	private int limit = 10;
 	private PatientDataService patientDataService;
-	private String lastQuery = "";
 	private boolean loading;
 
 	public FindPatientRecordPresenter(@NonNull FindPatientRecordContract.View view, String lastQuery) {
 		this.findPatientView = view;
 		this.findPatientView.setPresenter(this);
-		this.lastQuery = lastQuery;
 		this.patientDataService = new PatientDataService();
 	}
 
@@ -101,52 +99,48 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 	public void getLastViewed(int page) {
 		findPatientView.setProgressBarVisibility(true);
 		findPatientView.setFetchedPatientsVisibility(0);
-		setLoading(true);
 		if (page <= 0) {
 			return;
 		}
 		setPage(page);
+		setLoading(true);
 		setTotalNumberResults(0);
-		PagingInfo pagingInfo = new PagingInfo(page, 100);
-		patientDataService
-				.getLastViewed(ApplicationConstants.EMPTY_STRING, QueryOptions.LOAD_RELATED_OBJECTS, pagingInfo,
-						new DataService.GetCallback<List<Patient>>() {
-							@Override
-							public void onCompleted(List<Patient> patients) {
-								findPatientView.setProgressBarVisibility(false);
+		PagingInfo pagingInfo = new PagingInfo(page, limit);
+		patientDataService.getLastViewed(ApplicationConstants.EMPTY_STRING, QueryOptions.LOAD_RELATED_OBJECTS, pagingInfo,
+				new DataService.GetCallback<List<Patient>>() {
+					@Override
+					public void onCompleted(List<Patient> patients) {
+						findPatientView.setProgressBarVisibility(false);
 
-								if (!patients.isEmpty()) {
-									findPatientView.setNumberOfPatientsView(0);
-									findPatientView.setFetchedPatientsVisibility(patients.size());
+						if (!patients.isEmpty()) {
+							findPatientView.setNumberOfPatientsView(pagingInfo.getTotalRecordCount());
+							findPatientView.setFetchedPatientsVisibility(pagingInfo.getTotalRecordCount());
 
-									findPatientView.fetchPatients(patients);
-									findPatientView
-											.showToast(ApplicationConstants.entityName.LAST_VIEWED_PATIENT +
-															ApplicationConstants
-																	.toastMessages.fetchSuccessMessage,
-													ToastUtil.ToastType.SUCCESS);
-								} else {
-									findPatientView.setNumberOfPatientsView(0);
-									findPatientView.setFetchedPatientsVisibility(0);
-						/*findPatientView
-								.showToast(ApplicationConstants.toastMessages.lastviewedPatientInfo, ToastUtil.ToastType
-										.NOTICE);*/
-								}
-								setLoading(false);
-								setTotalNumberResults(pagingInfo.getTotalRecordCount());
-							}
+							findPatientView.fetchPatients(patients);
+							findPatientView
+									.showToast(ApplicationConstants.entityName.LAST_VIEWED_PATIENT +
+													ApplicationConstants
+															.toastMessages.fetchSuccessMessage,
+											ToastUtil.ToastType.SUCCESS);
+						} else {
+							findPatientView.setNumberOfPatientsView(pagingInfo.getTotalRecordCount());
+							findPatientView.setFetchedPatientsVisibility(pagingInfo.getTotalRecordCount());
+						}
+						setLoading(false);
+						setTotalNumberResults(pagingInfo.getTotalRecordCount());
+					}
 
-							@Override
-							public void onError(Throwable t) {
-								setLoading(false);
-								findPatientView.setProgressBarVisibility(false);
-								Log.e("User Error", "Error", t.fillInStackTrace());
-								findPatientView
-										.showToast(ApplicationConstants.entityName.LAST_VIEWED_PATIENT
-												+ ApplicationConstants.toastMessages
-												.fetchErrorMessage, ToastUtil.ToastType.ERROR);
-							}
-						});
+					@Override
+					public void onError(Throwable t) {
+						setLoading(false);
+						findPatientView.setProgressBarVisibility(false);
+						Log.e("User Error", "Error", t.fillInStackTrace());
+						findPatientView
+								.showToast(ApplicationConstants.entityName.LAST_VIEWED_PATIENT
+										+ ApplicationConstants.toastMessages
+										.fetchErrorMessage, ToastUtil.ToastType.ERROR);
+					}
+				});
 	}
 
 	private int computePage(boolean next) {

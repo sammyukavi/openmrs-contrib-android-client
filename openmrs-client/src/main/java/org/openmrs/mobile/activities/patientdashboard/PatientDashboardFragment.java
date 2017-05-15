@@ -43,6 +43,8 @@ import org.openmrs.mobile.activities.addeditvisit.AddEditVisitActivity;
 import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
 import org.openmrs.mobile.activities.visitphoto.upload.UploadVisitPhotoActivity;
 import org.openmrs.mobile.activities.visittasks.VisitTasksActivity;
+import org.openmrs.mobile.activities.visittasks.VisitTasksContract;
+import org.openmrs.mobile.activities.visittasks.VisitTasksPresenter;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.models.Encounter;
@@ -67,6 +69,10 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	private LinearLayout observationsContainer, observationHolder;
 	private ImageView observationIcon;
 	private CustomDialogBundle createEditVisitNoteDialog;
+
+
+	public VisitTasksContract.Presenter visitTasksPresenter;
+
 	View.OnClickListener switchToEditMode = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
@@ -122,12 +128,9 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 				startActivity(intent);
 				break;
 			case R.id.add_visit_task:
-				intent = new Intent(getContext(), VisitTasksActivity.class);
-				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, sharedPreferences.getString
-						(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING));
-				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, sharedPreferences.getString
-						(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING));
-				startActivity(intent);
+				if (activeVisit != null) {
+
+				}
 				break;
 			case R.id.audit_data_form:
 				//intent = new Intent(getContext(), AuditDataActivity.class);

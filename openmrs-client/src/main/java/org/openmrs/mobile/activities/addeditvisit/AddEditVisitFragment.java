@@ -51,7 +51,6 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 		implements AddEditVisitContract.View {
 
 	private static TableRow.LayoutParams marginParams;
-	private TextView visitTitle;
 	private TableLayout visitTableLayout;
 	private ProgressBar progressBar;
 	private TextView confirmMessage;
@@ -68,7 +67,6 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View root = inflater.inflate(R.layout.fragment_addedit_visit, container, false);
-		visitTitle = (TextView)root.findViewById(R.id.visitTitle);
 		visitTableLayout = (TableLayout)root.findViewById(R.id.visitTableLayout);
 		progressBar = (ProgressBar)root.findViewById(R.id.visitLoadingProgressBar);
 		confirmMessage = (TextView)root.findViewById(R.id.confirmMessage);
@@ -99,8 +97,6 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 		} else {
 			confirmMessage.setVisibility(View.GONE);
 		}
-
-		setVisitTitleText("patient header section");
 
 		getActivity().setTitle(startVisit ? getString(R.string.label_start_visit) : getString(R.string.label_edit_visit));
 
@@ -191,6 +187,7 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 
 				// set default value
 				String defaultValue = mPresenter.searchVisitAttributeValueByType(visitAttributeType);
+				System.out.println("DEFAULT VALUE:::" + defaultValue);
 				if (StringUtils.notEmpty(defaultValue)) {
 					freeTextType.setText(defaultValue);
 				}
@@ -265,11 +262,6 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 	@Override
 	public boolean isActive() {
 		return isAdded();
-	}
-
-	@Override
-	public void setVisitTitleText(String text) {
-		visitTitle.setText(text);
 	}
 
 	@Override

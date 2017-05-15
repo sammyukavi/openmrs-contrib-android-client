@@ -14,6 +14,7 @@
 
 package org.openmrs.mobile.activities.findpatientrecord;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -154,7 +155,10 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 
 	@Override
 	public void showToast(String message, ToastUtil.ToastType toastType) {
-		ToastUtil.showShortToast(getContext(), toastType, message);
+		Context context = getContext();
+		if (context != null) {
+			ToastUtil.showShortToast(getContext(), toastType, message);
+		}
 	}
 
 	@Override

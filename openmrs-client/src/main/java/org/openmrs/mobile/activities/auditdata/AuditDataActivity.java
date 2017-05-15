@@ -30,7 +30,7 @@ public class AuditDataActivity extends ACBaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getLayoutInflater().inflate(R.layout.activity_audit_data, frameLayout);
-		setTitle(R.string.nav_capture_vitals);
+		setTitle(R.string.title_audit_data_form);
 		// Create fragment
 		AuditDataFragment auditDataFragment =
 				(AuditDataFragment)getSupportFragmentManager().findFragmentById(R.id.contentFrame);

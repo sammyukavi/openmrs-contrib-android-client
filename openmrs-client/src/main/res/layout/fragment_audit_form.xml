@@ -107,6 +107,14 @@
 					android:layout_gravity="start"
 					android:checked="false" />
 
+			<RadioButton
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:text="@string/unknown"
+					android:id="@+id/is_palliative_consult_unknown"
+					android:layout_gravity="start"
+					android:checked="false" />
+
 		</RadioGroup>
 
 
@@ -133,6 +141,14 @@
 					android:layout_width="wrap_content"
 					android:text="@string/no"
 					android:id="@+id/is_preop_risk_assessment_only_no"
+					android:layout_gravity="start"
+					android:checked="false" />
+
+			<RadioButton
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:text="@string/unknown"
+					android:id="@+id/is_preop_risk_assessment_only_unknown"
 					android:layout_gravity="start"
 					android:checked="false" />
 
@@ -163,6 +179,14 @@
 					android:id="@+id/is_icu_stay_no"
 					android:layout_gravity="start"
 					android:checked="false" />
+
+			<RadioButton
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:text="@string/unknown"
+					android:id="@+id/is_icu_stay_unknown"
+					android:layout_gravity="start"
+					android:checked="false" />
 		</RadioGroup>
 
 		<TextView
@@ -188,6 +212,14 @@
 					android:layout_width="wrap_content"
 					android:text="@string/no"
 					android:id="@+id/is_hdu_stay_no"
+					android:layout_gravity="start"
+					android:checked="false" />
+
+			<RadioButton
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:text="@string/unknown"
+					android:id="@+id/is_hdu_stay_unknown"
 					android:layout_gravity="start"
 					android:checked="false" />
 
@@ -219,6 +251,14 @@
 					android:layout_gravity="start"
 					android:checked="false" />
 
+			<RadioButton
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:text="@string/unknown"
+					android:id="@+id/is_hdu_comgmt_unknown"
+					android:layout_gravity="start"
+					android:checked="false" />
+
 		</RadioGroup>
 
 		<TextView
@@ -244,6 +284,14 @@
 					android:layout_width="wrap_content"
 					android:text="@string/no"
 					android:id="@+id/is_hiv_positive_no"
+					android:layout_gravity="start"
+					android:checked="false" />
+
+			<RadioButton
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:text="@string/unknown"
+					android:id="@+id/is_hiv_positive_unknown"
 					android:layout_gravity="start"
 					android:checked="false" />
 

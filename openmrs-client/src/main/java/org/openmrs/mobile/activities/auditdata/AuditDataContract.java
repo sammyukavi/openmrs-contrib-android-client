@@ -12,12 +12,12 @@
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
 
-package org.openmrs.mobile.activities.capturevitals;
+package org.openmrs.mobile.activities.auditdata;
 
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
 
-public interface CaptureVitalsContract {
+public interface AuditDataContract {
 
 	interface View extends BaseView<Presenter> {
 	}

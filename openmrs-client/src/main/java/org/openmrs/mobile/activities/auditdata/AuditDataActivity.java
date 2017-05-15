@@ -12,7 +12,7 @@
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
 
-package org.openmrs.mobile.activities.capturevitals;
+package org.openmrs.mobile.activities.auditdata;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,26 +22,26 @@ import android.view.Menu;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
 
-public class CaptureVitalsActivity extends ACBaseActivity {
+public class AuditDataActivity extends ACBaseActivity {
 
-	public CaptureVitalsContract.Presenter mPresenter;
+	public AuditDataContract.Presenter mPresenter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getLayoutInflater().inflate(R.layout.activity_capture_vitals, frameLayout);
+		getLayoutInflater().inflate(R.layout.activity_audit_data, frameLayout);
 		setTitle(R.string.nav_capture_vitals);
 		// Create fragment
-		CaptureVitalsFragment captureVitalsFragment =
-				(CaptureVitalsFragment)getSupportFragmentManager().findFragmentById(R.id.contentFrame);
-		if (captureVitalsFragment == null) {
-			captureVitalsFragment = CaptureVitalsFragment.newInstance();
+		AuditDataFragment auditDataFragment =
+				(AuditDataFragment)getSupportFragmentManager().findFragmentById(R.id.contentFrame);
+		if (auditDataFragment == null) {
+			auditDataFragment = AuditDataFragment.newInstance();
 		}
-		if (!captureVitalsFragment.isActive()) {
-			addFragmentToActivity(getSupportFragmentManager(), captureVitalsFragment, R.id.contentFrame);
+		if (!auditDataFragment.isActive()) {
+			addFragmentToActivity(getSupportFragmentManager(), auditDataFragment, R.id.contentFrame);
 		}
 
-		mPresenter = new CaptureVitalsPresenter(captureVitalsFragment, mOpenMRS);
+		mPresenter = new AuditDataPresenter(auditDataFragment, mOpenMRS);
 	}
 
 	@Override

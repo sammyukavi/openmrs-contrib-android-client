@@ -37,6 +37,7 @@ import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.activities.addeditpatient.AddEditPatientActivity;
 import org.openmrs.mobile.activities.addeditvisit.AddEditVisitActivity;
+import org.openmrs.mobile.activities.auditdata.AuditDataActivity;
 import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
 import org.openmrs.mobile.activities.visitphoto.upload.UploadVisitPhotoActivity;
 import org.openmrs.mobile.activities.visittasks.VisitTasksActivity;
@@ -131,10 +132,9 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 				startActivity(intent);
 				break;
 			case R.id.audit_data_form:
-				//intent = new Intent(getContext(), AuditDataActivity.class);
-				//intent.putExtra(ApplicationConstants.BundleKeys.PATIENT, patient);
-				//intent.putExtra(ApplicationConstants.BundleKeys.VISIT, mainVisit);
-				//startActivity(intent);
+				intent = new Intent(getContext(), AuditDataActivity.class);
+				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patient.getUuid());
+				startActivity(intent);
 				break;
 			case R.id.start_visit:
 				intent = new Intent(getContext(), AddEditVisitActivity.class);

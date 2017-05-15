@@ -415,9 +415,6 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		Object personAttributeValue = mPresenter.searchPersonAttributeValueByType(personAttributeType);
 		String conceptAnswer = personAttributeValue instanceof ConceptName ? ((ConceptName)personAttributeValue).getUuid()
 				: null;
-
-		System.out.println(conceptAnswer + "Answer");
-
 		if (null != conceptAnswer) {
 			setDefaultDropdownSelection(conceptNameArrayAdapter, conceptAnswer, conceptNamesDropdown);
 		}
@@ -549,9 +546,6 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 	private <T extends BaseOpenmrsObject> void setDefaultDropdownSelection(ArrayAdapter<T> arrayAdapter, String searchUuid,
 			Spinner dropdown) {
 		for (int count = 0; count < arrayAdapter.getCount(); count++) {
-			System.out.println("the array adapter" + arrayAdapter.getItem(count).getUuid() + "==" + count);
-			System.out.println("the search uuid" + searchUuid + "==" + count);
-
 			if (arrayAdapter.getItem(count).getUuid().equalsIgnoreCase(searchUuid)) {
 				dropdown.setSelection(count);
 			}

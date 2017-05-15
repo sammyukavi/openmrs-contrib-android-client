@@ -10,6 +10,8 @@ import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 
 public class VisitDataService extends BaseEntityDataService<Visit, VisitDbService, VisitRestService>
@@ -76,5 +78,12 @@ public class VisitDataService extends BaseEntityDataService<Visit, VisitDbServic
 		executeSingleCallback(callback,
 				() -> null,
 				() -> restService.endVisit(buildRestRequestPath(), uuid, stopDatetime));
+	}
+
+	public void updateVisit(String visitUuid, Visit updatedVisit, GetCallback<Visit> callback){
+		executeSingleCallback(callback,
+				() -> null,
+				() -> restService.updateVisit(ApplicationConstants.API.REST_ENDPOINT_V2 + "/patientlist/visitedit",
+						visitUuid, updatedVisit.getVisitType().getUuid(), updatedVisit.getAttributes()));
 	}
 }

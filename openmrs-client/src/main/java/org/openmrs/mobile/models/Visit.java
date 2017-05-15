@@ -53,7 +53,6 @@ public class Visit extends BaseOpenmrsEntity implements Serializable {
 	public void setPatient(Patient patient) {
 		this.patient = patient;
 	}
-
 	public Long getId() {
 		return id;
 	}

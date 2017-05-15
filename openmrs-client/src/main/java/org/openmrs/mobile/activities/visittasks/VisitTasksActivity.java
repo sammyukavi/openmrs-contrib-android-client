@@ -53,7 +53,7 @@ public class VisitTasksActivity extends ACBaseActivity {
 			}
 		});
 
-		mPresenter = new VisitTasksPresenter(visitTasksFragment, mOpenMRS);
+		mPresenter = new VisitTasksPresenter(visitTasksFragment);
 	}
 
 	@Override

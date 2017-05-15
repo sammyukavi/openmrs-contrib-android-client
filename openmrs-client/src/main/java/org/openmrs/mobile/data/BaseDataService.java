@@ -318,7 +318,7 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 						}).start();
 					} else {
 						// Some other type of error occurred so just notify the caller about the error
-						callback.onError(new DataOperationException(response.code() + ": " + response.message()));
+ 						callback.onError(new DataOperationException(response.code() + ": " + response.message()));
 					}
 				}
 			}

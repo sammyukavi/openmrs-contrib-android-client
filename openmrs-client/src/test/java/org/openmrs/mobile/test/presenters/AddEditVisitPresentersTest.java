@@ -134,7 +134,7 @@ public class AddEditVisitPresentersTest extends ACUnitTestBase {
                 return null;
             }
         }).when(visitTypeDataService).getAll(any(QueryOptions.class), any(PagingInfo.class),
-				any(DataService.GetCallback.class));
+                any(DataService.GetCallback.class));
 
         // load location callback
         doAnswer(new Answer<Void>() {

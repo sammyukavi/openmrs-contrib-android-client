@@ -18,6 +18,7 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.AppCompatRadioButton;
 import android.support.v7.widget.AppCompatSpinner;
@@ -363,18 +364,18 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 				textInputLayout.addView(booleanType);
 				viewPersonAttributeTypeMap.put(booleanType, personAttributeType);
 			} else if (datatypeClass.equalsIgnoreCase("org.openmrs.customdatatype.datatype.DateDatatype")) {
-				EditText dateType = new EditText(getContext());
-				dateType.setFocusable(true);
-				dateType.setTextSize(14);
-				dateType.setLayoutParams(marginParams);
+				TextInputEditText inputEditText = new TextInputEditText(getContext());
+				inputEditText.setFocusable(true);
+				inputEditText.setTextSize(14);
+				inputEditText.setLayoutParams(marginParams);
 
 				// set default value
 				String defaultValue = mPresenter.searchPersonAttributeValueByType(personAttributeType);
 				if (StringUtils.notEmpty(defaultValue)) {
-					dateType.setText(defaultValue);
+					inputEditText.setText(defaultValue);
 				}
-				textInputLayout.addView(dateType);
-				viewPersonAttributeTypeMap.put(dateType, personAttributeType);
+				textInputLayout.addView(inputEditText);
+				viewPersonAttributeTypeMap.put(inputEditText, personAttributeType);
 			} else if (datatypeClass.equalsIgnoreCase("org.openmrs.Concept")) {
 				// get coded concept uuid
 				String conceptUuid = personAttributeType.getConcept().getUuid();
@@ -384,18 +385,18 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 				textInputLayout.addView(conceptAnswersDropdown);
 				viewPersonAttributeTypeMap.put(conceptAnswersDropdown, personAttributeType);
 			} else if (datatypeClass.equalsIgnoreCase("java.lang.String")) {
-				EditText editText = new EditText(getContext());
-				editText.setTextSize(14);
-				editText.setFocusable(true);
-				editText.setHint(personAttributeType.toString());
-				editText.setLayoutParams(marginParams);
+				TextInputEditText textInputEditText = new TextInputEditText(getContext());
+				textInputEditText.setTextSize(14);
+				textInputEditText.setFocusable(true);
+				textInputEditText.setHint(personAttributeType.toString());
+				textInputEditText.setLayoutParams(marginParams);
 				// set default value
 				String defaultValue = mPresenter.searchPersonAttributeValueByType(personAttributeType);
 				if (StringUtils.notEmpty(defaultValue)) {
-					editText.setText(defaultValue);
+					textInputEditText.setText(defaultValue);
 				}
-				textInputLayout.addView(editText);
-				viewPersonAttributeTypeMap.put(editText, personAttributeType);
+				textInputLayout.addView(textInputEditText);
+				viewPersonAttributeTypeMap.put(textInputEditText, personAttributeType);
 			}
 
 			personLayout.addView(textInputLayout);
@@ -414,9 +415,6 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		Object personAttributeValue = mPresenter.searchPersonAttributeValueByType(personAttributeType);
 		String conceptAnswer = personAttributeValue instanceof ConceptName ? ((ConceptName)personAttributeValue).getUuid()
 				: null;
-
-		System.out.println(conceptAnswer + "Answer");
-
 		if (null != conceptAnswer) {
 			setDefaultDropdownSelection(conceptNameArrayAdapter, conceptAnswer, conceptNamesDropdown);
 		}
@@ -548,10 +546,6 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 	private <T extends BaseOpenmrsObject> void setDefaultDropdownSelection(ArrayAdapter<T> arrayAdapter, String searchUuid,
 			Spinner dropdown) {
 		for (int count = 0; count < arrayAdapter.getCount(); count++) {
-
-			System.out.println("the array adapter" + arrayAdapter.getItem(count).getUuid() + "==" + count);
-			System.out.println("the search uuid" + searchUuid + "==" + count);
-
 			if (arrayAdapter.getItem(count).getUuid().equalsIgnoreCase(searchUuid)) {
 				dropdown.setSelection(count);
 			}

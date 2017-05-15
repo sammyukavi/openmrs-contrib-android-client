@@ -35,7 +35,6 @@ import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.activities.addeditpatient.AddEditPatientActivity;
 import org.openmrs.mobile.activities.addeditvisit.AddEditVisitActivity;
 import org.openmrs.mobile.activities.visitphoto.upload.UploadVisitPhotoActivity;
-import org.openmrs.mobile.activities.visittasks.VisitTasksActivity;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Person;
@@ -101,12 +100,9 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 				startActivity(intent);
 				break;
 			case R.id.add_visit_task:
-				intent = new Intent(getContext(), VisitTasksActivity.class);
-				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, sharedPreferences.getString
-						(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING));
-				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, sharedPreferences.getString
-						(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING));
-				startActivity(intent);
+				if (activeVisit != null) {
+
+				}
 				break;
 			case R.id.start_visit:
 				intent = new Intent(getContext(), AddEditVisitActivity.class);

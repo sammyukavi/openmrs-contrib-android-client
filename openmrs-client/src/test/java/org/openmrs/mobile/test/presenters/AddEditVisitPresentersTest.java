@@ -134,7 +134,7 @@ public class AddEditVisitPresentersTest extends ACUnitTestBase {
                 return null;
             }
         }).when(visitTypeDataService).getAll(any(QueryOptions.class), any(PagingInfo.class),
-				any(DataService.GetCallback.class));
+                any(DataService.GetCallback.class));
 
         // load location callback
         doAnswer(new Answer<Void>() {
@@ -171,7 +171,7 @@ public class AddEditVisitPresentersTest extends ACUnitTestBase {
                 ((DataService.GetCallback<Visit>) invocation.getArguments()[2]).onCompleted(visit);
                 return null;
             }
-        }).when(visitDataService).endVisit(anyString(), anyString(), any(DataService.GetCallback.class));
+        }).when(visitDataService).endVisit(anyString(), any(Visit.class), any(DataService.GetCallback.class));
 
     }
 

@@ -161,7 +161,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	public List<VisitAttributeType> loadVisitAttributeTypes() {
 		final List<VisitAttributeType> visitAttributeTypes = new ArrayList<>();
 		visitAttributeTypeDataService
-				.getAll(new QueryOptions(false, true), new PagingInfo(1, 100), new DataService
+				.getAll(new QueryOptions(false, true), new PagingInfo(0, 100), new DataService
 						.GetCallback<List<VisitAttributeType>>() {
 					@Override
 					public void onCompleted(List<VisitAttributeType> entities) {

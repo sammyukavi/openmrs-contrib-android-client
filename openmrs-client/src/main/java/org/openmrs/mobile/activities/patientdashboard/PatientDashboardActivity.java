@@ -14,11 +14,8 @@
 
 package org.openmrs.mobile.activities.patientdashboard;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.view.GravityCompat;
 import android.view.Menu;
-import android.view.View;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
@@ -83,18 +80,6 @@ public class PatientDashboardActivity extends ACBaseActivity {
 			addFragmentToActivity(getSupportFragmentManager(), visitTasksFragment, R.id.visitTaskContentFrame);
 		}
 		new VisitTasksPresenter(visitTasksFragment);
-	}
-
-	@Override
-	public void onBackPressed() {
-		if (drawer.isDrawerOpen(GravityCompat.START)) {
-			drawer.closeDrawer(GravityCompat.START);
-		} else {
-			Intent intent = new Intent(Intent.ACTION_MAIN);
-			intent.addCategory(Intent.CATEGORY_HOME);
-			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			startActivity(intent);
-		}
 	}
 
 	@Override

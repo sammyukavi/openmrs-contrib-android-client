@@ -55,9 +55,14 @@ public class Observation extends BaseOpenmrsEntity implements Serializable {
 	@SerializedName("resourceVersion")
 	@Expose
 	private String resourceVersion;
+
 	@Expose
-	private String value;
 	@SerializedName("value")
+	private String value;
+
+	@SerializedName("auditInfo")
+	@Expose
+	private AuditInfo auditInfo;
 
 	private Long id;
 	private Long encounterID;
@@ -306,5 +311,13 @@ public class Observation extends BaseOpenmrsEntity implements Serializable {
 
 	public void setValue(String value) {
 		this.value = value;
+	}
+
+	public AuditInfo getAuditInfo() {
+		return auditInfo;
+	}
+
+	public void setAuditInfo(AuditInfo auditInfo) {
+		this.auditInfo = auditInfo;
 	}
 }

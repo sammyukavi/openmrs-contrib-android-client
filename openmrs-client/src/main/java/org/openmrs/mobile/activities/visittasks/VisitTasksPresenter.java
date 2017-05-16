@@ -65,9 +65,6 @@ public class VisitTasksPresenter extends BasePresenter implements VisitTasksCont
 			public void onCompleted(List<VisitPredefinedTask> visitPredefinedTasks) {
 				if (visitPredefinedTasks.isEmpty()) {
 					visitTasksView.setPredefinedTasks(visitPredefinedTasks);
-						/*visitTasksView.showToast(ApplicationConstants.toastMessages.predefinedTaskInfo, ToastUtil
-						.ToastType
-								.NOTICE);*/
 				} else {
 					visitTasksView.setPredefinedTasks(visitPredefinedTasks);
 				}
@@ -92,15 +89,8 @@ public class VisitTasksPresenter extends BasePresenter implements VisitTasksCont
 					public void onCompleted(List<VisitTask> visitTasksList) {
 						if (visitTasksList.isEmpty()) {
 							visitTasksView.setVisitTasks(visitTasksList);
-						/*visitTasksView.showToast(ApplicationConstants.toastMessages.predefinedTaskInfo, ToastUtil
-						.ToastType
-								.NOTICE);*/
 						} else {
 							visitTasksView.setVisitTasks(visitTasksList);
-							visitTasksView
-									.showToast(ApplicationConstants.entityName.VISIT_TASKS
-													+ ApplicationConstants.toastMessages.fetchSuccessMessage,
-											ToastUtil.ToastType.SUCCESS);
 						}
 					}
 
@@ -128,10 +118,6 @@ public class VisitTasksPresenter extends BasePresenter implements VisitTasksCont
 					@Override
 					public void onCompleted(VisitTask entity) {
 						if (entity != null) {
-							visitTasksView
-									.showToast(ApplicationConstants.entityName.VISIT_TASKS
-											+ ApplicationConstants.toastMessages.addSuccessMessage, ToastUtil.ToastType
-											.SUCCESS);
 							visitTasksView.refresh();
 						}
 					}
@@ -153,9 +139,6 @@ public class VisitTasksPresenter extends BasePresenter implements VisitTasksCont
 			@Override
 			public void onCompleted(VisitTask entity) {
 				if (entity != null) {
-					visitTasksView
-							.showToast(ApplicationConstants.entityName.VISIT_TASKS + ApplicationConstants.toastMessages
-									.updateSuccessMessage, ToastUtil.ToastType.SUCCESS);
 					visitTasksView.refresh();
 				}
 			}

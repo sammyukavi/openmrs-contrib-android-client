@@ -84,13 +84,9 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 
 		findPatientProgressBar = (ProgressBar)v.findViewById(R.id.findPatientLoadingProgressBar);
 		numberOfFetchedPatients = (TextView)v.findViewById(R.id.numberOfFetchedPatients);
-		searchForPatient = (TextView)v.findViewById(R.id.findPatients);
-		findPatientLayout = (LinearLayout)v.findViewById(R.id.searchPatientsLayout);
 		noPatientsFoundLayout = (LinearLayout)v.findViewById(R.id.noPatientsFoundLayout);
 		foundPatientsLayout = (LinearLayout)v.findViewById(R.id.resultsLayout);
 		patientListLayout = (LinearLayout)v.findViewById(R.id.patientsCardViewLayout);
-		patientSearchTitle = (TextView)v.findViewById(R.id.findPatientTitle);
-		noPatientFoundTitle = (TextView)v.findViewById(R.id.noPatientsFoundPatientTitle);
 		progessBarLayout = (LinearLayout)v.findViewById(R.id.progressBarLayout);
 	}
 
@@ -104,7 +100,6 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		mRootView = inflater.inflate(R.layout.fragment_find_patient_record, container, false);
 		resolveViews(mRootView);
-		setSearchPatientVisibility(true);
 		setNumberOfPatientsView(0);
 		//Adding the Recycler view
 		layoutManager = new LinearLayoutManager(this.getActivity());
@@ -141,11 +136,6 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 		FindPatientRecyclerViewAdapter adapter = new FindPatientRecyclerViewAdapter(this.getActivity(), patients, this);
 		findPatientRecyclerView.setAdapter(adapter);
 		//findPatientRecyclerView.addOnScrollListener(recyclerViewOnScrollListener);
-	}
-
-	@Override
-	public void setSearchPatientVisibility(boolean visibility) {
-		findPatientLayout.setVisibility(visibility ? View.VISIBLE : View.GONE);
 	}
 
 	@Override

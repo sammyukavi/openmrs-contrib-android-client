@@ -226,10 +226,6 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 			public void onCompleted(Patient entity) {
 				setRegistering(false);
 				if (entity != null) {
-					patientRegistrationView
-							.showToast(ApplicationConstants.entityName.PATIENTS
-									+ ApplicationConstants.toastMessages.addSuccessMessage, ToastUtil.ToastType
-									.SUCCESS);
 					patientRegistrationView.startPatientDashboardActivity(entity);
 					patientRegistrationView.finishAddPatientActivity();
 				} else {
@@ -259,10 +255,6 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 			public void onCompleted(Patient entity) {
 				setRegistering(false);
 				if (entity != null) {
-					patientRegistrationView
-							.showToast(ApplicationConstants.entityName.PATIENTS
-									+ ApplicationConstants.toastMessages.updateSuccessMessage, ToastUtil.ToastType
-									.SUCCESS);
 					patientRegistrationView.startPatientDashboardActivity(entity);
 					patientRegistrationView.finishAddPatientActivity();
 				} else {

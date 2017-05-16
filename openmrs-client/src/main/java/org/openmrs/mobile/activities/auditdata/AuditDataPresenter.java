@@ -15,7 +15,6 @@
 package org.openmrs.mobile.activities.auditdata;
 
 import org.openmrs.mobile.activities.BasePresenter;
-import org.openmrs.mobile.activities.patientdashboard.ConsoleLogger;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
@@ -94,7 +93,6 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 														.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Observation>() {
 													@Override
 													public void onCompleted(Observation observation) {
-														ConsoleLogger.dump(observation.getConcept().getDatatype());
 														//auditDataView.updateForm(observation);
 													}
 

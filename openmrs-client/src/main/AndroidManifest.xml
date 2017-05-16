@@ -1,51 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.openmrs.mobile">
+		package="org.openmrs.mobile">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_LOGS" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.CAMERA" />
+	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.READ_LOGS" />
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
+	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+	<uses-permission android:name="android.permission.CAMERA" />
 
-    <uses-feature
-        android:name="android.hardware.camera"
-        android:required="false" />
-    <uses-feature
-        android:name="android.hardware.camera.autofocus"
-        android:required="false" />
+	<uses-feature
+			android:name="android.hardware.camera"
+			android:required="false" />
+	<uses-feature
+			android:name="android.hardware.camera.autofocus"
+			android:required="false" />
 
-    <application
-        android:name=".application.OpenMRS"
-        android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
-        android:roundIcon="@drawable/ic_launcher"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity
-            android:name=".activities.findpatientrecord.FindPatientRecordActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+	<application
+			android:name=".application.OpenMRS"
+			android:allowBackup="true"
+			android:icon="@drawable/ic_launcher"
+			android:label="@string/app_name"
+			android:roundIcon="@drawable/ic_launcher"
+			android:supportsRtl="true"
+			android:theme="@style/AppTheme">
+		<activity
+				android:name=".activities.patientlist.PatientListActivity"
+				android:label="@string/app_name"
+				android:theme="@style/AppTheme">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".activities.activevisits.ActiveVisitsActivity" />
-        <activity android:name=".activities.capturevitals.CaptureVitalsActivity" />
-        <activity android:name=".activities.addeditpatient.AddEditPatientActivity" />
-        <activity android:name=".activities.patientlist.PatientListActivity" />
-        <activity android:name=".activities.visittasks.VisitTasksActivity" />
-        <activity android:name=".activities.settings.SettingsActivity" />
-        <activity android:name=".activities.patientdashboard.PatientDashboardActivity" />
-        <activity android:name=".activities.login.LoginActivity" />
-        <activity android:name=".activities.addeditvisit.AddEditVisitActivity" />
-        <activity android:name=".activities.visitphoto.upload.UploadVisitPhotoActivity" />
-        <activity android:name=".activities.visitphoto.download.DownloadVisitPhotoActivity" />
-    </application>
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".activities.activevisits.ActiveVisitsActivity" />
+		<activity android:name=".activities.capturevitals.CaptureVitalsActivity" />
+		<activity android:name=".activities.addeditpatient.AddEditPatientActivity" />
+		<activity android:name=".activities.findpatientrecord.FindPatientRecordActivity" />
+		<activity android:name=".activities.visittasks.VisitTasksActivity" />
+		<activity android:name=".activities.settings.SettingsActivity" />
+		<activity android:name=".activities.patientdashboard.PatientDashboardActivity" />
+		<activity android:name=".activities.login.LoginActivity" />
+		<activity android:name=".activities.addeditvisit.AddEditVisitActivity" />
+		<activity android:name=".activities.visitphoto.upload.UploadVisitPhotoActivity" />
+		<activity android:name=".activities.visitphoto.download.DownloadVisitPhotoActivity" />
+	</application>
 
 </manifest>

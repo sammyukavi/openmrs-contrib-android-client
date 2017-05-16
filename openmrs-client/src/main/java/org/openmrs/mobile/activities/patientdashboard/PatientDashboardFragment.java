@@ -19,6 +19,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -36,6 +37,7 @@ import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.activities.addeditpatient.AddEditPatientActivity;
 import org.openmrs.mobile.activities.addeditvisit.AddEditVisitActivity;
 import org.openmrs.mobile.activities.auditdata.AuditDataActivity;
+import org.openmrs.mobile.activities.visitphoto.download.DownloadVisitPhotoFragment;
 import org.openmrs.mobile.activities.visitphoto.upload.UploadVisitPhotoActivity;
 import org.openmrs.mobile.activities.visittasks.VisitTasksContract;
 import org.openmrs.mobile.application.OpenMRS;
@@ -79,6 +81,14 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
 	public static PatientDashboardFragment newInstance() {
 		return new PatientDashboardFragment();
+	}
+
+	@Override
+	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		DownloadVisitPhotoFragment fragment = DownloadVisitPhotoFragment.newInstance();
+		FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+
 	}
 
 	@Override

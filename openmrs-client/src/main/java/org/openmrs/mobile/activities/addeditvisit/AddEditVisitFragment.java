@@ -187,7 +187,6 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 
 				// set default value
 				String defaultValue = mPresenter.searchVisitAttributeValueByType(visitAttributeType);
-				System.out.println("DEFAULT VALUE:::" + defaultValue);
 				if (StringUtils.notEmpty(defaultValue)) {
 					freeTextType.setText(defaultValue);
 				}

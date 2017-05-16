@@ -33,6 +33,7 @@ import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.activities.addeditpatient.AddEditPatientActivity;
 import org.openmrs.mobile.activities.addeditvisit.AddEditVisitActivity;
 import org.openmrs.mobile.activities.visitphoto.upload.UploadVisitPhotoActivity;
+import org.openmrs.mobile.activities.visittasks.VisitTasksActivity;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Person;
@@ -96,7 +97,9 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 				break;
 			case R.id.add_visit_task:
 				if (activeVisit != null) {
-
+					intent = new Intent(getContext(), VisitTasksActivity.class);
+					startActivity(intent);
+					break;
 				}
 				break;
 			case R.id.start_visit:

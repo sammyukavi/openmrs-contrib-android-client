@@ -20,7 +20,6 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v7.widget.AppCompatSpinner;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,7 +34,6 @@ import android.widget.Spinner;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
-import org.openmrs.mobile.activities.findpatientrecord.FindPatientRecordActivity;
 import org.openmrs.mobile.activities.patientlist.PatientListActivity;
 import org.openmrs.mobile.api.FormListService;
 import org.openmrs.mobile.application.OpenMRS;
@@ -96,13 +94,7 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 		changeUrlIcon.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				CustomDialogBundle bundle = new CustomDialogBundle();
-				bundle.setTitleViewMessage(getString(R.string.warning_dialog_title));
-				bundle.setTextViewMessage(getString(R.string.warning_lost_data_dialog));
-				bundle.setRightButtonText(getString(R.string.dialog_button_ok));
-				bundle.setRightButtonAction(CustomFragmentDialog.OnClickAction.LOGIN);
-				((LoginActivity)getActivity())
-						.createAndShowDialog(bundle, ApplicationConstants.DialogTAG.WARNING_LOST_DATA_DIALOG_TAG);
+				showWarningDialog(false);
 			}
 		});
 
@@ -174,12 +166,16 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 	}
 
 	@Override
-	public void showWarningDialog() {
+	public void showWarningDialog(boolean login) {
 		CustomDialogBundle bundle = new CustomDialogBundle();
 		bundle.setTitleViewMessage(getString(R.string.warning_dialog_title));
 		bundle.setTextViewMessage(getString(R.string.warning_lost_data_dialog));
 		bundle.setRightButtonText(getString(R.string.dialog_button_ok));
-		bundle.setLeftButtonAction(CustomFragmentDialog.OnClickAction.DISMISS);
+		if (login) {
+			bundle.setRightButtonAction(CustomFragmentDialog.OnClickAction.LOGIN);
+		} else {
+			bundle.setRightButtonAction(CustomFragmentDialog.OnClickAction.DISPLAY_URL_EDIT_FIELD);
+		}
 		((LoginActivity)this.getActivity())
 				.createAndShowDialog(bundle, ApplicationConstants.DialogTAG.WARNING_LOST_DATA_DIALOG_TAG);
 	}
@@ -347,6 +343,5 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 				mPassword.getText().toString(),
 				mUrl.getText().toString(), wipeDatabase);
 	}
-
 
 }

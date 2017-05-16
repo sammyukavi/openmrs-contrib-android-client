@@ -26,7 +26,6 @@ import android.widget.TextView;
 import org.joda.time.DateTime;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
-import org.openmrs.mobile.activities.patientdashboard.ConsoleLogger;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
@@ -35,8 +34,6 @@ import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.DateUtils;
 import org.openmrs.mobile.utilities.FontsUtil;
-
-import java.util.Map;
 
 public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presenter>
 		implements AuditDataContract.View {
@@ -49,7 +46,6 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 	private OpenMRS instance = OpenMRS.getInstance();
 	private SharedPreferences sharedPreferences = instance.getOpenMRSSharedPreferences();
 	private int visitsStartLimit = 5;
-
 
 	public AuditDataFragment() {
 	}
@@ -81,8 +77,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 			@Override
 			public void onClick(View v) {
 				Observation ob = new Observation();
-
-				ConsoleLogger.dump(v.getId());
+				//ConsoleLogger.dump(v.getId());
 			}
 		});
 

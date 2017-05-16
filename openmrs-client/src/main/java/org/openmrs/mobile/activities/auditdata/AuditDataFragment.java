@@ -81,6 +81,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 			}
 		});
 
+
 		return fragmentView;
 	}
 

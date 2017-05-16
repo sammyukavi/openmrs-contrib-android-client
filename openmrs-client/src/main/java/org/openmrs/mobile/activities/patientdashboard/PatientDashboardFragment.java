@@ -35,6 +35,7 @@ import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.activities.addeditpatient.AddEditPatientActivity;
 import org.openmrs.mobile.activities.addeditvisit.AddEditVisitActivity;
+import org.openmrs.mobile.activities.visitphoto.download.DownloadVisitPhotoFragment;
 import org.openmrs.mobile.activities.visitphoto.upload.UploadVisitPhotoActivity;
 import org.openmrs.mobile.activities.visittasks.VisitTasksFragment;
 import org.openmrs.mobile.application.OpenMRS;
@@ -71,6 +72,8 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		VisitTasksFragment fragment = VisitTasksFragment.newInstance();
 		FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
 
+		DownloadVisitPhotoFragment imagesFragment = DownloadVisitPhotoFragment.newInstance();
+		FragmentTransaction imagesTransaction = getChildFragmentManager().beginTransaction();
 	}
 
 	@Override

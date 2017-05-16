@@ -100,11 +100,17 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 				new DataService.GetCallback<List<PatientListContext>>() {
 					@Override
 					public void onCompleted(List<PatientListContext> entities) {
-						setViewAfterLoadData(false);
-						patientListView.updatePatientListData(entities);
-						setTotalNumberResults(pagingInfo.getTotalRecordCount());
-						if (pagingInfo.getTotalRecordCount() > 0) {
-							patientListView.setNumberOfPatientsView(pagingInfo.getTotalRecordCount());
+						if (entities.isEmpty()){
+							setViewAfterLoadData(true);
+							patientListView.setNumberOfPatientsView(0);
+							patientListView.updatePatientListData(entities);
+						} else {
+							setViewAfterLoadData(false);
+							patientListView.updatePatientListData(entities);
+							setTotalNumberResults(pagingInfo.getTotalRecordCount());
+							if (pagingInfo.getTotalRecordCount() > 0) {
+								patientListView.setNumberOfPatientsView(pagingInfo.getTotalRecordCount());
+							}
 						}
 						setLoading(false);
 					}
@@ -113,6 +119,7 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 					public void onError(Throwable t) {
 						patientListView.updatePatientListData(new ArrayList<>());
 						setViewAfterLoadData(true);
+						patientListView.setNumberOfPatientsView(0);
 						setLoading(false);
 					}
 				});

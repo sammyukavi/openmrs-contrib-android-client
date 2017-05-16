@@ -396,7 +396,7 @@
 
 	<!-- Fragment_patient_list -->
 	<string name="no_patients_found">No patients found</string>
-	<string name="select_patient_list">Select Patient List:</string>
+	<string name="select_patient_list">Select Patient List</string>
 	<string name="no_patient_list">No patient lists found!</string>
 	<string name="number_of_patients">%1$s patients found</string>
 	<string name="search_for_patients">Please type the first 3 characters of the patient name on the search bar for you to

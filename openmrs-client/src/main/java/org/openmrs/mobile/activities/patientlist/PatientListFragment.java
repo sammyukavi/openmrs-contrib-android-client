@@ -32,6 +32,7 @@ import org.openmrs.mobile.models.PatientList;
 import org.openmrs.mobile.models.PatientListContext;
 import org.openmrs.mobile.utilities.FontsUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -120,6 +121,10 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 
 	@Override
 	public void updatePatientLists(List<PatientList> patientLists) {
+		PatientList patientList = new PatientList();
+		patientList.setName(getString(R.string.select_patient_list));
+
+		patientLists.add(0,patientList);
 		ArrayAdapter<PatientList> adapter = new ArrayAdapter<PatientList>(getContext(),
 				android.R.layout.simple_spinner_dropdown_item, patientLists);
 		patientListDropdown.setAdapter(adapter);
@@ -127,7 +132,14 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				setSelectedPatientList(patientLists.get(position));
-				mPresenter.getPatientListData(selectedPatientList.getUuid(), mPresenter.getPage());
+				if (selectedPatientList.getUuid() == null){
+					setEmptyPatientListVisibility(true);
+					setNumberOfPatientsView(0);
+					List<PatientListContext> patientListContextList = new ArrayList<>();
+					updatePatientListData(patientListContextList);
+				} else {
+					mPresenter.getPatientListData(selectedPatientList.getUuid(), mPresenter.getPage());
+				}
 			}
 
 			@Override

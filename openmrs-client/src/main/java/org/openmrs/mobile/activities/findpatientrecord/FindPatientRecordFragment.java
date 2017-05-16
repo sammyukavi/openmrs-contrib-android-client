@@ -46,7 +46,7 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 	private TextView noPatientFound, numberOfFetchedPatients, searchForPatient, patientSearchTitle, noPatientFoundTitle;
 	private LinearLayoutManager layoutManager;
 	private ProgressBar findPatientProgressBar;
-	private LinearLayout findPatientLayout, noPatientsFoundLayout, foundPatientsLayout, patientListLayout, progessBarLayout;
+	private LinearLayout findPatientLayout, noPatientsFoundLayout, foundPatientsLayout, patientListLayout;
 	private OpenMRS openMRS = OpenMRS.getInstance();
 	private AuthorizationManager authorizationManager;
 
@@ -87,7 +87,6 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 		noPatientsFoundLayout = (LinearLayout)v.findViewById(R.id.noPatientsFoundLayout);
 		foundPatientsLayout = (LinearLayout)v.findViewById(R.id.resultsLayout);
 		patientListLayout = (LinearLayout)v.findViewById(R.id.patientsCardViewLayout);
-		progessBarLayout = (LinearLayout)v.findViewById(R.id.progressBarLayout);
 	}
 
 	@Override
@@ -140,7 +139,7 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 
 	@Override
 	public void setProgressBarVisibility(boolean visibility) {
-		progessBarLayout.setVisibility(visibility ? View.VISIBLE : View.GONE);
+		findPatientProgressBar.setVisibility(visibility ? View.VISIBLE : View.GONE);
 	}
 
 	@Override

@@ -429,7 +429,7 @@ public class CustomFragmentDialog extends DialogFragment {
 						break;
 					case REGISTER_PATIENT:
 						((AddEditPatientActivity)getActivity()).mPresenter
-								.registerPatient(mCustomDialogBundle.getNewPatient());
+								.addEditPatient(mCustomDialogBundle.getNewPatient());
 						dismiss();
 						break;
 					case CANCEL_REGISTERING:

@@ -51,8 +51,6 @@ public interface AddEditPatientContract {
 
 		void startPatientDashboardActivity(Patient patient);
 
-		void showUpgradeRegistrationModuleInfo();
-
 		void setPatientIdentifierType(PatientIdentifierType patientIdentifierType);
 
 		void showToast(String message, ToastUtil.ToastType toastType);
@@ -75,15 +73,11 @@ public interface AddEditPatientContract {
 
 		void setRegistering(boolean processing);
 
-		void confirmRegister(Patient patient);
-
-		void confirmUpdate(Patient patient);
+		void confirmPatient(Patient patient);
 
 		void finishAddPatientActivity();
 
-		void registerPatient(Patient patient);
-
-		void updatePatient(Patient patient);
+		void addEditPatient(Patient patient);
 
 		void getConceptNames(String uuid, Spinner conceptAnswersDropdown);
 

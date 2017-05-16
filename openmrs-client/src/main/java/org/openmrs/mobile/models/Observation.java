@@ -20,9 +20,11 @@ public class Observation extends BaseOpenmrsEntity implements Serializable {
 	@SerializedName("concept")
 	@Expose
 	private Concept concept;
+
 	@SerializedName("person")
 	@Expose
 	private Person person;
+
 	@SerializedName("obsDatetime")
 	@Expose
 	private String obsDatetime;
@@ -34,38 +36,45 @@ public class Observation extends BaseOpenmrsEntity implements Serializable {
 	@SerializedName("obsGroup")
 	@Expose
 	private Observation obsGroup;
+
 	@SerializedName("valueCodedName")
 	@Expose
 	private String valueCodedName;
+
 	@SerializedName("comment")
 	@Expose
 	private String comment;
+
 	@SerializedName("location")
 	@Expose
 	private String location = null;
+
 	@SerializedName("encounter")
 	@Expose
 	private Encounter encounter = null;
+
 	@SerializedName("formFieldPath")
 	@Expose
 	private String formFieldPath;
+
 	@SerializedName("formFieldNamespace")
 	@Expose
 	private String formFieldNamespace;
+
 	@SerializedName("resourceVersion")
 	@Expose
 	private String resourceVersion;
 
-	@Expose
 	@SerializedName("value")
+	@Expose
 	private String value;
 
 	@SerializedName("auditInfo")
 	@Expose
 	private AuditInfo auditInfo;
 
-	@SerializedName("answers")
 	@Expose
+	@SerializedName("answers")
 	private Answers answers;
 
 	private Long id;

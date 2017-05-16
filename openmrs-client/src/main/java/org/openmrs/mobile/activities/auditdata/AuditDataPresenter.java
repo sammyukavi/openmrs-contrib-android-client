@@ -15,7 +15,7 @@
 package org.openmrs.mobile.activities.auditdata;
 
 import org.openmrs.mobile.activities.BasePresenter;
-import org.openmrs.mobile.activities.patientdashboard.PatientDashboardContract;
+import org.openmrs.mobile.activities.patientdashboard.ConsoleLogger;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
@@ -35,15 +35,18 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 
 	private AuditDataContract.View auditDataView;
 	private DataService<Patient> patientDataService;
-	private PatientDashboardContract.View patientDashboardView;
 	private VisitDataService visitDataService;
 	private ObsDataService observationDataService;
+	private int startIndex = 0;
+	private int limit = 100;
 
 	public AuditDataPresenter(AuditDataContract.View view, OpenMRS openMRS) {
 		this.auditDataView = view;
 		this.auditDataView.setPresenter(this);
 		this.patientDataService = new PatientDataService();
 		this.visitDataService = new VisitDataService();
+		this.observationDataService = new ObsDataService();
+
 	}
 
 	@Override
@@ -76,20 +79,38 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 			@Override
 			public void onCompleted(Visit visit) {
 				for (Encounter encounter : visit.getEncounters()) {
+
 					switch (encounter.getEncounterType().getDisplay()) {
+
 						case ApplicationConstants.EncounterTypeEntitys.AuditData:
-							observationDataService.getByEncounter(encounter, QueryOptions.LOAD_RELATED_OBJECTS, new
-									PagingInfo(0, 100), new DataService.GetCallback<List<Observation>>() {
-								@Override
-								public void onCompleted(List<Observation> observations) {
-									//ConsoleLogger.dump(observations);
-								}
 
-								@Override
-								public void onError(Throwable t) {
+							PagingInfo pagininfo = new PagingInfo(startIndex, limit);
+							observationDataService.getByEncounter(encounter, QueryOptions.LOAD_RELATED_OBJECTS, pagininfo,
+									new DataService.GetCallback<List<Observation>>() {
+										@Override
+										public void onCompleted(List<Observation> observations) {
+											for (Observation observation : observations) {
+												observationDataService.getByUUID(observation.getUuid(), QueryOptions
+														.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Observation>() {
+													@Override
+													public void onCompleted(Observation observation) {
+														ConsoleLogger.dump(observation.getConcept().getDatatype());
+														//auditDataView.updateForm(observation);
+													}
 
-								}
-							});
+													@Override
+													public void onError(Throwable t) {
+
+													}
+												});
+											}
+										}
+
+										@Override
+										public void onError(Throwable t) {
+											t.printStackTrace();
+										}
+									});
 
 							break;
 					}

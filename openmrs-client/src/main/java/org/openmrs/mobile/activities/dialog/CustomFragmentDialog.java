@@ -495,10 +495,6 @@ public class CustomFragmentDialog extends DialogFragment {
 								});
 
 						break;
-					case DISPLAY_URL_EDIT_FIELD:
-						((LoginActivity)getActivity()).mPresenter.showEditUrlEditText(true);
-						dismiss();
-						break;
 					default:
 						break;
 				}
@@ -628,8 +624,7 @@ public class CustomFragmentDialog extends DialogFragment {
 		DELETE_PATIENT,
 		ADD_VISIT_TASKS,
 		SAVE_VISIT_NOTE,
-		CREATE_VISIT_NOTE,
-		DISPLAY_URL_EDIT_FIELD
+		CREATE_VISIT_NOTE
 	}
 
 	public interface DialogActionClickedListener {

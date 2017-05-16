@@ -94,7 +94,7 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 					((!mOpenMRS.getServerUrl().equals(ApplicationConstants.EMPTY_STRING) &&
 							!mOpenMRS.getServerUrl().equals(oldUrl))) ||
 					mWipeRequired) {
-				loginView.showWarningDialog(true);
+				loginView.showWarningDialog();
 			} else {
 				authenticateUser(username, password, url);
 			}

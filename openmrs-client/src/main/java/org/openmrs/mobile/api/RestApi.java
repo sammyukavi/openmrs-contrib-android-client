@@ -45,7 +45,7 @@ public interface RestApi {
 	@GET("form?v=custom:(uuid,name,resources)")
 	Call<Results<FormResource>> getForms();
 
-	@GET("location?tag=Login%20Location")
+	@GET("location?tag=LoginActivity%20Location")
 	Call<Results<Location>> getLocations(@Query("v") String representation);
 
 	@GET()

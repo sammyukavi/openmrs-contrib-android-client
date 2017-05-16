@@ -85,12 +85,9 @@ public class CustomFragmentDialog extends DialogFragment {
 	protected LayoutInflater mInflater;
 	protected LinearLayout mFieldsLayout;
 	protected RecyclerView mRecyclerView;
-	protected TextView mTextView;
-	protected TextView mTitleTextView;
-	protected EditText mEditText;
-	protected EditText mEditNoteText;
-	private Button mLeftButton;
-	private Button mRightButton;
+	protected TextView mTextView, mTitleTextView;
+	protected EditText mEditText, mEditNoteText;
+	private Button mLeftButton, mRightButton;
 	private CustomDialogBundle mCustomDialogBundle;
 	private AutoCompleteTextView autoCompleteTextView;
 
@@ -386,6 +383,11 @@ public class CustomFragmentDialog extends DialogFragment {
 	}
 
 	private View.OnClickListener onClickActionSolver(final OnClickAction action) {
+
+		//LoginActivity activity = (LoginActivity)getActivity();
+		//activity.onFinishEditDialog(mEditText.getText().toString());
+		//this.dismiss();
+
 		return new View.OnClickListener() {
 			//CHECKSTYLE:OFF
 			@Override
@@ -556,7 +558,7 @@ public class CustomFragmentDialog extends DialogFragment {
 							observation.setPerson(patient.getPerson());
 							observation.setObsDatetime(localDateTime.toString());
 							observation.setCreator(user);
-							observation.setAuditInfo(visit.getAuditInfo());
+							observation.setAuditInfo(auditInfo);
 							observation.setLocation(location.getUuid());
 
 							List<Observation> observationList = new ArrayList<>();
@@ -568,8 +570,9 @@ public class CustomFragmentDialog extends DialogFragment {
 							encounter.setObs(observationList);
 							encounter.setVisit(visit);
 							encounter.setEncounterDatetime(localDateTime.toString());
-							encounter.setAuditInfo(visit.getAuditInfo());
+							encounter.setAuditInfo(auditInfo);
 							encounter.setLocation(location);
+
 
 							EncounterDataService encounterDataService = new EncounterDataService();
 							encounterDataService.create(encounter, new DataService.GetCallback<Encounter>() {
@@ -632,5 +635,9 @@ public class CustomFragmentDialog extends DialogFragment {
 		ADD_VISIT_TASKS,
 		SAVE_VISIT_NOTE,
 		CREATE_VISIT_NOTE
+	}
+
+	public interface DialogActionClickedListener {
+		void onFinish(CustomFragmentDialog.OnClickAction action);
 	}
 }

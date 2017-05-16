@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.auditdata.AuditDataActivity;
-import org.openmrs.mobile.activities.auditdata.ConsoleLogger;
 import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.data.DataService;
@@ -171,6 +170,7 @@ public class PastVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 	@Override
 	public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 		if (holder instanceof VisitViewHolder) {
+
 			Visit visit = visits.get(position);
 			//setHasVisitNote(false);
 
@@ -219,16 +219,21 @@ public class PastVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 			});
 
 			for (Encounter encounter : visit.getEncounters()) {
+
 				switch (encounter.getEncounterType().getDisplay()) {
+
 					case ApplicationConstants.EncounterTypeEntitys.VISIT_NOTE:
+
 						QueryOptions options = new QueryOptions();
 						PagingInfo pagininfo =
-								new PagingInfo(startIndex, limit);//TODO set this to null after Wes has fixed his issues
+								new PagingInfo(startIndex, limit);
+
 						observationDataService.getByEncounter(encounter, options, pagininfo,
 								new DataService.GetCallback<List<Observation>>() {
 									@Override
 									public void onCompleted(List<Observation> observations) {
 										for (Observation observation : observations) {
+
 											if (observation.getDiagnosisNote() != null && !observation
 													.getDiagnosisNote()
 													.equals(ApplicationConstants.EMPTY_STRING)) {
@@ -263,9 +268,7 @@ public class PastVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 												createEditVisitNoteDialog
 														.setEditNoteTextViewMessage(observation.getDiagnosisNote());
 												createEditVisitNoteDialog.setArguments(dialogBundle);
-
 												setHasVisitNote(true);
-												ConsoleLogger.dump("Reached here");
 											}
 										}
 									}
@@ -275,6 +278,7 @@ public class PastVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 
 									}
 								});
+
 						break;
 				}
 			}
@@ -298,7 +302,6 @@ public class PastVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 						.putString(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE,
 								visit.getUuid());
 				createEditVisitNoteDialog.setArguments(dialogBundle);
-				setHasVisitNote(true);
 			}
 
 			viewHolder.observationsContainer.addView(singleVisitView);

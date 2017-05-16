@@ -66,4 +66,7 @@ public class LoginActivity extends ACBaseActivity {
 		return true;
 	}
 
+	public void onFinishEditDialog(String s) {
+
+	}
 }

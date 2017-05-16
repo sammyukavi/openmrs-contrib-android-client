@@ -82,7 +82,7 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 									PagingInfo(0, 100), new DataService.GetCallback<List<Observation>>() {
 								@Override
 								public void onCompleted(List<Observation> observations) {
-									ConsoleLogger.dump(observations);
+									//ConsoleLogger.dump(observations);
 								}
 
 								@Override

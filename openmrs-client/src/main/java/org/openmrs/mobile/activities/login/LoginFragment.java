@@ -30,11 +30,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
 import org.openmrs.mobile.activities.findpatientrecord.FindPatientRecordActivity;
+import org.openmrs.mobile.activities.patientlist.PatientListActivity;
 import org.openmrs.mobile.api.FormListService;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
@@ -60,7 +62,7 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 	private EditText mUrl, mUsername, mPassword;
 	private Button mLoginButton;
 	private ProgressBar mSpinner;
-	private AppCompatSpinner mDropdownLocation;
+	private Spinner mDropdownLocation;
 	private SparseArray<Bitmap> mBitmapCache;
 	private ProgressBar mLocationLoadingProgressBar;
 	private LoginValidatorWatcher loginValidatorWatcher;
@@ -99,8 +101,6 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 				bundle.setTextViewMessage(getString(R.string.warning_lost_data_dialog));
 				bundle.setRightButtonText(getString(R.string.dialog_button_ok));
 				bundle.setRightButtonAction(CustomFragmentDialog.OnClickAction.LOGIN);
-				bundle.setLeftButtonText(getString(R.string.dialog_button_cancel));
-				bundle.setLeftButtonAction(CustomFragmentDialog.OnClickAction.DISMISS);
 				((LoginActivity)getActivity())
 						.createAndShowDialog(bundle, ApplicationConstants.DialogTAG.WARNING_LOST_DATA_DIALOG_TAG);
 			}
@@ -144,7 +144,7 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 		mPassword = (EditText)root.findViewById(R.id.loginPasswordField);
 		mLoginButton = (Button)root.findViewById(R.id.loginButton);
 		mSpinner = (ProgressBar)root.findViewById(R.id.loginLoading);
-		mDropdownLocation = (AppCompatSpinner)root.findViewById(R.id.locationSpinner);
+		mDropdownLocation = (Spinner)root.findViewById(R.id.locationSpinner);
 		mLocationLoadingProgressBar = (ProgressBar)root.findViewById(R.id.locationLoadingProgressBar);
 		changeUrlIcon = (ImageView)root.findViewById(R.id.changeUrlIcon);
 	}
@@ -179,8 +179,6 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 		bundle.setTitleViewMessage(getString(R.string.warning_dialog_title));
 		bundle.setTextViewMessage(getString(R.string.warning_lost_data_dialog));
 		bundle.setRightButtonText(getString(R.string.dialog_button_ok));
-		bundle.setRightButtonAction(CustomFragmentDialog.OnClickAction.LOGIN);
-		bundle.setLeftButtonText(getString(R.string.dialog_button_cancel));
 		bundle.setLeftButtonAction(CustomFragmentDialog.OnClickAction.DISMISS);
 		((LoginActivity)this.getActivity())
 				.createAndShowDialog(bundle, ApplicationConstants.DialogTAG.WARNING_LOST_DATA_DIALOG_TAG);
@@ -218,8 +216,8 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 	private void bindDrawableResources() {
 		mBitmapCache = new SparseArray<>();
 		ImageView openMrsLogoImage = (ImageView)getActivity().findViewById(R.id.openmrsLogo);
-		createImageBitmap(R.drawable.openmrs_logo, openMrsLogoImage.getLayoutParams());
-		openMrsLogoImage.setImageBitmap(mBitmapCache.get(R.drawable.openmrs_logo));
+		createImageBitmap(R.drawable.banda_logo, openMrsLogoImage.getLayoutParams());
+		openMrsLogoImage.setImageBitmap(mBitmapCache.get(R.drawable.banda_logo));
 	}
 
 	private void createImageBitmap(Integer key, ViewGroup.LayoutParams layoutParams) {
@@ -253,7 +251,7 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 
 	@Override
 	public void userAuthenticated() {
-		Intent intent = new Intent(mOpenMRS.getApplicationContext(), FindPatientRecordActivity.class);
+		Intent intent = new Intent(mOpenMRS.getApplicationContext(), PatientListActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		mOpenMRS.getApplicationContext().startActivity(intent);
 		mPresenter.saveLocationsToDatabase(mLocationsList, mDropdownLocation.getSelectedItem().toString());
@@ -263,6 +261,11 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 	public void startFormListService() {
 		Intent i = new Intent(getContext(), FormListService.class);
 		getActivity().startService(i);
+	}
+
+	@Override
+	public void showEditUrlEditField(boolean visibility) {
+		mUrl.setVisibility(View.VISIBLE);
 	}
 
 	@Override

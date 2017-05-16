@@ -238,6 +238,11 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 
 	}
 
+	@Override
+	public void showEditUrlEditText(boolean visibility) {
+		loginView.showEditUrlEditField(true);
+	}
+
 	private boolean validateLoginFields(String username, String password, String url) {
 		return StringUtils.notEmpty(username) || StringUtils.notEmpty(password) || StringUtils.notEmpty(url);
 	}

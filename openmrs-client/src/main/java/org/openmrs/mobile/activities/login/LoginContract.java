@@ -31,7 +31,7 @@ public interface LoginContract {
 
 		void setPresenter(@NonNull Presenter presenter);
 
-		void showWarningDialog();
+		void showWarningDialog(boolean login);
 
 		void showLoadingAnimation();
 
@@ -59,6 +59,8 @@ public interface LoginContract {
 
 		void startFormListService();
 
+		void showEditUrlEditField(boolean visibility);
+
 	}
 
 	interface Presenter extends BasePresenterContract {
@@ -72,6 +74,8 @@ public interface LoginContract {
 		void saveLocationsToDatabase(List<Location> locationList, String selectedLocation);
 
 		void loadLocations(String url);
+
+		void showEditUrlEditText(boolean visibility);
 
 	}
 }

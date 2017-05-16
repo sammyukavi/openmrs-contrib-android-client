@@ -14,14 +14,12 @@
 
 package org.openmrs.mobile.models;
 
-import android.os.Parcel;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class Answer extends BaseOpenmrsEntity implements Serializable {
+public class Answers extends BaseOpenmrsEntity implements Serializable {
 
 	@SerializedName("concept")
 	@Expose
@@ -31,12 +29,7 @@ public class Answer extends BaseOpenmrsEntity implements Serializable {
 	@Expose
 	private String label;
 
-	public Answer() {
-	}
-
-	protected Answer(Parcel in) {
-		this.concept = in.readString();
-		this.label = in.readString();
+	public Answers() {
 	}
 
 	public String getConcept() {

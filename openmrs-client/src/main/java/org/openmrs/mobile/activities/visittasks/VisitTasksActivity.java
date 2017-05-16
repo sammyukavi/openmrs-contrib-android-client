@@ -23,6 +23,9 @@ import android.view.View;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
+import org.openmrs.mobile.activities.patientheader.PatientHeaderFragment;
+import org.openmrs.mobile.activities.patientheader.PatientHeaderPresenter;
+import org.openmrs.mobile.utilities.ApplicationConstants;
 
 public class VisitTasksActivity extends ACBaseActivity {
 
@@ -54,6 +57,25 @@ public class VisitTasksActivity extends ACBaseActivity {
 		});
 
 		mPresenter = new VisitTasksPresenter(visitTasksFragment);
+
+		// patient header
+		Bundle extras = getIntent().getExtras();
+		String patientUuid;
+		if (extras != null) {
+			patientUuid = extras.getString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
+
+			PatientHeaderFragment headerFragment = (PatientHeaderFragment)getSupportFragmentManager()
+					.findFragmentById(R.id.patientHeader);
+			if (headerFragment == null) {
+				headerFragment = PatientHeaderFragment.newInstance();
+			}
+
+			if (!headerFragment.isActive()) {
+				addFragmentToActivity(getSupportFragmentManager(), headerFragment, R.id.patientHeader);
+			}
+
+			new PatientHeaderPresenter(headerFragment, patientUuid);
+		}
 	}
 
 	@Override

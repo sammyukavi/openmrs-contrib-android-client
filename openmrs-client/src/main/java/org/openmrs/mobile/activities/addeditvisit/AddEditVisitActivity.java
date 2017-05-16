@@ -18,6 +18,8 @@ import android.view.Menu;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
+import org.openmrs.mobile.activities.patientheader.PatientHeaderFragment;
+import org.openmrs.mobile.activities.patientheader.PatientHeaderPresenter;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.StringUtils;
 import org.openmrs.mobile.utilities.ToastUtil;
@@ -51,6 +53,20 @@ public class AddEditVisitActivity extends ACBaseActivity {
 				if (extras.getBoolean(ApplicationConstants.BundleKeys.END_VISIT_TAG, false)) {
 					showEndVisitDialog();
 				}
+
+				// patient header
+				PatientHeaderFragment headerFragment = (PatientHeaderFragment) getSupportFragmentManager()
+						.findFragmentById(R.id.patientHeader);
+				if(headerFragment == null){
+					headerFragment = PatientHeaderFragment.newInstance();
+				}
+
+				if(!headerFragment.isActive()){
+					addFragmentToActivity(getSupportFragmentManager(), headerFragment, R.id.patientHeader);
+				}
+
+				new PatientHeaderPresenter(headerFragment, patientUuid);
+
 			} else {
 				ToastUtil.error(getString(R.string.no_patient_selected));
 			}

@@ -94,7 +94,7 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 					((!mOpenMRS.getServerUrl().equals(ApplicationConstants.EMPTY_STRING) &&
 							!mOpenMRS.getServerUrl().equals(oldUrl))) ||
 					mWipeRequired) {
-				loginView.showWarningDialog();
+				loginView.showWarningDialog(true);
 			} else {
 				authenticateUser(username, password, url);
 			}
@@ -236,6 +236,11 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 					}));
 		}
 
+	}
+
+	@Override
+	public void showEditUrlEditText(boolean visibility) {
+		loginView.showEditUrlEditField(true);
 	}
 
 	private boolean validateLoginFields(String username, String password, String url) {

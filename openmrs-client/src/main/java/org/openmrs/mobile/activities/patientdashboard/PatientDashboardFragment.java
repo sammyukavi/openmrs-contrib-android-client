@@ -19,30 +19,26 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 
-import org.joda.time.DateTime;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.activities.addeditpatient.AddEditPatientActivity;
 import org.openmrs.mobile.activities.addeditvisit.AddEditVisitActivity;
 import org.openmrs.mobile.activities.visitphoto.upload.UploadVisitPhotoActivity;
-import org.openmrs.mobile.activities.visittasks.VisitTasksFragment;
+import org.openmrs.mobile.activities.visittasks.VisitTasksActivity;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Person;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
-import org.openmrs.mobile.utilities.DateUtils;
 import org.openmrs.mobile.utilities.FontsUtil;
 import org.openmrs.mobile.utilities.StringUtils;
 
@@ -52,8 +48,6 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		implements PatientDashboardContract.View {
 
 	private View fragmentView;
-	private TextView patientDisplayName, patientGender, patientAge, patientIdentifier,
-			patientDob;
 	private Visit activeVisit;
 	private FloatingActionButton addVisitImageButton,
 			addVisitTaskButton, startVisitButton, editVisitButton, endVisitButton, editPatient;
@@ -68,9 +62,6 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		VisitTasksFragment fragment = VisitTasksFragment.newInstance();
-		FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-
 	}
 
 	@Override
@@ -106,7 +97,9 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 				break;
 			case R.id.add_visit_task:
 				if (activeVisit != null) {
-
+					intent = new Intent(getContext(), VisitTasksActivity.class);
+					startActivity(intent);
+					break;
 				}
 				break;
 			case R.id.start_visit:
@@ -142,11 +135,6 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	}
 
 	private void initViewFields() {
-		patientDisplayName = (TextView)fragmentView.findViewById(R.id.fetchedPatientDisplayName);
-		patientIdentifier = (TextView)fragmentView.findViewById(R.id.fetchedPatientIdentifier);
-		patientGender = (TextView)fragmentView.findViewById(R.id.fetchedPatientGender);
-		patientAge = (TextView)fragmentView.findViewById(R.id.fetchedPatientAge);
-		patientDob = (TextView)fragmentView.findViewById(R.id.fetchedPatientBirthDate);
 		addVisitImageButton = (FloatingActionButton)getActivity().findViewById(R.id.add_visit_image);
 		addVisitTaskButton = (FloatingActionButton)getActivity().findViewById(R.id.add_visit_task);
 		startVisitButton = (FloatingActionButton)getActivity().findViewById(R.id.start_visit);
@@ -166,13 +154,6 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	public void updateContactCard(Patient patient) {
 		this.patient = patient;
 		Person person = patient.getPerson();
-		patientDisplayName.setText(person.getName().getNameString());
-		patientGender.setText(person.getGender());
-		patientIdentifier.setText(patient.getIdentifier().getIdentifier());
-		DateTime date = DateUtils.convertTimeString(person.getBirthdate());
-		patientAge.setText(DateUtils.calculateAge(date.getYear(), date.getMonthOfYear(), date.getDayOfMonth()));
-		patientDob.setText(DateUtils.convertTime1(person.getBirthdate(), DateUtils.PATIENT_DASHBOARD_DOB_DATE_FORMAT));
-		//mPresenter.setStartIndex(visitsStartIndex);
 		mPresenter.setLimit(visitsStartLimit);
 		mPresenter.fetchVisits(patient);
 		setPatientUuid(patient);

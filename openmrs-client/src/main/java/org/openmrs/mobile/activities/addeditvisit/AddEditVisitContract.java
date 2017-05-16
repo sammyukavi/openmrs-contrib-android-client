@@ -30,8 +30,6 @@ public interface AddEditVisitContract {
 
 	interface View extends BaseView<Presenter> {
 
-		void setVisitTitleText(String text);
-
 		void initView(boolean startVisit);
 
 		void setSpinnerVisibility(boolean visibility);

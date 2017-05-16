@@ -56,14 +56,6 @@
 				fab:fab_size="mini" />
 
 		<com.github.clans.fab.FloatingActionButton
-				android:id="@+id/audit_data_form"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:src="@drawable/ic_start_visit"
-				fab:fab_label="@string/label_audit_data"
-				fab:fab_size="mini" />
-
-		<com.github.clans.fab.FloatingActionButton
 				android:id="@+id/add_visit_image"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
@@ -88,7 +80,7 @@
 				fab:fab_label="@string/add_visit_task_dialog_title"
 				fab:fab_size="mini"
 				android:visibility="gone" />
-		
+
 		<com.github.clans.fab.FloatingActionButton
 				android:id="@+id/edit_Patient"
 				android:layout_width="wrap_content"
@@ -96,7 +88,7 @@
 				android:src="@drawable/ic_edit"
 				fab:fab_label="@string/edit_patient"
 				fab:fab_size="mini"
-				fab:menu_colorNormal="@color/color_primary_dark"/>
+				fab:menu_colorNormal="@color/color_primary_dark" />
 
 
 	</com.github.clans.fab.FloatingActionMenu>

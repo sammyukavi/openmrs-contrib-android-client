@@ -64,7 +64,7 @@ public class FormFieldsWrapper implements Serializable, Parcelable {
 						if (question.getQuestionOptions().getRendering().equals("number")) {
 							String conceptUuid = question.getQuestionOptions().getConcept();
 							InputField inputField = new InputField(conceptUuid);
-							inputField.setValue(getValue(encounter.getObservations(), conceptUuid));
+							inputField.setValue(getValue(encounter.getObs(), conceptUuid));
 							inputFieldList.add(inputField);
 						} else if (question.getQuestionOptions().getRendering().equals("select") ||
 								question.getQuestionOptions().getRendering().equals("radio")) {
@@ -73,7 +73,7 @@ public class FormFieldsWrapper implements Serializable, Parcelable {
 									new SelectOneField(question.getQuestionOptions().getAnswers(), conceptUuid);
 							Answer chosenAnswer = new Answer();
 							chosenAnswer.setConcept(conceptUuid);
-							chosenAnswer.setLabel(getValue(encounter.getObservations(), conceptUuid).toString());
+							chosenAnswer.setLabel(getValue(encounter.getObs(), conceptUuid).toString());
 							selectOneField.setChosenAnswer(chosenAnswer);
 							selectOneFieldList.add(selectOneField);
 						}

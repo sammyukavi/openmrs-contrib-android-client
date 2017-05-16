@@ -6,11 +6,10 @@ import android.support.annotation.Nullable;
 import org.openmrs.mobile.data.BaseDataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
-import org.openmrs.mobile.data.db.impl.ObsDbService;
-import org.openmrs.mobile.data.rest.ObsRestService;
+import org.openmrs.mobile.data.db.impl.EncounterDbService;
+import org.openmrs.mobile.data.rest.EncounterRestService;
 import org.openmrs.mobile.data.rest.RestConstants;
 import org.openmrs.mobile.models.Encounter;
-import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 
@@ -20,16 +19,16 @@ import retrofit2.Call;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class ObsDataService extends BaseDataService<Observation, ObsDbService, ObsRestService> {
+public class EncounterDataService extends BaseDataService<Encounter, EncounterDbService, EncounterRestService> {
 
 	@Override
-	protected Class<ObsRestService> getRestServiceClass() {
-		return ObsRestService.class;
+	protected Class<EncounterRestService> getRestServiceClass() {
+		return EncounterRestService.class;
 	}
 
 	@Override
-	protected ObsDbService getDbService() {
-		return new ObsDbService();
+	protected EncounterDbService getDbService() {
+		return new EncounterDbService();
 	}
 
 	@Override
@@ -39,37 +38,37 @@ public class ObsDataService extends BaseDataService<Observation, ObsDbService, O
 
 	@Override
 	protected String getEntityName() {
-		return "obs";
+		return "encounter";
 	}
 
 	@Override
-	protected Call<Observation> _restGetByUuid(String restPath, String uuid, QueryOptions options) {
+	protected Call<Encounter> _restGetByUuid(String restPath, String uuid, QueryOptions options) {
 		return restService.getByUuid(restPath, uuid, QueryOptions.getRepresentation(options));
 	}
 
 	@Override
-	protected Call<Results<Observation>> _restGetAll(String restPath, QueryOptions options, PagingInfo pagingInfo) {
+	protected Call<Results<Encounter>> _restGetAll(String restPath, QueryOptions options, PagingInfo pagingInfo) {
 		return restService.getAll(restPath, QueryOptions.getRepresentation(options),
 				QueryOptions.getIncludeInactive(options), PagingInfo.getLimit(pagingInfo),
 				PagingInfo.getStartIndex(pagingInfo));
 	}
 
 	@Override
-	protected Call<Observation> _restCreate(String restPath, Observation entity) {
+	protected Call<Encounter> _restCreate(String restPath, Encounter entity) {
 		return restService.create(restPath, entity);
 	}
 
 	@Override
-	protected Call<Observation> _restUpdate(String restPath, Observation entity) {
+	protected Call<Encounter> _restUpdate(String restPath, Encounter entity) {
 		return restService.update(restPath, entity.getUuid(), entity);
 	}
 
 	@Override
-	protected Call<Observation> _restPurge(String restPath, String uuid) {
+	protected Call<Encounter> _restPurge(String restPath, String uuid) {
 		return null;
 	}
 
-	public void getVisitDocumentsObsByPatientAndConceptList(String patientUuid, GetCallback<List<Observation>> callback) {
+	public void getVisitDocumentsObsByPatientAndConceptList(String patientUuid, GetCallback<List<Encounter>> callback) {
 		executeMultipleCallback(callback, null,
 				() -> null,
 				() -> restService.getVisitDocumentsObsByPatientAndConceptList(
@@ -79,7 +78,7 @@ public class ObsDataService extends BaseDataService<Observation, ObsDbService, O
 	}
 
 	public void getByEncounter(@NonNull Encounter encounter, @Nullable QueryOptions options,
-			@Nullable PagingInfo pagingInfo, @NonNull GetCallback<List<Observation>> callback) {
+			@Nullable PagingInfo pagingInfo, @NonNull GetCallback<List<Encounter>> callback) {
 		checkNotNull(encounter);
 		checkNotNull(callback);
 

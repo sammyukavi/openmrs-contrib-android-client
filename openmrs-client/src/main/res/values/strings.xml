@@ -21,7 +21,7 @@
 	<string name="aadbname">aaopenmrs.db</string>
 
 
-	<!-- Login view -->
+	<!-- LoginActivity view -->
 	<string name="login_button">Login</string>
 	<string name="login_url_hint">URL address</string>
 	<string name="login_username_hint">Username</string>
@@ -435,9 +435,9 @@
 	<string name="inpatient_service_type">Type of inpatient service</string>
 	<string name="discharge_diagnosis">Discharge Diagnosis:</string>
 	<string name="unknown">Unknown</string>
+	<string name="nav_login">Login</string>
 
 	<string-array name="inpatient_service_types">
-		<item></item>
 		<item>General medicine service</item>
 		<item>Surgery service</item>
 		<item>Orthopedic department</item>

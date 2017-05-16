@@ -2,10 +2,10 @@ package org.openmrs.mobile.activities.patientdashboard;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.openmrs.mobile.R;
+import org.openmrs.mobile.activities.auditdata.AuditDataActivity;
 import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.data.DataService;
@@ -53,6 +54,7 @@ public class PastVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 					.createAndShowDialog(createEditVisitNoteDialog, ApplicationConstants.DialogTAG.VISIT_NOTE_TAG);
 		}
 	};
+	private boolean hasVisitNote;
 
 	public PastVisitsRecyclerAdapter(RecyclerView recyclerView, List<Visit> visits, Context context, Patient patient) {
 		this.visits = visits;
@@ -168,7 +170,9 @@ public class PastVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 	@Override
 	public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 		if (holder instanceof VisitViewHolder) {
+
 			Visit visit = visits.get(position);
+			//setHasVisitNote(false);
 
 			VisitViewHolder viewHolder = (VisitViewHolder)holder;
 			LayoutInflater layoutInflater = LayoutInflater.from(context);
@@ -194,100 +198,122 @@ public class PastVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 				}
 			});
 
-			if (visit.getEncounters().size() == 0) {
-				//We add a view to create a visit note
-				/*View row = LayoutInflater.from(context).inflate(R.layout.visit_obervation_row, null);
+			ImageView loadAuditForm =
+					(ImageView)singleVisitView.findViewById(R.id.loadAuditForm);
+
+			loadAuditForm.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+
+					Intent intent = new Intent(context, AuditDataActivity
+							.class);
+
+					intent.putExtra(ApplicationConstants.BundleKeys
+							.VISIT_UUID_BUNDLE, visit.getUuid());
+
+					intent.putExtra(ApplicationConstants.BundleKeys
+							.PATIENT_UUID_BUNDLE, patient.getUuid());
+
+					context.startActivity(intent);
+				}
+			});
+
+			for (Encounter encounter : visit.getEncounters()) {
+
+				switch (encounter.getEncounterType().getDisplay()) {
+
+					case ApplicationConstants.EncounterTypeEntitys.VISIT_NOTE:
+
+						QueryOptions options = new QueryOptions();
+						PagingInfo pagininfo =
+								new PagingInfo(startIndex, limit);
+
+						observationDataService.getByEncounter(encounter, options, pagininfo,
+								new DataService.GetCallback<List<Observation>>() {
+									@Override
+									public void onCompleted(List<Observation> observations) {
+										for (Observation observation : observations) {
+
+											if (observation.getDiagnosisNote() != null && !observation
+													.getDiagnosisNote()
+													.equals(ApplicationConstants.EMPTY_STRING)) {
+												View row = layoutInflater
+														.inflate(R.layout.visit_obervation_row, null);
+												observationsContainer.addView(row);
+
+												Observation newObservation = new Observation();
+												newObservation.setUuid(observation.getUuid());
+												newObservation.setConcept(observation.getConcept());
+												newObservation.setPerson(patient.getPerson());
+
+												ImageView visitNoteIcon = (ImageView)row.findViewById(R.id.icon);
+												visitNoteIcon.setOnClickListener(switchToEditMode);
+
+												TextView visitNote = (TextView)row.findViewById(R.id.text);
+												visitNote.setHint(context.getResources().getString(R.string
+														.add_a_note));
+												visitNote.setText(observation.getDiagnosisNote());
+												//visitNote.setMovementMethod(new ScrollingMovementMethod());
+
+												Bundle dialogBundle = new Bundle();
+												dialogBundle
+														.putString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE,
+																patient.getUuid());
+												dialogBundle.putSerializable(ApplicationConstants.BundleKeys
+																.OBSERVATION,
+														newObservation);
+
+												createEditVisitNoteDialog.setRightButtonAction(
+														CustomFragmentDialog.OnClickAction.SAVE_VISIT_NOTE);
+												createEditVisitNoteDialog
+														.setEditNoteTextViewMessage(observation.getDiagnosisNote());
+												createEditVisitNoteDialog.setArguments(dialogBundle);
+												setHasVisitNote(true);
+											}
+										}
+									}
+
+									@Override
+									public void onError(Throwable t) {
+
+									}
+								});
+
+						break;
+				}
+			}
+
+			ConsoleLogger.dump(hasVisitNote);
+
+			if (!hasVisitNote) {
+				View row = LayoutInflater.from(context).inflate(R.layout.visit_obervation_row, null);
+				observationsContainer.addView(row, 0);
+
 				TextView visitNote = (TextView)row.findViewById(R.id.text);
 				ImageView visitNoteIcon = (ImageView)row.findViewById(R.id.icon);
 				visitNote.setHint(context.getResources().getString(R.string.add_a_note));
+				visitNoteIcon.setOnClickListener(switchToEditMode);
 
-				//visitNote.setOnClickListener(switchToEditMode);
-				//visitNoteIcon.setOnClickListener(switchToEditMode);
-
-				Observation observation = new Observation();
-				observation.setConcept(new Concept());
-				observation.setPerson(patient.getPerson());
-				observation.setObsDatetime(DateUtils.now(DateUtils.OPEN_MRS_REQUEST_FORMAT));
-
-				ArrayList<Observation> observations = new ArrayList<>();
-				observations.add(observation);
-				EncounterCreate encounterCreate = new EncounterCreate();
-				encounterCreate.setPatient(patient.getUuid());
-				encounterCreate.setEncounterType(ApplicationConstants.EncounterTypeEntitys.VISIT_NOTE);
-				encounterCreate.setObs(observations);
-
-				//ConsoleLogger.dumpToJson(encounterCreate);
-
-				observationsContainer.addView(row);
 				createEditVisitNoteDialog.setEditNoteTextViewMessage("");
 				createEditVisitNoteDialog.setRightButtonAction(CustomFragmentDialog.OnClickAction.CREATE_VISIT_NOTE);
-				createEditVisitNoteDialog.setArguments(dialogBundle);*/
 
-			} else {
-				for (Encounter encounter : visit.getEncounters()) {
-					switch (encounter.getEncounterType().getDisplay()) {
-						case ApplicationConstants.EncounterTypeEntitys.VISIT_NOTE:
-							QueryOptions options = new QueryOptions();
-							PagingInfo pagininfo =
-									new PagingInfo(startIndex, limit);//TODO set this to null after Wes has fixed his issues
-							observationDataService.getByEncounter(encounter, options, pagininfo,
-									new DataService.GetCallback<List<Observation>>() {
-										@Override
-										public void onCompleted(List<Observation> observations) {
-											for (Observation observation : observations) {
-												if (observation.getDiagnosisNote() != null && !observation
-														.getDiagnosisNote()
-														.equals(ApplicationConstants.EMPTY_STRING)) {
-													View row = layoutInflater
-															.inflate(R.layout.visit_obervation_row, null);
-
-													Observation newObs = new Observation();
-													newObs.setUuid(observation.getUuid());
-													newObs.setConcept(observation.getConcept());
-													newObs.setPerson(patient.getPerson());
-
-													TextView visitNote = (TextView)row.findViewById(R.id.text);
-													ImageView visitNoteIcon = (ImageView)row.findViewById(R.id.icon);
-													visitNote.setHint(context.getResources().getString(R.string
-															.add_a_note));
-													visitNote.setText(observation.getDiagnosisNote());
-													visitNote.setMovementMethod(new ScrollingMovementMethod());
-
-													visitNoteIcon.setOnClickListener(switchToEditMode);
-
-													Bundle dialogBundle = new Bundle();
-													dialogBundle
-															.putString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE,
-																	patient.getUuid());
-													dialogBundle.putSerializable(ApplicationConstants.BundleKeys
-																	.OBSERVATION,
-															newObs);
-													createEditVisitNoteDialog.setRightButtonAction(
-															CustomFragmentDialog.OnClickAction.SAVE_VISIT_NOTE);
-													createEditVisitNoteDialog
-															.setEditNoteTextViewMessage(observation.getDiagnosisNote());
-													createEditVisitNoteDialog.setArguments(dialogBundle);
-
-													observationsContainer.addView(row);
-												}
-											}
-										}
-
-										@Override
-										public void onError(Throwable t) {
-
-										}
-									});
-							break;
-					}
-				}
+				Bundle dialogBundle = new Bundle();
+				dialogBundle
+						.putString(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE,
+								visit.getUuid());
+				createEditVisitNoteDialog.setArguments(dialogBundle);
 			}
+
 			viewHolder.observationsContainer.addView(singleVisitView);
 
 		} else if (holder instanceof LoadingViewHolder) {
 			LoadingViewHolder loadingViewHolder = (LoadingViewHolder)holder;
 			loadingViewHolder.progressBar.setIndeterminate(true);
 		}
+	}
+
+	private void setHasVisitNote(boolean b) {
+		this.hasVisitNote = b;
 	}
 
 	@Override

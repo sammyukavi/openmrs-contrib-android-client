@@ -25,7 +25,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.github.clans.fab.FloatingActionButton;
@@ -36,12 +35,9 @@ import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.activities.addeditpatient.AddEditPatientActivity;
 import org.openmrs.mobile.activities.addeditvisit.AddEditVisitActivity;
-import org.openmrs.mobile.activities.auditdata.AuditDataActivity;
 import org.openmrs.mobile.activities.visitphoto.upload.UploadVisitPhotoActivity;
-import org.openmrs.mobile.activities.visittasks.VisitTasksContract;
 import org.openmrs.mobile.activities.visittasks.VisitTasksFragment;
 import org.openmrs.mobile.application.OpenMRS;
-import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Person;
 import org.openmrs.mobile.models.Visit;
@@ -59,20 +55,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	private TextView patientDisplayName, patientGender, patientAge, patientIdentifier,
 			patientDob;
 	private Visit activeVisit;
-	private LinearLayout observationsContainer;
-	private CustomDialogBundle createEditVisitNoteDialog;
-
-	public VisitTasksContract.Presenter visitTasksPresenter;
-
-	View.OnClickListener switchToEditMode = new View.OnClickListener() {
-		@Override
-		public void onClick(View v) {
-			((PatientDashboardActivity)getActivity())
-					.createAndShowDialog(createEditVisitNoteDialog, ApplicationConstants.DialogTAG.VISIT_NOTE_TAG);
-		}
-	};
-	private Bundle dialogBundle;
-	private FloatingActionButton startAuditFormButton, addVisitImageButton,
+	private FloatingActionButton addVisitImageButton,
 			addVisitTaskButton, startVisitButton, editVisitButton, endVisitButton, editPatient;
 	private Patient patient;
 	private OpenMRS instance = OpenMRS.getInstance();
@@ -95,7 +78,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		fragmentView = inflater.inflate(R.layout.fragment_patient_dashboard, container, false);
 		String patientId = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
 		initViewFields();
-		initializeListeners(startAuditFormButton, addVisitImageButton, addVisitTaskButton, startVisitButton,
+		initializeListeners(addVisitImageButton, addVisitTaskButton, startVisitButton,
 				editVisitButton, endVisitButton, editVisitButton, endVisitButton, editPatient);
 		mPresenter.fetchPatientData(patientId);
 		FontsUtil.setFont((ViewGroup)this.getActivity().findViewById(android.R.id.content));
@@ -104,12 +87,8 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
 	private void initializeListeners(FloatingActionButton... params) {
 		for (FloatingActionButton patientActionButtons : params) {
-			patientActionButtons.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					startSelectedPatientDashboardActivity(patientActionButtons.getId());
-				}
-			});
+			patientActionButtons.setOnClickListener(
+					view -> startSelectedPatientDashboardActivity(patientActionButtons.getId()));
 		}
 	}
 
@@ -129,11 +108,6 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 				if (activeVisit != null) {
 
 				}
-				break;
-			case R.id.audit_data_form:
-				intent = new Intent(getContext(), AuditDataActivity.class);
-				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patient.getUuid());
-				startActivity(intent);
 				break;
 			case R.id.start_visit:
 				intent = new Intent(getContext(), AddEditVisitActivity.class);
@@ -175,14 +149,12 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		patientDob = (TextView)fragmentView.findViewById(R.id.fetchedPatientBirthDate);
 		addVisitImageButton = (FloatingActionButton)getActivity().findViewById(R.id.add_visit_image);
 		addVisitTaskButton = (FloatingActionButton)getActivity().findViewById(R.id.add_visit_task);
-		startAuditFormButton = (FloatingActionButton)getActivity().findViewById(R.id.audit_data_form);
 		startVisitButton = (FloatingActionButton)getActivity().findViewById(R.id.start_visit);
 		editVisitButton = (FloatingActionButton)getActivity().findViewById(R.id.edit_visit);
 		endVisitButton = (FloatingActionButton)getActivity().findViewById(R.id.end_visit);
 		editPatient = (FloatingActionButton)getActivity().findViewById(R.id.edit_Patient);
 		FloatingActionMenu floatingActionMenu = (FloatingActionMenu)getActivity().findViewById(R.id.floatingActionMenu);
 		floatingActionMenu.setVisibility(View.VISIBLE);
-		startAuditFormButton = (FloatingActionButton)getActivity().findViewById(R.id.audit_data_form);
 	}
 
 	@Override

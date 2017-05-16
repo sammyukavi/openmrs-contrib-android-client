@@ -154,9 +154,9 @@ public class EncounterService extends IntentService {
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(visit -> {
 					//encounter.setEncounterType(new EncounterTypeEntity(formname));
-					for (int i = 0; i < encounterCreate.getObservations().size(); i++) {
-						encounter.getObservations().get(i).setDisplayValue
-								(encounterCreate.getObservations().get(i).getValue());
+					for (int i = 0; i < encounterCreate.getObs().size(); i++) {
+						encounter.getObs().get(i).setDisplayValue
+								(encounterCreate.getObs().get(i).getValue());
 					}
 					List<Encounter> encounterList = visit.getEncounters();
 					encounterList.add(encounter);

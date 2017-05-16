@@ -46,6 +46,10 @@ public class Visit extends BaseOpenmrsEntity implements Serializable {
 	@SerializedName("patient")
 	private Patient patient;
 
+	@SerializedName("auditInfo")
+	@Expose
+	private AuditInfo auditInfo;
+
 	public Patient getPatient() {
 		return patient;
 	}
@@ -53,6 +57,7 @@ public class Visit extends BaseOpenmrsEntity implements Serializable {
 	public void setPatient(Patient patient) {
 		this.patient = patient;
 	}
+
 	public Long getId() {
 		return id;
 	}
@@ -108,4 +113,13 @@ public class Visit extends BaseOpenmrsEntity implements Serializable {
 	public void setAttributes(List<VisitAttribute> attributes) {
 		this.attributes = attributes;
 	}
+
+	public AuditInfo getAuditInfo() {
+		return auditInfo;
+	}
+
+	public void setAuditInfo(AuditInfo auditInfo) {
+		this.auditInfo = auditInfo;
+	}
+
 }

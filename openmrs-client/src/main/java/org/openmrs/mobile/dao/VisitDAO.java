@@ -57,7 +57,7 @@ public class VisitDAO {
 		if (visit.getEncounters() != null) {
 			for (Encounter encounter : visit.getEncounters()) {
 				long encounterID = encounterDAO.saveEncounter(encounter, visitID);
-				for (Observation obs : encounter.getObservations()) {
+				for (Observation obs : encounter.getObs()) {
 					observationDAO.saveObservation(obs, encounterID);
 				}
 			}
@@ -84,7 +84,7 @@ public class VisitDAO {
 					observationDAO.deleteObservation(obs.getId());
 				}
 
-				for (Observation obs : encounter.getObservations()) {
+				for (Observation obs : encounter.getObs()) {
 					observationDAO.saveObservation(obs, encounterID);
 				}
 			}

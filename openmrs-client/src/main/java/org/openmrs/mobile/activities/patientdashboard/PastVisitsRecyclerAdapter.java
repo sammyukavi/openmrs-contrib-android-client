@@ -262,6 +262,7 @@ public class PastVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 
 							break;
 					}
+					addVisitNoteField(observationsContainer, visit.getUuid(), null);
 				}
 			}
 

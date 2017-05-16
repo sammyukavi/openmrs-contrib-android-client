@@ -64,6 +64,10 @@ public class Observation extends BaseOpenmrsEntity implements Serializable {
 	@Expose
 	private AuditInfo auditInfo;
 
+	@SerializedName("answers")
+	@Expose
+	private Answers answers;
+
 	private Long id;
 	private Long encounterID;
 	private String displayValue;
@@ -320,4 +324,13 @@ public class Observation extends BaseOpenmrsEntity implements Serializable {
 	public void setAuditInfo(AuditInfo auditInfo) {
 		this.auditInfo = auditInfo;
 	}
+
+	public Answers getAnswers() {
+		return answers;
+	}
+
+	public void setAnswers(Answers answers) {
+		this.answers = answers;
+	}
+
 }

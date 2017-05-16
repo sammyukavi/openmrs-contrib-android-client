@@ -19,6 +19,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -38,6 +39,7 @@ import org.openmrs.mobile.activities.addeditvisit.AddEditVisitActivity;
 import org.openmrs.mobile.activities.auditdata.AuditDataActivity;
 import org.openmrs.mobile.activities.visitphoto.upload.UploadVisitPhotoActivity;
 import org.openmrs.mobile.activities.visittasks.VisitTasksContract;
+import org.openmrs.mobile.activities.visittasks.VisitTasksFragment;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.models.Patient;
@@ -79,6 +81,13 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
 	public static PatientDashboardFragment newInstance() {
 		return new PatientDashboardFragment();
+	}
+
+	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		VisitTasksFragment fragment = VisitTasksFragment.newInstance();
+		FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+
 	}
 
 	@Override
@@ -206,6 +215,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 				startVisitButton.setVisibility(View.GONE);
 				editVisitButton.setVisibility(View.VISIBLE);
 				endVisitButton.setVisibility(View.VISIBLE);
+				addVisitTaskButton.setVisibility(View.VISIBLE);
 				setVisitUuid(visit);
 				break;
 			}

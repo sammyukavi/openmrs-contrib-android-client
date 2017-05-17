@@ -448,4 +448,6 @@
 		<item>Urology department</item>
 	</string-array>
 
+	<string name="selectPatientList">Please select a patient list</string>
+	
 </resources>

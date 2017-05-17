@@ -44,7 +44,6 @@
 		<activity android:name=".activities.login.LoginActivity" />
 		<activity android:name=".activities.addeditvisit.AddEditVisitActivity" />
 		<activity android:name=".activities.visitphoto.upload.UploadVisitPhotoActivity" />
-		<activity android:name=".activities.visitphoto.download.DownloadVisitPhotoActivity" />
 		<activity android:name=".activities.auditdata.AuditDataActivity" />
 		<activity android:name=".activities.visitdetails.VisitDetailsActivity" />
 	</application>

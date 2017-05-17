@@ -53,20 +53,6 @@ public class PatientDashboardActivity extends ACBaseActivity {
 		if (extras != null) {
 			patientUuid = extras.getString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
 			if (StringUtils.notEmpty(patientUuid)) {
-				// download visit photos.
-				DownloadVisitPhotoFragment visitPhotoFragment =
-						(DownloadVisitPhotoFragment)getSupportFragmentManager()
-								.findFragmentById(R.id.photoDownloadsContentFrame);
-				if (visitPhotoFragment == null) {
-					visitPhotoFragment = DownloadVisitPhotoFragment.newInstance();
-				}
-
-				if (!visitPhotoFragment.isActive()) {
-					addFragmentToActivity(getSupportFragmentManager(), visitPhotoFragment, R.id.photoDownloadsContentFrame);
-				}
-
-				new DownloadVisitPhotoPresenter(visitPhotoFragment, patientUuid);
-
 				// patient header
 				PatientHeaderFragment headerFragment = (PatientHeaderFragment) getSupportFragmentManager()
 						.findFragmentById(R.id.patientHeader);

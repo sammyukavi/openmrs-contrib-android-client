@@ -20,6 +20,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
+import org.openmrs.mobile.activities.visitphoto.download.DownloadVisitPhotoFragment;
+import org.openmrs.mobile.activities.visitphoto.download.DownloadVisitPhotoPresenter;
 import org.openmrs.mobile.activities.visittasks.VisitTasksFragment;
 import org.openmrs.mobile.activities.visittasks.VisitTasksPresenter;
 
@@ -34,11 +36,13 @@ public class VisitDetailsPageAdapter extends FragmentPagerAdapter {
 
 	private String patientUuid;
 	private String visitUuid;
+	private String providerUuid;
 
-	VisitDetailsPageAdapter(FragmentManager fm, String patientUuid, String visitUuid) {
+	VisitDetailsPageAdapter(FragmentManager fm, String patientUuid, String visitUuid, String providerUuid) {
 		super(fm);
 		this.patientUuid = patientUuid;
 		this.visitUuid = visitUuid;
+		this.providerUuid = providerUuid;
 	}
 
 	@Override
@@ -48,16 +52,16 @@ public class VisitDetailsPageAdapter extends FragmentPagerAdapter {
 
 			case VISIT_DETAILS_TAB_POS:
 				VisitTasksFragment visitTasksFragment = VisitTasksFragment.newInstance();
-				new VisitTasksPresenter(patientUuid,visitUuid, visitTasksFragment);
+				new VisitTasksPresenter(patientUuid, visitUuid, visitTasksFragment);
 				return visitTasksFragment;
 			case VISIT_TASKS_TAB_POS:
 				VisitTasksFragment visitTasksFragment1 = VisitTasksFragment.newInstance();
-				new VisitTasksPresenter(patientUuid,visitUuid, visitTasksFragment1);
+				new VisitTasksPresenter(patientUuid, visitUuid, visitTasksFragment1);
 				return visitTasksFragment1;
 			case VISIT_IMAGES_TAB_POS:
-				VisitTasksFragment visitTasksFragment2 = VisitTasksFragment.newInstance();
-				new VisitTasksPresenter(patientUuid,visitUuid, visitTasksFragment2);
-				return visitTasksFragment2;
+				DownloadVisitPhotoFragment downloadVisitPhotoFragment = DownloadVisitPhotoFragment.newInstance();
+				new DownloadVisitPhotoPresenter(downloadVisitPhotoFragment, patientUuid);
+				return downloadVisitPhotoFragment;
 			default:
 				return null;
 		}

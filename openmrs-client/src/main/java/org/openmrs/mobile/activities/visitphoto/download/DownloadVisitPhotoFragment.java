@@ -11,13 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.openmrs.mobile.R;
-import org.openmrs.mobile.activities.ACBaseFragment;
+import org.openmrs.mobile.activities.visitdetails.VisitDetailsContract;
+import org.openmrs.mobile.activities.visitdetails.VisitDetailsFragment;
 import org.openmrs.mobile.data.DataService;
 
 import java.util.List;
 
-public class DownloadVisitPhotoFragment extends ACBaseFragment<DownloadVisitPhotoContract.Presenter>
-		implements DownloadVisitPhotoContract.View {
+public class DownloadVisitPhotoFragment extends VisitDetailsFragment implements VisitDetailsContract.VisitDownloadPhotoView {
 
 	private LinearLayoutManager layoutManager;
 	private RecyclerView recyclerView;
@@ -25,6 +25,12 @@ public class DownloadVisitPhotoFragment extends ACBaseFragment<DownloadVisitPhot
 
 	public static DownloadVisitPhotoFragment newInstance() {
 		return new DownloadVisitPhotoFragment();
+	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		super.setPresenter(mPresenter);
 	}
 
 	@Override
@@ -54,6 +60,6 @@ public class DownloadVisitPhotoFragment extends ACBaseFragment<DownloadVisitPhot
 
 	@Override
 	public void downloadImage(String obsUuid, DataService.GetCallback<Bitmap> callback) {
-		mPresenter.downloadImage(obsUuid, callback);
+		((DownloadVisitPhotoPresenter)mPresenter).downloadImage(obsUuid, callback);
 	}
 }

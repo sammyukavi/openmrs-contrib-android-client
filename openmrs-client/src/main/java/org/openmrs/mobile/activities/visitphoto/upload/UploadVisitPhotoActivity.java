@@ -45,19 +45,6 @@ public class UploadVisitPhotoActivity extends ACBaseActivity {
 						new UploadVisitPhotoPresenter(visitPhotoFragment, patientUuid, visitUuid, providerUuid);
 
 			}
-
-			// patient header
-			PatientHeaderFragment headerFragment = (PatientHeaderFragment) getSupportFragmentManager()
-					.findFragmentById(R.id.patientHeader);
-			if(headerFragment == null){
-				headerFragment = PatientHeaderFragment.newInstance();
-			}
-
-			if(!headerFragment.isActive()){
-				addFragmentToActivity(getSupportFragmentManager(), headerFragment, R.id.patientHeader);
-			}
-
-			new PatientHeaderPresenter(headerFragment, patientUuid);
 		}
 	}
 

@@ -16,7 +16,6 @@ package org.openmrs.mobile.activities.visittasks;
 
 import org.openmrs.mobile.activities.visitdetails.VisitDetailsContract;
 import org.openmrs.mobile.activities.visitdetails.VisitDetailsMainPresenterImpl;
-import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;

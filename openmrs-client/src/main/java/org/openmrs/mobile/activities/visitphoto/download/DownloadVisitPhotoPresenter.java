@@ -5,6 +5,8 @@ import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 
 import org.openmrs.mobile.activities.BasePresenter;
+import org.openmrs.mobile.activities.visitdetails.VisitDetailsActivity;
+import org.openmrs.mobile.activities.visitdetails.VisitDetailsContract;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.impl.ObsDataService;
 import org.openmrs.mobile.data.impl.VisitPhotoDataService;
@@ -16,16 +18,16 @@ import org.openmrs.mobile.utilities.ToastUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DownloadVisitPhotoPresenter extends BasePresenter implements DownloadVisitPhotoContract.Presenter {
+public class DownloadVisitPhotoPresenter extends VisitDetailsActivity implements VisitDetailsContract.VisitDownloadPhotoPresenter {
 
 	@NonNull
-	private DownloadVisitPhotoContract.View view;
+	private VisitDetailsContract.VisitDownloadPhotoView view;
 	private String patientUuid;
 	private boolean loading;
 	private VisitPhotoDataService visitPhotoDataService;
 	private ObsDataService obsDataService;
 
-	public DownloadVisitPhotoPresenter(DownloadVisitPhotoContract.View view, String patientUuid) {
+	public DownloadVisitPhotoPresenter(VisitDetailsContract.VisitDownloadPhotoView view, String patientUuid) {
 		this.view = view;
 		this.view.setPresenter(this);
 		this.patientUuid = patientUuid;
@@ -75,6 +77,11 @@ public class DownloadVisitPhotoPresenter extends BasePresenter implements Downlo
 	@Override
 	public void subscribe() {
 		loadVisitDocumentObservations();
+	}
+
+	@Override
+	public void unsubscribe() {
+
 	}
 
 	@Override

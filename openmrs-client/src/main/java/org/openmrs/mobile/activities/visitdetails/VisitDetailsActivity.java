@@ -26,8 +26,11 @@ import net.yanzm.mth.MaterialTabHost;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
+import org.openmrs.mobile.activities.visitphoto.download.DownloadVisitPhotoFragment;
+import org.openmrs.mobile.activities.visitphoto.download.DownloadVisitPhotoPresenter;
 import org.openmrs.mobile.activities.visittasks.VisitTasksFragment;
 import org.openmrs.mobile.activities.visittasks.VisitTasksPresenter;
+import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.TabUtil;
 
@@ -38,6 +41,7 @@ public class VisitDetailsActivity extends ACBaseActivity {
 	VisitDetailsContract.VisitDetailsMainPresenter visitDetailsPresenter;
 	private String patientUuid;
 	private String visitUuid;
+	private String providerUuid;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +54,8 @@ public class VisitDetailsActivity extends ACBaseActivity {
 		if (extras != null) {
 			patientUuid = extras.getString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
 			visitUuid = extras.getString(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE);
-			initViewPager(new VisitDetailsPageAdapter(getSupportFragmentManager(), patientUuid, visitUuid));
+			providerUuid = OpenMRS.getInstance().getCurrentProviderUUID();
+			initViewPager(new VisitDetailsPageAdapter(getSupportFragmentManager(), patientUuid, visitUuid, providerUuid));
 		}
 	}
 
@@ -85,8 +90,8 @@ public class VisitDetailsActivity extends ACBaseActivity {
 		visitUuid = String.valueOf(patientBundle.get(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE));
 		if (fragment instanceof VisitTasksFragment) {
 			visitDetailsPresenter = new VisitTasksPresenter(patientUuid, visitUuid, ((VisitTasksFragment)fragment));
-		} else if (fragment instanceof VisitDetailsFragment) {
-			//visitDetailsPresenter = new VisitDetailsMainPresenter(patientUuid, ((VisitDetailsFragment)fragment));
+		} else if (fragment instanceof DownloadVisitPhotoFragment) {
+			visitDetailsPresenter = new DownloadVisitPhotoPresenter(((DownloadVisitPhotoFragment)fragment),patientUuid);
 		}
 		/*else if (fragment instanceof PatientVitalsFragment){
 			visitDetailsPresenter = new PatientDashboardVitalsPresenter(patientUuid, ((PatientVitalsFragment) fragment));

@@ -118,14 +118,6 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 		return true;
 	}
 
-	private void setSyncButtonState(boolean syncState) {
-		if (syncState) {
-			mSyncbutton.setIcon(R.drawable.ic_sync_on);
-		} else {
-			mSyncbutton.setIcon(R.drawable.ic_sync_off);
-		}
-	}
-
 	private void showNoInternetConnectionSnackbar() {
 		Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content),
 				"No internet connection", Snackbar.LENGTH_SHORT);
@@ -275,9 +267,6 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 				break;
 			case R.id.navItemPatientLists:
 				startActivity(new Intent(this, PatientListActivity.class));
-				break;
-			case R.id.navItemVisitTasks:
-				//startActivity(new Intent(this, VisitTasksActivity.class));
 				break;
 			case R.id.navItemSettings:
 				startActivity(new Intent(this, SettingsActivity.class));

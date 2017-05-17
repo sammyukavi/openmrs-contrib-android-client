@@ -14,8 +14,11 @@
 
 package org.openmrs.mobile.activities.visitdetails;
 
+import android.graphics.Bitmap;
+
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
+import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitPredefinedTask;
 import org.openmrs.mobile.models.VisitTask;
@@ -47,6 +50,12 @@ public interface VisitDetailsContract {
 
 	}
 
+	interface VisitDownloadPhotoView extends ViewVisitDetailsMain{
+		void updateVisitImageUrls(List<String> urls);
+
+		void downloadImage(String obsUuid, DataService.GetCallback<Bitmap> callback);
+	}
+
 	/*
 	* Presenters
 	*/
@@ -68,6 +77,16 @@ public interface VisitDetailsContract {
 		void createVisitTasksObject(String visitTask);
 
 		void getVisit();
+	}
+
+	interface VisitDownloadPhotoPresenter extends VisitDetailsMainPresenter {
+		void downloadImage(String obsUuid, DataService.GetCallback<Bitmap> callback);
+
+		void loadVisitDocumentObservations();
+
+		boolean isLoading();
+
+		void setLoading(boolean loading);
 	}
 
 }

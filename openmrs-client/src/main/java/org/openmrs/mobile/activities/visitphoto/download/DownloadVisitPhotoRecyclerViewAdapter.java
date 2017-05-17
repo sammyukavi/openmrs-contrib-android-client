@@ -3,6 +3,7 @@ package org.openmrs.mobile.activities.visitphoto.download;
 import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.Bitmap;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.openmrs.mobile.R;
+import org.openmrs.mobile.activities.visitdetails.VisitDetailsContract;
 import org.openmrs.mobile.data.DataService;
 
 import java.util.HashMap;
@@ -24,12 +26,12 @@ public class DownloadVisitPhotoRecyclerViewAdapter
 		extends RecyclerView.Adapter<DownloadVisitPhotoRecyclerViewAdapter.DownloadVisitPhotoViewHolder> {
 
 	private Activity context;
-	private DownloadVisitPhotoContract.View view;
+	private VisitDetailsContract.VisitDownloadPhotoView view;
 	private List<String> items;
 	private Map<ImageView, Bitmap> map = new HashMap<>();
 
 	public DownloadVisitPhotoRecyclerViewAdapter(Activity context,
-			List<String> items, DownloadVisitPhotoContract.View view) {
+			List<String> items, VisitDetailsContract.VisitDownloadPhotoView view) {
 		this.context = context;
 		this.items = items;
 		this.view = view;

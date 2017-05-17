@@ -20,8 +20,6 @@ import org.openmrs.mobile.activities.login.LoginActivity;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 
-//import org.openmrs.mobile.activities.login.FindPatientRecordActivity;
-
 public class AuthorizationManager {
 
 	protected OpenMRS mOpenMRS = OpenMRS.getInstance();

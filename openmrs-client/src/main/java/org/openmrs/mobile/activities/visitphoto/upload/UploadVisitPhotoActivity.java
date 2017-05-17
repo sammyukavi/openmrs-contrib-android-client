@@ -5,6 +5,8 @@ import android.view.Menu;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
+import org.openmrs.mobile.activities.patientheader.PatientHeaderFragment;
+import org.openmrs.mobile.activities.patientheader.PatientHeaderPresenter;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.StringUtils;
 
@@ -16,6 +18,7 @@ public class UploadVisitPhotoActivity extends ACBaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getLayoutInflater().inflate(R.layout.activity_visit_photo, frameLayout);
+		setTitle(getString(R.string.upload_image));
 
 		Bundle extras = getIntent().getExtras();
 		String patientUuid;
@@ -25,6 +28,7 @@ public class UploadVisitPhotoActivity extends ACBaseActivity {
 			patientUuid = extras.getString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
 			visitUuid = extras.getString(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE);
 			providerUuid = extras.getString(ApplicationConstants.BundleKeys.PROVIDER_UUID_BUNDLE);
+
 			if (StringUtils.notEmpty(patientUuid) && StringUtils.notEmpty(visitUuid) && StringUtils.notEmpty
 					(providerUuid)) {
 				UploadVisitPhotoFragment visitPhotoFragment =
@@ -41,6 +45,19 @@ public class UploadVisitPhotoActivity extends ACBaseActivity {
 						new UploadVisitPhotoPresenter(visitPhotoFragment, patientUuid, visitUuid, providerUuid);
 
 			}
+
+			// patient header
+			PatientHeaderFragment headerFragment = (PatientHeaderFragment) getSupportFragmentManager()
+					.findFragmentById(R.id.patientHeader);
+			if(headerFragment == null){
+				headerFragment = PatientHeaderFragment.newInstance();
+			}
+
+			if(!headerFragment.isActive()){
+				addFragmentToActivity(getSupportFragmentManager(), headerFragment, R.id.patientHeader);
+			}
+
+			new PatientHeaderPresenter(headerFragment, patientUuid);
 		}
 	}
 

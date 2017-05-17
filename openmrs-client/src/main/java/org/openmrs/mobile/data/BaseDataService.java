@@ -223,10 +223,10 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 	/**
 	 * Executes a data operation which can return multiple results. Results returned from the REST query will be saved to
 	 * the db.
-	 * @param callback  The operation callback
-	 * @param pagingInfo  The optional paging information
-	 * @param dbQuery   The database query operation to perform
-	 * @param restQuery The REST query operation to perform
+	 * @param callback   The operation callback
+	 * @param pagingInfo The optional paging information
+	 * @param dbQuery    The database query operation to perform
+	 * @param restQuery  The REST query operation to perform
 	 */
 	protected void executeMultipleCallback(@NonNull GetCallback<List<E>> callback,
 			@Nullable QueryOptions options, @Nullable PagingInfo pagingInfo,
@@ -350,7 +350,7 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 						}).start();
 					} else {
 						// Some other type of error occurred so just notify the caller about the error
-						callback.onError(new DataOperationException(response.code() + ": " + response.message()));
+ 						callback.onError(new DataOperationException(response.code() + ": " + response.message()));
 					}
 				}
 			}

@@ -21,7 +21,7 @@
 			android:id="@+id/contactCard"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_margin="10dp"
+			android:layout_margin="5dp"
 			card_view:cardBackgroundColor="@color/white"
 			card_view:cardCornerRadius="4dp">
 		
@@ -41,7 +41,7 @@
 						android:id="@+id/fetchedPatientIdentifier"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
-						android:textSize="20sp"
+						android:textSize="18sp"
 						android:textStyle="bold"
 						android:gravity="start"
 						android:layout_marginRight="5dp"
@@ -51,7 +51,7 @@
 						android:id="@+id/patientSeperator"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
-						android:textSize="22sp"
+						android:textSize="20sp"
 						android:gravity="start"
 						android:text="@string/dash" />
 				
@@ -59,7 +59,7 @@
 						android:id="@+id/fetchedPatientDisplayName"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
-						android:textSize="20sp"
+						android:textSize="18sp"
 						android:textStyle="bold"
 						android:layout_marginLeft="5dp"
 						android:layout_marginStart="5dp"
@@ -107,27 +107,23 @@
 								android:id="@+id/fetchedPatientGender"
 								android:layout_marginLeft="10dp"
 								android:layout_marginStart="10dp"
+								android:layout_marginRight="30dp"
 								android:layout_width="wrap_content"
 								android:layout_height="wrap_content" />
-					
-					</LinearLayout>
-					
-					<LinearLayout
-							android:layout_width="wrap_content"
-							android:layout_height="wrap_content"
-							android:orientation="horizontal">
 						
 						<TextView
 								android:id="@+id/birthdate"
 								android:text="@string/birthdate_hint"
 								android:textStyle="italic"
+								android:layout_marginLeft="30dp"
+								android:layout_marginStart="30dp"
 								android:layout_width="wrap_content"
 								android:layout_height="wrap_content" />
 						
 						<TextView
 								android:id="@+id/fetchedPatientBirthDate"
-								android:layout_marginLeft="10dp"
-								android:layout_marginStart="10dp"
+								android:layout_marginLeft="20dp"
+								android:layout_marginStart="20dp"
 								android:layout_width="wrap_content"
 								android:layout_height="wrap_content" />
 					

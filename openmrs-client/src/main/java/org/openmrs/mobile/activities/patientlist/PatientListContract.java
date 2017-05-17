@@ -34,7 +34,7 @@ public interface PatientListContract {
 
 		void updatePatientLists(List<PatientList> patientList);
 
-        void updatePatientListData(List<PatientListContext> patientListData);
+		void updatePatientListData(List<PatientListContext> patientListData);
 
 		void setSpinnerVisibility(boolean visibility);
 

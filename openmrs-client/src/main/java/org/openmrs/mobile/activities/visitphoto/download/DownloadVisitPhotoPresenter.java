@@ -1,8 +1,8 @@
 package org.openmrs.mobile.activities.visitphoto.download;
 
-import android.support.annotation.NonNull;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.annotation.NonNull;
 
 import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.data.DataService;

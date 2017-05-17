@@ -21,7 +21,7 @@
 	<string name="aadbname">aaopenmrs.db</string>
 
 
-	<!-- Login view -->
+	<!-- LoginActivity view -->
 	<string name="login_button">Login</string>
 	<string name="login_url_hint">URL address</string>
 	<string name="login_username_hint">Username</string>
@@ -401,7 +401,7 @@
 	<string name="number_of_patients">%1$s patients found</string>
 	<string name="search_for_patients">Please type the first 3 characters of the patient name on the search bar for you to
 		view meaningful results</string>
-	<string name="patient_metadata_label">Patient Metadata</string>
+	<string name="patient_metadata_label">Patient Contact Information</string>
 	<string name="add_visit_task_dialog_title">Add Visit Task</string>
 	<string name="visit_tasks_dialog_message">add a visit task</string>
 	<string name="nav_patient_list">Patient List</string>
@@ -416,5 +416,36 @@
 	<string name="default_file_caption_message">Uploaded from android client</string>
 	<string name="patient_identifier_label">File Number : </string>
 	<string name="edit_patient">Edit Patient</string>
+
+	<!--Audit data form -->
+	<string name="yes">Yes</string>
+	<string name="no">No</string>
+	<string name="admission_date">Date of Admission:</string>
+	<string name="is_audit_complete">Is the Audit Data Complete?</string>
+	<string name="inpatient_service_type_prompt">Type of inpatient service</string>
+	<string name="is_death_in_hospital">Death in Hospital:</string>
+	<string name="is_palliative_consult">Palliative Consult</string>
+	<string name="is_preop_risk_assessment_only">Pre-Op Risk Assessment Only?</string>
+	<string name="is_icu_stay">ICU stay during admission?</string>
+	<string name="is_hdu_stay">HDU stay during admission?</string>
+	<string name="is_hdu_comgmt">HDU CO-MGMT ONLY?</string>
+	<string name="is_hiv_positive">HIV+:</string>
+	<string name="cd4">CD4:</string>
+	<string name="hba1c">HbA1c:</string>
+	<string name="inpatient_service_type">Type of inpatient service</string>
+	<string name="discharge_diagnosis">Discharge Diagnosis:</string>
+	<string name="unknown">Unknown</string>
+	<string name="nav_login">Login</string>
+
+	<string-array name="inpatient_service_types">
+		<item>General medicine service</item>
+		<item>Surgery service</item>
+		<item>Orthopedic department</item>
+		<item>Plastic Surgery Department</item>
+		<item>Obstetrics and gynecology department</item>
+		<item>Neurosurgery department</item>
+		<item>Ear nose and throat department</item>
+		<item>Urology department</item>
+	</string-array>
 
 </resources>

@@ -14,14 +14,9 @@
 
 package org.openmrs.mobile.activities.patientdashboard;
 
-import android.widget.LinearLayout;
-
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
-import org.openmrs.mobile.models.Encounter;
-import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
-import org.openmrs.mobile.models.Provider;
 import org.openmrs.mobile.models.Visit;
 
 import java.util.List;
@@ -35,11 +30,10 @@ public interface PatientDashboardContract {
 
 		void updateActiveVisitCard(List<Visit> visits);
 
-		void updateActiveVisitObservationsCard(Observation observation);
-
-		LinearLayout getVisitNoteContainer();
+		Patient getPatient();
 
 		void setProviderUuid(String providerUuid);
+
 	}
 
 	interface Presenter extends BasePresenterContract {
@@ -48,6 +42,8 @@ public interface PatientDashboardContract {
 
 		void fetchVisits(Patient patient);
 
-		void fetchEncounterObservations(Encounter encounter);
+		Patient getPatient();
+
+		void setLimit(int limit);
 	}
 }

@@ -43,3 +43,4 @@ modules/odk.collect/android/*
 *.project
 *.classpath
 .settings/
+/.java-version

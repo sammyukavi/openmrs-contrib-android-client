@@ -26,9 +26,11 @@ public class Observation extends BaseOpenmrsEntity implements Serializable {
 	@SerializedName("obsDatetime")
 	@Expose
 	private String obsDatetime;
+
 	@SerializedName("accessionNumber")
 	@Expose
-	private int accessionNumber;
+	private String accessionNumber;
+
 	@SerializedName("obsGroup")
 	@Expose
 	private Observation obsGroup;
@@ -40,7 +42,7 @@ public class Observation extends BaseOpenmrsEntity implements Serializable {
 	private String comment;
 	@SerializedName("location")
 	@Expose
-	private Resource location = null;
+	private String location = null;
 	@SerializedName("encounter")
 	@Expose
 	private Encounter encounter = null;
@@ -53,9 +55,14 @@ public class Observation extends BaseOpenmrsEntity implements Serializable {
 	@SerializedName("resourceVersion")
 	@Expose
 	private String resourceVersion;
+
 	@Expose
-	private String value;
 	@SerializedName("value")
+	private String value;
+
+	@SerializedName("auditInfo")
+	@Expose
+	private AuditInfo auditInfo;
 
 	private Long id;
 	private Long encounterID;
@@ -112,14 +119,14 @@ public class Observation extends BaseOpenmrsEntity implements Serializable {
 	/**
 	 * @return The accessionNumber
 	 */
-	public int getAccessionNumber() {
+	public String getAccessionNumber() {
 		return accessionNumber;
 	}
 
 	/**
 	 * @param accessionNumber The accessionNumber
 	 */
-	public void setAccessionNumber(int accessionNumber) {
+	public void setAccessionNumber(String accessionNumber) {
 		this.accessionNumber = accessionNumber;
 	}
 
@@ -168,14 +175,14 @@ public class Observation extends BaseOpenmrsEntity implements Serializable {
 	/**
 	 * @return The location
 	 */
-	public Resource getLocation() {
+	public String getLocation() {
 		return location;
 	}
 
 	/**
 	 * @param location The location
 	 */
-	public void setLocation(Resource location) {
+	public void setLocation(String location) {
 		this.location = location;
 	}
 
@@ -304,5 +311,13 @@ public class Observation extends BaseOpenmrsEntity implements Serializable {
 
 	public void setValue(String value) {
 		this.value = value;
+	}
+
+	public AuditInfo getAuditInfo() {
+		return auditInfo;
+	}
+
+	public void setAuditInfo(AuditInfo auditInfo) {
+		this.auditInfo = auditInfo;
 	}
 }

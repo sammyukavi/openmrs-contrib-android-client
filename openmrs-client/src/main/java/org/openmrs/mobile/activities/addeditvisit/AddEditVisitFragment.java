@@ -51,7 +51,6 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 		implements AddEditVisitContract.View {
 
 	private static TableRow.LayoutParams marginParams;
-	private TextView visitTitle;
 	private TableLayout visitTableLayout;
 	private ProgressBar progressBar;
 	private TextView confirmMessage;
@@ -68,7 +67,6 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View root = inflater.inflate(R.layout.fragment_addedit_visit, container, false);
-		visitTitle = (TextView)root.findViewById(R.id.visitTitle);
 		visitTableLayout = (TableLayout)root.findViewById(R.id.visitTableLayout);
 		progressBar = (ProgressBar)root.findViewById(R.id.visitLoadingProgressBar);
 		confirmMessage = (TextView)root.findViewById(R.id.confirmMessage);
@@ -100,7 +98,8 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 			confirmMessage.setVisibility(View.GONE);
 		}
 
-		setVisitTitleText(startVisit ? getString(R.string.label_start_visit) : getString(R.string.label_edit_visit));
+		getActivity().setTitle(startVisit ? getString(R.string.label_start_visit) : getString(R.string.label_edit_visit));
+
 		setSpinnerVisibility(false);
 	}
 
@@ -262,11 +261,6 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 	@Override
 	public boolean isActive() {
 		return isAdded();
-	}
-
-	@Override
-	public void setVisitTitleText(String text) {
-		visitTitle.setText(text);
 	}
 
 	@Override

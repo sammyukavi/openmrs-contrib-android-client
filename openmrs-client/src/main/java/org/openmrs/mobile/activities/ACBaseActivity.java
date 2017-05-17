@@ -61,6 +61,7 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 	protected FrameLayout frameLayout;
 	private MenuItem mSyncbutton;
 	private Toolbar toolbar;
+	private OpenMRS instance = OpenMRS.getInstance();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +100,7 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 		// Handle item selection
 		switch (item.getItemId()) {
 			case R.id.actionLogout:
-				logout();
+				showLogoutDialog();
 				return true;
 			case R.id.actionSettings:
 				startActivity(new Intent(this, SettingsActivity.class));
@@ -147,9 +148,18 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 		bundle.setTextViewMessage(getString(R.string.logout_dialog_message));
 		bundle.setRightButtonAction(CustomFragmentDialog.OnClickAction.LOGOUT);
 		bundle.setRightButtonText(getString(R.string.logout_dialog_button));
-		bundle.setLeftButtonAction(CustomFragmentDialog.OnClickAction.DISMISS);
-		bundle.setLeftButtonText(getString(R.string.dialog_button_cancel));
 		createAndShowDialog(bundle, ApplicationConstants.DialogTAG.LOGOUT_DIALOG_TAG);
+	}
+
+	public void showEndVisitDialog() {
+		CustomDialogBundle bundle = new CustomDialogBundle();
+		bundle.setTitleViewMessage(getString(R.string.end_visit_dialog_title));
+		bundle.setTextViewMessage(getString(R.string.end_visit_dialog_message));
+		bundle.setRightButtonAction(CustomFragmentDialog.OnClickAction.END_VISIT);
+		bundle.setRightButtonText(getString(R.string.dialog_button_confirm));
+		//bundle.setLeftButtonAction(CustomFragmentDialog.OnClickAction.DISMISS);
+		//bundle.setLeftButtonText(getString(R.string.dialog_button_cancel));
+		createAndShowDialog(bundle, ApplicationConstants.DialogTAG.END_VISIT_DIALOG_TAG);
 	}
 
 	public void showStartVisitImpossibleDialog(CharSequence title) {

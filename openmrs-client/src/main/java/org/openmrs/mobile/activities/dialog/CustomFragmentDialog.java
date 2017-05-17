@@ -42,24 +42,39 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.joda.time.LocalDateTime;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
 import org.openmrs.mobile.activities.addeditpatient.AddEditPatientActivity;
 import org.openmrs.mobile.activities.addeditpatient.SimilarPatientsRecyclerViewAdapter;
+import org.openmrs.mobile.activities.addeditvisit.AddEditVisitActivity;
 import org.openmrs.mobile.activities.login.LoginActivity;
+import org.openmrs.mobile.activities.login.LoginFragment;
 import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
 import org.openmrs.mobile.activities.visittasks.VisitTasksActivity;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.data.DataService;
+import org.openmrs.mobile.data.QueryOptions;
+import org.openmrs.mobile.data.impl.EncounterDataService;
+import org.openmrs.mobile.data.impl.LocationDataService;
 import org.openmrs.mobile.data.impl.ObsDataService;
+import org.openmrs.mobile.data.impl.VisitDataService;
+import org.openmrs.mobile.models.AuditInfo;
+import org.openmrs.mobile.models.Concept;
+import org.openmrs.mobile.models.Encounter;
+import org.openmrs.mobile.models.EncounterType;
+import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
+import org.openmrs.mobile.models.User;
+import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitPredefinedTask;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.FontsUtil;
 import org.openmrs.mobile.utilities.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -71,12 +86,9 @@ public class CustomFragmentDialog extends DialogFragment {
 	protected LayoutInflater mInflater;
 	protected LinearLayout mFieldsLayout;
 	protected RecyclerView mRecyclerView;
-	protected TextView mTextView;
-	protected TextView mTitleTextView;
-	protected EditText mEditText;
-	protected EditText mEditNoteText;
-	private Button mLeftButton;
-	private Button mRightButton;
+	protected TextView mTextView, mTitleTextView;
+	protected EditText mEditText, mEditNoteText;
+	private Button mLeftButton, mRightButton;
 	private CustomDialogBundle mCustomDialogBundle;
 	private AutoCompleteTextView autoCompleteTextView;
 
@@ -372,26 +384,22 @@ public class CustomFragmentDialog extends DialogFragment {
 	}
 
 	private View.OnClickListener onClickActionSolver(final OnClickAction action) {
+
+		//LoginActivity activity = (LoginActivity)getActivity();
+		//activity.onFinishEditDialog(mEditText.getText().toString());
+		//this.dismiss();
+
 		return new View.OnClickListener() {
 			//CHECKSTYLE:OFF
 			@Override
 			public void onClick(View v) {
 				switch (action) {
-					case DISMISS_URL_DIALOG:
-						/*((FindPatientRecordFragment) getActivity()
-								.getSupportFragmentManager()
-                                .findFragmentById(R.id.loginContentFrame))
-                                .hideURLDialog();*/
+					case DISMISS:
 						dismiss();
 						break;
 					case LOGIN:
-						/*((FindPatientRecordFragment) getActivity()
-								.getSupportFragmentManager()
-                                .findFragmentById(R.id.loginContentFrame))
-                                .login(true);*/
-						dismiss();
-						break;
-					case DISMISS:
+						((LoginFragment)getActivity().getSupportFragmentManager().findFragmentById(R.id.loginContentFrame))
+								.login(true);
 						dismiss();
 						break;
 					case LOGOUT:
@@ -412,7 +420,7 @@ public class CustomFragmentDialog extends DialogFragment {
 						dismiss();
 						break;
 					case END_VISIT:
-						//((VisitDashboardActivity) getActivity()).findPatientPresenter.endVisit();
+						((AddEditVisitActivity)getActivity()).addEditVisitPresenter.endVisit();
 						dismiss();
 						break;
 					case START_VISIT:
@@ -429,10 +437,10 @@ public class CustomFragmentDialog extends DialogFragment {
 						dismiss();
 						break;
 					case DELETE_PATIENT:
-						PatientDashboardActivity activity = (PatientDashboardActivity)getActivity();
+						PatientDashboardActivity patientDashboardActivity = (PatientDashboardActivity)getActivity();
 						//activity.findPatientPresenter.deletePatient();
 						dismiss();
-						activity.finish();
+						patientDashboardActivity.finish();
 						break;
 					case ADD_VISIT_TASKS:
 						if (StringUtils.notEmpty(getAutoCompleteTextValue())) {
@@ -447,7 +455,6 @@ public class CustomFragmentDialog extends DialogFragment {
 					case SAVE_VISIT_NOTE:
 
 						Bundle bundle = mCustomDialogBundle.getArguments();
-						Patient patient = (Patient)bundle.getSerializable(ApplicationConstants.BundleKeys.PATIENT);
 						Observation observation =
 								(Observation)bundle.getSerializable(ApplicationConstants.BundleKeys.OBSERVATION);
 						observation.setValue(getEditNoteTextValue());
@@ -457,7 +464,9 @@ public class CustomFragmentDialog extends DialogFragment {
 						observationDataService.update(observation, new DataService.GetCallback<Observation>() {
 							@Override
 							public void onCompleted(Observation entity) {
-								((PatientDashboardActivity)getActivity()).mPresenter.fetchVisits(patient);
+								((PatientDashboardActivity)getActivity()).mPresenter
+										.fetchPatientData(bundle.getString(ApplicationConstants
+												.BundleKeys.PATIENT_UUID_BUNDLE));
 								dismiss();
 							}
 
@@ -468,6 +477,27 @@ public class CustomFragmentDialog extends DialogFragment {
 						});
 						break;
 					case CREATE_VISIT_NOTE:
+
+						bundle = mCustomDialogBundle.getArguments();
+						VisitDataService visitDataService = new VisitDataService();
+						visitDataService.getByUUID(bundle.getString(ApplicationConstants
+										.BundleKeys.VISIT_UUID_BUNDLE), QueryOptions.LOAD_RELATED_OBJECTS,
+								new DataService.GetCallback<Visit>() {
+									@Override
+									public void onCompleted(Visit visit) {
+										saveEncounter(visit);
+									}
+
+									@Override
+									public void onError(Throwable t) {
+
+									}
+								});
+
+						break;
+					case DISPLAY_URL_EDIT_FIELD:
+						((LoginActivity)getActivity()).mPresenter.showEditUrlEditText(true);
+						dismiss();
 						break;
 					default:
 						break;
@@ -477,12 +507,98 @@ public class CustomFragmentDialog extends DialogFragment {
 		};
 	}
 
+	private void saveEncounter(Visit visit) {
+		if (visit != null) {
+			OpenMRS instance = OpenMRS.getInstance();
+
+			String locationUuid = "";
+			Location location = null;
+
+			PatientDashboardActivity patientDashboardActivity = (PatientDashboardActivity)getActivity();
+			Patient patient = patientDashboardActivity.mPresenter.getPatient();
+
+			//get Location
+			if (!OpenMRS.getInstance().getLocation().equalsIgnoreCase(null)) {
+				locationUuid = instance.getLocation();
+			}
+
+			LocationDataService locationDataService = new LocationDataService();
+			locationDataService.getByUUID
+					(locationUuid, QueryOptions
+							.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Location>() {
+						@Override
+						public void onCompleted(Location location) {
+							//create audit info
+							User user = new User();
+							user.setUuid(instance.getCurrentLoggedInUserInfo().get(ApplicationConstants.UserKeys
+									.USER_UUID));
+
+							AuditInfo auditInfo = new AuditInfo();
+							auditInfo.setCreator(user);
+
+							//create concept
+							Concept concept = new Concept();
+							concept.setUuid("162169AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+
+							//create encountertType
+							EncounterType mEncountertype = new EncounterType();
+							mEncountertype.setUuid("d7151f82-c1f3-4152-a605-2f9ea7414a79");
+
+							LocalDateTime localDateTime = new LocalDateTime();
+
+							//create observation
+							Observation observation = new Observation();
+							observation.setConcept(concept);
+							observation.setValue(getEditNoteTextValue());
+							observation.setPerson(patient.getPerson());
+							observation.setObsDatetime(localDateTime.toString());
+							observation.setCreator(user);
+							observation.setAuditInfo(auditInfo);
+							observation.setLocation(location.getUuid());
+
+							List<Observation> observationList = new ArrayList<>();
+							observationList.add(observation);
+
+							Encounter encounter = new Encounter();
+							encounter.setPatient(patient);
+							encounter.setEncounterType(mEncountertype);
+							encounter.setObs(observationList);
+							encounter.setVisit(visit);
+							encounter.setEncounterDatetime(localDateTime.toString());
+							encounter.setAuditInfo(auditInfo);
+							encounter.setLocation(location);
+
+							EncounterDataService encounterDataService = new EncounterDataService();
+							encounterDataService.create(encounter, new DataService.GetCallback<Encounter>() {
+								@Override
+								public void onCompleted(Encounter encounter) {
+									((PatientDashboardActivity)getActivity()).mPresenter
+											.fetchPatientData(patient.getUuid());
+									dismiss();
+								}
+
+								@Override
+								public void onError(Throwable t) {
+									t.printStackTrace();
+								}
+							});
+						}
+
+						@Override
+						public void onError(Throwable t) {
+
+						}
+					});
+
+		}
+	}
+
 	private void doStartVisitAction() {
 		Activity activity = getActivity();
 		if (activity instanceof PatientDashboardActivity) {
 			PatientDashboardActivity pda = ((PatientDashboardActivity)activity);
 			/*List<Fragment> fragments = pda.getSupportFragmentManager().getFragments();
-	        PatientVisitsFragment fragment = null;
+			PatientVisitsFragment fragment = null;
             for (Fragment frag : fragments) {
                 if (frag instanceof PatientVisitsFragment) {
                     fragment = (PatientVisitsFragment) frag;
@@ -512,6 +628,11 @@ public class CustomFragmentDialog extends DialogFragment {
 		DELETE_PATIENT,
 		ADD_VISIT_TASKS,
 		SAVE_VISIT_NOTE,
-		CREATE_VISIT_NOTE
+		CREATE_VISIT_NOTE,
+		DISPLAY_URL_EDIT_FIELD
+	}
+
+	public interface DialogActionClickedListener {
+		void onFinish(CustomFragmentDialog.OnClickAction action);
 	}
 }

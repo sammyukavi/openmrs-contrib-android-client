@@ -18,8 +18,9 @@
 			android:id="@+id/scrollView"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-			android:layout_alignParentBottom="false"
-			android:layout_centerInParent="true">
+			android:layout_alignTop="@+id/locationLoadingProgressBar"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true">
 
 		<LinearLayout
 				android:layout_width="match_parent"
@@ -31,12 +32,12 @@
 
 			<ImageView
 					android:id="@+id/openmrsLogo"
-					android:layout_width="wrap_content"
-					android:layout_height="72dp"
-					android:layout_gravity="center_horizontal"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center"
 					android:layout_marginBottom="24dp"
 					android:contentDescription="@string/app_name"
-					android:src="@drawable/logo_openmrs" />
+					android:src="@drawable/banda_logo" />
 
 			<android.support.design.widget.TextInputLayout
 					android:layout_width="match_parent"
@@ -46,6 +47,7 @@
 
 				<EditText
 						android:id="@+id/loginUrlField"
+						android:visibility="gone"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:hint="@string/login_url_hint"
@@ -84,38 +86,22 @@
 						android:inputType="textPassword" />
 			</android.support.design.widget.TextInputLayout>
 			
-			<android.support.v7.widget.AppCompatSpinner
-					android:id="@+id/locationSpinner"
+			<android.support.design.widget.TextInputLayout
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:layout_marginLeft="10dp"
-					android:layout_marginRight="10dp"
-					android:layout_marginTop="20dp" />
-
-			<LinearLayout
-					android:layout_width="wrap_content"
-					android:layout_height="match_parent"
-					android:layout_margin="5dp"
-					android:gravity="center"
-					android:orientation="horizontal"
-					android:visibility="gone">
-
-				<TextView
-						android:id="@+id/syncLabel"
-						android:layout_width="wrap_content"
+					android:layout_marginBottom="8dp"
+					android:layout_marginTop="8dp">
+				
+				<Spinner
+						android:id="@+id/locationSpinner"
+						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
-						android:layout_marginEnd="10dp"
+						android:layout_marginLeft="10dp"
 						android:layout_marginRight="10dp"
-						android:text="@string/login_offline" />
+						android:layout_marginTop="20dp" />
+			</android.support.design.widget.TextInputLayout>
 
-				<android.support.v7.widget.AppCompatImageView
-						android:id="@+id/loginSyncButton"
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:src="@drawable/sync_button_selector"
-						android:tint="@color/cardview_dark_background" />
-
-			</LinearLayout>
+			
 
 			<android.support.v7.widget.AppCompatButton
 					android:id="@+id/loginButton"
@@ -125,19 +111,16 @@
 					android:layout_marginTop="24dp"
 					android:padding="12dp"
 					android:textColor="@color/color_white"
-					android:background="@drawable/button_apply"
+					android:background="@drawable/button_submit"
 					android:text="@string/login"
-					style="@style/Widget.AppCompat.Button.Borderless"/>
+					style="@style/Widget.AppCompat.Button.Borderless" />
 
-			<TextView
-					android:id="@+id/link_signup"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:layout_marginBottom="24dp"
-					android:gravity="center"
-					android:text="@string/create_account"
-					android:textSize="16sp"
-					android:visibility="gone" />
+			<ImageView
+					android:id="@+id/changeUrlIcon"
+					android:layout_width="25dp"
+					android:layout_height="25dp"
+					android:contentDescription="@string/app_name"
+					android:src="@drawable/ic_settings_black" />
 
 			<ProgressBar
 					android:id="@+id/loginLoading"

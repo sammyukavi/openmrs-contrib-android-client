@@ -141,8 +141,8 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 		this.selectedPatientList = selectedPatientList;
 	}
 
-    @Override
-    public void updatePatientListData(List<PatientListContext> patientListData) {
+	@Override
+	public void updatePatientListData(List<PatientListContext> patientListData) {
 		PatientListModelRecyclerViewAdapter adapter =
 				new PatientListModelRecyclerViewAdapter(this.getActivity(), patientListData, this);
 		patientListModelRecyclerView.setAdapter(adapter);

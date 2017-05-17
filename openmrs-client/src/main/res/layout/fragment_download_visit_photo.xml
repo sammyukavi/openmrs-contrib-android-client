@@ -38,6 +38,18 @@
 					android:layout_height="wrap_content"
 					android:layout_margin="10dp"
 					android:orientation="vertical">
+
+				<TextView
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:textSize="18sp"
+						android:textStyle="bold"
+						android:text="Visit Imaging"/>
+
+				<View
+						android:layout_width="match_parent"
+						android:layout_height="1dp"
+						android:background="@android:color/darker_gray" />
 				
 				<android.support.v7.widget.RecyclerView
 						android:id="@+id/downloadPhotoRecyclerView"

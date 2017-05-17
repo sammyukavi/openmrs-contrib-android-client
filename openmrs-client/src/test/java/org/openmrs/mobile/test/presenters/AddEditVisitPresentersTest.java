@@ -111,7 +111,7 @@ public class AddEditVisitPresentersTest extends ACUnitTestBase {
         doAnswer(new Answer<Void>() {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
-                ((DataService.GetCallback) invocation.getArguments()[1]).onCompleted(patient);
+                ((DataService.GetCallback<Patient>) invocation.getArguments()[2]).onCompleted(patient);
                 return null;
             }
         }).when(patientDataService).getByUUID(anyString(), any(QueryOptions.class), any(DataService.GetCallback.class));
@@ -120,7 +120,7 @@ public class AddEditVisitPresentersTest extends ACUnitTestBase {
         doAnswer(new Answer<Void>() {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
-                ((DataService.GetCallback) invocation.getArguments()[3]).onCompleted(visits);
+                ((DataService.GetCallback<List<Visit>>) invocation.getArguments()[3]).onCompleted(visits);
                 return null;
             }
         }).when(visitDataService).getByPatient(any(Patient.class), any(QueryOptions.class), any(PagingInfo.class),
@@ -130,17 +130,17 @@ public class AddEditVisitPresentersTest extends ACUnitTestBase {
         doAnswer(new Answer<Void>() {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
-                ((DataService.GetCallback) invocation.getArguments()[2]).onCompleted(visitTypes);
+                ((DataService.GetCallback<List<VisitType>>) invocation.getArguments()[2]).onCompleted(visitTypes);
                 return null;
             }
         }).when(visitTypeDataService).getAll(any(QueryOptions.class), any(PagingInfo.class),
-				any(DataService.GetCallback.class));
+                any(DataService.GetCallback.class));
 
         // load location callback
         doAnswer(new Answer<Void>() {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
-                ((DataService.GetCallback) invocation.getArguments()[1]).onCompleted(location);
+                ((DataService.GetCallback<Location>) invocation.getArguments()[2]).onCompleted(location);
                 return null;
             }
         }).when(locationDataService).getByUUID(anyString(), any(QueryOptions.class), any(DataService.GetCallback.class));
@@ -149,7 +149,7 @@ public class AddEditVisitPresentersTest extends ACUnitTestBase {
         doAnswer(new Answer<Void>() {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
-                ((DataService.GetCallback) invocation.getArguments()[1]).onCompleted(visit);
+                ((DataService.GetCallback<Visit>) invocation.getArguments()[1]).onCompleted(visit);
                 return null;
             }
         }).when(visitDataService).create(any(Visit.class), any(DataService.GetCallback.class));
@@ -159,7 +159,7 @@ public class AddEditVisitPresentersTest extends ACUnitTestBase {
         doAnswer(new Answer<Void>() {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
-                ((DataService.GetCallback) invocation.getArguments()[1]).onCompleted(visit);
+                ((DataService.GetCallback<Visit>) invocation.getArguments()[1]).onCompleted(visit);
                 return null;
             }
         }).when(visitDataService).update(any(Visit.class), any(DataService.GetCallback.class));
@@ -168,10 +168,10 @@ public class AddEditVisitPresentersTest extends ACUnitTestBase {
         doAnswer(new Answer<Void>() {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
-                ((DataService.GetCallback) invocation.getArguments()[2]).onCompleted(visit);
+                ((DataService.GetCallback<Visit>) invocation.getArguments()[2]).onCompleted(visit);
                 return null;
             }
-        }).when(visitDataService).endVisit(anyString(), anyString(), any(DataService.GetCallback.class));
+        }).when(visitDataService).endVisit(anyString(), any(Visit.class), any(DataService.GetCallback.class));
 
     }
 

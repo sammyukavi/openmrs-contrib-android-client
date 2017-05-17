@@ -21,10 +21,10 @@ import android.util.Log;
 import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
+import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.impl.PatientDataService;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.utilities.ApplicationConstants;
-import org.openmrs.mobile.utilities.NetworkUtils;
 import org.openmrs.mobile.utilities.ToastUtil;
 
 import java.util.List;
@@ -34,16 +34,14 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 	@NonNull
 	private FindPatientRecordContract.View findPatientView;
 	private int totalNumberResults;
-	private int page = 1;
-	private int limit = 5;
+	private int page = 0;
+	private int limit = 10;
 	private PatientDataService patientDataService;
-	private String lastQuery = "";
 	private boolean loading;
 
 	public FindPatientRecordPresenter(@NonNull FindPatientRecordContract.View view, String lastQuery) {
 		this.findPatientView = view;
 		this.findPatientView.setPresenter(this);
-		this.lastQuery = lastQuery;
 		this.patientDataService = new PatientDataService();
 	}
 
@@ -64,94 +62,78 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 
 	public void findPatient(String query) {
 		findPatientView.setProgressBarVisibility(true);
-		findPatientView.setFetchedPatientsVisibility(0);
-		if (NetworkUtils.hasNetwork()) {
-			DataService.GetCallback<List<Patient>> getMultipleCallback = new DataService.GetCallback<List<Patient>>() {
-				@Override
-				public void onCompleted(List<Patient> patients) {
-					findPatientView.setProgressBarVisibility(false);
-					if (patients.isEmpty()) {
-						findPatientView.setNumberOfPatientsView(0);
-						findPatientView.setSearchPatientVisibility(false);
-						findPatientView.setNoPatientsVisibility(true);
-						findPatientView.setFetchedPatientsVisibility(0);
-					} else {
-						findPatientView.setNoPatientsVisibility(false);
-						findPatientView.setSearchPatientVisibility(false);
-						findPatientView.setNumberOfPatientsView(patients.size());
-						findPatientView.setFetchedPatientsVisibility(patients.size());
-						findPatientView.fetchPatients(patients);
-						findPatientView.showToast(ApplicationConstants.entityName.PATIENTS + ApplicationConstants
-								.toastMessages.fetchSuccessMessage, ToastUtil.ToastType.SUCCESS);
-					}
+		findPatientView.setFetchedPatientsVisibility(false);
+		PagingInfo pagingInfo = new PagingInfo(page, 100);
+		DataService.GetCallback<List<Patient>> getMultipleCallback = new DataService.GetCallback<List<Patient>>() {
+			@Override
+			public void onCompleted(List<Patient> patients) {
+				findPatientView.setProgressBarVisibility(false);
+				if (patients.isEmpty()) {
+					findPatientView.setNumberOfPatientsView(0);
+					findPatientView.setSearchPatientVisibility(false);
+					findPatientView.setNoPatientsVisibility(true);
+					findPatientView.setFetchedPatientsVisibility(false);
+				} else {
+					findPatientView.setNoPatientsVisibility(false);
+					findPatientView.setSearchPatientVisibility(false);
+					findPatientView.setNumberOfPatientsView(patients.size());
+					findPatientView.setFetchedPatientsVisibility(true);
+					findPatientView.fetchPatients(patients);
+					findPatientView.showToast(ApplicationConstants.entityName.PATIENTS + ApplicationConstants
+							.toastMessages.fetchSuccessMessage, ToastUtil.ToastType.SUCCESS);
 				}
+			}
 
-				@Override
-				public void onError(Throwable t) {
-					findPatientView.setProgressBarVisibility(false);
-					Log.e("Patient Error", "Error", t.fillInStackTrace());
-					findPatientView
-							.showToast(ApplicationConstants.entityName.PATIENTS + ApplicationConstants.toastMessages
-									.fetchErrorMessage, ToastUtil.ToastType.ERROR);
-				}
-			};
-			patientDataService.getByNameAndIdentifier(query, null, null, getMultipleCallback);
-		} else {
-			// get the users from the local storage.
-		}
+			@Override
+			public void onError(Throwable t) {
+				findPatientView.setProgressBarVisibility(false);
+				findPatientView
+						.showToast(ApplicationConstants.entityName.PATIENTS + ApplicationConstants.toastMessages
+								.fetchErrorMessage, ToastUtil.ToastType.ERROR);
+			}
+		};
+		patientDataService.getByNameAndIdentifier(query, QueryOptions.LOAD_RELATED_OBJECTS, pagingInfo,
+				getMultipleCallback);
 	}
 
-	public void getLastViewed(int page) {
-		System.out.println(page + "Last viewed===================");
+	public void getLastViewed() {
 		findPatientView.setProgressBarVisibility(true);
-		findPatientView.setFetchedPatientsVisibility(0);
-
+		findPatientView.setFetchedPatientsVisibility(false);
 		setLoading(true);
-		if (NetworkUtils.hasNetwork()) {
-			if (page <= 0) {
-				return;
-			}
-			setPage(page);
-			setTotalNumberResults(0);
-			PagingInfo pagingInfo = new PagingInfo(page, limit);
-			patientDataService.getLastViewed(ApplicationConstants.EMPTY_STRING, null, pagingInfo,
-					new DataService.GetCallback<List<Patient>>() {
-						@Override
-						public void onCompleted(List<Patient> patients) {
-							findPatientView.setProgressBarVisibility(false);
+		PagingInfo pagingInfo = new PagingInfo(page, limit);
+		patientDataService.getLastViewed(ApplicationConstants.EMPTY_STRING, QueryOptions.LOAD_RELATED_OBJECTS, pagingInfo,
+				new DataService.GetCallback<List<Patient>>() {
+					@Override
+					public void onCompleted(List<Patient> patients) {
+						findPatientView.setProgressBarVisibility(false);
 
-							if (!patients.isEmpty()) {
-								findPatientView.setNumberOfPatientsView(0);
-								findPatientView.setFetchedPatientsVisibility(patients.size());
-
-								findPatientView.fetchPatients(patients);
-								findPatientView
-										.showToast(ApplicationConstants.entityName.LAST_VIEWED_PATIENT +
-												ApplicationConstants
-														.toastMessages.fetchSuccessMessage, ToastUtil.ToastType.SUCCESS);
-							} else {
-								findPatientView.setNumberOfPatientsView(0);
-								findPatientView.setFetchedPatientsVisibility(0);
-						/*findPatientView
-								.showToast(ApplicationConstants.toastMessages.lastviewedPatientInfo, ToastUtil.ToastType
-										.NOTICE);*/
-							}
-							setLoading(false);
-							setTotalNumberResults(pagingInfo.getTotalRecordCount());
-						}
-
-						@Override
-						public void onError(Throwable t) {
-							setLoading(false);
-							findPatientView.setProgressBarVisibility(false);
-							Log.e("User Error", "Error", t.fillInStackTrace());
+						if (!patients.isEmpty()) {
+							findPatientView.setNumberOfPatientsView(0);
+							findPatientView.setFetchedPatientsVisibility(true);
+							findPatientView.fetchPatients(patients);
 							findPatientView
-									.showToast(ApplicationConstants.entityName.LAST_VIEWED_PATIENT
-											+ ApplicationConstants.toastMessages
-											.fetchErrorMessage, ToastUtil.ToastType.ERROR);
+									.showToast(ApplicationConstants.entityName.LAST_VIEWED_PATIENT +
+													ApplicationConstants
+															.toastMessages.fetchSuccessMessage,
+											ToastUtil.ToastType.SUCCESS);
+						} else {
+							findPatientView.setNumberOfPatientsView(patients.size());
+							findPatientView.setFetchedPatientsVisibility(false);
 						}
-					});
-		}
+						setLoading(false);
+					}
+
+					@Override
+					public void onError(Throwable t) {
+						setLoading(false);
+						findPatientView.setProgressBarVisibility(false);
+						Log.e("User Error", "Error", t.fillInStackTrace());
+						findPatientView
+								.showToast(ApplicationConstants.entityName.LAST_VIEWED_PATIENT
+										+ ApplicationConstants.toastMessages
+										.fetchErrorMessage, ToastUtil.ToastType.ERROR);
+					}
+				});
 	}
 
 	private int computePage(boolean next) {
@@ -193,7 +175,7 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 
 	@Override
 	public void loadResults(boolean loadNextResults) {
-		getLastViewed(computePage(loadNextResults));
+		getLastViewed();
 	}
 
 	@Override

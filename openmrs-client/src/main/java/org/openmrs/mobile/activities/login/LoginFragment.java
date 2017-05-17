@@ -16,32 +16,25 @@ package org.openmrs.mobile.activities.login;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v7.widget.AppCompatImageView;
-import android.support.v7.widget.AppCompatSpinner;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
-import org.openmrs.mobile.activities.findpatientrecord.FindPatientRecordActivity;
+import org.openmrs.mobile.activities.patientlist.PatientListActivity;
 import org.openmrs.mobile.api.FormListService;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
@@ -64,20 +57,14 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 	final private String initialUrl = OpenMRS.getInstance().getServerUrl();
 	protected OpenMRS mOpenMRS = OpenMRS.getInstance();
 	private View mRootView;
-	private TextView mForgotPass;
-	private EditText mUrl;
-	private EditText mUsername;
-	private EditText mPassword;
-	private CheckBox mShowPassword;
+	private EditText mUrl, mUsername, mPassword;
 	private Button mLoginButton;
 	private ProgressBar mSpinner;
-	private AppCompatSpinner mDropdownLocation;
-	private LinearLayout mLoginFormView;
-	private AppCompatImageView mLoginSyncButton;
-	private TextView mSyncStateLabel;
+	private Spinner mDropdownLocation;
 	private SparseArray<Bitmap> mBitmapCache;
 	private ProgressBar mLocationLoadingProgressBar;
 	private LoginValidatorWatcher loginValidatorWatcher;
+	private ImageView changeUrlIcon;
 
 	public static LoginFragment newInstance() {
 		return new LoginFragment();
@@ -104,16 +91,10 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 	}
 
 	private void initListeners() {
-		mLoginSyncButton.setOnClickListener(new View.OnClickListener() {
+		changeUrlIcon.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(OpenMRS.getInstance());
-				boolean syncState = prefs.getBoolean("sync", true);
-				SharedPreferences.Editor editor =
-						PreferenceManager.getDefaultSharedPreferences(OpenMRS.getInstance()).edit();
-				editor.putBoolean("sync", !syncState);
-				editor.commit();
-				setSyncButtonState(!syncState);
+				showWarningDialog(false);
 			}
 		});
 
@@ -153,26 +134,17 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 		mUsername = (EditText)root.findViewById(R.id.loginUsernameField);
 		mUsername.setText(OpenMRS.getInstance().getUsername());
 		mPassword = (EditText)root.findViewById(R.id.loginPasswordField);
-		// mShowPassword = (CheckBox) root.findViewById(R.id.checkboxShowPassword);
 		mLoginButton = (Button)root.findViewById(R.id.loginButton);
 		mSpinner = (ProgressBar)root.findViewById(R.id.loginLoading);
-		//mLoginFormView = (LinearLayout) root.findViewById(R.id.loginFormView);
-		mLoginSyncButton = ((AppCompatImageView)root.findViewById(R.id.loginSyncButton));
-		mSyncStateLabel = ((TextView)root.findViewById(R.id.syncLabel));
-		mDropdownLocation = (AppCompatSpinner)root.findViewById(R.id.locationSpinner);
-		// mForgotPass = (TextView) root.findViewById(R.id.forgotPass);
+		mDropdownLocation = (Spinner)root.findViewById(R.id.locationSpinner);
 		mLocationLoadingProgressBar = (ProgressBar)root.findViewById(R.id.locationLoadingProgressBar);
+		changeUrlIcon = (ImageView)root.findViewById(R.id.changeUrlIcon);
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-
-		final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(OpenMRS.getInstance());
-		boolean syncState = prefs.getBoolean("sync", true);
-		setSyncButtonState(syncState);
 		hideUrlLoadingAnimation();
-
 		bindDrawableResources();
 	}
 
@@ -193,33 +165,17 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 		inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
 	}
 
-	private void setSyncButtonState(boolean syncEnabled) {
-		if (syncEnabled) {
-			mSyncStateLabel.setText(getString(R.string.login_online));
-		} else {
-			mSyncStateLabel.setText(getString(R.string.login_offline));
-		}
-		mLoginSyncButton.setSelected(syncEnabled);
-	}
-
-	public void forgotPassword() {
-		CustomDialogBundle bundle = new CustomDialogBundle();
-		bundle.setTitleViewMessage(getString(R.string.forgot_dialog_title));
-		bundle.setTextViewMessage(getString(R.string.forgot_dialog_message));
-		bundle.setLeftButtonAction(CustomFragmentDialog.OnClickAction.DISMISS);
-		bundle.setLeftButtonText(getString(R.string.forgot_button_ok));
-		((LoginActivity)this.getActivity()).createAndShowDialog(bundle, ApplicationConstants.DialogTAG.LOGOUT_DIALOG_TAG);
-	}
-
 	@Override
-	public void showWarningDialog() {
+	public void showWarningDialog(boolean login) {
 		CustomDialogBundle bundle = new CustomDialogBundle();
 		bundle.setTitleViewMessage(getString(R.string.warning_dialog_title));
 		bundle.setTextViewMessage(getString(R.string.warning_lost_data_dialog));
 		bundle.setRightButtonText(getString(R.string.dialog_button_ok));
-		bundle.setRightButtonAction(CustomFragmentDialog.OnClickAction.LOGIN);
-		bundle.setLeftButtonText(getString(R.string.dialog_button_cancel));
-		bundle.setLeftButtonAction(CustomFragmentDialog.OnClickAction.DISMISS);
+		if (login) {
+			bundle.setRightButtonAction(CustomFragmentDialog.OnClickAction.LOGIN);
+		} else {
+			bundle.setRightButtonAction(CustomFragmentDialog.OnClickAction.DISPLAY_URL_EDIT_FIELD);
+		}
 		((LoginActivity)this.getActivity())
 				.createAndShowDialog(bundle, ApplicationConstants.DialogTAG.WARNING_LOST_DATA_DIALOG_TAG);
 	}
@@ -256,8 +212,8 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 	private void bindDrawableResources() {
 		mBitmapCache = new SparseArray<>();
 		ImageView openMrsLogoImage = (ImageView)getActivity().findViewById(R.id.openmrsLogo);
-		createImageBitmap(R.drawable.openmrs_logo, openMrsLogoImage.getLayoutParams());
-		openMrsLogoImage.setImageBitmap(mBitmapCache.get(R.drawable.openmrs_logo));
+		createImageBitmap(R.drawable.banda_logo, openMrsLogoImage.getLayoutParams());
+		openMrsLogoImage.setImageBitmap(mBitmapCache.get(R.drawable.banda_logo));
 	}
 
 	private void createImageBitmap(Integer key, ViewGroup.LayoutParams layoutParams) {
@@ -291,7 +247,7 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 
 	@Override
 	public void userAuthenticated() {
-		Intent intent = new Intent(mOpenMRS.getApplicationContext(), FindPatientRecordActivity.class);
+		Intent intent = new Intent(mOpenMRS.getApplicationContext(), PatientListActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		mOpenMRS.getApplicationContext().startActivity(intent);
 		mPresenter.saveLocationsToDatabase(mLocationsList, mDropdownLocation.getSelectedItem().toString());
@@ -301,6 +257,11 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 	public void startFormListService() {
 		Intent i = new Intent(getContext(), FormListService.class);
 		getActivity().startService(i);
+	}
+
+	@Override
+	public void showEditUrlEditField(boolean visibility) {
+		mUrl.setVisibility(View.VISIBLE);
 	}
 
 	@Override

@@ -19,7 +19,6 @@ import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
 import org.openmrs.mobile.models.ConceptName;
 import org.openmrs.mobile.models.Patient;
-import org.openmrs.mobile.models.Provider;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitAttribute;
 import org.openmrs.mobile.models.VisitAttributeType;
@@ -30,8 +29,6 @@ import java.util.List;
 public interface AddEditVisitContract {
 
 	interface View extends BaseView<Presenter> {
-
-		void setVisitTitleText(String text);
 
 		void initView(boolean startVisit);
 
@@ -44,21 +41,20 @@ public interface AddEditVisitContract {
 		void updateConceptNamesView(Spinner conceptNamesDropdown, List<ConceptName> conceptNames);
 
 		void showPatientDashboard();
+
 	}
 
 	interface Presenter extends BasePresenterContract {
 
 		List<VisitAttributeType> loadVisitAttributeTypes();
 
-		Patient getPatient();
-
-		void setPatient(Patient patient);
-
 		Visit getVisit();
 
 		void startVisit(List<VisitAttribute> attributes);
 
 		void updateVisit(List<VisitAttribute> attributes);
+
+		Patient getPatient();
 
 		<T> T searchVisitAttributeValueByType(VisitAttributeType visitAttributeType);
 
@@ -68,7 +64,7 @@ public interface AddEditVisitContract {
 
 		void setProcessing(boolean processing);
 
-		void endVisit(String uuid);
+		void endVisit();
 	}
 }
 

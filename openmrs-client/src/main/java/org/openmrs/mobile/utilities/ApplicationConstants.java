@@ -25,9 +25,8 @@ public abstract class ApplicationConstants {
 	public static final String LAST_SESSION_TOKEN = "last_session_id";
 	public static final String LAST_LOGIN_SERVER_URL = "last_login_server_url";
 	public static final String DEFAULT_OPEN_MRS_URL = "http://192.168.2.34:9996/openmrs/";
+
 	public static final String THUMBNAIL_VIEW = "complexdata.view.thumbnail";
-	//discuss on using the openhmis
-	// demo as the main test server to avoid changes here.
 
 	public abstract static class OpenMRSSharedPreferenceNames {
 		public static final String SHARED_PREFERENCES_NAME = "shared_preferences";
@@ -97,6 +96,16 @@ public abstract class ApplicationConstants {
 		public static final String VISIT_NOTE = "Visit Note";
 		public static final String DISCHARGE = "Discharge";
 		public static final String ADMISSION = "Admission";
+		public static final String AuditData = "Audit Data";
+	}
+
+	public abstract static class ObserVationUuId {
+		public static final String VITALSS = "67a71486-1a54-468f-ac3e-7091a9a79584";
+		public static final String VITALS = "Vitals";
+		public static final String VISIT_NOTE = "Visit Note";
+		public static final String DISCHARGE = "Discharge";
+		public static final String ADMISSION = "Admission";
+		public static final String AuditData = "Audit Data";
 
 	}
 
@@ -104,6 +113,7 @@ public abstract class ApplicationConstants {
 		public static final String CUSTOM_DIALOG_BUNDLE = "customDialogBundle";
 		public static final String PATIENT_UUID_BUNDLE = "patientUUID";
 		public static final String VISIT_UUID_BUNDLE = "visitUUID";
+		public static final String END_VISIT_TAG = "endVisitTag";
 		public static final String PROVIDER_UUID_BUNDLE = "providerUUID";
 		public static final String EncounterTypeEntity = "EncounterTypeEntity";
 		public static final String VALUEREFERENCE = "valueReference";
@@ -113,7 +123,6 @@ public abstract class ApplicationConstants {
 		public static final String FORM_FIELDS_BUNDLE = "formFieldsBundle";
 		public static final String FORM_FIELDS_LIST_BUNDLE = "formFieldsListBundle";
 		public static final String PATIENT_QUERY_BUNDLE = "patientQuery";
-		public static final String PATIENT = "patientTag";
 		public static final String OBSERVATION = "observationTag";
 		public static final String VISIT = "visitTag";
 	}

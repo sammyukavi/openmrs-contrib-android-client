@@ -18,15 +18,15 @@ import android.view.Menu;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
-import org.openmrs.mobile.activities.visitphoto.download.DownloadVisitPhotoFragment;
-import org.openmrs.mobile.activities.visitphoto.download.DownloadVisitPhotoPresenter;
+import org.openmrs.mobile.activities.patientheader.PatientHeaderFragment;
+import org.openmrs.mobile.activities.patientheader.PatientHeaderPresenter;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.StringUtils;
 import org.openmrs.mobile.utilities.ToastUtil;
 
 public class AddEditVisitActivity extends ACBaseActivity {
 
-	private AddEditVisitContract.Presenter addEditVisitPresenter;
+	public AddEditVisitContract.Presenter addEditVisitPresenter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,19 +50,22 @@ public class AddEditVisitActivity extends ACBaseActivity {
 
 				addEditVisitPresenter = new AddEditVisitPresenter(addEditVisitFragment, patientUuid);
 
-				// download visitphotos.
-				DownloadVisitPhotoFragment visitPhotoFragment =
-						(DownloadVisitPhotoFragment)getSupportFragmentManager()
-								.findFragmentById(R.id.photoDownloadsContentFrame);
-				if (visitPhotoFragment == null) {
-					visitPhotoFragment = DownloadVisitPhotoFragment.newInstance();
+				if (extras.getBoolean(ApplicationConstants.BundleKeys.END_VISIT_TAG, false)) {
+					showEndVisitDialog();
 				}
 
-				if (!visitPhotoFragment.isActive()) {
-					addFragmentToActivity(getSupportFragmentManager(), visitPhotoFragment, R.id.photoDownloadsContentFrame);
+				// patient header
+				PatientHeaderFragment headerFragment = (PatientHeaderFragment) getSupportFragmentManager()
+						.findFragmentById(R.id.patientHeader);
+				if(headerFragment == null){
+					headerFragment = PatientHeaderFragment.newInstance();
 				}
 
-				new DownloadVisitPhotoPresenter(visitPhotoFragment, patientUuid);
+				if(!headerFragment.isActive()){
+					addFragmentToActivity(getSupportFragmentManager(), headerFragment, R.id.patientHeader);
+				}
+
+				new PatientHeaderPresenter(headerFragment, patientUuid);
 
 			} else {
 				ToastUtil.error(getString(R.string.no_patient_selected));
@@ -75,4 +78,5 @@ public class AddEditVisitActivity extends ACBaseActivity {
 		super.onCreateOptionsMenu(menu);
 		return true;
 	}
+
 }

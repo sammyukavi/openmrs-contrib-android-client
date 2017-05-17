@@ -63,7 +63,8 @@ public final class NetworkUtils {
 	public static boolean checkIfServerOnline() {
 		if (hasNetwork()) {
 			try {
-				HttpURLConnection urlc = (HttpURLConnection) (new URL(OpenMRS.getInstance().getServerUrl()).openConnection());
+				HttpURLConnection urlc = (HttpURLConnection)(new URL(OpenMRS.getInstance().getServerUrl()).openConnection
+						());
 				urlc.setRequestProperty("User-Agent", "Test");
 				urlc.setRequestProperty("Connection", "close");
 				urlc.setConnectTimeout(1500);

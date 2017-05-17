@@ -48,7 +48,7 @@ public class EncounterDAO {
 			}
 			ObservationDAO observationDAO = new ObservationDAO();
 			long encounterID = saveEncounter(encounter, null);
-			for (Observation obs : encounter.getObservations()) {
+			for (Observation obs : encounter.getObs()) {
 				observationDAO.saveObservation(obs, encounterID);
 			}
 		}
@@ -106,7 +106,7 @@ public class EncounterDAO {
                     encounter.setEncounterDatetime(DateUtils.convertTime(datetime,DateUtils.OPEN_MRS_REQUEST_FORMAT));
                     //encounter.setEncounterType((EncounterTypeEntity)new Select().from(EncounterTypeEntity.class).where
                     ("display = ?", EncounterTypeEntity.VITALS).executeSingle());
-                    encounter.setObservations(new ObservationDAO().findObservationByEncounterID(id));
+                    encounter.setObs(new ObservationDAO().findObservationByEncounterID(id));
                     encounter.setForm(FormService.getFormByUuid(formUuid));
                     encounter.setPatient(new PatientDAO().findPatientByUUID(patientUuid));
                 }
@@ -152,7 +152,7 @@ public class EncounterDAO {
 					encounter.setUuid(uuid);
 					encounter.setDisplay(display);
 					encounter.setEncounterDatetime(DateUtils.convertTime(datetime, DateUtils.OPEN_MRS_REQUEST_FORMAT));
-					encounter.setObservations(new ObservationDAO().findObservationByEncounterID(id));
+					encounter.setObs(new ObservationDAO().findObservationByEncounterID(id));
 					encounter.setForm(FormService.getFormByUuid(formUuid));
 					encounters.add(encounter);
 				}
@@ -193,7 +193,7 @@ public class EncounterDAO {
 					encounter.setDisplay(display);
 					encounter.setEncounterDatetime(DateUtils.convertTime(datetime, DateUtils.OPEN_MRS_REQUEST_FORMAT));
 					//encounter.setEncounterType(type);
-					encounter.setObservations(new ObservationDAO().findObservationByEncounterID(id));
+					encounter.setObs(new ObservationDAO().findObservationByEncounterID(id));
 					encounter.setForm(FormService.getFormByUuid(formUuid));
 					encounters.add(encounter);
 				}

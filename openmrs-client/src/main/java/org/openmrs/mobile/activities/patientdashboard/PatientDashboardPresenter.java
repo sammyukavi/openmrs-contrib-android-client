@@ -23,8 +23,6 @@ import org.openmrs.mobile.data.impl.ObsDataService;
 import org.openmrs.mobile.data.impl.PatientDataService;
 import org.openmrs.mobile.data.impl.ProviderDataService;
 import org.openmrs.mobile.data.impl.VisitDataService;
-import org.openmrs.mobile.models.Encounter;
-import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Provider;
 import org.openmrs.mobile.models.Visit;
@@ -41,6 +39,9 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	private VisitDataService visitDataService;
 	private ObsDataService observationDataService;
 	private ProviderDataService providerDataService;
+	private final static int page = 1;
+	private final int startIndex = 0;
+	private int limit = 5;
 
 	public PatientDashboardPresenter(PatientDashboardContract.View view) {
 		this.patientDashboardView = view;
@@ -56,10 +57,15 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 		getCurrentProvider();
 	}
 
+	@Override
+	public void setLimit(int limit) {
+		this.limit = limit;
+	}
 
 	@Override
 	public void fetchPatientData(String uuid) {
-		patientDataService.getByUUID(uuid, null, new DataService.GetCallback<Patient>() {
+
+		patientDataService.getByUUID(uuid, QueryOptions.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Patient>() {
 			@Override
 			public void onCompleted(Patient patient) {
 				if (patient != null) {
@@ -77,65 +83,55 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
 	@Override
 	public void fetchVisits(Patient patient) {
-		patientDashboardView.getVisitNoteContainer().removeAllViews();
-		visitDataService.getByPatient(patient, QueryOptions.INCLUDE_INACTIVE, new PagingInfo(0, 20),
+		visitDataService.getByPatient(patient, new QueryOptions(true, true), new PagingInfo(startIndex, limit),
 				new DataService.GetCallback<List<Visit>>() {
-			@Override
-			public void onCompleted(List<Visit> visits) {
-				patientDashboardView.updateActiveVisitCard(visits);
-			}
+					@Override
+					public void onCompleted(List<Visit> visits) {
+						if (!visits.isEmpty()) {
+							patientDashboardView.updateActiveVisitCard(visits);
+						} else {
+							patientDashboardView.showSnack("No visits found");
+						}
+					}
 
-			@Override
-			public void onError(Throwable t) {
-				t.printStackTrace();
-				patientDashboardView.showSnack("Error occured: Unable to reach searver");
-			}
-		});
+					@Override
+					public void onError(Throwable t) {
+						t.printStackTrace();
+						patientDashboardView.showSnack("Visit fetch error");
+					}
+				});
 	}
 
 	@Override
-	public void fetchEncounterObservations(Encounter encounter) {
-		observationDataService.getByEncounter(encounter, QueryOptions.INCLUDE_INACTIVE, new PagingInfo(0, 20),
-				new DataService.GetCallback<List<Observation>>() {
-			@Override
-			public void onCompleted(List<Observation> observations) {
-				for (Observation observation : observations) {
-					if (observation.getDiagnosisNote() != null && !observation.getDiagnosisNote().equals(ApplicationConstants.EMPTY_STRING)) {
-						patientDashboardView.updateActiveVisitObservationsCard(observation);
-					}
-				}
-			}
-
-			@Override
-			public void onError(Throwable t) {
-				patientDashboardView.showSnack("Error fetching observations");
-				t.printStackTrace();
-			}
-		});
+	public Patient getPatient() {
+		return patientDashboardView.getPatient();
 	}
 
 	/**
 	 * TODO: create a service to getProviderByPerson, move code to commons
 	 */
 	private void getCurrentProvider() {
+
 		String personUuid = OpenMRS.getInstance().getCurrentLoggedInUserInfo().get(ApplicationConstants.UserKeys.USER_UUID);
 		if (StringUtils.notEmpty(personUuid)) {
-
-			providerDataService.getAll(null, null, new DataService.GetCallback<List<Provider>>() {
-				@Override
-				public void onCompleted(List<Provider> entities) {
-					for (Provider entity : entities) {
-						if (null != entity.getPerson() && personUuid.equalsIgnoreCase(entity.getPerson().getUuid())) {
-							patientDashboardView.setProviderUuid(entity.getUuid());
+			providerDataService.getAll(QueryOptions.LOAD_RELATED_OBJECTS, new PagingInfo(page, 100),
+					new DataService.GetCallback<List<Provider>>() {
+						@Override
+						public void onCompleted(List<Provider> entities) {
+							for (Provider entity : entities) {
+								if (null != entity.getPerson() && personUuid
+										.equalsIgnoreCase(entity.getPerson().getUuid())) {
+									patientDashboardView.setProviderUuid(entity.getUuid());
+								}
+							}
 						}
-					}
-				}
 
-				@Override
-				public void onError(Throwable t) {
-					ToastUtil.error(t.getMessage());
-				}
-			});
+						@Override
+						public void onError(Throwable t) {
+							ToastUtil.error(t.getMessage());
+						}
+					});
 		}
 	}
+
 }

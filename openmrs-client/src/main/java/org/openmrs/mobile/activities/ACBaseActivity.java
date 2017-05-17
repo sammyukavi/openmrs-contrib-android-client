@@ -41,7 +41,6 @@ import org.openmrs.mobile.activities.findpatientrecord.FindPatientRecordActivity
 import org.openmrs.mobile.activities.login.LoginActivity;
 import org.openmrs.mobile.activities.patientlist.PatientListActivity;
 import org.openmrs.mobile.activities.settings.SettingsActivity;
-import org.openmrs.mobile.activities.visittasks.VisitTasksActivity;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.application.OpenMRSLogger;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
@@ -278,7 +277,7 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 				startActivity(new Intent(this, PatientListActivity.class));
 				break;
 			case R.id.navItemVisitTasks:
-				startActivity(new Intent(this, VisitTasksActivity.class));
+				//startActivity(new Intent(this, VisitTasksActivity.class));
 				break;
 			case R.id.navItemSettings:
 				startActivity(new Intent(this, SettingsActivity.class));

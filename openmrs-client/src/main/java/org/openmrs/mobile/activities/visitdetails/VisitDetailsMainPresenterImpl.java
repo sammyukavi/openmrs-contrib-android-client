@@ -14,22 +14,9 @@
 
 package org.openmrs.mobile.activities.visitdetails;
 
-import android.support.annotation.NonNull;
 
 import org.openmrs.mobile.activities.BasePresenter;
 
-public class VisitDetailsPresenter extends BasePresenter implements VisitDetailsContract.Presenter {
+public abstract class VisitDetailsMainPresenterImpl extends BasePresenter implements VisitDetailsContract.VisitDetailsMainPresenter {
 
-	@NonNull
-	private VisitDetailsContract.View visitDetailsView;
-
-	public VisitDetailsPresenter(@NonNull VisitDetailsContract.View view) {
-		this.visitDetailsView = view;
-		this.visitDetailsView.setPresenter(this);
-	}
-
-	@Override
-	public void subscribe() {
-
-	}
 }

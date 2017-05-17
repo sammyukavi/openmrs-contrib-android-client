@@ -24,8 +24,6 @@ import org.openmrs.mobile.activities.patientheader.PatientHeaderFragment;
 import org.openmrs.mobile.activities.patientheader.PatientHeaderPresenter;
 import org.openmrs.mobile.activities.visitphoto.download.DownloadVisitPhotoFragment;
 import org.openmrs.mobile.activities.visitphoto.download.DownloadVisitPhotoPresenter;
-import org.openmrs.mobile.activities.visittasks.VisitTasksFragment;
-import org.openmrs.mobile.activities.visittasks.VisitTasksPresenter;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.StringUtils;
 
@@ -83,18 +81,6 @@ public class PatientDashboardActivity extends ACBaseActivity {
 				new PatientHeaderPresenter(headerFragment, patientUuid);
 			}
 		}
-
-		//Adding the visit tasks fragment on the dashboard
-		VisitTasksFragment visitTasksFragment = (VisitTasksFragment)getSupportFragmentManager().findFragmentById(R.id
-				.visitTaskContentFrame);
-		if (visitTasksFragment == null) {
-			visitTasksFragment = VisitTasksFragment.newInstance();
-		}
-
-		if (!visitTasksFragment.isActive()) {
-			addFragmentToActivity(getSupportFragmentManager(), visitTasksFragment, R.id.visitTaskContentFrame);
-		}
-		new VisitTasksPresenter(visitTasksFragment);
 	}
 
 	@Override

@@ -14,7 +14,8 @@
 
 package org.openmrs.mobile.activities.visittasks;
 
-import org.openmrs.mobile.activities.BasePresenter;
+import org.openmrs.mobile.activities.visitdetails.VisitDetailsContract;
+import org.openmrs.mobile.activities.visitdetails.VisitDetailsMainPresenterImpl;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
@@ -32,28 +33,32 @@ import org.openmrs.mobile.utilities.ToastUtil;
 
 import java.util.List;
 
-public class VisitTasksPresenter extends BasePresenter implements VisitTasksContract.Presenter {
+public class VisitTasksPresenter extends VisitDetailsMainPresenterImpl implements VisitDetailsContract.VisitTasksPresenter {
 
-	private VisitTasksContract.View visitTasksView;
+	private VisitDetailsContract.VisitTasksView visitTasksView;
 	private VisitPredefinedTaskDataService visitPredefinedTaskDataService;
 	private VisitTaskDataService visitTaskDataService;
 	private VisitDataService visitDataService;
-	private OpenMRS instance = OpenMRS.getInstance();
+	private String patientUUID, visitUUID;
 
 	private int page = 1;
 	private int limit = 10;
 
-	public VisitTasksPresenter(VisitTasksContract.View view) {
-		this.visitTasksView = view;
+	public VisitTasksPresenter(String patientUuid, String visitUuid, VisitDetailsContract.VisitTasksView visitTasksView) {
+		this.visitTasksView = visitTasksView;
 		this.visitTasksView.setPresenter(this);
 		this.visitPredefinedTaskDataService = new VisitPredefinedTaskDataService();
 		this.visitTaskDataService = new VisitTaskDataService();
 		this.visitDataService = new VisitDataService();
+		this.visitUUID = visitUuid;
+		this.patientUUID = patientUuid;
 	}
 
 	@Override
 	public void subscribe() {
-
+		getPredefinedTasks();
+		getVisit();
+		getVisitTasks();
 	}
 
 	@Override
@@ -102,8 +107,9 @@ public class VisitTasksPresenter extends BasePresenter implements VisitTasksCont
 												.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 					}
 				};
-		visitTaskDataService.getAll(ApplicationConstants.EMPTY_STRING, instance.getPatientUuid(),
-				instance.getVisitUuid(), QueryOptions.LOAD_RELATED_OBJECTS, pagingInfo, getMultipleCallback);
+		visitTaskDataService
+				.getAll(ApplicationConstants.EMPTY_STRING, patientUUID, visitUUID, QueryOptions.LOAD_RELATED_OBJECTS,
+						pagingInfo, getMultipleCallback);
 	}
 
 	@Override
@@ -156,10 +162,10 @@ public class VisitTasksPresenter extends BasePresenter implements VisitTasksCont
 	@Override
 	public void createVisitTasksObject(String visitTask) {
 		Patient patient = new Patient();
-		patient.setUuid(instance.getPatientUuid());
+		patient.setUuid(patientUUID);
 
 		Visit visit = new Visit();
-		visit.setUuid(instance.getVisitUuid());
+		visit.setUuid(visitUUID);
 
 		VisitTask visitTaskEntity = new VisitTask();
 
@@ -189,6 +195,6 @@ public class VisitTasksPresenter extends BasePresenter implements VisitTasksCont
 										.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 					}
 				};
-		visitDataService.getByUUID(instance.getVisitUuid(), QueryOptions.LOAD_RELATED_OBJECTS, getSingleCallback);
+		visitDataService.getByUUID(visitUUID, QueryOptions.LOAD_RELATED_OBJECTS, getSingleCallback);
 	}
 }

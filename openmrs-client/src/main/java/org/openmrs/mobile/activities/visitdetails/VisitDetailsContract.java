@@ -16,20 +16,58 @@ package org.openmrs.mobile.activities.visitdetails;
 
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
-import org.openmrs.mobile.activities.visittasks.VisitTasksContract;
+import org.openmrs.mobile.models.Visit;
+import org.openmrs.mobile.models.VisitPredefinedTask;
+import org.openmrs.mobile.models.VisitTask;
+import org.openmrs.mobile.utilities.ToastUtil;
 
-/**
- * Created by dubdabasoduba on 17/05/2017.
- */
+import java.util.List;
 
 public interface VisitDetailsContract {
-	interface View extends BaseView<Presenter> {
+	interface ViewVisitDetailsMain extends BaseView<VisitDetailsMainPresenter> {
 
+	}
+
+	interface VisitTasksView extends ViewVisitDetailsMain {
+		void showToast(String message, ToastUtil.ToastType toastType);
+
+		void setVisitTasks(List<VisitTask> visitTaskList);
+
+		void showAddTaskDialog(Boolean visibility);
+
+		void setPredefinedTasks(List<VisitPredefinedTask> predefinedTasks);
+
+		void setSelectedVisitTask(VisitTask visitTask);
+
+		void setUnSelectedVisitTask(VisitTask visitTask);
+
+		void refresh();
+
+		void setVisit(Visit visit);
 
 	}
 
-	interface Presenter extends BasePresenterContract {
-
+	/*
+	* Presenters
+	*/
+	interface VisitDetailsMainPresenter extends BasePresenterContract {
 
 	}
+
+	interface VisitTasksPresenter extends VisitDetailsMainPresenter {
+		void getPredefinedTasks();
+
+		void getVisitTasks();
+
+		void displayAddTask(Boolean visibility);
+
+		void addVisitTasks(VisitTask visitTasks);
+
+		void updateVisitTask(VisitTask visitTask);
+
+		void createVisitTasksObject(String visitTask);
+
+		void getVisit();
+	}
+
 }

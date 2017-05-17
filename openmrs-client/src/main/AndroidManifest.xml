@@ -39,7 +39,6 @@
 		<activity android:name=".activities.capturevitals.CaptureVitalsActivity" />
 		<activity android:name=".activities.addeditpatient.AddEditPatientActivity" />
 		<activity android:name=".activities.findpatientrecord.FindPatientRecordActivity" />
-		<activity android:name=".activities.visittasks.VisitTasksActivity" />
 		<activity android:name=".activities.settings.SettingsActivity" />
 		<activity android:name=".activities.patientdashboard.PatientDashboardActivity" />
 		<activity android:name=".activities.login.LoginActivity" />

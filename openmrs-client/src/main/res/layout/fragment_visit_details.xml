@@ -23,5 +23,12 @@
 			android:id="@+id/patientHeader"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content" />
+	
+	<android.support.v4.app.FragmentTabHost
+			android:id="@+id/visitDetailsTabs"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content">
+		
+	</android.support.v4.app.FragmentTabHost>
 
 </LinearLayout>

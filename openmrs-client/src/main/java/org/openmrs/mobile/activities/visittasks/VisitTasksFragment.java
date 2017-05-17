@@ -24,8 +24,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.openmrs.mobile.R;
-import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
+import org.openmrs.mobile.activities.visitdetails.VisitDetailsContract;
+import org.openmrs.mobile.activities.visitdetails.VisitDetailsFragment;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.models.Visit;
@@ -38,7 +39,7 @@ import org.openmrs.mobile.utilities.ToastUtil;
 
 import java.util.List;
 
-public class VisitTasksFragment extends ACBaseFragment<VisitTasksContract.Presenter> implements VisitTasksContract.View {
+public class VisitTasksFragment extends VisitDetailsFragment implements VisitDetailsContract.VisitTasksView {
 
 	private static OpenMRS instance = OpenMRS.getInstance();
 	FloatingActionButton fab;
@@ -55,8 +56,15 @@ public class VisitTasksFragment extends ACBaseFragment<VisitTasksContract.Presen
 	}
 
 	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		super.setPresenter(mPresenter);
+		setHasOptionsMenu(true);
+	}
+
+	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		mRootView = inflater.inflate(R.layout.fragment_visit_tasks, container, false);
+		mRootView = inflater.inflate(R.layout.fragment_visit_tasks, null, false);
 		resolveViews(mRootView);
 
 		//Adding the Recycler view
@@ -66,10 +74,6 @@ public class VisitTasksFragment extends ACBaseFragment<VisitTasksContract.Presen
 
 		// Font config
 		FontsUtil.setFont((ViewGroup)this.getActivity().findViewById(android.R.id.content));
-		mPresenter.getVisit();
-		mPresenter.getPredefinedTasks();
-		mPresenter.getVisitTasks();
-
 		return mRootView;
 	}
 
@@ -80,7 +84,7 @@ public class VisitTasksFragment extends ACBaseFragment<VisitTasksContract.Presen
 
 	@Override
 	public void showToast(String message, ToastUtil.ToastType toastType) {
-		ToastUtil.showShortToast(getContext(), toastType, message);
+
 	}
 
 	@Override
@@ -97,7 +101,7 @@ public class VisitTasksFragment extends ACBaseFragment<VisitTasksContract.Presen
 
 	@Override
 	public void showAddTaskDialog(Boolean visibility) {
-		CustomDialogBundle addVisitTasksDialog = new CustomDialogBundle();
+		/*CustomDialogBundle addVisitTasksDialog = new CustomDialogBundle();
 		addVisitTasksDialog.setTitleViewMessage(getString(R.string.add_visit_task_dialog_title));
 		addVisitTasksDialog.setRightButtonText(getString(R.string.action_submit));
 		addVisitTasksDialog.setAutoCompleteTextView(removeUsedPredefinedTasks(predefinedTasks, visitTasksLists));
@@ -108,7 +112,7 @@ public class VisitTasksFragment extends ACBaseFragment<VisitTasksContract.Presen
 		}
 		addVisitTasksDialog.setRightButtonAction(CustomFragmentDialog.OnClickAction.ADD_VISIT_TASKS);
 		((VisitTasksActivity)this.getActivity())
-				.createAndShowDialog(addVisitTasksDialog, ApplicationConstants.DialogTAG.ADD_VISIT_TASK_DIALOG_TAG);
+				.createAndShowDialog(addVisitTasksDialog, ApplicationConstants.DialogTAG.ADD_VISIT_TASK_DIALOG_TAG);*/
 	}
 
 	@Override
@@ -119,20 +123,20 @@ public class VisitTasksFragment extends ACBaseFragment<VisitTasksContract.Presen
 	@Override
 	public void setSelectedVisitTask(VisitTask visitTask) {
 		visitTask.setStatus(VisitTaskStatus.CLOSED);
-		mPresenter.updateVisitTask(visitTask);
+		((VisitTasksPresenter)mPresenter).updateVisitTask(visitTask);
 	}
 
 	@Override
 	public void setUnSelectedVisitTask(VisitTask visitTask) {
 		visitTask.setStatus(VisitTaskStatus.OPEN);
-		mPresenter.updateVisitTask(visitTask);
+		((VisitTasksPresenter)mPresenter).updateVisitTask(visitTask);
 	}
 
 	@Override
 	public void refresh() {
-		mPresenter.getVisit();
-		mPresenter.getPredefinedTasks();
-		mPresenter.getVisitTasks();
+		((VisitTasksPresenter)mPresenter).getVisit();
+		((VisitTasksPresenter)mPresenter).getPredefinedTasks();
+		((VisitTasksPresenter)mPresenter).getVisitTasks();
 	}
 
 	@Override

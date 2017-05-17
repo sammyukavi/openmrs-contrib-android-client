@@ -15,36 +15,21 @@
 package org.openmrs.mobile.activities.visitdetails;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
-import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
-import org.openmrs.mobile.utilities.FontsUtil;
 
-public class VisitDetailsFragment extends ACBaseFragment<VisitDetailsContract.Presenter>
-		implements VisitDetailsContract.View {
+public class VisitDetailsFragment extends ACBaseFragment<VisitDetailsContract.VisitDetailsMainPresenter>
+		implements VisitDetailsContract.ViewVisitDetailsMain {
 
-	private View visitDetailsView;
 
 	public static VisitDetailsFragment newInstance() {
 		return new VisitDetailsFragment();
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		visitDetailsView = inflater.inflate(R.layout.fragment_visit_tasks, container, false);
-		resolveViews(visitDetailsView);
-
-		// Font config
-		FontsUtil.setFont((ViewGroup)this.getActivity().findViewById(android.R.id.content));
-		return visitDetailsView;
-	}
-
-	private void resolveViews(View v) {
-
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
 	}
 
 }

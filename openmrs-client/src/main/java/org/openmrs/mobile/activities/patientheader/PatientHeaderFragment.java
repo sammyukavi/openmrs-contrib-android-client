@@ -37,7 +37,6 @@ public class PatientHeaderFragment extends ACBaseFragment<PatientHeaderContract.
 
 	@Override
 	public void updatePatientHeader(Patient patient) {
-		System.out.println("UPDATE::" + patient);
 		patientDisplayName.setText(patient.getPerson().getName().getNameString());
 		patientGender.setText(patient.getPerson().getGender());
 		patientIdentifier.setText(patient.getIdentifier().getIdentifier());

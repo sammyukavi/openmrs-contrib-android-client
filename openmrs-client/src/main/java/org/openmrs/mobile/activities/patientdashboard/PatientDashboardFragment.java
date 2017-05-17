@@ -176,20 +176,20 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
 		RecyclerView pastVisits = (RecyclerView)fragmentView.findViewById(R.id.pastVisits);
 		pastVisits.setLayoutManager(new LinearLayoutManager(getContext()));
-		PastVisitsRecyclerAdapter
-				pastVisitsRecyclerAdapter = new PastVisitsRecyclerAdapter(pastVisits, visits, getActivity(), patient);
-		pastVisits.setAdapter(pastVisitsRecyclerAdapter);
+		VisitsRecyclerAdapter
+				visitsRecyclerAdapter = new VisitsRecyclerAdapter(pastVisits, visits, getActivity(), patient);
+		pastVisits.setAdapter(visitsRecyclerAdapter);
 
-		pastVisitsRecyclerAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
+		visitsRecyclerAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
 			@Override
 			public void onLoadMore() {
-				//pastVisitsRecyclerAdapter.notifyItemRemoved();
+				//visitsRecyclerAdapter.notifyItemRemoved();
 				/**
 				 * Load more here
 				 */
 				//ConsoleLogger.dump("Loading more");
-				//pastVisitsRecyclerAdapter.notifyDataSetChanged();
-				//pastVisitsRecyclerAdapter.setLoaded();
+				//visitsRecyclerAdapter.notifyDataSetChanged();
+				//visitsRecyclerAdapter.setLoaded();
 			}
 		});
 	}

@@ -19,6 +19,8 @@ import android.widget.TextView;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.auditdata.AuditDataActivity;
 import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
+import org.openmrs.mobile.activities.visitdetails.VisitDetailsActivity;
+import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
@@ -34,7 +36,7 @@ import org.openmrs.mobile.utilities.StringUtils;
 
 import java.util.List;
 
-public class PastVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 	private final int VIEW_TYPE_ITEM = 0;
 	private final int VIEW_TYPE_LOADING = 1;
 	private final Patient patient;
@@ -49,6 +51,8 @@ public class PastVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 	private int startIndex = 0;
 	private int limit = 5;
 	LayoutInflater layoutInflater;
+	private ImageView showVisitDetails;
+	private Intent intent;
 
 	View.OnClickListener switchToEditMode = new View.OnClickListener() {
 		@Override
@@ -58,7 +62,7 @@ public class PastVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 		}
 	};
 
-	public PastVisitsRecyclerAdapter(RecyclerView recyclerView, List<Visit> visits, Context context, Patient patient) {
+	public VisitsRecyclerAdapter(RecyclerView recyclerView, List<Visit> visits, Context context, Patient patient) {
 		this.visits = visits;
 		this.context = context;
 		this.patient = patient;
@@ -114,48 +118,6 @@ public class PastVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 		return null;
 	}
 
-	public void expandCollapse(View view) {
-		if (view.getVisibility() == View.GONE) {
-			view.setVisibility(View.VISIBLE);
-			//int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-			//ConsoleLogger.dump(heightMeasureSpec);
-			/*
-			final int widthSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-			final int heightSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-			view.measure(widthSpec, heightSpec);
-			ValueAnimator mAnimator = slideAnimator(view, 0, view.getMeasuredHeight());
-			mAnimator.start();*/
-		} else {
-			view.setVisibility(View.GONE);
-			/*int finalHeight = view.getHeight();
-			ValueAnimator mAnimator = slideAnimator(view, finalHeight, 0);
-			mAnimator.addListener(new Animator.AnimatorListener() {
-				@Override
-				public void onAnimationStart(Animator animation) {
-
-				}
-
-				@Override
-				public void onAnimationEnd(Animator animator) {
-					view.setVisibility(View.GONE);
-				}
-
-				@Override
-				public void onAnimationCancel(Animator animation) {
-
-				}
-
-				@Override
-				public void onAnimationRepeat(Animator animation) {
-
-				}
-
-			});
-			mAnimator.start();*/
-		}
-
-	}
-
 	private ValueAnimator slideAnimator(View view, int start, int end) {
 		ValueAnimator animator = ValueAnimator.ofInt(start, end);
 		animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -187,16 +149,20 @@ public class PastVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 						.convertTime1(visit.getStartDatetime(), DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT));
 			} else {
 				visitTitle.setText("Visit: " + DateUtils
-						.convertTime1(visit.getStopDatetime(), DateUtils
-								.PATIENT_DASHBOARD_VISIT_DATE_FORMAT) + " - " + DateUtils
-						.convertTime1(visit.getStartDatetime(), DateUtils
-								.PATIENT_DASHBOARD_VISIT_DATE_FORMAT));
+						.convertTime1(visit.getStartDatetime(), DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT) + " - "
+						+ DateUtils.convertTime1(visit.getStopDatetime(), DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT));
 			}
 
-			visitTitle.setOnClickListener(new View.OnClickListener() {
+			//Adding the link to the visit details page
+			showVisitDetails = (ImageView)singleVisitView.findViewById(R.id.loadVisitDetails);
+			showVisitDetails.setOnClickListener(new View.OnClickListener() {
 				@Override
-				public void onClick(View view) {
-					expandCollapse(observationsContainer);
+				public void onClick(View v) {
+					intent = new Intent(context, VisitDetailsActivity.class);
+					intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, OpenMRS.getInstance()
+							.getPatientUuid());
+					intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visit.getUuid());
+					context.startActivity(intent);
 				}
 			});
 
@@ -207,7 +173,7 @@ public class PastVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 				@Override
 				public void onClick(View v) {
 
-					Intent intent = new Intent(context, AuditDataActivity
+					intent = new Intent(context, AuditDataActivity
 							.class);
 
 					intent.putExtra(ApplicationConstants.BundleKeys
@@ -320,7 +286,6 @@ public class PastVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 				newObservation);
 
 		createEditVisitNoteDialog.setArguments(dialogBundle);
-
 
 	}
 

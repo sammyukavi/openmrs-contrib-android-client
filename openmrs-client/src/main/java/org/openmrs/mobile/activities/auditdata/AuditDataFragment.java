@@ -14,7 +14,6 @@
 
 package org.openmrs.mobile.activities.auditdata;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -26,11 +25,10 @@ import android.widget.TextView;
 import org.joda.time.DateTime;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
-import org.openmrs.mobile.application.OpenMRS;
+import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Person;
-import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.DateUtils;
 import org.openmrs.mobile.utilities.FontsUtil;
@@ -41,11 +39,11 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 	private View fragmentView;
 	private TextView patientDisplayName, patientGender, patientAge, patientIdentifier,
 			patientDob;
-	private Visit activeVisit;
+	private Observation auditCompleteObservation, deathInHospitalObservation, palliativeConsultObservation,
+			preopRiskAssessmentObservation, icuStay, hduStay, hduComgmt;
+	private Concept yesConcept, noConcept;
+	private RadioButton auditCompleteYes, auditCompleteNo;
 	private Patient patient;
-	private OpenMRS instance = OpenMRS.getInstance();
-	private SharedPreferences sharedPreferences = instance.getOpenMRSSharedPreferences();
-	private int visitsStartLimit = 5;
 
 	public AuditDataFragment() {
 	}
@@ -72,17 +70,71 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		// Font config
 		FontsUtil.setFont((ViewGroup)this.getActivity().findViewById(android.R.id.content));
 
-		RadioButton radioButton = (RadioButton)fragmentView.findViewById(R.id.is_audit_complete_yes);
-		radioButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Observation ob = new Observation();
-				//ConsoleLogger.dump(v.getId());
-			}
-		});
+		initViewFields();
 
+		initObservations();
+
+		initConcepts();
+
+		initRadioListeners(auditCompleteYes, auditCompleteNo);
 
 		return fragmentView;
+	}
+
+	private void initViewFields() {
+		auditCompleteYes = (RadioButton)fragmentView.findViewById(R.id.is_audit_complete_yes);
+		auditCompleteNo = (RadioButton)fragmentView.findViewById(R.id.is_audit_complete_no);
+	}
+
+	private void initConcepts() {
+		yesConcept = new Concept();
+		yesConcept.setUuid("");
+
+		noConcept = new Concept();
+		noConcept.setUuid("");
+	}
+
+	private void initObservations() {
+		auditCompleteObservation = new Observation();
+		auditCompleteObservation.setUuid("");
+
+		deathInHospitalObservation = new Observation();
+		deathInHospitalObservation.setUuid("");
+
+		palliativeConsultObservation = new Observation();
+		palliativeConsultObservation.setUuid("");
+
+		preopRiskAssessmentObservation = new Observation();
+		preopRiskAssessmentObservation.setUuid("");
+
+		icuStay = new Observation();
+		icuStay.setUuid("");
+
+		hduStay = new Observation();
+		hduStay.setUuid("");
+
+		hduComgmt = new Observation();
+		hduComgmt.setUuid("");
+	}
+
+	private void initRadioListeners(RadioButton... params) {
+		for (RadioButton radioButton : params) {
+			radioButton.setOnClickListener(
+					view -> applyEvent(radioButton.getId()));
+		}
+	}
+
+	private void applyEvent(int id) {
+		switch (id) {
+			case R.id.is_audit_complete_yes:
+				ConsoleLogger.dump("audit complete is yes");
+				break;
+			case R.id.is_audit_complete_no:
+				ConsoleLogger.dump("audit complete is yes");
+				break;
+			default:
+				break;
+		}
 	}
 
 	@Override
@@ -95,9 +147,5 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		DateTime date = DateUtils.convertTimeString(person.getBirthdate());
 		patientAge.setText(DateUtils.calculateAge(date.getYear(), date.getMonthOfYear(), date.getDayOfMonth()));
 		patientDob.setText(DateUtils.convertTime1(person.getBirthdate(), DateUtils.PATIENT_DASHBOARD_DOB_DATE_FORMAT));
-		//mPresenter.setStartIndex(visitsStartIndex);
-		//mPresenter.setLimit(visitsStartLimit);
-		//mPresenter.fetchVisits(patient);
-		//setPatientUuid(patient);
 	}
 }

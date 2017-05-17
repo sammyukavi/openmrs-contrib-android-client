@@ -24,7 +24,7 @@ public abstract class BaseMetadataDataService<E extends BaseOpenmrsMetadata, DS 
 		checkNotNull(name);
 		checkNotNull(callback);
 
-		executeMultipleCallback(callback, pagingInfo,
+		executeMultipleCallback(callback, options, pagingInfo,
 				() -> dbService.getByNameFragment(name, options, pagingInfo),
 				() -> _restGetByNameFragment(buildRestRequestPath(), name, options, pagingInfo));
 	}

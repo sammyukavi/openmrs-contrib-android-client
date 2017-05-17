@@ -75,7 +75,7 @@ public class PatientDataService extends BaseDataService<Patient, PatientDbServic
 	// End Retrofit Workaround
 
 	public void getByName(String name, QueryOptions options, PagingInfo pagingInfo, GetCallback<List<Patient>> callback) {
-		executeMultipleCallback(callback, pagingInfo,
+		executeMultipleCallback(callback, options, pagingInfo,
 				() -> dbService.getByName(name, options, pagingInfo),
 				() -> {
 					return restService.getByName(buildRestRequestPath(), name, QueryOptions.getRepresentation(options),
@@ -86,7 +86,7 @@ public class PatientDataService extends BaseDataService<Patient, PatientDbServic
 
 	public void getByNameAndIdentifier(String query, QueryOptions options, PagingInfo pagingInfo,
 			GetCallback<List<Patient>> callback) {
-		executeMultipleCallback(callback, pagingInfo,
+		executeMultipleCallback(callback, options, pagingInfo,
 				() -> null,
 				() -> restService.getByNameAndIdentifier(buildRestRequestPath(), query, query,
 						QueryOptions.getRepresentation(options), QueryOptions.getIncludeInactive(options),
@@ -96,7 +96,7 @@ public class PatientDataService extends BaseDataService<Patient, PatientDbServic
 
 	public void getLastViewed(String lastViewed, QueryOptions options, PagingInfo pagingInfo,
 			GetCallback<List<Patient>> callback) {
-		executeMultipleCallback(callback, pagingInfo,
+		executeMultipleCallback(callback, options, pagingInfo,
 				() -> null,
 				() -> restService.getLastViewed(buildRestRequestPath(), lastViewed,
 						QueryOptions.getRepresentation(options), QueryOptions.getIncludeInactive(options),

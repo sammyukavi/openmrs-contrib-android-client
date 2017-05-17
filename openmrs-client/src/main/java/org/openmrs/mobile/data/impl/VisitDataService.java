@@ -1,5 +1,8 @@
 package org.openmrs.mobile.data.impl;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import org.openmrs.mobile.data.BaseEntityDataService;
 import org.openmrs.mobile.data.EntityDataService;
 import org.openmrs.mobile.data.PagingInfo;
@@ -13,6 +16,8 @@ import org.openmrs.mobile.utilities.ApplicationConstants;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Call;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class VisitDataService extends BaseEntityDataService<Visit, VisitDbService, VisitRestService>
 		implements EntityDataService<Visit> {
@@ -74,10 +79,15 @@ public class VisitDataService extends BaseEntityDataService<Visit, VisitDbServic
 
 	// End Retrofit Workaround
 
-	public void endVisit(String uuid, Visit stopDatetime, GetCallback<Visit> callback) {
-		executeSingleCallback(callback,
+	public void endVisit(@NonNull String uuid, @NonNull Visit visit, @Nullable QueryOptions options,
+			@NonNull GetCallback<Visit> callback) {
+		checkNotNull(uuid);
+		checkNotNull(visit);
+		checkNotNull(callback);
+
+		executeSingleCallback(callback, options,
 				() -> null,
-				() -> restService.endVisit(buildRestRequestPath(), uuid, stopDatetime));
+				() -> restService.endVisit(buildRestRequestPath(), uuid, visit));
 	}
 
 	public void updateVisit(String visitUuid, Visit updatedVisit, GetCallback<Visit> callback){

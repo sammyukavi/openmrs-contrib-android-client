@@ -15,11 +15,13 @@
 package org.openmrs.mobile.activities.visitdetails;
 
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 
 import org.openmrs.mobile.activities.ACBaseFragment;
 
 public class VisitDetailsFragment extends ACBaseFragment<VisitDetailsContract.VisitDetailsMainPresenter>
 		implements VisitDetailsContract.ViewVisitDetailsMain {
+	private Toolbar toolbar;
 
 
 	public static VisitDetailsFragment newInstance() {

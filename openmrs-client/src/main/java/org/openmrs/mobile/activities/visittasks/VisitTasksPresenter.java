@@ -15,7 +15,7 @@
 package org.openmrs.mobile.activities.visittasks;
 
 import org.openmrs.mobile.activities.visitdetails.VisitDetailsContract;
-import org.openmrs.mobile.activities.visitdetails.VisitDetailsMainPresenterImpl;
+import org.openmrs.mobile.activities.visitdetails.VisitDetailsPresenter;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
@@ -32,7 +32,7 @@ import org.openmrs.mobile.utilities.ToastUtil;
 
 import java.util.List;
 
-public class VisitTasksPresenter extends VisitDetailsMainPresenterImpl implements VisitDetailsContract.VisitTasksPresenter {
+public class VisitTasksPresenter extends VisitDetailsPresenter implements VisitDetailsContract.VisitTasksPresenter {
 
 	private VisitDetailsContract.VisitTasksView visitTasksView;
 	private VisitPredefinedTaskDataService visitPredefinedTaskDataService;

@@ -1,4 +1,18 @@
-package org.openmrs.mobile.activities.visitphoto.upload;
+/*
+ * The contents of this file are subject to the OpenMRS Public License
+ * Version 1.0 (the "License"); you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://license.openmrs.org
+ *
+ * Software distributed under the License is distributed on an "AS IS"
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+ * License for the specific language governing rights and limitations
+ * under the License.
+ *
+ * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
+ */
+
+package org.openmrs.mobile.activities.visitphoto;
 
 import android.Manifest;
 import android.app.Activity;
@@ -16,7 +30,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,9 +43,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import org.openmrs.mobile.R;
-import org.openmrs.mobile.activities.ACBaseFragment;
-import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
-import org.openmrs.mobile.utilities.ApplicationConstants;
+import org.openmrs.mobile.activities.visitdetails.VisitDetailsContract;
+import org.openmrs.mobile.activities.visitdetails.VisitDetailsFragment;
+import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.utilities.StringUtils;
 import org.openmrs.mobile.utilities.ViewUtils;
 
@@ -36,6 +54,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -48,107 +67,75 @@ import permissions.dispatcher.PermissionRequest;
 import permissions.dispatcher.RuntimePermissions;
 
 @RuntimePermissions
-public class UploadVisitPhotoFragment extends ACBaseFragment<UploadVisitPhotoContract.Presenter>
-		implements UploadVisitPhotoContract.View {
+public class VisitPhotoFragment extends VisitDetailsFragment implements VisitDetailsContract.VisitPhotoView {
 
+	private LinearLayoutManager layoutManager;
+	private RecyclerView recyclerView;
+	private VisitPhotoRecyclerViewAdapter adapter;
+
+	//Upload Visit photo
 	private final static int IMAGE_REQUEST = 1;
 	private ImageView visitImageView;
 	private FloatingActionButton capturePhoto;
 	private Bitmap visitPhoto = null;
 	private Button uploadVisitPhotoButton;
+
 	private File output;
 	private EditText fileCaption;
 
-	public static Bitmap rotateImage(Bitmap source, float angle) {
-		Matrix matrix = new Matrix();
-		matrix.postRotate(angle);
-		return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+	public static VisitPhotoFragment newInstance() {
+		return new VisitPhotoFragment();
 	}
 
-	public static UploadVisitPhotoFragment newInstance() {
-		return new UploadVisitPhotoFragment();
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		super.setPresenter(mPresenter);
 	}
 
-	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		View root = inflater.inflate(R.layout.fragment_upload_visit_photo, container, false);
+		View root = inflater.inflate(R.layout.fragment_visit_photo, container, false);
+		layoutManager = new LinearLayoutManager(this.getActivity());
+		recyclerView = (RecyclerView)root.findViewById(R.id.downloadPhotoRecyclerView);
+		recyclerView.setLayoutManager(layoutManager);
+
 		capturePhoto = (FloatingActionButton)root.findViewById(R.id.capture_photo);
 		visitImageView = (ImageView)root.findViewById(R.id.visitPhoto);
 		uploadVisitPhotoButton = (Button)root.findViewById(R.id.uploadVisitPhoto);
 		fileCaption = (EditText)root.findViewById(R.id.fileCaption);
+
+		((VisitPhotoPresenter)mPresenter).loadVisitDocumentObservations();
+		((VisitPhotoPresenter)mPresenter).initVisitPhoto();
 		addListeners();
 
 		return root;
 	}
 
 	@Override
-	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-		UploadVisitPhotoFragmentPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
-	}
+	public void updateVisitImageUrls(List<String> urls) {
+		if (urls.size() == 0)
+			return;
 
-	private void addListeners() {
-		capturePhoto.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				UploadVisitPhotoFragmentPermissionsDispatcher.capturePhotoWithCheck(UploadVisitPhotoFragment.this);
-			}
-		});
-
-		visitImageView.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				if (output != null) {
-					Intent i = new Intent(Intent.ACTION_VIEW);
-					i.setDataAndType(Uri.fromFile(output), "image/jpeg");
-					startActivity(i);
-				}
-			}
-		});
-
-		uploadVisitPhotoButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (visitPhoto != null) {
-					ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-					visitPhoto.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
-
-					MultipartBody.Part uploadFile = MultipartBody.Part.createFormData("file",
-							output.getName(), RequestBody.create(MediaType.parse("image/jpeg"), output));
-
-					mPresenter.getVisitPhoto().setRequestImage(uploadFile);
-					mPresenter.getVisitPhoto().setFileCaption(
-							StringUtils.notEmpty(
-									ViewUtils.getInput(fileCaption)) ?
-									ViewUtils.getInput(fileCaption) :
-									getString(R.string.default_file_caption_message));
-					mPresenter.uploadImage();
-				}
-			}
-		});
-	}
-
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == IMAGE_REQUEST) {
-			if (resultCode == Activity.RESULT_OK) {
-				visitPhoto = getPortraitImage(output.getPath());
-				Bitmap bitmap =
-						ThumbnailUtils.extractThumbnail(visitPhoto, visitImageView.getWidth(), visitImageView.getHeight());
-				visitImageView.setImageBitmap(bitmap);
-				visitImageView.invalidate();
-			} else {
-				output = null;
-			}
+		if (adapter == null) {
+			adapter = new VisitPhotoRecyclerViewAdapter(this.getActivity(), urls, this);
 		}
+
+		RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), urls.size());
+		recyclerView.setLayoutManager(layoutManager);
+
+		recyclerView.setAdapter(adapter);
 	}
 
 	@Override
-	public void showPatientDashboard(String patientUuid) {
-		Intent intent = new Intent(getContext(), PatientDashboardActivity.class);
-		intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
-		getContext().startActivity(intent);
+	public void downloadImage(String obsUuid, DataService.GetCallback<Bitmap> callback) {
+		((VisitPhotoPresenter)mPresenter).downloadImage(obsUuid, callback);
+	}
+
+	@Override
+	public void refresh() {
+		FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+		fragmentTransaction.detach(this).attach(this).commit();
 	}
 
 	@NeedsPermission({ Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE })
@@ -224,6 +211,75 @@ public class UploadVisitPhotoFragment extends ACBaseFragment<UploadVisitPhotoCon
 			return rotateImage(photo, rotateAngle);
 		} catch (IOException e) {
 			return photo;
+		}
+	}
+
+	public static Bitmap rotateImage(Bitmap source, float angle) {
+		Matrix matrix = new Matrix();
+		matrix.postRotate(angle);
+		return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+	}
+
+	@Override
+	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+		VisitPhotoFragmentPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+	}
+
+	private void addListeners() {
+		capturePhoto.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				VisitPhotoFragmentPermissionsDispatcher.capturePhotoWithCheck(VisitPhotoFragment.this);
+
+			}
+		});
+
+		visitImageView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				if (output != null) {
+					Intent i = new Intent(Intent.ACTION_VIEW);
+					i.setDataAndType(Uri.fromFile(output), "image/jpeg");
+					startActivity(i);
+				}
+			}
+		});
+
+		uploadVisitPhotoButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (visitPhoto != null) {
+					ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+					visitPhoto.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+
+					MultipartBody.Part uploadFile = MultipartBody.Part.createFormData("file",
+							output.getName(), RequestBody.create(MediaType.parse("image/jpeg"), output));
+
+					((VisitPhotoPresenter)mPresenter).getVisitPhoto().setRequestImage(uploadFile);
+					((VisitPhotoPresenter)mPresenter).getVisitPhoto().setFileCaption(
+							StringUtils.notEmpty(
+									ViewUtils.getInput(fileCaption)) ?
+									ViewUtils.getInput(fileCaption) :
+									getString(R.string.default_file_caption_message));
+					((VisitPhotoPresenter)mPresenter).uploadImage();
+				}
+			}
+		});
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == IMAGE_REQUEST) {
+			if (resultCode == Activity.RESULT_OK) {
+				visitPhoto = getPortraitImage(output.getPath());
+				Bitmap bitmap =
+						ThumbnailUtils.extractThumbnail(visitPhoto, visitImageView.getWidth(), visitImageView.getHeight());
+				visitImageView.setImageBitmap(bitmap);
+				visitImageView.invalidate();
+			} else {
+				output = null;
+			}
 		}
 	}
 }

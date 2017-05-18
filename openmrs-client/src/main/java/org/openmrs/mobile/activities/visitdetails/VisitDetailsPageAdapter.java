@@ -20,8 +20,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
-import org.openmrs.mobile.activities.visitphoto.download.DownloadVisitPhotoFragment;
-import org.openmrs.mobile.activities.visitphoto.download.DownloadVisitPhotoPresenter;
+import org.openmrs.mobile.activities.visitphoto.VisitPhotoFragment;
+import org.openmrs.mobile.activities.visitphoto.VisitPhotoPresenter;
 import org.openmrs.mobile.activities.visittasks.VisitTasksFragment;
 import org.openmrs.mobile.activities.visittasks.VisitTasksPresenter;
 
@@ -59,9 +59,9 @@ public class VisitDetailsPageAdapter extends FragmentPagerAdapter {
 				new VisitTasksPresenter(patientUuid, visitUuid, visitTasksFragment1);
 				return visitTasksFragment1;
 			case VISIT_IMAGES_TAB_POS:
-				DownloadVisitPhotoFragment downloadVisitPhotoFragment = DownloadVisitPhotoFragment.newInstance();
-				new DownloadVisitPhotoPresenter(downloadVisitPhotoFragment, patientUuid);
-				return downloadVisitPhotoFragment;
+				VisitPhotoFragment visitPhotoFragment = VisitPhotoFragment.newInstance();
+				new VisitPhotoPresenter(visitPhotoFragment, patientUuid,visitUuid,providerUuid);
+				return visitPhotoFragment;
 			default:
 				return null;
 		}

@@ -22,8 +22,6 @@ import org.openmrs.mobile.activities.ACBaseActivity;
 import org.openmrs.mobile.activities.addeditvisit.AddEditVisitContract;
 import org.openmrs.mobile.activities.patientheader.PatientHeaderFragment;
 import org.openmrs.mobile.activities.patientheader.PatientHeaderPresenter;
-import org.openmrs.mobile.activities.visitphoto.download.DownloadVisitPhotoFragment;
-import org.openmrs.mobile.activities.visitphoto.download.DownloadVisitPhotoPresenter;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.StringUtils;
 

@@ -20,14 +20,17 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuItem;
 
 import net.yanzm.mth.MaterialTabHost;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
-import org.openmrs.mobile.activities.visitphoto.download.DownloadVisitPhotoFragment;
-import org.openmrs.mobile.activities.visitphoto.download.DownloadVisitPhotoPresenter;
+import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
+import org.openmrs.mobile.activities.visitphoto.VisitPhotoFragment;
+import org.openmrs.mobile.activities.visitphoto.VisitPhotoPresenter;
 import org.openmrs.mobile.activities.visittasks.VisitTasksFragment;
 import org.openmrs.mobile.activities.visittasks.VisitTasksPresenter;
 import org.openmrs.mobile.application.OpenMRS;
@@ -47,7 +50,17 @@ public class VisitDetailsActivity extends ACBaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getLayoutInflater().inflate(R.layout.activity_visit_details, frameLayout);
-		getSupportActionBar().setElevation(0);
+
+		Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+		toolbar.setTitle(R.string.nav_visit_details);
+		toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white);
+		setSupportActionBar(toolbar);
+		if (getSupportActionBar() != null) {
+			getSupportActionBar().setElevation(0);
+			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+			getSupportActionBar().setDisplayShowHomeEnabled(true);
+		}
+
 		setTitle(R.string.nav_visit_details);
 
 		Bundle extras = getIntent().getExtras();
@@ -90,8 +103,9 @@ public class VisitDetailsActivity extends ACBaseActivity {
 		visitUuid = String.valueOf(patientBundle.get(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE));
 		if (fragment instanceof VisitTasksFragment) {
 			visitDetailsPresenter = new VisitTasksPresenter(patientUuid, visitUuid, ((VisitTasksFragment)fragment));
-		} else if (fragment instanceof DownloadVisitPhotoFragment) {
-			visitDetailsPresenter = new DownloadVisitPhotoPresenter(((DownloadVisitPhotoFragment)fragment),patientUuid);
+		} else if (fragment instanceof VisitPhotoFragment) {
+			visitDetailsPresenter =
+					new VisitPhotoPresenter(((VisitPhotoFragment)fragment), patientUuid, visitUuid, providerUuid);
 		}
 		/*else if (fragment instanceof PatientVitalsFragment){
 			visitDetailsPresenter = new PatientDashboardVitalsPresenter(patientUuid, ((PatientVitalsFragment) fragment));
@@ -133,5 +147,20 @@ public class VisitDetailsActivity extends ACBaseActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle item selection
+		switch (item.getItemId()) {
+			case android.R.id.home:
+				finish();
+				Intent intent = new Intent(getApplicationContext(), PatientDashboardActivity.class);
+				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
+				getApplicationContext().startActivity(intent);
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
+		}
 	}
 }

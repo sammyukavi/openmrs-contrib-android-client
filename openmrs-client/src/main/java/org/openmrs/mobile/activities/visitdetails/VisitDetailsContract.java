@@ -37,8 +37,6 @@ public interface VisitDetailsContract {
 
 		void setVisitTasks(List<VisitTask> visitTaskList);
 
-		void showAddTaskDialog(Boolean visibility);
-
 		void setPredefinedTasks(List<VisitPredefinedTask> predefinedTasks);
 
 		void setSelectedVisitTask(VisitTask visitTask);
@@ -70,8 +68,6 @@ public interface VisitDetailsContract {
 		void getPredefinedTasks();
 
 		void getVisitTasks();
-
-		void displayAddTask(Boolean visibility);
 
 		void addVisitTasks(VisitTask visitTasks);
 

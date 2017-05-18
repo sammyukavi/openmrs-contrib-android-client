@@ -5,6 +5,7 @@
 		android:orientation="vertical">
 	
 	<LinearLayout
+			android:id="@+id/addTaskLayout"
 			android:layout_width="match_parent"
 			android:layout_marginTop="20dp"
 			android:layout_height="wrap_content"
@@ -16,14 +17,15 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content">
 			
-			<android.support.design.widget.TextInputEditText
+			<AutoCompleteTextView
+					android:id="@+id/addVisitTasks"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:layout_marginTop="20dp"
 					android:layout_marginLeft="5dp"
 					android:layout_marginRight="5dp"
 					android:layout_marginBottom="5dp"
-					android:hint="@string/label_add_task" />
+					android:hint="@string/visit_tasks_dialog_message" />
 		</android.support.design.widget.TextInputLayout>
 	</LinearLayout>
 	

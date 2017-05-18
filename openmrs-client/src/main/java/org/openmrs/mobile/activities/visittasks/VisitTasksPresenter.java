@@ -54,11 +54,7 @@ public class VisitTasksPresenter extends VisitDetailsPresenter implements VisitD
 	}
 
 	@Override
-	public void subscribe() {
-		getPredefinedTasks();
-		getVisit();
-		getVisitTasks();
-	}
+	public void subscribe() {}
 
 	@Override
 	public void getPredefinedTasks() {
@@ -109,11 +105,6 @@ public class VisitTasksPresenter extends VisitDetailsPresenter implements VisitD
 		visitTaskDataService
 				.getAll(ApplicationConstants.EMPTY_STRING, patientUUID, visitUUID, QueryOptions.LOAD_RELATED_OBJECTS,
 						pagingInfo, getMultipleCallback);
-	}
-
-	@Override
-	public void displayAddTask(Boolean visibility) {
-		visitTasksView.showAddTaskDialog(visibility);
 	}
 
 	@Override

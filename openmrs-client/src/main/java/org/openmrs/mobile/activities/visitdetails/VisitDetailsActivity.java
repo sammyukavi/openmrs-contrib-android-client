@@ -91,7 +91,7 @@ public class VisitDetailsActivity extends ACBaseActivity {
 
 	private ArrayList<String> getTabNames() {
 		ArrayList<String> tabNames = new ArrayList<>();
-		tabNames.add(getString(R.string.visit_scroll_tab_details_label));
+		//tabNames.add(getString(R.string.visit_scroll_tab_details_label));
 		tabNames.add(getString(R.string.visi_scroll_tab_visit_tasks_label));
 		tabNames.add(getString(R.string.visit_scroll_tab_visit_images_label));
 		return tabNames;

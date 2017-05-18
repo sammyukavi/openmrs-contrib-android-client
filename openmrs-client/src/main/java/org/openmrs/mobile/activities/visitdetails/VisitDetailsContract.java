@@ -29,7 +29,7 @@ import java.util.List;
 
 public interface VisitDetailsContract {
 	interface ViewVisitDetailsMain extends BaseView<VisitDetailsMainPresenter> {
-
+		void test();
 	}
 
 	interface VisitTasksView extends ViewVisitDetailsMain {
@@ -47,6 +47,8 @@ public interface VisitDetailsContract {
 
 		void setVisit(Visit visit);
 
+		void clearTextField();
+
 	}
 
 	interface VisitPhotoView extends ViewVisitDetailsMain {
@@ -55,6 +57,8 @@ public interface VisitDetailsContract {
 		void downloadImage(String obsUuid, DataService.GetCallback<Bitmap> callback);
 
 		void refresh();
+
+		void showNoVisitPhoto();
 	}
 
 	/*

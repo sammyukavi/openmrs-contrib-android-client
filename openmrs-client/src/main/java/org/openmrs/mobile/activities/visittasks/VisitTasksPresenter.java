@@ -165,6 +165,7 @@ public class VisitTasksPresenter extends VisitDetailsPresenter implements VisitD
 		visitTaskEntity.setVisit(visit);
 
 		addVisitTasks(visitTaskEntity);
+		visitTasksView.clearTextField();
 	}
 
 	@Override

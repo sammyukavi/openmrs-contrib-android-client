@@ -46,7 +46,7 @@ public class ObservationDeserializer implements JsonDeserializer<Observation> {
 
 		JsonElement conceptJson = jsonObject.get("concept");
 
-		if (jsonObject.get(COMMENT_KEY) != JsonNull.INSTANCE) {
+		if(jsonObject.get(COMMENT_KEY) != JsonNull.INSTANCE && jsonObject.get(COMMENT_KEY) != null) {
 			observation.setComment(jsonObject.get(COMMENT_KEY).getAsString());
 		}
 		if (conceptJson != null && "Visit Diagnoses".equals(conceptJson.getAsJsonObject().get(DISPLAY_KEY).getAsString())) {

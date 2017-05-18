@@ -41,6 +41,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.visitdetails.VisitDetailsContract;
@@ -82,6 +83,7 @@ public class VisitPhotoFragment extends VisitDetailsFragment implements VisitDet
 
 	private File output;
 	private EditText fileCaption;
+	private TextView noVisitImage;
 
 	public static VisitPhotoFragment newInstance() {
 		return new VisitPhotoFragment();
@@ -104,6 +106,7 @@ public class VisitPhotoFragment extends VisitDetailsFragment implements VisitDet
 		visitImageView = (ImageView)root.findViewById(R.id.visitPhoto);
 		uploadVisitPhotoButton = (Button)root.findViewById(R.id.uploadVisitPhoto);
 		fileCaption = (EditText)root.findViewById(R.id.fileCaption);
+		noVisitImage = (TextView)root.findViewById(R.id.noVisitImage);
 
 		((VisitPhotoPresenter)mPresenter).loadVisitDocumentObservations();
 		((VisitPhotoPresenter)mPresenter).initVisitPhoto();
@@ -136,6 +139,12 @@ public class VisitPhotoFragment extends VisitDetailsFragment implements VisitDet
 	public void refresh() {
 		FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
 		fragmentTransaction.detach(this).attach(this).commit();
+	}
+
+	@Override
+	public void showNoVisitPhoto() {
+		noVisitImage.setVisibility(View.VISIBLE);
+		recyclerView.setVisibility(View.GONE);
 	}
 
 	@NeedsPermission({ Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE })

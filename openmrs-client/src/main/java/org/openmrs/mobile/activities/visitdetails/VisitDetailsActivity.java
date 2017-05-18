@@ -29,6 +29,8 @@ import net.yanzm.mth.MaterialTabHost;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
 import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
+import org.openmrs.mobile.activities.patientheader.PatientHeaderFragment;
+import org.openmrs.mobile.activities.patientheader.PatientHeaderPresenter;
 import org.openmrs.mobile.activities.visitphoto.VisitPhotoFragment;
 import org.openmrs.mobile.activities.visitphoto.VisitPhotoPresenter;
 import org.openmrs.mobile.activities.visittasks.VisitTasksFragment;
@@ -69,6 +71,19 @@ public class VisitDetailsActivity extends ACBaseActivity {
 			visitUuid = extras.getString(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE);
 			providerUuid = OpenMRS.getInstance().getCurrentProviderUUID();
 			initViewPager(new VisitDetailsPageAdapter(getSupportFragmentManager(), patientUuid, visitUuid, providerUuid));
+
+			// patient header
+			/*PatientHeaderFragment headerFragment = (PatientHeaderFragment) getSupportFragmentManager()
+					.findFragmentById(R.id.patientHeader);
+			if(headerFragment == null){
+				headerFragment = PatientHeaderFragment.newInstance();
+			}
+
+			if(!headerFragment.isActive()){
+				addFragmentToActivity(getSupportFragmentManager(), headerFragment, R.id.patientHeader);
+			}
+
+			new PatientHeaderPresenter(headerFragment, patientUuid);*/
 		}
 	}
 

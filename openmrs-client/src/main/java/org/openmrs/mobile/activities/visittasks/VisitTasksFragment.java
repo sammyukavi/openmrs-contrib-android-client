@@ -20,6 +20,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -31,11 +32,13 @@ import android.widget.Toast;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.visitdetails.VisitDetailsContract;
 import org.openmrs.mobile.activities.visitdetails.VisitDetailsFragment;
+import org.openmrs.mobile.activities.visitphoto.VisitPhotoPresenter;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitPredefinedTask;
 import org.openmrs.mobile.models.VisitTask;
 import org.openmrs.mobile.models.VisitTaskStatus;
+import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.FontsUtil;
 import org.openmrs.mobile.utilities.ToastUtil;
 import org.openmrs.mobile.utilities.ViewUtils;
@@ -82,6 +85,7 @@ public class VisitTasksFragment extends VisitDetailsFragment implements VisitDet
 		((VisitTasksPresenter)mPresenter).getPredefinedTasks();
 		((VisitTasksPresenter)mPresenter).getVisitTasks();
 
+		addListeners();
 		// Font config
 		FontsUtil.setFont((ViewGroup)this.getActivity().findViewById(android.R.id.content));
 		return mRootView;
@@ -132,6 +136,17 @@ public class VisitTasksFragment extends VisitDetailsFragment implements VisitDet
 		});
 	}
 
+	public void addListeners() {
+		addtask.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (ViewUtils.getInput(addtask) != null){
+					((VisitTasksPresenter)mPresenter).createVisitTasksObject(ViewUtils.getInput(addtask));
+				}
+			}
+		});
+	}
+
 	@Override
 	public void setPredefinedTasks(List<VisitPredefinedTask> predefinedTasks) {
 		this.predefinedTasks = predefinedTasks;
@@ -162,6 +177,11 @@ public class VisitTasksFragment extends VisitDetailsFragment implements VisitDet
 		if(!visit.getStopDatetime().equalsIgnoreCase(null)){
 			addTasklayout.setVisibility(View.GONE);
 		}
+	}
+
+	@Override
+	public void clearTextField() {
+		addtask.setText(ApplicationConstants.EMPTY_STRING);
 	}
 
 	public List<VisitPredefinedTask> removeUsedPredefinedTasks(List<VisitPredefinedTask> visitPredefinedTask,

@@ -21,8 +21,6 @@ import org.openmrs.mobile.activities.ACBaseFragment;
 
 public class VisitDetailsFragment extends ACBaseFragment<VisitDetailsContract.VisitDetailsMainPresenter>
 		implements VisitDetailsContract.ViewVisitDetailsMain {
-	private Toolbar toolbar;
-
 
 	public static VisitDetailsFragment newInstance() {
 		return new VisitDetailsFragment();
@@ -33,5 +31,9 @@ public class VisitDetailsFragment extends ACBaseFragment<VisitDetailsContract.Vi
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 	}
+
+	@Override
+	public void test(){}
+
 
 }

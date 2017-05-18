@@ -67,7 +67,12 @@ public class VisitPhotoPresenter extends VisitDetailsActivity implements VisitDe
 						for (Observation observation : observations) {
 							imageUrls.add(observation.getUuid());
 						}
-						view.updateVisitImageUrls(imageUrls);
+						if (imageUrls.size() != 0){
+							view.updateVisitImageUrls(imageUrls);
+						} else {
+							view.showNoVisitPhoto();
+						}
+
 					}
 
 					@Override

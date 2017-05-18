@@ -6,11 +6,14 @@ import android.util.Log;
 
 import com.google.common.base.Supplier;
 
+import org.openmrs.mobile.data.cache.CacheService;
+import org.openmrs.mobile.data.cache.SimpleCacheService;
 import org.openmrs.mobile.data.db.BaseDbService;
 import org.openmrs.mobile.data.rest.RestServiceBuilder;
 import org.openmrs.mobile.models.BaseOpenmrsObject;
 import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.utilities.NetworkUtils;
+import org.openmrs.mobile.utilities.StringUtils;
 
 import java.io.IOException;
 import java.util.List;
@@ -35,9 +38,12 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 	 */
 	protected RS restService;
 
+	protected CacheService cacheService;
+
 	protected BaseDataService() {
 		dbService = getDbService();
 		restService = RestServiceBuilder.createService(getRestServiceClass());
+		cacheService = SimpleCacheService.getInstance();
 	}
 
 	protected abstract DS getDbService();
@@ -75,7 +81,7 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 		checkNotNull(uuid);
 		checkNotNull(callback);
 
-		executeSingleCallback(callback,
+		executeSingleCallback(callback, options,
 				() -> dbService.getByUuid(uuid, options),
 				() -> _restGetByUuid(buildRestRequestPath(), uuid, options));
 
@@ -94,7 +100,7 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 			@NonNull GetCallback<List<E>> callback) {
 		checkNotNull(callback);
 
-		executeMultipleCallback(callback, pagingInfo,
+		executeMultipleCallback(callback, options, pagingInfo,
 				() -> dbService.getAll(options, pagingInfo),
 				() -> _restGetAll(buildRestRequestPath(), options, pagingInfo));
 	}
@@ -112,7 +118,7 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 		checkNotNull(entity);
 		checkNotNull(callback);
 
-		executeSingleCallback(callback,
+		executeSingleCallback(callback, null,
 				() -> dbService.save(entity),
 				() -> _restCreate(buildRestRequestPath(), entity));
 	}
@@ -122,7 +128,7 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 		checkNotNull(entity);
 		checkNotNull(callback);
 
-		executeSingleCallback(callback,
+		executeSingleCallback(callback, null,
 				() -> dbService.save(entity),
 				() -> _restUpdate(buildRestRequestPath(), entity));
 	}
@@ -132,7 +138,7 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 		checkNotNull(entity);
 		checkNotNull(callback);
 
-		executeVoidCallback(entity, callback,
+		executeVoidCallback(entity, callback, null,
 				() -> dbService.delete(entity.getUuid()),
 				() -> _restPurge(buildRestRequestPath(), entity.getUuid()));
 	}
@@ -151,7 +157,7 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 	 * @param dbOperation   The database operation to perform
 	 * @param restOperation The REST operation to perform
 	 */
-	protected void executeVoidCallback(@Nullable E entity, @NonNull VoidCallback callback,
+	protected void executeVoidCallback(@Nullable E entity, @NonNull VoidCallback callback, @Nullable QueryOptions options,
 			@NonNull Runnable dbOperation, @NonNull Supplier<Call<E>> restOperation) {
 		checkNotNull(callback);
 		checkNotNull(dbOperation);
@@ -178,7 +184,7 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 		};
 		Consumer<E> dbOperationWrapper = e -> dbOperation.run();
 
-		performCallback(callbackWrapper, dbSupplier, restOperation,
+		performCallback(callbackWrapper, options, dbSupplier, restOperation,
 				(E result) -> result, dbOperationWrapper);
 	}
 
@@ -189,26 +195,27 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 	 * @param dbQuery   The database query operation to perform
 	 * @param restQuery The REST query operation to perform
 	 */
-	protected void executeSingleCallback(@NonNull GetCallback<E> callback,
+	protected void executeSingleCallback(@NonNull GetCallback<E> callback, @Nullable QueryOptions options,
 			@NonNull Supplier<E> dbQuery, @NonNull Supplier<Call<E>> restQuery) {
-		executeSingleCallback(callback, dbQuery, restQuery, (e) -> dbService.save(e));
+		executeSingleCallback(callback, options, dbQuery, restQuery, (e) -> dbService.save(e));
 	}
 
 	/**
-	 * Executes a data operation which returns a single result.
+	 * Executes a data operation which returns a single result. The result returned from the REST request will be processed
+	 * by the specified dbOperation.
 	 * @param callback    The operation callback
 	 * @param dbQuery     The database query operation to perform
 	 * @param restQuery   The REST query operation to perform
 	 * @param dbOperation The database operation to perform when results are returned from the REST query
 	 */
-	protected void executeSingleCallback(@NonNull GetCallback<E> callback,
+	protected void executeSingleCallback(@NonNull GetCallback<E> callback, @Nullable QueryOptions options,
 			@NonNull Supplier<E> dbQuery, @NonNull Supplier<Call<E>> restQuery, @NonNull Consumer<E> dbOperation) {
 		checkNotNull(callback);
 		checkNotNull(dbQuery);
 		checkNotNull(restQuery);
 		checkNotNull(dbOperation);
 
-		performCallback(callback, dbQuery, restQuery,
+		performCallback(callback, options, dbQuery, restQuery,
 				(E result) -> result,
 				dbOperation);
 	}
@@ -221,20 +228,23 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 	 * @param dbQuery    The database query operation to perform
 	 * @param restQuery  The REST query operation to perform
 	 */
-	protected void executeMultipleCallback(@NonNull GetCallback<List<E>> callback, @Nullable PagingInfo pagingInfo,
+	protected void executeMultipleCallback(@NonNull GetCallback<List<E>> callback,
+			@Nullable QueryOptions options, @Nullable PagingInfo pagingInfo,
 			@NonNull Supplier<List<E>> dbQuery, @NonNull Supplier<Call<Results<E>>> restQuery) {
-		executeMultipleCallback(callback, pagingInfo, dbQuery, restQuery, (e) -> dbService.saveAll(e));
+		executeMultipleCallback(callback, options, pagingInfo, dbQuery, restQuery, (e) -> dbService.saveAll(e));
 	}
 
 	/**
-	 * Executes a data operation which can return multiple results.
+	 * Executes a data operation which can return multiple results. The results returned from the REST request will be
+	 * processed by the specified dbOperation.
 	 * @param callback    The operation callback
 	 * @param pagingInfo  The optional paging information
 	 * @param dbQuery     The database query operation to perform
 	 * @param restQuery   The REST query operation to perform
 	 * @param dbOperation The database operation to perform when results are returned from the REST query
 	 */
-	protected void executeMultipleCallback(@NonNull GetCallback<List<E>> callback, @Nullable PagingInfo pagingInfo,
+	protected void executeMultipleCallback(@NonNull GetCallback<List<E>> callback,
+			@Nullable QueryOptions options, @Nullable PagingInfo pagingInfo,
 			@NonNull Supplier<List<E>> dbQuery, @NonNull Supplier<Call<Results<E>>> restQuery,
 			@NonNull Consumer<List<E>> dbOperation) {
 		checkNotNull(callback);
@@ -242,7 +252,7 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 		checkNotNull(restQuery);
 		checkNotNull(dbOperation);
 
-		performCallback(callback, dbQuery, restQuery,
+		performCallback(callback, options, dbQuery, restQuery,
 				(Results<E> results) -> {
 					if (pagingInfo != null) {
 						pagingInfo.setTotalRecordCount(results.getLength());
@@ -253,22 +263,35 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 				dbOperation);
 	}
 
-	private <T, R> void performCallback(GetCallback<T> callback, Supplier<T> dbSupplier,
+	/**
+	 * Executes the data operation (via REST or DB, depending on the network state) and performs the correct callback
+	 * based on the operation result.
+	 */
+	private <T, R> void performCallback(GetCallback<T> callback, QueryOptions options, Supplier<T> dbSupplier,
 			Supplier<Call<R>> restSupplier, Function<R, T> responseConverter, Consumer<T> dbSave) {
-		//if (!NetworkUtils.isServerAvailable()) {
-		if (!NetworkUtils.isOnline()) {
-			performOfflineCallback(callback, dbSupplier);
-		} else {
-			performOnlineCallback(callback, dbSupplier, restSupplier, responseConverter, dbSave);
+		if (!getCachedResult(callback, options)) {
+			//if (!NetworkUtils.isServerAvailable()) {
+			if (!NetworkUtils.isOnline()) {
+				performOfflineCallback(callback, options, dbSupplier);
+			} else {
+				performOnlineCallback(callback, options, dbSupplier, restSupplier, responseConverter, dbSave);
+			}
 		}
 	}
 
-	private <T> void performOfflineCallback(GetCallback<T> callback, Supplier<T> dbSupplier) {
+	/**
+	 * Executes the specified data operation on the local db and performs the appropriate callback based on the operation
+	 * result.
+	 */
+	private <T> void performOfflineCallback(GetCallback<T> callback, QueryOptions options, Supplier<T> dbSupplier) {
 		// Perform the db task on another thread
 		new Thread(() -> {
 			try {
 				// Try to get the entity from the db. If nothing is found just return null without any error
-				callback.onCompleted(dbSupplier.get());
+				T result = dbSupplier.get();
+
+				setCachedResult(options, result);
+				callback.onCompleted(result);
 			} catch (Exception ex) {
 				// An exception occurred while trying to get the entity from the db
 				callback.onError(ex);
@@ -276,7 +299,13 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 		}).start();
 	}
 
-	private <T, R> void performOnlineCallback(GetCallback<T> callback, Supplier<T> dbSupplier,
+	/**
+	 * Executes the specified data operation, first trying REST and then the local db if the REST request fails. The
+	 * result of the REST operation, if successful, is processed by the specified dbOperation. If the REST operation fails
+	 * because of a network issue (as determined by the error response code), then the local db is used instead. If the
+	 * local db operation returns null then an exception is thrown to indicate that the call failed.
+	 */
+	private <T, R> void performOnlineCallback(GetCallback<T> callback, QueryOptions options, Supplier<T> dbSupplier,
 			Supplier<Call<R>> restSupplier, Function<R, T> responseConverter, Consumer<T> dbOperation) {
 		// Perform the rest task
 		restSupplier.get().enqueue(new Callback<R>() {
@@ -289,6 +318,8 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 						T result = responseConverter.apply(response.body());
 
 						dbOperation.accept(result);
+
+						setCachedResult(options, result);
 						callback.onCompleted(result);
 					} catch (Exception ex) {
 						// An exception occurred while trying to save the entity in the db
@@ -305,6 +336,7 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 
 								if (result != null) {
 									// Found it! Return this entity and ignore the rest connection error
+									setCachedResult(options, response);
 									callback.onCompleted(result);
 								} else {
 									// Could not find the entity so notify of the error
@@ -334,6 +366,7 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 
 							if (result != null) {
 								// Found it! Return this entity and ignore the rest exception
+								setCachedResult(options, result);
 								callback.onCompleted(result);
 							} else {
 								// Could not find the entity so notify of the error
@@ -351,6 +384,27 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 				}
 			}
 		});
+	}
+
+	protected <T> boolean getCachedResult(GetCallback<T> callback, QueryOptions options) {
+		String cacheKey = QueryOptions.getCacheKey(options);
+		if (StringUtils.notEmpty(cacheKey)) {
+			Object cachedResult = cacheService.get(cacheKey);
+			if (cachedResult != null) {
+				callback.onCompleted((T)cachedResult);
+
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	protected void setCachedResult(QueryOptions options, Object value) {
+		String cacheKey = QueryOptions.getCacheKey(options);
+		if (StringUtils.notEmpty(cacheKey) && value != null) {
+			cacheService.set(cacheKey, value);
+		}
 	}
 
 	protected boolean isPagingValid(PagingInfo pagingInfo) {

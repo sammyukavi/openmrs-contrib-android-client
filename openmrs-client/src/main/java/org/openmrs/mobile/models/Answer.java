@@ -15,18 +15,29 @@
 package org.openmrs.mobile.models;
 
 import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class Answer extends BaseOpenmrsEntity implements Serializable {
+public class Answer implements Serializable, Parcelable {
 
+	public static final Creator<Answer> CREATOR = new Creator<Answer>() {
+		@Override
+		public Answer createFromParcel(Parcel source) {
+			return new Answer(source);
+		}
+
+		@Override
+		public Answer[] newArray(int size) {
+			return new Answer[size];
+		}
+	};
 	@SerializedName("concept")
 	@Expose
 	private String concept;
-
 	@SerializedName("label")
 	@Expose
 	private String label;
@@ -55,4 +66,14 @@ public class Answer extends BaseOpenmrsEntity implements Serializable {
 		this.label = label;
 	}
 
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeString(this.concept);
+		dest.writeString(this.label);
+	}
 }

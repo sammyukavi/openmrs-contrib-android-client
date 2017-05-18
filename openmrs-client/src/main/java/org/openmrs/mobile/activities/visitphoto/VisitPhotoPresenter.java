@@ -21,6 +21,7 @@ import android.support.annotation.NonNull;
 import org.openmrs.mobile.activities.visitdetails.VisitDetailsActivity;
 import org.openmrs.mobile.activities.visitdetails.VisitDetailsContract;
 import org.openmrs.mobile.data.DataService;
+import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.impl.ObsDataService;
 import org.openmrs.mobile.data.impl.VisitPhotoDataService;
 import org.openmrs.mobile.models.Observation;
@@ -34,8 +35,6 @@ import org.openmrs.mobile.utilities.ToastUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.openmrs.mobile.R.id.visitPhoto;
-
 public class VisitPhotoPresenter extends VisitDetailsActivity implements VisitDetailsContract.VisitPhotoPresenter {
 
 	@NonNull
@@ -46,7 +45,8 @@ public class VisitPhotoPresenter extends VisitDetailsActivity implements VisitDe
 	private ObsDataService obsDataService;
 	private VisitPhoto visitPhoto;
 
-	public VisitPhotoPresenter(VisitDetailsContract.VisitPhotoView view, String patientUuid, String visitUuid, String providerUuid) {
+	public VisitPhotoPresenter(VisitDetailsContract.VisitPhotoView view, String patientUuid, String visitUuid,
+			String providerUuid) {
 		this.view = view;
 		this.view.setPresenter(this);
 		this.patientUuid = patientUuid;
@@ -59,7 +59,7 @@ public class VisitPhotoPresenter extends VisitDetailsActivity implements VisitDe
 	@Override
 	public void loadVisitDocumentObservations() {
 		// get obs for patient.
-		obsDataService.getVisitDocumentsObsByPatientAndConceptList(patientUuid,
+		obsDataService.getVisitDocumentsObsByPatientAndConceptList(patientUuid, QueryOptions.DEFAULT,
 				new DataService.GetCallback<List<Observation>>() {
 					@Override
 					public void onCompleted(List<Observation> observations) {

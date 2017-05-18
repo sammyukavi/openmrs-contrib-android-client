@@ -14,6 +14,7 @@
 package org.openmrs.mobile.data.impl;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import org.openmrs.mobile.data.BaseDataService;
 import org.openmrs.mobile.data.PagingInfo;
@@ -27,6 +28,8 @@ import org.openmrs.mobile.utilities.ApplicationConstants;
 import java.util.List;
 
 import retrofit2.Call;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class ConceptNameDataService extends BaseDataService<ConceptName, ConceptNameDbService, ConceptNameRestSevice> {
 	@Override
@@ -54,8 +57,12 @@ public class ConceptNameDataService extends BaseDataService<ConceptName, Concept
 		return restService.getByUuid(restPath, uuid, QueryOptions.getRepresentation(options));
 	}
 
-	public void getByConceptUuid(String conceptUuid, @NonNull GetCallback<List<ConceptName>> callback) {
-		executeMultipleCallback(callback, null,
+	public void getByConceptUuid(@NonNull String conceptUuid, @Nullable QueryOptions options,
+			@NonNull GetCallback<List<ConceptName>> callback) {
+		checkNotNull(conceptUuid);
+		checkNotNull(callback);
+
+		executeMultipleCallback(callback, options, null,
 				() -> null,
 				() -> restService.getByConceptUuid(buildRestRequestPath(), conceptUuid));
 	}

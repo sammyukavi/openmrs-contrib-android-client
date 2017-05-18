@@ -23,6 +23,8 @@ import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.github.clans.fab.FloatingActionButton;
+
 import org.joda.time.DateTime;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
@@ -42,14 +44,12 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 	private TextView patientDisplayName, patientGender, patientAge, patientIdentifier,
 			patientDob;
 	private Visit activeVisit;
+	private FloatingActionButton addVisitImageButton,
+			addVisitTaskButton, startVisitButton, editVisitButton, endVisitButton, editPatient;
 	private Patient patient;
 	private OpenMRS instance = OpenMRS.getInstance();
 	private SharedPreferences sharedPreferences = instance.getOpenMRSSharedPreferences();
 	private int visitsStartLimit = 5;
-
-
-	public AuditDataFragment() {
-	}
 
 	public static AuditDataFragment newInstance() {
 		return new AuditDataFragment();
@@ -72,7 +72,6 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		mPresenter.fetchVisitData(visitUuid);
 		// Font config
 		FontsUtil.setFont((ViewGroup)this.getActivity().findViewById(android.R.id.content));
-
 		RadioButton radioButton = (RadioButton)fragmentView.findViewById(R.id.is_audit_complete_yes);
 		radioButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -80,7 +79,6 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 				Observation ob = new Observation();
 			}
 		});
-
 		return fragmentView;
 	}
 

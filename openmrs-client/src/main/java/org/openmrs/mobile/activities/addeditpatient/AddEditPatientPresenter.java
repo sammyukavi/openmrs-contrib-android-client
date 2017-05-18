@@ -325,7 +325,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 										.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 					}
 				};
-		conceptNameDataService.getByConceptUuid(uuid, callback);
+		conceptNameDataService.getByConceptUuid(uuid, null, callback);
 	}
 
 	public void getPatientIdentifierTypes() {

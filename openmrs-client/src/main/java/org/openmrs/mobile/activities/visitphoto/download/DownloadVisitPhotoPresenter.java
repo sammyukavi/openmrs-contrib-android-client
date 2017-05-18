@@ -36,7 +36,7 @@ public class DownloadVisitPhotoPresenter extends BasePresenter implements Downlo
 	@Override
 	public void loadVisitDocumentObservations() {
 		// get obs for patient.
-		obsDataService.getVisitDocumentsObsByPatientAndConceptList(patientUuid,
+		obsDataService.getVisitDocumentsObsByPatientAndConceptList(patientUuid, null,
 				new DataService.GetCallback<List<Observation>>() {
 					@Override
 					public void onCompleted(List<Observation> observations) {

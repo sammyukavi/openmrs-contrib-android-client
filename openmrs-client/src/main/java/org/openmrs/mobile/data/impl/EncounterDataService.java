@@ -69,7 +69,7 @@ public class EncounterDataService extends BaseDataService<Encounter, EncounterDb
 	}
 
 	public void getVisitDocumentsObsByPatientAndConceptList(String patientUuid, GetCallback<List<Encounter>> callback) {
-		executeMultipleCallback(callback, null,
+		executeMultipleCallback(callback, null, null,
 				() -> null,
 				() -> restService.getVisitDocumentsObsByPatientAndConceptList(
 						buildRestRequestPath(), patientUuid,
@@ -82,7 +82,7 @@ public class EncounterDataService extends BaseDataService<Encounter, EncounterDb
 		checkNotNull(encounter);
 		checkNotNull(callback);
 
-		executeMultipleCallback(callback, pagingInfo,
+		executeMultipleCallback(callback, options, pagingInfo,
 				() -> null,
 				() -> restService.getByEncounter(buildRestRequestPath(), encounter.getUuid(),
 						QueryOptions.getRepresentation(options), QueryOptions.getIncludeInactive(options),

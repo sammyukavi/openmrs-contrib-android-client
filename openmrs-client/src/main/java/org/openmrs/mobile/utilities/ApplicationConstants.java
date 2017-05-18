@@ -24,7 +24,7 @@ public abstract class ApplicationConstants {
 	public static final String VISIT_TYPE_UUID = "visit_type_uuid";
 	public static final String LAST_SESSION_TOKEN = "last_session_id";
 	public static final String LAST_LOGIN_SERVER_URL = "last_login_server_url";
-	public static final String DEFAULT_OPEN_MRS_URL = "http://sandbox.openhmisafrica.org/openmrs/";
+	public static final String DEFAULT_OPEN_MRS_URL = "http://192.168.2.30:8080/openmrs/";
 
 	public static final String THUMBNAIL_VIEW = "complexdata.view.thumbnail";
 
@@ -90,23 +90,17 @@ public abstract class ApplicationConstants {
 				"org.openmrs.mobile.intent.action.SERVER_NOT_SUPPORTED_BROADCAST";
 	}
 
-	public abstract static class EncounterTypeEntitys {
-		public static final String VITALSS = "67a71486-1a54-468f-ac3e-7091a9a79584";
+	public abstract static class EncounterTypeDisplays {
 		public static final String VITALS = "Vitals";
 		public static final String VISIT_NOTE = "Visit Note";
 		public static final String DISCHARGE = "Discharge";
 		public static final String ADMISSION = "Admission";
-		public static final String AuditData = "Audit Data";
+		public static final String AUDITDATA = "Audit Data";
 	}
 
-	public abstract static class ObserVationUuId {
+	public abstract static class EncounterTypeEntitys {
 		public static final String VITALSS = "67a71486-1a54-468f-ac3e-7091a9a79584";
-		public static final String VITALS = "Vitals";
-		public static final String VISIT_NOTE = "Visit Note";
-		public static final String DISCHARGE = "Discharge";
-		public static final String ADMISSION = "Admission";
-		public static final String AuditData = "Audit Data";
-
+		public static final String AUDITDATA = "7dc1632c-f947-474f-b92c-7add68019aec";
 	}
 
 	public abstract static class BundleKeys {
@@ -163,5 +157,29 @@ public abstract class ApplicationConstants {
 		public static final String RACE_UUID = "8d871386-c2cc-11de-8d13-0010c6dffd0f";
 		public static final String UNKNOWN_PATIENT_UUID = "8b56eac7-5c76-4b9c-8c6f-1deab8d3fc47";
 		public static final String TEST_PATIENT_UUID = "4f07985c-88a5-4abd-aa0c-f3ec8324d8e7";
+	}
+
+	public abstract static class AuditFormConcepts {
+		public static final String ANSWER_YES = "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+
+		public static final String ANSWER_NO = "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+
+		public static final String ANSWER_UNKNOWN = "1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+
+		public static final String DEATH_IN_HOSPITAL = "ec559b53-8cc9-4b54-a34e-95a605919365";
+
+		public static final String PALLIATIVE_CONSULT = "a9ae21a2-2631-49d6-928c-d23001812729";
+
+		public static final String PREOP_RISK_ASSESMENT = "eadfe47c-7988-42ea-97d0-e21ce71db7e0";
+
+		public static final String ICU_STAY = "9446f7aa-7a1c-4246-a0a5-1ebc3560a0e0";
+
+		public static final String HDU_STAY = "46d4283e-3275-4c6e-9d52-cfd858889f4b";
+
+		public static final String HDU_COMGMT = "dd61d87f-3398-46c2-8108-00db2e49bab6";
+
+		public static final String HIV_POSITIVE = "1169AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+
+		public static final String AUDIT_COMPLETE = "98f0f043-bdb1-40c6-8c81-6a094056e981";
 	}
 }

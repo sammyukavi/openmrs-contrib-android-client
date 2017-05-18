@@ -34,6 +34,8 @@ import org.openmrs.mobile.utilities.StringUtils;
 
 import java.util.List;
 
+import static org.openmrs.mobile.utilities.ApplicationConstants.EncounterTypeDisplays.VISIT_NOTE;
+
 public class PastVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 	private final int VIEW_TYPE_ITEM = 0;
 	private final int VIEW_TYPE_LOADING = 1;
@@ -224,7 +226,7 @@ public class PastVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 			} else {
 				for (Encounter encounter : visit.getEncounters()) {
 					switch (encounter.getEncounterType().getDisplay()) {
-						case ApplicationConstants.EncounterTypeEntitys.VISIT_NOTE:
+						case VISIT_NOTE:
 							QueryOptions options = new QueryOptions();
 							PagingInfo pagininfo =
 									new PagingInfo(startIndex, limit);

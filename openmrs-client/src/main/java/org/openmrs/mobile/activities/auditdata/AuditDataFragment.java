@@ -30,6 +30,7 @@ import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.Encounter;
+import org.openmrs.mobile.models.Obs;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Person;
@@ -52,21 +53,21 @@ import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcept
 public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presenter>
 		implements AuditDataContract.View {
 
-	private View fragmentView;
-	private TextView patientDisplayName, patientGender, patientAge, patientIdentifier, patientDob;
-	private Observation deathInHospitalObservation, palliativeConsultObservation, preopRiskAssessmentObservation,
-			icuStayObservation, hduStayObservation, hduComgmtObservation, hivPositiveObservation, auditCompleteObservation;
-	private Concept yesConcept, noConcept;
-	private RadioButton deathInHospitalYes, deathInHospitalNo, palliativeConsultYes, palliativeConsulNo,
-			preopRiskAssessmentYes, preopRiskAssessmentNo, icuStayYes, icuStayNo, icuStayUnknown, hduStayYes, hduStayNo,
-			hduStayUnknown, hduComgmtYes, hduComgmtNo, hduComgmtUnknown, hivPositiveYes, hivPositiveNo, hivPositiveUnknown,
-			auditCompleteYes, auditCompleteNo;
-	private Patient patient;
-	private Encounter encounter;
-	private OpenMRS instance = OpenMRS.getInstance();
 	private Visit visit;
+	private Patient patient;
+	private View fragmentView;
+	private Encounter encounter;
 	private LocalDateTime localDateTime;
 	private String visitUuid, patientUuid;
+	private Concept yesConcept, noConcept;
+	private OpenMRS instance = OpenMRS.getInstance();
+	private TextView patientDisplayName, patientGender, patientAge, patientIdentifier, patientDob;
+	private Obs deathInHospitalObservation, palliativeConsultObservation, preopRiskAssessmentObservation,
+			icuStayObservation, hduStayObservation, hduComgmtObservation, hivPositiveObservation, auditCompleteObservation;
+	private RadioButton deathInHospitalYes, deathInHospitalNo, palliativeConsultYes, palliativeConsultNo,
+			palliativeConsultUknown, preopRiskAssessmentYes, preopRiskAssessmentNo, preopRiskAssessmentUknown, icuStayYes,
+			icuStayNo, icuStayUnknown, hduStayYes, hduStayNo, hduStayUnknown, hduComgmtYes, hduComgmtNo, hduComgmtUnknown,
+			hivPositiveYes, hivPositiveNo, hivPositiveUnknown, auditCompleteYes, auditCompleteNo;
 
 	public AuditDataFragment() {
 		localDateTime = new LocalDateTime();
@@ -96,11 +97,10 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 
 		initConcepts();
 
-		initRadioListeners(deathInHospitalYes, deathInHospitalNo, palliativeConsultYes, palliativeConsulNo,
-				preopRiskAssessmentYes, preopRiskAssessmentNo, icuStayYes, icuStayNo, icuStayUnknown, hduStayYes, hduStayNo,
-				hduStayUnknown, hduComgmtYes, hduComgmtNo, hduComgmtUnknown, hivPositiveYes, hivPositiveNo,
-				hivPositiveUnknown,
-				auditCompleteYes, auditCompleteNo);
+		initRadioListeners(deathInHospitalYes, deathInHospitalNo, palliativeConsultYes, palliativeConsultNo,
+				palliativeConsultUknown, preopRiskAssessmentYes, preopRiskAssessmentNo, preopRiskAssessmentUknown,
+				icuStayYes, icuStayNo, icuStayUnknown, hduStayYes, hduStayNo, hduStayUnknown, hduComgmtYes, hduComgmtNo,
+				hduComgmtUnknown, hivPositiveYes, hivPositiveNo, hivPositiveUnknown, auditCompleteYes, auditCompleteNo);
 
 		mPresenter.fetchPatientDetails(patientUuid);
 
@@ -120,10 +120,12 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		deathInHospitalNo = (RadioButton)fragmentView.findViewById(R.id.is_death_in_hospital_no);
 
 		palliativeConsultYes = (RadioButton)fragmentView.findViewById(R.id.is_palliative_consult_yes);
-		palliativeConsulNo = (RadioButton)fragmentView.findViewById(R.id.is_palliative_consult_no);
+		palliativeConsultNo = (RadioButton)fragmentView.findViewById(R.id.is_palliative_consult_no);
+		palliativeConsultUknown = (RadioButton)fragmentView.findViewById(R.id.is_palliative_consult_unknown);
 
 		preopRiskAssessmentYes = (RadioButton)fragmentView.findViewById(R.id.is_preop_risk_assessment_only_yes);
 		preopRiskAssessmentNo = (RadioButton)fragmentView.findViewById(R.id.is_preop_risk_assessment_only_no);
+		preopRiskAssessmentUknown = (RadioButton)fragmentView.findViewById(R.id.is_preop_risk_assessment_only_unknown);
 
 		icuStayYes = (RadioButton)fragmentView.findViewById(R.id.is_icu_stay_yes);
 		icuStayNo = (RadioButton)fragmentView.findViewById(R.id.is_icu_stay_no);
@@ -201,7 +203,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 	private void initObservations() {
 		deathInHospitalObservation = palliativeConsultObservation = preopRiskAssessmentObservation =
 				icuStayObservation = hduStayObservation =
-						hduComgmtObservation = hivPositiveObservation = auditCompleteObservation = new Observation();
+						hduComgmtObservation = hivPositiveObservation = auditCompleteObservation = new Obs();
 
 		deathInHospitalObservation.setUuid(DEATH_IN_HOSPITAL);
 		//deathInHospitalObservation.setPerson(patient.getPerson());
@@ -336,11 +338,126 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 	}
 
 	@Override
-	public void updateForm(Observation observation) {
-		System.out.println("======================================================================");
-		//ConsoleLogger.dump(observation);
-		System.out.println(observation.getValue());
-		System.out.println("======================================================================");
-	}
+	public void updateForm(Encounter encounter) {
 
+		for (Observation observation : encounter.getObs()) {
+			ConsoleLogger.dump(observation.getDisplay());
+
+		}
+
+
+		/*Value value = obs.getValue();
+
+		switch (obs.getConcept().getUuid()) {
+
+			case DEATH_IN_HOSPITAL:
+
+				deathInHospitalObservation = obs;
+
+				if (value.getUuid().equals(ANSWER_YES)) {
+					deathInHospitalYes.setChecked(true);
+				} else if (value.getUuid().equals(ANSWER_NO)) {
+					deathInHospitalNo.setChecked(true);
+				}
+
+				break;
+
+			case PALLIATIVE_CONSULT:
+
+				palliativeConsultObservation = obs;
+
+				if (value.getUuid().equals(ANSWER_YES)) {
+					palliativeConsultYes.setChecked(true);
+				} else if (value.getUuid().equals(ANSWER_NO)) {
+					palliativeConsultNo.setChecked(true);
+				} else if (value.getUuid().equals(ANSWER_UNKNOWN)) {
+					palliativeConsultUknown.setChecked(true);
+				}
+
+				break;
+
+			case PREOP_RISK_ASSESMENT:
+
+				preopRiskAssessmentObservation = obs;
+
+				if (value.getUuid().equals(ANSWER_YES)) {
+					preopRiskAssessmentYes.setChecked(true);
+				} else if (value.getUuid().equals(ANSWER_NO)) {
+					preopRiskAssessmentNo.setChecked(true);
+				} else if (value.getUuid().equals(ANSWER_UNKNOWN)) {
+					preopRiskAssessmentUknown.setChecked(true);
+				}
+
+				break;
+
+			case ICU_STAY:
+
+				icuStayObservation = obs;
+
+				if (value.getUuid().equals(ANSWER_YES)) {
+					icuStayYes.setChecked(true);
+				} else if (value.getUuid().equals(ANSWER_NO)) {
+					icuStayNo.setChecked(true);
+				} else if (value.getUuid().equals(ANSWER_UNKNOWN)) {
+					icuStayUnknown.setChecked(true);
+				}
+
+				break;
+
+			case HDU_STAY:
+
+				hduStayObservation = obs;
+
+				if (value.getUuid().equals(ANSWER_YES)) {
+					hduStayYes.setChecked(true);
+				} else if (value.getUuid().equals(ANSWER_NO)) {
+					hduStayNo.setChecked(true);
+				} else if (value.getUuid().equals(ANSWER_UNKNOWN)) {
+					hduStayUnknown.setChecked(true);
+				}
+
+				break;
+			case HDU_COMGMT:
+
+				hduComgmtObservation = obs;
+
+				if (value.getUuid().equals(ANSWER_YES)) {
+					hduComgmtYes.setChecked(true);
+				} else if (value.getUuid().equals(ANSWER_NO)) {
+					hduComgmtNo.setChecked(true);
+				} else if (value.getUuid().equals(ANSWER_UNKNOWN)) {
+					hduComgmtUnknown.setChecked(true);
+				}
+
+				break;
+			case HIV_POSITIVE:
+
+				hivPositiveObservation = obs;
+
+				if (value.getUuid().equals(ANSWER_YES)) {
+					hivPositiveYes.setChecked(true);
+				} else if (value.getUuid().equals(ANSWER_NO)) {
+					hivPositiveNo.setChecked(true);
+				} else if (value.getUuid().equals(ANSWER_UNKNOWN)) {
+					hivPositiveUnknown.setChecked(true);
+				}
+
+				break;
+			case AUDIT_COMPLETE:
+
+				auditCompleteObservation = obs;
+
+				if (value.getUuid().equals(ANSWER_YES)) {
+					auditCompleteYes.setChecked(true);
+				} else if (value.getUuid().equals(ANSWER_NO)) {
+					auditCompleteNo.setChecked(true);
+				}
+
+				break;
+			default:
+				break;
+
+		}*/
+
+	}
 }

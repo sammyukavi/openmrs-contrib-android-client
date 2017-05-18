@@ -17,6 +17,7 @@ package org.openmrs.mobile.activities.auditdata;
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
 import org.openmrs.mobile.models.Encounter;
+import org.openmrs.mobile.models.Obs;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Visit;
@@ -28,7 +29,7 @@ public interface AuditDataContract {
 
 		void setVisit(Visit visit);
 
-		void updateForm(Observation observations);
+		void updateForm(Encounter encounter);
 
 		void setEncounter(Encounter encounter);
 	}

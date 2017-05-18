@@ -14,7 +14,11 @@
 
 package org.openmrs.mobile.activities.auditdata;
 
+import com.google.gson.Gson;
+
 import org.openmrs.mobile.activities.BasePresenter;
+import org.openmrs.mobile.api.RestApi;
+import org.openmrs.mobile.api.RestServiceBuilder;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.QueryOptions;
@@ -25,9 +29,19 @@ import org.openmrs.mobile.data.impl.PatientDataService;
 import org.openmrs.mobile.data.impl.VisitDataService;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Location;
+import org.openmrs.mobile.models.Obs;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Visit;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static org.openmrs.mobile.utilities.ApplicationConstants.EncounterTypeDisplays.AUDITDATA;
 
@@ -108,8 +122,7 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 			@Override
 			public void onCompleted(Encounter encounter) {
 				auditDataView.setEncounter(encounter);
-				//auditDataView.updateForm(encounter);
-				fetchEncounterObservations(encounter);
+				auditDataView.updateForm(encounter);
 			}
 
 			@Override
@@ -124,7 +137,7 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 	@Override
 	public void fetchEncounterObservations(Encounter encounter) {
 
-		DataService.GetCallback<Observation> fetchObservationCallback = new DataService.GetCallback<Observation>() {
+		/*DataService.GetCallback<Observation> fetchObservationCallback = new DataService.GetCallback<Observation>() {
 			@Override
 			public void onCompleted(Observation observation) {
 				auditDataView.updateForm(observation);
@@ -140,7 +153,37 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 
 			observationDataService.getByUUID(observation.getUuid(), QueryOptions.LOAD_RELATED_OBJECTS,
 					fetchObservationCallback);
-		}
+		}*/
+
+
+		/*Gson gson = new Gson();
+		List<Obs> observations = new ArrayList<>();
+
+		for (Observation observation : encounter.getObs()) {
+			RestApi restApi = RestServiceBuilder.createService(RestApi.class);
+			Call<ResponseBody> call = restApi.getObservation(observation.getUuid(), "full");
+			call.enqueue(new Callback<ResponseBody>() {
+
+				@Override
+				public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+					if (response.isSuccessful()) {
+						try {
+							String string = response.body().string();
+							auditDataView.updateForm(gson.fromJson(string, Obs.class));
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					} else {
+
+					}
+				}
+
+				@Override
+				public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+				}
+			});
+		}*/
 
 	}
 

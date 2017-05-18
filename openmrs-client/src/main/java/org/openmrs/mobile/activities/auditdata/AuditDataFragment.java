@@ -20,6 +20,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.github.clans.fab.FloatingActionButton;
@@ -28,6 +29,7 @@ import org.joda.time.DateTime;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.application.OpenMRS;
+import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Person;
 import org.openmrs.mobile.models.Visit;
@@ -70,7 +72,13 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		mPresenter.fetchVisitData(visitUuid);
 		// Font config
 		FontsUtil.setFont((ViewGroup)this.getActivity().findViewById(android.R.id.content));
-
+		RadioButton radioButton = (RadioButton)fragmentView.findViewById(R.id.is_audit_complete_yes);
+		radioButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Observation ob = new Observation();
+			}
+		});
 		return fragmentView;
 	}
 

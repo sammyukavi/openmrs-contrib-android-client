@@ -31,7 +31,7 @@ public interface LoginContract {
 
 		void setPresenter(@NonNull Presenter presenter);
 
-		void showWarningDialog(boolean login);
+		void showWarningDialog();
 
 		void showLoadingAnimation();
 

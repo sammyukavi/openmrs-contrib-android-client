@@ -27,6 +27,7 @@ import java.lang.reflect.Method;
 public final class TabUtil {
 	public static final int MIN_SCREEN_WIDTH_FOR_FINDPATIENTSACTIVITY = 480;
 	public static final int MIN_SCREEN_WIDTH_FOR_PATIENTDASHBOARDACTIVITY = 960;
+	public static final int MIN_SCREEN_WIDTH_FOR_VISITDETAILSACTIVITY = 960;
 	private static OpenMRSLogger mLogger = OpenMRS.getInstance().getOpenMRSLogger();
 
 	private TabUtil() {

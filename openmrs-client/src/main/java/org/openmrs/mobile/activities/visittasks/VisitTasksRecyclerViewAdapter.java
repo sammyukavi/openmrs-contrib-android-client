@@ -25,6 +25,7 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 
 import org.openmrs.mobile.R;
+import org.openmrs.mobile.activities.visitdetails.VisitDetailsContract;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitTask;
 import org.openmrs.mobile.models.VisitTaskStatus;
@@ -35,11 +36,11 @@ class VisitTasksRecyclerViewAdapter extends RecyclerView.Adapter<VisitTasksRecyc
 
 	private Activity mContext;
 	private List<VisitTask> visitTaskList;
-	private VisitTasksContract.View view;
+	private VisitDetailsContract.VisitTasksView view;
 	private Visit visit;
 
 	VisitTasksRecyclerViewAdapter(Activity context,
-			List<VisitTask> visitTaskList, Visit visit, VisitTasksContract.View view) {
+			List<VisitTask> visitTaskList, Visit visit, VisitDetailsContract.VisitTasksView view) {
 		this.mContext = context;
 		this.visitTaskList = visitTaskList;
 		this.view = view;

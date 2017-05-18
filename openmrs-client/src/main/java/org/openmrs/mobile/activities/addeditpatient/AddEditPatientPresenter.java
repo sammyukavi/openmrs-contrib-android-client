@@ -165,9 +165,11 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 
 	@Override
 	public void getPatientToUpdate(String uuid) {
+		patientRegistrationView.setProgressBarVisibility(true);
 		DataService.GetCallback<Patient> singleCallback = new DataService.GetCallback<Patient>() {
 			@Override
 			public void onCompleted(Patient entity) {
+				patientRegistrationView.setProgressBarVisibility(false);
 				if (entity != null) {
 					patientRegistrationView.fillFields(entity);
 					setPatient(entity);
@@ -180,6 +182,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 
 			@Override
 			public void onError(Throwable t) {
+				patientRegistrationView.setProgressBarVisibility(false);
 				Log.e("User Error", "Error", t.fillInStackTrace());
 				patientRegistrationView.showToast(ApplicationConstants.entityName.PATIENTS + ApplicationConstants
 						.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
@@ -189,25 +192,18 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		patientDataService.getByUUID(uuid, new QueryOptions(false, true), singleCallback);
 	}
 
-	@Override
-	public void confirmRegister(Patient patient) {
-		if (!registeringPatient && validate(patient)) {
-			patientRegistrationView.setProgressBarVisibility(true);
-			patientRegistrationView.hideSoftKeys();
-			registeringPatient = true;
-			findSimilarPatients(patient);
-		} else {
-			patientRegistrationView.scrollToTop();
-		}
-	}
 
 	@Override
-	public void confirmUpdate(Patient patient) {
+	public void confirmPatient(Patient patient) {
 		if (!registeringPatient && validate(patient)) {
 			patientRegistrationView.setProgressBarVisibility(true);
 			patientRegistrationView.hideSoftKeys();
 			registeringPatient = true;
-			updatePatient(patient);
+			if (patient.getUuid().equalsIgnoreCase(null)) {
+				findSimilarPatients(patient);
+			} else {
+				addEditPatient(patient);
+			}
 		} else {
 			patientRegistrationView.scrollToTop();
 		}
@@ -219,19 +215,17 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 	}
 
 	@Override
-	public void registerPatient(Patient patient) {
+	public void addEditPatient(Patient patient) {
+		patientRegistrationView.setProgressBarVisibility(true);
 		setRegistering(true);
 		DataService.GetCallback<Patient> getSingleCallback = new DataService.GetCallback<Patient>() {
 			@Override
 			public void onCompleted(Patient entity) {
 				setRegistering(false);
+				patientRegistrationView.setProgressBarVisibility(false);
 				if (entity != null) {
-					patientRegistrationView
-							.showToast(ApplicationConstants.entityName.PATIENTS
-									+ ApplicationConstants.toastMessages.addSuccessMessage, ToastUtil.ToastType
-									.SUCCESS);
-					patientRegistrationView.startPatientDashboardActivity(entity);
 					patientRegistrationView.finishAddPatientActivity();
+					patientRegistrationView.startPatientDashboardActivity(entity);
 				} else {
 					patientRegistrationView
 							.showToast(ApplicationConstants.entityName.PATIENTS + ApplicationConstants.toastMessages
@@ -248,40 +242,12 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 								.addErrorMessage, ToastUtil.ToastType.ERROR);
 			}
 		};
-		patientDataService.create(patient, getSingleCallback);
-	}
+		if (patient.getUuid().equalsIgnoreCase(null)){
+			patientDataService.create(patient, getSingleCallback);
+		} else {
+			patientDataService.update(patient, getSingleCallback);
+		}
 
-	@Override
-	public void updatePatient(Patient patient) {
-		setRegistering(true);
-		DataService.GetCallback<Patient> getSingleCallback = new DataService.GetCallback<Patient>() {
-			@Override
-			public void onCompleted(Patient entity) {
-				setRegistering(false);
-				if (entity != null) {
-					patientRegistrationView
-							.showToast(ApplicationConstants.entityName.PATIENTS
-									+ ApplicationConstants.toastMessages.updateSuccessMessage, ToastUtil.ToastType
-									.SUCCESS);
-					patientRegistrationView.startPatientDashboardActivity(entity);
-					patientRegistrationView.finishAddPatientActivity();
-				} else {
-					patientRegistrationView
-							.showToast(ApplicationConstants.entityName.PATIENTS + ApplicationConstants.toastMessages
-									.addWarningMessage, ToastUtil.ToastType.WARNING);
-				}
-			}
-
-			@Override
-			public void onError(Throwable t) {
-				setRegistering(false);
-				patientRegistrationView.setProgressBarVisibility(false);
-				patientRegistrationView
-						.showToast(ApplicationConstants.entityName.PATIENTS + ApplicationConstants.toastMessages
-								.addErrorMessage, ToastUtil.ToastType.ERROR);
-			}
-		};
-		patientDataService.update(patient, getSingleCallback);
 	}
 
 	public void findSimilarPatients(Patient patient) {
@@ -289,8 +255,9 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		DataService.GetCallback<List<Patient>> callback = new DataService.GetCallback<List<Patient>>() {
 			@Override
 			public void onCompleted(List<Patient> patients) {
+				patientRegistrationView.setProgressBarVisibility(false);
 				if (patients.isEmpty()) {
-					registerPatient(patient);
+					addEditPatient(patient);
 				} else {
 					patientRegistrationView.showSimilarPatientDialog(patients, patient);
 				}
@@ -298,6 +265,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 
 			@Override
 			public void onError(Throwable t) {
+				patientRegistrationView.setProgressBarVisibility(false);
 				Log.e("User Error", "Error", t.fillInStackTrace());
 				patientRegistrationView.showToast(ApplicationConstants.entityName.PATIENTS + ApplicationConstants
 						.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);

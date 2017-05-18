@@ -41,7 +41,6 @@ import org.openmrs.mobile.activities.findpatientrecord.FindPatientRecordActivity
 import org.openmrs.mobile.activities.login.LoginActivity;
 import org.openmrs.mobile.activities.patientlist.PatientListActivity;
 import org.openmrs.mobile.activities.settings.SettingsActivity;
-import org.openmrs.mobile.activities.visittasks.VisitTasksActivity;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.application.OpenMRSLogger;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
@@ -117,14 +116,6 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 			logoutMenuItem.setTitle(getString(R.string.action_logout) + " " + mOpenMRS.getUsername());
 		}
 		return true;
-	}
-
-	private void setSyncButtonState(boolean syncState) {
-		if (syncState) {
-			mSyncbutton.setIcon(R.drawable.ic_sync_on);
-		} else {
-			mSyncbutton.setIcon(R.drawable.ic_sync_off);
-		}
 	}
 
 	private void showNoInternetConnectionSnackbar() {
@@ -276,9 +267,6 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 				break;
 			case R.id.navItemPatientLists:
 				startActivity(new Intent(this, PatientListActivity.class));
-				break;
-			case R.id.navItemVisitTasks:
-				startActivity(new Intent(this, VisitTasksActivity.class));
 				break;
 			case R.id.navItemSettings:
 				startActivity(new Intent(this, SettingsActivity.class));

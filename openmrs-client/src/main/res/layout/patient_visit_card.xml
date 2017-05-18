@@ -10,22 +10,43 @@
 			android:textStyle="bold"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content" />
-
+	
 	<LinearLayout
 			android:visibility="gone"
 			android:id="@+id/observationsContainer"
 			android:layout_width="match_parent"
 			android:orientation="vertical"
-			android:layout_height="wrap_content"></LinearLayout>
-
-	<ImageView
+			android:layout_height="wrap_content" />
+	
+	<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
 			android:layout_marginTop="10dp"
-			android:id="@+id/loadAuditForm"
-			android:layout_marginRight="5dp"
-			android:layout_marginEnd="5dp"
-			android:contentDescription="@string/app_name"
-			android:src="@drawable/wpforms"
-			android:clickable="true"
-			android:layout_width="15dp"
-			android:layout_height="15dp" />
+			android:weightSum="2">
+		
+		<ImageView
+				android:id="@+id/loadAuditForm"
+				android:layout_weight="1"
+				android:contentDescription="@string/app_name"
+				android:src="@drawable/wpforms"
+				android:clickable="true"
+				android:layout_width="0dp"
+				android:layout_gravity="start"
+				android:layout_marginLeft="5dp"
+				android:layout_marginStart="5dp"
+				android:layout_height="35dp" />
+		
+		<ImageView
+				android:id="@+id/loadVisitDetails"
+				android:layout_weight="1"
+				android:contentDescription="@string/app_name"
+				android:src="@drawable/ic_chevron_right_black"
+				android:clickable="true"
+				android:layout_gravity="end"
+				android:layout_marginEnd="5dp"
+				android:layout_width="0dp"
+				android:layout_height="35dp"
+				android:layout_marginRight="5dp" />
+			
+	</LinearLayout>
 </LinearLayout>

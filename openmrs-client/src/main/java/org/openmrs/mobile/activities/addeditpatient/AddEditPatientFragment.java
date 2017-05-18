@@ -32,7 +32,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
@@ -95,9 +94,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 	private RadioGroup gen;
 	private ProgressBar progressBar;
 	private Button submitConfirm;
-	private String[] counties;
 	private String patientUuuid;
-	private ImageView patientImageView;
 	private String patientName;
 	private File output = null;
 	private OpenMRSLogger logger = new OpenMRSLogger();
@@ -114,6 +111,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 	private Map<String, PersonAttribute> personAttributeMap = new HashMap<>();
 	private Map<View, PersonAttributeType> viewPersonAttributeTypeMap = new HashMap<>();
 	private LinearLayout personLinearLayout;
+	private ScrollView addPatientScrollView;
 	private Location loginLocation;
 	private OpenMRS instance = OpenMRS.getInstance();
 
@@ -132,6 +130,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		fileNumber = (EditText)v.findViewById(R.id.fileNumber);
 
 		personLinearLayout = (LinearLayout)v.findViewById(R.id.personAttributeLinearLayout);
+		addPatientScrollView = (ScrollView)v.findViewById(R.id.patientAddScrollView);
 
 		gen = (RadioGroup)v.findViewById(R.id.gender);
 		progressBar = (ProgressBar)v.findViewById(R.id.progress_bar);
@@ -301,6 +300,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 	@Override
 	public void setProgressBarVisibility(boolean visibility) {
 		progressBar.setVisibility(visibility ? View.VISIBLE : View.GONE);
+		addPatientScrollView.setVisibility(visibility ? View.GONE : View.VISIBLE);
 	}
 
 	@Override
@@ -321,11 +321,6 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		Intent intent = new Intent(getActivity(), PatientDashboardActivity.class);
 		intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patient.getPerson().getUuid());
 		startActivity(intent);
-	}
-
-	@Override
-	public void showUpgradeRegistrationModuleInfo() {
-		ToastUtil.notifyLong(getResources().getString(R.string.registration_core_info));
 	}
 
 	@Override
@@ -451,7 +446,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 			submitConfirm.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
-					mPresenter.confirmUpdate(updatePatient(patient));
+					mPresenter.confirmPatient(updatePatient(patient));
 				}
 			});
 
@@ -534,7 +529,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 				if (!mPresenter.isRegisteringPatient()) {
 					buildPersonAttributeValues();
 				}
-				mPresenter.confirmRegister(createPatient());
+				mPresenter.confirmPatient(createPatient());
 			}
 		});
 

@@ -60,7 +60,6 @@ import org.openmrs.mobile.data.impl.EncounterDataService;
 import org.openmrs.mobile.data.impl.LocationDataService;
 import org.openmrs.mobile.data.impl.ObsDataService;
 import org.openmrs.mobile.data.impl.VisitDataService;
-import org.openmrs.mobile.models.AuditInfo;
 import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.EncounterType;
@@ -533,8 +532,6 @@ public class CustomFragmentDialog extends DialogFragment {
 							user.setUuid(instance.getCurrentLoggedInUserInfo().get(ApplicationConstants.UserKeys
 									.USER_UUID));
 
-							AuditInfo auditInfo = new AuditInfo();
-							auditInfo.setCreator(user);
 
 							//create concept
 							Concept concept = new Concept();
@@ -553,7 +550,7 @@ public class CustomFragmentDialog extends DialogFragment {
 							observation.setPerson(patient.getPerson());
 							observation.setObsDatetime(localDateTime.toString());
 							observation.setCreator(user);
-							observation.setAuditInfo(auditInfo);
+
 							observation.setLocation(location.getUuid());
 
 							List<Observation> observationList = new ArrayList<>();
@@ -565,7 +562,7 @@ public class CustomFragmentDialog extends DialogFragment {
 							encounter.setObs(observationList);
 							encounter.setVisit(visit);
 							encounter.setEncounterDatetime(localDateTime.toString());
-							encounter.setAuditInfo(auditInfo);
+
 							encounter.setLocation(location);
 
 							EncounterDataService encounterDataService = new EncounterDataService();

@@ -52,14 +52,10 @@ public class Encounter extends BaseOpenmrsAuditableObject implements Serializabl
 	private Visit visit;
 	@SerializedName("encounterProviders")
 	@Expose
-	private List<Resource> encounterProviders = new ArrayList<Resource>();
+	private List<Provider> encounterProviders = new ArrayList<Provider>();
 	@SerializedName("resourceVersion")
 	@Expose
 	private String resourceVersion;
-
-	@SerializedName("auditInfo")
-	@Expose
-	private AuditInfo auditInfo;
 
 	private Long visitID;
 	private String patientUUID;
@@ -242,14 +238,14 @@ public class Encounter extends BaseOpenmrsAuditableObject implements Serializabl
 	/**
 	 * @return The encounterProviders
 	 */
-	public List<Resource> getEncounterProviders() {
+	public List<Provider> getEncounterProviders() {
 		return encounterProviders;
 	}
 
 	/**
 	 * @param encounterProviders The encounterProviders
 	 */
-	public void setEncounterProviders(List<Resource> encounterProviders) {
+	public void setEncounterProviders(List<Provider> encounterProviders) {
 		this.encounterProviders = encounterProviders;
 	}
 
@@ -286,14 +282,6 @@ public class Encounter extends BaseOpenmrsAuditableObject implements Serializabl
 			return form.getUuid();
 		else
 			return null;
-	}
-
-	public AuditInfo getAuditInfo() {
-		return auditInfo;
-	}
-
-	public void setAuditInfo(AuditInfo auditInfo) {
-		this.auditInfo = auditInfo;
 	}
 
 }

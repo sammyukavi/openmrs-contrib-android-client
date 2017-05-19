@@ -17,8 +17,7 @@ package org.openmrs.mobile.activities.auditdata;
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
 import org.openmrs.mobile.models.Encounter;
-import org.openmrs.mobile.models.Obs;
-import org.openmrs.mobile.models.Observation;
+import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Visit;
 
@@ -29,9 +28,13 @@ public interface AuditDataContract {
 
 		void setVisit(Visit visit);
 
-		void updateForm(Encounter encounter);
+		void updateFormFields(Encounter encounter);
 
 		void setEncounter(Encounter encounter);
+
+		void setLocation(Location location);
+
+		void fetchPatientDetails();
 	}
 
 	interface Presenter extends BasePresenterContract {
@@ -40,9 +43,9 @@ public interface AuditDataContract {
 
 		void fetchVisit(String patientId);
 
-		void fetchEncounterObservations(Encounter encounter);
+		void saveEncounter(Encounter encounter, boolean isNewEncounter);
 
-		void createEncounter(Encounter encounter);
+		void fetchLocation(String locationUuid);
 	}
 
 }

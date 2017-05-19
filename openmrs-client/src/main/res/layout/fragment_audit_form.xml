@@ -180,35 +180,6 @@
 				</android.support.design.widget.TextInputLayout>
 
 				<TextView
-						android:text="@string/is_audit_complete"
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content" />
-
-				<RadioGroup
-						android:layout_width="match_parent"
-						android:orientation="horizontal"
-						android:layout_height="wrap_content">
-
-					<RadioButton
-							android:layout_height="wrap_content"
-							android:layout_width="wrap_content"
-							android:text="@string/yes"
-							android:id="@+id/is_audit_complete_yes"
-							android:layout_gravity="start"
-							android:checked="false" />
-
-					<RadioButton
-							android:layout_height="wrap_content"
-							android:layout_width="wrap_content"
-							android:text="@string/no"
-							android:id="@+id/is_audit_complete_no"
-							android:layout_gravity="start"
-							android:checked="false" />
-
-				</RadioGroup>
-
-
-				<TextView
 						android:text="@string/is_death_in_hospital"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content" />
@@ -508,6 +479,34 @@
 							android:minLines="5"
 							android:inputType="text" />
 				</android.support.design.widget.TextInputLayout>
+
+				<TextView
+						android:text="@string/is_audit_complete"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content" />
+
+				<RadioGroup
+						android:layout_width="match_parent"
+						android:orientation="horizontal"
+						android:layout_height="wrap_content">
+
+					<RadioButton
+							android:layout_height="wrap_content"
+							android:layout_width="wrap_content"
+							android:text="@string/yes"
+							android:id="@+id/is_audit_complete_yes"
+							android:layout_gravity="start"
+							android:checked="false" />
+
+					<RadioButton
+							android:layout_height="wrap_content"
+							android:layout_width="wrap_content"
+							android:text="@string/no"
+							android:id="@+id/is_audit_complete_no"
+							android:layout_gravity="start"
+							android:checked="false" />
+
+				</RadioGroup>
 
 				<Button
 						android:layout_width="match_parent"

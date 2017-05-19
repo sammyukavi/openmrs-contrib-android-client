@@ -14,59 +14,35 @@
 
 package org.openmrs.mobile.activities.auditdata;
 
-import com.google.gson.Gson;
-
 import org.openmrs.mobile.activities.BasePresenter;
-import org.openmrs.mobile.api.RestApi;
-import org.openmrs.mobile.api.RestServiceBuilder;
-import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.impl.EncounterDataService;
 import org.openmrs.mobile.data.impl.LocationDataService;
-import org.openmrs.mobile.data.impl.ObsDataService;
 import org.openmrs.mobile.data.impl.PatientDataService;
 import org.openmrs.mobile.data.impl.VisitDataService;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Location;
-import org.openmrs.mobile.models.Obs;
-import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Visit;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import static org.openmrs.mobile.utilities.ApplicationConstants.EncounterTypeDisplays.AUDITDATA;
 
 public class AuditDataPresenter extends BasePresenter implements AuditDataContract.Presenter {
 
-	private OpenMRS openMRS;
 	private AuditDataContract.View auditDataView;
 	private DataService<Patient> patientDataService;
 	private VisitDataService visitDataService;
-	private ObsDataService observationDataService;
 	private EncounterDataService encounterDataService;
-	LocationDataService locationDataService;
-	private int startIndex = 0;
-	private int limit = 100;
+	private LocationDataService locationDataService;
 
-	public AuditDataPresenter(AuditDataContract.View view, OpenMRS openMRS) {
+	public AuditDataPresenter(AuditDataContract.View view) {
 		this.auditDataView = view;
 		this.auditDataView.setPresenter(this);
 		this.patientDataService = new PatientDataService();
 		this.visitDataService = new VisitDataService();
-		this.observationDataService = new ObsDataService();
 		this.encounterDataService = new EncounterDataService();
-		this.openMRS = openMRS;
 		this.locationDataService = new LocationDataService();
-
 	}
 
 	@Override
@@ -122,7 +98,7 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 			@Override
 			public void onCompleted(Encounter encounter) {
 				auditDataView.setEncounter(encounter);
-				auditDataView.updateForm(encounter);
+				auditDataView.updateFormFields(encounter);
 			}
 
 			@Override
@@ -130,17 +106,24 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 				t.printStackTrace();
 			}
 		};
-		encounterDataService.getByUUID(uuid, QueryOptions.LOAD_RELATED_OBJECTS,
-				fetchEncountercallback);
+		encounterDataService.getByUUID(uuid, QueryOptions.LOAD_RELATED_OBJECTS, fetchEncountercallback);
 	}
 
 	@Override
-	public void fetchEncounterObservations(Encounter encounter) {
+	public void saveEncounter(Encounter encounter, boolean isNewEncounter) {
 
-		/*DataService.GetCallback<Observation> fetchObservationCallback = new DataService.GetCallback<Observation>() {
+		DataService.GetCallback<Encounter> serverResponceCallback = new DataService.GetCallback<Encounter>() {
 			@Override
-			public void onCompleted(Observation observation) {
-				auditDataView.updateForm(observation);
+			public void onCompleted(Encounter encounter) {
+				/*TODO
+				Ask if the're a parameter you can pass when creating or updating the encounters so that you can get the
+				full representation and get to uncomment the commented lines below.
+				 */
+
+				//auditDataView.setEncounter(encounter);
+				//auditDataView.updateFormFields(encounter);
+
+				fetchEncounter(encounter.getUuid());
 			}
 
 			@Override
@@ -149,78 +132,21 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 			}
 		};
 
-		for (Observation observation : encounter.getObs()) {
-
-			observationDataService.getByUUID(observation.getUuid(), QueryOptions.LOAD_RELATED_OBJECTS,
-					fetchObservationCallback);
-		}*/
-
-
-		/*Gson gson = new Gson();
-		List<Obs> observations = new ArrayList<>();
-
-		for (Observation observation : encounter.getObs()) {
-			RestApi restApi = RestServiceBuilder.createService(RestApi.class);
-			Call<ResponseBody> call = restApi.getObservation(observation.getUuid(), "full");
-			call.enqueue(new Callback<ResponseBody>() {
-
-				@Override
-				public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-					if (response.isSuccessful()) {
-						try {
-							String string = response.body().string();
-							auditDataView.updateForm(gson.fromJson(string, Obs.class));
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					} else {
-
-					}
-				}
-
-				@Override
-				public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-				}
-			});
-		}*/
-
-	}
-
-	@Override
-	public void createEncounter(Encounter encounter) {
-
-		//some variables
-		String locationUuid = "";
-		Location location = null;
-
-		//get Location from db
-		if (!OpenMRS.getInstance().getLocation().equalsIgnoreCase(null)) {
-			locationUuid = openMRS.getLocation();
+		if (isNewEncounter) {
+			encounterDataService.create(encounter, serverResponceCallback);
+		} else {
+			encounterDataService.update(encounter, serverResponceCallback);
 		}
+	}
 
+	@Override
+	public void fetchLocation(String locationUuid) {
 		DataService.GetCallback<Location> locationDataServiceCallback = new DataService.GetCallback<Location>() {
 			@Override
 			public void onCompleted(Location location) {
-
-				//assigng location to encounter
-				encounter.setLocation(location);
-				saveEncounter(location);
-			}
-
-			private void saveEncounter(Location location) {
-
-				encounterDataService.create(encounter, new DataService.GetCallback<Encounter>() {
-					@Override
-					public void onCompleted(Encounter encounter) {
-						//ConsoleLogger.dump(encounter);
-					}
-
-					@Override
-					public void onError(Throwable t) {
-						t.printStackTrace();
-					}
-				});
+				//set location in the fragment and start loading other fields
+				auditDataView.setLocation(location);
+				auditDataView.fetchPatientDetails();
 			}
 
 			@Override
@@ -230,7 +156,6 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 		};
 
 		locationDataService.getByUUID(locationUuid, QueryOptions.LOAD_RELATED_OBJECTS, locationDataServiceCallback);
-
 	}
 
 }

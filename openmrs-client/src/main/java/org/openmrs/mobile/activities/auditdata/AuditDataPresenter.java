@@ -15,6 +15,7 @@
 package org.openmrs.mobile.activities.auditdata;
 
 import org.openmrs.mobile.activities.BasePresenter;
+import org.openmrs.mobile.activities.patientdashboard.PatientDashboardContract;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.impl.EncounterDataService;
@@ -32,7 +33,9 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 
 	private AuditDataContract.View auditDataView;
 	private DataService<Patient> patientDataService;
+	private PatientDashboardContract.View patientDashboardView;
 	private VisitDataService visitDataService;
+
 	private EncounterDataService encounterDataService;
 	private LocationDataService locationDataService;
 
@@ -78,6 +81,7 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 				auditDataView.updateStartDate(visit.getStartDatetime());
 				for (Encounter encounter : visit.getEncounters()) {
 					switch (encounter.getEncounterType().getDisplay()) {
+
 						case AUDITDATA:
 							fetchEncounter(encounter.getUuid());
 							break;
@@ -121,10 +125,12 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 				full representation and get to uncomment the commented lines below.
 				 */
 
+				fetchEncounter(encounter.getUuid());
+
 				//auditDataView.setEncounterUuid(encounter.getUuid());
 				//auditDataView.updateFormFields(encounter);
 
-				//fetchEncounter(encounter.getUuid());
+
 			}
 
 			@Override
@@ -139,6 +145,7 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 			encounterDataService.update(encounter, serverResponceCallback);
 		}
 	}
+
 
 	@Override
 	public void fetchLocation(String locationUuid) {
@@ -160,3 +167,4 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 	}
 
 }
+

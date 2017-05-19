@@ -12,6 +12,7 @@ public class QueryOptions {
 	public static final QueryOptions INCLUDE_INACTIVE = new QueryOptions(true, false);
 	public static final QueryOptions LOAD_RELATED_OBJECTS = new QueryOptions(false, true);
 
+	private String cacheKey;
 	private boolean includeInactive = DEFAULT_INCLUDE_INACTIVE;
 	private boolean loadRelatedObjects = DEFAULT_LOAD_RELATED_OBJECTS;
 
@@ -24,6 +25,14 @@ public class QueryOptions {
 		this.loadRelatedObjects = loadRelatedObjects;
 	}
 
+	public QueryOptions(String cacheKey) {
+		this.cacheKey = cacheKey;
+	}
+
+	public static String getCacheKey(@Nullable QueryOptions options) {
+		return options == null ? null : options.getCacheKey();
+	}
+
 	public static boolean getIncludeInactive(@Nullable QueryOptions options) {
 		return options == null ? DEFAULT_INCLUDE_INACTIVE : options.includeInactive();
 	}
@@ -34,6 +43,14 @@ public class QueryOptions {
 
 	public static String getRepresentation(@Nullable QueryOptions options) {
 		return getLoadRelatedObjects(options) ? RestConstants.Representations.FULL : RestConstants.Representations.DEFAULT;
+	}
+
+	public String getCacheKey() {
+		return cacheKey;
+	}
+
+	public void setCacheKey(String cacheKey) {
+		this.cacheKey = cacheKey;
 	}
 
 	public boolean includeInactive() {

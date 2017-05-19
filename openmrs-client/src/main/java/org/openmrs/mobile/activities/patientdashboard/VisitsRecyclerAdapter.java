@@ -19,6 +19,8 @@ import android.widget.TextView;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.auditdata.AuditDataActivity;
 import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
+import org.openmrs.mobile.activities.visitdetails.VisitDetailsActivity;
+import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
@@ -36,7 +38,8 @@ import java.util.List;
 
 import static org.openmrs.mobile.utilities.ApplicationConstants.EncounterTypeDisplays.VISIT_NOTE;
 
-public class PastVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
 	private final int VIEW_TYPE_ITEM = 0;
 	private final int VIEW_TYPE_LOADING = 1;
 	private final Patient patient;
@@ -51,6 +54,8 @@ public class PastVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 	private int startIndex = 0;
 	private int limit = 5;
 	LayoutInflater layoutInflater;
+	private ImageView showVisitDetails;
+	private Intent intent;
 
 	View.OnClickListener switchToEditMode = new View.OnClickListener() {
 		@Override
@@ -59,8 +64,9 @@ public class PastVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 					.createAndShowDialog(createEditVisitNoteDialog, ApplicationConstants.DialogTAG.VISIT_NOTE_TAG);
 		}
 	};
+	private boolean hasVisitNote;
 
-	public PastVisitsRecyclerAdapter(RecyclerView recyclerView, List<Visit> visits, Context context, Patient patient) {
+	public VisitsRecyclerAdapter(RecyclerView recyclerView, List<Visit> visits, Context context, Patient patient) {
 		this.visits = visits;
 		this.context = context;
 		this.patient = patient;
@@ -68,7 +74,6 @@ public class PastVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 		createEditVisitNoteDialog.setTitleViewMessage(context.getString(R.string.visit_note));
 		createEditVisitNoteDialog.setRightButtonText(context.getString(R.string.label_save));
 		observationDataService = new ObsDataService();
-		layoutInflater = LayoutInflater.from(context);
 		LinearLayoutManager layoutManager = (LinearLayoutManager)recyclerView.getLayoutManager();
 		recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 			@Override
@@ -116,48 +121,6 @@ public class PastVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 		return null;
 	}
 
-	public void expandCollapse(View view) {
-		if (view.getVisibility() == View.GONE) {
-			view.setVisibility(View.VISIBLE);
-			//int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-			//ConsoleLogger.dump(heightMeasureSpec);
-			/*
-			final int widthSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-			final int heightSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-			view.measure(widthSpec, heightSpec);
-			ValueAnimator mAnimator = slideAnimator(view, 0, view.getMeasuredHeight());
-			mAnimator.start();*/
-		} else {
-			view.setVisibility(View.GONE);
-			/*int finalHeight = view.getHeight();
-			ValueAnimator mAnimator = slideAnimator(view, finalHeight, 0);
-			mAnimator.addListener(new Animator.AnimatorListener() {
-				@Override
-				public void onAnimationStart(Animator animation) {
-
-				}
-
-				@Override
-				public void onAnimationEnd(Animator animator) {
-					view.setVisibility(View.GONE);
-				}
-
-				@Override
-				public void onAnimationCancel(Animator animation) {
-
-				}
-
-				@Override
-				public void onAnimationRepeat(Animator animation) {
-
-				}
-
-			});
-			mAnimator.start();*/
-		}
-
-	}
-
 	private ValueAnimator slideAnimator(View view, int start, int end) {
 		ValueAnimator animator = ValueAnimator.ofInt(start, end);
 		animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -180,6 +143,7 @@ public class PastVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 			//setHasVisitNote(false);
 
 			VisitViewHolder viewHolder = (VisitViewHolder)holder;
+			LayoutInflater layoutInflater = LayoutInflater.from(context);
 			View singleVisitView = layoutInflater.inflate(R.layout.patient_visit_card, null);
 			LinearLayout observationsContainer = (LinearLayout)singleVisitView.findViewById(R.id.observationsContainer);
 			TextView visitTitle = (TextView)singleVisitView.findViewById(R.id.visitTitle);
@@ -189,16 +153,20 @@ public class PastVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 						.convertTime1(visit.getStartDatetime(), DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT));
 			} else {
 				visitTitle.setText("Visit: " + DateUtils
-						.convertTime1(visit.getStopDatetime(), DateUtils
-								.PATIENT_DASHBOARD_VISIT_DATE_FORMAT) + " - " + DateUtils
-						.convertTime1(visit.getStartDatetime(), DateUtils
-								.PATIENT_DASHBOARD_VISIT_DATE_FORMAT));
+						.convertTime1(visit.getStartDatetime(), DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT) + " - "
+						+ DateUtils.convertTime1(visit.getStopDatetime(), DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT));
 			}
 
-			visitTitle.setOnClickListener(new View.OnClickListener() {
+			//Adding the link to the visit details page
+			showVisitDetails = (ImageView)singleVisitView.findViewById(R.id.loadVisitDetails);
+			showVisitDetails.setOnClickListener(new View.OnClickListener() {
 				@Override
-				public void onClick(View view) {
-					expandCollapse(observationsContainer);
+				public void onClick(View v) {
+					intent = new Intent(context, VisitDetailsActivity.class);
+					intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, OpenMRS.getInstance()
+							.getPatientUuid());
+					intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visit.getUuid());
+					context.startActivity(intent);
 				}
 			});
 
@@ -209,7 +177,7 @@ public class PastVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 				@Override
 				public void onClick(View v) {
 
-					Intent intent = new Intent(context, AuditDataActivity
+					intent = new Intent(context, AuditDataActivity
 							.class);
 
 					intent.putExtra(ApplicationConstants.BundleKeys
@@ -221,39 +189,63 @@ public class PastVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 					context.startActivity(intent);
 				}
 			});
+
 			if (visit.getEncounters().size() == 0) {
 				addVisitNoteField(observationsContainer, visit.getUuid(), null);
 			} else {
 				for (Encounter encounter : visit.getEncounters()) {
+
 					switch (encounter.getEncounterType().getDisplay()) {
+
 						case VISIT_NOTE:
+
 							QueryOptions options = new QueryOptions();
 							PagingInfo pagininfo =
 									new PagingInfo(startIndex, limit);
+
 							observationDataService.getByEncounter(encounter, options, pagininfo,
 									new DataService.GetCallback<List<Observation>>() {
 										@Override
 										public void onCompleted(List<Observation> observations) {
-											if (observations.size() == 0) {
-												addVisitNoteField(observationsContainer, visit.getUuid(), null);
-											} else {
-												for (int i = 0; i < observations.size(); i++) {
-													Observation observation = observations.get(i);
-													if (observation.getDiagnosisNote() != null && !observation
-															.getDiagnosisNote()
-															.equals(ApplicationConstants.EMPTY_STRING)) {
-														addVisitNoteField(observationsContainer, visit.getUuid(),
-																observation);
-													}
+											for (Observation observation : observations) {
 
-													if ((i == (observations.size() - 1)) && (
-															observationsContainer.getChildCount
-																	() == 0)) {
-														addVisitNoteField(observationsContainer, visit.getUuid(), null);
-													}
+												if (observation.getDiagnosisNote() != null && !observation
+														.getDiagnosisNote()
+														.equals(ApplicationConstants.EMPTY_STRING)) {
+													View row = layoutInflater
+															.inflate(R.layout.visit_obervation_row, null);
+													observationsContainer.addView(row);
+
+													Observation newObservation = new Observation();
+													newObservation.setUuid(observation.getUuid());
+													newObservation.setConcept(observation.getConcept());
+													newObservation.setPerson(patient.getPerson());
+
+													ImageView visitNoteIcon = (ImageView)row.findViewById(R.id.icon);
+													visitNoteIcon.setOnClickListener(switchToEditMode);
+
+													TextView visitNote = (TextView)row.findViewById(R.id.text);
+													visitNote.setHint(context.getResources().getString(R.string
+															.add_a_note));
+													visitNote.setText(observation.getDiagnosisNote());
+													//visitNote.setMovementMethod(new ScrollingMovementMethod());
+
+													Bundle dialogBundle = new Bundle();
+													dialogBundle
+															.putString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE,
+																	patient.getUuid());
+													dialogBundle.putSerializable(ApplicationConstants.BundleKeys
+																	.OBSERVATION,
+															newObservation);
+
+													createEditVisitNoteDialog.setRightButtonAction(
+															CustomFragmentDialog.OnClickAction.SAVE_VISIT_NOTE);
+													createEditVisitNoteDialog
+															.setEditNoteTextViewMessage(observation.getDiagnosisNote());
+													createEditVisitNoteDialog.setArguments(dialogBundle);
+													setHasVisitNote(true);
 												}
 											}
-
 										}
 
 										@Override
@@ -264,8 +256,27 @@ public class PastVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 
 							break;
 					}
-					addVisitNoteField(observationsContainer, visit.getUuid(), null);
 				}
+
+			}
+
+			if (!hasVisitNote) {
+				View row = LayoutInflater.from(context).inflate(R.layout.visit_obervation_row, null);
+				observationsContainer.addView(row, 0);
+
+				TextView visitNote = (TextView)row.findViewById(R.id.text);
+				ImageView visitNoteIcon = (ImageView)row.findViewById(R.id.icon);
+				visitNote.setHint(context.getResources().getString(R.string.add_a_note));
+				visitNoteIcon.setOnClickListener(switchToEditMode);
+
+				createEditVisitNoteDialog.setEditNoteTextViewMessage("");
+				createEditVisitNoteDialog.setRightButtonAction(CustomFragmentDialog.OnClickAction.CREATE_VISIT_NOTE);
+
+				Bundle dialogBundle = new Bundle();
+				dialogBundle
+						.putString(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE,
+								visit.getUuid());
+				createEditVisitNoteDialog.setArguments(dialogBundle);
 			}
 
 			viewHolder.observationsContainer.addView(singleVisitView);
@@ -274,6 +285,11 @@ public class PastVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 			LoadingViewHolder loadingViewHolder = (LoadingViewHolder)holder;
 			loadingViewHolder.progressBar.setIndeterminate(true);
 		}
+
+	}
+
+	private void setHasVisitNote(boolean b) {
+		this.hasVisitNote = b;
 	}
 
 	private void addVisitNoteField(LinearLayout observationsContainer, String visitUUid, @Nullable Observation
@@ -322,7 +338,6 @@ public class PastVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
 				newObservation);
 
 		createEditVisitNoteDialog.setArguments(dialogBundle);
-
 
 	}
 

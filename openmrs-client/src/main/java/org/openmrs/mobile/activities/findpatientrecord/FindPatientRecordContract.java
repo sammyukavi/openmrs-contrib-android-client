@@ -35,8 +35,6 @@ public interface FindPatientRecordContract {
 
 		void fetchPatients(List<Patient> patients);
 
-		void setSearchPatientVisibility(boolean visibility);
-
 		void setProgressBarVisibility(boolean visibility);
 
 		void showToast(String message, ToastUtil.ToastType toastType);
@@ -56,8 +54,6 @@ public interface FindPatientRecordContract {
 		boolean isLoading();
 
 		void setLoading(boolean loading);
-
-		void setTotalNumberResults(int totalNumberResults);
 
 		void loadResults(boolean loadNextResults);
 

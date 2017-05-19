@@ -94,7 +94,11 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 		changeUrlIcon.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				showWarningDialog(false);
+				if (mUrl.getVisibility() == View.VISIBLE) {
+					showEditUrlEditField(false);
+				} else {
+					showEditUrlEditField(true);
+				}
 			}
 		});
 
@@ -166,16 +170,12 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 	}
 
 	@Override
-	public void showWarningDialog(boolean login) {
+	public void showWarningDialog() {
 		CustomDialogBundle bundle = new CustomDialogBundle();
 		bundle.setTitleViewMessage(getString(R.string.warning_dialog_title));
 		bundle.setTextViewMessage(getString(R.string.warning_lost_data_dialog));
 		bundle.setRightButtonText(getString(R.string.dialog_button_ok));
-		if (login) {
 			bundle.setRightButtonAction(CustomFragmentDialog.OnClickAction.LOGIN);
-		} else {
-			bundle.setRightButtonAction(CustomFragmentDialog.OnClickAction.DISPLAY_URL_EDIT_FIELD);
-		}
 		((LoginActivity)this.getActivity())
 				.createAndShowDialog(bundle, ApplicationConstants.DialogTAG.WARNING_LOST_DATA_DIALOG_TAG);
 	}
@@ -261,7 +261,12 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 
 	@Override
 	public void showEditUrlEditField(boolean visibility) {
-		mUrl.setVisibility(View.VISIBLE);
+		if (!visibility) {
+			mUrl.setVisibility(View.GONE);
+		} else {
+			mUrl.setVisibility(View.VISIBLE);
+		}
+
 	}
 
 	@Override

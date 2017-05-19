@@ -19,6 +19,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -55,13 +56,14 @@ import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcept
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_ANSWER_UNKNOWN;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_ANSWER_YES;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_AUDIT_COMPLETE;
-import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_CD4;
+import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_CD4_COUNT;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_DEATH_IN_HOSPITAL;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_HBA1C;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_HDU_COMGMT;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_HDU_STAY;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_HIV_POSITIVE;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_ICU_STAY;
+import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_INPATIENT_SERVICE_TYPE;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_PALLIATIVE_CONSULT;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_PREOP_RISK_ASSESMENT;
 import static org.openmrs.mobile.utilities.ApplicationConstants.EncounterTypeEntitys.AUDIT_FORM;
@@ -74,18 +76,20 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 	private Patient patient;
 	private View fragmentView;
 	private Location location;
+	private EditText cd4, hBa1c;
 	private String encounterUuid = null;
 	private String visitUuid, patientUuid;
 	private OpenMRS instance = OpenMRS.getInstance();
+
 	private TextView patientDisplayName, patientGender, patientAge, patientIdentifier, patientDob, admissionDate;
 	private Observation deathInHospitalObservation, palliativeConsultObservation, preopRiskAssessmentObservation,
-			icuStayObservation, hduStayObservation, hduComgmtObservation, hivPositiveObservation,
-			auditCompleteObservation, dischargeDiagnosisObservation, hBa1cObservation, cd4Observation;
+			icuStayObservation, hduStayObservation, hduComgmtObservation, hivPositiveObservation, cd4Observation,
+			hBa1cObservation, inpatientServiceTypeObservation, auditCompleteObservation;
 	private RadioButton deathInHospitalYes, deathInHospitalNo, palliativeConsultYes, palliativeConsultNo,
 			palliativeConsultUknown, preopRiskAssessmentYes, preopRiskAssessmentNo, preopRiskAssessmentUknown, icuStayYes,
 			icuStayNo, icuStayUnknown, hduStayYes, hduStayNo, hduStayUnknown, hduComgmtYes, hduComgmtNo, hduComgmtUnknown,
 			hivPositiveYes, hivPositiveNo, hivPositiveUnknown, auditCompleteYes, auditCompleteNo;
-	private EditText dischargeDiagnosis, hBa1c, cd4;
+
 	private Spinner inpatientServiceType;
 
 	public static AuditDataFragment newInstance() {
@@ -160,11 +164,11 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		auditCompleteYes = (RadioButton)fragmentView.findViewById(R.id.is_audit_complete_yes);
 		auditCompleteNo = (RadioButton)fragmentView.findViewById(R.id.is_audit_complete_no);
 
-		dischargeDiagnosis = (EditText)fragmentView.findViewById(R.id.discharge_diagnosis);
+		cd4 = (EditText)fragmentView.findViewById(R.id.cd4);
 
 		hBa1c = (EditText)fragmentView.findViewById(R.id.hba1c);
 
-		cd4 = (EditText)fragmentView.findViewById(R.id.cd4);
+		inpatientServiceType = (Spinner)fragmentView.findViewById(R.id.inpatient_service_type);
 
 		Button submitForm = (Button)fragmentView.findViewById(R.id.submitConfirm);
 		submitForm.setOnClickListener(v -> {
@@ -174,9 +178,8 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 
 	private void initObservations() {
 		deathInHospitalObservation = palliativeConsultObservation = preopRiskAssessmentObservation =
-				icuStayObservation = hduStayObservation =
-						hduComgmtObservation = hivPositiveObservation = auditCompleteObservation =
-								dischargeDiagnosisObservation = hBa1cObservation = cd4Observation = null;
+				icuStayObservation = hduStayObservation = hduComgmtObservation =
+						hivPositiveObservation = auditCompleteObservation = hBa1cObservation = cd4Observation = null;
 
 	}
 
@@ -509,33 +512,48 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 					}
 
 					break;
-				case CONCEPT_CD4:
+				case CONCEPT_CD4_COUNT:
 
-					auditCompleteObservation = observation;
-
-					if (displayValue.equalsIgnoreCase(ANSWER_YES)) {
-						auditCompleteYes.setChecked(true);
-					} else if (displayValue.equalsIgnoreCase(ANSWER_NO)) {
-						auditCompleteNo.setChecked(true);
-					}
+					cd4Observation = observation;
+					cd4.setText(displayValue);
 
 					break;
 				case CONCEPT_HBA1C:
 
-					auditCompleteObservation = observation;
+					hBa1cObservation = observation;
 
-					if (displayValue.equalsIgnoreCase(ANSWER_YES)) {
-						auditCompleteYes.setChecked(true);
-					} else if (displayValue.equalsIgnoreCase(ANSWER_NO)) {
-						auditCompleteNo.setChecked(true);
+					hBa1c.setText(displayValue);
+
+					break;
+				case CONCEPT_INPATIENT_SERVICE_TYPE:
+
+					inpatientServiceTypeObservation = observation;
+					//Short fix. Values mismatch from server.
+					//TODO  find a way of putting thisngs in the settings page
+					if (displayValue.equalsIgnoreCase("surgical service")) {
+						displayValue = "Surgery service";
+					}
+
+					ArrayAdapter<CharSequence> adapter = ArrayAdapter
+							.createFromResource(getContext(), R.array.inpatient_service_types, android.R.layout
+									.simple_spinner_item);
+					adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+					inpatientServiceType.setAdapter(adapter);
+					if (!displayValue.equals(null)) {
+						int spinnerPosition = adapter.getPosition(displayValue);
+						inpatientServiceType.setSelection(spinnerPosition);
 					}
 
 					break;
 				case CONCEPT_AUDIT_COMPLETE:
 
-					dischargeDiagnosisObservation = observation;
+					auditCompleteObservation = observation;
 
-					dischargeDiagnosis.setText(observation.getValue().toString());
+					if (displayValue.equalsIgnoreCase(ANSWER_YES)) {
+						auditCompleteYes.setChecked(true);
+					} else if (displayValue.equalsIgnoreCase(ANSWER_NO)) {
+						auditCompleteNo.setChecked(true);
+					}
 
 					break;
 				default:
@@ -551,9 +569,11 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		Form auditDataForm = new Form();
 		auditDataForm.setUuid(AUDIT_DATA_FORM_UUID);
 
+		//create encountertype
 		EncounterType auditFormEncounterType = new EncounterType();
 		auditFormEncounterType.setUuid(AUDIT_FORM);
 
+		//create provider
 		Provider provider = new Provider();
 		provider.setUuid(instance.getCurrentLoggedInUserInfo().get(ApplicationConstants.UserKeys.USER_UUID));
 
@@ -589,6 +609,18 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 			observations.add(hivPositiveObservation);
 		}
 
+		if (cd4Observation != null) {
+			observations.add(cd4Observation);
+		}
+
+		if (hBa1cObservation != null) {
+			observations.add(hBa1cObservation);
+		}
+
+		if (inpatientServiceTypeObservation != null) {
+			observations.add(inpatientServiceTypeObservation);
+		}
+
 		if (auditCompleteObservation != null) {
 			observations.add(auditCompleteObservation);
 		}
@@ -619,7 +651,6 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		encounter.setEncounterType(auditFormEncounterType);
 		encounter.setEncounterDatetime(timeString);
 		encounter.setObs(observations);
-		//encounter.setEncounterProviders(provider);
 
 		mPresenter.saveEncounter(encounter, isNewEncounter);
 	}

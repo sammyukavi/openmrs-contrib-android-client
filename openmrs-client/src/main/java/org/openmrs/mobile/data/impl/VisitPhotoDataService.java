@@ -44,7 +44,7 @@ public class VisitPhotoDataService
 	}
 
 	public void uploadPhoto(VisitPhoto visitPhoto, @NonNull GetCallback<VisitPhoto> callback) {
-		executeSingleCallback(callback,
+		executeSingleCallback(callback, null,
 				() -> null,
 				() -> {
 					RequestBody patient =

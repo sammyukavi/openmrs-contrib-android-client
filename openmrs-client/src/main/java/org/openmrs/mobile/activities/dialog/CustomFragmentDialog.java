@@ -51,7 +51,6 @@ import org.openmrs.mobile.activities.addeditvisit.AddEditVisitActivity;
 import org.openmrs.mobile.activities.login.LoginActivity;
 import org.openmrs.mobile.activities.login.LoginFragment;
 import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
-import org.openmrs.mobile.activities.visittasks.VisitTasksActivity;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.data.DataService;
@@ -428,7 +427,7 @@ public class CustomFragmentDialog extends DialogFragment {
 						break;
 					case REGISTER_PATIENT:
 						((AddEditPatientActivity)getActivity()).mPresenter
-								.registerPatient(mCustomDialogBundle.getNewPatient());
+								.addEditPatient(mCustomDialogBundle.getNewPatient());
 						dismiss();
 						break;
 					case CANCEL_REGISTERING:
@@ -443,10 +442,10 @@ public class CustomFragmentDialog extends DialogFragment {
 						break;
 					case ADD_VISIT_TASKS:
 						if (StringUtils.notEmpty(getAutoCompleteTextValue())) {
-							((VisitTasksActivity)getActivity()).mPresenter
+							/*((VisitTasksActivity)getActivity()).mPresenter
 									.createVisitTasksObject(getAutoCompleteTextValue());
 							dismiss();
-							break;
+							break;*/
 						} else {
 							dismiss();
 							break;
@@ -493,10 +492,6 @@ public class CustomFragmentDialog extends DialogFragment {
 									}
 								});
 
-						break;
-					case DISPLAY_URL_EDIT_FIELD:
-						((LoginActivity)getActivity()).mPresenter.showEditUrlEditText(true);
-						dismiss();
 						break;
 					default:
 						break;
@@ -625,8 +620,7 @@ public class CustomFragmentDialog extends DialogFragment {
 		DELETE_PATIENT,
 		ADD_VISIT_TASKS,
 		SAVE_VISIT_NOTE,
-		CREATE_VISIT_NOTE,
-		DISPLAY_URL_EDIT_FIELD
+		CREATE_VISIT_NOTE
 	}
 
 	public interface DialogActionClickedListener {

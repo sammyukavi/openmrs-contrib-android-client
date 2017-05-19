@@ -32,8 +32,6 @@ import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.activities.addeditpatient.AddEditPatientActivity;
 import org.openmrs.mobile.activities.addeditvisit.AddEditVisitActivity;
-import org.openmrs.mobile.activities.visitphoto.upload.UploadVisitPhotoActivity;
-import org.openmrs.mobile.activities.visittasks.VisitTasksActivity;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Person;
@@ -55,6 +53,10 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	private OpenMRS instance = OpenMRS.getInstance();
 	private SharedPreferences sharedPreferences = instance.getOpenMRSSharedPreferences();
 
+	private int visitsStartLimit = 5;
+	private Intent intent;
+
+
 	public static PatientDashboardFragment newInstance() {
 		return new PatientDashboardFragment();
 	}
@@ -66,11 +68,11 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		fragmentView = inflater.inflate(R.layout.fragment_patient_dashboard, container, false);
-		String patientId = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
+		String patientUuid = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
 		initViewFields();
 		initializeListeners(addVisitImageButton, addVisitTaskButton, startVisitButton,
 				editVisitButton, endVisitButton, editVisitButton, endVisitButton, editPatient);
-		mPresenter.fetchPatientData(patientId);
+		mPresenter.fetchPatientData(patientUuid);
 		FontsUtil.setFont((ViewGroup)this.getActivity().findViewById(android.R.id.content));
 		return fragmentView;
 	}
@@ -84,23 +86,6 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
 	private void startSelectedPatientDashboardActivity(int selectedId) {
 		switch (selectedId) {
-			case R.id.add_visit_image:
-				Intent intent = new Intent(getContext(), UploadVisitPhotoActivity.class);
-				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, sharedPreferences.getString
-						(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING));
-				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, sharedPreferences.getString
-						(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING));
-				intent.putExtra(ApplicationConstants.BundleKeys.PROVIDER_UUID_BUNDLE, sharedPreferences.getString
-						(ApplicationConstants.BundleKeys.PROVIDER_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING));
-				startActivity(intent);
-				break;
-			case R.id.add_visit_task:
-				if (activeVisit != null) {
-					intent = new Intent(getContext(), VisitTasksActivity.class);
-					startActivity(intent);
-					break;
-				}
-				break;
 			case R.id.start_visit:
 				intent = new Intent(getContext(), AddEditVisitActivity.class);
 				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, sharedPreferences.getString
@@ -176,20 +161,20 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
 		RecyclerView pastVisits = (RecyclerView)fragmentView.findViewById(R.id.pastVisits);
 		pastVisits.setLayoutManager(new LinearLayoutManager(getContext()));
-		PastVisitsRecyclerAdapter
-				pastVisitsRecyclerAdapter = new PastVisitsRecyclerAdapter(pastVisits, visits, getActivity(), patient);
-		pastVisits.setAdapter(pastVisitsRecyclerAdapter);
+		VisitsRecyclerAdapter
+				visitsRecyclerAdapter = new VisitsRecyclerAdapter(pastVisits, visits, getActivity(), patient);
+		pastVisits.setAdapter(visitsRecyclerAdapter);
 
-		pastVisitsRecyclerAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
+		visitsRecyclerAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
 			@Override
 			public void onLoadMore() {
-				//pastVisitsRecyclerAdapter.notifyItemRemoved();
+				//visitsRecyclerAdapter.notifyItemRemoved();
 				/**
 				 * Load more here
 				 */
 				//ConsoleLogger.dump("Loading more");
-				//pastVisitsRecyclerAdapter.notifyDataSetChanged();
-				//pastVisitsRecyclerAdapter.setLoaded();
+				//visitsRecyclerAdapter.notifyDataSetChanged();
+				//visitsRecyclerAdapter.setLoaded();
 			}
 		});
 	}

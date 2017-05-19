@@ -39,14 +39,12 @@
 		<activity android:name=".activities.capturevitals.CaptureVitalsActivity" />
 		<activity android:name=".activities.addeditpatient.AddEditPatientActivity" />
 		<activity android:name=".activities.findpatientrecord.FindPatientRecordActivity" />
-		<activity android:name=".activities.visittasks.VisitTasksActivity" />
 		<activity android:name=".activities.settings.SettingsActivity" />
 		<activity android:name=".activities.patientdashboard.PatientDashboardActivity" />
 		<activity android:name=".activities.login.LoginActivity" />
 		<activity android:name=".activities.addeditvisit.AddEditVisitActivity" />
-		<activity android:name=".activities.visitphoto.upload.UploadVisitPhotoActivity" />
-		<activity android:name=".activities.visitphoto.download.DownloadVisitPhotoActivity" />
 		<activity android:name=".activities.auditdata.AuditDataActivity" />
+		<activity android:name=".activities.visitdetails.VisitDetailsActivity" />
 	</application>
 
 </manifest>

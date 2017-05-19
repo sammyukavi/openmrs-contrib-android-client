@@ -213,7 +213,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 
 	@Override
 	public void getConceptNames(String uuid, Spinner dropdown) {
-		conceptNameDataService.getByConceptUuid(uuid, new DataService.GetCallback<List<ConceptName>>() {
+		conceptNameDataService.getByConceptUuid(uuid, null, new DataService.GetCallback<List<ConceptName>>() {
 			@Override
 			public void onCompleted(List<ConceptName> entities) {
 				addEditVisitView.updateConceptNamesView(dropdown, entities);
@@ -298,7 +298,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 		visit = new Visit();
 		visit.setUuid(uuid);
 		visit.setStopDatetime(DateUtils.convertTime(System.currentTimeMillis(), DateUtils.OPEN_MRS_REQUEST_FORMAT));
-		visitDataService.endVisit(visit.getUuid(), visit, new DataService.GetCallback<Visit>() {
+		visitDataService.endVisit(visit.getUuid(), visit, null, new DataService.GetCallback<Visit>() {
 			@Override
 			public void onCompleted(Visit entity) {
 				visit = entity;

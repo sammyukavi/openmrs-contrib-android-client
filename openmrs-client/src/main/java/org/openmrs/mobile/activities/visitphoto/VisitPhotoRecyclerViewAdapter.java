@@ -1,4 +1,18 @@
-package org.openmrs.mobile.activities.visitphoto.download;
+/*
+ * The contents of this file are subject to the OpenMRS Public License
+ * Version 1.0 (the "License"); you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://license.openmrs.org
+ *
+ * Software distributed under the License is distributed on an "AS IS"
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+ * License for the specific language governing rights and limitations
+ * under the License.
+ *
+ * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
+ */
+
+package org.openmrs.mobile.activities.visitphoto;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -14,22 +28,23 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.openmrs.mobile.R;
+import org.openmrs.mobile.activities.visitdetails.VisitDetailsContract;
 import org.openmrs.mobile.data.DataService;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DownloadVisitPhotoRecyclerViewAdapter
-		extends RecyclerView.Adapter<DownloadVisitPhotoRecyclerViewAdapter.DownloadVisitPhotoViewHolder> {
+public class VisitPhotoRecyclerViewAdapter
+		extends RecyclerView.Adapter<VisitPhotoRecyclerViewAdapter.DownloadVisitPhotoViewHolder> {
 
 	private Activity context;
-	private DownloadVisitPhotoContract.View view;
+	private VisitDetailsContract.VisitPhotoView view;
 	private List<String> items;
 	private Map<ImageView, Bitmap> map = new HashMap<>();
 
-	public DownloadVisitPhotoRecyclerViewAdapter(Activity context,
-			List<String> items, DownloadVisitPhotoContract.View view) {
+	public VisitPhotoRecyclerViewAdapter(Activity context,
+			List<String> items, VisitDetailsContract.VisitPhotoView view) {
 		this.context = context;
 		this.items = items;
 		this.view = view;

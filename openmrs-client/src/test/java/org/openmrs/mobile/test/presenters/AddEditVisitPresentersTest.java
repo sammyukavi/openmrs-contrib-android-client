@@ -20,7 +20,6 @@ import org.openmrs.mobile.data.impl.VisitTypeDataService;
 import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Person;
-import org.openmrs.mobile.models.Provider;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitType;
 import org.openmrs.mobile.test.ACUnitTestBase;
@@ -32,11 +31,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @PrepareForTest({OpenMRS.class})
 public class AddEditVisitPresentersTest extends ACUnitTestBase {
@@ -171,9 +168,8 @@ public class AddEditVisitPresentersTest extends ACUnitTestBase {
                 ((DataService.GetCallback<Visit>) invocation.getArguments()[2]).onCompleted(visit);
                 return null;
             }
-        }).when(visitDataService).endVisit(anyString(), any(Visit.class), any(QueryOptions.class), any(DataService
-                .GetCallback
-                .class));
+        }).when(visitDataService).endVisit(anyString(), any(Visit.class), any(QueryOptions.class),
+                any(DataService.GetCallback.class));
 
     }
 

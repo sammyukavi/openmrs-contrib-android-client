@@ -186,6 +186,13 @@ public abstract class ApplicationConstants {
 
 		public static final String CONCEPT_HIV_POSITIVE = "1169AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 
+		public static final String CONCEPT_CD4 = "1642AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+
+		public static final String CONCEPT_HBA1C = "159644AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+
+		public static final String CONCEPT_INPATIENT_SERVICE_TYPE = "161630AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+
 		public static final String CONCEPT_AUDIT_COMPLETE = "98f0f043-bdb1-40c6-8c81-6a094056e981";
+
 	}
 }

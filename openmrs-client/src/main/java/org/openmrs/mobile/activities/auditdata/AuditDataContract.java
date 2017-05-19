@@ -30,11 +30,13 @@ public interface AuditDataContract {
 
 		void updateFormFields(Encounter encounter);
 
-		void setEncounter(Encounter encounter);
+		void setEncounterUuid(String uuid);
 
 		void setLocation(Location location);
 
 		void fetchPatientDetails();
+
+		void updateStartDate(String startDatetime);
 	}
 
 	interface Presenter extends BasePresenterContract {

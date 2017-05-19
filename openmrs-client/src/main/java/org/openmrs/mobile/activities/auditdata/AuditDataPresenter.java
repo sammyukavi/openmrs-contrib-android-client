@@ -75,6 +75,7 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 			@Override
 			public void onCompleted(Visit visit) {
 				auditDataView.setVisit(visit);
+				auditDataView.updateStartDate(visit.getStartDatetime());
 				for (Encounter encounter : visit.getEncounters()) {
 					switch (encounter.getEncounterType().getDisplay()) {
 						case AUDITDATA:
@@ -97,7 +98,7 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 		DataService.GetCallback<Encounter> fetchEncountercallback = new DataService.GetCallback<Encounter>() {
 			@Override
 			public void onCompleted(Encounter encounter) {
-				auditDataView.setEncounter(encounter);
+				auditDataView.setEncounterUuid(encounter.getUuid());
 				auditDataView.updateFormFields(encounter);
 			}
 
@@ -120,10 +121,10 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 				full representation and get to uncomment the commented lines below.
 				 */
 
-				//auditDataView.setEncounter(encounter);
+				//auditDataView.setEncounterUuid(encounter.getUuid());
 				//auditDataView.updateFormFields(encounter);
 
-				fetchEncounter(encounter.getUuid());
+				//fetchEncounter(encounter.getUuid());
 			}
 
 			@Override

@@ -53,7 +53,7 @@
 	<string name="reg_ques_phno">Phone number</string>
 	<string name="reg_address">Address</string>
 	<string name="reg_nationality">Nationality</string>
-	<string name="reg_ward">Ward</string>
+	<string name="reg_ward">Ward:</string>
 	<string name="reg_clinic">Clinic</string>
 	<string name="emergency_contact">Emergency Contact</string>
 	<string name="addr2_hint">Address 2</string>
@@ -455,5 +455,11 @@
 	<string name="visit_scroll_tab_visit_images_label">Visit Imaging</string>
 	<string name="visit_scroll_tab_patient_details_label">Patient Details</string>
 	<string name="no_visit_images">No Visit Images</string>
+	<string name="bed_number">Bed Number:</string>
+	<string name="visit_note_diagnosis_label">Visit Note and Diagnosis</string>
+	<string name="primary_diagnosis_label">Primary Diagnosis</string>
+	<string name="secondary_diagnosis_label">Secondary Diagnosis</string>
+	<string name="clinical_notes_label">Add clinical note</string>
+	<string name="visit_label">Visit</string>
 
 </resources>

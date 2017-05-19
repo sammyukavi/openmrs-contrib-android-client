@@ -12,7 +12,7 @@
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
 
-package org.openmrs.mobile.activities.visittasks;
+package org.openmrs.mobile.activities.visit.visittasks;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -20,19 +20,15 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import org.openmrs.mobile.R;
-import org.openmrs.mobile.activities.visitdetails.VisitDetailsContract;
-import org.openmrs.mobile.activities.visitdetails.VisitDetailsFragment;
-import org.openmrs.mobile.activities.visitphoto.VisitPhotoPresenter;
+import org.openmrs.mobile.activities.visit.VisitContract;
+import org.openmrs.mobile.activities.visit.VisitFragment;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitPredefinedTask;
@@ -46,7 +42,7 @@ import org.openmrs.mobile.utilities.ViewUtils;
 import java.util.Arrays;
 import java.util.List;
 
-public class VisitTasksFragment extends VisitDetailsFragment implements VisitDetailsContract.VisitTasksView {
+public class VisitTasksFragment extends VisitFragment implements VisitContract.VisitTasksView {
 
 	private static OpenMRS instance = OpenMRS.getInstance();
 	FloatingActionButton fab;

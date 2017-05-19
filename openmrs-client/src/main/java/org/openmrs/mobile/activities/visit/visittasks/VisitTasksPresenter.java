@@ -12,10 +12,10 @@
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
 
-package org.openmrs.mobile.activities.visittasks;
+package org.openmrs.mobile.activities.visit.visittasks;
 
-import org.openmrs.mobile.activities.visitdetails.VisitDetailsContract;
-import org.openmrs.mobile.activities.visitdetails.VisitDetailsPresenter;
+import org.openmrs.mobile.activities.visit.VisitContract;
+import org.openmrs.mobile.activities.visit.VisitPresenterImpl;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
@@ -32,9 +32,9 @@ import org.openmrs.mobile.utilities.ToastUtil;
 
 import java.util.List;
 
-public class VisitTasksPresenter extends VisitDetailsPresenter implements VisitDetailsContract.VisitTasksPresenter {
+public class VisitTasksPresenter extends VisitPresenterImpl implements VisitContract.VisitTasksPresenter {
 
-	private VisitDetailsContract.VisitTasksView visitTasksView;
+	private VisitContract.VisitTasksView visitTasksView;
 	private VisitPredefinedTaskDataService visitPredefinedTaskDataService;
 	private VisitTaskDataService visitTaskDataService;
 	private VisitDataService visitDataService;
@@ -43,7 +43,7 @@ public class VisitTasksPresenter extends VisitDetailsPresenter implements VisitD
 	private int page = 1;
 	private int limit = 10;
 
-	public VisitTasksPresenter(String patientUuid, String visitUuid, VisitDetailsContract.VisitTasksView visitTasksView) {
+	public VisitTasksPresenter(String patientUuid, String visitUuid, VisitContract.VisitTasksView visitTasksView) {
 		this.visitTasksView = visitTasksView;
 		this.visitTasksView.setPresenter(this);
 		this.visitPredefinedTaskDataService = new VisitPredefinedTaskDataService();

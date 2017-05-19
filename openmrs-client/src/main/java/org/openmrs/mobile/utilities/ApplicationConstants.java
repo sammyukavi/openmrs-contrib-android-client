@@ -164,4 +164,9 @@ public abstract class ApplicationConstants {
 		public static final String UNKNOWN_PATIENT_UUID = "8b56eac7-5c76-4b9c-8c6f-1deab8d3fc47";
 		public static final String TEST_PATIENT_UUID = "4f07985c-88a5-4abd-aa0c-f3ec8324d8e7";
 	}
+
+	public static class visitAttributeTypes{
+		public static final String BED_NUMBER_UUID = "4af4da08-9042-4ef2-9310-781a80ccb6ba";
+		public static final String WARD_UUID = "5f18943d-f271-4a4a-91f7-0cb4c3ee93ce";
+	}
 }

@@ -1,18 +1,22 @@
 package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 public class VisitAttribute extends BaseOpenmrsEntity {
-
+	@SerializedName("visit")
 	@Expose
 	private Visit visit;
 
+	@SerializedName("value")
 	@Expose
 	private Object value;
 
+	@SerializedName("valueReference")
 	@Expose
 	private String valueReference;
 
+	@SerializedName("attributeType")
 	@Expose
 	private VisitAttributeType attributeType;
 

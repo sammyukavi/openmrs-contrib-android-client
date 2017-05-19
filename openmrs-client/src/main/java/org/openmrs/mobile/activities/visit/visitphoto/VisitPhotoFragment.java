@@ -12,7 +12,7 @@
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
 
-package org.openmrs.mobile.activities.visitphoto;
+package org.openmrs.mobile.activities.visit.visitphoto;
 
 import android.Manifest;
 import android.app.Activity;
@@ -44,8 +44,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.openmrs.mobile.R;
-import org.openmrs.mobile.activities.visitdetails.VisitDetailsContract;
-import org.openmrs.mobile.activities.visitdetails.VisitDetailsFragment;
+import org.openmrs.mobile.activities.visit.VisitContract;
+import org.openmrs.mobile.activities.visit.VisitFragment;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.utilities.StringUtils;
 import org.openmrs.mobile.utilities.ViewUtils;
@@ -68,7 +68,7 @@ import permissions.dispatcher.PermissionRequest;
 import permissions.dispatcher.RuntimePermissions;
 
 @RuntimePermissions
-public class VisitPhotoFragment extends VisitDetailsFragment implements VisitDetailsContract.VisitPhotoView {
+public class VisitPhotoFragment extends VisitFragment implements VisitContract.VisitPhotoView {
 
 	private LinearLayoutManager layoutManager;
 	private RecyclerView recyclerView;

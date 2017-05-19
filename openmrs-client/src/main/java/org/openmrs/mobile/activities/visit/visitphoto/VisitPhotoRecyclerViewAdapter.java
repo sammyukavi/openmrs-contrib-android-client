@@ -12,7 +12,7 @@
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
 
-package org.openmrs.mobile.activities.visitphoto;
+package org.openmrs.mobile.activities.visit.visitphoto;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -28,7 +28,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.openmrs.mobile.R;
-import org.openmrs.mobile.activities.visitdetails.VisitDetailsContract;
+import org.openmrs.mobile.activities.visit.VisitContract;
 import org.openmrs.mobile.data.DataService;
 
 import java.util.HashMap;
@@ -39,12 +39,12 @@ public class VisitPhotoRecyclerViewAdapter
 		extends RecyclerView.Adapter<VisitPhotoRecyclerViewAdapter.DownloadVisitPhotoViewHolder> {
 
 	private Activity context;
-	private VisitDetailsContract.VisitPhotoView view;
+	private VisitContract.VisitPhotoView view;
 	private List<String> items;
 	private Map<ImageView, Bitmap> map = new HashMap<>();
 
 	public VisitPhotoRecyclerViewAdapter(Activity context,
-			List<String> items, VisitDetailsContract.VisitPhotoView view) {
+			List<String> items, VisitContract.VisitPhotoView view) {
 		this.context = context;
 		this.items = items;
 		this.view = view;

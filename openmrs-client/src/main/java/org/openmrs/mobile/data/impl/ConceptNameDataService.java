@@ -20,7 +20,7 @@ import org.openmrs.mobile.data.BaseDataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.db.impl.ConceptNameDbService;
-import org.openmrs.mobile.data.rest.ConceptNameRestSevice;
+import org.openmrs.mobile.data.rest.ConceptNameRestService;
 import org.openmrs.mobile.models.ConceptName;
 import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.utilities.ApplicationConstants;
@@ -31,10 +31,10 @@ import retrofit2.Call;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class ConceptNameDataService extends BaseDataService<ConceptName, ConceptNameDbService, ConceptNameRestSevice> {
+public class ConceptNameDataService extends BaseDataService<ConceptName, ConceptNameDbService, ConceptNameRestService> {
 	@Override
-	protected Class<ConceptNameRestSevice> getRestServiceClass() {
-		return ConceptNameRestSevice.class;
+	protected Class<ConceptNameRestService> getRestServiceClass() {
+		return ConceptNameRestService.class;
 	}
 
 	@Override

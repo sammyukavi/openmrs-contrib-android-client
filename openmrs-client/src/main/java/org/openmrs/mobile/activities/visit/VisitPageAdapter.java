@@ -12,7 +12,7 @@
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
 
-package org.openmrs.mobile.activities.visitdetails;
+package org.openmrs.mobile.activities.visit;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -20,17 +20,19 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
-import org.openmrs.mobile.activities.visitphoto.VisitPhotoFragment;
-import org.openmrs.mobile.activities.visitphoto.VisitPhotoPresenter;
-import org.openmrs.mobile.activities.visittasks.VisitTasksFragment;
-import org.openmrs.mobile.activities.visittasks.VisitTasksPresenter;
+import org.openmrs.mobile.activities.visit.detail.VisitDetailsFragment;
+import org.openmrs.mobile.activities.visit.detail.VisitDetailsPresenter;
+import org.openmrs.mobile.activities.visit.visitphoto.VisitPhotoFragment;
+import org.openmrs.mobile.activities.visit.visitphoto.VisitPhotoPresenter;
+import org.openmrs.mobile.activities.visit.visittasks.VisitTasksFragment;
+import org.openmrs.mobile.activities.visit.visittasks.VisitTasksPresenter;
 
-public class VisitDetailsPageAdapter extends FragmentPagerAdapter {
-	private static final int TAB_COUNT = 2;
+public class VisitPageAdapter extends FragmentPagerAdapter {
+	private static final int TAB_COUNT = 3;
 
-	//private static final int VISIT_DETAILS_TAB_POS = 0;
-	private static final int VISIT_TASKS_TAB_POS = 0;
-	private static final int VISIT_IMAGES_TAB_POS = 1;
+	private static final int VISIT_DETAILS_TAB_POS = 0;
+	private static final int VISIT_TASKS_TAB_POS = 1;
+	private static final int VISIT_IMAGES_TAB_POS = 2;
 
 	private SparseArray<Fragment> registeredFragments = new SparseArray<>();
 
@@ -38,7 +40,7 @@ public class VisitDetailsPageAdapter extends FragmentPagerAdapter {
 	private String visitUuid;
 	private String providerUuid;
 
-	VisitDetailsPageAdapter(FragmentManager fm, String patientUuid, String visitUuid, String providerUuid) {
+	VisitPageAdapter(FragmentManager fm, String patientUuid, String visitUuid, String providerUuid) {
 		super(fm);
 		this.patientUuid = patientUuid;
 		this.visitUuid = visitUuid;
@@ -49,11 +51,10 @@ public class VisitDetailsPageAdapter extends FragmentPagerAdapter {
 	public Fragment getItem(int i) {
 
 		switch (i) {
-/*
 			case VISIT_DETAILS_TAB_POS:
-				VisitTasksFragment visitTasksFragment = VisitTasksFragment.newInstance();
-				new VisitTasksPresenter(patientUuid, visitUuid, visitTasksFragment);
-				return visitTasksFragment;*/
+				VisitDetailsFragment visitDetailsFragment = VisitDetailsFragment.newInstance();
+				new VisitDetailsPresenter(patientUuid,visitUuid,providerUuid, visitDetailsFragment);
+				return visitDetailsFragment;
 			case VISIT_TASKS_TAB_POS:
 				VisitTasksFragment visitTasksFragment = VisitTasksFragment.newInstance();
 				new VisitTasksPresenter(patientUuid, visitUuid, visitTasksFragment);

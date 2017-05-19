@@ -12,9 +12,10 @@
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
 
-package org.openmrs.mobile.activities.visitdetails;
+package org.openmrs.mobile.activities.visit;
 
 import android.graphics.Bitmap;
+import android.widget.Spinner;
 
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
@@ -27,9 +28,8 @@ import org.openmrs.mobile.utilities.ToastUtil;
 
 import java.util.List;
 
-public interface VisitDetailsContract {
+public interface VisitContract {
 	interface ViewVisitDetailsMain extends BaseView<VisitDetailsMainPresenter> {
-		void test();
 	}
 
 	interface VisitTasksView extends ViewVisitDetailsMain {
@@ -49,6 +49,12 @@ public interface VisitDetailsContract {
 
 		void clearTextField();
 
+	}
+
+	interface VisitDetailsView extends ViewVisitDetailsMain {
+		void showToast(String message, ToastUtil.ToastType toastType);
+
+		void setVisit(Visit visit);
 	}
 
 	interface VisitPhotoView extends ViewVisitDetailsMain {
@@ -96,6 +102,12 @@ public interface VisitDetailsContract {
 		void uploadImage();
 
 		VisitPhoto getVisitPhoto();
+	}
+
+	interface VisitDetailsPresenter extends VisitDetailsMainPresenter {
+		void getVisit();
+
+		void getConcept(String uuid);
 	}
 
 }

@@ -37,6 +37,7 @@ public final class DateUtils {
 	public static final String PATIENT_DASHBOARD_DOB_DATE_FORMAT = "dd-MMM-yyyy";
 	public static final Long ZERO = 0L;
 	private static final String OPEN_MRS_RESPONSE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+	public static final String VISIT_PHOTO_DATE_FORMAT = "MM dd, yy";
 
 	private DateUtils() {
 

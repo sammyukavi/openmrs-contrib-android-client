@@ -47,6 +47,7 @@ import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.visit.VisitContract;
 import org.openmrs.mobile.activities.visit.VisitFragment;
 import org.openmrs.mobile.data.DataService;
+import org.openmrs.mobile.models.VisitPhoto;
 import org.openmrs.mobile.utilities.StringUtils;
 import org.openmrs.mobile.utilities.ViewUtils;
 
@@ -114,15 +115,12 @@ public class VisitPhotoFragment extends VisitFragment implements VisitContract.V
 	}
 
 	@Override
-	public void updateVisitImageUrls(List<String> urls) {
-		if (urls.size() == 0)
-			return;
-
+	public void updateVisitImageMetadata(List<VisitPhoto> visitPhotos) {
 		if (adapter == null) {
-			adapter = new VisitPhotoRecyclerViewAdapter(this.getActivity(), urls, this);
+			adapter = new VisitPhotoRecyclerViewAdapter(this.getActivity(), visitPhotos, this);
 		}
 
-		RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), urls.size());
+		RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), visitPhotos.size());
 		recyclerView.setLayoutManager(layoutManager);
 
 		recyclerView.setAdapter(adapter);
@@ -143,6 +141,11 @@ public class VisitPhotoFragment extends VisitFragment implements VisitContract.V
 	public void showNoVisitPhoto() {
 		noVisitImage.setVisibility(View.VISIBLE);
 		recyclerView.setVisibility(View.GONE);
+	}
+
+	@Override
+	public String formatVisitImageDescription(String description, String uploadedOn, String uploadedBy){
+		return getString(R.string.visit_image_description, description, uploadedOn, uploadedBy);
 	}
 
 	@NeedsPermission({ Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE })

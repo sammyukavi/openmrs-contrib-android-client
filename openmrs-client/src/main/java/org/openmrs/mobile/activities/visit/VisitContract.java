@@ -91,13 +91,9 @@ public interface VisitContract {
 	interface VisitPhotoPresenter extends VisitDetailsMainPresenter {
 		void downloadImage(String obsUuid, DataService.GetCallback<Bitmap> callback);
 
-		void loadVisitDocumentObservations();
-
 		boolean isLoading();
 
 		void setLoading(boolean loading);
-
-		void initVisitPhoto();
 
 		void uploadImage();
 

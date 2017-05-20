@@ -108,8 +108,6 @@ public class VisitPhotoFragment extends VisitFragment implements VisitContract.V
 		fileCaption = (EditText)root.findViewById(R.id.fileCaption);
 		noVisitImage = (TextView)root.findViewById(R.id.noVisitImage);
 
-		((VisitPhotoPresenter)mPresenter).loadVisitDocumentObservations();
-		((VisitPhotoPresenter)mPresenter).initVisitPhoto();
 		addListeners();
 
 		return root;

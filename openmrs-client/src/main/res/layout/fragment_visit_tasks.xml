@@ -5,13 +5,6 @@
 		android:layout_height="match_parent"
 		android:orientation="vertical">
 	
-	<FrameLayout
-			android:id="@+id/patientHeader"
-			android:layout_marginTop="10dp"
-			android:layout_marginBottom="10dp"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content" />
-	
 	<LinearLayout
 			android:id="@+id/addTaskLayout"
 			android:layout_width="match_parent"

@@ -12,14 +12,14 @@
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
 
-package org.openmrs.mobile.activities.visitphoto;
+package org.openmrs.mobile.activities.visit.visitphoto;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 
-import org.openmrs.mobile.activities.visitdetails.VisitDetailsActivity;
-import org.openmrs.mobile.activities.visitdetails.VisitDetailsContract;
+import org.openmrs.mobile.activities.visit.VisitContract;
+import org.openmrs.mobile.activities.visit.VisitPresenterImpl;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.impl.ObsDataService;
@@ -35,17 +35,17 @@ import org.openmrs.mobile.utilities.ToastUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VisitPhotoPresenter extends VisitDetailsActivity implements VisitDetailsContract.VisitPhotoPresenter {
+public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitContract.VisitPhotoPresenter {
 
 	@NonNull
-	private VisitDetailsContract.VisitPhotoView view;
+	private VisitContract.VisitPhotoView view;
 	private String patientUuid, visitUuid, providerUuid;
 	private boolean loading;
 	private VisitPhotoDataService visitPhotoDataService;
 	private ObsDataService obsDataService;
 	private VisitPhoto visitPhoto;
 
-	public VisitPhotoPresenter(VisitDetailsContract.VisitPhotoView view, String patientUuid, String visitUuid,
+	public VisitPhotoPresenter(VisitContract.VisitPhotoView view, String patientUuid, String visitUuid,
 			String providerUuid) {
 		this.view = view;
 		this.view.setPresenter(this);
@@ -67,7 +67,12 @@ public class VisitPhotoPresenter extends VisitDetailsActivity implements VisitDe
 						for (Observation observation : observations) {
 							imageUrls.add(observation.getUuid());
 						}
-						view.updateVisitImageUrls(imageUrls);
+						if (imageUrls.size() != 0){
+							view.updateVisitImageUrls(imageUrls);
+						} else {
+							view.showNoVisitPhoto();
+						}
+
 					}
 
 					@Override

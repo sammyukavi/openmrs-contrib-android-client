@@ -12,7 +12,7 @@
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
 
-package org.openmrs.mobile.activities.visittasks;
+package org.openmrs.mobile.activities.visit.visittasks;
 
 import android.app.Activity;
 import android.graphics.Paint;
@@ -25,7 +25,7 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 
 import org.openmrs.mobile.R;
-import org.openmrs.mobile.activities.visitdetails.VisitDetailsContract;
+import org.openmrs.mobile.activities.visit.VisitContract;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitTask;
 import org.openmrs.mobile.models.VisitTaskStatus;
@@ -36,11 +36,11 @@ class VisitTasksRecyclerViewAdapter extends RecyclerView.Adapter<VisitTasksRecyc
 
 	private Activity mContext;
 	private List<VisitTask> visitTaskList;
-	private VisitDetailsContract.VisitTasksView view;
+	private VisitContract.VisitTasksView view;
 	private Visit visit;
 
 	VisitTasksRecyclerViewAdapter(Activity context,
-			List<VisitTask> visitTaskList, Visit visit, VisitDetailsContract.VisitTasksView view) {
+			List<VisitTask> visitTaskList, Visit visit, VisitContract.VisitTasksView view) {
 		this.mContext = context;
 		this.visitTaskList = visitTaskList;
 		this.view = view;

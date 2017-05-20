@@ -17,7 +17,7 @@ import android.widget.TextView;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.auditdata.AuditDataActivity;
 import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
-import org.openmrs.mobile.activities.visitdetails.VisitDetailsActivity;
+import org.openmrs.mobile.activities.visit.VisitActivity;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.data.DataService;
@@ -157,7 +157,7 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 			showVisitDetails.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					intent = new Intent(context, VisitDetailsActivity.class);
+					intent = new Intent(context, VisitActivity.class);
 					intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, OpenMRS.getInstance()
 							.getPatientUuid());
 					intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visit.getUuid());
@@ -189,7 +189,7 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
 				switch (encounter.getEncounterType().getDisplay()) {
 
-					case ApplicationConstants.EncounterTypeEntitys.VISIT_NOTE:
+					case ApplicationConstants.EncounterTypeEntity.VISIT_NOTE:
 
 						QueryOptions options = new QueryOptions();
 						PagingInfo pagininfo =

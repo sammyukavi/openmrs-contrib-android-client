@@ -18,6 +18,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
@@ -31,6 +32,7 @@ public class ObservationDeserializer implements JsonDeserializer<Observation> {
 	private static final String UUID_KEY = "uuid";
 	private static final String DISPLAY_KEY = "display";
 	private static final String VALUE_KEY = "value";
+	private static final String COMMENT_KEY = "comment";
 
 	@Override
 	public Observation deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
@@ -43,6 +45,10 @@ public class ObservationDeserializer implements JsonDeserializer<Observation> {
 		observation.setDisplay(jsonObject.get(DISPLAY_KEY).getAsString());
 
 		JsonElement conceptJson = jsonObject.get("concept");
+
+		if(jsonObject.get(COMMENT_KEY) != JsonNull.INSTANCE && jsonObject.get(COMMENT_KEY) != null) {
+			observation.setComment(jsonObject.get(COMMENT_KEY).getAsString());
+		}
 		if (conceptJson != null && "Visit Diagnoses".equals(conceptJson.getAsJsonObject().get(DISPLAY_KEY).getAsString())) {
 			JsonArray diagnosisDetailJSONArray = jsonObject.get("groupMembers").getAsJsonArray();
 			for (int i = 0; i < diagnosisDetailJSONArray.size(); i++) {

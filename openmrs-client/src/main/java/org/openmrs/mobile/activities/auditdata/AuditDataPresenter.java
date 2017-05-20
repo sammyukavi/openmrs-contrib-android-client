@@ -77,7 +77,7 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 			public void onCompleted(Visit visit) {
 				for (Encounter encounter : visit.getEncounters()) {
 					switch (encounter.getEncounterType().getDisplay()) {
-						case ApplicationConstants.EncounterTypeEntitys.AuditData:
+						case ApplicationConstants.EncounterTypeEntity.AuditData:
 							observationDataService.getByEncounter(encounter, QueryOptions.LOAD_RELATED_OBJECTS, new
 									PagingInfo(0, 100), new DataService.GetCallback<List<Observation>>() {
 								@Override

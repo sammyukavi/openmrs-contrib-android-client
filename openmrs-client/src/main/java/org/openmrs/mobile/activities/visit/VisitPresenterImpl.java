@@ -12,11 +12,11 @@
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
 
-package org.openmrs.mobile.activities.visitdetails;
+package org.openmrs.mobile.activities.visit;
 
 
 import org.openmrs.mobile.activities.BasePresenter;
 
-public abstract class VisitDetailsPresenter extends BasePresenter implements VisitDetailsContract.VisitDetailsMainPresenter {
+public abstract class VisitPresenterImpl extends BasePresenter implements VisitContract.VisitDetailsMainPresenter {
 
 }

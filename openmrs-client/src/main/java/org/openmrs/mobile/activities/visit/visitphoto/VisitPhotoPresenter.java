@@ -56,8 +56,7 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 		this.obsDataService = new ObsDataService();
 	}
 
-	@Override
-	public void loadVisitDocumentObservations() {
+	private void loadVisitDocumentObservations() {
 		// get obs for patient.
 		obsDataService.getVisitDocumentsObsByPatientAndConceptList(patientUuid, QueryOptions.DEFAULT,
 				new DataService.GetCallback<List<Observation>>() {
@@ -65,14 +64,15 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 					public void onCompleted(List<Observation> observations) {
 						List<String> imageUrls = new ArrayList<>();
 						for (Observation observation : observations) {
+							System.out.println("COMMENT:::" + observation.getComment());
 							imageUrls.add(observation.getUuid());
 						}
-						if (imageUrls.size() != 0){
+
+						if (!imageUrls.isEmpty()){
 							view.updateVisitImageUrls(imageUrls);
 						} else {
 							view.showNoVisitPhoto();
 						}
-
 					}
 
 					@Override
@@ -101,10 +101,11 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 
 	@Override
 	public void subscribe() {
+		initVisitPhoto();
+		loadVisitDocumentObservations();
 	}
 
-	@Override
-	public void initVisitPhoto() {
+	private void initVisitPhoto() {
 		visitPhoto = new VisitPhoto();
 		Visit visit = new Visit();
 		visit.setUuid(visitUuid);

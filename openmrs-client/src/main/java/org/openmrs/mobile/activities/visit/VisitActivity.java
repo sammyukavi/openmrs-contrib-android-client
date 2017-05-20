@@ -29,6 +29,7 @@ import net.yanzm.mth.MaterialTabHost;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
 import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
+import org.openmrs.mobile.activities.patientheader.PatientHeaderContract;
 import org.openmrs.mobile.activities.patientheader.PatientHeaderFragment;
 import org.openmrs.mobile.activities.patientheader.PatientHeaderPresenter;
 import org.openmrs.mobile.activities.visit.detail.VisitDetailsFragment;
@@ -45,7 +46,8 @@ import java.util.ArrayList;
 
 public class VisitActivity extends ACBaseActivity {
 
-	VisitContract.VisitDetailsMainPresenter visitDetailsPresenter;
+	private VisitContract.VisitDetailsMainPresenter visitDetailsPresenter;
+	private PatientHeaderContract.Presenter patientHeaderPresenter;
 	private String patientUuid;
 	private String visitUuid;
 	private String providerUuid;
@@ -75,17 +77,20 @@ public class VisitActivity extends ACBaseActivity {
 			initViewPager(new VisitPageAdapter(getSupportFragmentManager(), patientUuid, visitUuid, providerUuid));
 
 			// patient header
-			/*PatientHeaderFragment headerFragment = (PatientHeaderFragment)getSupportFragmentManager()
-					.findFragmentById(R.id.patientHeader);
-			if (headerFragment == null) {
-				headerFragment = PatientHeaderFragment.newInstance();
+			if(patientHeaderPresenter == null) {
+				PatientHeaderFragment headerFragment = (PatientHeaderFragment)getSupportFragmentManager()
+						.findFragmentById(R.id.patientHeader);
+				if (headerFragment == null) {
+					headerFragment = PatientHeaderFragment.newInstance();
+				}
+
+				if (!headerFragment.isActive()) {
+					addFragmentToActivity(getSupportFragmentManager(), headerFragment, R.id.patientHeader);
+				}
+
+				patientHeaderPresenter = new PatientHeaderPresenter(headerFragment, patientUuid);
 			}
 
-			if (!headerFragment.isActive()) {
-				addFragmentToActivity(getSupportFragmentManager(), headerFragment, R.id.patientHeader);
-			}
-
-			new PatientHeaderPresenter(headerFragment, patientUuid);*/
 		}
 	}
 
@@ -115,6 +120,8 @@ public class VisitActivity extends ACBaseActivity {
 	}
 
 	private void attachPresenterToFragment(Fragment fragment) {
+
+
 		Bundle patientBundle = getIntent().getExtras();
 		patientUuid = String.valueOf(patientBundle.get(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE));
 		visitUuid = String.valueOf(patientBundle.get(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE));

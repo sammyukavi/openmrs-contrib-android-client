@@ -135,6 +135,7 @@
 	<string name="dialog_button_merge">Merge</string>
 	<string name="action_next">Next</string>
 	<string name="action_submit">Submit</string>
+	<string name="action_update">Update</string>
 	<string name="action_register">Register Patient</string>
 	<!-- SettingsActivity activity -->
 	<string name="settings_logs">Logs</string>
@@ -461,5 +462,9 @@
 	<string name="secondary_diagnosis_label">Secondary Diagnosis</string>
 	<string name="clinical_notes_label">Add clinical note</string>
 	<string name="visit_label">Visit</string>
+	<string name="no_vitals">No vitals recorded for this visit</string>
+	<string name="no_visit_tasks">No tasks for this visit</string>
+	<string name="add_diagnosis">Choose primary diagnosis first, then secondary diagnoses</string>
+	<string name="chief_complaint_label">Chief Complaint</string>
 
 </resources>

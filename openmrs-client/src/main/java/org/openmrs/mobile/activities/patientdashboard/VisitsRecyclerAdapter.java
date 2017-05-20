@@ -189,7 +189,7 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
 				switch (encounter.getEncounterType().getDisplay()) {
 
-					case ApplicationConstants.EncounterTypeEntitys.VISIT_NOTE:
+					case ApplicationConstants.EncounterTypeEntity.VISIT_NOTE:
 
 						QueryOptions options = new QueryOptions();
 						PagingInfo pagininfo =

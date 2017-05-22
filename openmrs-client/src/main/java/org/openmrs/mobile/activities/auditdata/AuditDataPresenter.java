@@ -15,7 +15,6 @@
 package org.openmrs.mobile.activities.auditdata;
 
 import org.openmrs.mobile.activities.BasePresenter;
-import org.openmrs.mobile.activities.patientdashboard.PatientDashboardContract;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.impl.EncounterDataService;
@@ -33,7 +32,6 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 
 	private AuditDataContract.View auditDataView;
 	private DataService<Patient> patientDataService;
-	private PatientDashboardContract.View patientDashboardView;
 	private VisitDataService visitDataService;
 
 	private EncounterDataService encounterDataService;

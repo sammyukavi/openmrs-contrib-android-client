@@ -468,5 +468,6 @@
 	<string name="add_diagnosis">Choose primary diagnosis first, then secondary diagnoses</string>
 	<string name="chief_complaint_label">Chief Complaint</string>
 	<string name="visit_image_description">Description: %1$s \r\n Uploaded On: %2$s \r\n Uploaded By: %3$s</string>
+	<string name="add_patient">Add Patient</string>
 
 </resources>

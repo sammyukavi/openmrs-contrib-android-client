@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:fab="http://schemas.android.com/apk/res-auto"
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:orientation="vertical">
+		android:layout_height="wrap_content">
 
 	<ScrollView
 			android:layout_width="match_parent"
@@ -30,4 +30,34 @@
 					android:layout_height="wrap_content" />
 		</LinearLayout>
 	</ScrollView>
-</LinearLayout>
+
+	<com.github.clans.fab.FloatingActionMenu
+			android:id="@+id/floatingActionMenu"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_gravity="bottom|end"
+			android:layout_margin="0dp"
+			fab:menu_backgroundColor="@android:color/transparent"
+			fab:menu_fab_label="@string/label_close"
+			fab:menu_labels_ellipsize="end"
+			fab:menu_labels_singleLine="true">
+
+		<com.github.clans.fab.FloatingActionButton
+				android:id="@+id/start_visit"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:src="@drawable/ic_start_visit"
+				fab:fab_label="@string/label_start_visit"
+				fab:fab_size="mini" />
+
+
+		<com.github.clans.fab.FloatingActionButton
+				android:id="@+id/edit_Patient"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:src="@drawable/ic_edit"
+				fab:fab_label="@string/edit_patient"
+				fab:fab_size="mini"
+				fab:menu_colorNormal="@color/color_primary_dark" />
+	</com.github.clans.fab.FloatingActionMenu>
+</RelativeLayout>

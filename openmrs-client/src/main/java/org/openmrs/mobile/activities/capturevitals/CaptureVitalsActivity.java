@@ -14,9 +14,7 @@
 
 package org.openmrs.mobile.activities.capturevitals;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.view.GravityCompat;
 import android.view.Menu;
 
 import org.openmrs.mobile.R;
@@ -29,8 +27,8 @@ public class CaptureVitalsActivity extends ACBaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getLayoutInflater().inflate(R.layout.activity_capture_vitals, frameLayout);
-		setTitle(R.string.nav_capture_vitals);
+		getLayoutInflater().inflate(R.layout.activity_audit_data, frameLayout);
+		setTitle(R.string.title_audit_data_form);
 		// Create fragment
 		CaptureVitalsFragment captureVitalsFragment =
 				(CaptureVitalsFragment)getSupportFragmentManager().findFragmentById(R.id.contentFrame);
@@ -41,23 +39,12 @@ public class CaptureVitalsActivity extends ACBaseActivity {
 			addFragmentToActivity(getSupportFragmentManager(), captureVitalsFragment, R.id.contentFrame);
 		}
 
-		mPresenter = new CaptureVitalsPresenter(captureVitalsFragment, mOpenMRS);
+		mPresenter = new CaptureVitalsPresenter(captureVitalsFragment);
+
 	}
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
-	}
-
-	@Override
-	public void onBackPressed() {
-		if (drawer.isDrawerOpen(GravityCompat.START)) {
-			drawer.closeDrawer(GravityCompat.START);
-		} else {
-			Intent intent = new Intent(Intent.ACTION_MAIN);
-			intent.addCategory(Intent.CATEGORY_HOME);
-			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			startActivity(intent);
-		}
 	}
 
 	@Override

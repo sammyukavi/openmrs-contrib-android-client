@@ -14,6 +14,8 @@
 
 package org.openmrs.mobile.activities.visit.detail;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
@@ -28,9 +30,13 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.github.clans.fab.FloatingActionButton;
+
 import org.openmrs.mobile.R;
+import org.openmrs.mobile.activities.addeditvisit.AddEditVisitActivity;
 import org.openmrs.mobile.activities.visit.VisitContract;
 import org.openmrs.mobile.activities.visit.VisitFragment;
+import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.EncounterType;
 import org.openmrs.mobile.models.Observation;
@@ -54,6 +60,10 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	private Button submitVisitNote;
 	private TextInputEditText chiefComplaint, clinicalNote;
 	private AutoCompleteTextView addDiagnosis;
+	private Intent intent;
+	private OpenMRS instance = OpenMRS.getInstance();
+	private SharedPreferences sharedPreferences = instance.getOpenMRSSharedPreferences();
+	private FloatingActionButton endVisitButton, editVisitButton;
 
 	public static VisitDetailsFragment newInstance() {
 		return new VisitDetailsFragment();
@@ -71,6 +81,8 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		View root = inflater.inflate(R.layout.fragment_visit_details, container, false);
 		resolveViews(root);
 		((VisitDetailsPresenter)mPresenter).getVisit();
+		//buildMarginLayout();
+		initializeListeners(endVisitButton, editVisitButton);
 		return root;
 	}
 
@@ -86,6 +98,8 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		clinicalNote = (TextInputEditText)v.findViewById(R.id.clinicalNotes);
 		addDiagnosis = (AutoCompleteTextView)v.findViewById(R.id.diagnosisInput);
 		chiefComplaint = (TextInputEditText)v.findViewById(R.id.chiefComplaint);
+		editVisitButton = (FloatingActionButton)v.findViewById(R.id.edit_visit);
+		endVisitButton = (FloatingActionButton)v.findViewById(R.id.end_visit);
 	}
 
 	@Override
@@ -233,6 +247,35 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 			marginParams = new TableRow.LayoutParams(
 					TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
 			marginParams.setMargins(70, 0, 0, 0);
+		}
+	}
+
+	private void initializeListeners(FloatingActionButton... params) {
+		for (FloatingActionButton patientActionButtons : params) {
+			patientActionButtons.setOnClickListener(
+					view -> startSelectedPatientDashboardActivity(patientActionButtons.getId()));
+		}
+	}
+
+	private void startSelectedPatientDashboardActivity(int selectedId) {
+		switch (selectedId) {
+			case R.id.edit_visit:
+				intent = new Intent(getContext(), AddEditVisitActivity.class);
+				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, sharedPreferences.getString
+						(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING));
+				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, sharedPreferences.getString
+						(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING));
+				startActivity(intent);
+				break;
+			case R.id.end_visit:
+				intent = new Intent(getContext(), AddEditVisitActivity.class);
+				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, sharedPreferences.getString
+						(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING));
+				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, sharedPreferences.getString
+						(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING));
+				intent.putExtra(ApplicationConstants.BundleKeys.END_VISIT_TAG, true);
+				startActivity(intent);
+				break;
 		}
 	}
 

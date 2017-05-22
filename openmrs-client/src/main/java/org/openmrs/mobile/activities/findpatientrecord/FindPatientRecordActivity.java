@@ -16,13 +16,14 @@ package org.openmrs.mobile.activities.findpatientrecord;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
+import com.github.clans.fab.FloatingActionButton;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
@@ -55,7 +56,7 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 		}
 
 		//adding
-		FloatingActionButton floatingActionButton = (FloatingActionButton)findViewById(R.id.findPatientFab);
+		FloatingActionButton floatingActionButton = (FloatingActionButton)findViewById(R.id.add_Patient);
 		floatingActionButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {

@@ -181,6 +181,10 @@ public class VisitActivity extends ACBaseActivity {
 				finish();
 				Intent intent = new Intent(getApplicationContext(), PatientDashboardActivity.class);
 				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
+
+				//fix for now
+				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
 				getApplicationContext().startActivity(intent);
 				return true;
 			default:

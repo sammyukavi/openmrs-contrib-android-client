@@ -56,13 +56,9 @@ public class Observation extends BaseOpenmrsEntity implements Serializable {
 	@Expose
 	private String resourceVersion;
 
-	@Expose
 	@SerializedName("value")
-	private String value;
-
-	@SerializedName("auditInfo")
 	@Expose
-	private AuditInfo auditInfo;
+	private Object value;
 
 	private Long id;
 	private Long encounterID;
@@ -73,6 +69,7 @@ public class Observation extends BaseOpenmrsEntity implements Serializable {
 	private String diagnosisOrder;
 
 	private String diagnosisNote;
+	private Provider provider;
 
 	/**
 	 * @return The concept
@@ -305,7 +302,7 @@ public class Observation extends BaseOpenmrsEntity implements Serializable {
 		this.diagnosisNote = diagnosisNote;
 	}
 
-	public String getValue() {
+	public Object getValue() {
 		return value;
 	}
 
@@ -313,11 +310,16 @@ public class Observation extends BaseOpenmrsEntity implements Serializable {
 		this.value = value;
 	}
 
-	public AuditInfo getAuditInfo() {
-		return auditInfo;
+	public void setValue(Object value) {
+		this.value = value;
 	}
 
-	public void setAuditInfo(AuditInfo auditInfo) {
-		this.auditInfo = auditInfo;
+	public void setDiagnosisCertainty(String diagnosisCertainty) {
+		this.diagnosisCertainty = diagnosisCertainty;
 	}
+
+	public void setProvider(Provider provider) {
+		this.provider = provider;
+	}
+
 }

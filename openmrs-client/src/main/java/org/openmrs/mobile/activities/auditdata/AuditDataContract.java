@@ -16,18 +16,38 @@ package org.openmrs.mobile.activities.auditdata;
 
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
+import org.openmrs.mobile.models.Encounter;
+import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Patient;
+import org.openmrs.mobile.models.Visit;
 
 public interface AuditDataContract {
 
 	interface View extends BaseView<Presenter> {
 		void updateContactCard(Patient patient);
+
+		void setVisit(Visit visit);
+
+		void updateFormFields(Encounter encounter);
+
+		void setEncounterUuid(String uuid);
+
+		void setLocation(Location location);
+
+		void fetchPatientDetails();
+
+		void updateStartDate(String startDatetime);
 	}
 
 	interface Presenter extends BasePresenterContract {
-		void fetchPatientData(String patientId);
 
-		void fetchVisitData(String patientId);
+		void fetchPatientDetails(String patientId);
+
+		void fetchVisit(String patientId);
+
+		void saveEncounter(Encounter encounter, boolean isNewEncounter);
+
+		void fetchLocation(String locationUuid);
 	}
 
 }

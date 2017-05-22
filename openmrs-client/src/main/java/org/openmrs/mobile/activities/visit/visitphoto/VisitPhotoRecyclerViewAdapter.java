@@ -12,7 +12,7 @@
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
 
-package org.openmrs.mobile.activities.visitphoto;
+package org.openmrs.mobile.activities.visit.visitphoto;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -28,8 +28,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.openmrs.mobile.R;
-import org.openmrs.mobile.activities.visitdetails.VisitDetailsContract;
+import org.openmrs.mobile.activities.visit.VisitContract;
 import org.openmrs.mobile.data.DataService;
+import org.openmrs.mobile.models.Visit;
+import org.openmrs.mobile.models.VisitPhoto;
+import org.openmrs.mobile.utilities.DateUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -39,14 +42,14 @@ public class VisitPhotoRecyclerViewAdapter
 		extends RecyclerView.Adapter<VisitPhotoRecyclerViewAdapter.DownloadVisitPhotoViewHolder> {
 
 	private Activity context;
-	private VisitDetailsContract.VisitPhotoView view;
-	private List<String> items;
-	private Map<ImageView, Bitmap> map = new HashMap<>();
+	private VisitContract.VisitPhotoView view;
+	private List<VisitPhoto> visitPhotos;
+	private Map<ImageView, VisitPhoto> map = new HashMap<>();
 
 	public VisitPhotoRecyclerViewAdapter(Activity context,
-			List<String> items, VisitDetailsContract.VisitPhotoView view) {
+			List<VisitPhoto> visitPhotos, VisitContract.VisitPhotoView view) {
 		this.context = context;
-		this.items = items;
+		this.visitPhotos = visitPhotos;
 		this.view = view;
 	}
 
@@ -58,16 +61,18 @@ public class VisitPhotoRecyclerViewAdapter
 
 	@Override
 	public void onBindViewHolder(DownloadVisitPhotoViewHolder holder, int position) {
-		String obsUuid = items.get(position);
-		if (obsUuid == null)
+		VisitPhoto visitPhoto = visitPhotos.get(position);
+		if(visitPhoto == null){
 			return;
+		}
 
-		view.downloadImage(obsUuid, new DataService.GetCallback<Bitmap>() {
+		view.downloadImage(visitPhoto.getObservation().getUuid(), new DataService.GetCallback<Bitmap>() {
 			@Override
 			public void onCompleted(Bitmap entity) {
+				visitPhoto.setDownloadedImage(entity);
 				holder.image.setImageBitmap(entity);
 				holder.image.invalidate();
-				map.put(holder.image, entity);
+				map.put(holder.image, visitPhoto);
 			}
 
 			@Override
@@ -80,16 +85,30 @@ public class VisitPhotoRecyclerViewAdapter
 			@Override
 			public void onClick(View imageView) {
 				if (map.containsKey(imageView)) {
-					Dialog settingsDialog = new Dialog(context);
-					settingsDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-					RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(1000, 800);
-					lp.addRule(RelativeLayout.CENTER_IN_PARENT);
+					VisitPhoto visitPhoto = map.get(imageView);
+					Dialog expandImageDialog = new Dialog(context);
+					RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(1000, 800);
+					layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+
+					LinearLayout linearLayout = new LinearLayout(context);
+					linearLayout.setOrientation(LinearLayout.VERTICAL);
+
 					ImageView expandImage = new ImageView(context);
-					expandImage.setLayoutParams(lp);
-					expandImage.setImageResource(R.drawable.ic_male);
-					expandImage.setImageBitmap(map.get(imageView));
-					settingsDialog.addContentView(expandImage, lp);
-					settingsDialog.show();
+					expandImage.setLayoutParams(layoutParams);
+					expandImage.setImageBitmap(visitPhoto.getDownloadedImage());
+
+					TextView descriptionView = new TextView(context);
+					descriptionView.setText(view.formatVisitImageDescription(visitPhoto.getFileCaption(),
+							DateUtils.convertTime(visitPhoto.getDateCreated()
+									.getTime()),
+							visitPhoto.getCreator().getPerson().getDisplay()));
+					descriptionView.setPadding(10, 10, 10, 10);
+
+					linearLayout.addView(descriptionView);
+					linearLayout.addView(expandImage);
+
+					expandImageDialog.addContentView(linearLayout, layoutParams);
+					expandImageDialog.show();
 				}
 			}
 		});
@@ -97,18 +116,16 @@ public class VisitPhotoRecyclerViewAdapter
 
 	@Override
 	public int getItemCount() {
-		return items.size();
+		return visitPhotos.size();
 	}
 
 	class DownloadVisitPhotoViewHolder extends RecyclerView.ViewHolder {
 		private LinearLayout rowLayout;
 		private ImageView image;
-		private TextView fileCaption;
 
 		public DownloadVisitPhotoViewHolder(View itemView) {
 			super(itemView);
 			rowLayout = (LinearLayout)itemView;
-			fileCaption = (TextView)itemView.findViewById(R.id.visitPhotoFileCaption);
 			image = (ImageView)itemView.findViewById(R.id.visitPhoto);
 		}
 	}

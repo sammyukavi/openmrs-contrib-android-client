@@ -25,7 +25,6 @@ public abstract class ApplicationConstants {
 	public static final String LAST_SESSION_TOKEN = "last_session_id";
 	public static final String LAST_LOGIN_SERVER_URL = "last_login_server_url";
 	public static final String DEFAULT_OPEN_MRS_URL = "http://192.168.56.1:8080/openmrs/";
-
 	public static final String THUMBNAIL_VIEW = "complexdata.view.thumbnail";
 
 	public abstract static class OpenMRSSharedPreferenceNames {
@@ -98,9 +97,18 @@ public abstract class ApplicationConstants {
 		public static final String AUDITDATA = "Audit Data";
 	}
 
-	public abstract static class EncounterTypeEntitys {
+	public abstract static class EncounterTypeEntity {
+		public static final String VITALS_UUID = "67a71486-1a54-468f-ac3e-7091a9a79584";
+		public static final String VISIT_NOTE_UUID = "d7151f82-c1f3-4152-a605-2f9ea7414a79";
+	}
+
+	public abstract static class ObserationLocators {
 		public static final String VITALSS = "67a71486-1a54-468f-ac3e-7091a9a79584";
 		public static final String AUDIT_FORM = "7dc1632c-f947-474f-b92c-7add68019aec";
+		public static final String VITALS = "Vitals";
+		public static final String CLINICAL_NOTE = "Text of encounter note";
+		public static final String CHIEF_COMPLAINT = "Chief complaint (text)";
+		public static final String ADMISSION = "Admission";
 	}
 
 	public abstract static class BundleKeys {
@@ -194,5 +202,10 @@ public abstract class ApplicationConstants {
 
 		public static final String CONCEPT_AUDIT_COMPLETE = "98f0f043-bdb1-40c6-8c81-6a094056e981";
 
+	}
+
+	public static class visitAttributeTypes {
+		public static final String BED_NUMBER_UUID = "4af4da08-9042-4ef2-9310-781a80ccb6ba";
+		public static final String WARD_UUID = "5f18943d-f271-4a4a-91f7-0cb4c3ee93ce";
 	}
 }

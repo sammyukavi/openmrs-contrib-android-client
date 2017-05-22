@@ -23,13 +23,10 @@ public class PatientHeaderPresenter extends BasePresenter implements PatientHead
 
 	@Override
 	public void getPatient() {
-		System.out.println("GET PATIENT::");
 		patientDataService.getByUUID(patientUuid, QueryOptions.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Patient>() {
 			@Override
 			public void onCompleted(Patient patient) {
-				System.out.println("FOUND:::" + patient);
 				if (patient != null) {
-					System.out.println("UPDATE VIEW:::");
 					view.updatePatientHeader(patient);
 				}
 			}

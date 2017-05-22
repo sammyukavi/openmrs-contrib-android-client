@@ -12,7 +12,7 @@
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
 
-package org.openmrs.mobile.activities.visitdetails;
+package org.openmrs.mobile.activities.visit;
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -29,19 +29,25 @@ import net.yanzm.mth.MaterialTabHost;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
 import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
-import org.openmrs.mobile.activities.visitphoto.VisitPhotoFragment;
-import org.openmrs.mobile.activities.visitphoto.VisitPhotoPresenter;
-import org.openmrs.mobile.activities.visittasks.VisitTasksFragment;
-import org.openmrs.mobile.activities.visittasks.VisitTasksPresenter;
+import org.openmrs.mobile.activities.patientheader.PatientHeaderContract;
+import org.openmrs.mobile.activities.patientheader.PatientHeaderFragment;
+import org.openmrs.mobile.activities.patientheader.PatientHeaderPresenter;
+import org.openmrs.mobile.activities.visit.detail.VisitDetailsFragment;
+import org.openmrs.mobile.activities.visit.detail.VisitDetailsPresenter;
+import org.openmrs.mobile.activities.visit.visitphoto.VisitPhotoFragment;
+import org.openmrs.mobile.activities.visit.visitphoto.VisitPhotoPresenter;
+import org.openmrs.mobile.activities.visit.visittasks.VisitTasksFragment;
+import org.openmrs.mobile.activities.visit.visittasks.VisitTasksPresenter;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.TabUtil;
 
 import java.util.ArrayList;
 
-public class VisitDetailsActivity extends ACBaseActivity {
+public class VisitActivity extends ACBaseActivity {
 
-	VisitDetailsContract.VisitDetailsMainPresenter visitDetailsPresenter;
+	private VisitContract.VisitDetailsMainPresenter visitDetailsPresenter;
+	private PatientHeaderContract.Presenter patientHeaderPresenter;
 	private String patientUuid;
 	private String visitUuid;
 	private String providerUuid;
@@ -68,18 +74,34 @@ public class VisitDetailsActivity extends ACBaseActivity {
 			patientUuid = extras.getString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
 			visitUuid = extras.getString(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE);
 			providerUuid = OpenMRS.getInstance().getCurrentProviderUUID();
-			initViewPager(new VisitDetailsPageAdapter(getSupportFragmentManager(), patientUuid, visitUuid, providerUuid));
+			initViewPager(new VisitPageAdapter(getSupportFragmentManager(), patientUuid, visitUuid, providerUuid));
+
+			// patient header
+			if(patientHeaderPresenter == null) {
+				PatientHeaderFragment headerFragment = (PatientHeaderFragment)getSupportFragmentManager()
+						.findFragmentById(R.id.patientHeader);
+				if (headerFragment == null) {
+					headerFragment = PatientHeaderFragment.newInstance();
+				}
+
+				if (!headerFragment.isActive()) {
+					addFragmentToActivity(getSupportFragmentManager(), headerFragment, R.id.patientHeader);
+				}
+
+				patientHeaderPresenter = new PatientHeaderPresenter(headerFragment, patientUuid);
+			}
+
 		}
 	}
 
-	private void initViewPager(VisitDetailsPageAdapter visitDetailsPageAdapter) {
+	private void initViewPager(VisitPageAdapter visitPageAdapter) {
 		MaterialTabHost tabHost = (MaterialTabHost)findViewById(R.id.visitDetailsTabHost);
 		tabHost.setType(MaterialTabHost.Type.FullScreenWidth);
-		for (int i = 0; i < visitDetailsPageAdapter.getCount(); i++) {
+		for (int i = 0; i < visitPageAdapter.getCount(); i++) {
 			tabHost.addTab(getTabNames().get(i).toUpperCase());
 		}
 		final ViewPager viewPager = (ViewPager)findViewById(R.id.visitDetailsPager);
-		viewPager.setAdapter(visitDetailsPageAdapter);
+		viewPager.setAdapter(visitPageAdapter);
 		viewPager.addOnPageChangeListener(tabHost);
 		tabHost.setOnTabChangeListener(new MaterialTabHost.OnTabChangeListener() {
 			@Override
@@ -98,6 +120,8 @@ public class VisitDetailsActivity extends ACBaseActivity {
 	}
 
 	private void attachPresenterToFragment(Fragment fragment) {
+
+
 		Bundle patientBundle = getIntent().getExtras();
 		patientUuid = String.valueOf(patientBundle.get(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE));
 		visitUuid = String.valueOf(patientBundle.get(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE));
@@ -106,10 +130,10 @@ public class VisitDetailsActivity extends ACBaseActivity {
 		} else if (fragment instanceof VisitPhotoFragment) {
 			visitDetailsPresenter =
 					new VisitPhotoPresenter(((VisitPhotoFragment)fragment), patientUuid, visitUuid, providerUuid);
+		} else if (fragment instanceof VisitDetailsFragment) {
+			visitDetailsPresenter = new VisitDetailsPresenter(patientUuid, visitUuid, providerUuid, ((VisitDetailsFragment)
+					fragment));
 		}
-		/*else if (fragment instanceof PatientVitalsFragment){
-			visitDetailsPresenter = new PatientDashboardVitalsPresenter(patientUuid, ((PatientVitalsFragment) fragment));
-		}*/
 	}
 
 	@Override
@@ -157,6 +181,10 @@ public class VisitDetailsActivity extends ACBaseActivity {
 				finish();
 				Intent intent = new Intent(getApplicationContext(), PatientDashboardActivity.class);
 				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
+
+				//fix for now
+				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
 				getApplicationContext().startActivity(intent);
 				return true;
 			default:

@@ -31,10 +31,13 @@ public final class DateUtils {
 	public static final String DATE_WITH_TIME_FORMAT = "dd/MM/yyyy HH:mm";
 	public static final String OPEN_MRS_REQUEST_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
 	public static final String OPEN_MRS_REQUEST_PATIENT_FORMAT = "yyyy-MM-dd";
-	public static final String PATIENT_DASHBOARD_VISIT_DATE_FORMAT = "dd.MM.yyyy HH:mm";
-	public static final String PATIENT_DASHBOARD_DOB_DATE_FORMAT = "dd.MM.yyyy";
+	public static final String PATIENT_DASHBOARD_VISIT_DATE_FORMAT = "dd-MMM-yyyy HH:mm";
+	public static final String TIME_FORMAT = "HH:mm";
+	public static final String DATE_FORMAT = "dd-MMM-yyyy";
+	public static final String PATIENT_DASHBOARD_DOB_DATE_FORMAT = "dd-MMM-yyyy";
 	public static final Long ZERO = 0L;
 	private static final String OPEN_MRS_RESPONSE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+	public static final String VISIT_PHOTO_DATE_FORMAT = "MM dd, yy";
 
 	private DateUtils() {
 

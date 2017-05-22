@@ -24,10 +24,49 @@
 			android:layout_height="wrap_content"
 			android:orientation="vertical">
 		
-		<FrameLayout
-				android:id="@+id/patientHeader"
+
+		<android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+				android:id="@+id/displayVisitPhoto"
 				android:layout_width="match_parent"
-				android:layout_height="wrap_content" />
+				android:layout_height="wrap_content"
+				android:layout_margin="10dp"
+				card_view:cardBackgroundColor="@color/white"
+				card_view:cardCornerRadius="4dp">
+			
+			<LinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_margin="10dp"
+					android:orientation="vertical">
+				
+				<TextView
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:textSize="18sp"
+						android:textStyle="bold"
+						android:text="@string/visit_scroll_tab_visit_images_label" />
+				
+				<View
+						android:layout_width="match_parent"
+						android:layout_height="1dp"
+						android:background="@android:color/darker_gray" />
+				
+				<TextView
+						android:id="@+id/noVisitImage"
+						android:layout_marginTop="5dp"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:text="@string/no_visit_images"
+						android:visibility="gone"/>
+				
+				<android.support.v7.widget.RecyclerView
+						android:id="@+id/downloadPhotoRecyclerView"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:layout_gravity="start|bottom" />
+			
+			</LinearLayout>
+		</android.support.v7.widget.CardView>
 		
 		<android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
 				android:id="@+id/uploadVisitPhotoCard"
@@ -58,8 +97,8 @@
 							android:scaleType="fitXY"
 							android:layout_centerInParent="true"
 							android:background="@color/card_shadow_1"
-							android:layout_width="300dp"
-							android:layout_height="300dp" />
+							android:layout_width="200dp"
+							android:layout_height="200dp" />
 					
 					<android.support.design.widget.FloatingActionButton
 							android:id="@+id/capture_photo"
@@ -110,41 +149,6 @@
 							android:textColor="@color/white" />
 				
 				</LinearLayout>
-			</LinearLayout>
-		</android.support.v7.widget.CardView>
-		
-		<android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-				android:id="@+id/displayVisitPhoto"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_margin="10dp"
-				card_view:cardBackgroundColor="@color/white"
-				card_view:cardCornerRadius="4dp">
-			
-			<LinearLayout
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:layout_margin="10dp"
-					android:orientation="vertical">
-				
-				<TextView
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:textSize="18sp"
-						android:textStyle="bold"
-						android:text="@string/visit_scroll_tab_visit_images_label" />
-				
-				<View
-						android:layout_width="match_parent"
-						android:layout_height="1dp"
-						android:background="@android:color/darker_gray" />
-				
-				<android.support.v7.widget.RecyclerView
-						android:id="@+id/downloadPhotoRecyclerView"
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:layout_gravity="start|bottom" />
-			
 			</LinearLayout>
 		</android.support.v7.widget.CardView>
 	</LinearLayout>

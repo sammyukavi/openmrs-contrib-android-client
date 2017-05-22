@@ -12,14 +12,13 @@
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
 
-package org.openmrs.mobile.activities.visitphoto;
+package org.openmrs.mobile.activities.visit.visitphoto;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 
-import org.openmrs.mobile.activities.visitdetails.VisitDetailsActivity;
-import org.openmrs.mobile.activities.visitdetails.VisitDetailsContract;
+import org.openmrs.mobile.activities.visit.VisitContract;
+import org.openmrs.mobile.activities.visit.VisitPresenterImpl;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.impl.ObsDataService;
@@ -27,25 +26,28 @@ import org.openmrs.mobile.data.impl.VisitPhotoDataService;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Provider;
+import org.openmrs.mobile.models.User;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitPhoto;
 import org.openmrs.mobile.utilities.ApplicationConstants;
+import org.openmrs.mobile.utilities.DateUtils;
 import org.openmrs.mobile.utilities.ToastUtil;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-public class VisitPhotoPresenter extends VisitDetailsActivity implements VisitDetailsContract.VisitPhotoPresenter {
+public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitContract.VisitPhotoPresenter {
 
 	@NonNull
-	private VisitDetailsContract.VisitPhotoView view;
+	private VisitContract.VisitPhotoView view;
 	private String patientUuid, visitUuid, providerUuid;
 	private boolean loading;
 	private VisitPhotoDataService visitPhotoDataService;
 	private ObsDataService obsDataService;
 	private VisitPhoto visitPhoto;
 
-	public VisitPhotoPresenter(VisitDetailsContract.VisitPhotoView view, String patientUuid, String visitUuid,
+	public VisitPhotoPresenter(VisitContract.VisitPhotoView view, String patientUuid, String visitUuid,
 			String providerUuid) {
 		this.view = view;
 		this.view.setPresenter(this);
@@ -56,23 +58,35 @@ public class VisitPhotoPresenter extends VisitDetailsActivity implements VisitDe
 		this.obsDataService = new ObsDataService();
 	}
 
-	@Override
-	public void loadVisitDocumentObservations() {
+	private void loadVisitDocumentObservations() {
 		// get obs for patient.
 		obsDataService.getVisitDocumentsObsByPatientAndConceptList(patientUuid, QueryOptions.DEFAULT,
 				new DataService.GetCallback<List<Observation>>() {
 					@Override
 					public void onCompleted(List<Observation> observations) {
-						List<String> imageUrls = new ArrayList<>();
+						List<VisitPhoto> visitPhotos = new ArrayList<>();
 						for (Observation observation : observations) {
-							imageUrls.add(observation.getUuid());
+							VisitPhoto visitPhoto = new VisitPhoto();
+							visitPhoto.setFileCaption(observation.getComment());
+							visitPhoto.setDateCreated(new Date(DateUtils.convertTime(observation.getObsDatetime())));
+
+							User creator = new User();
+							creator.setPerson(observation.getPerson());
+							visitPhoto.setCreator(creator);
+
+							visitPhoto.setObservation(observation);
+							visitPhotos.add(visitPhoto);
 						}
-						view.updateVisitImageUrls(imageUrls);
+
+						if (!visitPhotos.isEmpty()){
+							view.updateVisitImageMetadata(visitPhotos);
+						} else {
+							view.showNoVisitPhoto();
+						}
 					}
 
 					@Override
 					public void onError(Throwable t) {
-						ToastUtil.error(t.getMessage());
 					}
 				});
 	}
@@ -83,7 +97,7 @@ public class VisitPhotoPresenter extends VisitDetailsActivity implements VisitDe
 				new DataService.GetCallback<VisitPhoto>() {
 					@Override
 					public void onCompleted(VisitPhoto entity) {
-						callback.onCompleted(BitmapFactory.decodeStream(entity.getResponseImage().byteStream()));
+						callback.onCompleted(entity.getDownloadedImage());
 					}
 
 					@Override
@@ -96,10 +110,11 @@ public class VisitPhotoPresenter extends VisitDetailsActivity implements VisitDe
 
 	@Override
 	public void subscribe() {
+		initVisitPhoto();
+		loadVisitDocumentObservations();
 	}
 
-	@Override
-	public void initVisitPhoto() {
+	private void initVisitPhoto() {
 		visitPhoto = new VisitPhoto();
 		Visit visit = new Visit();
 		visit.setUuid(visitUuid);

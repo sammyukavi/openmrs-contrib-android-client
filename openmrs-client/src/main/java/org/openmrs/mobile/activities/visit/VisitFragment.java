@@ -12,26 +12,20 @@
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
 
-package org.openmrs.mobile.activities.visitdetails;
+package org.openmrs.mobile.activities.visit;
 
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 
 import org.openmrs.mobile.activities.ACBaseFragment;
 
-public class VisitDetailsFragment extends ACBaseFragment<VisitDetailsContract.VisitDetailsMainPresenter>
-		implements VisitDetailsContract.ViewVisitDetailsMain {
-	private Toolbar toolbar;
-
-
-	public static VisitDetailsFragment newInstance() {
-		return new VisitDetailsFragment();
-	}
+public class VisitFragment extends ACBaseFragment<VisitContract.VisitDetailsMainPresenter>
+		implements VisitContract.ViewVisitDetailsMain {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 	}
+
 
 }

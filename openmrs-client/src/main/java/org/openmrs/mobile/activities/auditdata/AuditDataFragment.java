@@ -66,7 +66,7 @@ import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcept
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_INPATIENT_SERVICE_TYPE;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_PALLIATIVE_CONSULT;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_PREOP_RISK_ASSESMENT;
-import static org.openmrs.mobile.utilities.ApplicationConstants.EncounterTypeEntitys.AUDIT_FORM;
+import static org.openmrs.mobile.utilities.ApplicationConstants.ObserationLocators.AUDIT_FORM;
 import static org.openmrs.mobile.utilities.ApplicationConstants.FORM_UUIDS.AUDIT_DATA_FORM_UUID;
 
 public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presenter>

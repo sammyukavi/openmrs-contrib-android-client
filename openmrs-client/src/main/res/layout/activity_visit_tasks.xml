@@ -8,7 +8,7 @@
 		style="@style/BackgroundThemeEEE"
 		android:orientation="vertical"
 		android:fitsSystemWindows="true"
-		tools:context=".activities.visittasks.VisitTasksActivity">
+		tools:context=".activities.visit.visittasks.VisitTasksActivity">
 	
 	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 			android:layout_width="match_parent"

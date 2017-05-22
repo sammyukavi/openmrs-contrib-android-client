@@ -81,7 +81,6 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 				auditDataView.updateStartDate(visit.getStartDatetime());
 				for (Encounter encounter : visit.getEncounters()) {
 					switch (encounter.getEncounterType().getDisplay()) {
-
 						case AUDITDATA:
 							fetchEncounter(encounter.getUuid());
 							break;
@@ -130,7 +129,6 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 				//auditDataView.setEncounterUuid(encounter.getUuid());
 				//auditDataView.updateFormFields(encounter);
 
-
 			}
 
 			@Override
@@ -145,7 +143,6 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 			encounterDataService.update(encounter, serverResponceCallback);
 		}
 	}
-
 
 	@Override
 	public void fetchLocation(String locationUuid) {

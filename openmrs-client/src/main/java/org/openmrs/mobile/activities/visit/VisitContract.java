@@ -12,9 +12,10 @@
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
 
-package org.openmrs.mobile.activities.visitdetails;
+package org.openmrs.mobile.activities.visit;
 
 import android.graphics.Bitmap;
+import android.widget.Spinner;
 
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
@@ -27,17 +28,14 @@ import org.openmrs.mobile.utilities.ToastUtil;
 
 import java.util.List;
 
-public interface VisitDetailsContract {
+public interface VisitContract {
 	interface ViewVisitDetailsMain extends BaseView<VisitDetailsMainPresenter> {
-
 	}
 
 	interface VisitTasksView extends ViewVisitDetailsMain {
 		void showToast(String message, ToastUtil.ToastType toastType);
 
 		void setVisitTasks(List<VisitTask> visitTaskList);
-
-		void showAddTaskDialog(Boolean visibility);
 
 		void setPredefinedTasks(List<VisitPredefinedTask> predefinedTasks);
 
@@ -49,14 +47,26 @@ public interface VisitDetailsContract {
 
 		void setVisit(Visit visit);
 
+		void clearTextField();
+
+	}
+
+	interface VisitDetailsView extends ViewVisitDetailsMain {
+		void showToast(String message, ToastUtil.ToastType toastType);
+
+		void setVisit(Visit visit);
 	}
 
 	interface VisitPhotoView extends ViewVisitDetailsMain {
-		void updateVisitImageUrls(List<String> urls);
+		void updateVisitImageMetadata(List<VisitPhoto> visitPhotos);
 
 		void downloadImage(String obsUuid, DataService.GetCallback<Bitmap> callback);
 
 		void refresh();
+
+		void showNoVisitPhoto();
+
+		String formatVisitImageDescription(String description, String uploadedOn, String uploadedBy);
 	}
 
 	/*
@@ -71,8 +81,6 @@ public interface VisitDetailsContract {
 
 		void getVisitTasks();
 
-		void displayAddTask(Boolean visibility);
-
 		void addVisitTasks(VisitTask visitTasks);
 
 		void updateVisitTask(VisitTask visitTask);
@@ -85,17 +93,19 @@ public interface VisitDetailsContract {
 	interface VisitPhotoPresenter extends VisitDetailsMainPresenter {
 		void downloadImage(String obsUuid, DataService.GetCallback<Bitmap> callback);
 
-		void loadVisitDocumentObservations();
-
 		boolean isLoading();
 
 		void setLoading(boolean loading);
 
-		void initVisitPhoto();
-
 		void uploadImage();
 
 		VisitPhoto getVisitPhoto();
+	}
+
+	interface VisitDetailsPresenter extends VisitDetailsMainPresenter {
+		void getVisit();
+
+		void getConcept(String uuid);
 	}
 
 }

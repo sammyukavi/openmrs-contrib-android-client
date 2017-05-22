@@ -34,7 +34,6 @@ import org.openmrs.mobile.activities.addeditpatient.AddEditPatientActivity;
 import org.openmrs.mobile.activities.addeditvisit.AddEditVisitActivity;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.models.Patient;
-import org.openmrs.mobile.models.Person;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.FontsUtil;
@@ -52,10 +51,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	private Patient patient;
 	private OpenMRS instance = OpenMRS.getInstance();
 	private SharedPreferences sharedPreferences = instance.getOpenMRSSharedPreferences();
-
-	private int visitsStartLimit = 5;
 	private Intent intent;
-
 
 	public static PatientDashboardFragment newInstance() {
 		return new PatientDashboardFragment();
@@ -137,7 +133,6 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	@Override
 	public void updateContactCard(Patient patient) {
 		this.patient = patient;
-		Person person = patient.getPerson();
 		int visitsStartLimit = 5;
 		mPresenter.setLimit(visitsStartLimit);
 		mPresenter.fetchVisits(patient);
@@ -162,7 +157,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		RecyclerView pastVisits = (RecyclerView)fragmentView.findViewById(R.id.pastVisits);
 		pastVisits.setLayoutManager(new LinearLayoutManager(getContext()));
 		VisitsRecyclerAdapter
-				visitsRecyclerAdapter = new VisitsRecyclerAdapter(pastVisits, visits, getActivity(), patient);
+				visitsRecyclerAdapter = new VisitsRecyclerAdapter(pastVisits, visits, getActivity(), patient, mPresenter);
 		pastVisits.setAdapter(visitsRecyclerAdapter);
 
 		visitsRecyclerAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {

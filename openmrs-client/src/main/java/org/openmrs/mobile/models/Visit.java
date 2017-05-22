@@ -23,22 +23,22 @@ import java.util.List;
 public class Visit extends BaseOpenmrsEntity implements Serializable {
 
 	private Long id;
-
+	@SerializedName("visitType")
 	@Expose
 	private VisitType visitType;
-
+	@SerializedName("location")
 	@Expose
 	private Location location;
-
+	@SerializedName("startDatetime")
 	@Expose
 	private String startDatetime;
-
+	@SerializedName("stopDatetime")
 	@Expose
 	private String stopDatetime;
-
+	@SerializedName("encounters")
 	@Expose
 	private List<Encounter> encounters;
-
+	@SerializedName("attributes")
 	@Expose
 	private List<VisitAttribute> attributes;
 

@@ -66,8 +66,8 @@ import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcept
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_INPATIENT_SERVICE_TYPE;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_PALLIATIVE_CONSULT;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_PREOP_RISK_ASSESMENT;
-import static org.openmrs.mobile.utilities.ApplicationConstants.ObserationLocators.AUDIT_FORM;
 import static org.openmrs.mobile.utilities.ApplicationConstants.FORM_UUIDS.AUDIT_DATA_FORM_UUID;
+import static org.openmrs.mobile.utilities.ApplicationConstants.ObserationLocators.AUDIT_FORM;
 
 public class CaptureVitalsFragment extends ACBaseFragment<CaptureVitalsContract.Presenter>
 		implements CaptureVitalsContract.View {
@@ -76,7 +76,8 @@ public class CaptureVitalsFragment extends ACBaseFragment<CaptureVitalsContract.
 	private Patient patient;
 	private View fragmentView;
 	private Location location;
-	private EditText cd4, hBa1c;
+	private EditText patientHeight, patientWeight, patientBMI, patientTemperature, patientPulse, patientRespiratoryRate,
+			patientBloodPressure, patientBloodOxygenSaturation;
 	private String encounterUuid = null;
 	private String visitUuid, patientUuid;
 	private OpenMRS instance = OpenMRS.getInstance();
@@ -102,7 +103,7 @@ public class CaptureVitalsFragment extends ACBaseFragment<CaptureVitalsContract.
 		this.patientUuid = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
 		this.visitUuid = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE);
 
-		fragmentView = inflater.inflate(R.layout.fragment_audit_form, container, false);
+		fragmentView = inflater.inflate(R.layout.fragment_capture_vitals, container, false);
 
 		patientDisplayName = (TextView)fragmentView.findViewById(R.id.fetchedPatientDisplayName);
 		patientIdentifier = (TextView)fragmentView.findViewById(R.id.fetchedPatientIdentifier);
@@ -134,41 +135,12 @@ public class CaptureVitalsFragment extends ACBaseFragment<CaptureVitalsContract.
 
 	private void initViewFields() {
 
-		deathInHospitalYes = (RadioButton)fragmentView.findViewById(R.id.is_death_in_hospital_yes);
-		deathInHospitalNo = (RadioButton)fragmentView.findViewById(R.id.is_death_in_hospital_no);
-
-		palliativeConsultYes = (RadioButton)fragmentView.findViewById(R.id.is_palliative_consult_yes);
-		palliativeConsultNo = (RadioButton)fragmentView.findViewById(R.id.is_palliative_consult_no);
-		palliativeConsultUknown = (RadioButton)fragmentView.findViewById(R.id.is_palliative_consult_unknown);
-
-		preopRiskAssessmentYes = (RadioButton)fragmentView.findViewById(R.id.is_preop_risk_assessment_only_yes);
-		preopRiskAssessmentNo = (RadioButton)fragmentView.findViewById(R.id.is_preop_risk_assessment_only_no);
-		preopRiskAssessmentUknown = (RadioButton)fragmentView.findViewById(R.id.is_preop_risk_assessment_only_unknown);
-
-		icuStayYes = (RadioButton)fragmentView.findViewById(R.id.is_icu_stay_yes);
-		icuStayNo = (RadioButton)fragmentView.findViewById(R.id.is_icu_stay_no);
-		icuStayUnknown = (RadioButton)fragmentView.findViewById(R.id.is_icu_stay_unknown);
-
-		hduStayYes = (RadioButton)fragmentView.findViewById(R.id.is_hdu_stay_yes);
-		hduStayNo = (RadioButton)fragmentView.findViewById(R.id.is_hdu_stay_no);
-		hduStayUnknown = (RadioButton)fragmentView.findViewById(R.id.is_hdu_stay_unknown);
-
-		hduComgmtYes = (RadioButton)fragmentView.findViewById(R.id.is_hdu_comgmt_yes);
-		hduComgmtNo = (RadioButton)fragmentView.findViewById(R.id.is_hdu_comgmt_no);
-		hduComgmtUnknown = (RadioButton)fragmentView.findViewById(R.id.is_hdu_comgmt_unknown);
-
-		hivPositiveYes = (RadioButton)fragmentView.findViewById(R.id.is_hiv_positive_yes);
-		hivPositiveNo = (RadioButton)fragmentView.findViewById(R.id.is_hiv_positive_no);
-		hivPositiveUnknown = (RadioButton)fragmentView.findViewById(R.id.is_hiv_positive_unknown);
-
-		auditCompleteYes = (RadioButton)fragmentView.findViewById(R.id.is_audit_complete_yes);
-		auditCompleteNo = (RadioButton)fragmentView.findViewById(R.id.is_audit_complete_no);
-
-		cd4 = (EditText)fragmentView.findViewById(R.id.cd4);
-
-		hBa1c = (EditText)fragmentView.findViewById(R.id.hba1c);
-
-		inpatientServiceType = (Spinner)fragmentView.findViewById(R.id.inpatient_service_type);
+		patientHeight = (EditText)fragmentView.findViewById(R.id.patientHeight);
+		patientWeight = (EditText)fragmentView.findViewById(R.id.patientWeight);
+		patientBMI = (EditText) fragmentView.findViewById(R.id.patientBMI);
+		patientTemperature = (EditText)fragmentView.findViewById(R.id.patientTemperature);
+		patientPulse = (EditText)fragmentView.findViewById(R.id.patientRespiratoryRate);
+		patientBloodPressure = (EditText)fragmentView.findViewById(R.id.patientBloodPressure);
 
 		Button submitForm = (Button)fragmentView.findViewById(R.id.submitConfirm);
 		submitForm.setOnClickListener(v -> {
@@ -514,15 +486,15 @@ public class CaptureVitalsFragment extends ACBaseFragment<CaptureVitalsContract.
 					break;
 				case CONCEPT_CD4_COUNT:
 
-					cd4Observation = observation;
-					cd4.setText(displayValue);
+					//cd4Observation = observation;
+					//cd4.setText(displayValue);
 
 					break;
 				case CONCEPT_HBA1C:
 
 					hBa1cObservation = observation;
 
-					hBa1c.setText(displayValue);
+					//hBa1c.setText(displayValue);
 
 					break;
 				case CONCEPT_INPATIENT_SERVICE_TYPE:

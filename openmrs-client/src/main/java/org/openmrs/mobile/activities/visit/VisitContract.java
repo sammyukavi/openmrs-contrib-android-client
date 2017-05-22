@@ -58,13 +58,15 @@ public interface VisitContract {
 	}
 
 	interface VisitPhotoView extends ViewVisitDetailsMain {
-		void updateVisitImageUrls(List<String> urls);
+		void updateVisitImageMetadata(List<VisitPhoto> visitPhotos);
 
 		void downloadImage(String obsUuid, DataService.GetCallback<Bitmap> callback);
 
 		void refresh();
 
 		void showNoVisitPhoto();
+
+		String formatVisitImageDescription(String description, String uploadedOn, String uploadedBy);
 	}
 
 	/*

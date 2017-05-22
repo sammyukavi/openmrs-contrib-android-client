@@ -171,42 +171,13 @@
 						android:layout_marginBottom="8dp"
 						android:layout_marginTop="8dp">
 
-					<EditText
+					<TextView
 							android:id="@+id/admissionDate"
 							android:layout_width="match_parent"
 							android:layout_height="wrap_content"
 							android:hint="@string/admission_date"
 							android:inputType="date" />
 				</android.support.design.widget.TextInputLayout>
-
-				<TextView
-						android:text="@string/is_audit_complete"
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content" />
-
-				<RadioGroup
-						android:layout_width="match_parent"
-						android:orientation="horizontal"
-						android:layout_height="wrap_content">
-
-					<RadioButton
-							android:layout_height="wrap_content"
-							android:layout_width="wrap_content"
-							android:text="@string/yes"
-							android:id="@+id/is_audit_complete_yes"
-							android:layout_gravity="start"
-							android:checked="false" />
-
-					<RadioButton
-							android:layout_height="wrap_content"
-							android:layout_width="wrap_content"
-							android:text="@string/no"
-							android:id="@+id/is_audit_complete_no"
-							android:layout_gravity="start"
-							android:checked="false" />
-
-				</RadioGroup>
-
 
 				<TextView
 						android:text="@string/is_death_in_hospital"
@@ -494,20 +465,33 @@
 						android:entries="@array/inpatient_service_types"
 						android:prompt="@string/inpatient_service_type_prompt" />
 
-				<android.support.design.widget.TextInputLayout
+				<TextView
+						android:text="@string/is_audit_complete"
 						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:layout_marginBottom="8dp"
-						android:layout_marginTop="8dp">
+						android:layout_height="wrap_content" />
 
-					<EditText
-							android:id="@+id/discharge_diagnosis"
-							android:layout_width="match_parent"
+				<RadioGroup
+						android:layout_width="match_parent"
+						android:orientation="horizontal"
+						android:layout_height="wrap_content">
+
+					<RadioButton
 							android:layout_height="wrap_content"
-							android:hint="@string/discharge_diagnosis"
-							android:minLines="5"
-							android:inputType="text" />
-				</android.support.design.widget.TextInputLayout>
+							android:layout_width="wrap_content"
+							android:text="@string/yes"
+							android:id="@+id/is_audit_complete_yes"
+							android:layout_gravity="start"
+							android:checked="false" />
+
+					<RadioButton
+							android:layout_height="wrap_content"
+							android:layout_width="wrap_content"
+							android:text="@string/no"
+							android:id="@+id/is_audit_complete_no"
+							android:layout_gravity="start"
+							android:checked="false" />
+
+				</RadioGroup>
 
 				<Button
 						android:layout_width="match_parent"

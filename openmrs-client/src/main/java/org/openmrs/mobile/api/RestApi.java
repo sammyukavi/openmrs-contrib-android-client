@@ -130,4 +130,8 @@ public interface RestApi {
 	@GET("user/{uuid}")
 	Call<User> getFullUserInfo(@Path("uuid") String uuid);
 
+	@GET("obs/{uuid}")
+	Call<ResponseBody> getObservation(@Path("uuid") String uuid,
+			@Query("v") String representation);
+
 }

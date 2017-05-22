@@ -1,5 +1,6 @@
 package org.openmrs.mobile.data.impl;
 
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 
 import org.openmrs.mobile.data.BaseDataService;
@@ -66,8 +67,10 @@ public class VisitPhotoDataService
 		call.enqueue(new Callback<ResponseBody>() {
 			@Override
 			public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-				visitPhoto.setResponseImage(response.body());
-				callback.onCompleted(visitPhoto);
+				if(response.body() != null) {
+					visitPhoto.setDownloadedImage(BitmapFactory.decodeStream(response.body().byteStream()));
+					callback.onCompleted(visitPhoto);
+				}
 			}
 
 			@Override

@@ -1,11 +1,13 @@
 package org.openmrs.mobile.models;
 
+import android.graphics.Bitmap;
+
 import com.google.gson.annotations.Expose;
 
 import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
 
-public class VisitPhoto extends BaseOpenmrsObject {
+public class VisitPhoto extends BaseOpenmrsEntity {
 
 	@Expose
 	private Visit visit;
@@ -25,7 +27,9 @@ public class VisitPhoto extends BaseOpenmrsObject {
 	@Expose
 	private MultipartBody.Part requestImage;
 
-	private ResponseBody responseImage;
+	private Bitmap downloadedImage;
+
+	private Observation observation;
 
 	public Visit getVisit() {
 		return visit;
@@ -75,11 +79,19 @@ public class VisitPhoto extends BaseOpenmrsObject {
 		this.instructions = instructions;
 	}
 
-	public ResponseBody getResponseImage() {
-		return responseImage;
+	public Bitmap getDownloadedImage() {
+		return downloadedImage;
 	}
 
-	public void setResponseImage(ResponseBody responseImage) {
-		this.responseImage = responseImage;
+	public void setDownloadedImage(Bitmap downloadedImage) {
+		this.downloadedImage = downloadedImage;
+	}
+
+	public Observation getObservation() {
+		return observation;
+	}
+
+	public void setObservation(Observation observation) {
+		this.observation = observation;
 	}
 }

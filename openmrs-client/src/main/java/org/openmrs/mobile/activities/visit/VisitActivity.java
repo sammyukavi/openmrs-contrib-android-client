@@ -77,7 +77,7 @@ public class VisitActivity extends ACBaseActivity {
 			initViewPager(new VisitPageAdapter(getSupportFragmentManager(), patientUuid, visitUuid, providerUuid));
 
 			// patient header
-			if(patientHeaderPresenter == null) {
+			if (patientHeaderPresenter == null) {
 				PatientHeaderFragment headerFragment = (PatientHeaderFragment)getSupportFragmentManager()
 						.findFragmentById(R.id.patientHeader);
 				if (headerFragment == null) {
@@ -114,13 +114,13 @@ public class VisitActivity extends ACBaseActivity {
 	private ArrayList<String> getTabNames() {
 		ArrayList<String> tabNames = new ArrayList<>();
 		tabNames.add(getString(R.string.visit_scroll_tab_details_label));
-		tabNames.add(getString(R.string.visi_scroll_tab_visit_tasks_label));
+		tabNames.add(getResources().getDrawable(R.drawable.ic_playlist_add_white) + " " + getString(R.string
+						.visi_scroll_tab_visit_tasks_label));
 		tabNames.add(getString(R.string.visit_scroll_tab_visit_images_label));
 		return tabNames;
 	}
 
 	private void attachPresenterToFragment(Fragment fragment) {
-
 
 		Bundle patientBundle = getIntent().getExtras();
 		patientUuid = String.valueOf(patientBundle.get(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE));
@@ -181,6 +181,10 @@ public class VisitActivity extends ACBaseActivity {
 				finish();
 				Intent intent = new Intent(getApplicationContext(), PatientDashboardActivity.class);
 				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
+
+				//fix for now
+				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
 				getApplicationContext().startActivity(intent);
 				return true;
 			default:

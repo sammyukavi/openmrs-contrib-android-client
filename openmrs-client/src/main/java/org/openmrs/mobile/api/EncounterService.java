@@ -109,7 +109,7 @@ public class EncounterService extends IntentService {
 		if (NetworkUtils.isOnline()) {
 
 			/*encounterCreate.pullObslist();
-			Call<Encounter> call = apiService.createEncounter(encounterCreate);
+			Call<Encounter> call = apiService.saveEncounter(encounterCreate);
 			call.enqueue(new Callback<Encounter>() {
 				@Override
 				public void onResponse(Call<Encounter> call, Response<Encounter> response) {

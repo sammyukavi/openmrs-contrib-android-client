@@ -15,7 +15,6 @@
 package org.openmrs.mobile.activities.visit.visitphoto;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 
 import org.openmrs.mobile.activities.visit.VisitContract;
@@ -27,12 +26,15 @@ import org.openmrs.mobile.data.impl.VisitPhotoDataService;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Provider;
+import org.openmrs.mobile.models.User;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitPhoto;
 import org.openmrs.mobile.utilities.ApplicationConstants;
+import org.openmrs.mobile.utilities.DateUtils;
 import org.openmrs.mobile.utilities.ToastUtil;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitContract.VisitPhotoPresenter {
@@ -62,13 +64,24 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 				new DataService.GetCallback<List<Observation>>() {
 					@Override
 					public void onCompleted(List<Observation> observations) {
-						List<String> imageUrls = new ArrayList<>();
+						List<VisitPhoto> visitPhotos = new ArrayList<>();
 						for (Observation observation : observations) {
-							imageUrls.add(observation.getUuid());
+
+							//imageUrls.add(observation.getUuid());
+							VisitPhoto visitPhoto = new VisitPhoto();
+							visitPhoto.setFileCaption(observation.getComment());
+							visitPhoto.setDateCreated(new Date(DateUtils.convertTime(observation.getObsDatetime())));
+
+							User creator = new User();
+							creator.setPerson(observation.getPerson());
+							visitPhoto.setCreator(creator);
+
+							visitPhoto.setObservation(observation);
+							visitPhotos.add(visitPhoto);
 						}
 
-						if (!imageUrls.isEmpty()){
-							view.updateVisitImageUrls(imageUrls);
+						if (!visitPhotos.isEmpty()){
+							view.updateVisitImageMetadata(visitPhotos);
 						} else {
 							view.showNoVisitPhoto();
 						}
@@ -76,7 +89,6 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 
 					@Override
 					public void onError(Throwable t) {
-						ToastUtil.error(t.getMessage());
 					}
 				});
 	}
@@ -87,7 +99,7 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 				new DataService.GetCallback<VisitPhoto>() {
 					@Override
 					public void onCompleted(VisitPhoto entity) {
-						callback.onCompleted(BitmapFactory.decodeStream(entity.getResponseImage().byteStream()));
+						callback.onCompleted(entity.getDownloadedImage());
 					}
 
 					@Override

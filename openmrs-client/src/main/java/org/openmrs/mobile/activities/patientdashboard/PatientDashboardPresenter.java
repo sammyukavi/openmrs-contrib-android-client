@@ -76,7 +76,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 			@Override
 			public void onError(Throwable t) {
 				t.printStackTrace();
-				patientDashboardView.showSnack("Error occured: Unable to reach searver");
+				patientDashboardView.showSnack("Error occurred: Unable to reach server");
 			}
 		});
 	}

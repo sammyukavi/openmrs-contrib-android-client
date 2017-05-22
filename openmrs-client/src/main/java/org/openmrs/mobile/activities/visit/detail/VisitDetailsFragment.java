@@ -71,7 +71,6 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		View root = inflater.inflate(R.layout.fragment_visit_details, container, false);
 		resolveViews(root);
 		((VisitDetailsPresenter)mPresenter).getVisit();
-		//buildMarginLayout();
 		return root;
 	}
 
@@ -116,7 +115,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		} else {
 			activeStatus.setVisibility(View.VISIBLE);
 			visitDate.setText(getContext().getString(R.string.active_visit_label) + ": " + DateUtils.convertTime1
-					(visit.getStartDatetime(), DateUtils.DATE_FORMAT) + " ( since " + DateUtils.convertTime1
+					(visit.getStartDatetime(), DateUtils.DATE_FORMAT) + " ( started " + DateUtils.convertTime1
 					(visit.getStartDatetime(), DateUtils.TIME_FORMAT) + " )");
 		}
 	}

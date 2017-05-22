@@ -30,18 +30,19 @@
 				android:layout_height="wrap_content"
 				app:colorTabIndicator="#fff" />
 	</android.support.design.widget.AppBarLayout>
-
-
+	
+	
 	<FrameLayout
 			android:id="@+id/patientHeader"
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content" />
-
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="10dp" />
+	
 	<FrameLayout
 			android:id="@+id/visitDetailsContentFrame"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent">
-
+		
 		<android.support.v4.view.ViewPager
 				android:id="@+id/visitDetailsPager"
 				android:layout_width="match_parent"

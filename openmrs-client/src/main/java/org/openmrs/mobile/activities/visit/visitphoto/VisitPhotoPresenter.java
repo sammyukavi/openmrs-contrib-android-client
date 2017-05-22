@@ -64,7 +64,6 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 					public void onCompleted(List<Observation> observations) {
 						List<String> imageUrls = new ArrayList<>();
 						for (Observation observation : observations) {
-							System.out.println("COMMENT:::" + observation.getComment());
 							imageUrls.add(observation.getUuid());
 						}
 
@@ -132,7 +131,6 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 			@Override
 			public void onError(Throwable t) {
 				ToastUtil.error(t.getMessage());
-				System.out.println(t.getMessage());
 			}
 		});
 	}

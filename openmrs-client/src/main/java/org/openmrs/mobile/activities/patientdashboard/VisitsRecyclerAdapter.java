@@ -48,7 +48,6 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 	private List<Visit> visits;
 	private ObsDataService observationDataService;
 	private CustomDialogBundle createEditVisitNoteDialog;
-	LayoutInflater layoutInflater;
 	private ImageView showVisitDetails;
 	private Intent intent;
 
@@ -188,7 +187,7 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 			});
 
 			if (visit.getEncounters().size() == 0) {
-				///addVisitNoteField(observationsContainer, visit.getUuid(), null);
+				addVisitNoteField(observationsContainer, visit.getUuid(), null);
 			} else {
 
 				for (Encounter encounter : visit.getEncounters()) {
@@ -290,8 +289,7 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
 	private void addVisitNoteField(LinearLayout observationsContainer, String visitUUid, @Nullable Observation
 			observation) {
-		View row = layoutInflater
-				.inflate(R.layout.visit_obervation_row, null);
+		View row = LayoutInflater.from(context).inflate(R.layout.visit_obervation_row, null);
 		observationsContainer.addView(row);
 
 		Observation newObservation = new Observation();

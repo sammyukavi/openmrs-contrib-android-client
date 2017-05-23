@@ -145,11 +145,12 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 			TextView visitTitle = (TextView)singleVisitView.findViewById(R.id.visitTitle);
 
 			if (!StringUtils.notNull(visit.getStopDatetime())) {
-				visitTitle.setText(context.getString(R.string.active_visit_label) + ": " + DateUtils
+				visitTitle.setText(context.getString(R.string.active_visit_label) + ": Start Date: " + DateUtils
 						.convertTime1(visit.getStartDatetime(), DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT));
 			} else {
-				visitTitle.setText("Visit: " + DateUtils
-						.convertTime1(visit.getStartDatetime(), DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT) + " - "
+				visitTitle.setText("Date Started: " + DateUtils
+						.convertTime1(visit.getStartDatetime(), DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT) + " - Date "
+						+ "Closed: "
 						+ DateUtils.convertTime1(visit.getStopDatetime(), DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT));
 			}
 
@@ -209,7 +210,7 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 												.equals(ApplicationConstants.EMPTY_STRING)) {
 											View row = layoutInflater
 													.inflate(R.layout.visit_obervation_row, null);
-											observationsContainer.addView(row);
+											//observationsContainer.addView(row);
 
 											Observation newObservation = new Observation();
 											newObservation.setUuid(observation.getUuid());

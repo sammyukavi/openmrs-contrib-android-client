@@ -35,6 +35,7 @@ import com.github.clans.fab.FloatingActionButton;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.addeditvisit.AddEditVisitActivity;
+import org.openmrs.mobile.activities.capturevitals.CaptureVitalsActivity;
 import org.openmrs.mobile.activities.visit.VisitContract;
 import org.openmrs.mobile.activities.visit.VisitFragment;
 import org.openmrs.mobile.application.OpenMRS;
@@ -63,7 +64,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	private Intent intent;
 	private OpenMRS instance = OpenMRS.getInstance();
 	private SharedPreferences sharedPreferences = instance.getOpenMRSSharedPreferences();
-	private FloatingActionButton endVisitButton, editVisitButton;
+	private FloatingActionButton captureVitalsButton, endVisitButton, editVisitButton;
 
 	public static VisitDetailsFragment newInstance() {
 		return new VisitDetailsFragment();
@@ -81,7 +82,8 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		View root = inflater.inflate(R.layout.fragment_visit_details, container, false);
 		resolveViews(root);
 		((VisitDetailsPresenter)mPresenter).getVisit();
-		initializeListeners(endVisitButton, editVisitButton);
+		//buildMarginLayout();
+		initializeListeners(endVisitButton, editVisitButton, captureVitalsButton);
 		return root;
 	}
 
@@ -95,6 +97,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		submitVisitNote = (Button)v.findViewById(R.id.submitVisitNote);
 		clinicalNote = (TextInputEditText)v.findViewById(R.id.clinicalNotes);
 		addDiagnosis = (AutoCompleteTextView)v.findViewById(R.id.diagnosisInput);
+		captureVitalsButton = (FloatingActionButton)v.findViewById(R.id.capture_vitals);
 		editVisitButton = (FloatingActionButton)v.findViewById(R.id.edit_visit);
 		endVisitButton = (FloatingActionButton)v.findViewById(R.id.end_visit);
 	}
@@ -268,6 +271,14 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, sharedPreferences.getString
 						(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING));
 				intent.putExtra(ApplicationConstants.BundleKeys.END_VISIT_TAG, true);
+				startActivity(intent);
+
+			case R.id.capture_vitals:
+				intent = new Intent(getContext(), CaptureVitalsActivity.class);
+				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, sharedPreferences.getString
+						(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING));
+				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, sharedPreferences.getString
+						(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING));
 				startActivity(intent);
 				break;
 		}

@@ -327,7 +327,7 @@
 	<string name="label_day">Day</string>
 	<string name="label_month">Month</string>
 	<string name="label_year">Year</string>
-	<string name="label_address">Address</string>
+	<string name="label_address">Address:</string>
 	<string name="label_address_2">Address 2</string>
 	<string name="label_city">City</string>
 	<string name="label_province">Province</string>
@@ -469,6 +469,7 @@
 	<string name="chief_complaint_label">Chief Complaint</string>
 	<string name="visit_image_description">Description: %1$s \r\n Uploaded On: %2$s \r\n Uploaded By: %3$s</string>
 	<string name="add_patient">Add Patient</string>
+	<string name="telephone">Telephone:</string>
 	<string name="no_primary_diagnosis">No Primary Diagnosis</string>
 	<string name="no_secondary_diagnosis">No Secodanry Diagnosis</string>
 	<string name="date_started">Date Started</string>
@@ -477,5 +478,5 @@
 	<string name="no_audit_infomation">No Audit Infomation</string>
 	<string name="primary_diagnosis">Primary</string>
 	<string name="confirmed_diagnosis">Confirmed</string>
-
+	<string name="audit_data_form_label">Audit Data</string>
 </resources>

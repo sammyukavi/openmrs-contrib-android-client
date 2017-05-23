@@ -76,14 +76,14 @@ public class CaptureVitalsPresenter extends BasePresenter implements CaptureVita
 			@Override
 			public void onCompleted(Visit visit) {
 				auditDataView.setVisit(visit);
-				auditDataView.updateStartDate(visit.getStartDatetime());
+				/*auditDataView.updateStartDate(visit.getStartDatetime());
 				for (Encounter encounter : visit.getEncounters()) {
 					switch (encounter.getEncounterType().getDisplay()) {
 						case AUDITDATA:
 							fetchEncounter(encounter.getUuid());
 							break;
 					}
-				}
+				}*/
 			}
 
 			@Override

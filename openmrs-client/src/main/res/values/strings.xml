@@ -194,7 +194,7 @@
 	<string name="action_find_visits">Find Active Visits</string>
 	<string name="search_visits_no_results">No visits in database</string>
 	<!-- fragment_patient_visits layout -->
-	<string name="active_visit_label">Active visit</string>
+	<string name="active_visit_label">Active Visit</string>
 	<string name="past_visit_label">Past visit</string>
 	<string name="visit_in">in %1$s</string>
 	<!-- fragment_patient_vitals layout -->
@@ -451,9 +451,9 @@
 	</string-array>
 
 	<string name="selectPatientList">Please select a patient list</string>
-	<string name="visit_scroll_tab_details_label">Visit Details</string>
-	<string name="visi_scroll_tab_visit_tasks_label">Visit Tasks</string>
-	<string name="visit_scroll_tab_visit_images_label">Visit Imaging</string>
+	<string name="visit_scroll_tab_details_label">Information</string>
+	<string name="visi_scroll_tab_visit_tasks_label">Tasks</string>
+	<string name="visit_scroll_tab_visit_images_label">Imaging</string>
 	<string name="visit_scroll_tab_patient_details_label">Patient Details</string>
 
 	<string name="no_visit_images">No Visit Images</string>
@@ -470,5 +470,7 @@
 	<string name="visit_image_description">Description: %1$s \r\n Uploaded On: %2$s \r\n Uploaded By: %3$s</string>
 	<string name="add_patient">Add Patient</string>
 	<string name="telephone">Telephone:</string>
-
+	<string name="no_primary_diagnosis">No Primary Diagnosis</string>
+	<string name="date_started">Date Started</string>
+	<string name="date_closed">Date Closed</string>
 </resources>

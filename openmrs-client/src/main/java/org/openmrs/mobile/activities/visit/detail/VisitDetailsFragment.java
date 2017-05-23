@@ -53,7 +53,6 @@ import java.util.List;
 public class VisitDetailsFragment extends VisitFragment implements VisitContract.VisitDetailsView {
 
 	private TextView visitDate, bedNumber, ward, visitType, noVitals;
-	private ImageView activeStatus;
 	private Visit visit;
 	private TableLayout visitVitalsTableLayout;
 	private static TableRow.LayoutParams marginParams;
@@ -87,7 +86,6 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	}
 
 	private void resolveViews(View v) {
-		activeStatus = (ImageView)v.findViewById(R.id.activeStatus);
 		visitDate = (TextView)v.findViewById(R.id.visitDates);
 		bedNumber = (TextView)v.findViewById(R.id.fetchedBedNumber);
 		ward = (TextView)v.findViewById(R.id.fetchedWard);
@@ -122,15 +120,16 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 
 	public void setVisitDates(Visit visit) {
 		if (StringUtils.notNull(visit.getStopDatetime())) {
-			activeStatus.setVisibility(View.GONE);
-			visitDate.setText(getContext().getString(R.string.visit_label) + ": " + DateUtils
+			visitDate.setText(getContext().getString(R.string.date_started) + ": " + DateUtils
 					.convertTime1(visit.getStartDatetime(), DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT) + " - "
-					+ DateUtils.convertTime1(visit.getStopDatetime(), DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT));
+					+ getContext().getString(R.string.date_closed) + ": " + DateUtils.convertTime1(visit.getStopDatetime(),
+					DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT));
 		} else {
-			activeStatus.setVisibility(View.VISIBLE);
 			visitDate.setText(getContext().getString(R.string.active_visit_label) + ": " + DateUtils.convertTime1
-					(visit.getStartDatetime(), DateUtils.DATE_FORMAT) + " ( started " + DateUtils.convertTime1
-					(visit.getStartDatetime(), DateUtils.TIME_FORMAT) + " )");
+					(visit.getStartDatetime(), DateUtils.DATE_FORMAT) + " (started " + DateUtils.convertTime1
+					(visit.getStartDatetime(), DateUtils.TIME_FORMAT) + ")");
+			visitDate.setTextColor(getResources().getColor(R.color.color_white));
+			visitDate.setBackgroundColor(getResources().getColor(R.color.color_primary));
 		}
 	}
 

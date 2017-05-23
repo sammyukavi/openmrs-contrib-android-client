@@ -188,7 +188,7 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 			});
 
 			if (visit.getEncounters().size() == 0) {
-				addVisitNoteField(observationsContainer, visit.getUuid(), null);
+				///addVisitNoteField(observationsContainer, visit.getUuid(), null);
 			} else {
 
 				for (Encounter encounter : visit.getEncounters()) {

@@ -470,7 +470,12 @@
 	<string name="visit_image_description">Description: %1$s \r\n Uploaded On: %2$s \r\n Uploaded By: %3$s</string>
 	<string name="add_patient">Add Patient</string>
 	<string name="no_primary_diagnosis">No Primary Diagnosis</string>
+	<string name="no_secondary_diagnosis">No Secodanry Diagnosis</string>
 	<string name="date_started">Date Started</string>
 	<string name="date_closed">Date Closed</string>
+	<string name="audit_info">Audit Info</string>
+	<string name="no_audit_infomation">No Audit Infomation</string>
+	<string name="primary_diagnosis">Primary</string>
+	<string name="confirmed_diagnosis">Confirmed</string>
 
 </resources>

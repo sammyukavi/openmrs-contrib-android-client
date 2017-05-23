@@ -19,6 +19,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
+import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,7 +58,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	private TableLayout visitVitalsTableLayout;
 	private static TableRow.LayoutParams marginParams;
 	private Button submitVisitNote;
-	private TextInputEditText chiefComplaint, clinicalNote;
+	private TextInputEditText clinicalNote;
 	private AutoCompleteTextView addDiagnosis;
 	private Intent intent;
 	private OpenMRS instance = OpenMRS.getInstance();
@@ -80,7 +81,6 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		View root = inflater.inflate(R.layout.fragment_visit_details, container, false);
 		resolveViews(root);
 		((VisitDetailsPresenter)mPresenter).getVisit();
-		//buildMarginLayout();
 		initializeListeners(endVisitButton, editVisitButton);
 		return root;
 	}
@@ -95,7 +95,6 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		submitVisitNote = (Button)v.findViewById(R.id.submitVisitNote);
 		clinicalNote = (TextInputEditText)v.findViewById(R.id.clinicalNotes);
 		addDiagnosis = (AutoCompleteTextView)v.findViewById(R.id.diagnosisInput);
-		chiefComplaint = (TextInputEditText)v.findViewById(R.id.chiefComplaint);
 		editVisitButton = (FloatingActionButton)v.findViewById(R.id.edit_visit);
 		endVisitButton = (FloatingActionButton)v.findViewById(R.id.end_visit);
 	}
@@ -129,7 +128,6 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 					(visit.getStartDatetime(), DateUtils.DATE_FORMAT) + " (started " + DateUtils.convertTime1
 					(visit.getStartDatetime(), DateUtils.TIME_FORMAT) + ")");
 			visitDate.setTextColor(getResources().getColor(R.color.color_white));
-			visitDate.setBackgroundColor(getResources().getColor(R.color.color_primary));
 		}
 	}
 
@@ -193,9 +191,6 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 							ArrayList clinicalNoteText = splitStrings(encounter.getObs().get(v).getDisplay());
 							clinicalNote.setText(locators.get(1).toString());
 							System.out.println(clinicalNoteText.get(1).toString());
-						} else if (locators.get(0).toString()
-								.equalsIgnoreCase(ApplicationConstants.ObserationLocators.CHIEF_COMPLAINT)) {
-							chiefComplaint.setText(locators.get(1).toString());
 						} else {
 
 						}

@@ -34,7 +34,6 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import org.openmrs.mobile.R;
-import org.openmrs.mobile.activities.capturevitals.CaptureVitalsActivity;
 import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
 import org.openmrs.mobile.activities.findpatientrecord.FindPatientRecordActivity;
 import org.openmrs.mobile.activities.login.LoginActivity;
@@ -257,9 +256,6 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 		switch (selectedId) {
 			case R.id.navItemFindPatientRecord:
 				startActivity(new Intent(this, FindPatientRecordActivity.class));
-				break;
-			case R.id.navItemCaptureVitals:
-				startActivity(new Intent(this, CaptureVitalsActivity.class));
 				break;
 			case R.id.navItemPatientLists:
 				startActivity(new Intent(this, PatientListActivity.class));

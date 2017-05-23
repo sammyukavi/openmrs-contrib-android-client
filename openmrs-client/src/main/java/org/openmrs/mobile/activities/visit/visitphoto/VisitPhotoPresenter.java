@@ -66,6 +66,8 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 					public void onCompleted(List<Observation> observations) {
 						List<VisitPhoto> visitPhotos = new ArrayList<>();
 						for (Observation observation : observations) {
+
+							//imageUrls.add(observation.getUuid());
 							VisitPhoto visitPhoto = new VisitPhoto();
 							visitPhoto.setFileCaption(observation.getComment());
 							visitPhoto.setDateCreated(new Date(DateUtils.convertTime(observation.getObsDatetime())));
@@ -141,7 +143,6 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 			@Override
 			public void onError(Throwable t) {
 				ToastUtil.error(t.getMessage());
-				System.out.println(t.getMessage());
 			}
 		});
 	}

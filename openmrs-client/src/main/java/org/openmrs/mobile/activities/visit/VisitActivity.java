@@ -67,8 +67,6 @@ public class VisitActivity extends ACBaseActivity {
 			getSupportActionBar().setDisplayShowHomeEnabled(true);
 		}
 
-		setTitle(R.string.nav_visit_details);
-
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
 			patientUuid = extras.getString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
@@ -77,7 +75,7 @@ public class VisitActivity extends ACBaseActivity {
 			initViewPager(new VisitPageAdapter(getSupportFragmentManager(), patientUuid, visitUuid, providerUuid));
 
 			// patient header
-			if(patientHeaderPresenter == null) {
+			if (patientHeaderPresenter == null) {
 				PatientHeaderFragment headerFragment = (PatientHeaderFragment)getSupportFragmentManager()
 						.findFragmentById(R.id.patientHeader);
 				if (headerFragment == null) {
@@ -120,7 +118,6 @@ public class VisitActivity extends ACBaseActivity {
 	}
 
 	private void attachPresenterToFragment(Fragment fragment) {
-
 
 		Bundle patientBundle = getIntent().getExtras();
 		patientUuid = String.valueOf(patientBundle.get(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE));

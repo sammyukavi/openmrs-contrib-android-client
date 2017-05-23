@@ -33,7 +33,8 @@ public class PatientHeaderPresenter extends BasePresenter implements PatientHead
 
 			@Override
 			public void onError(Throwable t) {
-				ToastUtil.error(t.getMessage());
+				//ToastUtil.error(t.getMessage());'
+				t.printStackTrace();
 			}
 		});
 	}

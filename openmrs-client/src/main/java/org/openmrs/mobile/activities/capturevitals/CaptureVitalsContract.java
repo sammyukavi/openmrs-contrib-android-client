@@ -36,7 +36,6 @@ public interface CaptureVitalsContract {
 
 		void fetchPatientDetails();
 
-		void updateStartDate(String startDatetime);
 	}
 
 	interface Presenter extends BasePresenterContract {

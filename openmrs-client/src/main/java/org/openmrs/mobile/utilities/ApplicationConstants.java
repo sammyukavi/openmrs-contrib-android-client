@@ -25,6 +25,7 @@ public abstract class ApplicationConstants {
 	public static final String LAST_SESSION_TOKEN = "last_session_id";
 	public static final String LAST_LOGIN_SERVER_URL = "last_login_server_url";
 	public static final String DEFAULT_OPEN_MRS_URL = "http://sandbox.openhmisafrica.org/openmrs/";
+	//public static final String DEFAULT_OPEN_MRS_URL = "http://10.1.10.3:8080/openmrs/";
 	public static final String THUMBNAIL_VIEW = "complexdata.view.thumbnail";
 
 	public abstract static class OpenMRSSharedPreferenceNames {
@@ -100,15 +101,16 @@ public abstract class ApplicationConstants {
 	public abstract static class EncounterTypeEntity {
 		public static final String VITALS_UUID = "67a71486-1a54-468f-ac3e-7091a9a79584";
 		public static final String VISIT_NOTE_UUID = "d7151f82-c1f3-4152-a605-2f9ea7414a79";
+		public static final String AUDIT_DATA = "7dc1632c-f947-474f-b92c-7add68019aec";
 	}
 
-	public abstract static class ObserationLocators {
+	public abstract static class ObservationLocators {
 		public static final String VITALSS = "67a71486-1a54-468f-ac3e-7091a9a79584";
-		public static final String AUDIT_FORM = "7dc1632c-f947-474f-b92c-7add68019aec";
 		public static final String VITALS = "Vitals";
 		public static final String CLINICAL_NOTE = "Text of encounter note";
-		public static final String CHIEF_COMPLAINT = "Chief complaint (text)";
+		public static final String DIANOSES = "Visit Diagnoses";
 		public static final String ADMISSION = "Admission";
+		public static final String AUDIT_DATA_COMPLETENESS = "Audit Data Complete";
 	}
 
 	public abstract static class BundleKeys {
@@ -127,6 +129,7 @@ public abstract class ApplicationConstants {
 		public static final String PATIENT_QUERY_BUNDLE = "patientQuery";
 		public static final String OBSERVATION = "observationTag";
 		public static final String VISIT = "visitTag";
+		public static final String AUDIT_DATA_AVAILABILITY = "auditDataAvailability";
 	}
 
 	public static class toastMessages {

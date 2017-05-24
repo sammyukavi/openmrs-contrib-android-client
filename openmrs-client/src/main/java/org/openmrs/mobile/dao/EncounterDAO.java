@@ -81,7 +81,7 @@ public class EncounterDAO {
 
         /*String where = String.format("%s = ? AND %s = ? ORDER BY %s DESC LIMIT 1", EncounterTable.Column.PATIENT_UUID,
 		EncounterTable.Column.ENCOUNTER_TYPE, EncounterTable.Column.ENCOUNTER_DATETIME);
-        //String[] whereArgs = new String[]{patientUUID, EncounterType.VITALS};
+        //String[] whereArgs = new String[]{patientUUID, EncounterDataType.VITALS};
         final Cursor cursor = helper.getReadableDatabase().query(EncounterTable.TABLE_NAME, null, where, whereArgs, null,
         null, null);
         if (null != cursor) {

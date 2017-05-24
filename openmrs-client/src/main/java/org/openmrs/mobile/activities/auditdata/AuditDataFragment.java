@@ -66,7 +66,7 @@ import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcept
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_INPATIENT_SERVICE_TYPE;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_PALLIATIVE_CONSULT;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_PREOP_RISK_ASSESMENT;
-import static org.openmrs.mobile.utilities.ApplicationConstants.ObserationLocators.AUDIT_FORM;
+import static org.openmrs.mobile.utilities.ApplicationConstants.EncounterTypeEntity.AUDIT_DATA;
 import static org.openmrs.mobile.utilities.ApplicationConstants.FORM_UUIDS.AUDIT_DATA_FORM_UUID;
 
 public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presenter>
@@ -81,7 +81,6 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 	private String visitUuid, patientUuid;
 	private OpenMRS instance = OpenMRS.getInstance();
 
-	private TextView patientDisplayName, patientGender, patientAge, patientIdentifier, patientDob, admissionDate;
 	private Observation deathInHospitalObservation, palliativeConsultObservation, preopRiskAssessmentObservation,
 			icuStayObservation, hduStayObservation, hduComgmtObservation, hivPositiveObservation, cd4Observation,
 			hBa1cObservation, inpatientServiceTypeObservation, auditCompleteObservation;
@@ -104,13 +103,6 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 
 		fragmentView = inflater.inflate(R.layout.fragment_audit_form, container, false);
 
-		patientDisplayName = (TextView)fragmentView.findViewById(R.id.fetchedPatientDisplayName);
-		patientIdentifier = (TextView)fragmentView.findViewById(R.id.fetchedPatientIdentifier);
-		patientGender = (TextView)fragmentView.findViewById(R.id.fetchedPatientGender);
-		patientAge = (TextView)fragmentView.findViewById(R.id.fetchedPatientAge);
-		patientDob = (TextView)fragmentView.findViewById(R.id.fetchedPatientBirthDate);
-		admissionDate = (TextView)fragmentView.findViewById(R.id.admissionDate);
-
 		initViewFields();
 
 		initRadioListeners(deathInHospitalYes, deathInHospitalNo, palliativeConsultYes, palliativeConsultNo,
@@ -125,6 +117,9 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		}
 
 		mPresenter.fetchLocation(locationUuid);
+		mPresenter.fetchVisit(visitUuid);
+
+		initObservations();
 
 		// Font config
 		FontsUtil.setFont((ViewGroup)this.getActivity().findViewById(android.R.id.content));
@@ -384,32 +379,6 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		this.location = location;
 	}
 
-	@Override
-	public void fetchPatientDetails() {
-		mPresenter.fetchPatientDetails(patientUuid);
-	}
-
-	@Override
-	public void updateStartDate(String startDatetime) {
-		admissionDate
-				.setText(DateUtils.convertTime(startDatetime, DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT).toString());
-	}
-
-	@Override
-	public void updateContactCard(Patient patient) {
-		this.patient = patient;
-		Person person = patient.getPerson();
-		patientDisplayName.setText(person.getName().getNameString());
-		patientGender.setText(person.getGender());
-		patientIdentifier.setText(patient.getIdentifier().getIdentifier());
-		DateTime date = DateUtils.convertTimeString(person.getBirthdate());
-		patientAge.setText(DateUtils.calculateAge(date.getYear(), date.getMonthOfYear(), date.getDayOfMonth()));
-		patientDob.setText(DateUtils.convertTime1(person.getBirthdate(), DateUtils.PATIENT_DASHBOARD_DOB_DATE_FORMAT));
-
-		mPresenter.fetchVisit(visitUuid);
-
-		initObservations();
-	}
 
 	@Override
 	public void updateFormFields(Encounter encounter) {
@@ -571,7 +540,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 
 		//create encountertype
 		EncounterType auditFormEncounterType = new EncounterType();
-		auditFormEncounterType.setUuid(AUDIT_FORM);
+		auditFormEncounterType.setUuid(AUDIT_DATA);
 
 		//create provider
 		Provider provider = new Provider();

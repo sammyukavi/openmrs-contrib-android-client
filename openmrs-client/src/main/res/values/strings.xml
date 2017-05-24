@@ -429,7 +429,7 @@
 	<string name="is_preop_risk_assessment_only">Pre-Op Risk Assessment Only?</string>
 	<string name="is_icu_stay">ICU stay during admission?</string>
 	<string name="is_hdu_stay">HDU stay during admission?</string>
-	<string name="is_hdu_comgmt">HDU CO-MGMT ONLY?</string>
+	<string name="is_hdu_comgmt">HDU Co-Management Only?</string>
 	<string name="is_hiv_positive">HIV+:</string>
 	<string name="cd4">CD4:</string>
 	<string name="hba1c">HbA1c:</string>
@@ -479,4 +479,8 @@
 	<string name="primary_diagnosis">Primary</string>
 	<string name="confirmed_diagnosis">Confirmed</string>
 	<string name="audit_data_form_label">Audit Data</string>
+	<string name="save_vitals">Save Vitals</string>
+	<string name="save_visit_note">Save Visit Note</string>
+	<string name="save_audit_data">Save Audit Data</string>
+	<string name="capture_vitals">Capture Vitals</string>
 </resources>

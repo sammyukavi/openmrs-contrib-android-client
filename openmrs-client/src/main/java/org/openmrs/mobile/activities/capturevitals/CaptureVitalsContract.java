@@ -24,7 +24,6 @@ import org.openmrs.mobile.models.Visit;
 public interface CaptureVitalsContract {
 
 	interface View extends BaseView<Presenter> {
-		void updateContactCard(Patient patient);
 
 		void setVisit(Visit visit);
 
@@ -34,13 +33,9 @@ public interface CaptureVitalsContract {
 
 		void setLocation(Location location);
 
-		void fetchPatientDetails();
-
 	}
 
 	interface Presenter extends BasePresenterContract {
-
-		void fetchPatientDetails(String patientId);
 
 		void fetchVisit(String patientId);
 

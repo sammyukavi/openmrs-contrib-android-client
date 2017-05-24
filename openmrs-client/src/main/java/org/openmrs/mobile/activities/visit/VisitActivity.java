@@ -15,6 +15,7 @@
 package org.openmrs.mobile.activities.visit;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -23,12 +24,16 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
+
+import com.github.clans.fab.FloatingActionButton;
 
 import net.yanzm.mth.MaterialTabHost;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
+import org.openmrs.mobile.activities.addeditvisit.AddEditVisitActivity;
+import org.openmrs.mobile.activities.auditdata.AuditDataActivity;
+import org.openmrs.mobile.activities.capturevitals.CaptureVitalsActivity;
 import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
 import org.openmrs.mobile.activities.patientheader.PatientHeaderContract;
 import org.openmrs.mobile.activities.patientheader.PatientHeaderFragment;
@@ -52,6 +57,10 @@ public class VisitActivity extends ACBaseActivity {
 	private String patientUuid;
 	private String visitUuid;
 	private String providerUuid;
+	private Intent intent;
+	private OpenMRS instance = OpenMRS.getInstance();
+	private SharedPreferences sharedPreferences = instance.getOpenMRSSharedPreferences();
+	private FloatingActionButton captureVitalsButton, endVisitButton, editVisitButton;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +100,13 @@ public class VisitActivity extends ACBaseActivity {
 			}
 
 		}
+
+		FloatingActionButton captureVitalsButton = (FloatingActionButton)findViewById(R.id.capture_vitals);
+		FloatingActionButton auditData = (FloatingActionButton)findViewById(R.id.auditDataForm);
+		FloatingActionButton endVisitButton = (FloatingActionButton)findViewById(R.id.end_visit);
+		FloatingActionButton editVisitButton = (FloatingActionButton)findViewById(R.id.edit_visit);
+
+		initializeListeners(endVisitButton, editVisitButton, captureVitalsButton, auditData);
 	}
 
 	private void initViewPager(VisitPageAdapter visitPageAdapter) {
@@ -187,6 +203,54 @@ public class VisitActivity extends ACBaseActivity {
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
+		}
+	}
+
+	private void initializeListeners(FloatingActionButton... params) {
+		for (FloatingActionButton visitActionButtons : params) {
+			visitActionButtons.setOnClickListener(
+					view -> startSelectedVisitActivity(visitActionButtons.getId()));
+		}
+	}
+
+	private void startSelectedVisitActivity(int selectedId) {
+
+		Bundle patientBundle = getIntent().getExtras();
+		switch (selectedId) {
+			case R.id.edit_visit:
+				intent = new Intent(getApplicationContext(), AddEditVisitActivity.class);
+				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
+				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visitUuid);
+				intent.putExtra(ApplicationConstants.BundleKeys.PROVIDER_UUID_BUNDLE, providerUuid);
+				startActivity(intent);
+				break;
+			case R.id.end_visit:
+				intent = new Intent(getApplicationContext(), AddEditVisitActivity.class);
+				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
+				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visitUuid);
+				intent.putExtra(ApplicationConstants.BundleKeys.PROVIDER_UUID_BUNDLE, providerUuid);
+				intent.putExtra(ApplicationConstants.BundleKeys.END_VISIT_TAG, true);
+				startActivity(intent);
+
+			case R.id.capture_vitals:
+				intent = new Intent(getApplicationContext(), CaptureVitalsActivity.class);
+				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
+				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visitUuid);
+				intent.putExtra(ApplicationConstants.BundleKeys.PROVIDER_UUID_BUNDLE, providerUuid);
+				startActivity(intent);
+				break;
+
+			case R.id.auditDataForm:
+				intent = new Intent(getApplicationContext(), AuditDataActivity.class);
+				System.out.println(patientUuid);
+				System.out.println(visitUuid);
+				System.out.println(providerUuid);
+
+				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
+				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visitUuid);
+				intent.putExtra(ApplicationConstants.BundleKeys.PROVIDER_UUID_BUNDLE, providerUuid);
+				startActivity(intent);
+				break;
 		}
 	}
 }

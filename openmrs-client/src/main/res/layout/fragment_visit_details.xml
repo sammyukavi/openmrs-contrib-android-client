@@ -347,8 +347,8 @@
 								android:layout_marginBottom="10dp"
 								android:background="@drawable/button_apply"
 								android:backgroundTint="@color/primary"
-								android:text="@string/action_submit"
-								android:textColor="@color/white" />
+								android:textColor="@color/white"
+								android:text="@string/save_visit_note" />
 					
 					</LinearLayout>
 				</LinearLayout>
@@ -465,53 +465,4 @@
 			</android.support.v7.widget.CardView>
 		</LinearLayout>
 	</ScrollView>
-	
-	<com.github.clans.fab.FloatingActionMenu
-			android:id="@+id/floatingActionMenu"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:layout_gravity="bottom|end"
-			android:layout_margin="0dp"
-			fab:menu_backgroundColor="@android:color/transparent"
-			fab:menu_icon="@drawable/ic_menu"
-			fab:menu_fab_label="@string/label_close"
-			fab:menu_labels_showAnimation="@anim/fab_slide_in_from_right"
-			fab:menu_labels_hideAnimation="@anim/fab_slide_out_to_right"
-			fab:menu_labels_ellipsize="end"
-			fab:menu_labels_singleLine="true">
-		
-		<com.github.clans.fab.FloatingActionButton
-				android:id="@+id/capture_vitals"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:src="@drawable/ic_vitals"
-				fab:fab_label="@string/label_capture_vitals"
-				fab:fab_size="mini" />
-		
-		<com.github.clans.fab.FloatingActionButton
-				android:id="@+id/imForm"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:src="@drawable/ic_description"
-				fab:fab_label="@string/audit_data_form_label"
-				fab:fab_size="mini" />
-		
-		<com.github.clans.fab.FloatingActionButton
-				android:id="@+id/edit_visit"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:src="@drawable/ic_edit"
-				fab:fab_label="@string/label_edit_visit"
-				fab:fab_size="mini" />
-		
-		
-		<com.github.clans.fab.FloatingActionButton
-				android:id="@+id/end_visit"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:src="@drawable/ic_power_settings_new"
-				fab:fab_label="@string/label_end_visit"
-				fab:fab_size="mini" />
-	
-	</com.github.clans.fab.FloatingActionMenu>
 </RelativeLayout>

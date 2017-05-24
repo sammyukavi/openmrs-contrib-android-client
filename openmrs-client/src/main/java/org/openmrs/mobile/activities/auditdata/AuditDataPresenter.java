@@ -47,27 +47,7 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 	}
 
 	@Override
-	public void subscribe() {
-
-	}
-
-	@Override
-	public void fetchPatientDetails(String uuid) {
-
-		patientDataService.getByUUID(uuid, QueryOptions.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Patient>() {
-			@Override
-			public void onCompleted(Patient patient) {
-				if (patient != null) {
-					auditDataView.updateContactCard(patient);
-				}
-			}
-
-			@Override
-			public void onError(Throwable t) {
-				t.printStackTrace();
-			}
-		});
-	}
+	public void subscribe() {}
 
 	@Override
 	public void fetchVisit(String visitUuid) {
@@ -76,7 +56,6 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 			@Override
 			public void onCompleted(Visit visit) {
 				auditDataView.setVisit(visit);
-				auditDataView.updateStartDate(visit.getStartDatetime());
 				for (Encounter encounter : visit.getEncounters()) {
 					switch (encounter.getEncounterType().getDisplay()) {
 						case AUDITDATA:
@@ -149,7 +128,6 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 			public void onCompleted(Location location) {
 				//set location in the fragment and start loading other fields
 				auditDataView.setLocation(location);
-				auditDataView.fetchPatientDetails();
 			}
 
 			@Override

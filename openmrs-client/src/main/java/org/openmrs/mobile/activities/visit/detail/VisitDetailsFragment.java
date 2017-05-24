@@ -14,34 +14,30 @@
 
 package org.openmrs.mobile.activities.visit.detail;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
-import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.github.clans.fab.FloatingActionButton;
-
 import org.openmrs.mobile.R;
-import org.openmrs.mobile.activities.addeditvisit.AddEditVisitActivity;
-import org.openmrs.mobile.activities.capturevitals.CaptureVitalsActivity;
 import org.openmrs.mobile.activities.visit.VisitContract;
 import org.openmrs.mobile.activities.visit.VisitFragment;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.EncounterType;
 import org.openmrs.mobile.models.Observation;
+import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.DateUtils;
@@ -54,17 +50,19 @@ import java.util.List;
 
 public class VisitDetailsFragment extends VisitFragment implements VisitContract.VisitDetailsView {
 
-	private TextView visitDate, bedNumber, ward, visitType, noVitals;
+	private TextView visitDate, bedNumber, ward, visitType, noVitals, noPrimaryDiagnoses, noSecondaryDiagnoses, noAuditData;
 	private Visit visit;
-	private TableLayout visitVitalsTableLayout;
+	private TableLayout visitVitalsTableLayout, auditInfoTableLayout;
 	private static TableRow.LayoutParams marginParams;
 	private Button submitVisitNote;
 	private TextInputEditText clinicalNote;
 	private AutoCompleteTextView addDiagnosis;
-	private Intent intent;
+	private RecyclerView primaryDiagnosesRecycler, secondaryDiagnosesRecycler;
+	private LinearLayoutManager primaryDiagnosisLayoutManager, secondaryDiagnosisLayoutManager;
+	private List<Observation> primaryDiagnoses;
+
 	private OpenMRS instance = OpenMRS.getInstance();
 	private SharedPreferences sharedPreferences = instance.getOpenMRSSharedPreferences();
-	private FloatingActionButton captureVitalsButton, endVisitButton, editVisitButton;
 
 	public static VisitDetailsFragment newInstance() {
 		return new VisitDetailsFragment();
@@ -81,9 +79,14 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View root = inflater.inflate(R.layout.fragment_visit_details, container, false);
 		resolveViews(root);
+		primaryDiagnosisLayoutManager = new LinearLayoutManager(this.getActivity());
+		secondaryDiagnosisLayoutManager = new LinearLayoutManager(this.getActivity());
+
+		primaryDiagnosesRecycler.setLayoutManager(primaryDiagnosisLayoutManager);
+		secondaryDiagnosesRecycler.setLayoutManager(secondaryDiagnosisLayoutManager);
+
 		((VisitDetailsPresenter)mPresenter).getVisit();
 		//buildMarginLayout();
-		initializeListeners(endVisitButton, editVisitButton, captureVitalsButton);
 		return root;
 	}
 
@@ -94,12 +97,15 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		visitType = (TextView)v.findViewById(R.id.visitType);
 		noVitals = (TextView)v.findViewById(R.id.noVitals);
 		visitVitalsTableLayout = (TableLayout)v.findViewById(R.id.visitVitalsTable);
+		auditInfoTableLayout = (TableLayout)v.findViewById(R.id.auditInfoTable);
 		submitVisitNote = (Button)v.findViewById(R.id.submitVisitNote);
 		clinicalNote = (TextInputEditText)v.findViewById(R.id.clinicalNotes);
 		addDiagnosis = (AutoCompleteTextView)v.findViewById(R.id.diagnosisInput);
-		captureVitalsButton = (FloatingActionButton)v.findViewById(R.id.capture_vitals);
-		editVisitButton = (FloatingActionButton)v.findViewById(R.id.edit_visit);
-		endVisitButton = (FloatingActionButton)v.findViewById(R.id.end_visit);
+		noPrimaryDiagnoses = (TextView)v.findViewById(R.id.noPrimaryDiagnosis);
+		noSecondaryDiagnoses = (TextView)v.findViewById(R.id.noSecondaryDiagnosis);
+		noAuditData = (TextView)v.findViewById(R.id.noAuditInfo);
+		primaryDiagnosesRecycler = (RecyclerView)v.findViewById(R.id.primaryDiagnosisRecyclerView);
+		secondaryDiagnosesRecycler = (RecyclerView)v.findViewById(R.id.secondaryDiagnosisRecyclerView);
 	}
 
 	@Override
@@ -115,7 +121,9 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 			setVisitType(visit);
 			setAttributeTypes(visit);
 			setVitals(visit);
-			setVisitNote(visit);
+			setClinicalNote(visit);
+			setDiagnoses(visit);
+			setAuditData(visit);
 		}
 
 	}
@@ -165,7 +173,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 					if (visit.getEncounters().get(i).getObs().size() != 0) {
 						noVitals.setVisibility(View.GONE);
 						visitVitalsTableLayout.setVisibility(View.VISIBLE);
-						loadObservationsFields(visit.getEncounters().get(i).getObs());
+						loadObservationFields(visit.getEncounters().get(i).getObs(), EncounterDataType.VITALS);
 					} else {
 						noVitals.setVisibility(View.VISIBLE);
 						visitVitalsTableLayout.setVisibility(View.GONE);
@@ -176,28 +184,45 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		}
 	}
 
-	public void setVisitNote(Visit visitNote) {
-		if (visitNote.getEncounters().size() != 0) {
-			for (int i = 0; i < visitNote.getEncounters().size(); i++) {
-				Encounter encounter = visitNote.getEncounters().get(i);
-				EncounterType encounterType = visitNote.getEncounters().get(i).getEncounterType();
+	public void setAuditData(Visit visit) {
+		if (visit.getEncounters().size() != 0) {
+			for (int i = 0; i < visit.getEncounters().size(); i++) {
+				if (visit.getEncounters().get(i).getEncounterType().getUuid()
+						.equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.AUDIT_DATA) || visit.getEncounters()
+						.get(i).getEncounterType().getDisplay().equalsIgnoreCase(ApplicationConstants
+								.EncounterTypeDisplays.AUDITDATA)) {
+					if (visit.getEncounters().get(i).getObs().size() != 0) {
+						noAuditData.setVisibility(View.GONE);
+						auditInfoTableLayout.setVisibility(View.VISIBLE);
+						loadObservationFields(visit.getEncounters().get(i).getObs(), EncounterDataType.AUDIT_DATA);
+					} else {
+						noAuditData.setVisibility(View.VISIBLE);
+						auditInfoTableLayout.setVisibility(View.GONE);
+						setAuditDataAvailability(true);
+					}
+
+				}
+			}
+		}
+	}
+
+	public void setClinicalNote(Visit visit) {
+		if (visit.getEncounters().size() != 0) {
+			for (int i = 0; i < visit.getEncounters().size(); i++) {
+				Encounter encounter = visit.getEncounters().get(i);
+				EncounterType encounterType = visit.getEncounters().get(i).getEncounterType();
 
 				if (encounterType.getUuid().equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.VISIT_NOTE_UUID)) {
 					submitVisitNote.setText(getString(R.string.action_update));
 
 					for (int v = 0; v < encounter.getObs().size(); v++) {
 
-						ArrayList locators = splitStrings(encounter.getObs().get(v).getDisplay());
+						ArrayList locators = splitStrings(encounter.getObs().get(v).getDisplay(), ":");
 
 						if (locators.get(0).toString()
-								.equalsIgnoreCase(ApplicationConstants.ObserationLocators.CLINICAL_NOTE)) {
-							ArrayList clinicalNoteText = splitStrings(encounter.getObs().get(v).getDisplay());
+								.equalsIgnoreCase(ApplicationConstants.ObservationLocators.CLINICAL_NOTE)) {
 							clinicalNote.setText(locators.get(1).toString());
-							System.out.println(clinicalNoteText.get(1).toString());
-						} else {
-
 						}
-
 					}
 
 				} else {
@@ -207,19 +232,54 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		}
 	}
 
-	public void loadObservationsFields(List<Observation> observations) {
-		for (Observation observation : observations) {
+	public void setDiagnoses(Visit visit) {
+		if (visit.getEncounters().size() != 0) {
+			for (int i = 0; i < visit.getEncounters().size(); i++) {
+				Encounter encounter = visit.getEncounters().get(i);
+				EncounterType encounterType = visit.getEncounters().get(i).getEncounterType();
 
+				if (encounterType.getUuid().equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.VISIT_NOTE_UUID)) {
+					submitVisitNote.setText(getString(R.string.action_update));
+					for (int v = 0; v < encounter.getObs().size(); v++) {
+						ArrayList locators = splitStrings(encounter.getObs().get(v).getDisplay(), ":");
+
+						if (locators.get(0).toString()
+								.equalsIgnoreCase(ApplicationConstants.ObservationLocators.DIANOSES)) {
+						} else {
+							noPrimaryDiagnoses.setVisibility(View.VISIBLE);
+							noSecondaryDiagnoses.setVisibility(View.VISIBLE);
+							primaryDiagnosesRecycler.setVisibility(View.GONE);
+							secondaryDiagnosesRecycler.setVisibility(View.GONE);
+						}
+
+					}
+				} else {
+					noPrimaryDiagnoses.setVisibility(View.VISIBLE);
+					noSecondaryDiagnoses.setVisibility(View.VISIBLE);
+					primaryDiagnosesRecycler.setVisibility(View.GONE);
+					secondaryDiagnosesRecycler.setVisibility(View.GONE);
+				}
+			}
+		}
+	}
+
+	public void loadObservationFields(List<Observation> observations, EncounterDataType type) {
+		for (Observation observation : observations) {
 			TableRow row = new TableRow(getContext());
 			row.setPadding(0, 20, 0, 10);
 			row.setGravity(Gravity.CENTER);
 
-			ArrayList splitValues = splitStrings(observation.getDisplay());
+			ArrayList splitValues = splitStrings(observation.getDisplay(), ":");
 
 			TextView label = new TextView(getContext());
 			label.setText(splitValues.get(0) + " :");
 			label.setTextSize(14);
-			label.setGravity(Gravity.RIGHT | Gravity.END);
+			if (type == EncounterDataType.VITALS) {
+				label.setGravity(Gravity.RIGHT | Gravity.END);
+			} else {
+				label.setGravity(Gravity.LEFT | Gravity.START);
+			}
+
 			label.setTextColor(getResources().getColor(R.color.black));
 			row.addView(label, 0);
 
@@ -229,59 +289,27 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 			vitalValue.setTextColor(getResources().getColor(R.color.dark_grey));
 			row.addView(vitalValue, 1);
 
-			visitVitalsTableLayout.addView(row);
+			if (type == EncounterDataType.VITALS) {
+				visitVitalsTableLayout.addView(row);
+			} else {
+				auditInfoTableLayout.addView(row);
+			}
 		}
 	}
 
-	private ArrayList splitStrings(String display) {
+	private ArrayList splitStrings(String display, String splitter) {
 		ArrayList<String> displayArray = new ArrayList<>();
-		Collections.addAll(displayArray, display.split(":"));
+		Collections.addAll(displayArray, display.split(splitter));
 		return displayArray;
 	}
 
-	private void buildMarginLayout() {
-		if (marginParams == null) {
-			marginParams = new TableRow.LayoutParams(
-					TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
-			marginParams.setMargins(70, 0, 0, 0);
-		}
+
+	public void setAuditDataAvailability(Boolean availability) {
+		SharedPreferences.Editor editor = instance.getOpenMRSSharedPreferences().edit();
+		editor.putBoolean(ApplicationConstants.BundleKeys.AUDIT_DATA_AVAILABILITY, availability);
+		editor.commit();
 	}
 
-	private void initializeListeners(FloatingActionButton... params) {
-		for (FloatingActionButton patientActionButtons : params) {
-			patientActionButtons.setOnClickListener(
-					view -> startSelectedPatientDashboardActivity(patientActionButtons.getId()));
-		}
-	}
 
-	private void startSelectedPatientDashboardActivity(int selectedId) {
-		switch (selectedId) {
-			case R.id.edit_visit:
-				intent = new Intent(getContext(), AddEditVisitActivity.class);
-				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, sharedPreferences.getString
-						(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING));
-				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, sharedPreferences.getString
-						(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING));
-				startActivity(intent);
-				break;
-			case R.id.end_visit:
-				intent = new Intent(getContext(), AddEditVisitActivity.class);
-				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, sharedPreferences.getString
-						(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING));
-				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, sharedPreferences.getString
-						(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING));
-				intent.putExtra(ApplicationConstants.BundleKeys.END_VISIT_TAG, true);
-				startActivity(intent);
-
-			case R.id.capture_vitals:
-				intent = new Intent(getContext(), CaptureVitalsActivity.class);
-				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, sharedPreferences.getString
-						(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING));
-				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, sharedPreferences.getString
-						(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING));
-				startActivity(intent);
-				break;
-		}
-	}
 
 }

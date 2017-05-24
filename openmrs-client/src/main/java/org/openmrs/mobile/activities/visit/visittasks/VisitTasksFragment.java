@@ -48,9 +48,8 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 	private static OpenMRS instance = OpenMRS.getInstance();
 	FloatingActionButton fab;
 	private View mRootView;
-	private RecyclerView viewTasksRecyclerView;
 	private LinearLayoutManager layoutManager;
-	private LinearLayout addTasklayout;
+	private LinearLayout addTaskLayout;
 	private RecyclerView visitTasksRecyclerViewAdapter;
 	private List<VisitPredefinedTask> predefinedTasks;
 	private List<VisitTask> visitTasksLists;
@@ -76,7 +75,6 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 
 		//Adding the Recycler view
 		layoutManager = new LinearLayoutManager(this.getActivity());
-		visitTasksRecyclerViewAdapter = (RecyclerView)mRootView.findViewById(R.id.visitTasksRecyclerView);
 		visitTasksRecyclerViewAdapter.setLayoutManager(layoutManager);
 
 		((VisitTasksPresenter)mPresenter).getVisit();
@@ -90,10 +88,10 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 	}
 
 	private void resolveViews(View v) {
-		viewTasksRecyclerView = (RecyclerView)v.findViewById(R.id.visitTasksRecyclerView);
+		visitTasksRecyclerViewAdapter = (RecyclerView)v.findViewById(R.id.visitTasksRecyclerView);
 		fab = (FloatingActionButton)v.findViewById(R.id.visitTaskFab);
 		addtask = (AutoCompleteTextView)v.findViewById(R.id.addVisitTasks);
-		addTasklayout = (LinearLayout)v.findViewById(R.id.addTaskLayout);
+		addTaskLayout = (LinearLayout)v.findViewById(R.id.addTaskLayout);
 		noVisitTasks = (TextView)v.findViewById(R.id.noVisitTasks);
 	}
 
@@ -111,10 +109,10 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 						new VisitTasksRecyclerViewAdapter(this.getActivity(), visitTaskList, visit, this);
 				visitTasksRecyclerViewAdapter.setAdapter(adapter);
 				//visitTasksRecyclerViewAdapter.addOnScrollListener(recyclerViewOnScrollListener)
-				viewTasksRecyclerView.setVisibility(View.VISIBLE);
+				visitTasksRecyclerViewAdapter.setVisibility(View.VISIBLE);
 				noVisitTasks.setVisibility(View.GONE);
 			} else {
-				viewTasksRecyclerView.setVisibility(View.GONE);
+				visitTasksRecyclerViewAdapter.setVisibility(View.GONE);
 				noVisitTasks.setVisibility(View.VISIBLE);
 			}
 		}
@@ -180,7 +178,7 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 	public void setVisit(Visit visit) {
 		this.visit = visit;
 		if (!visit.getStopDatetime().equalsIgnoreCase(null)) {
-			addTasklayout.setVisibility(View.GONE);
+			addTaskLayout.setVisibility(View.GONE);
 		}
 	}
 

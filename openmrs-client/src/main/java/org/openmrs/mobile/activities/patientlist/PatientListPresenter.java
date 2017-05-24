@@ -102,12 +102,10 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 					public void onCompleted(List<PatientListContext> entities) {
 						if (entities.isEmpty()){
 							setViewAfterLoadData(true);
-							patientListView.setNoPatientListSelected(false);
 							patientListView.setNumberOfPatientsView(0);
 							patientListView.updatePatientListData(entities);
 						} else {
 							setViewAfterLoadData(false);
-							patientListView.setNoPatientListSelected(false);
 							patientListView.updatePatientListData(entities);
 							setTotalNumberResults(pagingInfo.getTotalRecordCount());
 							if (pagingInfo.getTotalRecordCount() > 0) {
@@ -119,7 +117,6 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 
 					@Override
 					public void onError(Throwable t) {
-						patientListView.setNoPatientListSelected(false);
 						patientListView.updatePatientListData(new ArrayList<>());
 						setViewAfterLoadData(true);
 						patientListView.setNumberOfPatientsView(0);

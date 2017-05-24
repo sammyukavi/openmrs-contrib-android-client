@@ -33,6 +33,7 @@ import org.openmrs.mobile.activities.addeditpatient.AddEditPatientActivity;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.net.AuthorizationManager;
+import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.FontsUtil;
 import org.openmrs.mobile.utilities.ToastUtil;
 
@@ -109,7 +110,12 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 		FontsUtil.setFont((ViewGroup)this.getActivity().findViewById(android.R.id.content));
 		authorizationManager = new AuthorizationManager();
 		if (authorizationManager.isUserLoggedIn()) {
-			mPresenter.getLastViewed();
+			if (OpenMRS.getInstance().getSearchQuery().equalsIgnoreCase(ApplicationConstants.EMPTY_STRING)){
+				mPresenter.getLastViewed();
+			} else {
+				mPresenter.findPatient(OpenMRS.getInstance().getSearchQuery());
+			}
+
 		}
 		return mRootView;
 	}

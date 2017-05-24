@@ -15,6 +15,7 @@
 package org.openmrs.mobile.activities.findpatientrecord;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -37,6 +38,8 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 	FindPatientRecordFragment findPatientRecordFragment;
 	SearchView searchView;
 	private String query;
+	private OpenMRS instance = OpenMRS.getInstance();
+	private SharedPreferences sharedPreferences = instance.getOpenMRSSharedPreferences();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +58,13 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 			addFragmentToActivity(getSupportFragmentManager(), findPatientRecordFragment, R.id.findPatientContentFrame);
 		}
 
+		if (savedInstanceState != null) {
+			query = savedInstanceState.getString(ApplicationConstants.BundleKeys.PATIENT_QUERY_BUNDLE, "");
+			findPatientPresenter = new FindPatientRecordPresenter(findPatientRecordFragment, query);
+		} else {
+			findPatientPresenter = new FindPatientRecordPresenter(findPatientRecordFragment);
+		}
+
 		//adding
 		FloatingActionButton floatingActionButton = (FloatingActionButton)findViewById(R.id.add_Patient);
 		floatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -64,13 +74,6 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 				startActivity(intent);
 			}
 		});
-
-		if (savedInstanceState != null) {
-			query = savedInstanceState.getString(ApplicationConstants.BundleKeys.PATIENT_QUERY_BUNDLE, "");
-			findPatientPresenter = new FindPatientRecordPresenter(findPatientRecordFragment, query);
-		} else {
-			findPatientPresenter = new FindPatientRecordPresenter(findPatientRecordFragment);
-		}
 	}
 
 	@Override
@@ -110,8 +113,13 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 			public boolean onQueryTextSubmit(String query) {
 				if (query.length() >= 3) {
 					findPatientPresenter.findPatient(query);
+					setSearchQuery(query);
 				} else {
-					findPatientPresenter.getLastViewed();
+					if (OpenMRS.getInstance().getSearchQuery().equalsIgnoreCase(ApplicationConstants.EMPTY_STRING)) {
+						findPatientPresenter.getLastViewed();
+					} else {
+						findPatientPresenter.findPatient(query);
+					}
 					findPatientRecordFragment.setNoPatientsVisibility(false);
 				}
 				return true;
@@ -121,6 +129,7 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 			public boolean onQueryTextChange(String query) {
 				if (query.length() >= 3) {
 					findPatientPresenter.findPatient(query);
+					setSearchQuery(query);
 				} else {
 					findPatientRecordFragment.setNumberOfPatientsView(0);
 					findPatientRecordFragment.setNoPatientsVisibility(false);
@@ -131,4 +140,9 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 		return true;
 	}
 
+	public void setSearchQuery(String query) {
+		SharedPreferences.Editor editor = instance.getOpenMRSSharedPreferences().edit();
+		editor.putString(ApplicationConstants.BundleKeys.PATIENT_QUERY_BUNDLE, query);
+		editor.commit();
+	}
 }

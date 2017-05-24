@@ -12,11 +12,14 @@
   ~ Copyright (C) OpenMRS, LLC.  All Rights Reserved.
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 		xmlns:app="http://schemas.android.com/apk/res-auto"
+		xmlns:fab="http://schemas.android.com/apk/res-auto"
+		android:orientation="vertical"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:orientation="vertical">
+		android:focusable="true"
+		android:focusableInTouchMode="true">
 	
 	<FrameLayout
 			android:id="@+id/patientHeader"
@@ -25,6 +28,8 @@
 			android:layout_marginBottom="10dp" />
 	
 	<android.support.design.widget.AppBarLayout
+			android:layout_below="@+id/patientHeader"
+			android:id="@+id/appBarLayout"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:elevation="0dp">
@@ -40,6 +45,7 @@
 	
 	<FrameLayout
 			android:id="@+id/visitDetailsContentFrame"
+			android:layout_below="@+id/appBarLayout"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent">
 		
@@ -50,6 +56,64 @@
 				android:layout_height="match_parent" />
 	
 	</FrameLayout>
+	
+	<com.github.clans.fab.FloatingActionMenu
+			android:id="@+id/floatingActionMenu"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_gravity="bottom|end"
+			android:layout_margin="0dp"
+			fab:menu_backgroundColor="@android:color/transparent"
+			fab:menu_icon="@drawable/ic_menu"
+			fab:menu_fab_label="@string/label_close"
+			fab:menu_labels_showAnimation="@anim/fab_slide_in_from_right"
+			fab:menu_labels_hideAnimation="@anim/fab_slide_out_to_right"
+			fab:menu_labels_ellipsize="end"
+			fab:menu_labels_singleLine="true"
+			fab:menu_colorNormal="@color/color_primary_dark"
+			fab:menu_colorPressed="@color/color_primary">
+		
+		<com.github.clans.fab.FloatingActionButton
+				android:id="@+id/capture_vitals"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:src="@drawable/ic_vitals"
+				fab:fab_colorNormal="@color/color_primary_dark"
+				fab:fab_colorPressed="@color/color_primary"
+				fab:fab_label="@string/label_capture_vitals"
+				fab:fab_size="mini" />
+		
+		<com.github.clans.fab.FloatingActionButton
+				android:id="@+id/auditDataForm"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:src="@drawable/ic_description"
+				fab:fab_label="@string/audit_data_form_label"
+				fab:fab_size="mini"
+				fab:fab_colorNormal="@color/color_primary_dark"
+				fab:fab_colorPressed="@color/color_primary" />
+		
+		<com.github.clans.fab.FloatingActionButton
+				android:id="@+id/edit_visit"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:src="@drawable/ic_edit"
+				fab:fab_label="@string/label_edit_visit"
+				fab:fab_size="mini"
+				fab:fab_colorNormal="@color/color_primary_dark"
+				fab:fab_colorPressed="@color/color_primary" />
+		
+		
+		<com.github.clans.fab.FloatingActionButton
+				android:id="@+id/end_visit"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:src="@drawable/ic_power_settings_new"
+				fab:fab_label="@string/label_end_visit"
+				fab:fab_size="mini"
+				fab:fab_colorNormal="@color/color_primary_dark"
+				fab:fab_colorPressed="@color/color_primary" />
+	
+	</com.github.clans.fab.FloatingActionMenu>
 
-
-</LinearLayout>
+</RelativeLayout>

@@ -46,7 +46,7 @@
 	<color name="openmrs_color_yellow">#EEA616</color>
 	<color name="openmrs_color_green">#009384</color>
 	<color name="openmrs_color_black">#231F20</color>
-	<color name="openmrs_color_grey">#888</color>
+	<color name="openmrs_color_grey">#888888</color>
 	<color name="list_color">#363463</color>
 	
 	<color name="color_primary">#4ec07e</color>

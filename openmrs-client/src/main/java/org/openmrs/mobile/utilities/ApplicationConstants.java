@@ -111,6 +111,7 @@ public abstract class ApplicationConstants {
 		public static final String DIANOSES = "Visit Diagnoses";
 		public static final String ADMISSION = "Admission";
 		public static final String AUDIT_DATA_COMPLETENESS = "Audit Data Complete";
+		public static final String PRIMARY_DIAGNOSIS = "Primary";
 	}
 
 	public abstract static class BundleKeys {

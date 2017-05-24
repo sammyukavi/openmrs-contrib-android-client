@@ -37,7 +37,6 @@ import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.EncounterType;
 import org.openmrs.mobile.models.Observation;
-import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.DateUtils;
@@ -59,7 +58,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	private AutoCompleteTextView addDiagnosis;
 	private RecyclerView primaryDiagnosesRecycler, secondaryDiagnosesRecycler;
 	private LinearLayoutManager primaryDiagnosisLayoutManager, secondaryDiagnosisLayoutManager;
-	private List<Observation> primaryDiagnoses;
+	private List<String> primaryDiagnoses;
 
 	private OpenMRS instance = OpenMRS.getInstance();
 	private SharedPreferences sharedPreferences = instance.getOpenMRSSharedPreferences();
@@ -131,9 +130,10 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	public void setVisitDates(Visit visit) {
 		if (StringUtils.notNull(visit.getStopDatetime())) {
 			visitDate.setText(getContext().getString(R.string.date_started) + ": " + DateUtils
-					.convertTime1(visit.getStartDatetime(), DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT) + " - "
+					.convertTime1(visit.getStartDatetime(), DateUtils.DATE_FORMAT) + " - "
 					+ getContext().getString(R.string.date_closed) + ": " + DateUtils.convertTime1(visit.getStopDatetime(),
-					DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT));
+					DateUtils.DATE_FORMAT));
+			visitDate.setBackground(getResources().getDrawable(R.color.color_white));
 		} else {
 			visitDate.setText(getContext().getString(R.string.active_visit_label) + ": " + DateUtils.convertTime1
 					(visit.getStartDatetime(), DateUtils.DATE_FORMAT) + " (started " + DateUtils.convertTime1
@@ -170,6 +170,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 			for (int i = 0; i < visit.getEncounters().size(); i++) {
 				if (visit.getEncounters().get(i).getEncounterType().getUuid()
 						.equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.VITALS_UUID)) {
+
 					if (visit.getEncounters().get(i).getObs().size() != 0) {
 						noVitals.setVisibility(View.GONE);
 						visitVitalsTableLayout.setVisibility(View.VISIBLE);
@@ -178,7 +179,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 						noVitals.setVisibility(View.VISIBLE);
 						visitVitalsTableLayout.setVisibility(View.GONE);
 					}
-
+					break;
 				}
 			}
 		}
@@ -198,7 +199,6 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 					} else {
 						noAuditData.setVisibility(View.VISIBLE);
 						auditInfoTableLayout.setVisibility(View.GONE);
-						setAuditDataAvailability(true);
 					}
 
 				}
@@ -239,25 +239,21 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 				EncounterType encounterType = visit.getEncounters().get(i).getEncounterType();
 
 				if (encounterType.getUuid().equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.VISIT_NOTE_UUID)) {
-					submitVisitNote.setText(getString(R.string.action_update));
+					submitVisitNote.setText(getString(R.string.update_visit_note));
 					for (int v = 0; v < encounter.getObs().size(); v++) {
 						ArrayList locators = splitStrings(encounter.getObs().get(v).getDisplay(), ":");
 
 						if (locators.get(0).toString()
 								.equalsIgnoreCase(ApplicationConstants.ObservationLocators.DIANOSES)) {
-						} else {
-							noPrimaryDiagnoses.setVisibility(View.VISIBLE);
-							noSecondaryDiagnoses.setVisibility(View.VISIBLE);
-							primaryDiagnosesRecycler.setVisibility(View.GONE);
-							secondaryDiagnosesRecycler.setVisibility(View.GONE);
+							ArrayList diagnosis = splitStrings(locators.get(1).toString(), ",");
+							for (int d = 0; d < diagnosis.size(); d++) {
+								String diagnosisString = diagnosis.get(d).toString();
+								if (diagnosisString.equals(ApplicationConstants.ObservationLocators.PRIMARY_DIAGNOSIS)) {
+									System.out.println("Found Primary");
+								}
+							}
 						}
-
 					}
-				} else {
-					noPrimaryDiagnoses.setVisibility(View.VISIBLE);
-					noSecondaryDiagnoses.setVisibility(View.VISIBLE);
-					primaryDiagnosesRecycler.setVisibility(View.GONE);
-					secondaryDiagnosesRecycler.setVisibility(View.GONE);
 				}
 			}
 		}
@@ -268,6 +264,8 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 			TableRow row = new TableRow(getContext());
 			row.setPadding(0, 20, 0, 10);
 			row.setGravity(Gravity.CENTER);
+			row.setLayoutParams(
+					new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
 			ArrayList splitValues = splitStrings(observation.getDisplay(), ":");
 
@@ -279,15 +277,18 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 			} else {
 				label.setGravity(Gravity.LEFT | Gravity.START);
 			}
+			label.setMaxLines(4);
+			label.setSingleLine(false);
 
 			label.setTextColor(getResources().getColor(R.color.black));
 			row.addView(label, 0);
 
-			TextView vitalValue = new TextView(getContext());
-			vitalValue.setText(splitValues.get(1).toString());
-			vitalValue.setTextSize(14);
-			vitalValue.setTextColor(getResources().getColor(R.color.dark_grey));
-			row.addView(vitalValue, 1);
+			TextView value = new TextView(getContext());
+			value.setText(splitValues.get(1).toString());
+			value.setTextSize(14);
+			label.setMaxLines(4);
+			label.setSingleLine(false);
+			row.addView(value, 1);
 
 			if (type == EncounterDataType.VITALS) {
 				visitVitalsTableLayout.addView(row);
@@ -302,14 +303,4 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		Collections.addAll(displayArray, display.split(splitter));
 		return displayArray;
 	}
-
-
-	public void setAuditDataAvailability(Boolean availability) {
-		SharedPreferences.Editor editor = instance.getOpenMRSSharedPreferences().edit();
-		editor.putBoolean(ApplicationConstants.BundleKeys.AUDIT_DATA_AVAILABILITY, availability);
-		editor.commit();
-	}
-
-
-
 }

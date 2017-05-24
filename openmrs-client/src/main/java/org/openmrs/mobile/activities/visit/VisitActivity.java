@@ -242,10 +242,6 @@ public class VisitActivity extends ACBaseActivity {
 
 			case R.id.auditDataForm:
 				intent = new Intent(getApplicationContext(), AuditDataActivity.class);
-				System.out.println(patientUuid);
-				System.out.println(visitUuid);
-				System.out.println(providerUuid);
-
 				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
 				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visitUuid);
 				intent.putExtra(ApplicationConstants.BundleKeys.PROVIDER_UUID_BUNDLE, providerUuid);

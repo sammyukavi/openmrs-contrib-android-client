@@ -197,9 +197,9 @@ public class OpenMRS extends Application {
 		return prefs.getString(ApplicationConstants.BundleKeys.PROVIDER_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING);
 	}
 
-	public String getAuditDataAvailability() {
+	public String getSearchQuery() {
 		SharedPreferences prefs = getOpenMRSSharedPreferences();
-		return prefs.getString(ApplicationConstants.BundleKeys.AUDIT_DATA_AVAILABILITY, ApplicationConstants.EMPTY_STRING);
+		return prefs.getString(ApplicationConstants.BundleKeys.PATIENT_QUERY_BUNDLE, ApplicationConstants.EMPTY_STRING);
 	}
 
 	public void setVisitTypeUUID(String visitTypeUUID) {

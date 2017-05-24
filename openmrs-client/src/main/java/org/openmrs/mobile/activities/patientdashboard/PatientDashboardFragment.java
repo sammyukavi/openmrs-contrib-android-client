@@ -129,9 +129,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		pastVisitsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 		VisitsRecyclerAdapter visitsRecyclerAdapter = new VisitsRecyclerAdapter(
 				pastVisitsRecyclerView,
-				visits, getActivity(),
-				patient,
-				mPresenter
+				visits, getActivity()
 		);
 		pastVisitsRecyclerView.setAdapter(visitsRecyclerAdapter);
 

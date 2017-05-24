@@ -3,7 +3,7 @@ package org.openmrs.mobile.activities.patientdashboard;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -17,11 +17,12 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import org.openmrs.mobile.R;
+import org.openmrs.mobile.activities.visit.VisitActivity;
+import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.data.impl.ObsDataService;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Observation;
-import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.DateUtils;
@@ -35,8 +36,6 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
 	private final int VIEW_TYPE_ITEM = 0;
 	private final int VIEW_TYPE_LOADING = 1;
-	private final Patient patient;
-	private final PatientDashboardContract.Presenter mPresenter;
 	private OnLoadMoreListener onLoadMoreListener;
 	private boolean isLoading;
 	private Context context;
@@ -47,7 +46,6 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 	private Intent intent;
 	private TimeAgo time;
 	private LayoutInflater layoutInflater;
-	private LinearLayout observationsContainer;
 	private TableLayout visitVitalsTableLayout;
 
 	private final RecyclerView.OnScrollListener onScrollListener = new RecyclerView.OnScrollListener() {
@@ -74,12 +72,9 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 		}
 	};
 
-	public VisitsRecyclerAdapter(RecyclerView recyclerView, List<Visit> visits, Context context, Patient patient,
-			PatientDashboardContract.Presenter mPresenter) {
-		this.mPresenter = mPresenter;
+	public VisitsRecyclerAdapter(RecyclerView recyclerView, List<Visit> visits, Context context) {
 		this.visits = visits;
 		this.context = context;
-		this.patient = patient;
 		this.createEditVisitNoteDialog = new CustomDialogBundle();
 		this.createEditVisitNoteDialog.setTitleViewMessage(context.getString(R.string.visit_note));
 		this.createEditVisitNoteDialog.setRightButtonText(context.getString(R.string.label_save));
@@ -136,14 +131,12 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 		//viewHolder.observationsContainer.addView(patientContactInfo);
 
 		if (holder instanceof VisitViewHolder) {
-			boolean isActiveVisit, hasVisitNote;
-			isActiveVisit = hasVisitNote = false;
+			boolean isActiveVisit = false;
 			VisitViewHolder viewHolder = (VisitViewHolder)holder;
 			Visit visit = visits.get(position);
 			View singleVisitView = layoutInflater.inflate(R.layout.container_single_visit_observation, null);
 			TextView visitTitle = (TextView)singleVisitView.findViewById(R.id.visitTitle);
 			TextView visitTimeAgo = (TextView)singleVisitView.findViewById(R.id.visitTimeago);
-			observationsContainer = (LinearLayout)singleVisitView.findViewById(R.id.observationsContainer);
 
 			//Let's set the visit title
 			String startDate = DateUtils.convertTime1(visit.getStartDatetime(), DateUtils.DATE_FORMAT);
@@ -171,46 +164,106 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 							+ DateUtils.convertTime1(visit.getStopDatetime(), DateUtils.DATE_FORMAT));
 				}
 			}
-
 			visitTimeAgo.setText("Started: " + time.timeAgo(DateUtils.convertTime(visit.getStartDatetime())));
 
-			for (Encounter encounter : visit.getEncounters()) {
-
-				switch (encounter.getEncounterType().getDisplay()) {
-
-					case ApplicationConstants.EncounterTypeDisplays.VISIT_NOTE:
-						hasVisitNote = true;
-						presentVisitNotes(encounter);
-						break;
-					case ApplicationConstants.EncounterTypeDisplays.VITALS:
-						//presentVitals(encounter);
-						break;
-					default:
-
-						break;
+			//Adding the link to the visit details page
+			showVisitDetails = (ImageView)singleVisitView.findViewById(R.id.loadVisitDetails);
+			showVisitDetails.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					intent = new Intent(context, VisitActivity.class);
+					intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, OpenMRS.getInstance()
+							.getPatientUuid());
+					intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visit.getUuid());
+					context.startActivity(intent);
 				}
+			});
 
-			}
-
-			if (isActiveVisit && !hasVisitNote) {
-				addVisitNoteField();
-			} else if (!hasVisitNote) {
-				showNoVisitNote();
+			if (visit.getEncounters().size() == 0) {
+				presentVisitNotes(new Encounter(), singleVisitView, isActiveVisit);
+			} else {
+				for (Encounter encounter : visit.getEncounters()) {
+					switch (encounter.getEncounterType().getDisplay()) {
+						case ApplicationConstants.EncounterTypeDisplays.VISIT_NOTE:
+							presentVisitNotes(encounter, singleVisitView, isActiveVisit);
+							break;
+						default:
+							presentVisitNotes(new Encounter(), singleVisitView, isActiveVisit);
+							break;
+					}
+				}
 			}
 
 			viewHolder.observationsContainer.addView(singleVisitView);
 
-		} else if (holder instanceof LoadingViewHolder)
-
-		{
+		} else if (holder instanceof LoadingViewHolder) {
 			LoadingViewHolder loadingViewHolder = (LoadingViewHolder)holder;
 			loadingViewHolder.progressBar.setIndeterminate(true);
 		}
 
 	}
 
-	private void presentVitals(Encounter encounter) {
-		TableLayout visitVitalsTableLayout = (TableLayout)layoutInflater.inflate(R.layout.container_visit_vitals_row, null);
+	private void presentVisitNotes(Encounter encounter, View view, boolean isActiveVisit) {
+		TextView visitNote = null;
+
+		if (isActiveVisit) {
+			view.findViewById(R.id.editVisitNoteContainer).setVisibility(View.VISIBLE);
+			visitNote = (TextInputEditText)view.findViewById(R.id.editVisitNote);
+		} else {
+			visitNote = (TextView)view.findViewById(R.id.visitNoteText);
+			view.findViewById(R.id.visitNoteTextContainer).setVisibility(View.VISIBLE);
+		}
+
+		TextView primaryDiagnosis = (TextView)view.findViewById(R.id.primaryDiagnosis);
+		TextView secondaryDiagnosis = (TextView)view.findViewById(R.id.secondaryDiagnosis);
+
+		String visitNoteStr = null;
+		String primaryObsStr = "";
+		String secondaryObsStr = "";
+		String otherObsStr = "";
+		boolean hasVisitNote = false;
+
+		for (Observation observation : encounter.getObs()) {
+
+			if (observation.getDisplay().startsWith("Text of")) {
+				visitNoteStr = observation.getDisplay();
+				visitNoteStr = visitNoteStr.substring((visitNoteStr.indexOf(":") + 1), (visitNoteStr.length() - 1));
+				hasVisitNote = true;
+			} else if (observation.getDisplay().startsWith("Visit Diagnoses: Primary, ")) {
+				primaryObsStr += (observation.getDisplay().replaceAll("Visit Diagnoses: Primary, ", "")) + "\n";
+			} else if (observation.getDisplay().startsWith("Visit Diagnoses: Secondary,")) {
+				secondaryObsStr += observation.getDisplay().replaceAll("Visit Diagnoses: Secondary, ", "") + "\n";
+			} else {
+				otherObsStr += observation.getDisplay();
+				hasVisitNote = true;
+			}
+		}
+
+		primaryDiagnosis.setText(primaryObsStr.replaceAll("Presumed diagnosis", "").replaceAll(", ", " "));
+		secondaryDiagnosis.setText(secondaryObsStr.replaceAll("Presumed diagnosis", "").replaceAll(", ", " "));
+		if (visitNoteStr == null) {
+			visitNote.setText(otherObsStr);
+		} else {
+			visitNote.setText(visitNoteStr);
+		}
+
+		if (!primaryObsStr.equalsIgnoreCase("")) {
+			view.findViewById(R.id.primaryDiagnosisHolder).setVisibility(View.VISIBLE);
+		}
+
+		if (!primaryObsStr.equalsIgnoreCase("")) {
+			view.findViewById(R.id.secondaryDiagnosisHolder).setVisibility(View.VISIBLE);
+		}
+
+		if (!hasVisitNote && !isActiveVisit) {
+			view.findViewById(R.id.visitNoteTitle).setVisibility(View.GONE);
+			visitNote.setText("No Diagnosis");
+		}
+
+	}
+
+	private void presentVitals(Encounter encounter, View singleVisitView) {
+		TableLayout visitVitalsTableLayout = (TableLayout)singleVisitView.findViewById(R.id.visitVitalsTable);
 
 		if (encounter.getObs().size() != 0) {
 			for (Observation observation : encounter.getObs()) {
@@ -236,66 +289,9 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
 				visitVitalsTableLayout.addView(row);
 			}
-			observationsContainer.addView(visitVitalsTableLayout);
 		} else {
 
 		}
-	}
-
-	private void presentVisitNotes(Encounter encounter) {
-
-		LinearLayout row = (LinearLayout)layoutInflater.inflate(R.layout.container_visit_note_row, null);
-		TextView visitNote = (TextView)row.findViewById(R.id.text);
-		TextView primaryDiagnosis = (TextView)row.findViewById(R.id.primaryDiagnosis);
-		TextView secondaryDiagnosis = (TextView)row.findViewById(R.id.secondaryDiagnosis);
-
-		String visitNoteStr = null;
-		String primaryObsStr = "";
-		String secondaryObsStr = "";
-		String otherObsStr = "";
-
-		for (Observation observation : encounter.getObs()) {
-
-			if (observation.getDisplay().startsWith("Text of")) {
-				visitNoteStr = observation.getDisplay();
-				visitNoteStr = visitNoteStr.substring((visitNoteStr.indexOf(":") + 1), (visitNoteStr.length() - 1));
-			} else if (observation.getDisplay().startsWith("Visit Diagnoses: Primary, ")) {
-				primaryObsStr += (observation.getDisplay().replaceAll("Visit Diagnoses: Primary, ", "")) + "\n";
-			} else if (observation.getDisplay().startsWith("Visit Diagnoses: Secondary,")) {
-				secondaryObsStr += observation.getDisplay().replaceAll("Visit Diagnoses: Secondary, ", "") + "\n";
-			} else {
-				otherObsStr += observation.getDisplay();
-			}
-		}
-
-		primaryDiagnosis.setText(primaryObsStr.replaceAll("Presumed diagnosis", "").replaceAll(", ", " "));
-		secondaryDiagnosis.setText(secondaryObsStr.replaceAll("Presumed diagnosis", "").replaceAll(", ", " "));
-		if (visitNoteStr == null) {
-			visitNote.setText(otherObsStr);
-		} else {
-			visitNote.setText(visitNoteStr);
-		}
-		observationsContainer.addView(row);
-	}
-
-	private void addVisitNoteField(String visitUUid, @Nullable Observation observation) {
-		View row = LayoutInflater.from(context).inflate(R.layout.container_visit_note_row, null);
-		observationsContainer.addView(row);
-	}
-
-	private void addVisitNoteField() {
-		View row = LayoutInflater.from(context).inflate(R.layout.container_visit_note_row, null);
-		observationsContainer.addView(row, 0);
-	}
-
-	private void showNoVisitNote() {
-		LinearLayout row = (LinearLayout)LayoutInflater.from(context).inflate(R.layout.container_visit_note_row, null);
-		row.removeAllViews();
-		TextView messageTextView = new TextView(context);
-		messageTextView.setText("No Visit Note");
-		row.addView(messageTextView);
-		row.setPadding(10, 10, 10, 10);
-		observationsContainer.addView(row, 0);
 	}
 
 	@Override

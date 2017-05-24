@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 		xmlns:fab="http://schemas.android.com/apk/res-auto"
-		android:orientation="vertical"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content">
 
@@ -10,11 +9,31 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content" />
 
-	<android.support.v7.widget.RecyclerView
-			android:id="@+id/pastVisits"
+	<android.support.v4.widget.NestedScrollView
+			android:id="@+id/scrollView"
 			android:layout_below="@id/patientHeader"
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content" />
+			android:layout_height="wrap_content">
+
+		<LinearLayout
+				android:orientation="vertical"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content">
+
+			<include
+					layout="@layout/container_patient_contact_info"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content" />
+
+			<android.support.v7.widget.RecyclerView
+					android:paddingTop="10dp"
+					android:id="@+id/pastVisits"
+					android:layout_below="@id/patientHeader"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content" />
+		</LinearLayout>
+
+	</android.support.v4.widget.NestedScrollView>
 
 	<com.github.clans.fab.FloatingActionMenu
 			android:id="@+id/floatingActionMenu"
@@ -45,4 +64,4 @@
 				fab:fab_size="mini"
 				fab:menu_colorNormal="@color/color_primary_dark" />
 	</com.github.clans.fab.FloatingActionMenu>
-</LinearLayout>
+</RelativeLayout>

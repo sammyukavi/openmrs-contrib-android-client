@@ -28,7 +28,7 @@ public class CaptureVitalsActivity extends ACBaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getLayoutInflater().inflate(R.layout.activity_audit_data, frameLayout);
-		setTitle(R.string.title_audit_data_form);
+		setTitle(R.string.label_capture_vitals);
 		// Create fragment
 		CaptureVitalsFragment captureVitalsFragment =
 				(CaptureVitalsFragment)getSupportFragmentManager().findFragmentById(R.id.contentFrame);

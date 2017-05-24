@@ -44,7 +44,7 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 	private Spinner patientListDropdown;
 	private TextView emptyPatientList;
 	private TextView noPatientLists;
-	private TextView numberOfPatients, selectPatientList;
+	private TextView numberOfPatients;
 	private RecyclerView patientListModelRecyclerView;
 	private LinearLayoutManager layoutManager;
 
@@ -97,7 +97,6 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 		layoutManager = new LinearLayoutManager(this.getActivity());
 		patientListModelRecyclerView = (RecyclerView)root.findViewById(R.id.patientListModelRecyclerView);
 		patientListModelRecyclerView.setLayoutManager(layoutManager);
-		selectPatientList = (TextView)root.findViewById(R.id.noPatientListSelected);
 
 		// Font config
 		FontsUtil.setFont((ViewGroup)this.getActivity().findViewById(android.R.id.content));
@@ -115,10 +114,6 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 		noPatientLists.setVisibility(visible ? View.VISIBLE : View.GONE);
 	}
 
-	@Override
-	public void setNoPatientListSelected(boolean visible){
-		selectPatientList.setVisibility(visible ? View.VISIBLE : View.GONE);
-	}
 
 	@Override
 	public void setSpinnerVisibility(boolean visible) {
@@ -139,7 +134,6 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				setSelectedPatientList(patientLists.get(position));
 				if (selectedPatientList.getUuid() == null){
-					setNoPatientListSelected(true);
 					setNumberOfPatientsView(0);
 					List<PatientListContext> patientListContextList = new ArrayList<>();
 					updatePatientListData(patientListContextList);

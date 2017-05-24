@@ -16,14 +16,4 @@
 		xmlns:app="http://schemas.android.com/apk/res-auto"
 		xmlns:tools="http://schemas.android.com/tools"
 		tools:context="org.openmrs.mobile.activities.ACBaseActivity">
-	<item
-			android:id="@+id/actionSettings"
-			android:orderInCategory="100"
-			android:title="@string/action_settings"
-			app:showAsAction="never" />
-	<item
-			android:id="@+id/actionLogout"
-			android:orderInCategory="100"
-			android:title="@string/action_logout"
-			app:showAsAction="never" />
 </menu>

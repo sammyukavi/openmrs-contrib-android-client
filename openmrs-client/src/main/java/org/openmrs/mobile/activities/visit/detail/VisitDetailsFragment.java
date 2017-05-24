@@ -14,7 +14,7 @@
 
 package org.openmrs.mobile.activities.visit.detail;
 
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
@@ -26,14 +26,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
 import org.openmrs.mobile.R;
+import org.openmrs.mobile.activities.auditdata.AuditDataActivity;
+import org.openmrs.mobile.activities.capturevitals.CaptureVitalsActivity;
 import org.openmrs.mobile.activities.visit.VisitContract;
 import org.openmrs.mobile.activities.visit.VisitFragment;
-import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.EncounterType;
 import org.openmrs.mobile.models.Observation;
@@ -60,9 +62,11 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	private RecyclerView primaryDiagnosesRecycler, secondaryDiagnosesRecycler;
 	private LinearLayoutManager primaryDiagnosisLayoutManager, secondaryDiagnosisLayoutManager;
 	private List<String> primaryDiagnoses;
-
-	private OpenMRS instance = OpenMRS.getInstance();
-	private SharedPreferences sharedPreferences = instance.getOpenMRSSharedPreferences();
+	private ImageButton addAuditData, addVisitVitals;
+	private String patientUuid;
+	private String visitUuid;
+	private String providerUuid;
+	private Intent intent;
 
 	public static VisitDetailsFragment newInstance() {
 		return new VisitDetailsFragment();
@@ -79,6 +83,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View root = inflater.inflate(R.layout.fragment_visit_details, container, false);
 		resolveViews(root);
+		addListeners();
 		primaryDiagnosisLayoutManager = new LinearLayoutManager(this.getActivity());
 		secondaryDiagnosisLayoutManager = new LinearLayoutManager(this.getActivity());
 
@@ -86,6 +91,9 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		secondaryDiagnosesRecycler.setLayoutManager(secondaryDiagnosisLayoutManager);
 
 		((VisitDetailsPresenter)mPresenter).getVisit();
+		((VisitDetailsPresenter)mPresenter).getPatientUUID();
+		((VisitDetailsPresenter)mPresenter).getVisitUUID();
+		((VisitDetailsPresenter)mPresenter).getProviderUUID();
 		//buildMarginLayout();
 		return root;
 	}
@@ -110,6 +118,8 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		visitEndDate = (TextView)v.findViewById(R.id.visitEndDate);
 		visitDuration = (TextView)v.findViewById(R.id.visitDuration);
 		startDuration = (TextView)v.findViewById(R.id.startDuration);
+		addVisitVitals = (ImageButton)v.findViewById(R.id.visitVitalsAdd);
+		addAuditData = (ImageButton)v.findViewById(R.id.visitAuditInfoAdd);
 	}
 
 	@Override
@@ -130,6 +140,45 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 			setAuditData(visit);
 		}
 
+	}
+
+	@Override
+	public void setPatientUUID(String uuid) {
+		this.patientUuid = uuid;
+	}
+
+	@Override
+	public void setVisitUUID(String uuid) {
+		this.visitUuid = uuid;
+	}
+
+	@Override
+	public void setProviderUUID(String uuid) {
+		this.providerUuid = uuid;
+	}
+
+	private void addListeners() {
+		addAuditData.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				intent = new Intent(getContext(), AuditDataActivity.class);
+				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
+				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visitUuid);
+				intent.putExtra(ApplicationConstants.BundleKeys.PROVIDER_UUID_BUNDLE, providerUuid);
+				startActivity(intent);
+			}
+		});
+
+		addVisitVitals.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				intent = new Intent(getContext(), CaptureVitalsActivity.class);
+				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
+				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visitUuid);
+				intent.putExtra(ApplicationConstants.BundleKeys.PROVIDER_UUID_BUNDLE, providerUuid);
+				startActivity(intent);
+			}
+		});
 	}
 
 	public void setVisitDates(Visit visit) {
@@ -184,10 +233,12 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 
 					if (visit.getEncounters().get(i).getObs().size() != 0) {
 						noVitals.setVisibility(View.GONE);
+						addVisitVitals.setVisibility(View.GONE);
 						visitVitalsTableLayout.setVisibility(View.VISIBLE);
 						loadObservationFields(visit.getEncounters().get(i).getObs(), EncounterTypeData.VITALS);
 					} else {
 						noVitals.setVisibility(View.VISIBLE);
+						addVisitVitals.setVisibility(View.VISIBLE);
 						visitVitalsTableLayout.setVisibility(View.GONE);
 					}
 					break;
@@ -205,10 +256,12 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 								.EncounterTypeDisplays.AUDITDATA)) {
 					if (visit.getEncounters().get(i).getObs().size() != 0) {
 						noAuditData.setVisibility(View.GONE);
+						addAuditData.setVisibility(View.GONE);
 						auditInfoTableLayout.setVisibility(View.VISIBLE);
 						loadObservationFields(visit.getEncounters().get(i).getObs(), EncounterTypeData.AUDIT_DATA);
 					} else {
 						noAuditData.setVisibility(View.VISIBLE);
+						addAuditData.setVisibility(View.VISIBLE);
 						auditInfoTableLayout.setVisibility(View.GONE);
 					}
 
@@ -273,7 +326,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	public void loadObservationFields(List<Observation> observations, EncounterTypeData type) {
 		for (Observation observation : observations) {
 			TableRow row = new TableRow(getContext());
-			row.setPadding(0, 20, 0, 10);
+			row.setPadding(0, 5, 0, 5);
 			row.setGravity(Gravity.CENTER);
 			row.setLayoutParams(
 					new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));

@@ -90,13 +90,6 @@
 					</TableRow>
 				</TableLayout>
 
-				<TextView
-						android:id="@+id/confirmMessage"
-						android:layout_width="match_parent"
-						android:layout_height="match_parent"
-						android:padding="10dp"
-						android:textColor="@color/light_teal" />
-
 				<LinearLayout
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"

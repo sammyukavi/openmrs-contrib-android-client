@@ -15,7 +15,6 @@
 package org.openmrs.mobile.activities.visit;
 
 import android.graphics.Bitmap;
-import android.widget.Spinner;
 
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
@@ -55,6 +54,12 @@ public interface VisitContract {
 		void showToast(String message, ToastUtil.ToastType toastType);
 
 		void setVisit(Visit visit);
+
+		void setPatientUUID(String uuid);
+
+		void setVisitUUID(String uuid);
+
+		void setProviderUUID(String uuid);
 	}
 
 	interface VisitPhotoView extends ViewVisitDetailsMain {
@@ -106,6 +111,12 @@ public interface VisitContract {
 		void getVisit();
 
 		void getConcept(String uuid);
+
+		void getPatientUUID();
+
+		void getVisitUUID();
+
+		void getProviderUUID();
 	}
 
 }

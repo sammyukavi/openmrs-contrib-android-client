@@ -99,4 +99,19 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 		});
 	}
 
+	@Override
+	public void getPatientUUID(){
+		visitDetailsView.setPatientUUID(patientUUID);
+	}
+
+	@Override
+	public void getVisitUUID() {
+		visitDetailsView.setVisitUUID(visitUUID);
+	}
+
+	@Override
+	public void getProviderUUID() {
+		visitDetailsView.setProviderUUID(providerUuid);
+	}
+
 }

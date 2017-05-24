@@ -229,7 +229,7 @@ public class VisitActivity extends ACBaseActivity {
 				intent.putExtra(ApplicationConstants.BundleKeys.PROVIDER_UUID_BUNDLE, providerUuid);
 				intent.putExtra(ApplicationConstants.BundleKeys.END_VISIT_TAG, true);
 				startActivity(intent);
-
+				break;
 			case R.id.capture_vitals:
 				intent = new Intent(getApplicationContext(), CaptureVitalsActivity.class);
 				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);

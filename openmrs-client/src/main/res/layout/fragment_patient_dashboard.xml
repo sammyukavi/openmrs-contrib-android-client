@@ -1,35 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 		xmlns:fab="http://schemas.android.com/apk/res-auto"
+		android:orientation="vertical"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content">
 
-	<ScrollView
+	<FrameLayout
+			android:id="@+id/patientHeader"
 			android:layout_width="match_parent"
-			android:layout_height="match_parent">
+			android:layout_height="wrap_content" />
 
-		<LinearLayout
-				android:animateLayoutChanges="true"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:orientation="vertical">
-
-			<FrameLayout
-					android:id="@+id/patientHeader"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content" />
-
-			<FrameLayout
-					android:id="@+id/photoDownloadsContentFrame"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content" />
-
-			<android.support.v7.widget.RecyclerView
-					android:id="@+id/pastVisits"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content" />
-		</LinearLayout>
-	</ScrollView>
+	<android.support.v7.widget.RecyclerView
+			android:id="@+id/pastVisits"
+			android:layout_below="@id/patientHeader"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content" />
 
 	<com.github.clans.fab.FloatingActionMenu
 			android:id="@+id/floatingActionMenu"
@@ -60,4 +45,4 @@
 				fab:fab_size="mini"
 				fab:menu_colorNormal="@color/color_primary_dark" />
 	</com.github.clans.fab.FloatingActionMenu>
-</RelativeLayout>
+</LinearLayout>

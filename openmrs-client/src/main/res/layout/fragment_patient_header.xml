@@ -1,155 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-		xmlns:card_view="http://schemas.android.com/tools"
-		xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 		android:id="@+id/cardView"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_margin="10dp"
-		card_view:cardBackgroundColor="@color/white"
-		card_view:cardCornerRadius="4dp">
+		android:layout_margin="0dp"
+		android:padding="5dp"
+		android:paddingTop="5dp"
+		android:paddingLeft="5dp"
+		android:paddingRight="5dp"
+		android:paddingStart="5dp"
+		android:paddingEnd="5dp"
+		android:background="@color/color_white">
 
-	<RelativeLayout
-			android:layout_margin="5dp"
-			android:layout_width="match_parent"
+	<LinearLayout
+			android:weightSum="1"
+			android:id="@+id/patientHeader"
+			android:layout_width="fill_parent"
+			android:orientation="horizontal"
 			android:layout_height="wrap_content">
 
-		<LinearLayout
-				android:weightSum="1"
-				android:id="@+id/patientHeader"
+		<TextView
+				android:id="@+id/fetchedPatientDisplayName"
+				android:textStyle="bold"
 				android:layout_width="fill_parent"
-				android:orientation="horizontal"
-				android:layout_height="wrap_content">
+				android:layout_weight="0.3"
+				android:layout_height="wrap_content" />
 
-			<TextView
-					android:id="@+id/fetchedPatientDisplayName"
-					android:textStyle="bold"
-					android:layout_width="fill_parent"
-					android:layout_weight="0.3"
-					android:layout_height="wrap_content" />
+		<TextView
+				android:textColor="@color/color_white"
+				android:background="@drawable/label_badge"
+				android:id="@+id/fileNumber"
+				android:layout_width="fill_parent"
+				android:layout_weight="0.7"
+				android:gravity="center"
+				android:layout_height="wrap_content" />
+	</LinearLayout>
 
-			<TextView
-					android:textColor="@color/color_white"
-					android:background="@drawable/patient_id_badge"
-					android:id="@+id/fileNumber"
-					android:layout_width="fill_parent"
-					android:layout_weight="0.7"
-					android:gravity="center"
-					android:layout_height="wrap_content" />
-		</LinearLayout>
+	<View
+			android:layout_marginTop="5dp"
+			android:layout_marginBottom="1dp"
+			android:layout_below="@id/patientHeader"
+			android:id="@+id/line"
+			android:layout_width="match_parent"
+			android:layout_height="1dp"
+			android:background="@android:color/darker_gray" />
 
-		<View
-				android:layout_marginTop="5dp"
-				android:layout_marginBottom="1dp"
-				android:layout_below="@id/patientHeader"
-				android:id="@+id/line"
-				android:layout_width="match_parent"
-				android:layout_height="1dp"
-				android:background="@android:color/darker_gray" />
+	<LinearLayout
+			android:layout_below="@id/line"
+			android:id="@+id/patientGenderAgeDetails"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal">
 
-		<com.google.android.flexbox.FlexboxLayout
-				android:layout_below="@id/line"
-				android:id="@+id/patientGenderAgeDetails"
-				android:layout_width="match_parent"
+		<ImageView
+				android:layout_marginStart="10dp"
+				android:layout_marginLeft="10dp"
+				android:id="@+id/fetchedPatientGender"
+				android:layout_width="25dp"
+				android:layout_height="25dp"
+				android:src="@drawable/male" />
+
+		<TextView
+				android:layout_marginStart="10dp"
+				android:layout_marginLeft="10dp"
+				android:layout_marginEnd="10dp"
+				android:layout_marginRight="10dp"
+				android:id="@+id/fetchedPatientBirthDate"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content" />
+
+		<TextView
+				android:id="@+id/ageLabel"
+				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:orientation="vertical"
-				app:alignItems="flex_start"
-				app:alignContent="flex_start"
-				app:flexDirection="row"
-				app:flexWrap="wrap">
+				android:layout_marginEnd="5dp"
+				android:layout_marginRight="5dp"
+				android:text="@string/label_age"
+				android:textStyle="italic" />
 
-			<TextView
-					android:id="@+id/gender"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="@string/gender_hint"
-					android:textStyle="italic" />
+		<TextView
+				android:id="@+id/fetchedPatientAge"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/label_age" />
 
-			<ImageView
-					android:layout_marginStart="5dp"
-					android:layout_marginLeft="5dp"
-					android:id="@+id/fetchedPatientGender"
-					android:layout_width="20dp"
-					android:layout_height="20dp"
-					android:src="@drawable/male" />
 
-			<TextView
-					android:id="@+id/ageLabel"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_marginEnd="5dp"
-					android:layout_marginRight="5dp"
-					android:text="@string/label_age"
-					android:textStyle="italic" />
+	</LinearLayout>
 
-			<TextView
-					android:id="@+id/fetchedPatientAge"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="@string/label_age" />
-
-			<TextView
-					android:id="@+id/birthdate"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_marginLeft="5dp"
-					android:layout_marginStart="5dp"
-					android:layout_marginRight="5dp"
-					android:layout_marginEnd="5dp"
-					android:text="@string/birthdate_hint"
-					android:textStyle="italic" />
-
-			<TextView
-					android:id="@+id/fetchedPatientBirthDate"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content" />
-
-		</com.google.android.flexbox.FlexboxLayout>
-
-		<LinearLayout
-				android:layout_below="@+id/patientGenderAgeDetails"
-				android:weightSum="1"
-				android:id="@+id/patientAddressContainer"
-				android:layout_width="fill_parent"
-				android:orientation="horizontal"
-				android:layout_height="wrap_content">
-
-			<TextView
-					android:textStyle="italic"
-					android:id="@+id/addressLabel"
-					android:layout_width="fill_parent"
-					android:text="@string/label_address"
-					android:layout_weight="0.7"
-					android:layout_height="match_parent" />
-
-			<TextView
-					android:id="@+id/patientAddress"
-					android:layout_width="fill_parent"
-					android:layout_weight="0.3"
-					android:layout_height="match_parent" />
-		</LinearLayout>
-
-		<LinearLayout
-				android:layout_below="@id/patientAddressContainer"
-				android:weightSum="1"
-				android:id="@+id/patientPhonenoContainer"
-				android:layout_width="fill_parent"
-				android:orientation="horizontal"
-				android:layout_height="wrap_content">
-
-			<TextView
-					android:textStyle="italic"
-					android:id="@+id/phoneLabel"
-					android:layout_width="fill_parent"
-					android:text="@string/telephone"
-					android:layout_weight="0.7"
-					android:layout_height="match_parent" />
-
-			<TextView
-					android:id="@+id/patientPhonenumber"
-					android:layout_width="fill_parent"
-					android:layout_weight="0.3"
-					android:layout_height="match_parent" />
-		</LinearLayout>
-	</RelativeLayout>
-</android.support.v7.widget.CardView>
+</RelativeLayout>

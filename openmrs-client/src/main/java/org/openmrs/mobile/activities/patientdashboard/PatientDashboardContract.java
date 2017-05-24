@@ -16,6 +16,7 @@ package org.openmrs.mobile.activities.patientdashboard;
 
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
+import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Visit;
 
@@ -45,5 +46,6 @@ public interface PatientDashboardContract {
 		Patient getPatient();
 
 		void setLimit(int limit);
+
 	}
 }

@@ -158,7 +158,7 @@ public class CaptureVitalsFragment extends ACBaseFragment<CaptureVitalsContract.
 		patientIdentifier.setText(patient.getIdentifier().getIdentifier());
 		DateTime date = DateUtils.convertTimeString(person.getBirthdate());
 		patientAge.setText(DateUtils.calculateAge(date.getYear(), date.getMonthOfYear(), date.getDayOfMonth()));
-		patientDob.setText(DateUtils.convertTime1(person.getBirthdate(), DateUtils.PATIENT_DASHBOARD_DOB_DATE_FORMAT));
+		patientDob.setText(DateUtils.convertTime1(person.getBirthdate(), DateUtils.DATE_FORMAT));
 
 		mPresenter.fetchVisit(visitUuid);
 

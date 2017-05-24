@@ -95,6 +95,7 @@ public abstract class ApplicationConstants {
 		public static final String DISCHARGE = "Discharge";
 		public static final String ADMISSION = "Admission";
 		public static final String AUDITDATA = "Audit Data";
+		//public static final String VITALS = "Vitals";
 	}
 
 	public abstract static class EncounterTypeEntity {

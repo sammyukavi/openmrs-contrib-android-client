@@ -30,7 +30,6 @@ import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
 import org.openmrs.mobile.activities.addeditpatient.AddEditPatientActivity;
 import org.openmrs.mobile.application.OpenMRS;
-import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 
 public class FindPatientRecordActivity extends ACBaseActivity {
@@ -57,6 +56,13 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 		}
 		if (!findPatientRecordFragment.isActive()) {
 			addFragmentToActivity(getSupportFragmentManager(), findPatientRecordFragment, R.id.findPatientContentFrame);
+		}
+
+		if (savedInstanceState != null) {
+			query = savedInstanceState.getString(ApplicationConstants.BundleKeys.PATIENT_QUERY_BUNDLE, "");
+			findPatientPresenter = new FindPatientRecordPresenter(findPatientRecordFragment, query);
+		} else {
+			findPatientPresenter = new FindPatientRecordPresenter(findPatientRecordFragment);
 		}
 
 		//adding
@@ -140,7 +146,6 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 		});
 		return true;
 	}
-
 
 	public void setSearchQuery(String query) {
 		SharedPreferences.Editor editor = instance.getOpenMRSSharedPreferences().edit();

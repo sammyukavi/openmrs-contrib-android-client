@@ -17,7 +17,6 @@ package org.openmrs.mobile.activities.capturevitals;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -25,7 +24,6 @@ import android.view.MenuItem;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
-import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
 import org.openmrs.mobile.activities.patientheader.PatientHeaderContract;
 import org.openmrs.mobile.activities.patientheader.PatientHeaderFragment;
 import org.openmrs.mobile.activities.patientheader.PatientHeaderPresenter;
@@ -45,9 +43,8 @@ public class CaptureVitalsActivity extends ACBaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getLayoutInflater().inflate(R.layout.activity_audit_data, frameLayout);
-
 		Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
-		toolbar.setTitle(R.string.title_audit_data_form);
+		toolbar.setTitle(R.string.capture_vitals);
 		toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white);
 		setSupportActionBar(toolbar);
 		if (getSupportActionBar() != null) {

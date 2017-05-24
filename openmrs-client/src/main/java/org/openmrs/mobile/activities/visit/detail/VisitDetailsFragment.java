@@ -49,7 +49,8 @@ import java.util.List;
 
 public class VisitDetailsFragment extends VisitFragment implements VisitContract.VisitDetailsView {
 
-	private TextView visitDate, bedNumber, ward, visitType, noVitals, noPrimaryDiagnoses, noSecondaryDiagnoses, noAuditData;
+	private TextView visitStartDate, bedNumber, ward, visitType, noVitals, noPrimaryDiagnoses, noSecondaryDiagnoses,
+			noAuditData, activeVisitBadge, startDuration, visitDuration, visitEndDate;
 	private Visit visit;
 	private TableLayout visitVitalsTableLayout, auditInfoTableLayout;
 	private static TableRow.LayoutParams marginParams;
@@ -90,7 +91,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	}
 
 	private void resolveViews(View v) {
-		visitDate = (TextView)v.findViewById(R.id.visitDates);
+		visitStartDate = (TextView)v.findViewById(R.id.visitStartDate);
 		bedNumber = (TextView)v.findViewById(R.id.fetchedBedNumber);
 		ward = (TextView)v.findViewById(R.id.fetchedWard);
 		visitType = (TextView)v.findViewById(R.id.visitType);
@@ -105,6 +106,10 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		noAuditData = (TextView)v.findViewById(R.id.noAuditInfo);
 		primaryDiagnosesRecycler = (RecyclerView)v.findViewById(R.id.primaryDiagnosisRecyclerView);
 		secondaryDiagnosesRecycler = (RecyclerView)v.findViewById(R.id.secondaryDiagnosisRecyclerView);
+		activeVisitBadge = (TextView)v.findViewById(R.id.activeVisitBadge);
+		visitEndDate = (TextView)v.findViewById(R.id.visitEndDate);
+		visitDuration = (TextView)v.findViewById(R.id.visitDuration);
+		startDuration = (TextView)v.findViewById(R.id.startDuration);
 	}
 
 	@Override
@@ -129,16 +134,22 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 
 	public void setVisitDates(Visit visit) {
 		if (StringUtils.notNull(visit.getStopDatetime())) {
-			visitDate.setText(getContext().getString(R.string.date_started) + ": " + DateUtils
-					.convertTime1(visit.getStartDatetime(), DateUtils.DATE_FORMAT) + " - "
-					+ getContext().getString(R.string.date_closed) + ": " + DateUtils.convertTime1(visit.getStopDatetime(),
-					DateUtils.DATE_FORMAT));
-			visitDate.setBackground(getResources().getDrawable(R.color.color_white));
+			activeVisitBadge.setVisibility(View.GONE);
+			visitStartDate.setText(getContext().getResources().getString(R.string.date_started) + ": " + DateUtils
+					.convertTime1(visit.getStartDatetime(), DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT));
+			visitEndDate
+					.setText(getContext().getResources().getString(R.string.date_started) + ": " + DateUtils
+							.convertTime1(visit.getStopDatetime(), DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT));
+			visitDuration.setText("Not now");
+			startDuration.setText("Not now");
+
 		} else {
-			visitDate.setText(getContext().getString(R.string.active_visit_label) + ": " + DateUtils.convertTime1
-					(visit.getStartDatetime(), DateUtils.DATE_FORMAT) + " (started " + DateUtils.convertTime1
-					(visit.getStartDatetime(), DateUtils.TIME_FORMAT) + ")");
-			visitDate.setTextColor(getResources().getColor(R.color.color_white));
+			activeVisitBadge.setVisibility(View.VISIBLE);
+			visitEndDate.setVisibility(View.GONE);
+			visitDuration.setVisibility(View.GONE);
+			visitStartDate.setText(
+					DateUtils.convertTime1(visit.getStartDatetime(), DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT));
+			startDuration.setText("Not now");
 		}
 	}
 
@@ -174,7 +185,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 					if (visit.getEncounters().get(i).getObs().size() != 0) {
 						noVitals.setVisibility(View.GONE);
 						visitVitalsTableLayout.setVisibility(View.VISIBLE);
-						loadObservationFields(visit.getEncounters().get(i).getObs(), EncounterDataType.VITALS);
+						loadObservationFields(visit.getEncounters().get(i).getObs(), EncounterTypeData.VITALS);
 					} else {
 						noVitals.setVisibility(View.VISIBLE);
 						visitVitalsTableLayout.setVisibility(View.GONE);
@@ -195,7 +206,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 					if (visit.getEncounters().get(i).getObs().size() != 0) {
 						noAuditData.setVisibility(View.GONE);
 						auditInfoTableLayout.setVisibility(View.VISIBLE);
-						loadObservationFields(visit.getEncounters().get(i).getObs(), EncounterDataType.AUDIT_DATA);
+						loadObservationFields(visit.getEncounters().get(i).getObs(), EncounterTypeData.AUDIT_DATA);
 					} else {
 						noAuditData.setVisibility(View.VISIBLE);
 						auditInfoTableLayout.setVisibility(View.GONE);
@@ -259,7 +270,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		}
 	}
 
-	public void loadObservationFields(List<Observation> observations, EncounterDataType type) {
+	public void loadObservationFields(List<Observation> observations, EncounterTypeData type) {
 		for (Observation observation : observations) {
 			TableRow row = new TableRow(getContext());
 			row.setPadding(0, 20, 0, 10);
@@ -272,7 +283,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 			TextView label = new TextView(getContext());
 			label.setText(splitValues.get(0) + " :");
 			label.setTextSize(14);
-			if (type == EncounterDataType.VITALS) {
+			if (type == EncounterTypeData.VITALS) {
 				label.setGravity(Gravity.RIGHT | Gravity.END);
 			} else {
 				label.setGravity(Gravity.LEFT | Gravity.START);
@@ -290,7 +301,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 			label.setSingleLine(false);
 			row.addView(value, 1);
 
-			if (type == EncounterDataType.VITALS) {
+			if (type == EncounterTypeData.VITALS) {
 				visitVitalsTableLayout.addView(row);
 			} else {
 				auditInfoTableLayout.addView(row);

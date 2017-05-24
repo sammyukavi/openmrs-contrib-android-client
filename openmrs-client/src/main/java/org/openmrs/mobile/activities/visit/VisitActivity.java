@@ -214,8 +214,6 @@ public class VisitActivity extends ACBaseActivity {
 	}
 
 	private void startSelectedVisitActivity(int selectedId) {
-
-		Bundle patientBundle = getIntent().getExtras();
 		switch (selectedId) {
 			case R.id.edit_visit:
 				intent = new Intent(getApplicationContext(), AddEditVisitActivity.class);

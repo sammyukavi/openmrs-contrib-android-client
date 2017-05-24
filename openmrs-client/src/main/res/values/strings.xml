@@ -194,7 +194,7 @@
 	<string name="action_find_visits">Find Active Visits</string>
 	<string name="search_visits_no_results">No visits in database</string>
 	<!-- fragment_patient_visits layout -->
-	<string name="active_visit_label">Active Visit</string>
+	<string name="active_visit_label">Active Visit:</string>
 	<string name="past_visit_label">Past visit</string>
 	<string name="visit_in">in %1$s</string>
 	<!-- fragment_patient_vitals layout -->

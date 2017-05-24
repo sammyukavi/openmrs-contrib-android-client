@@ -14,6 +14,9 @@
 
 package org.openmrs.mobile.utilities;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 public final class StringUtils {
 	private static final String NULL_AS_STRING = "null";
 	private static final String SPACE_CHAR = " ";
@@ -106,5 +109,11 @@ public final class StringUtils {
 
 	public static String stripHtmlTags(String htmlString) {
 		return htmlString.replaceAll("\\<[^>]*>", "").replaceAll("\\s", " ");
+	}
+
+	public static ArrayList splitStrings(String display) {
+		ArrayList<String> displayArray = new ArrayList<>();
+		Collections.addAll(displayArray, display.split(":"));
+		return displayArray;
 	}
 }

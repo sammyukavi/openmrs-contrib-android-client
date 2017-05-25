@@ -26,9 +26,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+import com.google.android.flexbox.FlexboxLayout;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.visit.VisitContract;
@@ -38,6 +42,8 @@ import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.EncounterType;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Visit;
+import org.openmrs.mobile.models.VisitAttribute;
+import org.openmrs.mobile.models.VisitAttributeType;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.DateUtils;
 import org.openmrs.mobile.utilities.StringUtils;
@@ -49,7 +55,7 @@ import java.util.List;
 
 public class VisitDetailsFragment extends VisitFragment implements VisitContract.VisitDetailsView {
 
-	private TextView visitDate, bedNumber, ward, visitType, noVitals, noPrimaryDiagnoses, noSecondaryDiagnoses, noAuditData;
+	private TextView visitDate, visitType, noVitals, noPrimaryDiagnoses, noSecondaryDiagnoses, noAuditData;
 	private Visit visit;
 	private TableLayout visitVitalsTableLayout, auditInfoTableLayout;
 	private static TableRow.LayoutParams marginParams;
@@ -59,6 +65,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	private RecyclerView primaryDiagnosesRecycler, secondaryDiagnosesRecycler;
 	private LinearLayoutManager primaryDiagnosisLayoutManager, secondaryDiagnosisLayoutManager;
 	private List<String> primaryDiagnoses;
+	private FlexboxLayout visitAttributesLayout;
 
 	private OpenMRS instance = OpenMRS.getInstance();
 	private SharedPreferences sharedPreferences = instance.getOpenMRSSharedPreferences();
@@ -84,15 +91,12 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		primaryDiagnosesRecycler.setLayoutManager(primaryDiagnosisLayoutManager);
 		secondaryDiagnosesRecycler.setLayoutManager(secondaryDiagnosisLayoutManager);
 
-		((VisitDetailsPresenter)mPresenter).getVisit();
 		//buildMarginLayout();
 		return root;
 	}
 
 	private void resolveViews(View v) {
 		visitDate = (TextView)v.findViewById(R.id.visitDates);
-		bedNumber = (TextView)v.findViewById(R.id.fetchedBedNumber);
-		ward = (TextView)v.findViewById(R.id.fetchedWard);
 		visitType = (TextView)v.findViewById(R.id.visitType);
 		noVitals = (TextView)v.findViewById(R.id.noVitals);
 		visitVitalsTableLayout = (TableLayout)v.findViewById(R.id.visitVitalsTable);
@@ -105,6 +109,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		noAuditData = (TextView)v.findViewById(R.id.noAuditInfo);
 		primaryDiagnosesRecycler = (RecyclerView)v.findViewById(R.id.primaryDiagnosisRecyclerView);
 		secondaryDiagnosesRecycler = (RecyclerView)v.findViewById(R.id.secondaryDiagnosisRecyclerView);
+		visitAttributesLayout = (FlexboxLayout) v.findViewById(R.id.visitAttributesLayout);
 	}
 
 	@Override
@@ -118,13 +123,11 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		if (visit != null) {
 			setVisitDates(visit);
 			setVisitType(visit);
-			setAttributeTypes(visit);
 			setVitals(visit);
 			setClinicalNote(visit);
 			setDiagnoses(visit);
 			setAuditData(visit);
 		}
-
 	}
 
 	public void setVisitDates(Visit visit) {
@@ -150,17 +153,48 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		}
 	}
 
-	public void setAttributeTypes(Visit visit) {
-		if (visit.getAttributes().size() != 0) {
-			for (int i = 0; i < visit.getAttributes().size(); i++) {
-				if (visit.getAttributes().get(i).getUuid().equalsIgnoreCase(ApplicationConstants.visitAttributeTypes
-						.BED_NUMBER_UUID)) {
-					bedNumber.setText(visit.getAttributes().get(i).getValue().toString());
-				} else if (visit.getAttributes().get(i).getUuid()
-						.equalsIgnoreCase(ApplicationConstants.visitAttributeTypes.WARD_UUID)) {
-					ward.setText(visit.getAttributes().get(i).getValue().toString());
+	@Override
+	public void setAttributeTypes(List<VisitAttributeType> visitAttributeTypes) {
+		visitAttributesLayout.removeAllViews();
+		if(null == visit.getAttributes()){
+			return;
+		}
 
-				}
+		for(VisitAttribute visitAttribute : visit.getAttributes()){
+			loadVisitAttributeType(visitAttribute, visitAttributeTypes);
+			LinearLayout linearLayout = new LinearLayout(getContext());
+			LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+					LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+			linearLayout.setLayoutParams(params);
+			linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+			String valueLabel = String.valueOf(visitAttribute.getValue());
+			TextView nameLabelView = new TextView(getContext());
+			nameLabelView.setPadding(0, 10, 10, 10);
+			nameLabelView.setText(visitAttribute.getAttributeType().getDisplay() + ":");
+			linearLayout.addView(nameLabelView);
+
+			TextView valueLabelView = new TextView(getContext());
+			valueLabelView.setPadding(20, 10, 10, 10);
+
+			if(null != visitAttribute.getAttributeType().getDatatypeConfig()){
+				((VisitDetailsPresenter) mPresenter).getConceptName(
+						visitAttribute.getAttributeType().getDatatypeConfig(),
+						(String) visitAttribute.getValue(), valueLabelView);
+			} else {
+				valueLabelView.setText(valueLabel);
+			}
+
+			linearLayout.addView(valueLabelView);
+
+			visitAttributesLayout.addView(linearLayout);
+		}
+	}
+
+	private void loadVisitAttributeType(VisitAttribute visitAttribute, List<VisitAttributeType> attributeTypes){
+		for(VisitAttributeType type : attributeTypes){
+			if(type.getUuid().equalsIgnoreCase(visitAttribute.getAttributeType().getUuid())){
+				visitAttribute.setAttributeType(type);
 			}
 		}
 	}

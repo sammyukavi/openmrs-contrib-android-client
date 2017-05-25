@@ -312,10 +312,10 @@
 	<string name="label_add_task">Add Task</string>
 
 
-	<string name="label_height">Height (cm)</string>
-	<string name="label_weight">Weigt (kg)</string>
+	<string name="label_height">Height</string>
+	<string name="label_weight">Weigt</string>
 	<string name="label_bmi">(Calculated)BMI</string>
-	<string name="label_temperature">Temperature(c)</string>
+	<string name="label_temperature">Temperature</string>
 	<string name="label_pulse">Pulse</string>
 	<string name="label_respiratory_rate">Respiratory rate</string>
 	<string name="label_blood_presure">Blood Pressure</string>
@@ -484,4 +484,16 @@
 	<string name="save_audit_data">Save Audit Data</string>
 	<string name="capture_vitals">Capture Vitals</string>
 	<string name="update_visit_note">Update Visit Note</string>
+	<string name="slash">/</string>
+	<string name="percent_sign">%</string>
+	<string name="label_blood_presure_systolic">Systolic</string>
+	<string name="label_blood_presure_diastolic">Diastolic</string>
+	<string name="sign_cm">cm</string>
+	<string name="sign_kg">kg</string>
+	<string name="sign_celcius">c</string>
+	<string name="sign_pulse">/min</string>
+	<string name="error_text_vitals_maximum">Maximum: %1$d</string>
+	<string name="error_text_vitals_minimum">Minimum: %1$d</string>
+	<string name="error_occured">An error occured making your request</string>
+	<string name="saved">Saved</string>
 </resources>

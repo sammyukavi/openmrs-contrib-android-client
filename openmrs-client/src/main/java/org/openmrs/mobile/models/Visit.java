@@ -46,6 +46,14 @@ public class Visit extends BaseOpenmrsEntity implements Serializable {
 	@SerializedName("patient")
 	private Patient patient;
 
+	public Visit() {
+
+	}
+
+	public Visit(String visitUuid) {
+		this.uuid = visitUuid;
+	}
+
 	public Patient getPatient() {
 		return patient;
 	}

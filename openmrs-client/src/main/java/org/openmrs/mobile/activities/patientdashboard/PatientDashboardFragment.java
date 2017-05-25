@@ -16,14 +16,17 @@ package org.openmrs.mobile.activities.patientdashboard;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.github.clans.fab.FloatingActionButton;
 
@@ -50,6 +53,9 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	private OpenMRS instance = OpenMRS.getInstance();
 	private SharedPreferences sharedPreferences = instance.getOpenMRSSharedPreferences();
 	private Intent intent;
+	private NestedScrollView scrollView;
+	private LinearLayout patientContactInfo;
+	private View borderLine, shadowLine;
 
 	public static PatientDashboardFragment newInstance() {
 		return new PatientDashboardFragment();
@@ -97,6 +103,12 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	private void initViewFields() {
 		startVisitButton = (FloatingActionButton)fragmentView.findViewById(R.id.start_visit);
 		editPatient = (FloatingActionButton)fragmentView.findViewById(R.id.edit_Patient);
+		scrollView = (NestedScrollView)fragmentView.findViewById(R.id.scrollView);
+		patientContactInfo = (LinearLayout)fragmentView.findViewById(R.id.patientContactInfo);
+		borderLine = fragmentView.findViewById(R.id.borderLine);
+		//shadowLine = getView().findViewById(R.id.shadowLine);
+
+		//System.out.println(shadowLine);
 	}
 
 	@Override
@@ -124,6 +136,34 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 				break;
 			}
 		}
+
+		final Rect scrollBounds = new Rect();
+		scrollView.getHitRect(scrollBounds);
+
+		scrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+			@Override
+			public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+
+				if (patientContactInfo != null) {
+
+					if (patientContactInfo.getLocalVisibleRect(scrollBounds)) {
+						if (!patientContactInfo.getLocalVisibleRect(scrollBounds)
+								|| scrollBounds.height() < patientContactInfo.getHeight()) {
+							//contact info is now being showed parcially, do nothing
+						} else {
+							//contact info is now being showed fully, hide shadow, show line
+							shadowLine.setVisibility(View.GONE);
+							borderLine.setVisibility(View.VISIBLE);
+						}
+					} else {
+						//contact info is not being shown, show shadow
+						//shadowLine.setVisibility(View.VISIBLE);
+						//borderLine.setVisibility(View.GONE);
+					}
+				}
+
+			}
+		});
 
 		RecyclerView pastVisitsRecyclerView = (RecyclerView)fragmentView.findViewById(R.id.pastVisits);
 		pastVisitsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

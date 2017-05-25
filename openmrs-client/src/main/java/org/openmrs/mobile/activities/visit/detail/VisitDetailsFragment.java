@@ -189,7 +189,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		if (visit.getEncounters().size() != 0) {
 			for (int i = 0; i < visit.getEncounters().size(); i++) {
 				if (visit.getEncounters().get(i).getEncounterType().getUuid()
-						.equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.AUDIT_DATA) || visit.getEncounters()
+						.equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.AUDIT_DATA_UUID) || visit.getEncounters()
 						.get(i).getEncounterType().getDisplay().equalsIgnoreCase(ApplicationConstants
 								.EncounterTypeDisplays.AUDITDATA)) {
 					if (visit.getEncounters().get(i).getObs().size() != 0) {

@@ -24,9 +24,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
-import android.widget.TextView;
 
-import org.joda.time.DateTime;
 import org.joda.time.LocalDateTime;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
@@ -38,12 +36,10 @@ import org.openmrs.mobile.models.Form;
 import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
-import org.openmrs.mobile.models.Person;
 import org.openmrs.mobile.models.Provider;
 import org.openmrs.mobile.models.Value;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
-import org.openmrs.mobile.utilities.DateUtils;
 import org.openmrs.mobile.utilities.FontsUtil;
 
 import java.util.ArrayList;
@@ -66,7 +62,7 @@ import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcept
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_INPATIENT_SERVICE_TYPE;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_PALLIATIVE_CONSULT;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_PREOP_RISK_ASSESMENT;
-import static org.openmrs.mobile.utilities.ApplicationConstants.EncounterTypeEntity.AUDIT_DATA;
+import static org.openmrs.mobile.utilities.ApplicationConstants.EncounterTypeEntity.AUDIT_DATA_UUID;
 import static org.openmrs.mobile.utilities.ApplicationConstants.FORM_UUIDS.AUDIT_DATA_FORM_UUID;
 
 public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presenter>
@@ -540,7 +536,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 
 		//create encountertype
 		EncounterType auditFormEncounterType = new EncounterType();
-		auditFormEncounterType.setUuid(AUDIT_DATA);
+		auditFormEncounterType.setUuid(AUDIT_DATA_UUID);
 
 		//create provider
 		Provider provider = new Provider();

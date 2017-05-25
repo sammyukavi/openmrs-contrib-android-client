@@ -14,34 +14,36 @@
 
 package org.openmrs.mobile.activities.capturevitals;
 
+import android.content.Context;
+import android.view.View;
+
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Location;
-import org.openmrs.mobile.models.Patient;
-import org.openmrs.mobile.models.Visit;
 
 public interface CaptureVitalsContract {
 
 	interface View extends BaseView<Presenter> {
 
-		void setVisit(Visit visit);
+		void showErrorView(android.view.View... view);
 
-		void updateFormFields(Encounter encounter);
-
-		void setEncounterUuid(String uuid);
+		void hideErrorView(android.view.View... view);
 
 		void setLocation(Location location);
 
+		void showSnackbar(String message);
+
+		Context getContext();
+
+		void disableButton();
 	}
 
 	interface Presenter extends BasePresenterContract {
 
-		void fetchVisit(String patientId);
-
-		void saveEncounter(Encounter encounter, boolean isNewEncounter);
-
 		void fetchLocation(String locationUuid);
+
+		void attemptSave(Encounter encounter);
 	}
 
 }

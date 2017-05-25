@@ -14,51 +14,53 @@
 
 package org.openmrs.mobile.activities.visit.detail;
 
+import android.widget.TextView;
+
 import org.openmrs.mobile.activities.visit.VisitContract;
 import org.openmrs.mobile.activities.visit.VisitPresenterImpl;
 import org.openmrs.mobile.data.DataService;
+import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.impl.ConceptDataService;
+import org.openmrs.mobile.data.impl.ConceptNameDataService;
+import org.openmrs.mobile.data.impl.VisitAttributeTypeDataService;
 import org.openmrs.mobile.data.impl.VisitDataService;
-import org.openmrs.mobile.data.impl.VisitPredefinedTaskDataService;
-import org.openmrs.mobile.data.impl.VisitTaskDataService;
 import org.openmrs.mobile.models.Concept;
+import org.openmrs.mobile.models.ConceptName;
 import org.openmrs.mobile.models.Visit;
+import org.openmrs.mobile.models.VisitAttributeType;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.ToastUtil;
+
+import java.util.List;
 
 public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitContract.VisitDetailsPresenter {
 
 	VisitContract.VisitDetailsView visitDetailsView;
-	private VisitPredefinedTaskDataService visitPredefinedTaskDataService;
-	private VisitTaskDataService visitTaskDataService;
+	private VisitAttributeTypeDataService visitAttributeTypeDataService;
 	private VisitDataService visitDataService;
 	private ConceptDataService conceptDataService;
-	private String patientUUID, visitUUID, providerUuid;
-
-	private int page = 1;
-	private int limit = 10;
+	private ConceptNameDataService conceptNameDataService;
+	private String visitUUID;
 
 	public VisitDetailsPresenter(String patientUuid, String visitUuid, String providerUuid, VisitContract.VisitDetailsView
 			visitDetailsView) {
 		this.visitDetailsView = visitDetailsView;
 		this.visitDetailsView.setPresenter(this);
-		this.visitPredefinedTaskDataService = new VisitPredefinedTaskDataService();
-		this.visitTaskDataService = new VisitTaskDataService();
 		this.visitDataService = new VisitDataService();
 		this.conceptDataService = new ConceptDataService();
+		this.conceptNameDataService = new ConceptNameDataService();
+		this.visitAttributeTypeDataService = new VisitAttributeTypeDataService();
 		this.visitUUID = visitUuid;
-		this.patientUUID = patientUuid;
-		this.providerUuid = providerUuid;
 	}
 
 	@Override
 	public void subscribe() {
+		getVisit();
 	}
 
 	@Override
 	public void unsubscribe() {
-
 	}
 
 	@Override
@@ -69,6 +71,7 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 					public void onCompleted(Visit entity) {
 						if (entity != null) {
 							visitDetailsView.setVisit(entity);
+							loadVisitAttributeTypes();
 						}
 					}
 
@@ -99,4 +102,37 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 		});
 	}
 
+	private void loadVisitAttributeTypes() {
+		visitAttributeTypeDataService.getAll(new QueryOptions(false, true), new PagingInfo(0, 100), new DataService
+				.GetCallback<List<VisitAttributeType>>() {
+			@Override
+			public void onCompleted(List<VisitAttributeType> entities) {
+				visitDetailsView.setAttributeTypes(entities);
+			}
+
+			@Override
+			public void onError(Throwable t) {
+				ToastUtil.error(t.getMessage());
+			}
+		});
+	}
+
+	@Override
+	public void getConceptName(String uuid, String searchValue, TextView textView) {
+		conceptNameDataService.getByConceptUuid(uuid, null, new DataService.GetCallback<List<ConceptName>>() {
+			@Override
+			public void onCompleted(List<ConceptName> entities) {
+				for(ConceptName conceptName : entities){
+					if(conceptName.getUuid().equalsIgnoreCase(searchValue)){
+						textView.setText(conceptName.getName());
+					}
+				}
+			}
+
+			@Override
+			public void onError(Throwable t) {
+				ToastUtil.error(t.getMessage());
+			}
+		});
+	}
 }

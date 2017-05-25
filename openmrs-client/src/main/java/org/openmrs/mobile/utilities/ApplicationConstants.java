@@ -24,7 +24,7 @@ public abstract class ApplicationConstants {
 	public static final String VISIT_TYPE_UUID = "visit_type_uuid";
 	public static final String LAST_SESSION_TOKEN = "last_session_id";
 	public static final String LAST_LOGIN_SERVER_URL = "last_login_server_url";
-	public static final String DEFAULT_OPEN_MRS_URL = "http://192.168.56.1:8080/openmrs/";
+	public static final String DEFAULT_OPEN_MRS_URL = "http://192.168.137.231:8080/openmrs/";
 	//public static final String DEFAULT_OPEN_MRS_URL = "http://10.1.10.3:8080/openmrs/";
 	public static final String THUMBNAIL_VIEW = "complexdata.view.thumbnail";
 
@@ -210,8 +210,6 @@ public abstract class ApplicationConstants {
 	}
 
 	public static class visitAttributeTypes {
-		public static final String BED_NUMBER_UUID = "4af4da08-9042-4ef2-9310-781a80ccb6ba";
-		public static final String WARD_UUID = "5f18943d-f271-4a4a-91f7-0cb4c3ee93ce";
 		public static final String PERSON_ATTRIBUTE_TYPE_PHONE_NUMBER = "14d4f066-15f5-102d-96e4-000c29c2a5d7";
 	}
 }

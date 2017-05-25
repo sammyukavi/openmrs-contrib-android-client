@@ -105,6 +105,7 @@
 							android:background="@android:color/darker_gray" />
 					
 					<com.google.android.flexbox.FlexboxLayout
+							android:id="@+id/visitAttributesLayout"
 							android:layout_marginEnd="30dp"
 							android:layout_marginLeft="5dp"
 							android:layout_marginRight="5dp"
@@ -118,34 +119,6 @@
 							app:flexWrap="wrap"
 							android:layout_marginTop="5dp">
 						
-						<TextView
-								android:id="@+id/bedNumberLabel"
-								android:layout_width="wrap_content"
-								android:layout_height="wrap_content"
-								android:text="@string/bed_number" />
-						
-						<TextView
-								android:id="@+id/fetchedBedNumber"
-								android:layout_width="wrap_content"
-								android:layout_height="wrap_content"
-								android:layout_marginLeft="10dp"
-								android:layout_marginRight="30dp" />
-						
-						<TextView
-								android:id="@+id/visitWardLabel"
-								android:layout_width="wrap_content"
-								android:layout_height="wrap_content"
-								android:layout_marginEnd="10dp"
-								android:layout_marginRight="5dp"
-								android:text="@string/reg_ward" />
-						
-						<TextView
-								android:id="@+id/fetchedWard"
-								android:layout_width="wrap_content"
-								android:layout_height="wrap_content"
-								android:layout_marginEnd="10dp"
-								android:layout_marginRight="10dp" />
-					
 					</com.google.android.flexbox.FlexboxLayout>
 				
 				</LinearLayout>

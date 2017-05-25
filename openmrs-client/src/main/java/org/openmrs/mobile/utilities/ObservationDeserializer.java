@@ -23,8 +23,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
 import org.openmrs.mobile.models.Concept;
+import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Person;
+import org.openmrs.mobile.models.Visit;
 
 import java.lang.reflect.Type;
 
@@ -52,6 +54,21 @@ public class ObservationDeserializer implements JsonDeserializer<Observation> {
 
 		if(jsonObject.get(DATE_KEY) != JsonNull.INSTANCE && jsonObject.get(DATE_KEY) != null) {
 			observation.setObsDatetime(jsonObject.get(DATE_KEY).getAsString());
+		}
+
+		JsonElement encounterJson = jsonObject.get("encounter");
+		if( encounterJson != null){
+			Encounter encounter = new Encounter();
+			encounter.setUuid(encounterJson.getAsJsonObject().get(UUID_KEY).getAsString());
+
+			Visit visit = new Visit();
+			JsonElement  visitElement = encounterJson.getAsJsonObject().get("visit");
+			if(!visitElement.isJsonNull()) {
+				visit.setUuid(visitElement.getAsJsonObject().get(UUID_KEY).getAsString());
+			}
+
+			encounter.setVisit(visit);
+			observation.setEncounter(encounter);
 		}
 
 		JsonElement conceptJson = jsonObject.get("concept");

@@ -35,7 +35,9 @@ public interface VisitContract {
 	interface VisitTasksView extends ViewVisitDetailsMain {
 		void showToast(String message, ToastUtil.ToastType toastType);
 
-		void setVisitTasks(List<VisitTask> visitTaskList);
+		void setOpenVisitTasks(List<VisitTask> visitTaskList);
+
+		void setClosedVisitTasks(List<VisitTask> visitTaskList);
 
 		void setPredefinedTasks(List<VisitPredefinedTask> predefinedTasks);
 

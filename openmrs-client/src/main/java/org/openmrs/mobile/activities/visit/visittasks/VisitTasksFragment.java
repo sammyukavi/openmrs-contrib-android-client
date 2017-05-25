@@ -14,9 +14,12 @@
 
 package org.openmrs.mobile.activities.visit.visittasks;
 
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -36,26 +39,32 @@ import org.openmrs.mobile.models.VisitPredefinedTask;
 import org.openmrs.mobile.models.VisitTask;
 import org.openmrs.mobile.models.VisitTaskStatus;
 import org.openmrs.mobile.utilities.ApplicationConstants;
+import org.openmrs.mobile.utilities.DateUtils;
 import org.openmrs.mobile.utilities.FontsUtil;
 import org.openmrs.mobile.utilities.ToastUtil;
 import org.openmrs.mobile.utilities.ViewUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class VisitTasksFragment extends VisitFragment implements VisitContract.VisitTasksView {
 
-	private static OpenMRS instance = OpenMRS.getInstance();
 	FloatingActionButton fab;
 	private View mRootView;
+	private RecyclerView openViewTasksRecyclerView;
 	private LinearLayoutManager layoutManager;
 	private LinearLayout addTaskLayout;
-	private RecyclerView visitTasksRecyclerViewAdapter;
+	private LinearLayout closedTasksLayout;
+
 	private List<VisitPredefinedTask> predefinedTasks;
 	private List<VisitTask> visitTasksLists;
 	private Visit visit;
 	private AutoCompleteTextView addtask;
 	private TextView noVisitTasks;
+	private Map<String, List<VisitTask>> groupedClosedTasks = new LinkedHashMap<>();
 
 	public static VisitTasksFragment newInstance() {
 		return new VisitTasksFragment();
@@ -75,11 +84,7 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 
 		//Adding the Recycler view
 		layoutManager = new LinearLayoutManager(this.getActivity());
-		visitTasksRecyclerViewAdapter.setLayoutManager(layoutManager);
-
-		((VisitTasksPresenter)mPresenter).getVisit();
-		((VisitTasksPresenter)mPresenter).getPredefinedTasks();
-		((VisitTasksPresenter)mPresenter).getVisitTasks();
+		openViewTasksRecyclerView.setLayoutManager(layoutManager);
 
 		addListeners();
 		// Font config
@@ -88,10 +93,12 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 	}
 
 	private void resolveViews(View v) {
-		visitTasksRecyclerViewAdapter = (RecyclerView)v.findViewById(R.id.visitTasksRecyclerView);
+		openViewTasksRecyclerView = (RecyclerView)v.findViewById(R.id.openVisitTasksRecyclerView);
 		fab = (FloatingActionButton)v.findViewById(R.id.visitTaskFab);
 		addtask = (AutoCompleteTextView)v.findViewById(R.id.addVisitTasks);
 		addTaskLayout = (LinearLayout)v.findViewById(R.id.addTaskLayout);
+		closedTasksLayout = (LinearLayout) v.findViewById(R.id.closedTasksLayout);
+
 		noVisitTasks = (TextView)v.findViewById(R.id.noVisitTasks);
 	}
 
@@ -101,22 +108,78 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 	}
 
 	@Override
-	public void setVisitTasks(List<VisitTask> visitTaskList) {
+	public void setOpenVisitTasks(List<VisitTask> visitTaskList) {
 		this.visitTasksLists = visitTaskList;
 		if (visit != null) {
 			if (visitTaskList.size() != 0) {
 				VisitTasksRecyclerViewAdapter adapter =
 						new VisitTasksRecyclerViewAdapter(this.getActivity(), visitTaskList, visit, this);
-				visitTasksRecyclerViewAdapter.setAdapter(adapter);
+				openViewTasksRecyclerView.setAdapter(adapter);
+
 				//visitTasksRecyclerViewAdapter.addOnScrollListener(recyclerViewOnScrollListener)
-				visitTasksRecyclerViewAdapter.setVisibility(View.VISIBLE);
+				openViewTasksRecyclerView.setVisibility(View.VISIBLE);
 				noVisitTasks.setVisibility(View.GONE);
 			} else {
-				visitTasksRecyclerViewAdapter.setVisibility(View.GONE);
+				openViewTasksRecyclerView.setVisibility(View.GONE);
 				noVisitTasks.setVisibility(View.VISIBLE);
 			}
 		}
 		addTaskOnFocusListener();
+	}
+
+	@Override
+	public void setClosedVisitTasks(List<VisitTask> visitTaskList) {
+		groupedClosedTasks.clear();
+		closedTasksLayout.removeAllViews();
+		for(VisitTask task : visitTaskList){
+			String relativeDate = DateUtils.calculateRelativeDate(task.getClosedOn());
+			if(groupedClosedTasks.containsKey(relativeDate)){
+				groupedClosedTasks.get(relativeDate).add(task);
+			} else {
+				List<VisitTask> tasks = new ArrayList<>();
+				tasks.add(task);
+				groupedClosedTasks.put(relativeDate, tasks);
+			}
+		}
+
+		if(!groupedClosedTasks.isEmpty()){
+			for(Map.Entry<String, List<VisitTask>> set : groupedClosedTasks.entrySet()){
+				CardView cardView = new CardView(getContext());
+				cardView.setCardBackgroundColor(Color.WHITE);
+				cardView.setContentPadding(10, 10, 10, 50);
+				LinearLayout.LayoutParams cardViewParams = new LinearLayout.LayoutParams(
+						LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+				cardView.setLayoutParams(cardViewParams);
+
+				LinearLayout linearLayout = new LinearLayout(getContext());
+				LinearLayout.LayoutParams params =
+						new LinearLayout.LayoutParams(
+								LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+				linearLayout.setLayoutParams(params);
+				linearLayout.setOrientation(LinearLayout.VERTICAL);
+
+				TextView closedTaskTitle = new TextView(getContext());
+				closedTaskTitle.setTypeface(Typeface.DEFAULT_BOLD);
+				closedTaskTitle.setText(getString(R.string.nav_closed_visit_tasks_period, set.getKey()));
+				linearLayout.addView(closedTaskTitle);
+
+				RecyclerView closedRecyclerView = new RecyclerView(getContext());
+				VisitTasksRecyclerViewAdapter adapter =
+						new VisitTasksRecyclerViewAdapter(this.getActivity(), set.getValue(), visit, this);
+				closedRecyclerView.setAdapter(adapter);
+
+				closedRecyclerView.setLayoutParams(
+						new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+								LinearLayout.LayoutParams.MATCH_PARENT));
+
+				LinearLayoutManager layoutManagerClosed = new LinearLayoutManager(this.getActivity());
+				closedRecyclerView.setLayoutManager(layoutManagerClosed);
+				linearLayout.addView(closedRecyclerView);
+
+				cardView.addView(linearLayout);
+				closedTasksLayout.addView(cardView);
+			}
+		}
 	}
 
 	public void addTaskOnFocusListener() {

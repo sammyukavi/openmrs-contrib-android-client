@@ -99,8 +99,7 @@ public class VisitPhotoRecyclerViewAdapter
 
 					TextView descriptionView = new TextView(context);
 					descriptionView.setText(view.formatVisitImageDescription(visitPhoto.getFileCaption(),
-							DateUtils.convertTime(visitPhoto.getDateCreated()
-									.getTime()),
+							DateUtils.calculateRelativeDate(visitPhoto.getDateCreated()),
 							visitPhoto.getCreator().getPerson().getDisplay()));
 					descriptionView.setPadding(10, 10, 10, 10);
 

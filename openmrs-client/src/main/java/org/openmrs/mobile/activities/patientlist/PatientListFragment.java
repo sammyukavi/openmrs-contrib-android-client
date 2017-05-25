@@ -114,7 +114,6 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 		noPatientLists.setVisibility(visible ? View.VISIBLE : View.GONE);
 	}
 
-
 	@Override
 	public void setSpinnerVisibility(boolean visible) {
 		patientListSpinner.setVisibility(visible ? View.VISIBLE : View.GONE);

@@ -278,6 +278,9 @@
 	<string name="nav_capture_vitals">Capture Vitals</string>
 	<string name="nav_register_patient">Register Patient</string>
 	<string name="nav_patient_lists">Patient Lists</string>
+	<string name="nav_open_visit_tasks">Open Visit Tasks</string>
+	<string name="nav_closed_visit_tasks">Closed Visit Tasks</string>
+	<string name="nav_closed_visit_tasks_period">Closed Tasks (%1$s)</string>
 	<string name="nav_visit_tasks">Visit Tasks</string>
 	<string name="nav_settings">Settings</string>
 	<string name="nav_visit_details">Visit Details</string>

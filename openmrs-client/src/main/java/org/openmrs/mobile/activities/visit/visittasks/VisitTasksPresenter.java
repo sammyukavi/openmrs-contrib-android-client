@@ -54,7 +54,11 @@ public class VisitTasksPresenter extends VisitPresenterImpl implements VisitCont
 	}
 
 	@Override
-	public void subscribe() {}
+	public void subscribe() {
+		getVisit();
+		getPredefinedTasks();
+		getVisitTasks();
+	}
 
 	@Override
 	public void getPredefinedTasks() {
@@ -83,28 +87,36 @@ public class VisitTasksPresenter extends VisitPresenterImpl implements VisitCont
 	@Override
 	public void getVisitTasks() {
 		PagingInfo pagingInfo = new PagingInfo(page, limit);
-		DataService.GetCallback<List<VisitTask>> getMultipleCallback =
+
+		// get open tasks
+		visitTaskDataService.getAll("OPEN", patientUUID, visitUUID, QueryOptions.LOAD_RELATED_OBJECTS,
+				pagingInfo,
 				new DataService.GetCallback<List<VisitTask>>() {
 					@Override
 					public void onCompleted(List<VisitTask> visitTasksList) {
-						if (visitTasksList.isEmpty()) {
-							visitTasksView.setVisitTasks(visitTasksList);
-						} else {
-							visitTasksView.setVisitTasks(visitTasksList);
-						}
+						visitTasksView.setOpenVisitTasks(visitTasksList);
+
+						// get closed tasks
+						visitTaskDataService.getAll("CLOSED", patientUUID, visitUUID, QueryOptions.LOAD_RELATED_OBJECTS,
+								pagingInfo,
+								new DataService.GetCallback<List<VisitTask>>() {
+									@Override
+									public void onCompleted(List<VisitTask> visitTasksList) {
+										visitTasksView.setClosedVisitTasks(visitTasksList);
+									}
+
+									@Override
+									public void onError(Throwable t) {
+									}
+								});
 					}
 
 					@Override
 					public void onError(Throwable t) {
-						visitTasksView
-								.showToast(
-										ApplicationConstants.entityName.VISIT_TASKS + ApplicationConstants.toastMessages
-												.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 					}
-				};
-		visitTaskDataService
-				.getAll(ApplicationConstants.EMPTY_STRING, patientUUID, visitUUID, QueryOptions.LOAD_RELATED_OBJECTS,
-						pagingInfo, getMultipleCallback);
+				});
+
+
 	}
 
 	@Override

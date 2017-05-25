@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 public final class DateUtils {
 	public static final String DEFAULT_DATE_FORMAT = "dd/MM/yyyy";
@@ -36,7 +37,6 @@ public final class DateUtils {
 	public static final String DATE_FORMAT = "dd-MMM-yyyy";
 	public static final Long ZERO = 0L;
 	private static final String OPEN_MRS_RESPONSE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
-	public static final String VISIT_PHOTO_DATE_FORMAT = "MM dd, yy";
 
 	private DateUtils() {
 
@@ -137,5 +137,26 @@ public final class DateUtils {
 			date = originalFormat.parseDateTime(dateAsString);
 		}
 		return String.valueOf(date);
+	}
+
+	public static String calculateRelativeDate(String dateAsString){
+		String relative = "";
+		try {
+			Date pastDate = parseString(dateAsString, new SimpleDateFormat(DateUtils.OPEN_MRS_RESPONSE_FORMAT));
+			Date today = new Date();
+			long days = TimeUnit.MILLISECONDS.toDays(today.getTime() - pastDate.getTime());
+			if(days  == 0){
+				relative = "today";
+			} else if (days < 7 ){
+				relative = (days == 1 ? "yesterday" : days + " days ago");
+			} else if (days < 30) {
+				relative = Math.round(days / 7) + " week" + (days / 7 > 1 ? "s " : " ") + "ago";
+			} else {
+				relative = Math.round(days / 30) + " month" + (days / 30 > 1 ? "s " : " ") + "ago";
+			}
+
+		} catch(ParseException ex){}
+
+		return relative;
 	}
 }

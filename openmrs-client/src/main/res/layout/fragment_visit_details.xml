@@ -315,8 +315,8 @@
 									android:layout_marginStart="15dp"
 									android:layout_marginLeft="15dp"
 									android:layout_marginRight="10dp"
-									android:textStyle="bold"
 									android:visibility="gone"
+									android:textSize="13sp"
 									android:textColor="@color/openmrs_color_grey"
 									android:text="@string/no_primary_diagnosis" />
 							
@@ -361,8 +361,8 @@
 									android:layout_marginStart="15dp"
 									android:layout_marginLeft="15dp"
 									android:layout_marginRight="10dp"
-									android:textStyle="bold"
 									android:visibility="gone"
+									android:textSize="13sp"
 									android:textColor="@color/openmrs_color_grey"
 									android:text="@string/no_secondary_diagnosis" />
 							

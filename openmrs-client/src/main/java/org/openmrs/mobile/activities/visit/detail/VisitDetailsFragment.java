@@ -36,6 +36,8 @@ import org.openmrs.mobile.activities.auditdata.AuditDataActivity;
 import org.openmrs.mobile.activities.capturevitals.CaptureVitalsActivity;
 import org.openmrs.mobile.activities.visit.VisitContract;
 import org.openmrs.mobile.activities.visit.VisitFragment;
+import org.openmrs.mobile.models.Concept;
+import org.openmrs.mobile.models.ConceptName;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.EncounterType;
 import org.openmrs.mobile.models.Observation;
@@ -47,7 +49,10 @@ import org.openmrs.mobile.utilities.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 public class VisitDetailsFragment extends VisitFragment implements VisitContract.VisitDetailsView {
 
@@ -67,6 +72,10 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	private String visitUuid;
 	private String providerUuid;
 	private Intent intent;
+	private List<Map> primaryDiagnosisList, secondaryDiagnosisList;
+	private ConceptName diagnosisConceptName;
+
+	private Map<String, Object> encounterDiagnosis = new HashMap<>();
 
 	public static VisitDetailsFragment newInstance() {
 		return new VisitDetailsFragment();
@@ -138,6 +147,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 			setClinicalNote(visit);
 			setDiagnoses(visit);
 			setAuditData(visit);
+
 		}
 
 	}
@@ -155,6 +165,17 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	@Override
 	public void setProviderUUID(String uuid) {
 		this.providerUuid = uuid;
+	}
+
+	@Override
+	public void setConcept(Concept concept) {
+		for (ConceptName conceptName : concept.getNames()) {
+
+			if (conceptName.getLocale() == Locale.ENGLISH) {
+				System.out.println(conceptName.getName() + " Concept Name ");
+				//this.diagnosisConceptName = conceptName;
+			}
+		}
 	}
 
 	private void addListeners() {
@@ -181,13 +202,33 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		});
 	}
 
+	public void getDiagnosisOnFocusListener() {
+		/*ArrayAdapter adapter =
+				new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, ((VisitDetailsPresenter)
+						mPresenter).getConcept());
+		addDiagnosis.setAdapter(adapter);
+
+		addDiagnosis.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if (addDiagnosis.getText().length() >= addDiagnosis.getThreshold()) {
+					addDiagnosis.showDropDown();
+				}
+				if (Arrays.asList(removeUsedPredefinedTasks(predefinedTasks, visitTasksLists))
+						.contains(addDiagnosis.getText().toString())) {
+					addDiagnosis.dismissDropDown();
+				}
+			}
+		});*/
+	}
+
 	public void setVisitDates(Visit visit) {
 		if (StringUtils.notNull(visit.getStopDatetime())) {
 			activeVisitBadge.setVisibility(View.GONE);
 			visitStartDate.setText(getContext().getResources().getString(R.string.date_started) + ": " + DateUtils
 					.convertTime1(visit.getStartDatetime(), DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT));
 			visitEndDate
-					.setText(getContext().getResources().getString(R.string.date_started) + ": " + DateUtils
+					.setText(getContext().getResources().getString(R.string.date_closed) + ": " + DateUtils
 							.convertTime1(visit.getStopDatetime(), DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT));
 			visitDuration.setText("Not now");
 			startDuration.setText("Not now");
@@ -277,7 +318,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 				EncounterType encounterType = visit.getEncounters().get(i).getEncounterType();
 
 				if (encounterType.getUuid().equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.VISIT_NOTE_UUID)) {
-					submitVisitNote.setText(getString(R.string.action_update));
+					submitVisitNote.setText(getString(R.string.update_visit_note));
 
 					for (int v = 0; v < encounter.getObs().size(); v++) {
 
@@ -298,29 +339,34 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 
 	public void setDiagnoses(Visit visit) {
 		if (visit.getEncounters().size() != 0) {
-			for (int i = 0; i < visit.getEncounters().size(); i++) {
-				Encounter encounter = visit.getEncounters().get(i);
-				EncounterType encounterType = visit.getEncounters().get(i).getEncounterType();
-
-				if (encounterType.getUuid().equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.VISIT_NOTE_UUID)) {
+			for (Encounter encounter : visit.getEncounters()) {
+				if (encounter.getEncounterType().getUuid()
+						.equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.VISIT_NOTE_UUID)) {
 					submitVisitNote.setText(getString(R.string.update_visit_note));
-					for (int v = 0; v < encounter.getObs().size(); v++) {
-						ArrayList locators = splitStrings(encounter.getObs().get(v).getDisplay(), ":");
+					for (Observation obs : encounter.getObs()) {
+						if (obs.getDisplay().startsWith(ApplicationConstants.ObservationLocators.DIANOSES)) {
+							if (obs.getDisplay().contains(ApplicationConstants.ObservationLocators.PRIMARY_DIAGNOSIS)) {
+								encounterDiagnosis.put("order", ApplicationConstants.DiagnosisStrings.PRIMARY_ORDER);
+								encounterDiagnosis.put("certainty", checkObsCertainty(obs.getDisplay()));
+								encounterDiagnosis.put("diagnosis", "");
+								((VisitDetailsPresenter)mPresenter).getConcept(getConceptName(obs.getDisplay()));
 
-						if (locators.get(0).toString()
-								.equalsIgnoreCase(ApplicationConstants.ObservationLocators.DIANOSES)) {
-							ArrayList diagnosis = splitStrings(locators.get(1).toString(), ",");
-							for (int d = 0; d < diagnosis.size(); d++) {
-								String diagnosisString = diagnosis.get(d).toString();
-								if (diagnosisString.equals(ApplicationConstants.ObservationLocators.PRIMARY_DIAGNOSIS)) {
-									System.out.println("Found Primary");
-								}
+							} else {
+
 							}
+						} else {
+							showNoDiagnoses();
 						}
 					}
+				} else {
+					showNoDiagnoses();
 				}
 			}
+
+		} else {
+			showNoDiagnoses();
 		}
+
 	}
 
 	public void loadObservationFields(List<Observation> observations, EncounterTypeData type) {
@@ -367,4 +413,34 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		Collections.addAll(displayArray, display.split(splitter));
 		return displayArray;
 	}
+
+	private void showNoDiagnoses() {
+		noPrimaryDiagnoses.setVisibility(View.VISIBLE);
+		noSecondaryDiagnoses.setVisibility(View.VISIBLE);
+		primaryDiagnosesRecycler.setVisibility(View.GONE);
+		secondaryDiagnosesRecycler.setVisibility(View.GONE);
+	}
+
+	private String checkObsCertainty(String obsDisplay) {
+		if (obsDisplay.contains(ApplicationConstants.ObservationLocators
+				.PRESUMED_DIAGNOSIS)) {
+			return ApplicationConstants.DiagnosisStrings.PRESUMED;
+		} else {
+			return ApplicationConstants.DiagnosisStrings.CONFIRMED;
+		}
+	}
+
+	private String getConceptName(String obsDisplay) {
+		String diagnosis1 = "", diagnosis2 = "", diagnosis3 = "", diagnosis4 = "", diagnosis5 = "", diagnosis6 = "";
+		String diagnosis = (obsDisplay.replaceAll(ApplicationConstants.ObservationLocators.DIANOSES, ""));
+		diagnosis1 += (diagnosis.replaceAll(ApplicationConstants.ObservationLocators.PRIMARY_DIAGNOSIS, ""));
+		diagnosis2 += (diagnosis1.replaceAll(ApplicationConstants.ObservationLocators.SECONDARY_DIAGNOSIS, ""));
+		diagnosis3 += (diagnosis2.replaceAll(ApplicationConstants.ObservationLocators.PRESUMED_DIAGNOSIS, ""));
+		diagnosis4 += (diagnosis3.replaceAll(ApplicationConstants.ObservationLocators.CONFIRMED_DIAGNOSIS, ""));
+		diagnosis5 += (diagnosis4.replaceAll(",", ""));
+		diagnosis6 += (diagnosis5.replaceAll(":", ""));
+
+		return diagnosis6;
+	}
+
 }

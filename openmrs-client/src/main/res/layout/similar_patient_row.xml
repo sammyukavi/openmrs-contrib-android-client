@@ -166,7 +166,7 @@
 						android:orientation="vertical">
 					
 					<TextView
-							android:id="@+id/patientAddres"
+							android:id="@+id/patientAddress"
 							android:layout_width="wrap_content"
 							android:layout_height="wrap_content" />
 					

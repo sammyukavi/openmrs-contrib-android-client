@@ -19,6 +19,7 @@ import android.graphics.Bitmap;
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
 import org.openmrs.mobile.data.DataService;
+import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitPhoto;
 import org.openmrs.mobile.models.VisitPredefinedTask;
@@ -60,6 +61,8 @@ public interface VisitContract {
 		void setVisitUUID(String uuid);
 
 		void setProviderUUID(String uuid);
+
+		void setConcept(Concept concept);
 	}
 
 	interface VisitPhotoView extends ViewVisitDetailsMain {
@@ -110,13 +113,15 @@ public interface VisitContract {
 	interface VisitDetailsPresenter extends VisitDetailsMainPresenter {
 		void getVisit();
 
-		void getConcept(String uuid);
+		void getConcept(String name);
 
 		void getPatientUUID();
 
 		void getVisitUUID();
 
 		void getProviderUUID();
+
+		void getObservation(String uuid);
 	}
 
 }

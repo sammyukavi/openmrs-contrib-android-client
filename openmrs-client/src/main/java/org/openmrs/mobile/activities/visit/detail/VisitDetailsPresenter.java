@@ -14,18 +14,24 @@
 
 package org.openmrs.mobile.activities.visit.detail;
 
+import android.util.Log;
+
 import org.openmrs.mobile.activities.visit.VisitContract;
 import org.openmrs.mobile.activities.visit.VisitPresenterImpl;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.impl.ConceptDataService;
+import org.openmrs.mobile.data.impl.ObsDataService;
 import org.openmrs.mobile.data.impl.VisitDataService;
 import org.openmrs.mobile.data.impl.VisitPredefinedTaskDataService;
 import org.openmrs.mobile.data.impl.VisitTaskDataService;
 import org.openmrs.mobile.models.Concept;
+import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.ToastUtil;
+
+import java.util.List;
 
 public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitContract.VisitDetailsPresenter {
 
@@ -34,6 +40,7 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 	private VisitTaskDataService visitTaskDataService;
 	private VisitDataService visitDataService;
 	private ConceptDataService conceptDataService;
+	private ObsDataService obsDataService;
 	private String patientUUID, visitUUID, providerUuid;
 
 	private int page = 1;
@@ -47,6 +54,7 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 		this.visitTaskDataService = new VisitTaskDataService();
 		this.visitDataService = new VisitDataService();
 		this.conceptDataService = new ConceptDataService();
+		this.obsDataService = new ObsDataService();
 		this.visitUUID = visitUuid;
 		this.patientUUID = patientUuid;
 		this.providerUuid = providerUuid;
@@ -83,24 +91,29 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 	}
 
 	@Override
-	public void getConcept(String uuid) {
-		conceptDataService.getByUUID(uuid, QueryOptions.LOAD_RELATED_OBJECTS, new DataService
-				.GetCallback<Concept>() {
+	public void getConcept(String name) {
+		System.out.println(" Concept find");
+		DataService.GetCallback<List<Concept>> getSingleCallback = new DataService.GetCallback<List<Concept>>() {
 
 			@Override
-			public void onCompleted(Concept conceptAnswer) {
-				conceptAnswer.getDisplay();
+			public void onCompleted(List<Concept> concepts) {
+				if (!concepts.isEmpty()) {
+					visitDetailsView.setConcept(concepts.get(0));
+					System.out.println(concepts.size() + " Concept size");
+				}
 			}
 
 			@Override
 			public void onError(Throwable t) {
-				ToastUtil.error(t.getMessage());
+				Log.e("error", t.getLocalizedMessage());
 			}
-		});
+		};
+		conceptDataService.getByName(name, QueryOptions.LOAD_RELATED_OBJECTS, getSingleCallback);
+
 	}
 
 	@Override
-	public void getPatientUUID(){
+	public void getPatientUUID() {
 		visitDetailsView.setPatientUUID(patientUUID);
 	}
 
@@ -112,6 +125,35 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 	@Override
 	public void getProviderUUID() {
 		visitDetailsView.setProviderUUID(providerUuid);
+	}
+
+	@Override
+	public void getObservation(String uuid) {
+		DataService.GetCallback<Observation> getSingleCallback =
+				new DataService.GetCallback<Observation>() {
+					@Override
+					public void onCompleted(Observation entity) {
+						if (entity != null) {
+							if (!entity.getConcept().getUuid().equalsIgnoreCase(ApplicationConstants.ObservationLocators
+									.PRIMARY_DIAGNOSIS) && !entity.getConcept().getUuid()
+									.equalsIgnoreCase(ApplicationConstants.ObservationLocators
+											.SECONDARY_DIAGNOSIS)) {
+								System.out.println(entity.getConcept() + " Concept uuid");
+								Concept concept;
+								concept = (Concept)entity.getValue();
+								System.out.println(entity.getObsGroup().getDisplay() + " Concept name");
+							}
+
+						}
+					}
+
+					@Override
+					public void onError(Throwable t) {
+						visitDetailsView
+								.showToast("Could not fetch", ToastUtil.ToastType.ERROR);
+					}
+				};
+		obsDataService.getByUUID(uuid, QueryOptions.LOAD_RELATED_OBJECTS, getSingleCallback);
 	}
 
 }

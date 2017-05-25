@@ -24,9 +24,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
-import android.widget.TextView;
 
-import org.joda.time.DateTime;
 import org.joda.time.LocalDateTime;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
@@ -38,12 +36,10 @@ import org.openmrs.mobile.models.Form;
 import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
-import org.openmrs.mobile.models.Person;
 import org.openmrs.mobile.models.Provider;
 import org.openmrs.mobile.models.Value;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
-import org.openmrs.mobile.utilities.DateUtils;
 import org.openmrs.mobile.utilities.FontsUtil;
 
 import java.util.ArrayList;

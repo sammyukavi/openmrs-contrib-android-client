@@ -4,32 +4,40 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content">
 
-	<ScrollView
+	<FrameLayout
+			android:id="@+id/patientHeader"
 			android:layout_width="match_parent"
-			android:layout_height="match_parent">
+			android:layout_height="wrap_content" />
+
+	<android.support.v4.widget.NestedScrollView
+			android:id="@+id/scrollView"
+			android:layout_below="@id/patientHeader"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content">
 
 		<LinearLayout
-				android:animateLayoutChanges="true"
+				android:orientation="vertical"
 				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:orientation="vertical">
+				android:layout_height="wrap_content">
 
-			<FrameLayout
-					android:id="@+id/patientHeader"
+			<include
+					layout="@layout/container_patient_contact_info"
 					android:layout_width="match_parent"
-					android:layout_height="wrap_content" />
-
-			<FrameLayout
-					android:id="@+id/photoDownloadsContentFrame"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content" />
+					android:layout_height="wrap_content"
+					android:layout_marginLeft="10dp"
+					android:layout_marginRight="10dp"
+					android:layout_marginStart="10dp"
+					android:layout_marginEnd="10dp" />
 
 			<android.support.v7.widget.RecyclerView
+					android:paddingTop="10dp"
 					android:id="@+id/pastVisits"
+					android:layout_below="@id/patientHeader"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content" />
 		</LinearLayout>
-	</ScrollView>
+
+	</android.support.v4.widget.NestedScrollView>
 
 	<com.github.clans.fab.FloatingActionMenu
 			android:id="@+id/floatingActionMenu"
@@ -39,16 +47,22 @@
 			android:layout_margin="0dp"
 			fab:menu_backgroundColor="@android:color/transparent"
 			fab:menu_fab_label="@string/label_close"
+			fab:menu_labels_showAnimation="@anim/fab_slide_in_from_right"
+			fab:menu_labels_hideAnimation="@anim/fab_slide_out_to_right"
 			fab:menu_labels_ellipsize="end"
-			fab:menu_labels_singleLine="true">
+			fab:menu_labels_singleLine="true"
+			fab:menu_colorNormal="@color/color_primary_dark"
+			fab:menu_colorPressed="@color/color_primary">
 
 		<com.github.clans.fab.FloatingActionButton
 				android:id="@+id/start_visit"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:src="@drawable/ic_start_visit"
+				android:src="@drawable/ic_add_location"
 				fab:fab_label="@string/label_start_visit"
-				fab:fab_size="mini" />
+				fab:fab_size="mini"
+				fab:fab_colorNormal="@color/color_primary_dark"
+				fab:fab_colorPressed="@color/color_primary" />
 
 
 		<com.github.clans.fab.FloatingActionButton
@@ -58,6 +72,7 @@
 				android:src="@drawable/ic_edit"
 				fab:fab_label="@string/edit_patient"
 				fab:fab_size="mini"
-				fab:menu_colorNormal="@color/color_primary_dark" />
+				fab:fab_colorNormal="@color/color_primary_dark"
+				fab:fab_colorPressed="@color/color_primary" />
 	</com.github.clans.fab.FloatingActionMenu>
 </RelativeLayout>

@@ -36,8 +36,6 @@ public interface PatientListContract {
 
 		void updatePatientListData(List<PatientListContext> patientListData);
 
-		void setNoPatientListSelected(boolean visible);
-
 		void setSpinnerVisibility(boolean visibility);
 
 		boolean isActive();

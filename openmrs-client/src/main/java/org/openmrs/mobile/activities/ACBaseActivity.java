@@ -17,6 +17,9 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.internal.NavigationMenu;
+import android.support.design.internal.NavigationMenuItemView;
+import android.support.design.internal.NavigationMenuView;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -96,12 +99,6 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
-			case R.id.actionLogout:
-				showLogoutDialog();
-				return true;
-			case R.id.actionSettings:
-				startActivity(new Intent(this, SettingsActivity.class));
-				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}
@@ -109,10 +106,6 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 
 	@Override
 	public boolean onPrepareOptionsMenu(final Menu menu) {
-		MenuItem logoutMenuItem = menu.findItem(R.id.actionLogout);
-		if (logoutMenuItem != null) {
-			logoutMenuItem.setTitle(getString(R.string.action_logout) + " " + mOpenMRS.getUsername());
-		}
 		return true;
 	}
 
@@ -240,6 +233,11 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 		toggle.syncState();
 
 		NavigationView navigationView = (NavigationView)findViewById(R.id.nav_view);
+		Menu menu = navigationView.getMenu();
+		MenuItem logoutMenuItem = menu.findItem(R.id.navLogout);
+		if (logoutMenuItem != null) {
+			logoutMenuItem.setTitle(getString(R.string.action_logout) + " " + mOpenMRS.getUsername());
+		}
 		navigationView.setNavigationItemSelectedListener(this);
 	}
 
@@ -260,10 +258,9 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 			case R.id.navItemPatientLists:
 				startActivity(new Intent(this, PatientListActivity.class));
 				break;
-			case R.id.navItemSettings:
-				startActivity(new Intent(this, SettingsActivity.class));
+			case R.id.navLogout:
+				showLogoutDialog();
 				break;
-
 			default:
 				break;
 		}

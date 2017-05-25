@@ -115,10 +115,6 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 	}
 
 	@Override
-	public void setNoPatientListSelected(boolean visible){
-	}
-
-	@Override
 	public void setSpinnerVisibility(boolean visible) {
 		patientListSpinner.setVisibility(visible ? View.VISIBLE : View.GONE);
 	}
@@ -137,7 +133,6 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				setSelectedPatientList(patientLists.get(position));
 				if (selectedPatientList.getUuid() == null){
-					setNoPatientListSelected(true);
 					setNumberOfPatientsView(0);
 					List<PatientListContext> patientListContextList = new ArrayList<>();
 					updatePatientListData(patientListContextList);

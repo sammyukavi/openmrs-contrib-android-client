@@ -5,7 +5,6 @@ import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.impl.PatientDataService;
 import org.openmrs.mobile.models.Patient;
-import org.openmrs.mobile.utilities.ToastUtil;
 
 public class PatientHeaderPresenter extends BasePresenter implements PatientHeaderContract.Presenter {
 
@@ -14,7 +13,6 @@ public class PatientHeaderPresenter extends BasePresenter implements PatientHead
 	private String patientUuid;
 
 	public PatientHeaderPresenter(PatientHeaderContract.View view, String patientUuid) {
-		System.out.println("HEADER:::::" + patientUuid);
 		this.view = view;
 		this.view.setPresenter(this);
 		this.patientUuid = patientUuid;
@@ -23,7 +21,8 @@ public class PatientHeaderPresenter extends BasePresenter implements PatientHead
 
 	@Override
 	public void getPatient() {
-		patientDataService.getByUUID(patientUuid, QueryOptions.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Patient>() {
+		patientDataService.getByUUID(patientUuid, QueryOptions.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Patient>
+				() {
 			@Override
 			public void onCompleted(Patient patient) {
 				if (patient != null) {

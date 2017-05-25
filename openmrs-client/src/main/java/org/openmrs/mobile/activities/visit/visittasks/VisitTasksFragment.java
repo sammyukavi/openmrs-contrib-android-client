@@ -56,8 +56,9 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 	private View mRootView;
 	private RecyclerView openViewTasksRecyclerView;
 	private LinearLayoutManager layoutManager;
-	private LinearLayout addTasklayout;
+	private LinearLayout addTaskLayout;
 	private LinearLayout closedTasksLayout;
+
 	private List<VisitPredefinedTask> predefinedTasks;
 	private List<VisitTask> visitTasksLists;
 	private Visit visit;
@@ -95,8 +96,9 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 		openViewTasksRecyclerView = (RecyclerView)v.findViewById(R.id.openVisitTasksRecyclerView);
 		fab = (FloatingActionButton)v.findViewById(R.id.visitTaskFab);
 		addtask = (AutoCompleteTextView)v.findViewById(R.id.addVisitTasks);
-		addTasklayout = (LinearLayout)v.findViewById(R.id.addTaskLayout);
+		addTaskLayout = (LinearLayout)v.findViewById(R.id.addTaskLayout);
 		closedTasksLayout = (LinearLayout) v.findViewById(R.id.closedTasksLayout);
+
 		noVisitTasks = (TextView)v.findViewById(R.id.noVisitTasks);
 	}
 
@@ -239,7 +241,7 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 	public void setVisit(Visit visit) {
 		this.visit = visit;
 		if (!visit.getStopDatetime().equalsIgnoreCase(null)) {
-			addTasklayout.setVisibility(View.GONE);
+			addTaskLayout.setVisibility(View.GONE);
 		}
 	}
 

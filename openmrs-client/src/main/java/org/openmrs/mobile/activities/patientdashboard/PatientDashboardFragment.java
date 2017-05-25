@@ -120,29 +120,28 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 			if (!StringUtils.notNull(visit.getStopDatetime())) {
 				this.activeVisit = visit;
 				startVisitButton.setVisibility(View.GONE);
-				//editVisitButton.setVisibility(View.VISIBLE);
-				//endVisitButton.setVisibility(View.VISIBLE);
 				setVisitUuid(visit);
 				break;
 			}
 		}
 
-		RecyclerView pastVisits = (RecyclerView)fragmentView.findViewById(R.id.pastVisits);
-		pastVisits.setLayoutManager(new LinearLayoutManager(getContext()));
-		VisitsRecyclerAdapter
-				visitsRecyclerAdapter = new VisitsRecyclerAdapter(pastVisits, visits, getActivity(), patient, mPresenter);
-		pastVisits.setAdapter(visitsRecyclerAdapter);
+		RecyclerView pastVisitsRecyclerView = (RecyclerView)fragmentView.findViewById(R.id.pastVisits);
+		pastVisitsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+		VisitsRecyclerAdapter visitsRecyclerAdapter = new VisitsRecyclerAdapter(
+				pastVisitsRecyclerView,
+				visits, getActivity()
+		);
+		pastVisitsRecyclerView.setAdapter(visitsRecyclerAdapter);
 
 		visitsRecyclerAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
 			@Override
 			public void onLoadMore() {
 				//visitsRecyclerAdapter.notifyItemRemoved();
-				/**
-				 * Load more here
-				 */
+				// Load more here
 				//ConsoleLogger.dump("Loading more");
 				//visitsRecyclerAdapter.notifyDataSetChanged();
 				//visitsRecyclerAdapter.setLoaded();
+				//visitsRecyclerAdapter.notifyDataSetChanged();
 			}
 		});
 	}

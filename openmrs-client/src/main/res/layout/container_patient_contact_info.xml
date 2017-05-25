@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:orientation="vertical"
+		android:background="@color/color_white"
+		android:layout_below="@id/patientHeader"
+		android:paddingLeft="5dp"
+		android:paddingRight="5dp"
+		android:paddingStart="5dp"
+		android:paddingEnd="5dp"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
+
+	<LinearLayout
+			android:weightSum="1"
+			android:id="@+id/patientAddressContainer"
+			android:layout_width="match_parent"
+			android:orientation="horizontal"
+			android:layout_height="wrap_content">
+
+		<TextView
+				android:textStyle="italic"
+				android:id="@+id/addressLabel"
+				android:layout_width="fill_parent"
+				android:text="@string/label_address"
+				android:layout_weight="0.7"
+				android:layout_height="match_parent" />
+
+		<TextView
+				android:id="@+id/patientAddress"
+				android:layout_width="fill_parent"
+				android:layout_weight="0.3"
+				android:layout_height="match_parent" />
+	</LinearLayout>
+
+	<LinearLayout
+			android:weightSum="1"
+			android:id="@+id/patientPhonenoContainer"
+			android:layout_width="fill_parent"
+			android:orientation="horizontal"
+			android:layout_height="wrap_content">
+
+		<TextView
+				android:textStyle="italic"
+				android:id="@+id/phoneLabel"
+				android:layout_width="fill_parent"
+				android:text="@string/telephone"
+				android:layout_weight="0.7"
+				android:layout_height="match_parent" />
+
+		<TextView
+				android:id="@+id/patientPhonenumber"
+				android:layout_width="fill_parent"
+				android:layout_weight="0.3"
+				android:layout_height="match_parent" />
+	</LinearLayout>
+
+
+</LinearLayout>

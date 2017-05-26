@@ -116,7 +116,6 @@ public class VisitTasksPresenter extends VisitPresenterImpl implements VisitCont
 					}
 				});
 
-
 	}
 
 	@Override

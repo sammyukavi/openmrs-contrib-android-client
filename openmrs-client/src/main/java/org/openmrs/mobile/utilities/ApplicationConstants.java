@@ -219,8 +219,6 @@ public abstract class ApplicationConstants {
 	}
 
 	public static class visitAttributeTypes {
-		public static final String BED_NUMBER_UUID = "4af4da08-9042-4ef2-9310-781a80ccb6ba";
-		public static final String WARD_UUID = "5f18943d-f271-4a4a-91f7-0cb4c3ee93ce";
 		public static final String PERSON_ATTRIBUTE_TYPE_PHONE_NUMBER = "14d4f066-15f5-102d-96e4-000c29c2a5d7";
 	}
 }

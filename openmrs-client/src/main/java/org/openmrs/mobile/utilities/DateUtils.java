@@ -139,10 +139,8 @@ public final class DateUtils {
 		return String.valueOf(date);
 	}
 
-	public static String calculateRelativeDate(String dateAsString){
+	public static String calculateRelativeDate(Date pastDate){
 		String relative = "";
-		try {
-			Date pastDate = parseString(dateAsString, new SimpleDateFormat(DateUtils.OPEN_MRS_RESPONSE_FORMAT));
 			Date today = new Date();
 			long days = TimeUnit.MILLISECONDS.toHours(today.getTime() - pastDate.getTime());
 			if(days  == 0){
@@ -155,6 +153,14 @@ public final class DateUtils {
 				relative = Math.round(days / 30) + " month" + (days / 30 > 1 ? "s " : " ") + "ago";
 			}
 
+		return relative;
+	}
+
+	public static String calculateRelativeDate(String dateAsString){
+		String relative = "";
+		try {
+			Date pastDate = parseString(dateAsString, new SimpleDateFormat(DateUtils.OPEN_MRS_RESPONSE_FORMAT));
+			relative = calculateRelativeDate(pastDate);
 		} catch(ParseException ex){}
 
 		return relative;

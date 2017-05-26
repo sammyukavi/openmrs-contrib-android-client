@@ -115,7 +115,6 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 						new VisitTasksRecyclerViewAdapter(this.getActivity(), visitTaskList, visit, this);
 				openViewTasksRecyclerView.setAdapter(adapter);
 
-				//visitTasksRecyclerViewAdapter.addOnScrollListener(recyclerViewOnScrollListener)
 				openViewTasksRecyclerView.setVisibility(View.VISIBLE);
 				noVisitTasks.setVisibility(View.GONE);
 			} else {
@@ -163,7 +162,22 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 				TextView closedTaskTitle = new TextView(getContext());
 				closedTaskTitle.setTypeface(Typeface.DEFAULT_BOLD);
 				closedTaskTitle.setText(getString(R.string.nav_closed_visit_tasks_period, set.getKey()));
+
+				LinearLayout.LayoutParams closedTaskTitleParams =
+						new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+								LinearLayout.LayoutParams.WRAP_CONTENT);
+				closedTaskTitleParams.setMargins(10, 5, 10, 5);
+				closedTaskTitle.setLayoutParams(closedTaskTitleParams);
+
 				linearLayout.addView(closedTaskTitle);
+
+				View view = new View(getContext());
+				LinearLayout.LayoutParams viewParams =
+						new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 2);
+				viewParams.setMargins(0, 5, 0, 10);
+				view.setLayoutParams(viewParams);
+				view.setBackgroundColor(getResources().getColor(R.color.dark_grey));
+				linearLayout.addView(view);
 
 				RecyclerView closedRecyclerView = new RecyclerView(getContext());
 				VisitTasksRecyclerViewAdapter adapter =

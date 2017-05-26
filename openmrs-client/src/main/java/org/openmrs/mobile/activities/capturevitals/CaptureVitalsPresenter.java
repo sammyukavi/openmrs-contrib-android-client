@@ -77,6 +77,7 @@ public class CaptureVitalsPresenter extends BasePresenter implements CaptureVita
 
 			@Override
 			public void onError(Throwable t) {
+				captureVitalsView.showSnackbar(captureVitalsView.getContext().getString(R.string.error_occured));
 				t.printStackTrace();
 			}
 		};

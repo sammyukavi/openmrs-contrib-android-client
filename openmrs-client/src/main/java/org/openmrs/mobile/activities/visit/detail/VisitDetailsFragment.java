@@ -468,16 +468,16 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	}
 
 	private String getConceptName(String obsDisplay) {
-		String diagnosis1 = "", diagnosis2 = "", diagnosis3 = "", diagnosis4 = "", diagnosis5 = "", diagnosis6 = "";
-		String diagnosis = (obsDisplay.replaceAll(ApplicationConstants.ObservationLocators.DIANOSES, ""));
-		diagnosis1 += (diagnosis.replaceAll(ApplicationConstants.ObservationLocators.PRIMARY_DIAGNOSIS, ""));
-		diagnosis2 += (diagnosis1.replaceAll(ApplicationConstants.ObservationLocators.SECONDARY_DIAGNOSIS, ""));
-		diagnosis3 += (diagnosis2.replaceAll(ApplicationConstants.ObservationLocators.PRESUMED_DIAGNOSIS, ""));
-		diagnosis4 += (diagnosis3.replaceAll(ApplicationConstants.ObservationLocators.CONFIRMED_DIAGNOSIS, ""));
-		diagnosis5 += (diagnosis4.replaceAll(",", ""));
-		diagnosis6 += (diagnosis5.replaceAll(":", ""));
+		String diagnosisStringOne = "", diagnosisStringTwo = "", diagnosisStringThree = "", diagnosisStringFour = "", diagnosisStringFive = "", diagnosisStringSix = "";
+		String diagnosisString = (obsDisplay.replaceAll(ApplicationConstants.ObservationLocators.DIANOSES, ""));
+		diagnosisStringOne += (diagnosisString.replaceAll(ApplicationConstants.ObservationLocators.PRIMARY_DIAGNOSIS, ""));
+		diagnosisStringTwo += (diagnosisStringOne.replaceAll(ApplicationConstants.ObservationLocators.SECONDARY_DIAGNOSIS, ""));
+		diagnosisStringThree += (diagnosisStringTwo.replaceAll(ApplicationConstants.ObservationLocators.PRESUMED_DIAGNOSIS, ""));
+		diagnosisStringFour += (diagnosisStringThree.replaceAll(ApplicationConstants.ObservationLocators.CONFIRMED_DIAGNOSIS, ""));
+		diagnosisStringFive += (diagnosisStringFour.replaceAll(",", ""));
+		diagnosisStringSix += (diagnosisStringFive.replaceAll(":", ""));
 
-		return diagnosis6;
+		return diagnosisStringSix;
 	}
 
 }

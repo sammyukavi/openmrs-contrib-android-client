@@ -386,6 +386,7 @@
 							android:layout_height="wrap_content"
 							android:focusable="true"
 							android:inputType="none"
+							android:editable="false"
 							android:text="@string/label_blood_presure"
 							android:background="@color/transparent"
 							android:maxLines="1"

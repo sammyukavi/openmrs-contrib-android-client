@@ -72,7 +72,7 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 		}
 	};
 
-	public VisitsRecyclerAdapter(RecyclerView recyclerView, List<Visit> visits, Context context) {
+	public VisitsRecyclerAdapter(RecyclerView recyclerView, List<Visit> visits,  Context context) {
 		this.visits = visits;
 		this.context = context;
 		this.createEditVisitNoteDialog = new CustomDialogBundle();
@@ -175,6 +175,7 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 					intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, OpenMRS.getInstance()
 							.getPatientUuid());
 					intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visit.getUuid());
+					intent.putExtra(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, visit.getStopDatetime());
 					context.startActivity(intent);
 				}
 			});

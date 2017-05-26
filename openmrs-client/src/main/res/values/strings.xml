@@ -499,4 +499,5 @@
 	<string name="error_text_vitals_minimum">Minimum: %1$d</string>
 	<string name="error_occured">An error occured making your request</string>
 	<string name="saved">Saved</string>
+	<string name="in_complete">In Complete</string>
 </resources>

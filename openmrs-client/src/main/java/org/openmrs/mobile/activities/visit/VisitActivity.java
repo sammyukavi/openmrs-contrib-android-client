@@ -24,6 +24,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.github.clans.fab.FloatingActionButton;
 
@@ -56,11 +57,11 @@ public class VisitActivity extends ACBaseActivity {
 	private PatientHeaderContract.Presenter patientHeaderPresenter;
 	private String patientUuid;
 	private String visitUuid;
-	private String providerUuid;
+	private String providerUuid, visitClosedDate;
 	private Intent intent;
 	private OpenMRS instance = OpenMRS.getInstance();
 	private SharedPreferences sharedPreferences = instance.getOpenMRSSharedPreferences();
-	private FloatingActionButton captureVitalsButton, endVisitButton, editVisitButton;
+	private FloatingActionButton captureVitalsButton, endVisitButton, editVisitButton,auditData;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +83,7 @@ public class VisitActivity extends ACBaseActivity {
 			patientUuid = extras.getString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
 			visitUuid = extras.getString(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE);
 			providerUuid = OpenMRS.getInstance().getCurrentProviderUUID();
+			visitClosedDate = extras.getString(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE);
 			initViewPager(new VisitPageAdapter(getSupportFragmentManager(), patientUuid, visitUuid, providerUuid));
 
 			// patient header
@@ -101,10 +103,16 @@ public class VisitActivity extends ACBaseActivity {
 
 		}
 
-		FloatingActionButton captureVitalsButton = (FloatingActionButton)findViewById(R.id.capture_vitals);
-		FloatingActionButton auditData = (FloatingActionButton)findViewById(R.id.auditDataForm);
-		FloatingActionButton endVisitButton = (FloatingActionButton)findViewById(R.id.end_visit);
-		FloatingActionButton editVisitButton = (FloatingActionButton)findViewById(R.id.edit_visit);
+		captureVitalsButton = (FloatingActionButton)findViewById(R.id.capture_vitals);
+		auditData = (FloatingActionButton)findViewById(R.id.auditDataForm);
+		endVisitButton = (FloatingActionButton)findViewById(R.id.end_visit);
+		editVisitButton = (FloatingActionButton)findViewById(R.id.edit_visit);
+
+		if(visitClosedDate != null && !visitClosedDate.isEmpty()) {
+			captureVitalsButton.setVisibility(View.GONE);
+			editVisitButton.setVisibility(View.GONE);
+			endVisitButton.setVisibility(View.GONE);
+		}
 
 		initializeListeners(endVisitButton, editVisitButton, captureVitalsButton, auditData);
 	}

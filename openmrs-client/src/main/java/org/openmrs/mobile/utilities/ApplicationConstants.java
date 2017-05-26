@@ -95,7 +95,7 @@ public abstract class ApplicationConstants {
 		public static final String DISCHARGE = "Discharge";
 		public static final String ADMISSION = "Admission";
 		public static final String AUDITDATA = "Audit Data";
-		//public static final String VITALS = "Vitals";
+		public static final String AUDIT_DATA_COMPLETENESS = "Audit Data Complete";
 	}
 
 	public abstract static class EncounterTypeEntity {
@@ -136,6 +136,7 @@ public abstract class ApplicationConstants {
 		public static final String PATIENT_QUERY_BUNDLE = "patientQuery";
 		public static final String OBSERVATION = "observationTag";
 		public static final String VISIT = "visitTag";
+		public static final String VISIT_CLOSED_DATE = "visitClosedDate";
 		public static final String AUDIT_DATA_AVAILABILITY = "auditDataAvailability";
 	}
 

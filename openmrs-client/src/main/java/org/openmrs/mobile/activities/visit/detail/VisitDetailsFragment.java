@@ -28,6 +28,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -37,6 +38,7 @@ import com.google.android.flexbox.FlexboxLayout;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.auditdata.AuditDataActivity;
 import org.openmrs.mobile.activities.capturevitals.CaptureVitalsActivity;
+import org.openmrs.mobile.activities.findpatientrecord.FindPatientRecordContract;
 import org.openmrs.mobile.activities.visit.VisitContract;
 import org.openmrs.mobile.activities.visit.VisitFragment;
 import org.openmrs.mobile.models.Concept;
@@ -66,7 +68,9 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	private TextView startDuration;
 	private TextView visitDuration;
 	private TextView visitEndDate;
-	private TextView visitType, noVitals, noPrimaryDiagnoses, noSecondaryDiagnoses, noAuditData;
+	private TextView visitType, noVitals, noPrimaryDiagnoses, noSecondaryDiagnoses, noAuditData, visitNoteProvider,
+			visitNoteDate, visitVitalsProvider, visitVitalsDate, auditDataCompleteness, auditDataMetadataProvider,
+			auditDataMetadataDate;
 
 	private Visit visit;
 	private TableLayout visitVitalsTableLayout, auditInfoTableLayout;
@@ -85,6 +89,8 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	private List<Map> primaryDiagnosisList, secondaryDiagnosisList;
 	private ConceptName diagnosisConceptName;
 	private FlexboxLayout visitAttributesLayout;
+	private RelativeLayout visitNoteAuditInfo, visitVitalsAuditInfo, auditDataMetadata;
+	private View visitDetailsView;
 
 	private Map<String, Object> encounterDiagnosis = new HashMap<>();
 
@@ -138,6 +144,20 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		addVisitVitals = (ImageButton)v.findViewById(R.id.visitVitalsAdd);
 		addAuditData = (ImageButton)v.findViewById(R.id.visitAuditInfoAdd);
 		visitAttributesLayout = (FlexboxLayout)v.findViewById(R.id.visitAttributesLayout);
+		visitNoteProvider = (TextView)v.findViewById(R.id.visitNoteProvider);
+		visitNoteDate = (TextView)v.findViewById(R.id.visitNoteDate);
+		visitVitalsDate = (TextView)v.findViewById(R.id.visitVitalsDate);
+		visitVitalsProvider = (TextView)v.findViewById(R.id.visitVitalsProvider);
+		auditDataCompleteness = (TextView)v.findViewById(R.id.auditDataCompleteness);
+		auditDataMetadataProvider = (TextView)v.findViewById(R.id.auditDataMetadataProvider);
+		auditDataMetadataDate = (TextView)v.findViewById(R.id.auditDataMetadataDate);
+
+		visitNoteAuditInfo = (RelativeLayout)v.findViewById(R.id.visitNoteAuditInfo);
+		visitVitalsAuditInfo = (RelativeLayout)v.findViewById(R.id.visitVitalsAuditInfo);
+		auditDataMetadata = (RelativeLayout)v.findViewById(R.id.auditDataMetadata);
+
+		visitDetailsView = (View)v.findViewById(R.id.visitDetailsView);
+
 	}
 
 	@Override
@@ -262,7 +282,9 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	@Override
 	public void setAttributeTypes(List<VisitAttributeType> visitAttributeTypes) {
 		visitAttributesLayout.removeAllViews();
-		if (null == visit.getAttributes()) {
+		if (0 == visit.getAttributes().size()) {
+			visitAttributesLayout.setVisibility(View.GONE);
+			visitDetailsView.setVisibility(View.GONE);
 			return;
 		}
 
@@ -308,20 +330,37 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	public void setVitals(Visit visit) {
 		if (visit.getEncounters().size() != 0) {
 			for (int i = 0; i < visit.getEncounters().size(); i++) {
-				if (visit.getEncounters().get(i).getEncounterType().getUuid()
-						.equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.VITALS_UUID)) {
+				if (visit.getEncounters().get(i).getDisplay().contains(ApplicationConstants.EncounterTypeDisplays.VITALS)
+						&& i == 0) {
+					if (visit.getEncounters().get(i).getEncounterType().getUuid()
+							.equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.VITALS_UUID)) {
 
-					if (visit.getEncounters().get(i).getObs().size() != 0) {
-						noVitals.setVisibility(View.GONE);
-						addVisitVitals.setVisibility(View.GONE);
-						visitVitalsTableLayout.setVisibility(View.VISIBLE);
-						loadObservationFields(visit.getEncounters().get(i).getObs(), EncounterTypeData.VITALS);
-					} else {
-						noVitals.setVisibility(View.VISIBLE);
-						addVisitVitals.setVisibility(View.VISIBLE);
-						visitVitalsTableLayout.setVisibility(View.GONE);
+						if (visit.getEncounters().get(i).getObs().size() != 0) {
+
+							visitVitalsAuditInfo.setVisibility(View.VISIBLE);
+							visitVitalsDate
+									.setText(DateUtils.convertTime(visit.getEncounters().get(i).getEncounterDatetime(),
+											DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT));
+
+							for (int v = 0; v < visit.getEncounters().get(i).getEncounterProviders().size(); v++) {
+								if (v == 0) {
+
+									ArrayList names = splitStrings(
+											visit.getEncounters().get(i).getEncounterProviders().get(v).getDisplay(), ":");
+									visitVitalsProvider.setText(names.get(0).toString());
+								}
+							}
+
+							noVitals.setVisibility(View.GONE);
+							addVisitVitals.setVisibility(View.GONE);
+							visitVitalsTableLayout.setVisibility(View.VISIBLE);
+							loadObservationFields(visit.getEncounters().get(i).getObs(), EncounterTypeData.VITALS);
+						} else {
+							noVitals.setVisibility(View.VISIBLE);
+							addVisitVitals.setVisibility(View.VISIBLE);
+							visitVitalsTableLayout.setVisibility(View.GONE);
+						}
 					}
-					break;
 				}
 			}
 		}
@@ -334,7 +373,23 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 						.equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.AUDIT_DATA_UUID) || visit.getEncounters()
 						.get(i).getEncounterType().getDisplay().equalsIgnoreCase(ApplicationConstants
 								.EncounterTypeDisplays.AUDITDATA)) {
+
 					if (visit.getEncounters().get(i).getObs().size() != 0) {
+
+						auditDataMetadata.setVisibility(View.VISIBLE);
+						auditDataMetadataDate
+								.setText(DateUtils.convertTime(visit.getEncounters().get(i).getEncounterDatetime(),
+										DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT));
+
+						for (int v = 0; v < visit.getEncounters().get(i).getEncounterProviders().size(); v++) {
+							if (v == 0) {
+
+								ArrayList names = splitStrings(
+										visit.getEncounters().get(i).getEncounterProviders().get(v).getDisplay(), ":");
+								auditDataMetadataProvider.setText(names.get(0).toString());
+							}
+						}
+
 						noAuditData.setVisibility(View.GONE);
 						addAuditData.setVisibility(View.GONE);
 						auditInfoTableLayout.setVisibility(View.VISIBLE);
@@ -353,24 +408,36 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	public void setClinicalNote(Visit visit) {
 		if (visit.getEncounters().size() != 0) {
 			for (int i = 0; i < visit.getEncounters().size(); i++) {
-				Encounter encounter = visit.getEncounters().get(i);
-				EncounterType encounterType = visit.getEncounters().get(i).getEncounterType();
+				if (visit.getEncounters().get(i).getDisplay()
+						.contains(ApplicationConstants.EncounterTypeDisplays.VISIT_NOTE)) {
+					Encounter encounter = visit.getEncounters().get(i);
+					EncounterType encounterType = visit.getEncounters().get(i).getEncounterType();
+					if (encounterType.getUuid().equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity
+							.VISIT_NOTE_UUID)) {
+						submitVisitNote.setText(getString(R.string.update_visit_note));
+						visitNoteAuditInfo.setVisibility(View.VISIBLE);
+						visitNoteDate.setText(DateUtils.convertTime(encounter.getEncounterDatetime(),
+								DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT));
 
-				if (encounterType.getUuid().equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.VISIT_NOTE_UUID)) {
-					submitVisitNote.setText(getString(R.string.update_visit_note));
+						for (int v = 0; v < encounter.getEncounterProviders().size(); v++) {
+							if (v == 0) {
 
-					for (int v = 0; v < encounter.getObs().size(); v++) {
-
-						ArrayList locators = splitStrings(encounter.getObs().get(v).getDisplay(), ":");
-
-						if (locators.get(0).toString()
-								.equalsIgnoreCase(ApplicationConstants.ObservationLocators.CLINICAL_NOTE)) {
-							clinicalNote.setText(locators.get(1).toString());
+								ArrayList names = splitStrings(encounter.getEncounterProviders().get(v).getDisplay(), ":");
+								visitNoteProvider.setText(names.get(0).toString());
+							}
 						}
+
+						for (int v = 0; v < encounter.getObs().size(); v++) {
+
+							ArrayList locators = splitStrings(encounter.getObs().get(v).getDisplay(), ":");
+
+							if (locators.get(0).toString()
+									.equalsIgnoreCase(ApplicationConstants.ObservationLocators.CLINICAL_NOTE)) {
+								clinicalNote.setText(locators.get(1).toString());
+							}
+						}
+
 					}
-
-				} else {
-
 				}
 			}
 		}
@@ -413,12 +480,18 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 			TableRow row = new TableRow(getContext());
 			row.setPadding(0, 5, 0, 5);
 			row.setGravity(Gravity.CENTER);
-			row.setLayoutParams(
-					new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+			LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+					LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+			row.setLayoutParams(params);
 
 			ArrayList splitValues = splitStrings(observation.getDisplay(), ":");
 
+
 			TextView label = new TextView(getContext());
+			TableRow.LayoutParams labelParams = new TableRow.LayoutParams(0,LinearLayout.LayoutParams.WRAP_CONTENT);
+			labelParams.weight = 1;
+
 			label.setText(splitValues.get(0) + " :");
 			label.setTextSize(14);
 			if (type == EncounterTypeData.VITALS) {
@@ -426,20 +499,24 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 			} else {
 				label.setGravity(Gravity.LEFT | Gravity.START);
 			}
-			label.setMaxLines(4);
-			label.setSingleLine(false);
-
+			label.setLayoutParams(labelParams);
 			label.setTextColor(getResources().getColor(R.color.black));
 			row.addView(label, 0);
+
 
 			TextView value = new TextView(getContext());
 			value.setText(splitValues.get(1).toString());
 			value.setTextSize(14);
+		    value.setLayoutParams(labelParams);
 			row.addView(value, 1);
 
 			if (type == EncounterTypeData.VITALS) {
 				visitVitalsTableLayout.addView(row);
 			} else {
+				if (observation.getDisplay().contains(ApplicationConstants.EncounterTypeDisplays.AUDIT_DATA_COMPLETENESS)
+						&& observation.getDisplay().contains("No")) {
+					auditDataCompleteness.setVisibility(View.VISIBLE);
+				}
 				auditInfoTableLayout.addView(row);
 			}
 		}
@@ -468,12 +545,16 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	}
 
 	private String getConceptName(String obsDisplay) {
-		String diagnosisStringOne = "", diagnosisStringTwo = "", diagnosisStringThree = "", diagnosisStringFour = "", diagnosisStringFive = "", diagnosisStringSix = "";
+		String diagnosisStringOne = "", diagnosisStringTwo = "", diagnosisStringThree = "", diagnosisStringFour = "",
+				diagnosisStringFive = "", diagnosisStringSix = "";
 		String diagnosisString = (obsDisplay.replaceAll(ApplicationConstants.ObservationLocators.DIANOSES, ""));
 		diagnosisStringOne += (diagnosisString.replaceAll(ApplicationConstants.ObservationLocators.PRIMARY_DIAGNOSIS, ""));
-		diagnosisStringTwo += (diagnosisStringOne.replaceAll(ApplicationConstants.ObservationLocators.SECONDARY_DIAGNOSIS, ""));
-		diagnosisStringThree += (diagnosisStringTwo.replaceAll(ApplicationConstants.ObservationLocators.PRESUMED_DIAGNOSIS, ""));
-		diagnosisStringFour += (diagnosisStringThree.replaceAll(ApplicationConstants.ObservationLocators.CONFIRMED_DIAGNOSIS, ""));
+		diagnosisStringTwo +=
+				(diagnosisStringOne.replaceAll(ApplicationConstants.ObservationLocators.SECONDARY_DIAGNOSIS, ""));
+		diagnosisStringThree +=
+				(diagnosisStringTwo.replaceAll(ApplicationConstants.ObservationLocators.PRESUMED_DIAGNOSIS, ""));
+		diagnosisStringFour +=
+				(diagnosisStringThree.replaceAll(ApplicationConstants.ObservationLocators.CONFIRMED_DIAGNOSIS, ""));
 		diagnosisStringFive += (diagnosisStringFour.replaceAll(",", ""));
 		diagnosisStringSix += (diagnosisStringFive.replaceAll(":", ""));
 

@@ -64,7 +64,6 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 
 	@Override
 	public void subscribe() {
-		getVisit();
 	}
 
 	@Override

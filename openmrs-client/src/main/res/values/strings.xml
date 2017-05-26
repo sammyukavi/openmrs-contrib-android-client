@@ -315,10 +315,10 @@
 	<string name="label_add_task">Add Task</string>
 
 
-	<string name="label_height">Height (cm)</string>
-	<string name="label_weight">Weigt (kg)</string>
+	<string name="label_height">Height</string>
+	<string name="label_weight">Weigt</string>
 	<string name="label_bmi">(Calculated)BMI</string>
-	<string name="label_temperature">Temperature(c)</string>
+	<string name="label_temperature">Temperature</string>
 	<string name="label_pulse">Pulse</string>
 	<string name="label_respiratory_rate">Respiratory rate</string>
 	<string name="label_blood_presure">Blood Pressure</string>
@@ -424,12 +424,12 @@
 	<!--Audit data form -->
 	<string name="yes">Yes</string>
 	<string name="no">No</string>
-	<string name="admission_date">Date of Admission:</string>
-	<string name="is_audit_complete">Is the Audit Data Complete?</string>
+	<string name="admission_date">Date of admission:</string>
+	<string name="audit_complete">Audit data complete</string>
 	<string name="inpatient_service_type_prompt">Type of inpatient service</string>
-	<string name="is_death_in_hospital">Death in Hospital:</string>
-	<string name="is_palliative_consult">Palliative Consult</string>
-	<string name="is_preop_risk_assessment_only">Pre-Op Risk Assessment Only?</string>
+	<string name="is_death_in_hospital">Death in hospital:</string>
+	<string name="is_palliative_consult">Palliative consult</string>
+	<string name="is_preop_risk_assessment_only">Pre-Op risk assessment only?</string>
 	<string name="is_icu_stay">ICU stay during admission?</string>
 	<string name="is_hdu_stay">HDU stay during admission?</string>
 	<string name="is_hdu_comgmt">HDU Co-Management Only?</string>
@@ -437,7 +437,7 @@
 	<string name="cd4">CD4:</string>
 	<string name="hba1c">HbA1c:</string>
 	<string name="inpatient_service_type">Type of inpatient service</string>
-	<string name="discharge_diagnosis">Discharge Diagnosis:</string>
+	<string name="discharge_diagnosis">Discharge diagnosis:</string>
 	<string name="unknown">Unknown</string>
 	<string name="nav_login">Login</string>
 
@@ -487,4 +487,16 @@
 	<string name="save_audit_data">Save Audit Data</string>
 	<string name="capture_vitals">Capture Vitals</string>
 	<string name="update_visit_note">Update Visit Note</string>
+	<string name="slash">/</string>
+	<string name="percent_sign">%</string>
+	<string name="label_blood_presure_systolic">Systolic</string>
+	<string name="label_blood_presure_diastolic">Diastolic</string>
+	<string name="sign_cm">cm</string>
+	<string name="sign_kg">kg</string>
+	<string name="sign_celcius">c</string>
+	<string name="sign_pulse">/min</string>
+	<string name="error_text_vitals_maximum">Maximum: %1$d</string>
+	<string name="error_text_vitals_minimum">Minimum: %1$d</string>
+	<string name="error_occured">An error occured making your request</string>
+	<string name="saved">Saved</string>
 </resources>

@@ -53,7 +53,9 @@ public class Encounter extends BaseOpenmrsAuditableObject implements Serializabl
 	@SerializedName("encounterProviders")
 	@Expose
 	private List<Provider> encounterProviders = new ArrayList<Provider>();
-
+	@SerializedName("provider")
+	@Expose
+	private String provider;
 
 	@SerializedName("resourceVersion")
 	@Expose
@@ -286,4 +288,11 @@ public class Encounter extends BaseOpenmrsAuditableObject implements Serializabl
 			return null;
 	}
 
+	public String getProvider() {
+		return provider;
+	}
+
+	public void setProvider(String provider) {
+		this.provider = provider;
+	}
 }

@@ -14,6 +14,7 @@
 
 package org.openmrs.mobile.activities.auditdata;
 
+import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.QueryOptions;
@@ -47,7 +48,8 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 	}
 
 	@Override
-	public void subscribe() {}
+	public void subscribe() {
+	}
 
 	@Override
 	public void fetchVisit(String visitUuid) {
@@ -96,16 +98,21 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 		DataService.GetCallback<Encounter> serverResponceCallback = new DataService.GetCallback<Encounter>() {
 			@Override
 			public void onCompleted(Encounter encounter) {
-				/*TODO
+
+				if (encounter.equals(null)) {
+					auditDataView.showSnackbar(auditDataView.getContext().getString(R.string.error_occured));
+				} else {
+					auditDataView.showSnackbar(auditDataView.getContext().getString(R.string.saved));
+					/*TODO
 				Ask if the're a parameter you can pass when creating or updating the encounters so that you can get the
 				full representation and get to uncomment the commented lines below.
 				 */
 
-				fetchEncounter(encounter.getUuid());
+					//fetchEncounter(encounter.getUuid());
 
-				//auditDataView.setEncounterUuid(encounter.getUuid());
-				//auditDataView.updateFormFields(encounter);
-
+					//auditDataView.setEncounterUuid(encounter.getUuid());
+					//auditDataView.updateFormFields(encounter);
+				}
 			}
 
 			@Override

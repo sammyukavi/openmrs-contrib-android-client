@@ -13,7 +13,7 @@
 		android:paddingRight="5dp"
 		android:paddingStart="5dp"
 		android:paddingEnd="5dp"
-		android:background="@color/color_white">
+		android:background="@color/transparent">
 
 	<LinearLayout
 			android:weightSum="1"
@@ -39,17 +39,8 @@
 				android:layout_height="wrap_content" />
 	</LinearLayout>
 
-	<View
-			android:layout_marginTop="5dp"
-			android:layout_marginBottom="1dp"
-			android:layout_below="@id/patientHeader"
-			android:id="@+id/line"
-			android:layout_width="match_parent"
-			android:layout_height="1dp"
-			android:background="@android:color/darker_gray" />
-
 	<LinearLayout
-			android:layout_below="@id/line"
+			android:layout_below="@id/patientHeader"
 			android:id="@+id/patientGenderAgeDetails"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
@@ -59,8 +50,8 @@
 				android:layout_marginStart="10dp"
 				android:layout_marginLeft="10dp"
 				android:id="@+id/fetchedPatientGender"
-				android:layout_width="25dp"
-				android:layout_height="25dp"
+				android:layout_width="18dp"
+				android:layout_height="match_parent"
 				android:src="@drawable/male" />
 
 		<TextView
@@ -86,8 +77,17 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:text="@string/label_age" />
-
-
 	</LinearLayout>
+
+	<View
+			android:visibility="gone"
+			android:layout_below="@+id/patientGenderAgeDetails"
+			android:layout_marginTop="5dp"
+			android:layout_marginBottom="1dp"
+			android:id="@+id/shadowLine"
+			android:layout_width="match_parent"
+			android:layout_height="5dp"
+			android:background="@drawable/patient_header_border_bottom" />
+
 
 </RelativeLayout>

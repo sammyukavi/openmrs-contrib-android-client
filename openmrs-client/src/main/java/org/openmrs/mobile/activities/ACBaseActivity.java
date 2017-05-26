@@ -17,9 +17,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.internal.NavigationMenu;
-import android.support.design.internal.NavigationMenuItemView;
-import android.support.design.internal.NavigationMenuView;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -41,7 +38,6 @@ import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
 import org.openmrs.mobile.activities.findpatientrecord.FindPatientRecordActivity;
 import org.openmrs.mobile.activities.login.LoginActivity;
 import org.openmrs.mobile.activities.patientlist.PatientListActivity;
-import org.openmrs.mobile.activities.settings.SettingsActivity;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.application.OpenMRSLogger;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
@@ -264,5 +260,14 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 			default:
 				break;
 		}
+	}
+
+	public void showSnackbar(String message) {
+		Snackbar snackbar =
+				Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT);
+		View sbView = snackbar.getView();
+		TextView textView = (TextView)sbView.findViewById(android.support.design.R.id.snackbar_text);
+		textView.setTextColor(Color.WHITE);
+		snackbar.show();
 	}
 }

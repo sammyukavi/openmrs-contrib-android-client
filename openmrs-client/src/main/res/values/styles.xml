@@ -23,6 +23,7 @@
 	</style>
 
 	<style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+		<item name="android:textColorHint">@color/dark_grey</item>
 		<item name="windowNoTitle">true</item>
 		<item name="windowActionBar">false</item> <!-- For 2.x version  -->
 		<item name="colorPrimary">@color/color_primary</item>

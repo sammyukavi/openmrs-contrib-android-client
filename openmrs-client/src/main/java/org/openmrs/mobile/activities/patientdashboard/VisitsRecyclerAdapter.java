@@ -127,7 +127,7 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 	@Override
 	public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
-		//View patientContactInfo = layoutInflater.inflate(R.layout.container_patient_contact_info, null);
+		//View patientContactInfo = layoutInflater.inflate(R.layout.container_patient_address_info, null);
 		//viewHolder.observationsContainer.addView(patientContactInfo);
 
 		if (holder instanceof VisitViewHolder) {

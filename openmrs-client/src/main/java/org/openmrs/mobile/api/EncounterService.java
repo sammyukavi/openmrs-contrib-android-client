@@ -49,7 +49,7 @@ public class EncounterService extends IntentService {
 					.observeOn(AndroidSchedulers.mainThread())
 					.subscribe(visit -> {
 						if (visit != null) {
-							encounterCreate.setVisit(visit.getUuid());
+							encounterCreate.updateUIForm(visit.getUuid());
 							if (callbackListener != null) {
 								syncEncounter(encounterCreate, callbackListener);
 							} else {
@@ -182,7 +182,7 @@ public class EncounterService extends IntentService {
 							.observeOn(AndroidSchedulers.mainThread())
 							.subscribe(visit -> {
 								if (visit != null) {
-									encounterCreate.setVisit(visit.getUuid());
+									encounterCreate.updateUIForm(visit.getUuid());
 									syncEncounter(encounterCreate);
 
 								} else {

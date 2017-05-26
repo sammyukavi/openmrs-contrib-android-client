@@ -14,6 +14,8 @@
 
 package org.openmrs.mobile.activities.auditdata;
 
+import android.content.Context;
+
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
 import org.openmrs.mobile.models.Encounter;
@@ -32,6 +34,10 @@ public interface AuditDataContract {
 		void setEncounterUuid(String uuid);
 
 		void setLocation(Location location);
+
+		Context getContext();
+
+		void showSnackbar(String string);
 	}
 
 	interface Presenter extends BasePresenterContract {

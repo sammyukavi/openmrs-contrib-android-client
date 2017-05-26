@@ -101,16 +101,12 @@ public abstract class ApplicationConstants {
 	public abstract static class EncounterTypeEntity {
 		public static final String VITALS_UUID = "67a71486-1a54-468f-ac3e-7091a9a79584";
 		public static final String VISIT_NOTE_UUID = "d7151f82-c1f3-4152-a605-2f9ea7414a79";
-		public static final String AUDIT_DATA = "7dc1632c-f947-474f-b92c-7add68019aec";
+		public static final String AUDIT_DATA_UUID = "7dc1632c-f947-474f-b92c-7add68019aec";
 	}
 
 	public abstract static class ObservationLocators {
-		public static final String VITALSS = "67a71486-1a54-468f-ac3e-7091a9a79584";
-		public static final String VITALS = "Vitals";
 		public static final String CLINICAL_NOTE = "Text of encounter note";
 		public static final String DIANOSES = "Visit Diagnoses";
-		public static final String ADMISSION = "Admission";
-		public static final String AUDIT_DATA_COMPLETENESS = "Audit Data Complete";
 		public static final String PRIMARY_DIAGNOSIS = "Primary";
 		public static final String SECONDARY_DIAGNOSIS = "Secondary";
 		public static final String PRESUMED_DIAGNOSIS = "Presumed diagnosis";
@@ -179,6 +175,7 @@ public abstract class ApplicationConstants {
 
 	public abstract static class FORM_UUIDS {
 		public static final String AUDIT_DATA_FORM_UUID = "667dc18e-740f-44ce-ae0a-5ba6b33308b0";
+		public static final String VITALS_FORM_UUID = "a000cb34-9ec1-4344-a1c8-f692232f6edd";
 	}
 
 	public abstract static class AuditFormAnswers {
@@ -189,36 +186,60 @@ public abstract class ApplicationConstants {
 
 	public abstract static class AuditFormConcepts {
 		public static final String CONCEPT_ANSWER_YES = "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
-
 		public static final String CONCEPT_ANSWER_NO = "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
-
 		public static final String CONCEPT_ANSWER_UNKNOWN = "1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
-
 		public static final String CONCEPT_DEATH_IN_HOSPITAL = "ec559b53-8cc9-4b54-a34e-95a605919365";
-
 		public static final String CONCEPT_PALLIATIVE_CONSULT = "a9ae21a2-2631-49d6-928c-d23001812729";
-
 		public static final String CONCEPT_PREOP_RISK_ASSESMENT = "eadfe47c-7988-42ea-97d0-e21ce71db7e0";
-
 		public static final String CONCEPT_ICU_STAY = "9446f7aa-7a1c-4246-a0a5-1ebc3560a0e0";
-
 		public static final String CONCEPT_HDU_STAY = "46d4283e-3275-4c6e-9d52-cfd858889f4b";
-
 		public static final String CONCEPT_HDU_COMGMT = "dd61d87f-3398-46c2-8108-00db2e49bab6";
-
 		public static final String CONCEPT_HIV_POSITIVE = "1169AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
-
 		public static final String CONCEPT_CD4_COUNT = "5497AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
-
 		public static final String CONCEPT_HBA1C = "159644AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
-
 		public static final String CONCEPT_INPATIENT_SERVICE_TYPE = "161630AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
-
 		public static final String CONCEPT_AUDIT_COMPLETE = "98f0f043-bdb1-40c6-8c81-6a094056e981";
 
 	}
 
+	public abstract static class VITALSFormConcepts {
+		public static final String CONCEPT_HEIGHT = "5090AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+		public static final String CONCEPT_WEIGHT = "5089AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+		public static final String CONCEPT_TEMPERATURE = "5088AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+		public static final String CONCEPT_PULSE = "5087AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+		public static final String CONCEPT_RESPIRATORY_RATE = "5242AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+		public static final String CONCEPT_BLOOD_PRESSURE_SYSTOLIC = "5085AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+		public static final String CONCEPT_BLOOD_PRESSURE_DIASTOLIC = "5086AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+		public static final String CONCEPT_BLOOD_OXYGEN_SATURATION = "5092AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+	}
+
 	public static class visitAttributeTypes {
 		public static final String PERSON_ATTRIBUTE_TYPE_PHONE_NUMBER = "14d4f066-15f5-102d-96e4-000c29c2a5d7";
+	}
+
+	public static class ValidationFieldValues {
+		public static int VITALS_HEIGHT_MIN = 10;
+		public static int VITALS_HEIGHT_MAX = 272;
+
+		public static int VITALS_WEIGHT_MIN = 0;
+		public static int VITALS_WEIGHT_MAX = 250;
+
+		public static int VITALS_TEMPERATURE_MIN = 25;
+		public static int VITALS_TEMPERATURE_MAX = 43;
+
+		public static int VITALS_PULSE_MIN = 0;
+		public static int VITALS_PULSE_MAX = 230;
+
+		public static int VITALS_RESPIRATORYRATE_MIN = 0;
+		public static int VITALS_RESPIRATORYRATE_MAX = 999;
+
+		public static int VITALS_SYSTOLICBP_MIN = 50;
+		public static int VITALS_SYSTOLICBP_MAX = 250;
+
+		public static int VITALS_DIASTOLICBP_MIN = 30;
+		public static int VITALS_DIASTOLICBP_MAX = 150;
+
+		public static int VITALS_BLOOD_OXYGEN_MIN = 0;
+		public static int VITALS_BLOOD_OXYGEN_MAX = 100;
 	}
 }

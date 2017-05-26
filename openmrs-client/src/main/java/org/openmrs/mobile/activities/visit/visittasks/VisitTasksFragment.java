@@ -33,7 +33,6 @@ import android.widget.TextView;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.visit.VisitContract;
 import org.openmrs.mobile.activities.visit.VisitFragment;
-import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitPredefinedTask;
 import org.openmrs.mobile.models.VisitTask;
@@ -97,7 +96,7 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 		fab = (FloatingActionButton)v.findViewById(R.id.visitTaskFab);
 		addtask = (AutoCompleteTextView)v.findViewById(R.id.addVisitTasks);
 		addTaskLayout = (LinearLayout)v.findViewById(R.id.addTaskLayout);
-		closedTasksLayout = (LinearLayout) v.findViewById(R.id.closedTasksLayout);
+		closedTasksLayout = (LinearLayout)v.findViewById(R.id.closedTasksLayout);
 
 		noVisitTasks = (TextView)v.findViewById(R.id.noVisitTasks);
 	}
@@ -116,7 +115,6 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 						new VisitTasksRecyclerViewAdapter(this.getActivity(), visitTaskList, visit, this);
 				openViewTasksRecyclerView.setAdapter(adapter);
 
-				//visitTasksRecyclerViewAdapter.addOnScrollListener(recyclerViewOnScrollListener)
 				openViewTasksRecyclerView.setVisibility(View.VISIBLE);
 				noVisitTasks.setVisibility(View.GONE);
 			} else {
@@ -131,9 +129,9 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 	public void setClosedVisitTasks(List<VisitTask> visitTaskList) {
 		groupedClosedTasks.clear();
 		closedTasksLayout.removeAllViews();
-		for(VisitTask task : visitTaskList){
+		for (VisitTask task : visitTaskList) {
 			String relativeDate = DateUtils.calculateRelativeDate(task.getClosedOn());
-			if(groupedClosedTasks.containsKey(relativeDate)){
+			if (groupedClosedTasks.containsKey(relativeDate)) {
 				groupedClosedTasks.get(relativeDate).add(task);
 			} else {
 				List<VisitTask> tasks = new ArrayList<>();
@@ -142,13 +140,16 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 			}
 		}
 
-		if(!groupedClosedTasks.isEmpty()){
-			for(Map.Entry<String, List<VisitTask>> set : groupedClosedTasks.entrySet()){
+		if (!groupedClosedTasks.isEmpty()) {
+			for (Map.Entry<String, List<VisitTask>> set : groupedClosedTasks.entrySet()) {
 				CardView cardView = new CardView(getContext());
 				cardView.setCardBackgroundColor(Color.WHITE);
 				cardView.setContentPadding(10, 10, 10, 50);
-				LinearLayout.LayoutParams cardViewParams = new LinearLayout.LayoutParams(
-						LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+				LinearLayout.LayoutParams cardViewParams =
+						new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+								LinearLayout.LayoutParams.WRAP_CONTENT);
+				cardViewParams.setMargins(0, 20, 0, 20);
 				cardView.setLayoutParams(cardViewParams);
 
 				LinearLayout linearLayout = new LinearLayout(getContext());
@@ -161,7 +162,22 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 				TextView closedTaskTitle = new TextView(getContext());
 				closedTaskTitle.setTypeface(Typeface.DEFAULT_BOLD);
 				closedTaskTitle.setText(getString(R.string.nav_closed_visit_tasks_period, set.getKey()));
+
+				LinearLayout.LayoutParams closedTaskTitleParams =
+						new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+								LinearLayout.LayoutParams.WRAP_CONTENT);
+				closedTaskTitleParams.setMargins(10, 5, 10, 5);
+				closedTaskTitle.setLayoutParams(closedTaskTitleParams);
+
 				linearLayout.addView(closedTaskTitle);
+
+				View view = new View(getContext());
+				LinearLayout.LayoutParams viewParams =
+						new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 2);
+				viewParams.setMargins(0, 5, 0, 10);
+				view.setLayoutParams(viewParams);
+				view.setBackgroundColor(getResources().getColor(R.color.dark_grey));
+				linearLayout.addView(view);
 
 				RecyclerView closedRecyclerView = new RecyclerView(getContext());
 				VisitTasksRecyclerViewAdapter adapter =

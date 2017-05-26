@@ -14,7 +14,6 @@
 
 package org.openmrs.mobile.activities.visit;
 
-
 import org.openmrs.mobile.activities.BasePresenter;
 
 public abstract class VisitPresenterImpl extends BasePresenter implements VisitContract.VisitDetailsMainPresenter {

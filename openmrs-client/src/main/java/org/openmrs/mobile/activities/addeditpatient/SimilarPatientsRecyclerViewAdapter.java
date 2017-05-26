@@ -218,7 +218,7 @@ public class SimilarPatientsRecyclerViewAdapter
 			mFamilyName = (TextView)itemView.findViewById(R.id.patientFamilyName);
 			mGender = (TextView)itemView.findViewById(R.id.patientGender);
 			mBirthDate = (TextView)itemView.findViewById(R.id.patientBirthDate);
-			mAddress = (TextView)itemView.findViewById(R.id.patientAddres);
+			mAddress = (TextView)itemView.findViewById(R.id.patientAddress);
 			mPostalCode = (TextView)itemView.findViewById(R.id.patientPostalCode);
 			mCity = (TextView)itemView.findViewById(R.id.patientCity);
 			mCountry = (TextView)itemView.findViewById(R.id.patientCountry);

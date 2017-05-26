@@ -53,7 +53,7 @@ public class VisitPageAdapter extends FragmentPagerAdapter {
 		switch (i) {
 			case VISIT_DETAILS_TAB_POS:
 				VisitDetailsFragment visitDetailsFragment = VisitDetailsFragment.newInstance();
-				new VisitDetailsPresenter(patientUuid,visitUuid,providerUuid, visitDetailsFragment);
+				new VisitDetailsPresenter(patientUuid, visitUuid, providerUuid, visitDetailsFragment);
 				return visitDetailsFragment;
 			case VISIT_TASKS_TAB_POS:
 				VisitTasksFragment visitTasksFragment = VisitTasksFragment.newInstance();
@@ -61,7 +61,7 @@ public class VisitPageAdapter extends FragmentPagerAdapter {
 				return visitTasksFragment;
 			case VISIT_IMAGES_TAB_POS:
 				VisitPhotoFragment visitPhotoFragment = VisitPhotoFragment.newInstance();
-				new VisitPhotoPresenter(visitPhotoFragment, patientUuid,visitUuid,providerUuid);
+				new VisitPhotoPresenter(visitPhotoFragment, patientUuid, visitUuid, providerUuid);
 				return visitPhotoFragment;
 			default:
 				return null;

@@ -75,9 +75,9 @@ public class FormListService extends IntentService {
 				@Override
 				public void onResponse(Call<Results<EncounterType>> call, Response<Results<EncounterType>> response) {
 					/*if (response.isSuccessful()) {
-						new Delete().from(EncounterDataType.class).execute();
-						Results<EncounterDataType> encountertypelist = response.body();
-						for (EncounterDataType enctype : encountertypelist.getResults())
+						new Delete().from(EncounterTypeData.class).execute();
+						Results<EncounterTypeData> encountertypelist = response.body();
+						for (EncounterTypeData enctype : encountertypelist.getResults())
 							enctype.save();
 					}*/
 

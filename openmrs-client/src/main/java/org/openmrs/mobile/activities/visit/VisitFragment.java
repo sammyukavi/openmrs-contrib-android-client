@@ -27,5 +27,4 @@ public class VisitFragment extends ACBaseFragment<VisitContract.VisitDetailsMain
 		setHasOptionsMenu(true);
 	}
 
-
 }

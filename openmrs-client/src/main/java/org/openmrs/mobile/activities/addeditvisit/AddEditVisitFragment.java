@@ -53,7 +53,6 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 	private static TableRow.LayoutParams marginParams;
 	private TableLayout visitTableLayout;
 	private ProgressBar progressBar;
-	private TextView confirmMessage;
 	private Spinner visitTypeDropdown;
 	private Button visitSubmitButton;
 	private Map<String, VisitAttribute> visitAttributeMap = new HashMap<>();
@@ -69,7 +68,6 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 		View root = inflater.inflate(R.layout.fragment_addedit_visit, container, false);
 		visitTableLayout = (TableLayout)root.findViewById(R.id.visitTableLayout);
 		progressBar = (ProgressBar)root.findViewById(R.id.visitLoadingProgressBar);
-		confirmMessage = (TextView)root.findViewById(R.id.confirmMessage);
 		visitTypeDropdown = (Spinner)root.findViewById(R.id.visit_type);
 		visitSubmitButton = (Button)root.findViewById(R.id.visitSubmitButton);
 		addListeners();
@@ -91,13 +89,6 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 
 	@Override
 	public void initView(boolean startVisit) {
-		if (startVisit && mPresenter.getPatient() != null) {
-			confirmMessage.setText(getString(R.string.start_visit_dialog_message,
-					mPresenter.getPatient().getPerson().getName().getNameString()));
-		} else {
-			confirmMessage.setVisibility(View.GONE);
-		}
-
 		getActivity().setTitle(startVisit ? getString(R.string.label_start_visit) : getString(R.string.label_edit_visit));
 
 		setSpinnerVisibility(false);

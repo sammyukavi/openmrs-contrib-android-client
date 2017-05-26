@@ -74,6 +74,13 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 				startActivity(intent);
 			}
 		});
+
+		if (savedInstanceState != null) {
+			query = savedInstanceState.getString(ApplicationConstants.BundleKeys.PATIENT_QUERY_BUNDLE, "");
+			findPatientPresenter = new FindPatientRecordPresenter(findPatientRecordFragment, query);
+		} else {
+			findPatientPresenter = new FindPatientRecordPresenter(findPatientRecordFragment);
+		}
 	}
 
 	@Override

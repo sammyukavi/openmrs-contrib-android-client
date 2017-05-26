@@ -66,7 +66,7 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 					public void onCompleted(List<Observation> observations) {
 						List<VisitPhoto> visitPhotos = new ArrayList<>();
 						for (Observation observation : observations) {
-							if(null != observation.getEncounter().getVisit().getUuid() &&
+							if (null != observation.getEncounter().getVisit().getUuid() &&
 									observation.getEncounter().getVisit().getUuid().equalsIgnoreCase(visitUuid)) {
 								VisitPhoto visitPhoto = new VisitPhoto();
 								visitPhoto.setFileCaption(observation.getComment());
@@ -81,7 +81,7 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 							}
 						}
 
-						if (!visitPhotos.isEmpty()){
+						if (!visitPhotos.isEmpty()) {
 							view.updateVisitImageMetadata(visitPhotos);
 						} else {
 							view.showNoVisitPhoto();

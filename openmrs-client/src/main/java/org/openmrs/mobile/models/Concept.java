@@ -29,6 +29,9 @@ public class Concept extends BaseOpenmrsObject {
 	@SerializedName("answers")
 	@Expose
 	private List<ConceptAnswer> answers;
+	@SerializedName("names")
+	@Expose
+	private List<ConceptName> names;
 
 	public Datatype getDatatype() {
 		return datatype;
@@ -60,5 +63,13 @@ public class Concept extends BaseOpenmrsObject {
 
 	public void setAnswers(List<ConceptAnswer> answers) {
 		this.answers = answers;
+	}
+
+	public List<ConceptName> getNames() {
+		return names;
+	}
+
+	public void setNames(List<ConceptName> names) {
+		this.names = names;
 	}
 }

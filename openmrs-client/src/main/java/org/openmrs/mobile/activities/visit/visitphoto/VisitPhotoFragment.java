@@ -47,8 +47,8 @@ import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.visit.VisitContract;
 import org.openmrs.mobile.activities.visit.VisitFragment;
 import org.openmrs.mobile.data.DataService;
-import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.models.VisitPhoto;
+import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.StringUtils;
 import org.openmrs.mobile.utilities.ViewUtils;
 
@@ -146,7 +146,7 @@ public class VisitPhotoFragment extends VisitFragment implements VisitContract.V
 	}
 
 	@Override
-	public String formatVisitImageDescription(String description, String uploadedOn, String uploadedBy){
+	public String formatVisitImageDescription(String description, String uploadedOn, String uploadedBy) {
 		return getString(R.string.visit_image_description, description, uploadedOn, uploadedBy);
 	}
 

@@ -16,6 +16,8 @@ package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 
+import java.util.Locale;
+
 public class ConceptName extends BaseOpenmrsMetadata {
 
 	@Expose
@@ -23,6 +25,12 @@ public class ConceptName extends BaseOpenmrsMetadata {
 
 	@Expose
 	private int answer_concept;
+
+	@Expose
+	private Concept concept;
+
+	@Expose
+	private Locale locale;
 
 	public Long getId() {
 		return id;
@@ -43,5 +51,21 @@ public class ConceptName extends BaseOpenmrsMetadata {
 
 	public void setAnswer_concept(int answer_concept) {
 		this.answer_concept = answer_concept;
+	}
+
+	public Concept getConcept() {
+		return concept;
+	}
+
+	public void setConcept(Concept concept) {
+		this.concept = concept;
+	}
+
+	public Locale getLocale() {
+		return locale;
+	}
+
+	public void setLocale(Locale locale) {
+		this.locale = locale;
 	}
 }

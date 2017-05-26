@@ -15,6 +15,10 @@
 package org.openmrs.mobile.data.rest;
 
 import org.openmrs.mobile.models.Concept;
+import org.openmrs.mobile.models.ConceptName;
+import org.openmrs.mobile.models.Results;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -25,5 +29,10 @@ public interface ConceptRestService {
 	@GET(RestConstants.GET_BY_UUID)
 	Call<Concept> getByUuid(@Path(value = "restPath", encoded = true) String restPath,
 			@Path("uuid") String uuid,
+			@Query("v") String representation);
+
+	@GET(RestConstants.REST_PATH)
+	Call<Results<Concept>> getByConceptName(@Path(value = "restPath", encoded = true) String restPath,
+			@Query("name") String uuid,
 			@Query("v") String representation);
 }

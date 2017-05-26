@@ -15,12 +15,12 @@
 package org.openmrs.mobile.activities.visit;
 
 import android.graphics.Bitmap;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
 import org.openmrs.mobile.data.DataService;
+import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitAttributeType;
 import org.openmrs.mobile.models.VisitPhoto;
@@ -59,6 +59,14 @@ public interface VisitContract {
 		void showToast(String message, ToastUtil.ToastType toastType);
 
 		void setVisit(Visit visit);
+
+		void setPatientUUID(String uuid);
+
+		void setVisitUUID(String uuid);
+
+		void setProviderUUID(String uuid);
+
+		void setConcept(Concept concept);
 
 		void setAttributeTypes(List<VisitAttributeType> visitAttributeTypes);
 	}
@@ -111,7 +119,15 @@ public interface VisitContract {
 	interface VisitDetailsPresenter extends VisitDetailsMainPresenter {
 		void getVisit();
 
-		void getConcept(String uuid);
+		void getConcept(String name);
+
+		void getPatientUUID();
+
+		void getVisitUUID();
+
+		void getProviderUUID();
+
+		void getObservation(String uuid);
 
 		void getConceptName(String uuid, String searchValue, TextView textView);
 	}

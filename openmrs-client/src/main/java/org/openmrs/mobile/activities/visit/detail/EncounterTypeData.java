@@ -1,6 +1,6 @@
 package org.openmrs.mobile.activities.visit.detail;
 
-public enum EncounterDataType {
+public enum EncounterTypeData {
 	VITALS(0),
 
 	/**
@@ -10,7 +10,7 @@ public enum EncounterDataType {
 
 	private int value;
 
-	private EncounterDataType(int value) {
+	private EncounterTypeData(int value) {
 		this.value = value;
 	}
 }

@@ -194,7 +194,7 @@
 	<string name="action_find_visits">Find Active Visits</string>
 	<string name="search_visits_no_results">No visits in database</string>
 	<!-- fragment_patient_visits layout -->
-	<string name="active_visit_label">Active Visit</string>
+	<string name="active_visit_label">Active Visit:</string>
 	<string name="past_visit_label">Past visit</string>
 	<string name="visit_in">in %1$s</string>
 	<!-- fragment_patient_vitals layout -->
@@ -464,17 +464,17 @@
 	<string name="visit_note_diagnosis_label">Visit Note and Diagnosis</string>
 	<string name="primary_diagnosis_label">Primary Diagnosis</string>
 	<string name="secondary_diagnosis_label">Secondary Diagnosis</string>
-	<string name="clinical_notes_label">Add clinical note</string>
+	<string name="clinical_notes_label">Clinical note</string>
 	<string name="visit_label">Visit</string>
 	<string name="no_vitals">No vitals recorded for this visit</string>
 	<string name="no_visit_tasks">No tasks for this visit</string>
-	<string name="add_diagnosis">Choose primary diagnosis first, then secondary diagnoses</string>
+	<string name="add_diagnosis">Enter Diagnosis</string>
 	<string name="chief_complaint_label">Chief Complaint</string>
 	<string name="visit_image_description">Description: %1$s \r\n Uploaded: %2$s \r\n Uploaded By: %3$s</string>
 	<string name="add_patient">Add Patient</string>
 	<string name="telephone">Telephone:</string>
 	<string name="no_primary_diagnosis">No Primary Diagnosis</string>
-	<string name="no_secondary_diagnosis">No Secodanry Diagnosis</string>
+	<string name="no_secondary_diagnosis">No Secondary Diagnosis</string>
 	<string name="date_started">Date Started</string>
 	<string name="date_closed">Date Closed</string>
 	<string name="audit_info">Audit Info</string>

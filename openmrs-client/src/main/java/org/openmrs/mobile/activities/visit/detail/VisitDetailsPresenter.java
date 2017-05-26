@@ -93,7 +93,7 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 	@Override
 	public void getConcept(String name) {
 		System.out.println(" Concept find");
-		DataService.GetCallback<List<Concept>> getSingleCallback = new DataService.GetCallback<List<Concept>>() {
+		DataService.GetCallback<List<Concept>> getCallback = new DataService.GetCallback<List<Concept>>() {
 
 			@Override
 			public void onCompleted(List<Concept> concepts) {
@@ -108,7 +108,7 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 				Log.e("error", t.getLocalizedMessage());
 			}
 		};
-		conceptDataService.getByName(name, QueryOptions.LOAD_RELATED_OBJECTS, getSingleCallback);
+		conceptDataService.getByName(name, QueryOptions.LOAD_RELATED_OBJECTS, getCallback);
 
 	}
 

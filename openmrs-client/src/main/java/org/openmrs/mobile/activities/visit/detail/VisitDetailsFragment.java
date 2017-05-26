@@ -396,8 +396,6 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 			TextView value = new TextView(getContext());
 			value.setText(splitValues.get(1).toString());
 			value.setTextSize(14);
-			label.setMaxLines(4);
-			label.setSingleLine(false);
 			row.addView(value, 1);
 
 			if (type == EncounterTypeData.VITALS) {

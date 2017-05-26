@@ -144,7 +144,7 @@ public final class DateUtils {
 		try {
 			Date pastDate = parseString(dateAsString, new SimpleDateFormat(DateUtils.OPEN_MRS_RESPONSE_FORMAT));
 			Date today = new Date();
-			long days = TimeUnit.MILLISECONDS.toDays(today.getTime() - pastDate.getTime());
+			long days = TimeUnit.MILLISECONDS.toHours(today.getTime() - pastDate.getTime());
 			if(days  == 0){
 				relative = "today";
 			} else if (days < 7 ){

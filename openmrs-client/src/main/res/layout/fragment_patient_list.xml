@@ -71,7 +71,6 @@
 				android:text="@string/no_patients_found"
 				android:visibility="gone" />
 		
-		
 		<TextView
 				android:id="@+id/numberOfPatients"
 				android:layout_width="match_parent"

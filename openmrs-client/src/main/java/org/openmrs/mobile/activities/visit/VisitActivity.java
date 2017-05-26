@@ -214,8 +214,6 @@ public class VisitActivity extends ACBaseActivity {
 	}
 
 	private void startSelectedVisitActivity(int selectedId) {
-
-		Bundle patientBundle = getIntent().getExtras();
 		switch (selectedId) {
 			case R.id.edit_visit:
 				intent = new Intent(getApplicationContext(), AddEditVisitActivity.class);
@@ -231,7 +229,7 @@ public class VisitActivity extends ACBaseActivity {
 				intent.putExtra(ApplicationConstants.BundleKeys.PROVIDER_UUID_BUNDLE, providerUuid);
 				intent.putExtra(ApplicationConstants.BundleKeys.END_VISIT_TAG, true);
 				startActivity(intent);
-
+				break;
 			case R.id.capture_vitals:
 				intent = new Intent(getApplicationContext(), CaptureVitalsActivity.class);
 				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);

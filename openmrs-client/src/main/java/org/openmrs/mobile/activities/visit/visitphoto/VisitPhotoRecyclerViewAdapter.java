@@ -21,7 +21,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -30,7 +29,6 @@ import android.widget.TextView;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.visit.VisitContract;
 import org.openmrs.mobile.data.DataService;
-import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitPhoto;
 import org.openmrs.mobile.utilities.DateUtils;
 
@@ -62,7 +60,7 @@ public class VisitPhotoRecyclerViewAdapter
 	@Override
 	public void onBindViewHolder(DownloadVisitPhotoViewHolder holder, int position) {
 		VisitPhoto visitPhoto = visitPhotos.get(position);
-		if(visitPhoto == null){
+		if (visitPhoto == null) {
 			return;
 		}
 
@@ -99,8 +97,7 @@ public class VisitPhotoRecyclerViewAdapter
 
 					TextView descriptionView = new TextView(context);
 					descriptionView.setText(view.formatVisitImageDescription(visitPhoto.getFileCaption(),
-							DateUtils.convertTime(visitPhoto.getDateCreated()
-									.getTime()),
+							DateUtils.calculateRelativeDate(visitPhoto.getDateCreated()),
 							visitPhoto.getCreator().getPerson().getDisplay()));
 					descriptionView.setPadding(10, 10, 10, 10);
 

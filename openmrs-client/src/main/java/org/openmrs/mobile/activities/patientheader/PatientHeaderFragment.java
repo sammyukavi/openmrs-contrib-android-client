@@ -12,10 +12,7 @@ import org.joda.time.DateTime;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.models.Patient;
-import org.openmrs.mobile.models.PersonAttribute;
 import org.openmrs.mobile.utilities.DateUtils;
-
-import static org.openmrs.mobile.utilities.ApplicationConstants.visitAttributeTypes.PERSON_ATTRIBUTE_TYPE_PHONE_NUMBER;
 
 public class PatientHeaderFragment extends ACBaseFragment<PatientHeaderContract.Presenter>
 		implements PatientHeaderContract.View {
@@ -38,7 +35,7 @@ public class PatientHeaderFragment extends ACBaseFragment<PatientHeaderContract.
 		patientAge = (TextView)fragmentView.findViewById(R.id.fetchedPatientAge);
 		patientDob = (TextView)fragmentView.findViewById(R.id.fetchedPatientBirthDate);
 
-		patientAddress = (TextView)fragmentView.findViewById(R.id.patientAddres);
+		patientAddress = (TextView)fragmentView.findViewById(R.id.patientAddress);
 		patientPhonenumber = (TextView)fragmentView.findViewById(R.id.patientPhonenumber);
 
 		return fragmentView;

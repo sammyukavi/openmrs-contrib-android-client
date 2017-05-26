@@ -35,6 +35,12 @@ public class VisitTask extends BaseOpenmrsEntity {
 	@Expose
 	private Patient patient;
 
+	@Expose
+	private String closedOn;
+
+	@Expose
+	private User closedBy;
+
 	public VisitTaskStatus getStatus() {
 		return status;
 	}
@@ -65,5 +71,21 @@ public class VisitTask extends BaseOpenmrsEntity {
 
 	public void setPatient(Patient patient) {
 		this.patient = patient;
+	}
+
+	public String getClosedOn() {
+		return closedOn;
+	}
+
+	public void setClosedOn(String closedOn) {
+		this.closedOn = closedOn;
+	}
+
+	public User getClosedBy() {
+		return closedBy;
+	}
+
+	public void setClosedBy(User closedBy) {
+		this.closedBy = closedBy;
 	}
 }

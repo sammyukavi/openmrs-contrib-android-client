@@ -36,7 +36,6 @@ import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Person;
-import org.openmrs.mobile.models.Provider;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.FontsUtil;
@@ -311,9 +310,6 @@ public class CaptureVitalsFragment extends ACBaseFragment<CaptureVitalsContract.
 		Observation patientBloodOxygenSaturationObservation =
 				setObservationFields(CONCEPT_BLOOD_OXYGEN_SATURATION, patientBloodOxygenSaturation.getText().toString());
 		observations.add(patientBloodOxygenSaturationObservation);
-
-		Provider provider = new Provider();
-		provider.setUuid(instance.getCurrentProviderUUID());
 
 		Patient patient = new Patient();
 		patient.setUuid(patientUuid);

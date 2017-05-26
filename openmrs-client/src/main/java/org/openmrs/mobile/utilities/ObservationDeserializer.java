@@ -57,13 +57,13 @@ public class ObservationDeserializer implements JsonDeserializer<Observation> {
 		}
 
 		JsonElement encounterJson = jsonObject.get("encounter");
-		if( encounterJson != null){
+		if( null != encounterJson && !encounterJson.isJsonNull()){
 			Encounter encounter = new Encounter();
 			encounter.setUuid(encounterJson.getAsJsonObject().get(UUID_KEY).getAsString());
 
 			Visit visit = new Visit();
 			JsonElement  visitElement = encounterJson.getAsJsonObject().get("visit");
-			if(!visitElement.isJsonNull()) {
+			if( null != visitElement && !visitElement.isJsonNull()) {
 				visit.setUuid(visitElement.getAsJsonObject().get(UUID_KEY).getAsString());
 			}
 

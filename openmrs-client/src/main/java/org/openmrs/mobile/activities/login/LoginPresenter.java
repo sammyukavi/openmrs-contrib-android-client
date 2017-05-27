@@ -110,7 +110,7 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 			final boolean wipeDatabase) {
 		loginView.showLoadingAnimation();
 		mWipeRequired = wipeDatabase;
-		RestApi restApi = RestServiceBuilder.createService(RestApi.class, username, password);
+		RestApi restApi = RestServiceBuilder.createService(RestApi.class,null, username, password);
 		Call<Session> call = restApi.getSession();
 		call.enqueue(new Callback<Session>() {
 			@Override

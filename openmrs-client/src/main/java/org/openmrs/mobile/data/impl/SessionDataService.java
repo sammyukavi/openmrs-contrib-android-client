@@ -1,16 +1,10 @@
 package org.openmrs.mobile.data.impl;
 
 import org.openmrs.mobile.data.BaseDataService;
-import org.openmrs.mobile.data.BaseMetadataDataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
-import org.openmrs.mobile.data.db.impl.LocationDbService;
 import org.openmrs.mobile.data.db.impl.SessionDbService;
-import org.openmrs.mobile.data.rest.LocationRestService;
 import org.openmrs.mobile.data.rest.SessionRestService;
-import org.openmrs.mobile.models.BaseOpenmrsAuditableObject;
-import org.openmrs.mobile.models.BaseOpenmrsObject;
-import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.models.Session;
 

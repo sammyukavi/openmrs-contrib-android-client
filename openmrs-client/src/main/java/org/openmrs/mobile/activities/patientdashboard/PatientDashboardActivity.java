@@ -52,13 +52,13 @@ public class PatientDashboardActivity extends ACBaseActivity {
 			patientUuid = extras.getString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
 			if (StringUtils.notEmpty(patientUuid)) {
 				// patient header
-				PatientHeaderFragment headerFragment = (PatientHeaderFragment) getSupportFragmentManager()
+				PatientHeaderFragment headerFragment = (PatientHeaderFragment)getSupportFragmentManager()
 						.findFragmentById(R.id.patientHeader);
-				if(headerFragment == null){
+				if (headerFragment == null) {
 					headerFragment = PatientHeaderFragment.newInstance();
 				}
 
-				if(!headerFragment.isActive()){
+				if (!headerFragment.isActive()) {
 					addFragmentToActivity(getSupportFragmentManager(), headerFragment, R.id.patientHeader);
 				}
 

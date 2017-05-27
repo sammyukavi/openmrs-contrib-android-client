@@ -44,13 +44,14 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 	private VisitDataService visitDataService;
 	private ConceptDataService conceptDataService;
 	private ObsDataService obsDataService;
-	private String patientUUID, visitUUID, providerUuid;
+	private String patientUUID, visitUUID, providerUuid, visitStopDate;
 
 	private int page = 1;
 	private int limit = 10;
 	private ConceptNameDataService conceptNameDataService;
 
-	public VisitDetailsPresenter(String patientUuid, String visitUuid, String providerUuid, VisitContract.VisitDetailsView
+	public VisitDetailsPresenter(String patientUuid, String visitUuid, String providerUuid,String visitStopDate , VisitContract
+			.VisitDetailsView
 			visitDetailsView) {
 		this.visitDetailsView = visitDetailsView;
 		this.visitDetailsView.setPresenter(this);
@@ -60,11 +61,13 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 		this.conceptNameDataService = new ConceptNameDataService();
 		this.visitAttributeTypeDataService = new VisitAttributeTypeDataService();
 		this.visitUUID = visitUuid;
+		this.providerUuid = providerUuid;
+		this.patientUUID = patientUuid;
+		this.visitStopDate = visitStopDate;
 	}
 
 	@Override
 	public void subscribe() {
-		getVisit();
 	}
 
 	@Override
@@ -128,6 +131,11 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 	@Override
 	public void getProviderUUID() {
 		visitDetailsView.setProviderUUID(providerUuid);
+	}
+
+	@Override
+	public void getVisitStopDate() {
+		visitDetailsView.setVisitStopDate(visitStopDate);
 	}
 
 	@Override

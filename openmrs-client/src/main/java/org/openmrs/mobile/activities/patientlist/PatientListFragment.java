@@ -124,7 +124,7 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 		PatientList patientList = new PatientList();
 		patientList.setName(getString(R.string.select_patient_list));
 
-		patientLists.add(0,patientList);
+		patientLists.add(0, patientList);
 		ArrayAdapter<PatientList> adapter = new ArrayAdapter<PatientList>(getContext(),
 				android.R.layout.simple_spinner_dropdown_item, patientLists);
 		patientListDropdown.setAdapter(adapter);
@@ -132,7 +132,7 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				setSelectedPatientList(patientLists.get(position));
-				if (selectedPatientList.getUuid() == null){
+				if (selectedPatientList.getUuid() == null) {
 					setNumberOfPatientsView(0);
 					List<PatientListContext> patientListContextList = new ArrayList<>();
 					updatePatientListData(patientListContextList);

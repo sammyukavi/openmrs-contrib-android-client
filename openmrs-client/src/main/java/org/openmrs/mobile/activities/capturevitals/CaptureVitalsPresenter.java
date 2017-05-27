@@ -14,7 +14,6 @@
 
 package org.openmrs.mobile.activities.capturevitals;
 
-import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.QueryOptions;
@@ -64,20 +63,22 @@ public class CaptureVitalsPresenter extends BasePresenter implements CaptureVita
 
 	@Override
 	public void attemptSave(Encounter encounter) {
+		captureVitalsView.showProgressBar(true);
 		DataService.GetCallback<Encounter> serverResponceCallback = new DataService.GetCallback<Encounter>() {
 			@Override
 			public void onCompleted(Encounter encounter) {
-				if (encounter.equals(null)) {
-					captureVitalsView.showSnackbar(captureVitalsView.getContext().getString(R.string.error_occured));
+				if (encounter == null) {
+					captureVitalsView.showProgressBar(false);
 				} else {
-					captureVitalsView.showSnackbar(captureVitalsView.getContext().getString(R.string.saved));
+					captureVitalsView.goBackToVisitPage();
+					captureVitalsView.showProgressBar(false);
 					captureVitalsView.disableButton();
 				}
 			}
 
 			@Override
 			public void onError(Throwable t) {
-				captureVitalsView.showSnackbar(captureVitalsView.getContext().getString(R.string.error_occured));
+				captureVitalsView.showProgressBar(false);
 				t.printStackTrace();
 			}
 		};

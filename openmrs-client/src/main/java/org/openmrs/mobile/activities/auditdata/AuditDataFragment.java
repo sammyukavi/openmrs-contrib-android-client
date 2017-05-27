@@ -14,6 +14,7 @@
 
 package org.openmrs.mobile.activities.auditdata;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -23,12 +24,14 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 
 import org.joda.time.LocalDateTime;
 import org.openmrs.mobile.R;
-import org.openmrs.mobile.activities.ACBaseActivity;
 import org.openmrs.mobile.activities.ACBaseFragment;
+import org.openmrs.mobile.activities.visit.VisitActivity;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.Encounter;
@@ -75,7 +78,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 	private Location location;
 	private EditText cd4, hBa1c;
 	private String encounterUuid = null;
-	private String visitUuid, patientUuid;
+	private String visitUuid, patientUuid, visitStopDate;
 	private OpenMRS instance = OpenMRS.getInstance();
 
 	private Observation deathInHospitalObservation, palliativeConsultObservation, preopRiskAssessmentObservation,
@@ -88,6 +91,9 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 	private CheckBox auditComplete;
 
 	private Spinner inpatientServiceType;
+	private RelativeLayout progressBar;
+	private ScrollView auditScrollView;
+	private Button submitForm;
 
 	public static AuditDataFragment newInstance() {
 		return new AuditDataFragment();
@@ -98,6 +104,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 
 		this.patientUuid = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
 		this.visitUuid = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE);
+		this.visitStopDate = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE);
 
 		fragmentView = inflater.inflate(R.layout.fragment_audit_form, container, false);
 
@@ -164,10 +171,13 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 
 		inpatientServiceType = (Spinner)fragmentView.findViewById(R.id.inpatient_service_type);
 
-		Button submitForm = (Button)fragmentView.findViewById(R.id.submitConfirm);
+		submitForm = (Button)fragmentView.findViewById(R.id.submitConfirm);
 		submitForm.setOnClickListener(v -> {
 			performDataSend();
 		});
+
+		progressBar = (RelativeLayout)fragmentView.findViewById(R.id.auditDataRelativeView);
+		auditScrollView = (ScrollView)fragmentView.findViewById(R.id.auditDataForm);
 	}
 
 	private void initObservations() {
@@ -382,8 +392,28 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 	}
 
 	@Override
-	public void showSnackbar(String message) {
-		((ACBaseActivity)getActivity()).showSnackbar(message);
+	public void goBackToVisitPage() {
+		Intent intent = new Intent(getContext(), VisitActivity.class);
+		intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
+		intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visitUuid);
+		intent.putExtra(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, visitStopDate);
+		getContext().startActivity(intent);
+	}
+
+	@Override
+	public void updateSubmitButtonText() {
+		submitForm.setText(R.string.update_audit_data);
+	}
+
+	@Override
+	public void showProgressBar(Boolean visibility) {
+		if (visibility) {
+			progressBar.setVisibility(View.VISIBLE);
+			auditScrollView.setVisibility(View.GONE);
+		} else {
+			progressBar.setVisibility(View.GONE);
+			auditScrollView.setVisibility(View.VISIBLE);
+		}
 	}
 
 	@Override
@@ -609,7 +639,6 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		Encounter encounter = new Encounter();
 
 		if (encounterUuid == null) {
-			ConsoleLogger.dump("Creating new encounter");
 			isNewEncounter = true;
 		} else {
 			encounter.setUuid(encounterUuid);

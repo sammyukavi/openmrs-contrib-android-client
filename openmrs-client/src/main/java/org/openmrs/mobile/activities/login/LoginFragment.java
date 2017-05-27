@@ -175,7 +175,7 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 		bundle.setTitleViewMessage(getString(R.string.warning_dialog_title));
 		bundle.setTextViewMessage(getString(R.string.warning_lost_data_dialog));
 		bundle.setRightButtonText(getString(R.string.dialog_button_ok));
-			bundle.setRightButtonAction(CustomFragmentDialog.OnClickAction.LOGIN);
+		bundle.setRightButtonAction(CustomFragmentDialog.OnClickAction.LOGIN);
 		((LoginActivity)this.getActivity())
 				.createAndShowDialog(bundle, ApplicationConstants.DialogTAG.WARNING_LOST_DATA_DIALOG_TAG);
 	}

@@ -16,6 +16,7 @@ package org.openmrs.mobile.activities.addeditvisit;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,7 @@ import android.widget.TextView;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
+import org.openmrs.mobile.activities.visit.VisitActivity;
 import org.openmrs.mobile.models.BaseOpenmrsObject;
 import org.openmrs.mobile.models.ConceptName;
 import org.openmrs.mobile.models.VisitAttribute;
@@ -57,6 +59,7 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 	private Button visitSubmitButton;
 	private Map<String, VisitAttribute> visitAttributeMap = new HashMap<>();
 	private Map<View, VisitAttributeType> viewVisitAttributeTypeMap = new HashMap<>();
+	private String patientUuid, visitUuid, providerUuid;
 
 	public static AddEditVisitFragment newInstance() {
 		return new AddEditVisitFragment();
@@ -70,6 +73,11 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 		progressBar = (ProgressBar)root.findViewById(R.id.visitLoadingProgressBar);
 		visitTypeDropdown = (Spinner)root.findViewById(R.id.visit_type);
 		visitSubmitButton = (Button)root.findViewById(R.id.visitSubmitButton);
+
+		this.patientUuid = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
+		this.visitUuid = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE);
+		this.providerUuid = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys.PROVIDER_UUID_BUNDLE);
+
 		addListeners();
 		buildMarginLayout();
 
@@ -89,8 +97,8 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 
 	@Override
 	public void initView(boolean startVisit) {
-		getActivity().setTitle(startVisit ? getString(R.string.label_start_visit) : getString(R.string.label_edit_visit));
-
+		Toolbar toolbar = (Toolbar)getActivity().findViewById(R.id.toolbar);
+		toolbar.setTitle(startVisit ? getString(R.string.label_start_visit) : getString(R.string.label_edit_visit));
 		setSpinnerVisibility(false);
 	}
 
@@ -259,6 +267,18 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 		Intent intent = new Intent(getContext(), PatientDashboardActivity.class);
 		intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE,
 				mPresenter.getPatient().getUuid());
+		getContext().startActivity(intent);
+	}
+
+	@Override
+	public void showVisitDetails(String visitUUID) {
+		Intent intent = new Intent(getContext(), VisitActivity.class);
+		intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
+		if (visitUUID == null) {
+			intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visitUuid);
+		} else {
+			intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visitUUID);
+		}
 		getContext().startActivity(intent);
 	}
 

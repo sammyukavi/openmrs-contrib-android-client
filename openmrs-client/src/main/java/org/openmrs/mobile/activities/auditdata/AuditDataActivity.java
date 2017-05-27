@@ -24,13 +24,10 @@ import android.view.MenuItem;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
-import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
 import org.openmrs.mobile.activities.patientheader.PatientHeaderContract;
 import org.openmrs.mobile.activities.patientheader.PatientHeaderFragment;
 import org.openmrs.mobile.activities.patientheader.PatientHeaderPresenter;
 import org.openmrs.mobile.activities.visit.VisitActivity;
-import org.openmrs.mobile.activities.visit.VisitPageAdapter;
-import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.TabUtil;
 
@@ -66,7 +63,6 @@ public class AuditDataActivity extends ACBaseActivity {
 		if (!auditDataFragment.isActive()) {
 			addFragmentToActivity(getSupportFragmentManager(), auditDataFragment, R.id.contentFrame);
 		}
-
 
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {

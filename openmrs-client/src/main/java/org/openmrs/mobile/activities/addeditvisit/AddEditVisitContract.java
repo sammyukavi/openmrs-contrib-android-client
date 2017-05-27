@@ -42,6 +42,8 @@ public interface AddEditVisitContract {
 
 		void showPatientDashboard();
 
+		void showVisitDetails(String visitUuuid);
+
 	}
 
 	interface Presenter extends BasePresenterContract {

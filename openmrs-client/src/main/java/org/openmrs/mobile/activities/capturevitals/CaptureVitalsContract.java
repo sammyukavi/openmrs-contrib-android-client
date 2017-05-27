@@ -15,7 +15,6 @@
 package org.openmrs.mobile.activities.capturevitals;
 
 import android.content.Context;
-import android.view.View;
 
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
@@ -32,11 +31,13 @@ public interface CaptureVitalsContract {
 
 		void setLocation(Location location);
 
-		void showSnackbar(String message);
-
 		Context getContext();
 
 		void disableButton();
+
+		void goBackToVisitPage();
+
+		void showProgressBar(Boolean visibility);
 	}
 
 	interface Presenter extends BasePresenterContract {

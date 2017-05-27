@@ -60,6 +60,8 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 		this.conceptNameDataService = new ConceptNameDataService();
 		this.visitAttributeTypeDataService = new VisitAttributeTypeDataService();
 		this.visitUUID = visitUuid;
+		this.providerUuid = providerUuid;
+		this.patientUUID = patientUuid;
 	}
 
 	@Override

@@ -61,7 +61,7 @@ public class VisitActivity extends ACBaseActivity {
 	private Intent intent;
 	private OpenMRS instance = OpenMRS.getInstance();
 	private SharedPreferences sharedPreferences = instance.getOpenMRSSharedPreferences();
-	private FloatingActionButton captureVitalsButton, endVisitButton, editVisitButton,auditData;
+	private FloatingActionButton captureVitalsButton, endVisitButton, editVisitButton, auditData;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +83,7 @@ public class VisitActivity extends ACBaseActivity {
 			patientUuid = extras.getString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
 			visitUuid = extras.getString(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE);
 			providerUuid = OpenMRS.getInstance().getCurrentProviderUUID();
-			visitClosedDate = extras.getString(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE);
+			visitClosedDate = OpenMRS.getInstance().getVisitStopDate();
 			initViewPager(new VisitPageAdapter(getSupportFragmentManager(), patientUuid, visitUuid, providerUuid));
 
 			// patient header
@@ -108,7 +108,7 @@ public class VisitActivity extends ACBaseActivity {
 		endVisitButton = (FloatingActionButton)findViewById(R.id.end_visit);
 		editVisitButton = (FloatingActionButton)findViewById(R.id.edit_visit);
 
-		if(visitClosedDate != null && !visitClosedDate.isEmpty()) {
+		if (visitClosedDate != null && !visitClosedDate.isEmpty()) {
 			captureVitalsButton.setVisibility(View.GONE);
 			editVisitButton.setVisibility(View.GONE);
 			endVisitButton.setVisibility(View.GONE);

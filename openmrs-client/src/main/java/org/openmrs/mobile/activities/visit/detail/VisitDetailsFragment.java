@@ -38,7 +38,6 @@ import com.google.android.flexbox.FlexboxLayout;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.auditdata.AuditDataActivity;
 import org.openmrs.mobile.activities.capturevitals.CaptureVitalsActivity;
-import org.openmrs.mobile.activities.findpatientrecord.FindPatientRecordContract;
 import org.openmrs.mobile.activities.visit.VisitContract;
 import org.openmrs.mobile.activities.visit.VisitFragment;
 import org.openmrs.mobile.models.Concept;
@@ -487,9 +486,8 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 
 			ArrayList splitValues = splitStrings(observation.getDisplay(), ":");
 
-
 			TextView label = new TextView(getContext());
-			TableRow.LayoutParams labelParams = new TableRow.LayoutParams(0,LinearLayout.LayoutParams.WRAP_CONTENT);
+			TableRow.LayoutParams labelParams = new TableRow.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT);
 			labelParams.weight = 1;
 
 			label.setText(splitValues.get(0) + " :");
@@ -503,11 +501,10 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 			label.setTextColor(getResources().getColor(R.color.black));
 			row.addView(label, 0);
 
-
 			TextView value = new TextView(getContext());
 			value.setText(splitValues.get(1).toString());
 			value.setTextSize(14);
-		    value.setLayoutParams(labelParams);
+			value.setLayoutParams(labelParams);
 			row.addView(value, 1);
 
 			if (type == EncounterTypeData.VITALS) {

@@ -102,7 +102,7 @@
 							android:layout_width="match_parent"
 							android:layout_height="wrap_content"
 							android:background="@drawable/button_apply"
-							android:text="@string/action_submit"
+							android:text="@string/action_start_visit"
 							android:backgroundTint="@color/primary"
 							android:textColor="@color/white" />
 				</LinearLayout>

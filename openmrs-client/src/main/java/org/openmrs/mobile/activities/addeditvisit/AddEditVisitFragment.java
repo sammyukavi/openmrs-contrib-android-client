@@ -100,7 +100,11 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 	@Override
 	public void initView(boolean startVisit) {
 		Toolbar toolbar = (Toolbar)getActivity().findViewById(R.id.toolbar);
-		toolbar.setTitle(startVisit ? getString(R.string.label_start_visit) : getString(R.string.label_edit_visit));
+		if (startVisit)
+			toolbar.setTitle(getString(R.string.label_start_visit));
+		else
+			visitSubmitButton.setText(R.string.update_visit);
+			toolbar.setTitle(getString(R.string.label_edit_visit));
 		setSpinnerVisibility(false);
 	}
 
@@ -267,8 +271,7 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 	@Override
 	public void showPatientDashboard() {
 		Intent intent = new Intent(getContext(), PatientDashboardActivity.class);
-		intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE,
-				mPresenter.getPatient().getUuid());
+		intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
 		getContext().startActivity(intent);
 	}
 

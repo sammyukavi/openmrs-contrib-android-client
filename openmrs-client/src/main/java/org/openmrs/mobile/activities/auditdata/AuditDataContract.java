@@ -39,6 +39,8 @@ public interface AuditDataContract {
 		void showProgressBar(Boolean visibility);
 
 		void goBackToVisitPage();
+
+		void updateSubmitButtonText();
 	}
 
 	interface Presenter extends BasePresenterContract {

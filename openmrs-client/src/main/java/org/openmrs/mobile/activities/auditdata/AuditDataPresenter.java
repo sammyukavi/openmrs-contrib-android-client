@@ -61,6 +61,7 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 				for (Encounter encounter : visit.getEncounters()) {
 					switch (encounter.getEncounterType().getDisplay()) {
 						case AUDITDATA:
+							auditDataView.updateSubmitButtonText();
 							fetchEncounter(encounter.getUuid());
 							break;
 					}

@@ -93,6 +93,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 	private Spinner inpatientServiceType;
 	private RelativeLayout progressBar;
 	private ScrollView auditScrollView;
+	private Button submitForm;
 
 	public static AuditDataFragment newInstance() {
 		return new AuditDataFragment();
@@ -170,7 +171,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 
 		inpatientServiceType = (Spinner)fragmentView.findViewById(R.id.inpatient_service_type);
 
-		Button submitForm = (Button)fragmentView.findViewById(R.id.submitConfirm);
+		submitForm = (Button)fragmentView.findViewById(R.id.submitConfirm);
 		submitForm.setOnClickListener(v -> {
 			performDataSend();
 		});
@@ -397,6 +398,11 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visitUuid);
 		intent.putExtra(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, visitStopDate);
 		getContext().startActivity(intent);
+	}
+
+	@Override
+	public void updateSubmitButtonText() {
+		submitForm.setText(R.string.update_audit_data);
 	}
 
 	@Override

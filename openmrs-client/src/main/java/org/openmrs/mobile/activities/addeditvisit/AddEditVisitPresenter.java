@@ -307,6 +307,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 
 			@Override
 			public void onError(Throwable t) {
+				System.out.println(t.getLocalizedMessage());
 				ToastUtil.error(t.getMessage());
 			}
 		});

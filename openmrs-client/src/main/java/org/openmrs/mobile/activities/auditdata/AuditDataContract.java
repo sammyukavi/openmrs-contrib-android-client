@@ -20,6 +20,7 @@ import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Location;
+import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Visit;
 
 public interface AuditDataContract {
@@ -36,11 +37,7 @@ public interface AuditDataContract {
 
 		Context getContext();
 
-		void showProgressBar(Boolean visibility);
-
-		void goBackToVisitPage();
-
-		void updateSubmitButtonText();
+		void showSnackbar(String string);
 	}
 
 	interface Presenter extends BasePresenterContract {

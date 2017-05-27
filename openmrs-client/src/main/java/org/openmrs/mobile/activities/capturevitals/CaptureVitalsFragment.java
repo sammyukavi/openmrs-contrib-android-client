@@ -14,7 +14,6 @@
 
 package org.openmrs.mobile.activities.capturevitals;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -22,14 +21,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import org.joda.time.LocalDateTime;
 import org.openmrs.mobile.R;
+import org.openmrs.mobile.activities.ACBaseActivity;
 import org.openmrs.mobile.activities.ACBaseFragment;
-import org.openmrs.mobile.activities.visit.VisitActivity;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.Encounter;
@@ -82,11 +79,9 @@ public class CaptureVitalsFragment extends ACBaseFragment<CaptureVitalsContract.
 	private TextView patientHeightError, patientWeightError, patientBmiError, patientTemperatureError, patientPulseError,
 			patientRespiratoryRateError, patientBloodPressureError, patientBloodOxygenSaturationError;
 	private String encounterUuid = null;
-	private String visitUuid, patientUuid, visitStopDate;
+	private String visitUuid, patientUuid;
 	private OpenMRS instance = OpenMRS.getInstance();
 	private Button submitForm;
-	private RelativeLayout progressBar;
-	private ScrollView captureVitalsScrollView;
 
 	public static CaptureVitalsFragment newInstance() {
 		return new CaptureVitalsFragment();
@@ -97,7 +92,6 @@ public class CaptureVitalsFragment extends ACBaseFragment<CaptureVitalsContract.
 
 		this.patientUuid = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
 		this.visitUuid = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE);
-		this.visitStopDate = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE);
 
 		View root = inflater.inflate(R.layout.fragment_capture_vitals, container, false);
 
@@ -139,9 +133,6 @@ public class CaptureVitalsFragment extends ACBaseFragment<CaptureVitalsContract.
 		patientRespiratoryRateError = (TextView)root.findViewById(R.id.patientRespiratoryRateError);
 		patientBloodPressureError = (TextView)root.findViewById(R.id.patientBloodPressureError);
 		patientBloodOxygenSaturationError = (TextView)root.findViewById(R.id.patientBloodOxygenSaturationError);
-
-		progressBar = (RelativeLayout)root.findViewById(R.id.captureVitalsProgressBar);
-		captureVitalsScrollView = (ScrollView)root.findViewById(R.id.captureVitalsForm);
 
 		submitForm = (Button)root.findViewById(R.id.submitConfirm);
 		submitForm.setOnClickListener(v -> {
@@ -362,28 +353,13 @@ public class CaptureVitalsFragment extends ACBaseFragment<CaptureVitalsContract.
 	}
 
 	@Override
+	public void showSnackbar(String message) {
+		((ACBaseActivity)getActivity()).showSnackbar(message);
+	}
+
+	@Override
 	public void disableButton() {
 		submitForm.setEnabled(false);
-	}
-
-	@Override
-	public void goBackToVisitPage() {
-		Intent intent = new Intent(getContext(), VisitActivity.class);
-		intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
-		intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visitUuid);
-		intent.putExtra(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, visitStopDate);
-		getContext().startActivity(intent);
-	}
-
-	@Override
-	public void showProgressBar(Boolean visibility) {
-		if (visibility) {
-			progressBar.setVisibility(View.VISIBLE);
-			captureVitalsScrollView.setVisibility(View.GONE);
-		} else {
-			progressBar.setVisibility(View.GONE);
-			captureVitalsScrollView.setVisibility(View.VISIBLE);
-		}
 	}
 
 }

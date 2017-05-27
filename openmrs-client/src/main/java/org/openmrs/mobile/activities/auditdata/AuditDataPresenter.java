@@ -14,6 +14,7 @@
 
 package org.openmrs.mobile.activities.auditdata;
 
+import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.QueryOptions;
@@ -52,16 +53,14 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 
 	@Override
 	public void fetchVisit(String visitUuid) {
-		auditDataView.showProgressBar(true);
+
 		DataService.GetCallback<Visit> fetchEncountersCallback = new DataService.GetCallback<Visit>() {
 			@Override
 			public void onCompleted(Visit visit) {
 				auditDataView.setVisit(visit);
-				auditDataView.showProgressBar(false);
 				for (Encounter encounter : visit.getEncounters()) {
 					switch (encounter.getEncounterType().getDisplay()) {
 						case AUDITDATA:
-							auditDataView.updateSubmitButtonText();
 							fetchEncounter(encounter.getUuid());
 							break;
 					}
@@ -70,7 +69,6 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 
 			@Override
 			public void onError(Throwable t) {
-				auditDataView.showProgressBar(false);
 				t.printStackTrace();
 			}
 		};
@@ -78,18 +76,16 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 	}
 
 	private void fetchEncounter(String uuid) {
-		auditDataView.showProgressBar(true);
+
 		DataService.GetCallback<Encounter> fetchEncountercallback = new DataService.GetCallback<Encounter>() {
 			@Override
 			public void onCompleted(Encounter encounter) {
-				auditDataView.showProgressBar(false);
 				auditDataView.setEncounterUuid(encounter.getUuid());
 				auditDataView.updateFormFields(encounter);
 			}
 
 			@Override
 			public void onError(Throwable t) {
-				auditDataView.showProgressBar(false);
 				t.printStackTrace();
 			}
 		};
@@ -98,21 +94,29 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 
 	@Override
 	public void saveEncounter(Encounter encounter, boolean isNewEncounter) {
-		auditDataView.showProgressBar(true);
+
 		DataService.GetCallback<Encounter> serverResponceCallback = new DataService.GetCallback<Encounter>() {
 			@Override
 			public void onCompleted(Encounter encounter) {
-				auditDataView.showProgressBar(false);
-				if (encounter == null) {
 
+				if (encounter.equals(null)) {
+					auditDataView.showSnackbar(auditDataView.getContext().getString(R.string.error_occured));
 				} else {
-					auditDataView.goBackToVisitPage();
+					auditDataView.showSnackbar(auditDataView.getContext().getString(R.string.saved));
+					/*TODO
+				Ask if the're a parameter you can pass when creating or updating the encounters so that you can get the
+				full representation and get to uncomment the commented lines below.
+				 */
+
+					//fetchEncounter(encounter.getUuid());
+
+					//auditDataView.setEncounterUuid(encounter.getUuid());
+					//auditDataView.updateFormFields(encounter);
 				}
 			}
 
 			@Override
 			public void onError(Throwable t) {
-				auditDataView.showProgressBar(false);
 				t.printStackTrace();
 			}
 		};

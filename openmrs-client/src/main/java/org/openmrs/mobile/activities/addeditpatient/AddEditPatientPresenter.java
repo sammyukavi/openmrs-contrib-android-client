@@ -192,6 +192,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		patientDataService.getByUUID(uuid, new QueryOptions(false, true), singleCallback);
 	}
 
+
 	@Override
 	public void confirmPatient(Patient patient) {
 		if (!registeringPatient && validate(patient)) {
@@ -241,7 +242,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 								.addErrorMessage, ToastUtil.ToastType.ERROR);
 			}
 		};
-		if (patient.getUuid().equalsIgnoreCase(null)) {
+		if (patient.getUuid().equalsIgnoreCase(null)){
 			patientDataService.create(patient, getSingleCallback);
 		} else {
 			patientDataService.update(patient, getSingleCallback);

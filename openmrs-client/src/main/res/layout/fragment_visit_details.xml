@@ -26,11 +26,7 @@
 			android:layout_height="match_parent"
 			android:focusable="true"
 			android:focusableInTouchMode="true"
-			android:orientation="vertical"
-			android:layout_alignParentTop="true"
-			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true"
-			android:layout_marginTop="19dp">
+			android:orientation="vertical">
 		
 		<LinearLayout
 				android:layout_width="match_parent"
@@ -62,14 +58,10 @@
 								android:layout_width="wrap_content"
 								android:layout_height="wrap_content"
 								android:layout_marginTop="3dp"
-								android:layout_marginLeft="5dp"
-								android:layout_marginStart="5dp"
+								android:layout_marginLeft="10dp"
+								android:layout_marginStart="10dp"
 								android:layout_marginRight="10dp"
 								android:layout_marginEnd="10dp"
-								android:paddingLeft="5dp"
-								android:paddingStart="5dp"
-								android:paddingEnd="5dp"
-								android:paddingRight="5dp"
 								android:textColor="@color/color_white"
 								android:text="@string/active_visit_label"
 								android:background="@drawable/active_visit_badge" />
@@ -157,7 +149,6 @@
 					</RelativeLayout>
 					
 					<View
-							android:id="@+id/visitDetailsView"
 							android:layout_width="match_parent"
 							android:layout_height="1dp"
 							android:background="@android:color/darker_gray" />
@@ -176,7 +167,7 @@
 							app:flexDirection="row"
 							app:flexWrap="wrap"
 							android:layout_marginTop="5dp">
-					
+						
 					</com.google.android.flexbox.FlexboxLayout>
 				
 				</LinearLayout>
@@ -192,80 +183,29 @@
 					android:layout_height="wrap_content">
 				
 				<LinearLayout
-						android:layout_marginBottom="30dp"
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:orientation="vertical">
-					
-					<LinearLayout
-							android:layout_marginBottom="5dp"
-							android:layout_width="match_parent"
-							android:layout_height="wrap_content"
-							android:orientation="vertical">
-						
-						<TextView
-								android:id="@+id/visitNoteLabel"
-								android:layout_width="wrap_content"
-								android:layout_height="wrap_content"
-								android:layout_marginTop="5dp"
-								android:layout_marginLeft="10dp"
-								android:layout_marginStart="10dp"
-								android:textStyle="bold"
-								android:text="@string/visit_note" />
-					</LinearLayout>
-					
-					<RelativeLayout
-							android:id="@+id/visitNoteAuditInfo"
-							android:layout_width="match_parent"
-							android:layout_height="wrap_content"
-							android:visibility="gone"
-							android:orientation="vertical">
-						
-						<TextView
-								android:id="@+id/visitNoteProvider"
-								android:layout_width="wrap_content"
-								android:layout_height="wrap_content"
-								android:layout_marginLeft="10dp"
-								android:layout_marginStart="10dp"
-								android:layout_marginBottom="5dp"
-								android:textStyle="italic"
-								android:textSize="12sp"
-								android:layout_alignParentLeft="true"
-								android:layout_alignParentStart="true"
-								android:textColor="@color/openmrs_color_grey" />
-						
-						
-						<TextView
-								android:id="@+id/visitNoteDate"
-								android:layout_width="wrap_content"
-								android:layout_height="wrap_content"
-								android:layout_marginEnd="10dp"
-								android:layout_marginRight="10dp"
-								android:layout_marginBottom="5dp"
-								android:textStyle="italic"
-								android:textSize="12sp"
-								android:layout_alignParentRight="true"
-								android:layout_alignParentEnd="true"
-								android:textColor="@color/openmrs_color_grey" />
-					</RelativeLayout>
-					
-					<View
-							android:layout_width="match_parent"
-							android:layout_height="1dp"
-							android:layout_marginBottom="30dp"
-							android:background="@android:color/darker_gray" />
-				
-				</LinearLayout>
-				
-				<LinearLayout
-						android:layout_marginTop="30dp"
 						android:layout_marginBottom="10dp"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:orientation="vertical">
 					
+					<TextView
+							android:id="@+id/visitNoteLabel"
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:layout_marginTop="5dp"
+							android:layout_marginLeft="10dp"
+							android:layout_marginStart="10dp"
+							android:layout_marginBottom="5dp"
+							android:textStyle="bold"
+							android:text="@string/visit_note" />
+					
+					<View
+							android:layout_width="match_parent"
+							android:layout_height="1dp"
+							android:background="@android:color/darker_gray" />
+					
 					<android.support.design.widget.TextInputLayout
-							android:layout_marginTop="30dp"
+							android:layout_marginTop="10dp"
 							android:layout_width="match_parent"
 							android:layout_height="wrap_content"
 							android:layout_marginBottom="5dp"
@@ -446,94 +386,51 @@
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content">
 				
-				<LinearLayout
+				<RelativeLayout
+						android:layout_marginBottom="10dp"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
-						android:layout_marginBottom="30dp"
 						android:orientation="vertical">
 					
-					<RelativeLayout
-							android:id="@+id/visitVitalsHeader"
-							android:layout_marginBottom="5dp"
+					<TextView
+							android:id="@+id/visitVitalsLabel"
 							android:layout_width="match_parent"
 							android:layout_height="wrap_content"
-							android:orientation="vertical">
-						
-						<TextView
-								android:id="@+id/visitVitalsLabel"
-								android:layout_width="match_parent"
-								android:layout_height="wrap_content"
-								android:layout_marginTop="5dp"
-								android:layout_marginLeft="10dp"
-								android:layout_marginStart="10dp"
-								android:textStyle="bold"
-								android:text="@string/patient_scroll_tab_vitals_label" />
-						
-						<ImageButton
-								android:id="@+id/visitVitalsAdd"
-								android:layout_width="wrap_content"
-								android:layout_height="wrap_content"
-								android:layout_marginTop="5dp"
-								android:layout_marginLeft="10dp"
-								android:layout_marginStart="10dp"
-								android:layout_marginRight="5dp"
-								android:layout_marginEnd="5dp"
-								android:src="@drawable/ic_add_circle_outline"
-								android:background="@null"
-								android:scaleType="center"
-								android:tint="@color/color_primary_dark"
-								android:layout_centerHorizontal="true"
-								android:layout_alignParentEnd="true"
-								android:layout_alignParentRight="true" />
-					
-					</RelativeLayout>
-					
-					<RelativeLayout
-							android:id="@+id/visitVitalsAuditInfo"
+							android:layout_marginTop="5dp"
+							android:layout_marginLeft="10dp"
+							android:layout_marginStart="10dp"
 							android:layout_marginBottom="5dp"
-							android:layout_width="match_parent"
+							android:textStyle="bold"
+							android:text="@string/patient_scroll_tab_vitals_label" />
+					
+					<ImageButton
+							android:id="@+id/visitVitalsAdd"
+							android:layout_width="wrap_content"
 							android:layout_height="wrap_content"
-							android:visibility="gone"
-							android:orientation="vertical">
-						
-						<TextView
-								android:id="@+id/visitVitalsProvider"
-								android:layout_width="wrap_content"
-								android:layout_height="wrap_content"
-								android:layout_marginLeft="10dp"
-								android:layout_marginStart="10dp"
-								android:layout_marginBottom="5dp"
-								android:textStyle="italic"
-								android:textSize="12sp"
-								android:layout_alignParentLeft="true"
-								android:layout_alignParentStart="true"
-								android:textColor="@color/openmrs_color_grey" />
-						
-						
-						<TextView
-								android:id="@+id/visitVitalsDate"
-								android:layout_width="wrap_content"
-								android:layout_height="wrap_content"
-								android:layout_marginEnd="10dp"
-								android:layout_marginRight="10dp"
-								android:layout_marginBottom="5dp"
-								android:textStyle="italic"
-								android:textSize="12sp"
-								android:layout_alignParentRight="true"
-								android:layout_alignParentEnd="true"
-								android:textColor="@color/openmrs_color_grey" />
-					</RelativeLayout>
+							android:layout_marginTop="5dp"
+							android:layout_marginLeft="10dp"
+							android:layout_marginStart="10dp"
+							android:layout_marginRight="5dp"
+							android:layout_marginEnd="5dp"
+							android:layout_marginBottom="5dp"
+							android:src="@drawable/ic_add_circle_outline"
+							android:background="@null"
+							android:scaleType="center"
+							android:tint="@color/color_primary_dark"
+							android:layout_centerHorizontal="true"
+							android:layout_alignParentEnd="true"
+							android:layout_alignParentRight="true" />
 					
 					<View
+							android:layout_below="@+id/visitVitalsLabel"
 							android:layout_width="match_parent"
 							android:layout_height="1dp"
 							android:background="@android:color/darker_gray" />
-				
-				</LinearLayout>
+				</RelativeLayout>
 				
 				<LinearLayout
 						android:layout_marginBottom="10dp"
-						android:layout_marginTop="45dp"
+						android:layout_marginTop="10dp"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:orientation="vertical">
@@ -542,7 +439,7 @@
 							android:id="@+id/noVitals"
 							android:layout_width="match_parent"
 							android:layout_height="wrap_content"
-							android:layout_marginTop="10dp"
+							android:layout_marginTop="20dp"
 							android:layout_marginLeft="10dp"
 							android:layout_marginStart="10dp"
 							android:layout_marginBottom="5dp"
@@ -550,12 +447,13 @@
 					
 					<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
 							android:id="@+id/visitVitalsTable"
-							android:layout_width="match_parent"
+							android:layout_width="wrap_content"
 							android:layout_height="wrap_content"
 							android:padding="@dimen/patient_card_margin"
 							android:layout_gravity="center"
 							android:layout_marginTop="10dp"
-							android:layout_marginBottom="5dp">
+							android:layout_marginBottom="5dp"
+							android:stretchColumns="1">
 					
 					
 					</TableLayout>
@@ -570,113 +468,51 @@
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content">
 				
-				<LinearLayout
+				<RelativeLayout
+						android:layout_marginBottom="10dp"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
-						android:layout_marginBottom="30dp"
 						android:orientation="vertical">
 					
-					<RelativeLayout
+					<TextView
+							android:id="@+id/auditInfoLabel"
 							android:layout_width="match_parent"
 							android:layout_height="wrap_content"
-							android:orientation="vertical">
-						
-						<TextView
-								android:id="@+id/auditInfoLabel"
-								android:layout_width="match_parent"
-								android:layout_height="wrap_content"
-								android:layout_marginTop="5dp"
-								android:layout_marginLeft="10dp"
-								android:layout_marginStart="10dp"
-								android:layout_marginBottom="5dp"
-								android:textStyle="bold"
-								android:text="@string/audit_info" />
-						
-						<ImageButton
-								android:id="@+id/visitAuditInfoAdd"
-								android:layout_width="wrap_content"
-								android:layout_height="wrap_content"
-								android:layout_marginTop="5dp"
-								android:layout_marginLeft="10dp"
-								android:layout_marginStart="10dp"
-								android:layout_marginRight="5dp"
-								android:layout_marginEnd="5dp"
-								android:layout_marginBottom="5dp"
-								android:src="@drawable/ic_add_circle_outline"
-								android:background="@null"
-								android:scaleType="center"
-								android:tint="@color/color_primary_dark"
-								android:layout_centerHorizontal="true"
-								android:layout_alignParentEnd="true"
-								android:layout_alignParentRight="true" />
-						
-						<TextView
-								android:id="@+id/auditDataCompleteness"
-								android:layout_width="wrap_content"
-								android:layout_height="wrap_content"
-								android:layout_marginTop="5dp"
-								android:layout_marginRight="10dp"
-								android:layout_marginEnd="10dp"
-								android:layout_marginBottom="5dp"
-								android:layout_marginLeft="10dp"
-								android:layout_marginStart="10dp"
-								android:textStyle="italic|bold"
-								android:textSize="12sp"
-								android:visibility="gone"
-								android:text="@string/in_complete"
-								android:layout_centerHorizontal="true"
-								android:layout_alignParentEnd="true"
-								android:layout_alignParentRight="true"
-								android:textColor="@color/yellow" />
-					</RelativeLayout>
-					
-					<RelativeLayout
-							android:id="@+id/auditDataMetadata"
+							android:layout_marginTop="5dp"
+							android:layout_marginLeft="10dp"
+							android:layout_marginStart="10dp"
 							android:layout_marginBottom="5dp"
-							android:layout_width="match_parent"
-							android:layout_height="wrap_content"
-							android:visibility="gone"
-							android:orientation="vertical">
-						
-						<TextView
-								android:id="@+id/auditDataMetadataProvider"
-								android:layout_width="wrap_content"
-								android:layout_height="wrap_content"
-								android:layout_marginLeft="10dp"
-								android:layout_marginStart="10dp"
-								android:layout_marginBottom="5dp"
-								android:textStyle="italic"
-								android:textSize="12sp"
-								android:layout_alignParentLeft="true"
-								android:layout_alignParentStart="true"
-								android:textColor="@color/openmrs_color_grey" />
-						
-						
-						<TextView
-								android:id="@+id/auditDataMetadataDate"
-								android:layout_width="wrap_content"
-								android:layout_height="wrap_content"
-								android:layout_marginEnd="10dp"
-								android:layout_marginRight="10dp"
-								android:layout_marginBottom="5dp"
-								android:textStyle="italic"
-								android:textSize="12sp"
-								android:layout_alignParentRight="true"
-								android:layout_alignParentEnd="true"
-								android:textColor="@color/openmrs_color_grey" />
-					</RelativeLayout>
+							android:textStyle="bold"
+							android:text="@string/audit_info" />
 					
+					<ImageButton
+							android:id="@+id/visitAuditInfoAdd"
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:layout_marginTop="5dp"
+							android:layout_marginLeft="10dp"
+							android:layout_marginStart="10dp"
+							android:layout_marginRight="5dp"
+							android:layout_marginEnd="5dp"
+							android:layout_marginBottom="5dp"
+							android:src="@drawable/ic_add_circle_outline"
+							android:background="@null"
+							android:scaleType="center"
+							android:tint="@color/color_primary_dark"
+							android:layout_centerHorizontal="true"
+							android:layout_alignParentEnd="true"
+							android:layout_alignParentRight="true" />
 					
 					<View
+							android:layout_below="@+id/auditInfoLabel"
 							android:layout_width="match_parent"
 							android:layout_height="1dp"
 							android:background="@android:color/darker_gray" />
-				
-				</LinearLayout>
+				</RelativeLayout>
 				
 				<LinearLayout
 						android:layout_marginBottom="10dp"
-						android:layout_marginTop="45dp"
+						android:layout_marginTop="10dp"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:orientation="vertical">
@@ -685,7 +521,7 @@
 							android:id="@+id/noAuditInfo"
 							android:layout_width="match_parent"
 							android:layout_height="wrap_content"
-							android:layout_marginTop="10dp"
+							android:layout_marginTop="20dp"
 							android:layout_marginLeft="10dp"
 							android:layout_marginStart="10dp"
 							android:layout_marginBottom="5dp"
@@ -693,12 +529,13 @@
 					
 					<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
 							android:id="@+id/auditInfoTable"
-							android:layout_width="match_parent"
+							android:layout_width="wrap_content"
 							android:layout_height="wrap_content"
 							android:padding="@dimen/patient_card_margin"
 							android:layout_gravity="center"
 							android:layout_marginTop="10dp"
-							android:layout_marginBottom="5dp">
+							android:layout_marginBottom="5dp"
+							android:stretchColumns="1">
 					
 					
 					</TableLayout>

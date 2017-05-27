@@ -35,6 +35,7 @@ import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
 import org.openmrs.mobile.activities.visit.VisitActivity;
+import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.models.BaseOpenmrsObject;
 import org.openmrs.mobile.models.ConceptName;
 import org.openmrs.mobile.models.VisitAttribute;
@@ -59,7 +60,7 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 	private Button visitSubmitButton;
 	private Map<String, VisitAttribute> visitAttributeMap = new HashMap<>();
 	private Map<View, VisitAttributeType> viewVisitAttributeTypeMap = new HashMap<>();
-	private String patientUuid, visitUuid, providerUuid;
+	private String patientUuid, visitUuid, providerUuid, visitStopDate;
 
 	public static AddEditVisitFragment newInstance() {
 		return new AddEditVisitFragment();
@@ -77,6 +78,7 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 		this.patientUuid = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
 		this.visitUuid = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE);
 		this.providerUuid = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys.PROVIDER_UUID_BUNDLE);
+		this.visitStopDate = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE);
 
 		addListeners();
 		buildMarginLayout();
@@ -278,6 +280,7 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 			intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visitUuid);
 		} else {
 			intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visitUUID);
+			intent.putExtra(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE,visitStopDate);
 		}
 		getContext().startActivity(intent);
 	}

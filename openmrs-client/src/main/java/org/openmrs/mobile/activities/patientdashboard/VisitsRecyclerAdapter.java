@@ -173,7 +173,7 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 			showVisitDetails.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					setVisitStopDate(visit);
+					System.out.println(visit.getStopDatetime() + " Visit closed date");
 					intent = new Intent(context, VisitActivity.class);
 					intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, OpenMRS.getInstance()
 							.getPatientUuid());

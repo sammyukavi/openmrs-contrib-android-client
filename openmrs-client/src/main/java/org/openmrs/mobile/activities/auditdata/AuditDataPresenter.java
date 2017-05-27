@@ -57,10 +57,10 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 			@Override
 			public void onCompleted(Visit visit) {
 				auditDataView.setVisit(visit);
+				auditDataView.showProgressBar(false);
 				for (Encounter encounter : visit.getEncounters()) {
 					switch (encounter.getEncounterType().getDisplay()) {
 						case AUDITDATA:
-							auditDataView.showProgressBar(false);
 							fetchEncounter(encounter.getUuid());
 							break;
 					}

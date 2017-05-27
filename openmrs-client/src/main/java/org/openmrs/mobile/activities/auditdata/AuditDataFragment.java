@@ -78,7 +78,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 	private Location location;
 	private EditText cd4, hBa1c;
 	private String encounterUuid = null;
-	private String visitUuid, patientUuid;
+	private String visitUuid, patientUuid, visitStopDate;
 	private OpenMRS instance = OpenMRS.getInstance();
 
 	private Observation deathInHospitalObservation, palliativeConsultObservation, preopRiskAssessmentObservation,
@@ -103,6 +103,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 
 		this.patientUuid = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
 		this.visitUuid = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE);
+		this.visitStopDate = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE);
 
 		fragmentView = inflater.inflate(R.layout.fragment_audit_form, container, false);
 
@@ -394,7 +395,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		Intent intent = new Intent(getContext(), VisitActivity.class);
 		intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
 		intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visitUuid);
-		intent.putExtra(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, OpenMRS.getInstance().getVisitStopDate());
+		intent.putExtra(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, visitStopDate);
 		getContext().startActivity(intent);
 	}
 

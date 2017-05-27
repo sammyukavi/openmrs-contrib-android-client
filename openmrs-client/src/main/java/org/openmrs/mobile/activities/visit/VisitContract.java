@@ -66,6 +66,8 @@ public interface VisitContract {
 
 		void setProviderUUID(String uuid);
 
+		void setVisitStopDate(String visitStopDate);
+
 		void setConcept(Concept concept);
 
 		void setAttributeTypes(List<VisitAttributeType> visitAttributeTypes);
@@ -126,6 +128,8 @@ public interface VisitContract {
 		void getVisitUUID();
 
 		void getProviderUUID();
+
+		void getVisitStopDate();
 
 		void getObservation(String uuid);
 

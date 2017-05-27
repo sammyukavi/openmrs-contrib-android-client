@@ -82,7 +82,7 @@ public class CaptureVitalsFragment extends ACBaseFragment<CaptureVitalsContract.
 	private TextView patientHeightError, patientWeightError, patientBmiError, patientTemperatureError, patientPulseError,
 			patientRespiratoryRateError, patientBloodPressureError, patientBloodOxygenSaturationError;
 	private String encounterUuid = null;
-	private String visitUuid, patientUuid;
+	private String visitUuid, patientUuid, visitStopDate;
 	private OpenMRS instance = OpenMRS.getInstance();
 	private Button submitForm;
 	private RelativeLayout progressBar;
@@ -97,6 +97,7 @@ public class CaptureVitalsFragment extends ACBaseFragment<CaptureVitalsContract.
 
 		this.patientUuid = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
 		this.visitUuid = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE);
+		this.visitStopDate = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE);
 
 		View root = inflater.inflate(R.layout.fragment_capture_vitals, container, false);
 
@@ -370,7 +371,7 @@ public class CaptureVitalsFragment extends ACBaseFragment<CaptureVitalsContract.
 		Intent intent = new Intent(getContext(), VisitActivity.class);
 		intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
 		intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visitUuid);
-		intent.putExtra(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, OpenMRS.getInstance().getVisitStopDate());
+		intent.putExtra(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, visitStopDate);
 		getContext().startActivity(intent);
 	}
 

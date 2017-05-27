@@ -83,8 +83,9 @@ public class VisitActivity extends ACBaseActivity {
 			patientUuid = extras.getString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
 			visitUuid = extras.getString(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE);
 			providerUuid = OpenMRS.getInstance().getCurrentProviderUUID();
-			visitClosedDate = OpenMRS.getInstance().getVisitStopDate();
-			initViewPager(new VisitPageAdapter(getSupportFragmentManager(), patientUuid, visitUuid, providerUuid));
+			visitClosedDate = extras.getString(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE);
+			initViewPager(new VisitPageAdapter(getSupportFragmentManager(), patientUuid, visitUuid, providerUuid,
+					visitClosedDate));
 
 			// patient header
 			if (patientHeaderPresenter == null) {
@@ -153,8 +154,8 @@ public class VisitActivity extends ACBaseActivity {
 			visitDetailsPresenter =
 					new VisitPhotoPresenter(((VisitPhotoFragment)fragment), patientUuid, visitUuid, providerUuid);
 		} else if (fragment instanceof VisitDetailsFragment) {
-			visitDetailsPresenter = new VisitDetailsPresenter(patientUuid, visitUuid, providerUuid, ((VisitDetailsFragment)
-					fragment));
+			visitDetailsPresenter = new VisitDetailsPresenter(patientUuid, visitUuid, providerUuid, visitClosedDate, (
+					(VisitDetailsFragment)fragment));
 		}
 	}
 
@@ -203,7 +204,6 @@ public class VisitActivity extends ACBaseActivity {
 				finish();
 				Intent intent = new Intent(getApplicationContext(), PatientDashboardActivity.class);
 				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
-
 				//fix for now
 				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
@@ -228,6 +228,7 @@ public class VisitActivity extends ACBaseActivity {
 				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
 				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visitUuid);
 				intent.putExtra(ApplicationConstants.BundleKeys.PROVIDER_UUID_BUNDLE, providerUuid);
+				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, visitClosedDate);
 				startActivity(intent);
 				break;
 			case R.id.end_visit:
@@ -235,6 +236,7 @@ public class VisitActivity extends ACBaseActivity {
 				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
 				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visitUuid);
 				intent.putExtra(ApplicationConstants.BundleKeys.PROVIDER_UUID_BUNDLE, providerUuid);
+				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, visitClosedDate);
 				intent.putExtra(ApplicationConstants.BundleKeys.END_VISIT_TAG, true);
 				startActivity(intent);
 				break;
@@ -243,6 +245,7 @@ public class VisitActivity extends ACBaseActivity {
 				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
 				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visitUuid);
 				intent.putExtra(ApplicationConstants.BundleKeys.PROVIDER_UUID_BUNDLE, providerUuid);
+				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, visitClosedDate);
 				startActivity(intent);
 				break;
 
@@ -251,6 +254,7 @@ public class VisitActivity extends ACBaseActivity {
 				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
 				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visitUuid);
 				intent.putExtra(ApplicationConstants.BundleKeys.PROVIDER_UUID_BUNDLE, providerUuid);
+				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, visitClosedDate);
 				startActivity(intent);
 				break;
 		}

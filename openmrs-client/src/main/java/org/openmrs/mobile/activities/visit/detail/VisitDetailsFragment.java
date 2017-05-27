@@ -83,7 +83,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	private ImageButton addAuditData, addVisitVitals;
 	private String patientUuid;
 	private String visitUuid;
-	private String providerUuid;
+	private String providerUuid, visitStopDate;
 	private Intent intent;
 	private List<Map> primaryDiagnosisList, secondaryDiagnosisList;
 	private ConceptName diagnosisConceptName;
@@ -195,6 +195,11 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	}
 
 	@Override
+	public void setVisitStopDate(String visitStopDate) {
+		this.visitStopDate = visitStopDate;
+	}
+
+	@Override
 	public void setConcept(Concept concept) {
 		for (ConceptName conceptName : concept.getNames()) {
 
@@ -213,6 +218,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
 				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visitUuid);
 				intent.putExtra(ApplicationConstants.BundleKeys.PROVIDER_UUID_BUNDLE, providerUuid);
+				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, visitStopDate);
 				startActivity(intent);
 			}
 		});
@@ -224,6 +230,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
 				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visitUuid);
 				intent.putExtra(ApplicationConstants.BundleKeys.PROVIDER_UUID_BUNDLE, providerUuid);
+				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, visitStopDate);
 				startActivity(intent);
 			}
 		});

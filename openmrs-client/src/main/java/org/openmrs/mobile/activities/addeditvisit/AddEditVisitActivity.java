@@ -27,6 +27,7 @@ import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
 import org.openmrs.mobile.activities.patientheader.PatientHeaderFragment;
 import org.openmrs.mobile.activities.patientheader.PatientHeaderPresenter;
 import org.openmrs.mobile.activities.visit.VisitActivity;
+import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.StringUtils;
 import org.openmrs.mobile.utilities.TabUtil;
@@ -35,7 +36,7 @@ import org.openmrs.mobile.utilities.ToastUtil;
 public class AddEditVisitActivity extends ACBaseActivity {
 
 	public AddEditVisitContract.Presenter addEditVisitPresenter;
-	private String patientUuid, visitUuid, providerUuid;
+	private String patientUuid, visitUuid, providerUuid, visitStopDate;
 	private Bundle extras;
 	private Intent intent;
 
@@ -54,13 +55,14 @@ public class AddEditVisitActivity extends ACBaseActivity {
 		}
 		this.extras = getIntent().getExtras();
 		if (extras != null) {
-			patientUuid =
+			this.patientUuid =
 					extras.getString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, ApplicationConstants
 							.EMPTY_STRING);
-			visitUuid =
+			this.visitUuid =
 					extras.getString(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING);
-			providerUuid = extras.getString(ApplicationConstants.BundleKeys.PROVIDER_UUID_BUNDLE,
-					ApplicationConstants.EMPTY_STRING);
+			this.providerUuid = extras.getString(ApplicationConstants.BundleKeys.PROVIDER_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING);
+			this.visitStopDate = extras.getString(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, ApplicationConstants
+					.EMPTY_STRING);
 			if (StringUtils.notEmpty(patientUuid)) {
 				AddEditVisitFragment addEditVisitFragment =
 						(AddEditVisitFragment)getSupportFragmentManager().findFragmentById(R.id.addeditVisitContentFrame);
@@ -108,6 +110,9 @@ public class AddEditVisitActivity extends ACBaseActivity {
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
+		outState.putString(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visitUuid);
+		outState.putString(ApplicationConstants.BundleKeys.PROVIDER_UUID_BUNDLE, providerUuid);
+		outState.putString(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, visitStopDate);
 	}
 
 	@Override
@@ -141,6 +146,7 @@ public class AddEditVisitActivity extends ACBaseActivity {
 						intent = new Intent(getApplicationContext(), VisitActivity.class);
 						intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visitUuid);
 						intent.putExtra(ApplicationConstants.BundleKeys.PROVIDER_UUID_BUNDLE, providerUuid);
+						intent.putExtra(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, visitStopDate);
 					}
 
 					intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);

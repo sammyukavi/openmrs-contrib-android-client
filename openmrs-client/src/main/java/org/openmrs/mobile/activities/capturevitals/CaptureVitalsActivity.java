@@ -37,7 +37,7 @@ public class CaptureVitalsActivity extends ACBaseActivity {
 	private PatientHeaderContract.Presenter patientHeaderPresenter;
 	private String patientUuid;
 	private String visitUuid;
-	private String providerUuid;
+	private String providerUuid, visitStopDate;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -65,9 +65,10 @@ public class CaptureVitalsActivity extends ACBaseActivity {
 
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
-			patientUuid = extras.getString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
-			visitUuid = extras.getString(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE);
-			providerUuid = extras.getString(ApplicationConstants.BundleKeys.PROVIDER_UUID_BUNDLE);
+			this.patientUuid = extras.getString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
+			this.visitUuid = extras.getString(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE);
+			this.providerUuid = extras.getString(ApplicationConstants.BundleKeys.PROVIDER_UUID_BUNDLE);
+			this.visitStopDate = extras.getString(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE);
 
 			// patient header
 			if (patientHeaderPresenter == null) {
@@ -102,6 +103,8 @@ public class CaptureVitalsActivity extends ACBaseActivity {
 		super.onSaveInstanceState(outState);
 		outState.putString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
 		outState.putString(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visitUuid);
+		outState.putString(ApplicationConstants.BundleKeys.PROVIDER_UUID_BUNDLE, providerUuid);
+		outState.putString(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, visitStopDate);
 	}
 
 	@Override
@@ -132,6 +135,7 @@ public class CaptureVitalsActivity extends ACBaseActivity {
 				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
 				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visitUuid);
 				intent.putExtra(ApplicationConstants.BundleKeys.PROVIDER_UUID_BUNDLE, providerUuid);
+				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, visitStopDate);
 
 				//fix for now
 				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

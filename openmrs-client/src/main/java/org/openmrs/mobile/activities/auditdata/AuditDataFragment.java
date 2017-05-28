@@ -19,6 +19,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -502,7 +503,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 					break;
 				case CONCEPT_INPATIENT_SERVICE_TYPE:
 
-					/*inpatientServiceTypeObservation = observation;
+					inpatientServiceTypeObservation = observation;
 					//Short fix. Values mismatch from server.
 					//TODO  find a way of putting thisngs in the settings page
 					if (displayValue.equalsIgnoreCase("surgical service")) {
@@ -517,7 +518,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 					if (!displayValue.equals(null)) {
 						int spinnerPosition = adapter.getPosition(displayValue);
 						inpatientServiceType.setSelection(spinnerPosition);
-					}*/
+					}
 
 					break;
 				case CONCEPT_AUDIT_COMPLETE:
@@ -609,7 +610,6 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		Encounter encounter = new Encounter();
 
 		if (encounterUuid == null) {
-			ConsoleLogger.dump("Creating new encounter");
 			isNewEncounter = true;
 		} else {
 			encounter.setUuid(encounterUuid);

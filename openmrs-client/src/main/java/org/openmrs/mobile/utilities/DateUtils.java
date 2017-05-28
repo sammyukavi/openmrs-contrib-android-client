@@ -139,30 +139,49 @@ public final class DateUtils {
 		return String.valueOf(date);
 	}
 
-	public static String calculateRelativeDate(Date pastDate){
+	public static String calculateRelativeDate(Date pastDate) {
 		String relative = "";
-			Date today = new Date();
-			long days = TimeUnit.MILLISECONDS.toHours(today.getTime() - pastDate.getTime());
-			if(days  == 0){
-				relative = "today";
-			} else if (days < 7 ){
-				relative = (days == 1 ? "yesterday" : days + " days ago");
-			} else if (days < 30) {
-				relative = Math.round(days / 7) + " week" + (days / 7 > 1 ? "s " : " ") + "ago";
-			} else {
-				relative = Math.round(days / 30) + " month" + (days / 30 > 1 ? "s " : " ") + "ago";
-			}
+		Date today = new Date();
+		long days = TimeUnit.MILLISECONDS.toHours(today.getTime() - pastDate.getTime());
+		if (days == 0) {
+			relative = "today";
+		} else if (days < 7) {
+			relative = (days == 1 ? "yesterday" : days + " days ago");
+		} else if (days < 30) {
+			relative = Math.round(days / 7) + " week" + (days / 7 > 1 ? "s " : " ") + "ago";
+		} else {
+			relative = Math.round(days / 30) + " month" + (days / 30 > 1 ? "s " : " ") + "ago";
+		}
 
 		return relative;
 	}
 
-	public static String calculateRelativeDate(String dateAsString){
+	public static String calculateRelativeDate(String dateAsString) {
 		String relative = "";
 		try {
 			Date pastDate = parseString(dateAsString, new SimpleDateFormat(DateUtils.OPEN_MRS_RESPONSE_FORMAT));
 			relative = calculateRelativeDate(pastDate);
-		} catch(ParseException ex){}
+		} catch (ParseException ex) {
+		}
 
 		return relative;
 	}
+
+	public static String calculateDuration(Date starDate, Date endDate) {
+		String relative = "";
+		//Date endDate = new Date();
+		long days = TimeUnit.MILLISECONDS.toHours(endDate.getTime() - starDate.getTime());
+		if (days == 0) {
+			relative = "today";
+		} else if (days < 7) {
+			relative = (days == 1 ? "yesterday" : days + " days ago");
+		} else if (days < 30) {
+			relative = Math.round(days / 7) + " week" + (days / 7 > 1 ? "s " : " ") + "ago";
+		} else {
+			relative = Math.round(days / 30) + " month" + (days / 30 > 1 ? "s " : " ") + "ago";
+		}
+
+		return relative;
+	}
+
 }

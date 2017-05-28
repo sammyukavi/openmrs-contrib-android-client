@@ -135,36 +135,24 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 			VisitViewHolder viewHolder = (VisitViewHolder)holder;
 			Visit visit = visits.get(position);
 			View singleVisitView = layoutInflater.inflate(R.layout.container_single_visit_observation, null);
-			TextView visitTitle = (TextView)singleVisitView.findViewById(R.id.visitTitle);
-			TextView visitTimeAgo = (TextView)singleVisitView.findViewById(R.id.visitTimeago);
+			TextView visitStartDate = (TextView)singleVisitView.findViewById(R.id.startDate);
 
 			//Let's set the visit title
 			String startDate = DateUtils.convertTime1(visit.getStartDatetime(), DateUtils.DATE_FORMAT);
 			String stopDate = visit.getStopDatetime();
 			if (!StringUtils.notNull(stopDate)) {
 				isActiveVisit = true;
-				if (startDate.equalsIgnoreCase(DateUtils.now(DateUtils.DATE_FORMAT))) {
-					visitTitle.setText(DateUtils
-							.convertTime1(visit.getStartDatetime(), DateUtils.TIME_FORMAT));
-				} else {
-					visitTitle.setText(DateUtils
-							.convertTime1(visit.getStartDatetime(), DateUtils.DATE_FORMAT));
-				}
-
+				singleVisitView.findViewById(R.id.active_visit_badge).setVisibility(View.VISIBLE);
+				startDate = context.getString(R.string.started) + " " + startDate;
 			} else {
-				visitTitle.setBackgroundResource(0);
-				visitTitle.setTextColor(context.getResources().getColor(R.color.openmrs_color_black));
-				visitTitle.setPadding(10, 0, 0, 10);
-				stopDate = DateUtils.convertTime1(visit.getStopDatetime(), DateUtils.DATE_FORMAT);
-				if (startDate.equalsIgnoreCase(stopDate)) {
-					visitTitle.setText(DateUtils.convertTime1(visit.getStartDatetime(), DateUtils.TIME_FORMAT) + " - "
-							+ DateUtils.convertTime1(visit.getStopDatetime(), DateUtils.TIME_FORMAT));
-				} else {
-					visitTitle.setText(DateUtils.convertTime1(visit.getStartDatetime(), DateUtils.DATE_FORMAT) + " - "
-							+ DateUtils.convertTime1(visit.getStopDatetime(), DateUtils.DATE_FORMAT));
-				}
+				/*((TextView)singleVisitView.findViewById(R.id.visitDuration)).setText(time.timeAgo(DateUtils.convertTime
+						(visit
+								.getStartDatetime()), DateUtils.convertTime(visit.getStopDatetime())));*/
 			}
-			visitTimeAgo.setText("Started: " + time.timeAgo(DateUtils.convertTime(visit.getStartDatetime())));
+
+			visitStartDate.setText(startDate);
+			((TextView)singleVisitView.findViewById(R.id.visitTimeago)).setText(time.timeAgo(DateUtils.convertTime(visit
+					.getStartDatetime())));
 
 			//Adding the link to the visit details page
 			showVisitDetails = (ImageView)singleVisitView.findViewById(R.id.loadVisitDetails);

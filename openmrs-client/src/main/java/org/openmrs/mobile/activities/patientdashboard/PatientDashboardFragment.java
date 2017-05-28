@@ -106,7 +106,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		scrollView = (NestedScrollView)fragmentView.findViewById(R.id.scrollView);
 		patientContactInfo = (LinearLayout)fragmentView.findViewById(R.id.patientContactInfo);
 		borderLine = fragmentView.findViewById(R.id.borderLine);
-		//shadowLine = getView().findViewById(R.id.shadowLine);
+		shadowLine = getActivity().findViewById(R.id.shadowLine);
 
 		//System.out.println(shadowLine);
 	}
@@ -152,8 +152,8 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 							//contact info is now being showed parcially, do nothing
 						} else {
 							//contact info is now being showed fully, hide shadow, show line
-							shadowLine.setVisibility(View.GONE);
-							borderLine.setVisibility(View.VISIBLE);
+							//shadowLine.setVisibility(View.GONE);
+							//borderLine.setVisibility(View.VISIBLE);
 						}
 					} else {
 						//contact info is not being shown, show shadow

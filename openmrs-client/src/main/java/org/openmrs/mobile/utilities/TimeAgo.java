@@ -4,7 +4,6 @@ import java.text.MessageFormat;
 import java.util.Date;
 
 /**
- *
  * Time ago class that converts long millisecond and {@link Date} objects to
  * time ago/from now {@link String} objects.
  */
@@ -22,7 +21,7 @@ public class TimeAgo {
 
 	private String minute = "about a minute";
 
-	private String minutes = "{0} min(s)";
+	private String minutes = "{0} min";
 
 	private String hour = "about an hour";
 
@@ -42,7 +41,6 @@ public class TimeAgo {
 
 	/**
 	 * Get time until specified date
-	 *
 	 * @param date
 	 * @return time string
 	 */
@@ -52,7 +50,6 @@ public class TimeAgo {
 
 	/**
 	 * Get time ago that date occurred
-	 *
 	 * @param date
 	 * @return time string
 	 */
@@ -62,7 +59,6 @@ public class TimeAgo {
 
 	/**
 	 * Get time until specified milliseconds date
-	 *
 	 * @param millis
 	 * @return time string
 	 */
@@ -72,7 +68,6 @@ public class TimeAgo {
 
 	/**
 	 * Get time ago that milliseconds date occurred
-	 *
 	 * @param millis
 	 * @return time string
 	 */
@@ -81,8 +76,16 @@ public class TimeAgo {
 	}
 
 	/**
+	 * Get time ago that milliseconds date occurred
+	 * @param startDate
+	 * @return time string
+	 */
+	public String timeAgo(final long startDate, final long endDate) {
+		return time(endDate - startDate, false);
+	}
+
+	/**
 	 * Get time string for milliseconds distance
-	 *
 	 * @param distanceMillis
 	 * @param allowFuture
 	 * @return time string
@@ -110,6 +113,8 @@ public class TimeAgo {
 			time = this.seconds;
 		else if (seconds < 90)
 			time = this.minute;
+		else if (minutes == 1)
+			time = MessageFormat.format(this.minutes + "s", Math.round(minutes));
 		else if (minutes < 45)
 			time = MessageFormat.format(this.minutes, Math.round(minutes));
 		else if (minutes < 90)
@@ -135,7 +140,6 @@ public class TimeAgo {
 	/**
 	 * Join time string with prefix and suffix. The prefix and suffix are only
 	 * joined with the time if they are non-null and non-empty
-	 *
 	 * @param prefix
 	 * @param time
 	 * @param suffix
@@ -160,8 +164,7 @@ public class TimeAgo {
 	}
 
 	/**
-	 * @param prefixAgo
-	 *            prefixAgo value
+	 * @param prefixAgo prefixAgo value
 	 * @return this instance
 	 */
 	public TimeAgo setPrefixAgo(final String prefixAgo) {
@@ -177,8 +180,7 @@ public class TimeAgo {
 	}
 
 	/**
-	 * @param prefixFromNow
-	 *            prefixFromNow value
+	 * @param prefixFromNow prefixFromNow value
 	 * @return this instance
 	 */
 	public TimeAgo setPrefixFromNow(final String prefixFromNow) {
@@ -194,8 +196,7 @@ public class TimeAgo {
 	}
 
 	/**
-	 * @param suffixAgo
-	 *            suffixAgo value
+	 * @param suffixAgo suffixAgo value
 	 * @return this instance
 	 */
 	public TimeAgo setSuffixAgo(final String suffixAgo) {
@@ -211,8 +212,7 @@ public class TimeAgo {
 	}
 
 	/**
-	 * @param suffixFromNow
-	 *            suffixFromNow value
+	 * @param suffixFromNow suffixFromNow value
 	 * @return this instance
 	 */
 	public TimeAgo setSuffixFromNow(final String suffixFromNow) {
@@ -228,8 +228,7 @@ public class TimeAgo {
 	}
 
 	/**
-	 * @param seconds
-	 *            seconds value
+	 * @param seconds seconds value
 	 * @return this instance
 	 */
 	public TimeAgo setSeconds(final String seconds) {
@@ -245,8 +244,7 @@ public class TimeAgo {
 	}
 
 	/**
-	 * @param minute
-	 *            minute value
+	 * @param minute minute value
 	 * @return this instance
 	 */
 	public TimeAgo setMinute(final String minute) {
@@ -262,8 +260,7 @@ public class TimeAgo {
 	}
 
 	/**
-	 * @param minutes
-	 *            minutes value
+	 * @param minutes minutes value
 	 * @return this instance
 	 */
 	public TimeAgo setMinutes(final String minutes) {
@@ -279,8 +276,7 @@ public class TimeAgo {
 	}
 
 	/**
-	 * @param hour
-	 *            hour value
+	 * @param hour hour value
 	 * @return this instance
 	 */
 	public TimeAgo setHour(final String hour) {
@@ -296,8 +292,7 @@ public class TimeAgo {
 	}
 
 	/**
-	 * @param hours
-	 *            hours value
+	 * @param hours hours value
 	 * @return this instance
 	 */
 	public TimeAgo setHours(final String hours) {
@@ -313,8 +308,7 @@ public class TimeAgo {
 	}
 
 	/**
-	 * @param day
-	 *            day value
+	 * @param day day value
 	 * @return this instance
 	 */
 	public TimeAgo setDay(final String day) {
@@ -330,8 +324,7 @@ public class TimeAgo {
 	}
 
 	/**
-	 * @param days
-	 *            days value
+	 * @param days days value
 	 * @return this instance
 	 */
 	public TimeAgo setDays(final String days) {
@@ -347,8 +340,7 @@ public class TimeAgo {
 	}
 
 	/**
-	 * @param month
-	 *            month value
+	 * @param month month value
 	 * @return this instance
 	 */
 	public TimeAgo setMonth(final String month) {
@@ -364,8 +356,7 @@ public class TimeAgo {
 	}
 
 	/**
-	 * @param months
-	 *            months value
+	 * @param months months value
 	 * @return this instance
 	 */
 	public TimeAgo setMonths(String months) {
@@ -381,8 +372,7 @@ public class TimeAgo {
 	}
 
 	/**
-	 * @param year
-	 *            year value
+	 * @param year year value
 	 * @return this instance
 	 */
 	public TimeAgo setYear(String year) {
@@ -398,8 +388,7 @@ public class TimeAgo {
 	}
 
 	/**
-	 * @param years
-	 *            years value
+	 * @param years years value
 	 * @return this instance
 	 */
 	public TimeAgo setYears(String years) {

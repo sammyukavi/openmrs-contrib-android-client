@@ -432,11 +432,11 @@
 	<string name="is_preop_risk_assessment_only">Pre-Op risk assessment only?</string>
 	<string name="is_icu_stay">ICU stay during admission?</string>
 	<string name="is_hdu_stay">HDU stay during admission?</string>
-	<string name="is_hdu_comgmt">HDU Co-Management Only?</string>
+	<string name="is_hdu_comgmt">HDU Co-Management only?</string>
 	<string name="is_hiv_positive">HIV+:</string>
 	<string name="cd4">CD4:</string>
 	<string name="hba1c">HbA1c:</string>
-	<string name="inpatient_service_type">Type of inpatient service</string>
+	<string name="inpatient_service_type">Inpatient service type</string>
 	<string name="discharge_diagnosis">Discharge diagnosis:</string>
 	<string name="unknown">Unknown</string>
 	<string name="nav_login">Login</string>
@@ -499,4 +499,5 @@
 	<string name="error_text_vitals_minimum">Minimum: %1$d</string>
 	<string name="error_occured">An error occured making your request</string>
 	<string name="saved">Saved</string>
+	<string name="started">Started:</string>
 </resources>

@@ -56,12 +56,10 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 
 	FloatingActionButton fab;
 	private View mRootView;
-	private RecyclerView openViewTasksRecyclerView, predefinedTasksRecyclerView;
-	private LinearLayoutManager layoutManager, predefinedTaskManager;
-	private RelativeLayout addTaskLayout;
+	private RecyclerView openViewTasksRecyclerView;
+	private LinearLayoutManager layoutManager;
+	private LinearLayout addTaskLayout;
 	private LinearLayout closedTasksLayout;
-	private SwitchCompat predefinedTasksSwitch;
-	private CardView predefinedTasksCardView;
 
 	private List<VisitPredefinedTask> predefinedTasks;
 	private List<VisitTask> visitTasksLists;
@@ -90,9 +88,6 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 		layoutManager = new LinearLayoutManager(this.getActivity());
 		openViewTasksRecyclerView.setLayoutManager(layoutManager);
 
-		predefinedTaskManager = new LinearLayoutManager(this.getActivity());
-		predefinedTasksRecyclerView.setLayoutManager(predefinedTaskManager);
-
 		addListeners();
 		// Font config
 		FontsUtil.setFont((ViewGroup)this.getActivity().findViewById(android.R.id.content));
@@ -103,12 +98,8 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 		openViewTasksRecyclerView = (RecyclerView)v.findViewById(R.id.openVisitTasksRecyclerView);
 		fab = (FloatingActionButton)v.findViewById(R.id.visitTaskFab);
 		addtask = (AutoCompleteTextView)v.findViewById(R.id.addVisitTasks);
-		addTaskLayout = (RelativeLayout)v.findViewById(R.id.addTaskLayout);
+		addTaskLayout = (LinearLayout)v.findViewById(R.id.addTaskLayout);
 		closedTasksLayout = (LinearLayout)v.findViewById(R.id.closedTasksLayout);
-		predefinedTasksSwitch = (SwitchCompat)v.findViewById(R.id.switchCompatPredefinedTasks);
-		predefinedTasksCardView = (CardView)v.findViewById(R.id.predefinedTasks);
-		noPredefinedTasks = (TextView)v.findViewById(R.id.noPredefinedTasks);
-		predefinedTasksRecyclerView = (RecyclerView)v.findViewById(R.id.predefinedTasksListView);
 
 		noVisitTasks = (TextView)v.findViewById(R.id.noVisitTasks);
 	}
@@ -236,29 +227,6 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 			public void onClick(View v) {
 				if (ViewUtils.getInput(addtask) != null) {
 					((VisitTasksPresenter)mPresenter).createVisitTasksObject(ViewUtils.getInput(addtask));
-				}
-			}
-		});
-
-		predefinedTasksSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				if (isChecked) {
-					predefinedTasksCardView.setVisibility(View.VISIBLE);
-					if (removeUsedPredefinedTasks(predefinedTasks, visitTasksLists).size() > 0) {
-						predefinedTasksRecyclerView.setVisibility(View.VISIBLE);
-						noPredefinedTasks.setVisibility(View.GONE);
-
-						PredefinedVisitTasksRecyclerViewAdapter adapter =
-								new PredefinedVisitTasksRecyclerViewAdapter(getActivity(), removeUsedPredefinedTasks
-										(predefinedTasks, visitTasksLists), this);
-						predefinedTasksRecyclerView.setAdapter(adapter);
-					} else {
-						noPredefinedTasks.setVisibility(View.VISIBLE);
-						predefinedTasksRecyclerView.setVisibility(View.GONE);
-					}
-				} else {
-					predefinedTasksCardView.setVisibility(View.GONE);
 				}
 			}
 		});

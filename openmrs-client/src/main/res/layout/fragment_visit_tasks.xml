@@ -11,7 +11,7 @@
 			android:layout_height="wrap_content"
 			android:orientation="vertical">
 		
-		<RelativeLayout
+		<LinearLayout
 				android:id="@+id/addTaskLayout"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
@@ -26,7 +26,7 @@
 				
 				<AutoCompleteTextView
 						android:id="@+id/addVisitTasks"
-						android:layout_width="321dp"
+						android:layout_width="match_parent"
 						android:layout_height="match_parent"
 						android:layout_marginTop="10dp"
 						android:layout_marginLeft="5dp"
@@ -43,15 +43,7 @@
 					<requestFocus />
 				</AutoCompleteTextView>
 			</android.support.design.widget.TextInputLayout>
-			<android.support.v7.widget.SwitchCompat
-					android:id="@+id/switchCompatPredefinedTasks"
-					android:layout_width="wrap_content"
-					android:layout_height="40dp"
-					android:layout_centerVertical="true"
-					android:layout_alignParentRight="true"
-					android:layout_alignParentEnd="true" />
-		
-		</RelativeLayout>
+		</LinearLayout>
 		
 		<LinearLayout
 				android:layout_width="fill_parent"

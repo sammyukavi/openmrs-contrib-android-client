@@ -394,9 +394,8 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 	}
 
 	private Encounter createVisitNoteEncounter() {
-		OpenMRS openMRS = new OpenMRS();
 
-		SharedPreferences prefs = openMRS.getOpenMRSSharedPreferences();
+		SharedPreferences prefs = OpenMRS.getInstance().getOpenMRSSharedPreferences();
 		prefs.getString(ApplicationConstants.SESSION_TOKEN, ApplicationConstants.EMPTY_STRING);
 
 		//create encountertType
@@ -416,7 +415,7 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 		encounter.setForm(form);
 		encounter.setLocation(activeVisit.getLocation());
 		encounter.setVisit(new Visit(activeVisit.getUuid()));
-		encounter.setProvider(openMRS.getCurrentLoggedInUserInfo().get(ApplicationConstants.UserKeys.USER_UUID));
+		encounter.setProvider(OpenMRS.getInstance().getCurrentLoggedInUserInfo().get(ApplicationConstants.UserKeys.USER_UUID));
 		encounter.setEncounterType(mEncountertype);
 
 		return encounter;

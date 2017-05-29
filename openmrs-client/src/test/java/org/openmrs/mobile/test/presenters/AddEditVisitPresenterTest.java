@@ -86,7 +86,6 @@ public class AddEditVisitPresenterTest extends ACUnitTestBase {
         location.setParentLocation(parentLocation);
 
         visit = new Visit();
-        visit.setUuid("24-65-9");
         visit.setStartDatetime("2017-05-01 00:00:00");
         visit.setPatient(patient);
         visit.setVisitType(new VisitType("Inpatient Kijabe", "547874"));
@@ -146,6 +145,7 @@ public class AddEditVisitPresenterTest extends ACUnitTestBase {
         doAnswer(new Answer<Void>() {
             @Override
             public Void answer(InvocationOnMock invocation) throws Throwable {
+                visit.setUuid("24-65-9");
                 ((DataService.GetCallback<Visit>) invocation.getArguments()[1]).onCompleted(visit);
                 return null;
             }
@@ -184,7 +184,7 @@ public class AddEditVisitPresenterTest extends ACUnitTestBase {
     public void shouldStartVisit(){
         presenter.startVisit(new ArrayList<>());
         verify(view).setSpinnerVisibility(false);
-        verify(view).showPatientDashboard();
+        verify(view).showVisitDetails("24-65-9");
     }
 
     //@Test

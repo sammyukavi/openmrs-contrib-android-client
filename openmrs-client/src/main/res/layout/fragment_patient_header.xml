@@ -80,7 +80,6 @@
 	</LinearLayout>
 
 	<View
-			android:visibility="gone"
 			android:layout_below="@+id/patientGenderAgeDetails"
 			android:layout_marginTop="5dp"
 			android:layout_marginBottom="1dp"

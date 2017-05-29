@@ -1,5 +1,7 @@
 package org.openmrs.mobile.data.impl;
 
+import android.support.annotation.NonNull;
+
 import org.openmrs.mobile.data.BaseDataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
@@ -7,32 +9,31 @@ import org.openmrs.mobile.data.db.impl.SessionDbService;
 import org.openmrs.mobile.data.rest.SessionRestService;
 import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.models.Session;
+import org.openmrs.mobile.utilities.ApplicationConstants;
 
 import retrofit2.Call;
 
-/**
- * Created by dubdabasoduba on 27/05/2017.
- */
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class SessionDataService extends BaseDataService<Session, SessionDbService, SessionRestService> {
 	@Override
 	protected SessionDbService getDbService() {
-		return null;
+		return new SessionDbService();
 	}
 
 	@Override
 	protected Class<SessionRestService> getRestServiceClass() {
-		return null;
+		return SessionRestService.class;
 	}
 
 	@Override
 	protected String getRestPath() {
-		return null;
+		return ApplicationConstants.API.REST_ENDPOINT_V1;
 	}
 
 	@Override
 	protected String getEntityName() {
-		return null;
+		return "session";
 	}
 
 	@Override
@@ -59,4 +60,12 @@ public class SessionDataService extends BaseDataService<Session, SessionDbServic
 	protected Call<Session> _restPurge(String restPath, String uuid) {
 		return null;
 	}
+
+	/*public void getSession(@NonNull GetCallback<Session> callback) {
+		checkNotNull(callback);
+
+		executeSingleCallback(callback, null,
+				() -> null,
+				() -> restService.getSession(buildRestRequestPath()));
+	}*/
 }

@@ -240,9 +240,15 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 		List<String> items = getLocationStringList(locationsList);
 		final LocationArrayAdapter adapter = new LocationArrayAdapter(this.getActivity(), items);
 		mDropdownLocation.setAdapter(adapter);
+		for (int i = 0; i < items.size(); i++) {
+			if (items.get(i).contains(OpenMRS.getInstance().getLocation())) {
+				mDropdownLocation.setSelection(i);
+				break;
+			}
+		}
+
 		mLoginButton.setEnabled(false);
 		mSpinner.setVisibility(View.GONE);
-		//mLoginFormView.setVisibility(View.VISIBLE);
 	}
 
 	@Override

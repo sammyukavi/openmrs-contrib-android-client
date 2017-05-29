@@ -192,11 +192,6 @@ public class OpenMRS extends Application {
 		return prefs.getString(ApplicationConstants.VISIT_TYPE_UUID, ApplicationConstants.EMPTY_STRING);
 	}
 
-	public String getVisitStopDate() {
-		SharedPreferences prefs = getOpenMRSSharedPreferences();
-		return prefs.getString(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, ApplicationConstants.EMPTY_STRING);
-	}
-
 	public String getCurrentProviderUUID() {
 		SharedPreferences prefs = getOpenMRSSharedPreferences();
 		return prefs.getString(ApplicationConstants.BundleKeys.PROVIDER_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING);
@@ -307,6 +302,7 @@ public class OpenMRS extends Application {
 				prefs.getString(ApplicationConstants.SESSION_TOKEN, ApplicationConstants.EMPTY_STRING));
 		editor.remove(ApplicationConstants.SESSION_TOKEN);
 		editor.remove(ApplicationConstants.AUTHORIZATION_TOKEN);
+		editor.remove(ApplicationConstants.BundleKeys.PATIENT_QUERY_BUNDLE);
 		clearCurrentLoggedInUserInfo();
 		editor.commit();
 	}

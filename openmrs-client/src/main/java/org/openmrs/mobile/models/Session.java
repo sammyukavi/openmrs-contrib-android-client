@@ -29,6 +29,8 @@ public class Session extends BaseOpenmrsAuditableObject {
 	@Expose
 	private User user;
 
+	public Session(){}
+
 	public Session(String sessionId, boolean authenticated, User user) {
 		this.sessionId = sessionId;
 		this.authenticated = authenticated;

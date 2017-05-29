@@ -50,9 +50,10 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 	private int limit = 10;
 	private ConceptNameDataService conceptNameDataService;
 
-	public VisitDetailsPresenter(String patientUuid, String visitUuid, String providerUuid,String visitStopDate , VisitContract
-			.VisitDetailsView
-			visitDetailsView) {
+	public VisitDetailsPresenter(String patientUuid, String visitUuid, String providerUuid, String visitStopDate,
+			VisitContract
+					.VisitDetailsView
+					visitDetailsView) {
 		this.visitDetailsView = visitDetailsView;
 		this.visitDetailsView.setPresenter(this);
 		this.visitDataService = new VisitDataService();

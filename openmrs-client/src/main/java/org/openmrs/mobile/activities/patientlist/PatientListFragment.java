@@ -22,7 +22,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -47,6 +49,8 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 	private TextView numberOfPatients;
 	private RecyclerView patientListModelRecyclerView;
 	private LinearLayoutManager layoutManager;
+	private LinearLayout patientListScreen;
+	private RelativeLayout patientListProgressBar;
 
 	private PatientList selectedPatientList;
 
@@ -93,6 +97,8 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 		emptyPatientList = (TextView)root.findViewById(R.id.emptyPatientList);
 		noPatientLists = (TextView)root.findViewById(R.id.noPatientLists);
 		numberOfPatients = (TextView)root.findViewById(R.id.numberOfPatients);
+		patientListProgressBar = (RelativeLayout)root.findViewById(R.id.patientListScreenProgressBar);
+		patientListScreen = (LinearLayout)root.findViewById(R.id.patientListScreen);
 
 		layoutManager = new LinearLayoutManager(this.getActivity());
 		patientListModelRecyclerView = (RecyclerView)root.findViewById(R.id.patientListModelRecyclerView);
@@ -112,6 +118,17 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 	@Override
 	public void setNoPatientListsVisibility(boolean visible) {
 		noPatientLists.setVisibility(visible ? View.VISIBLE : View.GONE);
+	}
+
+	@Override
+	public void setPatientListScreenVisibility(boolean visible) {
+		if (visible) {
+			patientListScreen.setVisibility(View.VISIBLE);
+			patientListProgressBar.setVisibility(View.GONE);
+		} else {
+			patientListScreen.setVisibility(View.GONE);
+			patientListProgressBar.setVisibility(View.VISIBLE);
+		}
 	}
 
 	@Override

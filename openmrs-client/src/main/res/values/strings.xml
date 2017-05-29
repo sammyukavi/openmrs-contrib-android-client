@@ -502,4 +502,7 @@
 	<string name="in_complete">In Complete</string>
 	<string name="update_visit">Update Visit</string>
 	<string name="update_audit_data">Update Audit Data</string>
+	<string name="show_visit_tasks">Show visit tasks</string>
+	<string name="predefined_tasks">Predefined Tasks</string>
+	<string name="no_predefined_tasks">No predefined tasks</string>
 </resources>

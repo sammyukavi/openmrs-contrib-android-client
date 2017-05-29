@@ -500,4 +500,5 @@
 	<string name="error_occured">An error occured making your request</string>
 	<string name="saved">Saved</string>
 	<string name="started">Started:</string>
+	<string name="duration">Dur: %1$s</string>
 </resources>

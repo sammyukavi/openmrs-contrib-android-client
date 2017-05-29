@@ -20,11 +20,9 @@ import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.impl.EncounterDataService;
 import org.openmrs.mobile.data.impl.LocationDataService;
-import org.openmrs.mobile.data.impl.PatientDataService;
 import org.openmrs.mobile.data.impl.VisitDataService;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Location;
-import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Visit;
 
 import static org.openmrs.mobile.utilities.ApplicationConstants.EncounterTypeDisplays.AUDITDATA;
@@ -32,16 +30,13 @@ import static org.openmrs.mobile.utilities.ApplicationConstants.EncounterTypeDis
 public class AuditDataPresenter extends BasePresenter implements AuditDataContract.Presenter {
 
 	private AuditDataContract.View auditDataView;
-	private DataService<Patient> patientDataService;
 	private VisitDataService visitDataService;
-
 	private EncounterDataService encounterDataService;
 	private LocationDataService locationDataService;
 
 	public AuditDataPresenter(AuditDataContract.View view) {
 		this.auditDataView = view;
 		this.auditDataView.setPresenter(this);
-		this.patientDataService = new PatientDataService();
 		this.visitDataService = new VisitDataService();
 		this.encounterDataService = new EncounterDataService();
 		this.locationDataService = new LocationDataService();
@@ -124,8 +119,16 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 		if (isNewEncounter) {
 			encounterDataService.create(encounter, serverResponceCallback);
 		} else {
+			//voidCreate(encounter);
+			//encounter.setVoided(true);
 			encounterDataService.update(encounter, serverResponceCallback);
 		}
+	}
+
+	private void voidCreate(Encounter encounter) {
+		encounter.setVoided(true);
+		//encounterDataService.update(encounter, serverResponceCallback);
+		//encounterDataService.delete()
 	}
 
 	@Override

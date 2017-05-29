@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,14 +22,12 @@ import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.visit.VisitActivity;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
-import org.openmrs.mobile.data.impl.ObsDataService;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.DateUtils;
 import org.openmrs.mobile.utilities.StringUtils;
-import org.openmrs.mobile.utilities.TimeAgo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,13 +40,13 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 	private boolean isLoading;
 	private Context context;
 	private List<Visit> visits;
-	private ObsDataService observationDataService;
 	private CustomDialogBundle createEditVisitNoteDialog;
 	private ImageView showVisitDetails;
 	private Intent intent;
-	private TimeAgo time;
 	private LayoutInflater layoutInflater;
 	private TableLayout visitVitalsTableLayout;
+	boolean mEditing = false;
+	TextView visitNote;
 
 	private final RecyclerView.OnScrollListener onScrollListener = new RecyclerView.OnScrollListener() {
 		@Override
@@ -78,8 +78,6 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 		this.createEditVisitNoteDialog = new CustomDialogBundle();
 		this.createEditVisitNoteDialog.setTitleViewMessage(context.getString(R.string.visit_note));
 		this.createEditVisitNoteDialog.setRightButtonText(context.getString(R.string.label_save));
-		this.observationDataService = new ObsDataService();
-		this.time = new TimeAgo();
 		this.layoutInflater = LayoutInflater.from(context);
 		recyclerView.addOnScrollListener(onScrollListener);
 	}
@@ -124,6 +122,14 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 		return animator;
 	}
 
+	private void loadVisitDetails(String uuid) {
+		intent = new Intent(context, VisitActivity.class);
+		intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, OpenMRS.getInstance()
+				.getPatientUuid());
+		intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, uuid);
+		context.startActivity(intent);
+	}
+
 	@Override
 	public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
@@ -144,28 +150,27 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 				isActiveVisit = true;
 				singleVisitView.findViewById(R.id.active_visit_badge).setVisibility(View.VISIBLE);
 				startDate = context.getString(R.string.started) + " " + startDate;
-			} else {
-				/*((TextView)singleVisitView.findViewById(R.id.visitDuration)).setText(time.timeAgo(DateUtils.convertTime
-						(visit
-								.getStartDatetime()), DateUtils.convertTime(visit.getStopDatetime())));*/
 			}
 
 			visitStartDate.setText(startDate);
-			((TextView)singleVisitView.findViewById(R.id.visitTimeago)).setText(time.timeAgo(DateUtils.convertTime(visit
-					.getStartDatetime())));
+
+			((TextView)singleVisitView.findViewById(R.id.visitTimeago)).setText(DateUtils.calculateTimeDifference(
+					(visit.getStartDatetime())));
+
+			if (isActiveVisit) {
+				((TextView)singleVisitView.findViewById(R.id.visitDuration))
+						.setText(context.getString(R.string.duration,
+								DateUtils.calculateTimeDifference(visit.getStartDatetime(), false)));
+			} else {
+				((TextView)singleVisitView.findViewById(R.id.visitDuration))
+						.setText(context.getString(R.string.duration,
+								DateUtils.calculateTimeDifference(visit.getStartDatetime(), visit.getStopDatetime())));
+			}
 
 			//Adding the link to the visit details page
 			showVisitDetails = (ImageView)singleVisitView.findViewById(R.id.loadVisitDetails);
-			showVisitDetails.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					intent = new Intent(context, VisitActivity.class);
-					intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, OpenMRS.getInstance()
-							.getPatientUuid());
-					intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visit.getUuid());
-					context.startActivity(intent);
-				}
-			});
+			showVisitDetails.setOnClickListener(v -> loadVisitDetails(visit.getUuid()));
+			singleVisitView.setOnClickListener(v -> loadVisitDetails(visit.getUuid()));
 
 			if (visit.getEncounters().size() == 0) {
 				presentVisitNotes(new Encounter(), singleVisitView, isActiveVisit);
@@ -192,11 +197,47 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 	}
 
 	private void presentVisitNotes(Encounter encounter, View view, boolean isActiveVisit) {
-		TextView visitNote = null;
+		visitNote = null;
 
 		if (isActiveVisit) {
 			view.findViewById(R.id.editVisitNoteContainer).setVisibility(View.VISIBLE);
 			visitNote = (TextInputEditText)view.findViewById(R.id.editVisitNote);
+
+			visitNote.addTextChangedListener(new TextWatcher() {
+				@Override
+				public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+				}
+
+				@Override
+				public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+				}
+
+				@Override
+				public void afterTextChanged(Editable s) {
+					if (!mEditing && visitNote.hasFocus()) {
+						mEditing = true;
+					}
+				}
+			});
+			visitNote.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+
+				@Override
+				public void onFocusChange(View v, boolean hasFocus) {
+					if (!hasFocus && mEditing) {
+						mEditing = false;
+						///Do the thing
+					}
+				}
+			});
+			/*
+			protected void saveLastOpenField(){
+				for (EditText view:getFields()){
+					view.clearFocus();
+				}
+			}*/
+
 		} else {
 			visitNote = (TextView)view.findViewById(R.id.visitNoteText);
 			view.findViewById(R.id.visitNoteTextContainer).setVisibility(View.VISIBLE);

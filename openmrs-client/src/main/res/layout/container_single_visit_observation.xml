@@ -82,7 +82,7 @@
 						android:layout_gravity="top"
 						android:layout_width="match_parent"
 						android:minLines="4"
-						android:hint="@string/visit_note"
+						android:hint="@string/clinical_notes_label"
 						android:layout_height="wrap_content"
 						android:scrollbars="vertical"
 						android:id="@+id/editVisitNote" />

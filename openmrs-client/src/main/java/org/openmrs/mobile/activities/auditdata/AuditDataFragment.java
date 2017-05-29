@@ -20,6 +20,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -376,6 +377,29 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		return observation;
 	}
 
+	private Observation setObservationFields(String questionConceptUuid, String
+			answerConceptUuid) {
+
+		Observation observation = new Observation();
+
+		//here we assign all observations current time
+		LocalDateTime localDateTime = new LocalDateTime();
+		String timeString = localDateTime.toString();
+
+		Concept concept = new Concept();
+		concept.setUuid(questionConceptUuid);
+
+		Person person = new Person();
+		person.setUuid(patientUuid);
+
+		observation.setConcept(concept);
+		observation.setPerson(person);
+		observation.setValue(answerConceptUuid);
+		observation.setObsDatetime(timeString);
+
+		return observation;
+	}
+
 	@Override
 	public void setVisit(Visit visit) {
 		this.visit = visit;
@@ -532,7 +556,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 					break;
 				case CONCEPT_INPATIENT_SERVICE_TYPE:
 
-					/*inpatientServiceTypeObservation = observation;
+					inpatientServiceTypeObservation = observation;
 					//Short fix. Values mismatch from server.
 					//TODO  find a way of putting thisngs in the settings page
 					if (displayValue.equalsIgnoreCase("surgical service")) {
@@ -547,7 +571,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 					if (!displayValue.equals(null)) {
 						int spinnerPosition = adapter.getPosition(displayValue);
 						inpatientServiceType.setSelection(spinnerPosition);
-					}*/
+					}
 
 					break;
 				case CONCEPT_AUDIT_COMPLETE:
@@ -586,6 +610,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 
 		if (deathInHospitalObservation != null) {
 			observations.add(deathInHospitalObservation);
+			System.out.println(deathInHospitalObservation.getValue());
 		}
 
 		if (palliativeConsultObservation != null) {
@@ -612,11 +637,13 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 			observations.add(hivPositiveObservation);
 		}
 
-		if (cd4Observation != null) {
+		if (cd4.getText().length() > 0) {
+			cd4Observation = setObservationFields(CONCEPT_CD4_COUNT, cd4.getText().toString());
 			observations.add(cd4Observation);
 		}
 
-		if (hBa1cObservation != null) {
+		if (hBa1c.getText().length() > 0) {
+			hBa1cObservation = setObservationFields(CONCEPT_HBA1C, hBa1c.getText().toString());
 			observations.add(hBa1cObservation);
 		}
 

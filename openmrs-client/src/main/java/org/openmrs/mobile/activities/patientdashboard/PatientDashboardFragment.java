@@ -14,6 +14,7 @@
 
 package org.openmrs.mobile.activities.patientdashboard;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Rect;
@@ -31,23 +32,28 @@ import android.widget.LinearLayout;
 import com.github.clans.fab.FloatingActionButton;
 
 import org.openmrs.mobile.R;
+import org.openmrs.mobile.activities.ACBaseActivity;
 import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.activities.addeditpatient.AddEditPatientActivity;
 import org.openmrs.mobile.activities.addeditvisit.AddEditVisitActivity;
 import org.openmrs.mobile.application.OpenMRS;
+import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.FontsUtil;
 import org.openmrs.mobile.utilities.StringUtils;
 
+import java.util.HashMap;
 import java.util.List;
+
+import static org.openmrs.mobile.utilities.ApplicationConstants.BundleKeys.LOCATION_UUID_BUNDLE;
+import static org.openmrs.mobile.utilities.ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE;
 
 public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardContract.Presenter>
 		implements PatientDashboardContract.View {
 
 	private View fragmentView;
-	private Visit activeVisit;
 	private FloatingActionButton startVisitButton, editPatient;
 	private Patient patient;
 	private OpenMRS instance = OpenMRS.getInstance();
@@ -57,6 +63,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	private LinearLayout patientContactInfo;
 	private View borderLine, shadowLine;
 	private String providerUuid;
+	private Location location;
 
 	public static PatientDashboardFragment newInstance() {
 		return new PatientDashboardFragment();
@@ -72,6 +79,13 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		String patientUuid = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
 		initViewFields();
 		initializeListeners(startVisitButton, editPatient);
+		//We start by fetching by location, required for creating encounters
+		String locationUuid = "";
+		if (!instance.getLocation().equalsIgnoreCase(null)) {
+			locationUuid = instance.getLocation();
+		}
+
+		mPresenter.fetchLocation(locationUuid);
 		mPresenter.fetchPatientData(patientUuid);
 		FontsUtil.setFont((ViewGroup)this.getActivity().findViewById(android.R.id.content));
 		return fragmentView;
@@ -107,7 +121,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		scrollView = (NestedScrollView)fragmentView.findViewById(R.id.scrollView);
 		patientContactInfo = (LinearLayout)fragmentView.findViewById(R.id.patientContactInfo);
 		borderLine = fragmentView.findViewById(R.id.borderLine);
-		//shadowLine = getView().findViewById(R.id.shadowLine);
+		shadowLine = getActivity().findViewById(R.id.shadowLine);
 
 		//System.out.println(shadowLine);
 	}
@@ -131,7 +145,6 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
 		for (Visit visit : visits) {
 			if (!StringUtils.notNull(visit.getStopDatetime())) {
-				this.activeVisit = visit;
 				startVisitButton.setVisibility(View.GONE);
 				setVisitUuid(visit);
 				break;
@@ -153,8 +166,8 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 							//contact info is now being showed parcially, do nothing
 						} else {
 							//contact info is now being showed fully, hide shadow, show line
-							shadowLine.setVisibility(View.GONE);
-							borderLine.setVisibility(View.VISIBLE);
+							//shadowLine.setVisibility(View.GONE);
+							//borderLine.setVisibility(View.VISIBLE);
 						}
 					} else {
 						//contact info is not being shown, show shadow
@@ -166,10 +179,16 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 			}
 		});
 
+		HashMap<String, String> uuids = new HashMap<>();
+
+		uuids.put(PATIENT_UUID_BUNDLE, patient.getUuid());
+		uuids.put(LOCATION_UUID_BUNDLE, location.getUuid());
+
 		RecyclerView pastVisitsRecyclerView = (RecyclerView)fragmentView.findViewById(R.id.pastVisits);
 		pastVisitsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-		VisitsRecyclerAdapter visitsRecyclerAdapter = new VisitsRecyclerAdapter(pastVisitsRecyclerView, visits,
-				getActivity()
+		VisitsRecyclerAdapter visitsRecyclerAdapter = new VisitsRecyclerAdapter(
+				pastVisitsRecyclerView,
+				visits, getActivity(), uuids
 		);
 		pastVisitsRecyclerView.setAdapter(visitsRecyclerAdapter);
 
@@ -211,6 +230,16 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		SharedPreferences.Editor editor = instance.getOpenMRSSharedPreferences().edit();
 		editor.putString(ApplicationConstants.BundleKeys.PROVIDER_UUID_BUNDLE, providerUuid);
 		editor.commit();
+	}
+
+	@Override
+	public void setLocation(Location location) {
+		this.location = location;
+	}
+
+	@Override
+	public void showSnackbar(String message) {
+		((ACBaseActivity)getActivity()).showSnackbar(message);
 	}
 
 }

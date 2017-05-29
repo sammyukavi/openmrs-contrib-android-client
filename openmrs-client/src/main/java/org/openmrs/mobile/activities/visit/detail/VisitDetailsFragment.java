@@ -264,8 +264,8 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 			visitEndDate
 					.setText(getContext().getResources().getString(R.string.date_closed) + ": " + DateUtils
 							.convertTime1(visit.getStopDatetime(), DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT));
-			visitDuration.setText("Not now");
-			startDuration.setText("Not now");
+			visitDuration.setText(DateUtils.calculateTimeDifference(visit.getStartDatetime()));
+			startDuration.setText(DateUtils.calculateTimeDifference(visit.getStartDatetime(), visit.getStopDatetime()));
 
 		} else {
 			activeVisitBadge.setVisibility(View.VISIBLE);
@@ -273,7 +273,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 			visitDuration.setVisibility(View.GONE);
 			visitStartDate.setText(
 					DateUtils.convertTime1(visit.getStartDatetime(), DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT));
-			startDuration.setText("Not now");
+			startDuration.setText(DateUtils.calculateTimeDifference(visit.getStartDatetime()));
 		}
 	}
 
@@ -414,36 +414,22 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	public void setClinicalNote(Visit visit) {
 		if (visit.getEncounters().size() != 0) {
 			for (int i = 0; i < visit.getEncounters().size(); i++) {
-				if (visit.getEncounters().get(i).getDisplay()
-						.contains(ApplicationConstants.EncounterTypeDisplays.VISIT_NOTE)) {
-					Encounter encounter = visit.getEncounters().get(i);
-					EncounterType encounterType = visit.getEncounters().get(i).getEncounterType();
-					if (encounterType.getUuid().equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity
-							.VISIT_NOTE_UUID)) {
-						submitVisitNote.setText(getString(R.string.update_visit_note));
-						visitNoteAuditInfo.setVisibility(View.VISIBLE);
-						visitNoteDate.setText(DateUtils.convertTime(encounter.getEncounterDatetime(),
-								DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT));
+				Encounter encounter = visit.getEncounters().get(i);
+				EncounterType encounterType = visit.getEncounters().get(i).getEncounterType();
 
-						for (int v = 0; v < encounter.getEncounterProviders().size(); v++) {
-							if (v == 0) {
+				if (encounterType.getUuid().equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.CLINICAL_NOTE_UUID)) {
+					submitVisitNote.setText(getString(R.string.update_visit_note));
 
-								ArrayList names = splitStrings(encounter.getEncounterProviders().get(v).getDisplay(), ":");
-								visitNoteProvider.setText(names.get(0).toString());
-							}
+					for (int v = 0; v < encounter.getObs().size(); v++) {
+
+						ArrayList locators = splitStrings(encounter.getObs().get(v).getDisplay(), ":");
+
+						if (locators.get(0).toString()
+								.equalsIgnoreCase(ApplicationConstants.ObservationLocators.CLINICAL_NOTE)) {
+							clinicalNote.setText(locators.get(1).toString());
 						}
-
-						for (int v = 0; v < encounter.getObs().size(); v++) {
-
-							ArrayList locators = splitStrings(encounter.getObs().get(v).getDisplay(), ":");
-
-							if (locators.get(0).toString()
-									.equalsIgnoreCase(ApplicationConstants.ObservationLocators.CLINICAL_NOTE)) {
-								clinicalNote.setText(locators.get(1).toString());
-							}
-						}
-
 					}
+
 				}
 			}
 		}
@@ -453,7 +439,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		if (visit.getEncounters().size() != 0) {
 			for (Encounter encounter : visit.getEncounters()) {
 				if (encounter.getEncounterType().getUuid()
-						.equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.VISIT_NOTE_UUID)) {
+						.equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.CLINICAL_NOTE_UUID)) {
 					submitVisitNote.setText(getString(R.string.update_visit_note));
 					for (Observation obs : encounter.getObs()) {
 						if (obs.getDisplay().startsWith(ApplicationConstants.ObservationLocators.DIANOSES)) {

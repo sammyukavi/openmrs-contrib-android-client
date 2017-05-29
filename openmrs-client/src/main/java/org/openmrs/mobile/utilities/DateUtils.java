@@ -139,30 +139,113 @@ public final class DateUtils {
 		return String.valueOf(date);
 	}
 
-	public static String calculateRelativeDate(Date pastDate){
+	public static String calculateRelativeDate(Date pastDate) {
 		String relative = "";
-			Date today = new Date();
-			long days = TimeUnit.MILLISECONDS.toHours(today.getTime() - pastDate.getTime());
-			if(days  == 0){
-				relative = "today";
-			} else if (days < 7 ){
-				relative = (days == 1 ? "yesterday" : days + " days ago");
-			} else if (days < 30) {
-				relative = Math.round(days / 7) + " week" + (days / 7 > 1 ? "s " : " ") + "ago";
-			} else {
-				relative = Math.round(days / 30) + " month" + (days / 30 > 1 ? "s " : " ") + "ago";
-			}
+		Date today = new Date();
+		long days = TimeUnit.MILLISECONDS.toHours(today.getTime() - pastDate.getTime());
+		if (days == 0) {
+			relative = "today";
+		} else if (days < 7) {
+			relative = (days == 1 ? "yesterday" : days + " days ago");
+		} else if (days < 30) {
+			relative = Math.round(days / 7) + " week" + (days / 7 > 1 ? "s " : " ") + "ago";
+		} else {
+			relative = Math.round(days / 30) + " month" + (days / 30 > 1 ? "s " : " ") + "ago";
+		}
 
 		return relative;
 	}
 
-	public static String calculateRelativeDate(String dateAsString){
+	public static String calculateRelativeDate(String dateAsString) {
 		String relative = "";
 		try {
 			Date pastDate = parseString(dateAsString, new SimpleDateFormat(DateUtils.OPEN_MRS_RESPONSE_FORMAT));
 			relative = calculateRelativeDate(pastDate);
-		} catch(ParseException ex){}
+		} catch (ParseException ex) {
+		}
 
 		return relative;
+	}
+
+	private static String calculateTimeDifference(String dateStart, String dateStop, boolean minimum) {
+
+		Date startDate = null;
+		Date endDate = null;
+		SimpleDateFormat format = new SimpleDateFormat(OPEN_MRS_RESPONSE_FORMAT);
+
+		try {
+			startDate = format.parse(dateStart);
+			endDate = format.parse(dateStop);
+		} catch (ParseException ex) {
+			ex.printStackTrace();
+		}
+
+		long durationInSeconds = TimeUnit.MILLISECONDS.toSeconds(endDate.getTime() - startDate.getTime());
+
+		long SECONDS_IN_A_MINUTE = 60;
+		long MINUTES_IN_AN_HOUR = 60;
+		long HOURS_IN_A_DAY = 24;
+		long DAYS_IN_A_MONTH = 30;
+		long MONTHS_IN_A_YEAR = 12;
+
+		long sec = (durationInSeconds >= SECONDS_IN_A_MINUTE) ? durationInSeconds % SECONDS_IN_A_MINUTE : durationInSeconds;
+		long min = (durationInSeconds /= SECONDS_IN_A_MINUTE) >= MINUTES_IN_AN_HOUR ?
+				durationInSeconds % MINUTES_IN_AN_HOUR :
+				durationInSeconds;
+		long hrs = (durationInSeconds /= MINUTES_IN_AN_HOUR) >= HOURS_IN_A_DAY ?
+				durationInSeconds % HOURS_IN_A_DAY :
+				durationInSeconds;
+		long days = (durationInSeconds /= HOURS_IN_A_DAY) >= DAYS_IN_A_MONTH ?
+				durationInSeconds % DAYS_IN_A_MONTH :
+				durationInSeconds;
+		long months = (durationInSeconds /= DAYS_IN_A_MONTH) >= MONTHS_IN_A_YEAR ?
+				durationInSeconds % MONTHS_IN_A_YEAR :
+				durationInSeconds;
+		long years = (durationInSeconds /= MONTHS_IN_A_YEAR);
+
+		return getDuration(sec, min, hrs, days, months, years, minimum);
+	}
+
+	public static String calculateTimeDifference(String startDate, String stopDate) {
+		return calculateTimeDifference(startDate, stopDate, false);
+	}
+
+	public static String calculateTimeDifference(String startDate, boolean minimum) {
+		return calculateTimeDifference(startDate, new SimpleDateFormat(OPEN_MRS_RESPONSE_FORMAT).format(new Date()),
+				minimum);
+	}
+
+	public static String calculateTimeDifference(String startDate) {
+		return calculateTimeDifference(startDate, new SimpleDateFormat(OPEN_MRS_RESPONSE_FORMAT).format(new Date()),
+				true);
+	}
+
+	private static String getDuration(long secs, long mins, long hrs, long days, long months, long years, boolean minimum) {
+		StringBuffer sb = new StringBuffer();
+		String EMPTY_STRING = "";
+		if (minimum) {
+			if (years > 0)
+				sb.append(years > 0 ? years + (years > 1 ? " yrs " : " y ") : EMPTY_STRING);
+			else if (months > 0)
+				sb.append(months > 0 ? months + (months > 1 ? " m(s) " : " m ") : EMPTY_STRING);
+			else if (days > 0)
+				sb.append(days > 0 ? days + (days > 1 ? " d(s) " : " d ") : EMPTY_STRING);
+			else if (hrs > 0)
+				sb.append(hrs > 0 ? hrs + (hrs > 1 ? " h(s) " : " h ") : EMPTY_STRING);
+			else if (mins > 0)
+				sb.append(mins > 0 ? mins + (mins > 1 ? " min(s) " : " min ") : EMPTY_STRING);
+			else if (secs > 0)
+				sb.append(secs > 0 ? secs + (secs > 1 ? " secs " : " secs ") : EMPTY_STRING);
+		} else {
+			sb.append(years > 0 ? years + (years > 1 ? " years " : " year ") : EMPTY_STRING);
+			sb.append(months > 0 ? months + (months > 1 ? " months " : " month ") : EMPTY_STRING);
+			sb.append(days > 0 ? days + (days > 1 ? " days " : " day ") : EMPTY_STRING);
+			sb.append(hrs > 0 ? hrs + (hrs > 1 ? " hours " : " hour ") : EMPTY_STRING);
+			sb.append(mins > 0 ? mins + (mins > 1 ? " mins " : " min ") : EMPTY_STRING);
+			//sb.append(secs > 0 ? secs + (secs > 1 ? " secs " : " secs ") : EMPTY_STRING);
+		}
+
+		//sb.append("ago");
+		return sb.toString();
 	}
 }

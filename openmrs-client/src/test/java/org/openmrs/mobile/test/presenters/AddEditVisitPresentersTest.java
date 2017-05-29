@@ -36,7 +36,7 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 
 @PrepareForTest({OpenMRS.class})
-public class AddEditVisitPresenterTest extends ACUnitTestBase {
+public class AddEditVisitPresentersTest extends ACUnitTestBase {
 
     @Mock
     private VisitDataService visitDataService;

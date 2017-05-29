@@ -19,79 +19,102 @@
 		android:orientation="vertical">
 	
 	
-	<LinearLayout
+	<RelativeLayout
+			android:id="@+id/patientListScreenProgressBar"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_margin="5dp"
-			android:background="@drawable/card"
-			android:orientation="vertical">
-		
-		<Spinner
-				android:id="@+id/patientListDropdown"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="5dp"
-				android:layout_marginLeft="5dp"
-				android:focusable="true"
-				android:textSize="18sp" />
-	</LinearLayout>
-	
-	<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_margin="5dp"
-			android:layout_gravity="center"
-			android:background="@drawable/card"
-			android:orientation="vertical">
+			android:orientation="vertical"
+			android:visibility="gone">
 		
 		<ProgressBar
-				android:id="@+id/patientListLoadingProgressBar"
+				android:id="@+id/patientListScreenLoader"
 				android:layout_width="wrap_content"
 				android:layout_height="match_parent"
-				android:layout_gravity="center"
-				android:visibility="gone" />
-		
-		<TextView
-				android:id="@+id/noPatientLists"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				android:layout_marginBottom="5dp"
-				android:layout_marginTop="5dp"
-				android:gravity="center"
-				android:text="@string/no_patient_list"
-				android:visibility="gone" />
-		
-		<TextView
-				android:id="@+id/emptyPatientList"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				android:layout_marginBottom="5dp"
-				android:layout_marginTop="5dp"
-				android:gravity="center"
-				android:text="@string/no_patients_found"
-				android:visibility="gone" />
-		
-		<TextView
-				android:id="@+id/numberOfPatients"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				android:layout_marginBottom="5dp"
-				android:layout_marginTop="5dp"
-				android:gravity="center"
-				android:textColor="@color/light_teal"
-				android:visibility="gone" />
-	</LinearLayout>
+				android:layout_gravity="center" />
+	
+	</RelativeLayout>
 	
 	<LinearLayout
+			android:id="@+id/patientListScreen"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_margin="10dp"
 			android:orientation="vertical">
 		
-		<android.support.v7.widget.RecyclerView
-				android:id="@+id/patientListModelRecyclerView"
+		<LinearLayout
 				android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				android:layout_gravity="left|bottom" />
+				android:layout_height="wrap_content"
+				android:layout_margin="5dp"
+				android:background="@drawable/card"
+				android:orientation="vertical">
+			
+			<Spinner
+					android:id="@+id/patientListDropdown"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginTop="5dp"
+					android:layout_marginLeft="5dp"
+					android:focusable="true"
+					android:textSize="18sp" />
+		</LinearLayout>
+		
+		<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_margin="5dp"
+				android:layout_gravity="center"
+				android:background="@drawable/card"
+				android:orientation="vertical">
+			
+			<TextView
+					android:id="@+id/noPatientLists"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:layout_marginBottom="5dp"
+					android:layout_marginTop="5dp"
+					android:gravity="center"
+					android:text="@string/no_patient_list"
+					android:visibility="gone" />
+			
+			<TextView
+					android:id="@+id/emptyPatientList"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:layout_marginBottom="5dp"
+					android:layout_marginTop="5dp"
+					android:gravity="center"
+					android:text="@string/no_patients_found"
+					android:visibility="gone" />
+			
+			<TextView
+					android:id="@+id/numberOfPatients"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:layout_marginBottom="5dp"
+					android:layout_marginTop="5dp"
+					android:gravity="center"
+					android:textColor="@color/light_teal"
+					android:visibility="gone" />
+		</LinearLayout>
+		
+		<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_margin="10dp"
+				android:orientation="vertical">
+			
+			<ProgressBar
+					android:id="@+id/patientListLoadingProgressBar"
+					android:layout_width="wrap_content"
+					android:layout_height="match_parent"
+					android:layout_gravity="center"
+					android:visibility="gone" />
+			
+			<android.support.v7.widget.RecyclerView
+					android:id="@+id/patientListModelRecyclerView"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:layout_gravity="left|bottom" />
+		</LinearLayout>
+	
 	</LinearLayout>
 </LinearLayout>

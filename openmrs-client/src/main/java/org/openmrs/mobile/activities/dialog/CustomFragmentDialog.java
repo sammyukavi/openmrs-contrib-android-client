@@ -527,7 +527,6 @@ public class CustomFragmentDialog extends DialogFragment {
 							user.setUuid(instance.getCurrentLoggedInUserInfo().get(ApplicationConstants.UserKeys
 									.USER_UUID));
 
-
 							//create concept
 							Concept concept = new Concept();
 							concept.setUuid("162169AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");

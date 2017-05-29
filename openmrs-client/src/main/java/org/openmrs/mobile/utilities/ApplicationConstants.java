@@ -24,7 +24,8 @@ public abstract class ApplicationConstants {
 	public static final String VISIT_TYPE_UUID = "visit_type_uuid";
 	public static final String LAST_SESSION_TOKEN = "last_session_id";
 	public static final String LAST_LOGIN_SERVER_URL = "last_login_server_url";
-	public static final String DEFAULT_OPEN_MRS_URL = "http://192.168.56.1:8080/openmrs/";
+	//public static final String DEFAULT_OPEN_MRS_URL = "http://sandbox.openhmisafrica.org/openmrs/";
+	public static final String DEFAULT_OPEN_MRS_URL = "http://192.168.2.34:9996/openmrs/";
 	public static final String THUMBNAIL_VIEW = "complexdata.view.thumbnail";
 
 	public abstract static class OpenMRSSharedPreferenceNames {
@@ -95,7 +96,7 @@ public abstract class ApplicationConstants {
 		public static final String DISCHARGE = "Discharge";
 		public static final String ADMISSION = "Admission";
 		public static final String AUDITDATA = "Audit Data";
-		//public static final String VITALS = "Vitals";
+		public static final String AUDIT_DATA_COMPLETENESS = "Audit Data Complete";
 	}
 
 	public abstract static class EncounterTypeEntity {
@@ -136,6 +137,7 @@ public abstract class ApplicationConstants {
 		public static final String PATIENT_QUERY_BUNDLE = "patientQuery";
 		public static final String OBSERVATION = "observationTag";
 		public static final String VISIT = "visitTag";
+		public static final String VISIT_CLOSED_DATE = "visitClosedDate";
 		public static final String AUDIT_DATA_AVAILABILITY = "auditDataAvailability";
 		public static final String LOCATION_UUID_BUNDLE = "locationUuid";
 	}

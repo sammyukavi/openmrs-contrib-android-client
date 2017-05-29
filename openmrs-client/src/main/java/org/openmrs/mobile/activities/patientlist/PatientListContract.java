@@ -39,6 +39,8 @@ public interface PatientListContract {
 		void setSpinnerVisibility(boolean visibility);
 
 		boolean isActive();
+
+		void setPatientListScreenVisibility(boolean visible);
 	}
 
 	interface Presenter extends BasePresenterContract {

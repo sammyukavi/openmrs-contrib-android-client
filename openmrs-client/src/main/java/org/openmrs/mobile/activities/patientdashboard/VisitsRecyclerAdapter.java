@@ -62,6 +62,7 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 	private Intent intent;
 	private LayoutInflater layoutInflater;
 	private TableLayout visitVitalsTableLayout;
+	private OpenMRS instance = OpenMRS.getInstance();
 	private TextView visitNote;
 	private Handler handler = new Handler();
 	long delay = 3000; // 1 seconds after user stops typing
@@ -184,11 +185,13 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 		recyclerView.addOnScrollListener(onScrollListener);
 	}
 
-	private void loadVisitDetails(String uuid) {
+	private void loadVisitDetails(Visit visit) {
+		setVisitStopDate(visit);
 		intent = new Intent(context, VisitActivity.class);
-		intent.putExtra(PATIENT_UUID_BUNDLE, OpenMRS.getInstance()
+		intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, OpenMRS.getInstance()
 				.getPatientUuid());
-		intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, uuid);
+		intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visit.getUuid());
+		intent.putExtra(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, visit.getStopDatetime());
 		context.startActivity(intent);
 	}
 
@@ -258,8 +261,8 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
 			//Adding the link to the visit details page
 			showVisitDetails = (ImageView)singleVisitView.findViewById(R.id.loadVisitDetails);
-			showVisitDetails.setOnClickListener(v -> loadVisitDetails(visit.getUuid()));
-			singleVisitView.setOnClickListener(v -> loadVisitDetails(visit.getUuid()));
+			showVisitDetails.setOnClickListener(v -> loadVisitDetails(visit));
+			singleVisitView.setOnClickListener(v -> loadVisitDetails(visit));
 
 			if (visit.getEncounters().size() == 0) {
 				presentVisitNotes(new Encounter(), singleVisitView, isActiveVisit);
@@ -437,4 +440,9 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 		}
 	}
 
+	private void setVisitStopDate(Visit visit) {
+		SharedPreferences.Editor editor = instance.getOpenMRSSharedPreferences().edit();
+		editor.putString(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, visit.getStopDatetime());
+		editor.commit();
+	}
 }

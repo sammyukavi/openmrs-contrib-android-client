@@ -253,7 +253,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 			public void onCompleted(Visit entity) {
 				setProcessing(false);
 				addEditVisitView.setSpinnerVisibility(false);
-				addEditVisitView.showPatientDashboard();
+				addEditVisitView.showVisitDetails(entity.getUuid());
 			}
 
 			@Override
@@ -277,14 +277,14 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 			public void onCompleted(Visit entity) {
 				setProcessing(false);
 				addEditVisitView.setSpinnerVisibility(false);
-				addEditVisitView.showPatientDashboard();
+				addEditVisitView.showVisitDetails(entity.getUuid());
 			}
 
 			@Override
 			public void onError(Throwable t) {
 				setProcessing(false);
 				addEditVisitView.setSpinnerVisibility(false);
-				addEditVisitView.showPatientDashboard();
+				addEditVisitView.showVisitDetails(null);
 			}
 		});
 	}
@@ -307,6 +307,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 
 			@Override
 			public void onError(Throwable t) {
+				System.out.println(t.getLocalizedMessage());
 				ToastUtil.error(t.getMessage());
 			}
 		});

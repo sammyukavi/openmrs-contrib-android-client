@@ -302,6 +302,7 @@ public class OpenMRS extends Application {
 				prefs.getString(ApplicationConstants.SESSION_TOKEN, ApplicationConstants.EMPTY_STRING));
 		editor.remove(ApplicationConstants.SESSION_TOKEN);
 		editor.remove(ApplicationConstants.AUTHORIZATION_TOKEN);
+		editor.remove(ApplicationConstants.BundleKeys.PATIENT_QUERY_BUNDLE);
 		clearCurrentLoggedInUserInfo();
 		editor.commit();
 	}

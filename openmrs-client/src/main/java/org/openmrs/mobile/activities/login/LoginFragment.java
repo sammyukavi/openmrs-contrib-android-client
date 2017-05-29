@@ -175,7 +175,7 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 		bundle.setTitleViewMessage(getString(R.string.warning_dialog_title));
 		bundle.setTextViewMessage(getString(R.string.warning_lost_data_dialog));
 		bundle.setRightButtonText(getString(R.string.dialog_button_ok));
-			bundle.setRightButtonAction(CustomFragmentDialog.OnClickAction.LOGIN);
+		bundle.setRightButtonAction(CustomFragmentDialog.OnClickAction.LOGIN);
 		((LoginActivity)this.getActivity())
 				.createAndShowDialog(bundle, ApplicationConstants.DialogTAG.WARNING_LOST_DATA_DIALOG_TAG);
 	}
@@ -240,9 +240,15 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 		List<String> items = getLocationStringList(locationsList);
 		final LocationArrayAdapter adapter = new LocationArrayAdapter(this.getActivity(), items);
 		mDropdownLocation.setAdapter(adapter);
+		for (int i = 0; i < items.size(); i++) {
+			if (items.get(i).contains(OpenMRS.getInstance().getLocation())) {
+				mDropdownLocation.setSelection(i);
+				break;
+			}
+		}
+
 		mLoginButton.setEnabled(false);
 		mSpinner.setVisibility(View.GONE);
-		//mLoginFormView.setVisibility(View.VISIBLE);
 	}
 
 	@Override

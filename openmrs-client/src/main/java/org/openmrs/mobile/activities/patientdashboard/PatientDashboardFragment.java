@@ -62,6 +62,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	private NestedScrollView scrollView;
 	private LinearLayout patientContactInfo;
 	private View borderLine, shadowLine;
+	private String providerUuid;
 	private Location location;
 
 	public static PatientDashboardFragment newInstance() {
@@ -223,6 +224,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
 	@Override
 	public void setProviderUuid(String providerUuid) {
+		this.providerUuid = providerUuid;
 		if (StringUtils.isBlank(providerUuid))
 			return;
 		SharedPreferences.Editor editor = instance.getOpenMRSSharedPreferences().edit();

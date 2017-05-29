@@ -110,7 +110,7 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 		FontsUtil.setFont((ViewGroup)this.getActivity().findViewById(android.R.id.content));
 		authorizationManager = new AuthorizationManager();
 		if (authorizationManager.isUserLoggedIn()) {
-			if (OpenMRS.getInstance().getSearchQuery().equalsIgnoreCase(ApplicationConstants.EMPTY_STRING)){
+			if (OpenMRS.getInstance().getSearchQuery().equalsIgnoreCase(ApplicationConstants.EMPTY_STRING)) {
 				mPresenter.getLastViewed();
 			} else {
 				mPresenter.findPatient(OpenMRS.getInstance().getSearchQuery());
@@ -133,7 +133,7 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 
 	@Override
 	public void setFetchedPatientsVisibility(boolean visibility) {
-		patientListLayout.setVisibility(visibility ? View.VISIBLE: View.GONE);
+		patientListLayout.setVisibility(visibility ? View.VISIBLE : View.GONE);
 	}
 
 	@Override

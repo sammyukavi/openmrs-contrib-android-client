@@ -39,12 +39,14 @@ public class VisitPageAdapter extends FragmentPagerAdapter {
 	private String patientUuid;
 	private String visitUuid;
 	private String providerUuid;
+	private String visitStopDate;
 
-	VisitPageAdapter(FragmentManager fm, String patientUuid, String visitUuid, String providerUuid) {
+	VisitPageAdapter(FragmentManager fm, String patientUuid, String visitUuid, String providerUuid, String visitStopDate) {
 		super(fm);
 		this.patientUuid = patientUuid;
 		this.visitUuid = visitUuid;
 		this.providerUuid = providerUuid;
+		this.visitStopDate = visitStopDate;
 	}
 
 	@Override
@@ -53,7 +55,7 @@ public class VisitPageAdapter extends FragmentPagerAdapter {
 		switch (i) {
 			case VISIT_DETAILS_TAB_POS:
 				VisitDetailsFragment visitDetailsFragment = VisitDetailsFragment.newInstance();
-				new VisitDetailsPresenter(patientUuid, visitUuid, providerUuid, visitDetailsFragment);
+				new VisitDetailsPresenter(patientUuid, visitUuid, providerUuid, visitStopDate, visitDetailsFragment);
 				return visitDetailsFragment;
 			case VISIT_TASKS_TAB_POS:
 				VisitTasksFragment visitTasksFragment = VisitTasksFragment.newInstance();

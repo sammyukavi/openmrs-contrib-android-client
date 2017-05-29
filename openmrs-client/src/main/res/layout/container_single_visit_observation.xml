@@ -93,7 +93,8 @@
 		<LinearLayout
 				android:id="@+id/visitNoteTextContainer"
 				android:visibility="gone"
-				android:layout_marginTop="10dp"
+				android:layout_marginTop="5dp"
+				android:layout_marginBottom="5dp"
 				android:orientation="vertical"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent">
@@ -104,7 +105,7 @@
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:textStyle="bold"
-					android:text="@string/visit_note" />
+					android:text="@string/clinical_notes_label" />
 
 			<TextView
 					android:gravity="top"

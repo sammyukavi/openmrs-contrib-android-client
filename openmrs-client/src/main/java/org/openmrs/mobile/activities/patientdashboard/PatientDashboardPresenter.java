@@ -14,15 +14,19 @@
 
 package org.openmrs.mobile.activities.patientdashboard;
 
+import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
-import org.openmrs.mobile.data.impl.ObsDataService;
+import org.openmrs.mobile.data.impl.EncounterDataService;
+import org.openmrs.mobile.data.impl.LocationDataService;
 import org.openmrs.mobile.data.impl.PatientDataService;
 import org.openmrs.mobile.data.impl.ProviderDataService;
 import org.openmrs.mobile.data.impl.VisitDataService;
+import org.openmrs.mobile.models.Encounter;
+import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Provider;
 import org.openmrs.mobile.models.Visit;
@@ -34,10 +38,11 @@ import java.util.List;
 
 public class PatientDashboardPresenter extends BasePresenter implements PatientDashboardContract.Presenter {
 
+	private final EncounterDataService encounterDataService;
 	private PatientDashboardContract.View patientDashboardView;
 	private PatientDataService patientDataService;
 	private VisitDataService visitDataService;
-	private ObsDataService observationDataService;
+	private LocationDataService locationDataService;
 	private ProviderDataService providerDataService;
 	private final static int page = 1;
 	private final int startIndex = 0;
@@ -48,8 +53,9 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 		this.patientDashboardView.setPresenter(this);
 		this.patientDataService = new PatientDataService();
 		this.visitDataService = new VisitDataService();
-		this.observationDataService = new ObsDataService();
 		this.providerDataService = new ProviderDataService();
+		this.locationDataService = new LocationDataService();
+		this.encounterDataService = new EncounterDataService();
 	}
 
 	@Override
@@ -129,6 +135,59 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 							ToastUtil.error(t.getMessage());
 						}
 					});
+		}
+	}
+
+	@Override
+	public void fetchLocation(String locationUuid) {
+		DataService.GetCallback<Location> locationDataServiceCallback = new DataService.GetCallback<Location>() {
+			@Override
+			public void onCompleted(Location location) {
+				//set location in the fragment and start loading other fields
+				patientDashboardView.setLocation(location);
+			}
+
+			@Override
+			public void onError(Throwable t) {
+				t.printStackTrace();
+			}
+		};
+
+		locationDataService.getByUUID(locationUuid, QueryOptions.LOAD_RELATED_OBJECTS, locationDataServiceCallback);
+	}
+
+	@Override
+	public void saveEncounter(Encounter encounter, boolean isNewEncounter) {
+		DataService.GetCallback<Encounter> serverResponceCallback = new DataService.GetCallback<Encounter>() {
+			@Override
+			public void onCompleted(Encounter encounter) {
+
+				if (encounter.equals(null)) {
+					patientDashboardView.showSnackbar(patientDashboardView.getContext().getString(R.string.error_occured));
+				} else {
+					patientDashboardView.showSnackbar(patientDashboardView.getContext().getString(R.string.saved));
+					/*TODO
+				Ask if the're a parameter you can pass when creating or updating the encounters so that you can get the
+				full representation and get to uncomment the commented lines below.
+				 */
+
+					//fetchEncounter(encounter.getUuid());
+
+					//patientDashboardView.setEncounterUuid(encounter.getUuid());
+					//patientDashboardView.updateFormFields(encounter);
+				}
+			}
+
+			@Override
+			public void onError(Throwable t) {
+				t.printStackTrace();
+			}
+		};
+
+		if (isNewEncounter) {
+			encounterDataService.create(encounter, serverResponceCallback);
+		} else {
+			encounterDataService.update(encounter, serverResponceCallback);
 		}
 	}
 

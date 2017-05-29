@@ -100,7 +100,7 @@ public abstract class ApplicationConstants {
 
 	public abstract static class EncounterTypeEntity {
 		public static final String VITALS_UUID = "67a71486-1a54-468f-ac3e-7091a9a79584";
-		public static final String VISIT_NOTE_UUID = "d7151f82-c1f3-4152-a605-2f9ea7414a79";
+		public static final String CLINICAL_NOTE_UUID = "d7151f82-c1f3-4152-a605-2f9ea7414a79";
 		public static final String AUDIT_DATA_UUID = "7dc1632c-f947-474f-b92c-7add68019aec";
 	}
 
@@ -137,6 +137,7 @@ public abstract class ApplicationConstants {
 		public static final String OBSERVATION = "observationTag";
 		public static final String VISIT = "visitTag";
 		public static final String AUDIT_DATA_AVAILABILITY = "auditDataAvailability";
+		public static final String LOCATION_UUID_BUNDLE = "locationUuid";
 	}
 
 	public static class toastMessages {
@@ -176,6 +177,7 @@ public abstract class ApplicationConstants {
 	public abstract static class FORM_UUIDS {
 		public static final String AUDIT_DATA_FORM_UUID = "667dc18e-740f-44ce-ae0a-5ba6b33308b0";
 		public static final String VITALS_FORM_UUID = "a000cb34-9ec1-4344-a1c8-f692232f6edd";
+		public static final String CLINICAL_FORM_UUID = "6d071264-3932-41fe-95f2-1dbbf2e4cd31";
 	}
 
 	public abstract static class AuditFormAnswers {
@@ -211,6 +213,10 @@ public abstract class ApplicationConstants {
 		public static final String CONCEPT_BLOOD_PRESSURE_SYSTOLIC = "5085AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 		public static final String CONCEPT_BLOOD_PRESSURE_DIASTOLIC = "5086AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 		public static final String CONCEPT_BLOOD_OXYGEN_SATURATION = "5092AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+	}
+
+	public abstract static class ClinicalFormConcepts {
+		public static final String ClinicFormUUID = "162169AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 	}
 
 	public static class visitAttributeTypes {

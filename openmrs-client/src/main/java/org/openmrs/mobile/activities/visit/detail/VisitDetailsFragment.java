@@ -356,7 +356,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 				Encounter encounter = visit.getEncounters().get(i);
 				EncounterType encounterType = visit.getEncounters().get(i).getEncounterType();
 
-				if (encounterType.getUuid().equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.VISIT_NOTE_UUID)) {
+				if (encounterType.getUuid().equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.CLINICAL_NOTE_UUID)) {
 					submitVisitNote.setText(getString(R.string.update_visit_note));
 
 					for (int v = 0; v < encounter.getObs().size(); v++) {
@@ -380,7 +380,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		if (visit.getEncounters().size() != 0) {
 			for (Encounter encounter : visit.getEncounters()) {
 				if (encounter.getEncounterType().getUuid()
-						.equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.VISIT_NOTE_UUID)) {
+						.equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.CLINICAL_NOTE_UUID)) {
 					submitVisitNote.setText(getString(R.string.update_visit_note));
 					for (Observation obs : encounter.getObs()) {
 						if (obs.getDisplay().startsWith(ApplicationConstants.ObservationLocators.DIANOSES)) {

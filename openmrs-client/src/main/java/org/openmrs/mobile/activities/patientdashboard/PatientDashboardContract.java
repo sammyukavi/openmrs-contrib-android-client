@@ -14,9 +14,12 @@
 
 package org.openmrs.mobile.activities.patientdashboard;
 
+import android.content.Context;
+
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
 import org.openmrs.mobile.models.Encounter;
+import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Visit;
 
@@ -35,6 +38,11 @@ public interface PatientDashboardContract {
 
 		void setProviderUuid(String providerUuid);
 
+		void setLocation(Location location);
+
+		public void showSnackbar(String message);
+
+		Context getContext();
 	}
 
 	interface Presenter extends BasePresenterContract {
@@ -47,5 +55,8 @@ public interface PatientDashboardContract {
 
 		void setLimit(int limit);
 
+		void fetchLocation(String locationUuid);
+
+		void saveEncounter(Encounter encounter, boolean isNew);
 	}
 }

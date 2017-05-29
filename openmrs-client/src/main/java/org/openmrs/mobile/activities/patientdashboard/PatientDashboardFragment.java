@@ -127,11 +127,6 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	}
 
 	@Override
-	public void showSnack(String text) {
-		Snackbar.make(fragmentView, text, Snackbar.LENGTH_LONG).setAction(getString(R.string.action), null).show();
-	}
-
-	@Override
 	public void updateContactCard(Patient patient) {
 		this.patient = patient;
 		int visitsStartLimit = 5;
@@ -235,11 +230,6 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	@Override
 	public void setLocation(Location location) {
 		this.location = location;
-	}
-
-	@Override
-	public void showSnackbar(String message) {
-		((ACBaseActivity)getActivity()).showSnackbar(message);
 	}
 
 }

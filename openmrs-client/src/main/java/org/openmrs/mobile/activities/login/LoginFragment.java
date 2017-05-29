@@ -20,6 +20,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,6 +66,7 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 	private ProgressBar mLocationLoadingProgressBar;
 	private LoginValidatorWatcher loginValidatorWatcher;
 	private ImageView changeUrlIcon;
+	private TextInputLayout loginUrlTextLayout;
 
 	public static LoginFragment newInstance() {
 		return new LoginFragment();
@@ -94,7 +96,7 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 		changeUrlIcon.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				if (mUrl.getVisibility() == View.VISIBLE) {
+				if (loginUrlTextLayout.getVisibility() == View.VISIBLE) {
 					showEditUrlEditField(false);
 				} else {
 					showEditUrlEditField(true);
@@ -143,6 +145,7 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 		mDropdownLocation = (Spinner)root.findViewById(R.id.locationSpinner);
 		mLocationLoadingProgressBar = (ProgressBar)root.findViewById(R.id.locationLoadingProgressBar);
 		changeUrlIcon = (ImageView)root.findViewById(R.id.changeUrlIcon);
+		loginUrlTextLayout = (TextInputLayout)root.findViewById(R.id.loginUrlTextLayout);
 	}
 
 	@Override

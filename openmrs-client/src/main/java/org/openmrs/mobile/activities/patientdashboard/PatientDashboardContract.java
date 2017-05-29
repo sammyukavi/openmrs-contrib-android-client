@@ -28,7 +28,6 @@ import java.util.List;
 public interface PatientDashboardContract {
 
 	interface View extends BaseView<Presenter> {
-		void showSnack(String s);
 
 		void updateContactCard(Patient patient);
 
@@ -39,8 +38,6 @@ public interface PatientDashboardContract {
 		void setProviderUuid(String providerUuid);
 
 		void setLocation(Location location);
-
-		public void showSnackbar(String message);
 
 		Context getContext();
 	}

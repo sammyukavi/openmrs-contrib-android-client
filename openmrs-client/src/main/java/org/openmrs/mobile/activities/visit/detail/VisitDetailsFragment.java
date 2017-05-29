@@ -289,6 +289,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	public void setAttributeTypes(List<VisitAttributeType> visitAttributeTypes) {
 		visitAttributesLayout.removeAllViews();
 		if (0 == visit.getAttributes().size()) {
+			System.out.println();
 			visitAttributesLayout.setVisibility(View.GONE);
 			visitDetailsView.setVisibility(View.GONE);
 			return;

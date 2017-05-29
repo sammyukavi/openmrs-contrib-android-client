@@ -82,7 +82,6 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 			@Override
 			public void onError(Throwable t) {
 				t.printStackTrace();
-				patientDashboardView.showSnack("Error occurred: Unable to reach server");
 			}
 		});
 	}
@@ -101,7 +100,6 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 					@Override
 					public void onError(Throwable t) {
 						t.printStackTrace();
-						patientDashboardView.showSnack("Visit fetch error");
 					}
 				});
 	}
@@ -163,9 +161,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 			public void onCompleted(Encounter encounter) {
 
 				if (encounter.equals(null)) {
-					patientDashboardView.showSnackbar(patientDashboardView.getContext().getString(R.string.error_occured));
 				} else {
-					patientDashboardView.showSnackbar(patientDashboardView.getContext().getString(R.string.saved));
 					/*TODO
 				Ask if the're a parameter you can pass when creating or updating the encounters so that you can get the
 				full representation and get to uncomment the commented lines below.

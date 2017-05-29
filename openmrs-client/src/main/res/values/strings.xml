@@ -499,7 +499,7 @@
 	<string name="error_text_vitals_minimum">Minimum: %1$d</string>
 	<string name="error_occured">An error occured making your request</string>
 	<string name="saved">Saved</string>
-	<string name="in_complete">In Complete</string>
+	<string name="in_complete">Incomplete</string>
 	<string name="update_visit">Update Visit</string>
 	<string name="update_audit_data">Update Audit Data</string>
 	<string name="show_visit_tasks">Show visit tasks</string>

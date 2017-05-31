@@ -16,6 +16,7 @@ package org.openmrs.mobile.activities.addeditvisit;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,8 +25,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -54,12 +56,14 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 
 	private static TableRow.LayoutParams marginParams;
 	private TableLayout visitTableLayout;
-	private ProgressBar progressBar;
+	private RelativeLayout progressBar, addEditVisitProgressBar;
+	private LinearLayout addEditVisitScreen;
 	private Spinner visitTypeDropdown;
 	private Button visitSubmitButton;
 	private Map<String, VisitAttribute> visitAttributeMap = new HashMap<>();
 	private Map<View, VisitAttributeType> viewVisitAttributeTypeMap = new HashMap<>();
 	private String patientUuid, visitUuid, providerUuid, visitStopDate;
+	private CardView addEditVisitCard;
 
 	public static AddEditVisitFragment newInstance() {
 		return new AddEditVisitFragment();
@@ -68,9 +72,12 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		View root = inflater.inflate(R.layout.fragment_addedit_visit, container, false);
+		View root = inflater.inflate(R.layout.fragment_add_edit_visit, container, false);
 		visitTableLayout = (TableLayout)root.findViewById(R.id.visitTableLayout);
-		progressBar = (ProgressBar)root.findViewById(R.id.visitLoadingProgressBar);
+		progressBar = (RelativeLayout)root.findViewById(R.id.visitLoadingProgressBar);
+		addEditVisitProgressBar = (RelativeLayout)root.findViewById(R.id.addEditVisitProgressBar);
+		addEditVisitScreen = (LinearLayout)root.findViewById(R.id.addEditVisitScreen);
+		addEditVisitCard = (CardView)root.findViewById(R.id.addEditVisitCard);
 		visitTypeDropdown = (Spinner)root.findViewById(R.id.visit_type);
 		visitSubmitButton = (Button)root.findViewById(R.id.visitSubmitButton);
 
@@ -99,11 +106,12 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 	@Override
 	public void initView(boolean startVisit) {
 		Toolbar toolbar = (Toolbar)getActivity().findViewById(R.id.toolbar);
-		if (startVisit)
+		if (startVisit) {
 			toolbar.setTitle(getString(R.string.label_start_visit));
-		else
+		} else {
 			visitSubmitButton.setText(R.string.update_visit);
 			toolbar.setTitle(getString(R.string.label_edit_visit));
+		}
 		setSpinnerVisibility(false);
 	}
 
@@ -282,9 +290,20 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 			intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visitUuid);
 		} else {
 			intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visitUUID);
-			intent.putExtra(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE,visitStopDate);
+			intent.putExtra(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, visitStopDate);
 		}
 		getContext().startActivity(intent);
+	}
+
+	@Override
+	public void showPageSpinner(boolean visibility) {
+		if (visibility) {
+			addEditVisitProgressBar.setVisibility(View.VISIBLE);
+			addEditVisitScreen.setVisibility(View.GONE);
+		} else {
+			addEditVisitProgressBar.setVisibility(View.GONE);
+			addEditVisitScreen.setVisibility(View.VISIBLE);
+		}
 	}
 
 	private void buildMarginLayout() {

@@ -38,6 +38,8 @@ public interface CaptureVitalsContract {
 		void goBackToVisitPage();
 
 		void showProgressBar(Boolean visibility);
+
+		void showPageSpinner(boolean visibility);
 	}
 
 	interface Presenter extends BasePresenterContract {

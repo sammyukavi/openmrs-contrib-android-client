@@ -316,6 +316,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		Intent intent = new Intent(getActivity(), PatientDashboardActivity.class);
 		intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patient.getPerson().getUuid());
 		startActivity(intent);
+		showPageSpinner(false);
 	}
 
 	@Override

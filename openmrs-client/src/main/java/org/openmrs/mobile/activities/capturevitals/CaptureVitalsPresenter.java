@@ -45,15 +45,18 @@ public class CaptureVitalsPresenter extends BasePresenter implements CaptureVita
 
 	@Override
 	public void fetchLocation(String locationUuid) {
+		captureVitalsView.showPageSpinner(true);
 		DataService.GetCallback<Location> locationDataServiceCallback = new DataService.GetCallback<Location>() {
 			@Override
 			public void onCompleted(Location location) {
 				//set location in the fragment and start loading other fields
 				captureVitalsView.setLocation(location);
+				captureVitalsView.showPageSpinner(false);
 			}
 
 			@Override
 			public void onError(Throwable t) {
+				captureVitalsView.showPageSpinner(false);
 				t.printStackTrace();
 			}
 		};

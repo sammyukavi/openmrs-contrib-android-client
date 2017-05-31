@@ -116,6 +116,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	}
 
 	private void loadPatient() {
+		addEditVisitView.showPageSpinner(true);
 		if (StringUtils.notEmpty(patientUuid)) {
 			patientDataService
 					.getByUUID(patientUuid, QueryOptions.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Patient>() {
@@ -126,6 +127,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 
 						@Override
 						public void onError(Throwable t) {
+							addEditVisitView.showPageSpinner(false);
 							ToastUtil.error(t.getMessage());
 						}
 					});
@@ -139,20 +141,23 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 					public void onCompleted(List<Visit> entities) {
 						if (entities.size() > 0) {
 							visit = entities.get(0);
-
-							addEditVisitView.initView(false);
+							if (entities.get(0).getStopDatetime() == null) {
+								addEditVisitView.initView(false);
+							} else {
+								addEditVisitView.initView(true);
+							}
 						} else {
 							visit.setPatient(patient);
 							addEditVisitView.initView(true);
 						}
 
 						loadVisitTypes();
-
 						loadVisitAttributeTypes();
 					}
 
 					@Override
 					public void onError(Throwable t) {
+						addEditVisitView.showPageSpinner(false);
 						ToastUtil.error(t.getMessage());
 					}
 				});
@@ -169,10 +174,12 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 						visitAttributeTypes.addAll(entities);
 						addEditVisitView.loadVisitAttributeTypeFields(visitAttributeTypes);
 						setProcessing(false);
+						addEditVisitView.showPageSpinner(false);
 					}
 
 					@Override
 					public void onError(Throwable t) {
+						addEditVisitView.showPageSpinner(false);
 						ToastUtil.error(t.getMessage());
 					}
 				});
@@ -214,7 +221,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 
 	@Override
 	public void getConceptAnswer(String uuid, Spinner dropdown) {
-		conceptAnswerDataService.getByConceptUuid(uuid,null, new DataService.GetCallback<List<ConceptAnswer>>() {
+		conceptAnswerDataService.getByConceptUuid(uuid, null, new DataService.GetCallback<List<ConceptAnswer>>() {
 			@Override
 			public void onCompleted(List<ConceptAnswer> entities) {
 				addEditVisitView.updateConceptAnswersView(dropdown, entities);
@@ -329,7 +336,6 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 		if (null != getVisit() && null != getVisit().getAttributes()) {
 			for (VisitAttribute visitAttribute : getVisit().getAttributes()) {
 				if (visitAttribute.getAttributeType().getUuid().equalsIgnoreCase(visitAttributeType.getUuid())) {
-					System.out.println((T)visitAttribute.getValue() + " the visit attribute value ");
 					return (T)visitAttribute.getValue();
 				}
 			}

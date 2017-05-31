@@ -47,6 +47,7 @@ public class AddEditVisitActivity extends ACBaseActivity {
 
 		Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
 		toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white);
+		toolbar.setTitle(ApplicationConstants.EMPTY_STRING);
 		setSupportActionBar(toolbar);
 		if (getSupportActionBar() != null) {
 			getSupportActionBar().setElevation(0);

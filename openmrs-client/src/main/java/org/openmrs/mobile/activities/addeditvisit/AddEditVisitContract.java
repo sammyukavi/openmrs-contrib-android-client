@@ -45,6 +45,8 @@ public interface AddEditVisitContract {
 
 		void showVisitDetails(String visitUuuid);
 
+		void showPageSpinner(boolean visibility);
+
 	}
 
 	interface Presenter extends BasePresenterContract {

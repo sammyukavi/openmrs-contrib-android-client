@@ -222,7 +222,6 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 			@Override
 			public void onCompleted(Patient entity) {
 				setRegistering(false);
-				patientRegistrationView.showPageSpinner(false);
 				if (entity != null) {
 					patientRegistrationView.finishAddPatientActivity();
 					patientRegistrationView.startPatientDashboardActivity(entity);

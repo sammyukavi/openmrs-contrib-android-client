@@ -213,7 +213,7 @@ public final class DateUtils {
 
 		long durationInSeconds = TimeUnit.MILLISECONDS.toSeconds(endDate.getTime() - startDate.getTime());
 
-		long SECONDS_IN_A_MINUTE = 60;
+		/*long SECONDS_IN_A_MINUTE = 60;
 		long MINUTES_IN_AN_HOUR = 60;
 		long HOURS_IN_A_DAY = 24;
 		long DAYS_IN_A_WEEK = 7;
@@ -238,7 +238,65 @@ public final class DateUtils {
 				durationInSeconds;
 		long years = (durationInSeconds /= MONTHS_IN_A_YEAR);
 
-		return getDuration(sec, min, hrs, days, weeks, months, years, minimum);
+		return getDuration(sec, min, hrs, days, weeks, months, years, minimum);*/
+
+		String relative = "";
+
+		long SECONDS_IN_A_MINUTE = 60;
+		long SECONDS_IN_AN_HOUR = SECONDS_IN_A_MINUTE * 60;
+		long SECONDS_IN_A_DAY = SECONDS_IN_AN_HOUR * 24;
+		long SECONDS_IN_A_WEEK = SECONDS_IN_A_DAY * 7;
+		long SECONDS_IN_A_MONTH = SECONDS_IN_A_WEEK * 4;
+		long SECONDS_IN_A_YEAR = SECONDS_IN_A_MONTH * 12;
+
+		if (minimum) {
+			if (Math.round(durationInSeconds / 60) < 1) {
+				return "1min";
+			} else if (Math.round(durationInSeconds / SECONDS_IN_A_MINUTE) < 60) {
+				int minutes = Math.round(durationInSeconds / SECONDS_IN_A_MINUTE);
+				relative = (minutes == 1 ? "1 min" : minutes + " mins");
+			} else if (Math.round(durationInSeconds / SECONDS_IN_AN_HOUR) < 24) {
+				int minutes = Math.round(durationInSeconds / SECONDS_IN_AN_HOUR);
+				relative = (minutes == 1 ? "1 h" : minutes + " hrs");
+			} else if (Math.round(durationInSeconds / SECONDS_IN_A_DAY) < 7) {
+				int days = Math.round(durationInSeconds / SECONDS_IN_A_DAY);
+				relative = (days == 1 ? "1 d" : days + " ds");
+			} else if (Math.round(durationInSeconds / SECONDS_IN_A_WEEK) < 4) {
+				int weeks = Math.round(durationInSeconds / SECONDS_IN_A_WEEK);
+				relative = (weeks == 1 ? "1 wk" : weeks + " wks");
+			} else if (Math.round(durationInSeconds / SECONDS_IN_A_MONTH) < 4) {
+				int months = Math.round(durationInSeconds / SECONDS_IN_A_MONTH);
+				relative = (months == 1 ? "1 m" : months + " ms");
+			} else {
+				int years = Math.round(durationInSeconds / SECONDS_IN_A_YEAR);
+				relative = (years == 1 ? "1 y" : years + " yrs");
+			}
+		} else {
+
+			if (Math.round(durationInSeconds / 60) < 1) {
+				return "Less than a minute";
+			} else if (Math.round(durationInSeconds / SECONDS_IN_A_MINUTE) < 60) {
+				int minutes = Math.round(durationInSeconds / SECONDS_IN_A_MINUTE);
+				relative = (minutes == 1 ? "a minute" : minutes + " minutes");
+			} else if (Math.round(durationInSeconds / SECONDS_IN_AN_HOUR) < 24) {
+				int minutes = Math.round(durationInSeconds / SECONDS_IN_AN_HOUR);
+				relative = (minutes == 1 ? "an hour" : minutes + " hours");
+			} else if (Math.round(durationInSeconds / SECONDS_IN_A_DAY) < 7) {
+				int days = Math.round(durationInSeconds / SECONDS_IN_A_DAY);
+				relative = (days == 1 ? "a day" : days + " days");
+			} else if (Math.round(durationInSeconds / SECONDS_IN_A_WEEK) < 4) {
+				int weeks = Math.round(durationInSeconds / SECONDS_IN_A_WEEK);
+				relative = (weeks == 1 ? "a week" : weeks + " weeks");
+			} else if (Math.round(durationInSeconds / SECONDS_IN_A_MONTH) < 4) {
+				int months = Math.round(durationInSeconds / SECONDS_IN_A_MONTH);
+				relative = (months == 1 ? "an hour" : months + " hours");
+			} else {
+				int years = Math.round(durationInSeconds / SECONDS_IN_A_YEAR);
+				relative = (years == 1 ? "about a year" : years + " years");
+			}
+		}
+
+		return relative;
 	}
 
 	public static String calculateTimeDifference(String startDate, String stopDate) {

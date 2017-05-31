@@ -24,7 +24,7 @@ public abstract class ApplicationConstants {
 	public static final String VISIT_TYPE_UUID = "visit_type_uuid";
 	public static final String LAST_SESSION_TOKEN = "last_session_id";
 	public static final String LAST_LOGIN_SERVER_URL = "last_login_server_url";
-	public static final String DEFAULT_OPEN_MRS_URL = "http://sandbox.openhmisafrica.org/openmrs/";
+	public static final String DEFAULT_OPEN_MRS_URL = "http://192.168.56.1:8080/openmrs/";
 	//public static final String DEFAULT_OPEN_MRS_URL = "http://192.168.2.34:9996/openmrs/";
 	public static final String THUMBNAIL_VIEW = "complexdata.view.thumbnail";
 
@@ -107,11 +107,12 @@ public abstract class ApplicationConstants {
 
 	public abstract static class ObservationLocators {
 		public static final String CLINICAL_NOTE = "Text of encounter note";
-		public static final String DIANOSES = "Visit Diagnoses";
+		public static final String DIAGNOSES = "Visit Diagnoses";
 		public static final String PRIMARY_DIAGNOSIS = "Primary";
 		public static final String SECONDARY_DIAGNOSIS = "Secondary";
 		public static final String PRESUMED_DIAGNOSIS = "Presumed diagnosis";
-		public static final String CONFIRMED_DIAGNOSIS = "Confirmed";
+		public static final String CONFIRMED_DIAGNOSIS = "Confirmed diagnosis";
+		public static final String CHIEF_COMPLAINT = "Chief complaint";
 	}
 
 	public abstract static class DiagnosisStrings {

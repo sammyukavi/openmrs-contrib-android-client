@@ -120,7 +120,7 @@ public final class StringUtils {
 	public static String getConceptName(String obsDisplay) {
 		String diagnosisStringOne = "", diagnosisStringTwo = "", diagnosisStringThree = "", diagnosisStringFour = "",
 				diagnosisStringFive = "", diagnosisStringSix = "";
-		String diagnosisString = (obsDisplay.replaceAll(ApplicationConstants.ObservationLocators.DIANOSES, ""));
+		String diagnosisString = (obsDisplay.replaceAll(ApplicationConstants.ObservationLocators.DIAGNOSES, ""));
 		diagnosisStringOne += (diagnosisString.replaceAll(ApplicationConstants.ObservationLocators.PRIMARY_DIAGNOSIS, ""));
 		diagnosisStringTwo +=
 				(diagnosisStringOne.replaceAll(ApplicationConstants.ObservationLocators.SECONDARY_DIAGNOSIS, ""));

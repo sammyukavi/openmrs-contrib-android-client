@@ -26,6 +26,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import com.github.clans.fab.FloatingActionButton;
 
@@ -60,6 +61,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	private LinearLayout patientContactInfo;
 	private String providerUuid;
 	private Location location;
+	private ProgressBar savingProgressBar;
 
 	public static PatientDashboardFragment newInstance() {
 		return new PatientDashboardFragment();
@@ -117,6 +119,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		scrollView = (NestedScrollView)fragmentView.findViewById(R.id.scrollView);
 		patientContactInfo = (LinearLayout)fragmentView.findViewById(R.id.patientContactInfo);
 		borderLine = fragmentView.findViewById(R.id.borderLine);
+		savingProgressBar = (ProgressBar)fragmentView.findViewById(R.id.savingProgressBar);
 	}
 
 	@Override
@@ -130,6 +133,10 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
 	@Override
 	public void updateActiveVisitCard(List<Visit> visits) {
+
+		if (visits.size() == 0) {
+
+		}
 
 		for (Visit visit : visits) {
 			if (!StringUtils.notNull(visit.getStopDatetime())) {
@@ -228,6 +235,11 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	@Override
 	public void setLocation(Location location) {
 		this.location = location;
+	}
+
+	@Override
+	public void upDateProgressBar(boolean show) {
+		savingProgressBar.setVisibility(show ? View.VISIBLE : View.GONE);
 	}
 
 }

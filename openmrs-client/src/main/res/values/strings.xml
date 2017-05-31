@@ -507,4 +507,5 @@
 	<string name="no_predefined_tasks">No predefined tasks</string>
 	<string name="started">Started:</string>
 	<string name="duration">Dur: %1$s</string>
+	<string name="no_visit">Patient has no visit</string>
 </resources>

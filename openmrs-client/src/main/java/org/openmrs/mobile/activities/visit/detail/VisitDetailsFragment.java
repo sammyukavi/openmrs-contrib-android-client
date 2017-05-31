@@ -445,7 +445,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 						.equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.CLINICAL_NOTE_UUID)) {
 					submitVisitNote.setText(getString(R.string.update_visit_note));
 					for (Observation obs : encounter.getObs()) {
-						if (obs.getDisplay().startsWith(ApplicationConstants.ObservationLocators.DIANOSES)) {
+						if (obs.getDisplay().startsWith(ApplicationConstants.ObservationLocators.DIAGNOSES)) {
 							if (obs.getDisplay().contains(ApplicationConstants.ObservationLocators.PRIMARY_DIAGNOSIS)) {
 								encounterDiagnosis.put("order", ApplicationConstants.DiagnosisStrings.PRIMARY_ORDER);
 								encounterDiagnosis.put("certainty", checkObsCertainty(obs.getDisplay()));

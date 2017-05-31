@@ -175,9 +175,11 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
 	@Override
 	public void saveEncounter(Encounter encounter, boolean isNewEncounter) {
+		patientDashboardView.upDateProgressBar(true);
 		DataService.GetCallback<Encounter> serverResponceCallback = new DataService.GetCallback<Encounter>() {
 			@Override
 			public void onCompleted(Encounter encounter) {
+				patientDashboardView.upDateProgressBar(false);
 
 				if (encounter.equals(null)) {
 				} else {
@@ -190,6 +192,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
 					//patientDashboardView.setEncounterUuid(encounter.getUuid());
 					//patientDashboardView.updateFormFields(encounter);
+					patientDashboardView.upDateProgressBar(false);
 				}
 			}
 

@@ -78,10 +78,12 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 
 	@Override
 	public void getVisit() {
+		visitDetailsView.showTabSpinner(true);
 		DataService.GetCallback<Visit> getSingleCallback =
 				new DataService.GetCallback<Visit>() {
 					@Override
 					public void onCompleted(Visit entity) {
+						visitDetailsView.showTabSpinner(false);
 						if (entity != null) {
 							visitDetailsView.setVisit(entity);
 							loadVisitAttributeTypes();
@@ -90,6 +92,7 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 
 					@Override
 					public void onError(Throwable t) {
+						visitDetailsView.showTabSpinner(false);
 						visitDetailsView
 								.showToast(ApplicationConstants.entityName.VISITS + ApplicationConstants.toastMessages
 										.fetchErrorMessage, ToastUtil.ToastType.ERROR);

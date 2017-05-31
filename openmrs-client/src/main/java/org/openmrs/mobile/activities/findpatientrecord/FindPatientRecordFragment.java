@@ -25,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.openmrs.mobile.R;
@@ -46,7 +47,7 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 	private RecyclerView findPatientRecyclerView;
 	private TextView noPatientFound, numberOfFetchedPatients, searchForPatient, patientSearchTitle, noPatientFoundTitle;
 	private LinearLayoutManager layoutManager;
-	private ProgressBar findPatientProgressBar;
+	private RelativeLayout findPatientProgressBar;
 	private LinearLayout findPatientLayout, noPatientsFoundLayout, foundPatientsLayout, patientListLayout;
 	private OpenMRS openMRS = OpenMRS.getInstance();
 	private AuthorizationManager authorizationManager;
@@ -83,7 +84,7 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 		noPatientFound = (TextView)v.findViewById(R.id.noPatientsFound);
 		findPatientRecyclerView = (RecyclerView)v.findViewById(R.id.findPatientModelRecyclerView);
 
-		findPatientProgressBar = (ProgressBar)v.findViewById(R.id.findPatientLoadingProgressBar);
+		findPatientProgressBar = (RelativeLayout)v.findViewById(R.id.findPatientLoadingProgressBar);
 		numberOfFetchedPatients = (TextView)v.findViewById(R.id.numberOfFetchedPatients);
 		noPatientsFoundLayout = (LinearLayout)v.findViewById(R.id.noPatientsFoundLayout);
 		foundPatientsLayout = (LinearLayout)v.findViewById(R.id.resultsLayout);
@@ -140,7 +141,6 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 	public void fetchPatients(List<Patient> patients) {
 		FindPatientRecyclerViewAdapter adapter = new FindPatientRecyclerViewAdapter(this.getActivity(), patients, this);
 		findPatientRecyclerView.setAdapter(adapter);
-		//findPatientRecyclerView.addOnScrollListener(recyclerViewOnScrollListener);
 	}
 
 	@Override

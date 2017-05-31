@@ -29,6 +29,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -90,8 +91,9 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	private List<Map> primaryDiagnosisList, secondaryDiagnosisList;
 	private ConceptName diagnosisConceptName;
 	private FlexboxLayout visitAttributesLayout;
-	private RelativeLayout visitNoteAuditInfo, visitVitalsAuditInfo, auditDataMetadata;
+	private RelativeLayout visitNoteAuditInfo, visitVitalsAuditInfo, auditDataMetadata, visitDetailsProgressBar;
 	private View visitDetailsView;
+	private ScrollView visitDetailsFragment;
 
 	private Map<String, Object> encounterDiagnosis = new HashMap<>();
 
@@ -157,7 +159,10 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		visitVitalsAuditInfo = (RelativeLayout)v.findViewById(R.id.visitVitalsAuditInfo);
 		auditDataMetadata = (RelativeLayout)v.findViewById(R.id.auditDataMetadata);
 
-		visitDetailsView = (View)v.findViewById(R.id.visitDetailsView);
+		visitDetailsView = v.findViewById(R.id.visitDetailsView);
+
+		visitDetailsProgressBar = (RelativeLayout)v.findViewById(R.id.visitDetailsScreenProgressBar);
+		visitDetailsFragment = (ScrollView)v.findViewById(R.id.visitDetailsScreen);
 
 	}
 
@@ -261,13 +266,13 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	public void setVisitDates(Visit visit) {
 		if (StringUtils.notNull(visit.getStopDatetime())) {
 			activeVisitBadge.setVisibility(View.GONE);
-			visitStartDate.setText(getContext().getResources().getString(R.string.date_started) + ": " + DateUtils
+			visitStartDate.setText(DateUtils
 					.convertTime1(visit.getStartDatetime(), DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT));
 			visitEndDate
 					.setText(getContext().getResources().getString(R.string.date_closed) + ": " + DateUtils
 							.convertTime1(visit.getStopDatetime(), DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT));
-			visitDuration.setText(DateUtils.calculateTimeDifference(visit.getStartDatetime()));
-			startDuration.setText(DateUtils.calculateTimeDifference(visit.getStartDatetime(), visit.getStopDatetime()));
+			startDuration.setText(DateUtils.calculateTimeDifference(visit.getStartDatetime()));
+			visitDuration.setText(DateUtils.calculateTimeDifference(visit.getStartDatetime(), visit.getStopDatetime()));
 
 		} else {
 			activeVisitBadge.setVisibility(View.VISIBLE);
@@ -301,6 +306,17 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 			}
 		}
 
+	}
+
+	@Override
+	public void showTabSpinner(boolean visibility) {
+		if (visibility) {
+			visitDetailsProgressBar.setVisibility(View.VISIBLE);
+			visitDetailsFragment.setVisibility(View.GONE);
+		} else {
+			visitDetailsProgressBar.setVisibility(View.GONE);
+			visitDetailsFragment.setVisibility(View.VISIBLE);
+		}
 	}
 
 	private void createVisitAttributeTypesLayout(VisitAttributeType visitAttributeType) {
@@ -562,7 +578,5 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 			return ApplicationConstants.DiagnosisStrings.CONFIRMED;
 		}
 	}
-
-
 
 }

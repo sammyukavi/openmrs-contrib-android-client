@@ -166,11 +166,11 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 
 	@Override
 	public void getPatientToUpdate(String uuid) {
-		patientRegistrationView.setProgressBarVisibility(true);
+		patientRegistrationView.showPageSpinner(true);
 		DataService.GetCallback<Patient> singleCallback = new DataService.GetCallback<Patient>() {
 			@Override
 			public void onCompleted(Patient entity) {
-				patientRegistrationView.setProgressBarVisibility(false);
+				patientRegistrationView.showPageSpinner(false);
 				if (entity != null) {
 					patientRegistrationView.fillFields(entity);
 					setPatient(entity);
@@ -183,7 +183,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 
 			@Override
 			public void onError(Throwable t) {
-				patientRegistrationView.setProgressBarVisibility(false);
+				patientRegistrationView.showPageSpinner(false);
 				Log.e("User Error", "Error", t.fillInStackTrace());
 				patientRegistrationView.showToast(ApplicationConstants.entityName.PATIENTS + ApplicationConstants
 						.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
@@ -196,7 +196,6 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 	@Override
 	public void confirmPatient(Patient patient) {
 		if (!registeringPatient && validate(patient)) {
-			patientRegistrationView.setProgressBarVisibility(true);
 			patientRegistrationView.hideSoftKeys();
 			registeringPatient = true;
 			if (patient.getUuid().equalsIgnoreCase(null)) {
@@ -205,6 +204,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 				addEditPatient(patient);
 			}
 		} else {
+			patientRegistrationView.showPageSpinner(false);
 			patientRegistrationView.scrollToTop();
 		}
 	}
@@ -216,13 +216,13 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 
 	@Override
 	public void addEditPatient(Patient patient) {
-		patientRegistrationView.setProgressBarVisibility(true);
+		patientRegistrationView.showPageSpinner(true);
 		setRegistering(true);
 		DataService.GetCallback<Patient> getSingleCallback = new DataService.GetCallback<Patient>() {
 			@Override
 			public void onCompleted(Patient entity) {
 				setRegistering(false);
-				patientRegistrationView.setProgressBarVisibility(false);
+				patientRegistrationView.showPageSpinner(false);
 				if (entity != null) {
 					patientRegistrationView.finishAddPatientActivity();
 					patientRegistrationView.startPatientDashboardActivity(entity);
@@ -236,7 +236,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 			@Override
 			public void onError(Throwable t) {
 				setRegistering(false);
-				patientRegistrationView.setProgressBarVisibility(false);
+				patientRegistrationView.showPageSpinner(false);
 				patientRegistrationView
 						.showToast(ApplicationConstants.entityName.PATIENTS + ApplicationConstants.toastMessages
 								.addErrorMessage, ToastUtil.ToastType.ERROR);
@@ -255,7 +255,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		DataService.GetCallback<List<Patient>> callback = new DataService.GetCallback<List<Patient>>() {
 			@Override
 			public void onCompleted(List<Patient> patients) {
-				patientRegistrationView.setProgressBarVisibility(false);
+				patientRegistrationView.showPageSpinner(false);
 				if (patients.isEmpty()) {
 					addEditPatient(patient);
 				} else {
@@ -265,7 +265,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 
 			@Override
 			public void onError(Throwable t) {
-				patientRegistrationView.setProgressBarVisibility(false);
+				patientRegistrationView.showPageSpinner(false);
 				Log.e("User Error", "Error", t.fillInStackTrace());
 				patientRegistrationView.showToast(ApplicationConstants.entityName.PATIENTS + ApplicationConstants
 						.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
@@ -320,6 +320,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 
 	@Override
 	public List<PersonAttributeType> getPersonAttributeTypes() {
+		patientRegistrationView.showPageSpinner(true);
 		final List<PersonAttributeType> personAttributeTypes = new ArrayList<>();
 		personAttributeTypeDataService
 				.getAll(QueryOptions.LOAD_RELATED_OBJECTS, new PagingInfo(0, 100), new DataService
@@ -340,7 +341,9 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 							}
 							personAttributeTypes.addAll(entities);
 							patientRegistrationView.loadPersonAttributeTypes(personAttributeTypes);
+							patientRegistrationView.showPageSpinner(false);
 						} else {
+							patientRegistrationView.showPageSpinner(true);
 							patientRegistrationView
 									.showToast(ApplicationConstants.entityName.ATTRIBUTE_TPYES + ApplicationConstants
 											.toastMessages.fetchWarningMessage, ToastUtil.ToastType.WARNING);

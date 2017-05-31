@@ -71,6 +71,8 @@ public interface VisitContract {
 		void setConcept(Concept concept);
 
 		void setAttributeTypes(List<VisitAttributeType> visitAttributeTypes);
+
+		void showTabSpinner(boolean visibility);
 	}
 
 	interface VisitPhotoView extends ViewVisitDetailsMain {

@@ -36,6 +36,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -92,7 +93,6 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 	private EditText edmonth;
 	private EditText fileNumber;
 	private RadioGroup gen;
-	private ProgressBar progressBar;
 	private Button submitConfirm;
 	private String patientUuuid;
 	private String patientName;
@@ -114,6 +114,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 	private ScrollView addPatientScrollView;
 	private Location loginLocation;
 	private OpenMRS instance = OpenMRS.getInstance();
+	private RelativeLayout addEditPatientProgressBar;
 
 	public static AddEditPatientFragment newInstance() {
 		return new AddEditPatientFragment();
@@ -133,7 +134,6 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		addPatientScrollView = (ScrollView)v.findViewById(R.id.patientAddScrollView);
 
 		gen = (RadioGroup)v.findViewById(R.id.gender);
-		progressBar = (ProgressBar)v.findViewById(R.id.progress_bar);
 
 		fnameerror = (TextView)v.findViewById(R.id.fnameerror);
 		lnameerror = (TextView)v.findViewById(R.id.lnameerror);
@@ -142,12 +142,13 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		fileNumberError = (TextView)v.findViewById(R.id.fileNumberError);
 
 		submitConfirm = (Button)v.findViewById(R.id.submitConfirm);
+		addEditPatientProgressBar = (RelativeLayout)v.findViewById(R.id.addEditPatientProgressBar);
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View root = inflater.inflate(R.layout.fragment_patient_info, container, false);
+		View root = inflater.inflate(R.layout.fragment_add_edit_patient, container, false);
 		if (getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE) != null) {
 			patientUuuid = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
 		} else {
@@ -178,7 +179,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 
 	@Override
 	public void scrollToTop() {
-		ScrollView scrollView = (ScrollView)this.getActivity().findViewById(R.id.scrollView);
+		ScrollView scrollView = (ScrollView)this.getActivity().findViewById(R.id.patientAddScrollView);
 		scrollView.smoothScrollTo(0, scrollView.getPaddingTop());
 	}
 
@@ -297,15 +298,9 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
 	}
 
-	@Override
-	public void setProgressBarVisibility(boolean visibility) {
-		progressBar.setVisibility(visibility ? View.VISIBLE : View.GONE);
-		addPatientScrollView.setVisibility(visibility ? View.GONE : View.VISIBLE);
-	}
 
 	@Override
 	public void showSimilarPatientDialog(List<Patient> patients, Patient newPatient) {
-		setProgressBarVisibility(false);
 		CustomDialogBundle similarPatientsDialog = new CustomDialogBundle();
 		similarPatientsDialog.setTitleViewMessage(getString(R.string.similar_patients_dialog_title));
 		similarPatientsDialog.setLeftButtonText(getString(R.string.dialog_button_cancel));
@@ -479,6 +474,17 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 			PatientIdentifier patientIdentifier = patient.getIdentifier();
 			fileNumber.setText(patientIdentifier.getIdentifier());
 
+		}
+	}
+
+	@Override
+	public void showPageSpinner(boolean visibility) {
+		if (visibility) {
+			addPatientScrollView.setVisibility(View.GONE);
+			addEditPatientProgressBar.setVisibility(View.VISIBLE);
+		} else {
+			addPatientScrollView.setVisibility(View.VISIBLE);
+			addEditPatientProgressBar.setVisibility(View.GONE);
 		}
 	}
 

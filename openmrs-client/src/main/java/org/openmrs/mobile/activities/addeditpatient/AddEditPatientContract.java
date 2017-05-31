@@ -45,8 +45,6 @@ public interface AddEditPatientContract {
 
 		void hideSoftKeys();
 
-		void setProgressBarVisibility(boolean visibility);
-
 		void showSimilarPatientDialog(List<Patient> patients, Patient newPatient);
 
 		void startPatientDashboardActivity(Patient patient);
@@ -62,6 +60,8 @@ public interface AddEditPatientContract {
 		void setLoginLocation(Location location);
 
 		void fillFields(Patient patient);
+
+		void showPageSpinner(boolean visibility);
 
 	}
 

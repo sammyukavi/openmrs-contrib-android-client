@@ -23,11 +23,12 @@ import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.impl.ConceptDataService;
-import org.openmrs.mobile.data.impl.ConceptNameDataService;
+import org.openmrs.mobile.data.impl.ConceptAnswerDataService;
 import org.openmrs.mobile.data.impl.ObsDataService;
 import org.openmrs.mobile.data.impl.VisitAttributeTypeDataService;
 import org.openmrs.mobile.data.impl.VisitDataService;
 import org.openmrs.mobile.models.Concept;
+import org.openmrs.mobile.models.ConceptAnswer;
 import org.openmrs.mobile.models.ConceptName;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Visit;
@@ -48,7 +49,7 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 
 	private int page = 1;
 	private int limit = 10;
-	private ConceptNameDataService conceptNameDataService;
+	private ConceptAnswerDataService conceptAnswerDataService;
 
 	public VisitDetailsPresenter(String patientUuid, String visitUuid, String providerUuid, String visitStopDate,
 			VisitContract
@@ -59,7 +60,7 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 		this.visitDataService = new VisitDataService();
 		this.conceptDataService = new ConceptDataService();
 		this.obsDataService = new ObsDataService();
-		this.conceptNameDataService = new ConceptNameDataService();
+		this.conceptAnswerDataService = new ConceptAnswerDataService();
 		this.visitAttributeTypeDataService = new VisitAttributeTypeDataService();
 		this.visitUUID = visitUuid;
 		this.providerUuid = providerUuid;
@@ -77,10 +78,12 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 
 	@Override
 	public void getVisit() {
+		visitDetailsView.showTabSpinner(true);
 		DataService.GetCallback<Visit> getSingleCallback =
 				new DataService.GetCallback<Visit>() {
 					@Override
 					public void onCompleted(Visit entity) {
+						visitDetailsView.showTabSpinner(false);
 						if (entity != null) {
 							visitDetailsView.setVisit(entity);
 							loadVisitAttributeTypes();
@@ -89,6 +92,7 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 
 					@Override
 					public void onError(Throwable t) {
+						visitDetailsView.showTabSpinner(false);
 						visitDetailsView
 								.showToast(ApplicationConstants.entityName.VISITS + ApplicationConstants.toastMessages
 										.fetchErrorMessage, ToastUtil.ToastType.ERROR);
@@ -99,14 +103,12 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 
 	@Override
 	public void getConcept(String name) {
-		System.out.println(" Concept find");
 		DataService.GetCallback<List<Concept>> getCallback = new DataService.GetCallback<List<Concept>>() {
 
 			@Override
 			public void onCompleted(List<Concept> concepts) {
 				if (!concepts.isEmpty()) {
 					visitDetailsView.setConcept(concepts.get(0));
-					System.out.println(concepts.size() + " Concept size");
 				}
 			}
 
@@ -184,13 +186,13 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 	}
 
 	@Override
-	public void getConceptName(String uuid, String searchValue, TextView textView) {
-		conceptNameDataService.getByConceptUuid(uuid, null, new DataService.GetCallback<List<ConceptName>>() {
+	public void getConceptAnswer(String uuid, String searchValue, TextView textView) {
+		conceptAnswerDataService.getByConceptUuid(uuid, null, new DataService.GetCallback<List<ConceptAnswer>>() {
 			@Override
-			public void onCompleted(List<ConceptName> entities) {
-				for (ConceptName conceptName : entities) {
-					if (conceptName.getUuid().equalsIgnoreCase(searchValue)) {
-						textView.setText(conceptName.getName());
+			public void onCompleted(List<ConceptAnswer> entities) {
+				for (ConceptAnswer conceptAnswer : entities) {
+					if (conceptAnswer.getUuid().equalsIgnoreCase(searchValue)) {
+						textView.setText(conceptAnswer.getDisplay());
 					}
 				}
 			}

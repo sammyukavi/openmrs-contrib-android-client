@@ -11,7 +11,7 @@ import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
-import org.openmrs.mobile.data.impl.ConceptNameDataService;
+import org.openmrs.mobile.data.impl.ConceptAnswerDataService;
 import org.openmrs.mobile.data.impl.LocationDataService;
 import org.openmrs.mobile.data.impl.PatientDataService;
 import org.openmrs.mobile.data.impl.VisitAttributeTypeDataService;
@@ -47,7 +47,7 @@ public class AddEditVisitPresenterTest extends ACUnitTestBase {
     @Mock
     private PatientDataService patientDataService;
     @Mock
-    private ConceptNameDataService conceptNameDataService;
+    private ConceptAnswerDataService conceptAnswerDataService;
     @Mock
     private LocationDataService locationDataService;
     @Mock
@@ -66,7 +66,7 @@ public class AddEditVisitPresenterTest extends ACUnitTestBase {
     @Before
     public void setUp(){
         presenter = new AddEditVisitPresenter(view, patientUuid, visitDataService,
-                patientDataService, visitTypeDataService, visitAttributeTypeDataService, conceptNameDataService, locationDataService);
+                patientDataService, visitTypeDataService, visitAttributeTypeDataService, conceptAnswerDataService, locationDataService);
 
         patient = new Patient();
         patient.setUuid(patientUuid);

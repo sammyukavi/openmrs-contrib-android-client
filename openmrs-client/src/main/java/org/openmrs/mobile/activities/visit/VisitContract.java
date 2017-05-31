@@ -71,6 +71,8 @@ public interface VisitContract {
 		void setConcept(Concept concept);
 
 		void setAttributeTypes(List<VisitAttributeType> visitAttributeTypes);
+
+		void showTabSpinner(boolean visibility);
 	}
 
 	interface VisitPhotoView extends ViewVisitDetailsMain {
@@ -133,6 +135,6 @@ public interface VisitContract {
 
 		void getObservation(String uuid);
 
-		void getConceptName(String uuid, String searchValue, TextView textView);
+		void getConceptAnswer(String uuid, String searchValue, TextView textView);
 	}
 }

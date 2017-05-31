@@ -29,6 +29,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -90,8 +91,9 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	private List<Map> primaryDiagnosisList, secondaryDiagnosisList;
 	private ConceptName diagnosisConceptName;
 	private FlexboxLayout visitAttributesLayout;
-	private RelativeLayout visitNoteAuditInfo, visitVitalsAuditInfo, auditDataMetadata;
+	private RelativeLayout visitNoteAuditInfo, visitVitalsAuditInfo, auditDataMetadata, visitDetailsProgressBar;
 	private View visitDetailsView;
+	private ScrollView visitDetailsFragment;
 
 	private Map<String, Object> encounterDiagnosis = new HashMap<>();
 
@@ -157,7 +159,10 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		visitVitalsAuditInfo = (RelativeLayout)v.findViewById(R.id.visitVitalsAuditInfo);
 		auditDataMetadata = (RelativeLayout)v.findViewById(R.id.auditDataMetadata);
 
-		visitDetailsView = (View)v.findViewById(R.id.visitDetailsView);
+		visitDetailsView = v.findViewById(R.id.visitDetailsView);
+
+		visitDetailsProgressBar = (RelativeLayout)v.findViewById(R.id.visitDetailsScreenProgressBar);
+		visitDetailsFragment = (ScrollView)v.findViewById(R.id.visitDetailsScreen);
 
 	}
 
@@ -261,13 +266,13 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	public void setVisitDates(Visit visit) {
 		if (StringUtils.notNull(visit.getStopDatetime())) {
 			activeVisitBadge.setVisibility(View.GONE);
-			visitStartDate.setText(getContext().getResources().getString(R.string.date_started) + ": " + DateUtils
+			visitStartDate.setText(DateUtils
 					.convertTime1(visit.getStartDatetime(), DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT));
 			visitEndDate
 					.setText(getContext().getResources().getString(R.string.date_closed) + ": " + DateUtils
 							.convertTime1(visit.getStopDatetime(), DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT));
-			visitDuration.setText(DateUtils.calculateTimeDifference(visit.getStartDatetime()));
-			startDuration.setText(DateUtils.calculateTimeDifference(visit.getStartDatetime(), visit.getStopDatetime()));
+			startDuration.setText(DateUtils.calculateTimeDifference(visit.getStartDatetime()));
+			visitDuration.setText(DateUtils.calculateTimeDifference(visit.getStartDatetime(), visit.getStopDatetime()));
 
 		} else {
 			activeVisitBadge.setVisibility(View.VISIBLE);
@@ -290,42 +295,79 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	@Override
 	public void setAttributeTypes(List<VisitAttributeType> visitAttributeTypes) {
 		visitAttributesLayout.removeAllViews();
-		if (0 == visit.getAttributes().size()) {
-			System.out.println();
-			visitAttributesLayout.setVisibility(View.GONE);
-			visitDetailsView.setVisibility(View.GONE);
-			return;
-		}
-
-		for (VisitAttribute visitAttribute : visit.getAttributes()) {
-			loadVisitAttributeType(visitAttribute, visitAttributeTypes);
-			LinearLayout linearLayout = new LinearLayout(getContext());
-			LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-					LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-			linearLayout.setLayoutParams(params);
-			linearLayout.setOrientation(LinearLayout.HORIZONTAL);
-
-			String valueLabel = String.valueOf(visitAttribute.getValue());
-			TextView nameLabelView = new TextView(getContext());
-			nameLabelView.setPadding(0, 10, 10, 10);
-			nameLabelView.setText(visitAttribute.getAttributeType().getDisplay() + ":");
-			linearLayout.addView(nameLabelView);
-
-			TextView valueLabelView = new TextView(getContext());
-			valueLabelView.setPadding(20, 10, 10, 10);
-
-			if (null != visitAttribute.getAttributeType().getDatatypeConfig()) {
-				((VisitDetailsPresenter)mPresenter).getConceptName(
-						visitAttribute.getAttributeType().getDatatypeConfig(),
-						(String)visitAttribute.getValue(), valueLabelView);
-			} else {
-				valueLabelView.setText(valueLabel);
+		if (visit.getAttributes().size() == 0) {
+			for (VisitAttributeType visitAttributeType : visitAttributeTypes) {
+				createVisitAttributeTypesLayout(visitAttributeType);
 			}
-
-			linearLayout.addView(valueLabelView);
-
-			visitAttributesLayout.addView(linearLayout);
+		} else {
+			for (VisitAttribute visitAttribute : visit.getAttributes()) {
+				loadVisitAttributeType(visitAttribute, visitAttributeTypes);
+				createVisitAttributeLayout(visitAttribute);
+			}
 		}
+
+	}
+
+	@Override
+	public void showTabSpinner(boolean visibility) {
+		if (visibility) {
+			visitDetailsProgressBar.setVisibility(View.VISIBLE);
+			visitDetailsFragment.setVisibility(View.GONE);
+		} else {
+			visitDetailsProgressBar.setVisibility(View.GONE);
+			visitDetailsFragment.setVisibility(View.VISIBLE);
+		}
+	}
+
+	private void createVisitAttributeTypesLayout(VisitAttributeType visitAttributeType) {
+		LinearLayout linearLayout = new LinearLayout(getContext());
+		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+				LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+		linearLayout.setLayoutParams(params);
+		linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+		String valueLabel = String.valueOf(ApplicationConstants.EMPTY_STRING);
+		TextView nameLabelView = new TextView(getContext());
+		nameLabelView.setPadding(0, 10, 10, 10);
+		nameLabelView.setText(visitAttributeType.getDisplay() + ":");
+		linearLayout.addView(nameLabelView);
+
+		TextView valueLabelView = new TextView(getContext());
+		valueLabelView.setPadding(20, 10, 10, 10);
+		valueLabelView.setText(valueLabel);
+
+		linearLayout.addView(valueLabelView);
+
+		visitAttributesLayout.addView(linearLayout);
+	}
+
+	private void createVisitAttributeLayout(VisitAttribute visitAttribute) {
+		LinearLayout linearLayout = new LinearLayout(getContext());
+		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+				LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+		linearLayout.setLayoutParams(params);
+		linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+		String valueLabel = String.valueOf(visitAttribute.getValue());
+		TextView nameLabelView = new TextView(getContext());
+		nameLabelView.setPadding(0, 10, 10, 10);
+		nameLabelView.setText(visitAttribute.getAttributeType().getDisplay() + ":");
+		linearLayout.addView(nameLabelView);
+
+		TextView valueLabelView = new TextView(getContext());
+		valueLabelView.setPadding(20, 10, 10, 10);
+
+		if (null != visitAttribute.getAttributeType().getDatatypeConfig()) {
+			((VisitDetailsPresenter)mPresenter).getConceptAnswer(
+					visitAttribute.getAttributeType().getDatatypeConfig(),
+					(String)visitAttribute.getValue(), valueLabelView);
+		} else {
+			valueLabelView.setText(valueLabel);
+		}
+
+		linearLayout.addView(valueLabelView);
+
+		visitAttributesLayout.addView(linearLayout);
 	}
 
 	private void loadVisitAttributeType(VisitAttribute visitAttribute, List<VisitAttributeType> attributeTypes) {
@@ -536,7 +578,5 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 			return ApplicationConstants.DiagnosisStrings.CONFIRMED;
 		}
 	}
-
-
 
 }

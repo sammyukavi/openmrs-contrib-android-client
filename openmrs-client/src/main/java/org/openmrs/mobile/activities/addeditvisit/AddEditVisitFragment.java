@@ -35,9 +35,8 @@ import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
 import org.openmrs.mobile.activities.visit.VisitActivity;
-import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.models.BaseOpenmrsObject;
-import org.openmrs.mobile.models.ConceptName;
+import org.openmrs.mobile.models.ConceptAnswer;
 import org.openmrs.mobile.models.VisitAttribute;
 import org.openmrs.mobile.models.VisitAttributeType;
 import org.openmrs.mobile.models.VisitType;
@@ -181,7 +180,7 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 				String conceptUuid = visitAttributeType.getDatatypeConfig();
 				Spinner conceptAnswersDropdown = new Spinner(getContext());
 				conceptAnswersDropdown.setLayoutParams(marginParams);
-				mPresenter.getConceptNames(conceptUuid, conceptAnswersDropdown);
+				mPresenter.getConceptAnswer(conceptUuid, conceptAnswersDropdown);
 				row.addView(conceptAnswersDropdown, 1);
 				viewVisitAttributeTypeMap.put(conceptAnswersDropdown, visitAttributeType);
 			} else if (datatypeClass.equalsIgnoreCase("org.openmrs.customdatatype.datatype.FreeTextDatatype")) {
@@ -205,10 +204,10 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 	}
 
 	@Override
-	public void updateConceptNamesView(Spinner conceptNamesDropdown, List<ConceptName> conceptNames) {
+	public void updateConceptAnswersView(Spinner conceptNamesDropdown, List<ConceptAnswer> conceptAnswers) {
 		VisitAttributeType visitAttributeType = viewVisitAttributeTypeMap.get(conceptNamesDropdown);
-		ArrayAdapter<ConceptName> conceptNameArrayAdapter = new ArrayAdapter<ConceptName>(this.getActivity(),
-				android.R.layout.simple_spinner_dropdown_item, conceptNames);
+		ArrayAdapter<ConceptAnswer> conceptNameArrayAdapter = new ArrayAdapter<>(this.getActivity(),
+				android.R.layout.simple_spinner_dropdown_item, conceptAnswers);
 		conceptNamesDropdown.setAdapter(conceptNameArrayAdapter);
 
 		// set existing visit attribute if any
@@ -220,12 +219,12 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 		conceptNamesDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-				ConceptName conceptName = conceptNames.get(position);
+				ConceptAnswer conceptAnswer = conceptAnswers.get(position);
 				VisitAttribute visitAttribute = new VisitAttribute();
-				visitAttribute.setValue(conceptName.getUuid());
+				visitAttribute.setValue(conceptAnswer.getUuid());
 				visitAttribute.setAttributeType(visitAttributeType);
 				visitAttributeMap.clear();
-				visitAttributeMap.put(conceptName.getUuid(), visitAttribute);
+				visitAttributeMap.put(conceptAnswer.getUuid(), visitAttribute);
 			}
 
 			@Override
@@ -236,7 +235,7 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 
 	@Override
 	public void updateVisitTypes(List<VisitType> visitTypes) {
-		ArrayAdapter<VisitType> visitTypeArrayAdapter = new ArrayAdapter(this.getActivity(),
+		ArrayAdapter<VisitType> visitTypeArrayAdapter = new ArrayAdapter<>(this.getActivity(),
 				android.R.layout.simple_spinner_dropdown_item, visitTypes);
 		visitTypeDropdown.setAdapter(visitTypeArrayAdapter);
 

@@ -21,7 +21,7 @@ public class Concept extends BaseOpenmrsObject {
 
 	@SerializedName("description")
 	@Expose
-	private String description;
+	private Object description;
 
 	@SerializedName("conceptClass")
 	@Expose
@@ -41,11 +41,11 @@ public class Concept extends BaseOpenmrsObject {
 		this.datatype = datatype;
 	}
 
-	public String getDescription() {
+	public Object getDescription() {
 		return description;
 	}
 
-	public void setDescription(String description) {
+	public void setDescription(Object description) {
 		this.description = description;
 	}
 

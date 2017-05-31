@@ -19,9 +19,9 @@ import android.support.annotation.Nullable;
 import org.openmrs.mobile.data.BaseDataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
-import org.openmrs.mobile.data.db.impl.ConceptNameDbService;
-import org.openmrs.mobile.data.rest.ConceptNameRestService;
-import org.openmrs.mobile.models.ConceptName;
+import org.openmrs.mobile.data.db.impl.ConceptAnswerDbService;
+import org.openmrs.mobile.data.rest.ConceptAnswerRestService;
+import org.openmrs.mobile.models.ConceptAnswer;
 import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 
@@ -31,15 +31,15 @@ import retrofit2.Call;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class ConceptNameDataService extends BaseDataService<ConceptName, ConceptNameDbService, ConceptNameRestService> {
+public class ConceptAnswerDataService extends BaseDataService<ConceptAnswer, ConceptAnswerDbService, ConceptAnswerRestService> {
 	@Override
-	protected Class<ConceptNameRestService> getRestServiceClass() {
-		return ConceptNameRestService.class;
+	protected Class<ConceptAnswerRestService> getRestServiceClass() {
+		return ConceptAnswerRestService.class;
 	}
 
 	@Override
-	protected ConceptNameDbService getDbService() {
-		return new ConceptNameDbService();
+	protected ConceptAnswerDbService getDbService() {
+		return new ConceptAnswerDbService();
 	}
 
 	@Override
@@ -49,16 +49,16 @@ public class ConceptNameDataService extends BaseDataService<ConceptName, Concept
 
 	@Override
 	protected String getEntityName() {
-		return "conceptname";
+		return "conceptanswer";
 	}
 
 	@Override
-	protected Call<ConceptName> _restGetByUuid(String restPath, String uuid, QueryOptions options) {
+	protected Call<ConceptAnswer> _restGetByUuid(String restPath, String uuid, QueryOptions options) {
 		return restService.getByUuid(restPath, uuid, QueryOptions.getRepresentation(options));
 	}
 
 	public void getByConceptUuid(@NonNull String conceptUuid, @Nullable QueryOptions options,
-			@NonNull GetCallback<List<ConceptName>> callback) {
+			@NonNull GetCallback<List<ConceptAnswer>> callback) {
 		checkNotNull(conceptUuid);
 		checkNotNull(callback);
 
@@ -68,22 +68,22 @@ public class ConceptNameDataService extends BaseDataService<ConceptName, Concept
 	}
 
 	@Override
-	protected Call<Results<ConceptName>> _restGetAll(String restPath, QueryOptions options, PagingInfo pagingInfo) {
+	protected Call<Results<ConceptAnswer>> _restGetAll(String restPath, QueryOptions options, PagingInfo pagingInfo) {
 		return null;
 	}
 
 	@Override
-	protected Call<ConceptName> _restCreate(String restPath, ConceptName entity) {
+	protected Call<ConceptAnswer> _restCreate(String restPath, ConceptAnswer entity) {
 		return null;
 	}
 
 	@Override
-	protected Call<ConceptName> _restUpdate(String restPath, ConceptName entity) {
+	protected Call<ConceptAnswer> _restUpdate(String restPath, ConceptAnswer entity) {
 		return null;
 	}
 
 	@Override
-	protected Call<ConceptName> _restPurge(String restPath, String uuid) {
+	protected Call<ConceptAnswer> _restPurge(String restPath, String uuid) {
 		return null;
 	}
 }

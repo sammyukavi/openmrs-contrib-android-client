@@ -23,7 +23,6 @@ import org.joda.time.LocalDateTime;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.visit.VisitActivity;
 import org.openmrs.mobile.application.OpenMRS;
-import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.EncounterType;
@@ -47,6 +46,13 @@ import static org.openmrs.mobile.utilities.ApplicationConstants.BundleKeys.PATIE
 import static org.openmrs.mobile.utilities.ApplicationConstants.ClinicalFormConcepts.ClinicFormUUID;
 import static org.openmrs.mobile.utilities.ApplicationConstants.EncounterTypeEntity.CLINICAL_NOTE_UUID;
 import static org.openmrs.mobile.utilities.ApplicationConstants.FORM_UUIDS.CLINICAL_FORM_UUID;
+import static org.openmrs.mobile.utilities.ApplicationConstants.ObservationLocators.CHIEF_COMPLAINT;
+import static org.openmrs.mobile.utilities.ApplicationConstants.ObservationLocators.CLINICAL_NOTE;
+import static org.openmrs.mobile.utilities.ApplicationConstants.ObservationLocators.CONFIRMED_DIAGNOSIS;
+import static org.openmrs.mobile.utilities.ApplicationConstants.ObservationLocators.DIAGNOSES;
+import static org.openmrs.mobile.utilities.ApplicationConstants.ObservationLocators.PRESUMED_DIAGNOSIS;
+import static org.openmrs.mobile.utilities.ApplicationConstants.ObservationLocators.PRIMARY_DIAGNOSIS;
+import static org.openmrs.mobile.utilities.ApplicationConstants.ObservationLocators.SECONDARY_DIAGNOSIS;
 
 public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -57,7 +63,6 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 	private boolean isLoading;
 	private Context context;
 	private List<Visit> visits;
-	private CustomDialogBundle createEditVisitNoteDialog;
 	private ImageView showVisitDetails;
 	private Intent intent;
 	private LayoutInflater layoutInflater;
@@ -65,19 +70,23 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 	private OpenMRS instance = OpenMRS.getInstance();
 	private TextView visitNote;
 	private Handler handler = new Handler();
-	long delay = 3000; // 1 seconds after user stops typing
-	long last_text_edit = 0;
+	private long delay = 3000; //seconds after user stops typing
+	private long last_text_edit = 0;
 	private Encounter visitNoteEncounter;
 	private LocalDateTime localDateTime;
+	PatientDashboardActivity patientDashboardActivity;
 
 	Runnable input_finish_checker = new Runnable() {
 		public void run() {
 			if (System.currentTimeMillis() > (last_text_edit + delay - 500)) {
+
 				boolean isNewEncounter = false;
+
 				if (visitNoteEncounter == null) {
 					visitNoteEncounter = createVisitNoteEncounter();
 					isNewEncounter = true;
 				}
+
 				Observation observation = null;
 
 				if (clinicalNoteObs == null) {
@@ -109,14 +118,20 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 					observation = clinicalNoteObs;
 				}
 
-				observation.setValue(visitNote.getText());
+				observation.setValue(visitNote.getText().toString());
 
-				List<Observation> observationList = new ArrayList<>();
+				List<Observation> observationList;
+
+				if (isNewEncounter) {
+					observationList = new ArrayList<>();
+				} else {
+					observationList = visitNoteEncounter.getObs();
+				}
+
 				observationList.add(observation);
 
 				visitNoteEncounter.setObs(observationList);
 
-				PatientDashboardActivity patientDashboardActivity = (PatientDashboardActivity)context;
 				patientDashboardActivity.mPresenter.saveEncounter(visitNoteEncounter, isNewEncounter);
 
 			}
@@ -132,14 +147,6 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 		@Override
 		public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
 			super.onScrolled(recyclerView, dx, dy);
-			/*totalItemCount = layoutManager.getItemCount();
-				lastVisibleItem = layoutManager.findLastVisibleItemPosition();
-				if (!isLoading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
-					if (onLoadMoreListener != null) {
-						onLoadMoreListener.onLoadMore();
-					}
-					isLoading = true;
-				}*/
 			if (!isLoading && onLoadMoreListener != null) {
 				isLoading = true;
 				onLoadMoreListener.onLoadMore();
@@ -173,16 +180,14 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 	private Visit activeVisit;
 	private Observation clinicalNoteObs;
 
-	public VisitsRecyclerAdapter(RecyclerView recyclerView, List<Visit> visits, Context context, HashMap uuIds) {
+	public VisitsRecyclerAdapter(RecyclerView recyclerView, List<Visit> visits, Context context, HashMap uuidsHashmap) {
 		this.visits = visits;
 		this.context = context;
-		this.createEditVisitNoteDialog = new CustomDialogBundle();
-		this.createEditVisitNoteDialog.setTitleViewMessage(context.getString(R.string.visit_note));
-		this.createEditVisitNoteDialog.setRightButtonText(context.getString(R.string.label_save));
 		this.layoutInflater = LayoutInflater.from(context);
-		this.uuIds = uuIds;
+		this.uuIds = uuidsHashmap;
 		this.localDateTime = new LocalDateTime();
 		recyclerView.addOnScrollListener(onScrollListener);
+		this.patientDashboardActivity = (PatientDashboardActivity)context;
 	}
 
 	private void loadVisitDetails(Visit visit) {
@@ -224,9 +229,6 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 	@Override
 	public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
-		//View patientContactInfo = layoutInflater.inflate(R.layout.container_patient_address_info, null);
-		//viewHolder.observationsContainer.addView(patientContactInfo);
-
 		if (holder instanceof VisitViewHolder) {
 			boolean isActiveVisit = false;
 			VisitViewHolder viewHolder = (VisitViewHolder)holder;
@@ -241,18 +243,16 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 				activeVisit = visit;
 				isActiveVisit = true;
 				singleVisitView.findViewById(R.id.active_visit_badge).setVisibility(View.VISIBLE);
-				startDate = context.getString(R.string.started) + " " + startDate;
 			}
 
 			visitStartDate.setText(startDate);
-
-			((TextView)singleVisitView.findViewById(R.id.visitTimeago)).setText(DateUtils.calculateTimeDifference(
-					(visit.getStartDatetime())));
+			((TextView)singleVisitView.findViewById(R.id.visitTimeago))
+					.setText(DateUtils.calculateTimeDifference(visit.getStartDatetime(), true));
 
 			if (isActiveVisit) {
 				((TextView)singleVisitView.findViewById(R.id.visitDuration))
 						.setText(context.getString(R.string.duration,
-								DateUtils.calculateTimeDifference(visit.getStartDatetime(), false)));
+								DateUtils.calculateTimeDifference(visit.getStartDatetime(), true)));
 			} else {
 				((TextView)singleVisitView.findViewById(R.id.visitDuration))
 						.setText(context.getString(R.string.duration,
@@ -261,8 +261,14 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
 			//Adding the link to the visit details page
 			showVisitDetails = (ImageView)singleVisitView.findViewById(R.id.loadVisitDetails);
-			showVisitDetails.setOnClickListener(v -> loadVisitDetails(visit));
-			singleVisitView.setOnClickListener(v -> loadVisitDetails(visit));
+
+			if (isActiveVisit) {
+				showVisitDetails.setVisibility(View.VISIBLE);
+				showVisitDetails.setOnClickListener(v -> loadVisitDetails(visit));
+			} else {
+				showVisitDetails.setVisibility(View.GONE);
+				singleVisitView.setOnClickListener(v -> loadVisitDetails(visit));
+			}
 
 			if (visit.getEncounters().size() == 0) {
 				presentVisitNotes(new Encounter(), singleVisitView, isActiveVisit);
@@ -289,52 +295,63 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 	}
 
 	private void presentVisitNotes(Encounter encounter, View view, boolean isActiveVisit) {
-		visitNote = null;
+		visitNote = (TextInputEditText)view.findViewById(R.id.editVisitNote);
+		visitNote.addTextChangedListener(clinicalNoteWatcher);
 
 		if (isActiveVisit) {
 			view.findViewById(R.id.editVisitNoteContainer).setVisibility(View.VISIBLE);
-			visitNote = (TextInputEditText)view.findViewById(R.id.editVisitNote);
-			visitNote.addTextChangedListener(clinicalNoteWatcher);
 
 		} else {
-			visitNote = (TextView)view.findViewById(R.id.visitNoteText);
 			view.findViewById(R.id.visitNoteTextContainer).setVisibility(View.VISIBLE);
 		}
 
 		TextView primaryDiagnosis = (TextView)view.findViewById(R.id.primaryDiagnosis);
 		TextView secondaryDiagnosis = (TextView)view.findViewById(R.id.secondaryDiagnosis);
 
-		String visitNoteStr = null;
+		String visitNoteStr = "";
 		String primaryObsStr = "";
 		String secondaryObsStr = "";
-		String otherObsStr = "";
+		String chiefComplaintObsStr = "";
 		boolean hasVisitNote = false;
 
 		for (Observation observation : encounter.getObs()) {
-			if (observation.getDisplay().startsWith("Text of")) {
+
+			String displayStr = observation.getDisplay();
+
+			if (displayStr.contains(PRIMARY_DIAGNOSIS)) {
+				if (primaryObsStr != "") {
+					primaryObsStr += ", ";
+				}
+				primaryObsStr += ((((displayStr.replace(CONFIRMED_DIAGNOSIS, "")).replace(PRIMARY_DIAGNOSIS, ""))
+						.replace(PRESUMED_DIAGNOSIS, "")).replace(DIAGNOSES, "")).replace(":", " ").replaceAll("( +)", " ")
+						.replaceAll("^\\W+|\\W+$", "");
+				primaryDiagnosis.setText(primaryObsStr);
+			} else if (displayStr.contains(SECONDARY_DIAGNOSIS)) {
+				if (secondaryObsStr != "") {
+					secondaryObsStr += ", ";
+				}
+				secondaryObsStr += ((((displayStr.replace(CONFIRMED_DIAGNOSIS, "")).replace(SECONDARY_DIAGNOSIS, ""))
+						.replace(PRESUMED_DIAGNOSIS, "")).replace(DIAGNOSES, "")).replace(":", " ").replaceAll("( +)", " ")
+						.replaceAll("^\\W+|\\W+$", "");
+				secondaryDiagnosis.setText(secondaryObsStr);
+			} else if (displayStr.contains(CLINICAL_NOTE)) {
+				hasVisitNote = true;
 				this.visitNoteEncounter = encounter;
 				this.clinicalNoteObs = observation;
-				visitNoteStr = observation.getDisplay();
-				visitNoteStr = visitNoteStr.substring((visitNoteStr.indexOf(":") + 1), (visitNoteStr.length() - 1));
-				hasVisitNote = true;
-			} else if (observation.getDisplay().startsWith("Visit Diagnoses: Primary, ")) {
-				primaryObsStr += (observation.getDisplay().replaceAll("Visit Diagnoses: Primary, ", ""));
-			} else if (observation.getDisplay().startsWith("Visit Diagnoses: Secondary,")) {
-				secondaryObsStr += observation.getDisplay().replaceAll("Visit Diagnoses: Secondary, ", "");
-			} else {
-				otherObsStr += observation.getDisplay();
-				hasVisitNote = true;
-			}
-		}
 
-		primaryDiagnosis.setText(primaryObsStr.replaceAll("Presumed diagnosis", "").replaceAll(", ", ", ").replace(",",
-				"").trim());
-		secondaryDiagnosis.setText(secondaryObsStr.replaceAll("Presumed diagnosis", "").replaceAll(", ", ", ").replace(","
-				+ "", "").trim());
-		if (visitNoteStr == null) {
-			visitNote.setText(otherObsStr.trim());
-		} else {
-			visitNote.setText(visitNoteStr.trim());
+				visitNoteStr = (((((displayStr.replace(CONFIRMED_DIAGNOSIS, "")).replace(CLINICAL_NOTE, ""))
+						.replace(PRESUMED_DIAGNOSIS, "")).replace(DIAGNOSES, "")).replace("(text)", "")).replace(":", " ")
+						.replaceAll("" + "( +)", " ").replaceAll("^\\W+|\\W+$", "");
+				visitNote.setText(visitNoteStr);
+				view.findViewById(R.id.visitNoteTitle).setVisibility(View.VISIBLE);
+			} else if (displayStr.contains(CHIEF_COMPLAINT)) {
+				chiefComplaintObsStr = (((((displayStr.replace(CONFIRMED_DIAGNOSIS, "")).replace(CHIEF_COMPLAINT, ""))
+						.replace(PRESUMED_DIAGNOSIS, "")).replace(DIAGNOSES, "")).replace("(text)", "")).replace(":", " ")
+						.replaceAll("" + "( +)", " ").replaceAll("^\\W+|\\W+$", "");
+				if (visitNote.getText().length() == 0) {
+					visitNote.setText(chiefComplaintObsStr);
+				}
+			}
 		}
 
 		if (!primaryObsStr.equalsIgnoreCase("")) {
@@ -346,8 +363,7 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 		}
 
 		if (!hasVisitNote && !isActiveVisit) {
-			view.findViewById(R.id.visitNoteTitle).setVisibility(View.GONE);
-			visitNote.setText("No Diagnosis");
+			((TextView)view.findViewById(R.id.visitNoteText)).setText(context.getString(R.string.no_diagnoses_label));
 		}
 
 	}
@@ -415,7 +431,8 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 		encounter.setForm(form);
 		encounter.setLocation(activeVisit.getLocation());
 		encounter.setVisit(new Visit(activeVisit.getUuid()));
-		encounter.setProvider(OpenMRS.getInstance().getCurrentLoggedInUserInfo().get(ApplicationConstants.UserKeys.USER_UUID));
+		encounter.setProvider(
+				OpenMRS.getInstance().getCurrentLoggedInUserInfo().get(ApplicationConstants.UserKeys.USER_UUID));
 		encounter.setEncounterType(mEncountertype);
 
 		return encounter;

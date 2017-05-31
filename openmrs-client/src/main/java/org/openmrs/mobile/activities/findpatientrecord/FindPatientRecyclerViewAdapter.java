@@ -24,7 +24,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.joda.time.DateTime;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
 import org.openmrs.mobile.models.Patient;
@@ -85,9 +84,8 @@ class FindPatientRecyclerViewAdapter extends RecyclerView.Adapter<FindPatientRec
 		}
 
 		try {
-			DateTime date = DateUtils.convertTimeString(patient.getPerson().getBirthdate());
 			holder.fetchedPatientAge
-					.setText(DateUtils.calculateAge(date.getYear(), date.getMonthOfYear(), date.getDayOfMonth()));
+					.setText(DateUtils.calculateAge(patient.getPerson().getBirthdate()));
 		} catch (Exception e) {
 			holder.fetchedPatientAge.setText("");
 		}

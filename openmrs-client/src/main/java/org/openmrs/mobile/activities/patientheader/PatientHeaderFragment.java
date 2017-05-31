@@ -5,6 +5,8 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,6 +21,7 @@ public class PatientHeaderFragment extends ACBaseFragment<PatientHeaderContract.
 
 	private TextView patientDisplayName, patientAge, fileNumber, patientDob, patientAddress, patientPhonenumber;
 	ImageView patientGender;
+	private View shadowLine;
 
 	public static PatientHeaderFragment newInstance() {
 		return new PatientHeaderFragment();
@@ -38,6 +41,8 @@ public class PatientHeaderFragment extends ACBaseFragment<PatientHeaderContract.
 		patientAddress = (TextView)fragmentView.findViewById(R.id.patientAddress);
 		patientPhonenumber = (TextView)fragmentView.findViewById(R.id.patientPhonenumber);
 
+		shadowLine = fragmentView.findViewById(R.id.shadowLine);
+
 		return fragmentView;
 	}
 
@@ -48,18 +53,18 @@ public class PatientHeaderFragment extends ACBaseFragment<PatientHeaderContract.
 				.drawable.male);
 		fileNumber.setText(patient.getIdentifier().getIdentifier());
 		DateTime date = DateUtils.convertTimeString(patient.getPerson().getBirthdate());
-		patientAge.setText(DateUtils.calculateAge(date.getYear(), date.getMonthOfYear(), date.getDayOfMonth()));
+		patientAge.setText(DateUtils.calculateAge(patient.getPerson().getBirthdate()));;
 		patientDob.setText(
 				DateUtils.convertTime1(patient.getPerson().getBirthdate(), DateUtils.DATE_FORMAT));
+	}
 
-		/*String pnumber = "";
-		for (PersonAttribute attribute : patient.getPerson().getAttributes()) {
-			if (attribute.getAttributeType().getUuid().equalsIgnoreCase(PERSON_ATTRIBUTE_TYPE_PHONE_NUMBER)) {
-				pnumber = attribute.getValue().toString();
-			}
-		}*/
-		//patientPhonenumber.setText(pnumber);
-
+	public void updateShadowLine(boolean visible) {
+		//AlphaAnimation anim = new AlphaAnimation(1.0f, 0.0f);
+		//anim.setDuration(1000);
+		//anim.setRepeatCount(1000);
+		//anim.setRepeatMode(Animation.REVERSE);
+		//shadowLine.startAnimation(anim);
+		shadowLine.setVisibility(visible ? View.VISIBLE : View.GONE);
 	}
 
 }

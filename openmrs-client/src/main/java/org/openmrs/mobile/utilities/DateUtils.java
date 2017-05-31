@@ -24,6 +24,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -117,17 +118,47 @@ public final class DateUtils {
 		return new SimpleDateFormat(format).format(new Date());
 	}
 
-	public static String calculateAge(int year, int month, int day) {
-		Calendar dob = Calendar.getInstance();
-		Calendar today = Calendar.getInstance();
-		dob.set(year, month, day);
-		int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
-		if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)) {
-			age--;
+	public static String calculateAge(String date) {
+		DateFormat dateFormat = new SimpleDateFormat(OPEN_MRS_REQUEST_FORMAT, Locale.getDefault());
+
+		int years = 0;
+		int months = 0;
+		int days = 0;
+		try {
+			Date startDate = dateFormat.parse(date);
+			Calendar now = Calendar.getInstance();
+			Calendar dob = Calendar.getInstance();
+			dob.setTime(startDate);
+			if (dob.after(now)) {
+				throw new IllegalArgumentException("Can't be born in the future");
+			}
+			int year1 = now.get(Calendar.YEAR);
+			int year2 = dob.get(Calendar.YEAR);
+			years = year1 - year2;
+			if (years == 0) {
+				int month1 = now.get(Calendar.MONTH);
+				int month2 = dob.get(Calendar.MONTH);
+
+				if (month1 > month2) {
+					months = month1 - month2;
+				} else if (month1 == month2) {
+					int day1 = now.get(Calendar.DAY_OF_MONTH);
+					int day2 = dob.get(Calendar.DAY_OF_MONTH);
+					if (day1 > day2) {
+						days = day1 - day2;
+					}
+				}
+			}
+		} catch (ParseException e) {
+			e.printStackTrace();
 		}
-		Integer ageInt = new Integer(age);
-		String ageS = ageInt.toString();
-		return ageS;
+
+		if (years > 0) {
+			return String.valueOf(years);
+		} else if (months > 0) {
+			return months + " months";
+		} else
+			return days + " days";
 	}
 
 	public static String convertTimeStringDisplay(String dateAsString) {
@@ -182,9 +213,10 @@ public final class DateUtils {
 
 		long durationInSeconds = TimeUnit.MILLISECONDS.toSeconds(endDate.getTime() - startDate.getTime());
 
-		long SECONDS_IN_A_MINUTE = 60;
+		/*long SECONDS_IN_A_MINUTE = 60;
 		long MINUTES_IN_AN_HOUR = 60;
 		long HOURS_IN_A_DAY = 24;
+		long DAYS_IN_A_WEEK = 7;
 		long DAYS_IN_A_MONTH = 30;
 		long MONTHS_IN_A_YEAR = 12;
 
@@ -195,7 +227,10 @@ public final class DateUtils {
 		long hrs = (durationInSeconds /= MINUTES_IN_AN_HOUR) >= HOURS_IN_A_DAY ?
 				durationInSeconds % HOURS_IN_A_DAY :
 				durationInSeconds;
-		long days = (durationInSeconds /= HOURS_IN_A_DAY) >= DAYS_IN_A_MONTH ?
+		long days = (durationInSeconds /= HOURS_IN_A_DAY) >= DAYS_IN_A_WEEK ?
+				durationInSeconds % DAYS_IN_A_WEEK :
+				durationInSeconds;
+		long weeks = (durationInSeconds /= DAYS_IN_A_WEEK) >= DAYS_IN_A_MONTH ?
 				durationInSeconds % DAYS_IN_A_MONTH :
 				durationInSeconds;
 		long months = (durationInSeconds /= DAYS_IN_A_MONTH) >= MONTHS_IN_A_YEAR ?
@@ -203,7 +238,65 @@ public final class DateUtils {
 				durationInSeconds;
 		long years = (durationInSeconds /= MONTHS_IN_A_YEAR);
 
-		return getDuration(sec, min, hrs, days, months, years, minimum);
+		return getDuration(sec, min, hrs, days, weeks, months, years, minimum);*/
+
+		String relative = "";
+
+		long SECONDS_IN_A_MINUTE = 60;
+		long SECONDS_IN_AN_HOUR = SECONDS_IN_A_MINUTE * 60;
+		long SECONDS_IN_A_DAY = SECONDS_IN_AN_HOUR * 24;
+		long SECONDS_IN_A_WEEK = SECONDS_IN_A_DAY * 7;
+		long SECONDS_IN_A_MONTH = SECONDS_IN_A_WEEK * 4;
+		long SECONDS_IN_A_YEAR = SECONDS_IN_A_MONTH * 12;
+
+		if (minimum) {
+			if (Math.round(durationInSeconds / 60) < 1) {
+				return "1min";
+			} else if (Math.round(durationInSeconds / SECONDS_IN_A_MINUTE) < 60) {
+				int minutes = Math.round(durationInSeconds / SECONDS_IN_A_MINUTE);
+				relative = (minutes == 1 ? "1 min" : minutes + " mins");
+			} else if (Math.round(durationInSeconds / SECONDS_IN_AN_HOUR) < 24) {
+				int minutes = Math.round(durationInSeconds / SECONDS_IN_AN_HOUR);
+				relative = (minutes == 1 ? "1 h" : minutes + " hrs");
+			} else if (Math.round(durationInSeconds / SECONDS_IN_A_DAY) < 7) {
+				int days = Math.round(durationInSeconds / SECONDS_IN_A_DAY);
+				relative = (days == 1 ? "1 d" : days + " ds");
+			} else if (Math.round(durationInSeconds / SECONDS_IN_A_WEEK) < 4) {
+				int weeks = Math.round(durationInSeconds / SECONDS_IN_A_WEEK);
+				relative = (weeks == 1 ? "1 wk" : weeks + " wks");
+			} else if (Math.round(durationInSeconds / SECONDS_IN_A_MONTH) < 4) {
+				int months = Math.round(durationInSeconds / SECONDS_IN_A_MONTH);
+				relative = (months == 1 ? "1 m" : months + " ms");
+			} else {
+				int years = Math.round(durationInSeconds / SECONDS_IN_A_YEAR);
+				relative = (years == 1 ? "1 y" : years + " yrs");
+			}
+		} else {
+
+			if (Math.round(durationInSeconds / 60) < 1) {
+				return "Less than a minute";
+			} else if (Math.round(durationInSeconds / SECONDS_IN_A_MINUTE) < 60) {
+				int minutes = Math.round(durationInSeconds / SECONDS_IN_A_MINUTE);
+				relative = (minutes == 1 ? "a minute" : minutes + " minutes");
+			} else if (Math.round(durationInSeconds / SECONDS_IN_AN_HOUR) < 24) {
+				int minutes = Math.round(durationInSeconds / SECONDS_IN_AN_HOUR);
+				relative = (minutes == 1 ? "an hour" : minutes + " hours");
+			} else if (Math.round(durationInSeconds / SECONDS_IN_A_DAY) < 7) {
+				int days = Math.round(durationInSeconds / SECONDS_IN_A_DAY);
+				relative = (days == 1 ? "a day" : days + " days");
+			} else if (Math.round(durationInSeconds / SECONDS_IN_A_WEEK) < 4) {
+				int weeks = Math.round(durationInSeconds / SECONDS_IN_A_WEEK);
+				relative = (weeks == 1 ? "a week" : weeks + " weeks");
+			} else if (Math.round(durationInSeconds / SECONDS_IN_A_MONTH) < 4) {
+				int months = Math.round(durationInSeconds / SECONDS_IN_A_MONTH);
+				relative = (months == 1 ? "an hour" : months + " hours");
+			} else {
+				int years = Math.round(durationInSeconds / SECONDS_IN_A_YEAR);
+				relative = (years == 1 ? "about a year" : years + " years");
+			}
+		}
+
+		return relative;
 	}
 
 	public static String calculateTimeDifference(String startDate, String stopDate) {
@@ -220,25 +313,29 @@ public final class DateUtils {
 				true);
 	}
 
-	private static String getDuration(long secs, long mins, long hrs, long days, long months, long years, boolean minimum) {
+	private static String getDuration(long secs, long mins, long hrs, long days, long weeks, long months, long years,
+			boolean minimum) {
 		StringBuffer sb = new StringBuffer();
 		String EMPTY_STRING = "";
 		if (minimum) {
 			if (years > 0)
 				sb.append(years > 0 ? years + (years > 1 ? " yrs " : " y ") : EMPTY_STRING);
 			else if (months > 0)
-				sb.append(months > 0 ? months + (months > 1 ? " m(s) " : " m ") : EMPTY_STRING);
+				sb.append(months > 0 ? months + (months > 1 ? " ms " : " m ") : EMPTY_STRING);
+			else if (months > 0)
+				sb.append(weeks > 0 ? weeks + (weeks > 1 ? " wks " : " wk ") : EMPTY_STRING);
 			else if (days > 0)
-				sb.append(days > 0 ? days + (days > 1 ? " d(s) " : " d ") : EMPTY_STRING);
+				sb.append(days > 0 ? days + (days > 1 ? " ds " : " d ") : EMPTY_STRING);
 			else if (hrs > 0)
-				sb.append(hrs > 0 ? hrs + (hrs > 1 ? " h(s) " : " h ") : EMPTY_STRING);
+				sb.append(hrs > 0 ? hrs + (hrs > 1 ? " hs " : " h ") : EMPTY_STRING);
 			else if (mins > 0)
-				sb.append(mins > 0 ? mins + (mins > 1 ? " min(s) " : " min ") : EMPTY_STRING);
+				sb.append(mins > 0 ? mins + (mins > 1 ? " min " : " min ") : EMPTY_STRING);
 			else if (secs > 0)
 				sb.append(secs > 0 ? secs + (secs > 1 ? " secs " : " secs ") : EMPTY_STRING);
 		} else {
 			sb.append(years > 0 ? years + (years > 1 ? " years " : " year ") : EMPTY_STRING);
 			sb.append(months > 0 ? months + (months > 1 ? " months " : " month ") : EMPTY_STRING);
+			sb.append(days > 0 ? days + (days > 1 ? " weeks " : " week ") : EMPTY_STRING);
 			sb.append(days > 0 ? days + (days > 1 ? " days " : " day ") : EMPTY_STRING);
 			sb.append(hrs > 0 ? hrs + (hrs > 1 ? " hours " : " hour ") : EMPTY_STRING);
 			sb.append(mins > 0 ? mins + (mins > 1 ? " mins " : " min ") : EMPTY_STRING);

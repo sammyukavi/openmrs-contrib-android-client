@@ -4,7 +4,17 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content">
 
+	<ProgressBar
+			android:visibility="gone"
+			android:id="@+id/savingProgressBar"
+			style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+			android:layout_width="match_parent"
+			android:layout_height="40dp"
+			android:layout_marginTop="-20dp"
+			android:indeterminate="true" />
+
 	<FrameLayout
+			android:layout_below="@+id/savingProgressBar"
 			android:id="@+id/patientHeader"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content" />
@@ -23,11 +33,21 @@
 			<include
 					layout="@layout/container_patient_address_info"
 					android:layout_width="match_parent"
+					android:layout_height="wrap_content" />
+
+			<TextView
+					android:visibility="gone"
+					android:padding="20dp"
+					android:layout_gravity="center"
+					android:gravity="center"
+					android:id="@+id/noVisitNoteLabel"
+					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
+					android:layout_marginTop="5dp"
 					android:layout_marginLeft="10dp"
-					android:layout_marginRight="10dp"
 					android:layout_marginStart="10dp"
-					android:layout_marginEnd="10dp" />
+					android:textStyle="bold"
+					android:text="@string/no_visit" />
 
 			<android.support.v7.widget.RecyclerView
 					android:paddingTop="10dp"

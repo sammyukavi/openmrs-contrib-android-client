@@ -13,7 +13,9 @@
  */
 package org.openmrs.mobile.data.impl;
 
+import org.openmrs.mobile.data.BaseDataService;
 import org.openmrs.mobile.data.BaseMetadataDataService;
+import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.MetadataDataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
@@ -26,8 +28,8 @@ import org.openmrs.mobile.utilities.ApplicationConstants;
 import retrofit2.Call;
 
 public class PersonAttributeTypeDataService
-		extends BaseMetadataDataService<PersonAttributeType, PersonAttributeTypeDbService, PersonAttributeTypeRestService>
-		implements MetadataDataService<PersonAttributeType> {
+		extends BaseDataService<PersonAttributeType, PersonAttributeTypeDbService, PersonAttributeTypeRestService>
+		implements DataService<PersonAttributeType> {
 	@Override
 	protected Class<PersonAttributeTypeRestService> getRestServiceClass() {
 		return PersonAttributeTypeRestService.class;
@@ -48,8 +50,7 @@ public class PersonAttributeTypeDataService
 		return "personattributetype";
 	}
 
-	@Override
-	protected Call<Results<PersonAttributeType>> _restGetByNameFragment(String restPath, String name, QueryOptions options,
+	public Call<Results<PersonAttributeType>> getByName(String restPath, String name, QueryOptions options,
 			PagingInfo pagingInfo) {
 		return restService.getByName(restPath, name,
 				QueryOptions.getRepresentation(options), QueryOptions.getIncludeInactive(options),

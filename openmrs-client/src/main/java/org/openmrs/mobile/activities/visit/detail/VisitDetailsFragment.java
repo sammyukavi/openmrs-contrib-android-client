@@ -288,42 +288,68 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	@Override
 	public void setAttributeTypes(List<VisitAttributeType> visitAttributeTypes) {
 		visitAttributesLayout.removeAllViews();
-		if (0 == visit.getAttributes().size()) {
-			System.out.println();
-			visitAttributesLayout.setVisibility(View.GONE);
-			visitDetailsView.setVisibility(View.GONE);
-			return;
-		}
-
-		for (VisitAttribute visitAttribute : visit.getAttributes()) {
-			loadVisitAttributeType(visitAttribute, visitAttributeTypes);
-			LinearLayout linearLayout = new LinearLayout(getContext());
-			LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-					LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-			linearLayout.setLayoutParams(params);
-			linearLayout.setOrientation(LinearLayout.HORIZONTAL);
-
-			String valueLabel = String.valueOf(visitAttribute.getValue());
-			TextView nameLabelView = new TextView(getContext());
-			nameLabelView.setPadding(0, 10, 10, 10);
-			nameLabelView.setText(visitAttribute.getAttributeType().getDisplay() + ":");
-			linearLayout.addView(nameLabelView);
-
-			TextView valueLabelView = new TextView(getContext());
-			valueLabelView.setPadding(20, 10, 10, 10);
-
-			if (null != visitAttribute.getAttributeType().getDatatypeConfig()) {
-				((VisitDetailsPresenter)mPresenter).getConceptName(
-						visitAttribute.getAttributeType().getDatatypeConfig(),
-						(String)visitAttribute.getValue(), valueLabelView);
-			} else {
-				valueLabelView.setText(valueLabel);
+		if (visit.getAttributes().size() == 0) {
+			for (VisitAttributeType visitAttributeType : visitAttributeTypes) {
+				createVisitAttributeTypesLayout(visitAttributeType);
 			}
-
-			linearLayout.addView(valueLabelView);
-
-			visitAttributesLayout.addView(linearLayout);
+		} else {
+			for (VisitAttribute visitAttribute : visit.getAttributes()) {
+				loadVisitAttributeType(visitAttribute, visitAttributeTypes);
+				createVisitAttributeLayout(visitAttribute);
+			}
 		}
+
+	}
+
+	private void createVisitAttributeTypesLayout(VisitAttributeType visitAttributeType) {
+		LinearLayout linearLayout = new LinearLayout(getContext());
+		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+				LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+		linearLayout.setLayoutParams(params);
+		linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+		String valueLabel = String.valueOf(ApplicationConstants.EMPTY_STRING);
+		TextView nameLabelView = new TextView(getContext());
+		nameLabelView.setPadding(0, 10, 10, 10);
+		nameLabelView.setText(visitAttributeType.getDisplay() + ":");
+		linearLayout.addView(nameLabelView);
+
+		TextView valueLabelView = new TextView(getContext());
+		valueLabelView.setPadding(20, 10, 10, 10);
+		valueLabelView.setText(valueLabel);
+
+		linearLayout.addView(valueLabelView);
+
+		visitAttributesLayout.addView(linearLayout);
+	}
+
+	private void createVisitAttributeLayout(VisitAttribute visitAttribute) {
+		LinearLayout linearLayout = new LinearLayout(getContext());
+		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+				LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+		linearLayout.setLayoutParams(params);
+		linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+		String valueLabel = String.valueOf(visitAttribute.getValue());
+		TextView nameLabelView = new TextView(getContext());
+		nameLabelView.setPadding(0, 10, 10, 10);
+		nameLabelView.setText(visitAttribute.getAttributeType().getDisplay() + ":");
+		linearLayout.addView(nameLabelView);
+
+		TextView valueLabelView = new TextView(getContext());
+		valueLabelView.setPadding(20, 10, 10, 10);
+
+		if (null != visitAttribute.getAttributeType().getDatatypeConfig()) {
+			((VisitDetailsPresenter)mPresenter).getConceptAnswer(
+					visitAttribute.getAttributeType().getDatatypeConfig(),
+					(String)visitAttribute.getValue(), valueLabelView);
+		} else {
+			valueLabelView.setText(valueLabel);
+		}
+
+		linearLayout.addView(valueLabelView);
+
+		visitAttributesLayout.addView(linearLayout);
 	}
 
 	private void loadVisitAttributeType(VisitAttribute visitAttribute, List<VisitAttributeType> attributeTypes) {

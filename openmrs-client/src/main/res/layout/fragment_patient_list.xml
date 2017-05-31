@@ -30,6 +30,7 @@
 				android:id="@+id/patientListScreenLoader"
 				android:layout_width="wrap_content"
 				android:layout_height="match_parent"
+				android:layout_centerInParent="true"
 				android:layout_gravity="center" />
 	
 	</RelativeLayout>

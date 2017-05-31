@@ -133,6 +133,6 @@ public interface VisitContract {
 
 		void getObservation(String uuid);
 
-		void getConceptName(String uuid, String searchValue, TextView textView);
+		void getConceptAnswer(String uuid, String searchValue, TextView textView);
 	}
 }

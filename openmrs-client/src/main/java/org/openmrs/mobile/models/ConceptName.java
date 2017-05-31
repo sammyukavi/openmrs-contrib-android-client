@@ -21,36 +21,14 @@ import java.util.Locale;
 public class ConceptName extends BaseOpenmrsMetadata {
 
 	@Expose
-	private Long id;
-
-	@Expose
-	private int answer_concept;
-
-	@Expose
 	private Concept concept;
 
 	@Expose
 	private Locale locale;
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
 	@Override
 	public String toString() {
 		return getName();
-	}
-
-	public int getAnswer_concept() {
-		return answer_concept;
-	}
-
-	public void setAnswer_concept(int answer_concept) {
-		this.answer_concept = answer_concept;
 	}
 
 	public Concept getConcept() {

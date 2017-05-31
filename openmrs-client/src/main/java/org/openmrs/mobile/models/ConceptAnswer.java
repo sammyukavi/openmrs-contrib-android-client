@@ -15,31 +15,20 @@
 package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 public class ConceptAnswer extends BaseOpenmrsObject {
-
-	// Fields
-	private Integer conceptAnswerId;
 
 	/**
 	 * The question concept that this object is answering
 	 */
+	@SerializedName("concept")
 	@Expose
 	private Concept concept;
 
-	/**
-	 * The answer to the question
-	 */
+	@SerializedName("answerConcept")
 	@Expose
 	private Concept answerConcept;
-
-	public Integer getConceptAnswerId() {
-		return conceptAnswerId;
-	}
-
-	public void setConceptAnswerId(Integer conceptAnswerId) {
-		this.conceptAnswerId = conceptAnswerId;
-	}
 
 	public Concept getConcept() {
 		return concept;

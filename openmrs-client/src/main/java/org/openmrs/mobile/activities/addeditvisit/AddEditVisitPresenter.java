@@ -21,13 +21,13 @@ import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
-import org.openmrs.mobile.data.impl.ConceptNameDataService;
+import org.openmrs.mobile.data.impl.ConceptAnswerDataService;
 import org.openmrs.mobile.data.impl.LocationDataService;
 import org.openmrs.mobile.data.impl.PatientDataService;
 import org.openmrs.mobile.data.impl.VisitAttributeTypeDataService;
 import org.openmrs.mobile.data.impl.VisitDataService;
 import org.openmrs.mobile.data.impl.VisitTypeDataService;
-import org.openmrs.mobile.models.ConceptName;
+import org.openmrs.mobile.models.ConceptAnswer;
 import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Visit;
@@ -49,7 +49,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	private Visit visit;
 	private VisitAttributeTypeDataService visitAttributeTypeDataService;
 	private VisitTypeDataService visitTypeDataService;
-	private ConceptNameDataService conceptNameDataService;
+	private ConceptAnswerDataService conceptAnswerDataService;
 	private VisitDataService visitDataService;
 	private PatientDataService patientDataService;
 	private LocationDataService locationDataService;
@@ -64,7 +64,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	public AddEditVisitPresenter(@NonNull AddEditVisitContract.View addEditVisitView, String patientUuid,
 			VisitDataService visitDataService, PatientDataService patientDataService,
 			VisitTypeDataService visitTypeDataService, VisitAttributeTypeDataService visitAttributeTypeDataService,
-			ConceptNameDataService conceptNameDataService, LocationDataService locationDataService) {
+			ConceptAnswerDataService conceptAnswerDataService, LocationDataService locationDataService) {
 		this.addEditVisitView = addEditVisitView;
 		this.addEditVisitView.setPresenter(this);
 		this.patientUuid = patientUuid;
@@ -93,10 +93,10 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 			this.patientDataService = patientDataService;
 		}
 
-		if (conceptNameDataService == null) {
-			this.conceptNameDataService = new ConceptNameDataService();
+		if (conceptAnswerDataService == null) {
+			this.conceptAnswerDataService = new ConceptAnswerDataService();
 		} else {
-			this.conceptNameDataService = conceptNameDataService;
+			this.conceptAnswerDataService = conceptAnswerDataService;
 		}
 
 		if (locationDataService == null) {
@@ -133,12 +133,13 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	}
 
 	private void loadVisit(Patient patient) {
-		visitDataService.getByPatient(patient, new QueryOptions(false, true), new PagingInfo(1, 10),
+		visitDataService.getByPatient(patient, new QueryOptions(false, true), new PagingInfo(0, 10),
 				new DataService.GetCallback<List<Visit>>() {
 					@Override
 					public void onCompleted(List<Visit> entities) {
 						if (entities.size() > 0) {
 							visit = entities.get(0);
+
 							addEditVisitView.initView(false);
 						} else {
 							visit.setPatient(patient);
@@ -212,11 +213,11 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	}
 
 	@Override
-	public void getConceptNames(String uuid, Spinner dropdown) {
-		conceptNameDataService.getByConceptUuid(uuid, null, new DataService.GetCallback<List<ConceptName>>() {
+	public void getConceptAnswer(String uuid, Spinner dropdown) {
+		conceptAnswerDataService.getByConceptUuid(uuid,null, new DataService.GetCallback<List<ConceptAnswer>>() {
 			@Override
-			public void onCompleted(List<ConceptName> entities) {
-				addEditVisitView.updateConceptNamesView(dropdown, entities);
+			public void onCompleted(List<ConceptAnswer> entities) {
+				addEditVisitView.updateConceptAnswersView(dropdown, entities);
 			}
 
 			@Override
@@ -328,6 +329,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 		if (null != getVisit() && null != getVisit().getAttributes()) {
 			for (VisitAttribute visitAttribute : getVisit().getAttributes()) {
 				if (visitAttribute.getAttributeType().getUuid().equalsIgnoreCase(visitAttributeType.getUuid())) {
+					System.out.println((T)visitAttribute.getValue() + " the visit attribute value ");
 					return (T)visitAttribute.getValue();
 				}
 			}

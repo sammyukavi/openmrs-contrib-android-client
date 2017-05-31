@@ -53,7 +53,7 @@ import org.openmrs.mobile.application.OpenMRSLogger;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.listeners.watcher.PatientBirthdateValidatorWatcher;
 import org.openmrs.mobile.models.BaseOpenmrsObject;
-import org.openmrs.mobile.models.ConceptName;
+import org.openmrs.mobile.models.ConceptAnswer;
 import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.PatientIdentifier;
@@ -376,14 +376,14 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 				String conceptUuid = personAttributeType.getConcept().getUuid();
 				AppCompatSpinner conceptAnswersDropdown = new AppCompatSpinner(getContext());
 				conceptAnswersDropdown.setLayoutParams(marginParams);
-				mPresenter.getConceptNames(conceptUuid, conceptAnswersDropdown);
+				mPresenter.getConceptAnswer(conceptUuid, conceptAnswersDropdown);
 				textInputLayout.addView(conceptAnswersDropdown);
 				viewPersonAttributeTypeMap.put(conceptAnswersDropdown, personAttributeType);
 			} else if (datatypeClass.equalsIgnoreCase("java.lang.String")) {
 				TextInputEditText textInputEditText = new TextInputEditText(getContext());
 				textInputEditText.setTextSize(14);
 				textInputEditText.setFocusable(true);
-				textInputEditText.setHint(personAttributeType.toString());
+				textInputEditText.setHint(personAttributeType.getDisplay());
 				textInputEditText.setLayoutParams(marginParams);
 				// set default value
 				String defaultValue = mPresenter.searchPersonAttributeValueByType(personAttributeType);
@@ -400,28 +400,31 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 	}
 
 	@Override
-	public void updateConceptNamesView(Spinner conceptNamesDropdown, List<ConceptName> conceptNames) {
+	public void updateConceptAnswerView(Spinner conceptNamesDropdown, List<ConceptAnswer> conceptAnswers) {
 		PersonAttributeType personAttributeType = viewPersonAttributeTypeMap.get(conceptNamesDropdown);
-		ArrayAdapter<ConceptName> conceptNameArrayAdapter = new ArrayAdapter<ConceptName>(this.getActivity(),
-				android.R.layout.simple_spinner_dropdown_item, conceptNames);
+		ArrayAdapter<ConceptAnswer> conceptNameArrayAdapter = new ArrayAdapter<>(this.getActivity(),
+				android.R.layout.simple_spinner_dropdown_item, conceptAnswers);
 		conceptNamesDropdown.setAdapter(conceptNameArrayAdapter);
 
-		// set existing visit attribute if any
-		Object personAttributeValue = mPresenter.searchPersonAttributeValueByType(personAttributeType);
-		String conceptAnswer = personAttributeValue instanceof ConceptName ? ((ConceptName)personAttributeValue).getUuid()
-				: null;
-		if (null != conceptAnswer) {
-			setDefaultDropdownSelection(conceptNameArrayAdapter, conceptAnswer, conceptNamesDropdown);
+		// set existing patient attribute if any
+		String conceptAnswerUuid = mPresenter.searchPersonAttributeValueByType(personAttributeType);
+		System.out.println(conceptAnswerUuid + " Attribute type uuid");
+		if (null != conceptAnswerUuid) {
+			setDefaultDropdownSelection(conceptNameArrayAdapter, conceptAnswerUuid, conceptNamesDropdown);
 		}
 
 		conceptNamesDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-				ConceptName conceptName = conceptNames.get(position);
+				ConceptAnswer conceptAnswer = conceptAnswers.get(position);
+				System.out.println(conceptAnswer.getUuid() + " the concept uuid ");
+				System.out.println(personAttributeType.getDisplay() + " the attribute type name ");
+
 				PersonAttribute personAttribute = new PersonAttribute();
-				personAttribute.setValue(String.valueOf(conceptName.getAnswer_concept()));
+				personAttribute.setValue(conceptAnswer.getUuid());
 				personAttribute.setAttributeType(personAttributeType);
-				personAttributeMap.put(personAttributeType.getUuid(), personAttribute);
+				personAttributeMap.clear();
+				personAttributeMap.put(conceptAnswer.getUuid(), personAttribute);
 			}
 
 			@Override
@@ -446,6 +449,9 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 			submitConfirm.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
+					if (!mPresenter.isRegisteringPatient()) {
+						buildPersonAttributeValues();
+					}
 					mPresenter.confirmPatient(updatePatient(patient));
 				}
 			});

@@ -22,13 +22,14 @@ import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
+import org.openmrs.mobile.data.impl.ConceptAnswerDataService;
 import org.openmrs.mobile.data.impl.ConceptDataService;
-import org.openmrs.mobile.data.impl.ConceptNameDataService;
 import org.openmrs.mobile.data.impl.LocationDataService;
 import org.openmrs.mobile.data.impl.PatientDataService;
 import org.openmrs.mobile.data.impl.PatientIdentifierTypeDataService;
 import org.openmrs.mobile.data.impl.PersonAttributeTypeDataService;
-import org.openmrs.mobile.models.ConceptName;
+import org.openmrs.mobile.models.Concept;
+import org.openmrs.mobile.models.ConceptAnswer;
 import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.PatientIdentifierType;
@@ -49,7 +50,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 	private ConceptDataService conceptDataService;
 	private PersonAttributeTypeDataService personAttributeTypeDataService;
 	private PatientIdentifierTypeDataService patientIdentifierTypeDataService;
-	private ConceptNameDataService conceptNameDataService;
+	private ConceptAnswerDataService conceptAnswerDataService;
 	private LocationDataService locationDataService;
 	private Patient patient;
 	private String patientToUpdateId;
@@ -72,7 +73,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		this.conceptDataService = new ConceptDataService();
 		this.patientIdentifierTypeDataService = new PatientIdentifierTypeDataService();
 		this.personAttributeTypeDataService = new PersonAttributeTypeDataService();
-		this.conceptNameDataService = new ConceptNameDataService();
+		this.conceptAnswerDataService = new ConceptAnswerDataService();
 		this.locationDataService = new LocationDataService();
 	}
 
@@ -87,7 +88,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		this.patientRegistrationView.setPresenter(this);
 		this.patientIdentifierTypeDataService = new PatientIdentifierTypeDataService();
 		this.personAttributeTypeDataService = new PersonAttributeTypeDataService();
-		this.conceptNameDataService = new ConceptNameDataService();
+		this.conceptAnswerDataService = new ConceptAnswerDataService();
 		this.locationDataService = new LocationDataService();
 	}
 
@@ -276,23 +277,19 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 						.LOAD_RELATED_OBJECTS, pagingInfo, callback);
 	}
 
-	public void getConceptNames(String uuid, Spinner conceptAnswersDropdown) {
-		DataService.GetCallback<List<ConceptName>> callback =
-				new DataService.GetCallback<List<ConceptName>>() {
-					@Override
-					public void onCompleted(List<ConceptName> entities) {
-						patientRegistrationView.updateConceptNamesView(conceptAnswersDropdown, entities);
-					}
+	@Override
+	public void getConceptAnswer(String uuid, Spinner dropdown) {
+		conceptAnswerDataService.getByConceptUuid(uuid, null, new DataService.GetCallback<List<ConceptAnswer>>() {
+			@Override
+			public void onCompleted(List<ConceptAnswer> entities) {
+				patientRegistrationView.updateConceptAnswerView(dropdown, entities);
+			}
 
-					@Override
-					public void onError(Throwable t) {
-						Log.e("Concept Answers Error", "Error", t.fillInStackTrace());
-						patientRegistrationView
-								.showToast(ApplicationConstants.entityName.CIVIL_STATUS + ApplicationConstants
-										.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
-					}
-				};
-		conceptNameDataService.getByConceptUuid(uuid, null, callback);
+			@Override
+			public void onError(Throwable t) {
+				ToastUtil.error(t.getMessage());
+			}
+		});
 	}
 
 	public void getPatientIdentifierTypes() {
@@ -321,24 +318,27 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		patientIdentifierTypeDataService.getAll(QueryOptions.LOAD_RELATED_OBJECTS, null, callback);
 	}
 
-	public void getPersonAttributeTypes() {
-		DataService.GetCallback<List<PersonAttributeType>> getMultipleCallback =
-				new DataService.GetCallback<List<PersonAttributeType>>() {
-
+	@Override
+	public List<PersonAttributeType> getPersonAttributeTypes() {
+		final List<PersonAttributeType> personAttributeTypes = new ArrayList<>();
+		personAttributeTypeDataService
+				.getAll(QueryOptions.LOAD_RELATED_OBJECTS, new PagingInfo(0, 100), new DataService
+						.GetCallback<List<PersonAttributeType>>() {
 					@Override
-					public void onCompleted(List<PersonAttributeType> personAttributeTypes) {
-						if (!personAttributeTypes.isEmpty()) {
+					public void onCompleted(List<PersonAttributeType> entities) {
 
+						if (!entities.isEmpty()) {
 							for (int q = 0; q < createUnwantedPersonAttributes().size(); q++) {
 								String unwantedUuid = createUnwantedPersonAttributes().get(q);
 
-								for (int i = 0; i < personAttributeTypes.size(); i++) {
-									String uuid = personAttributeTypes.get(i).getUuid();
+								for (int i = 0; i < entities.size(); i++) {
+									String uuid = entities.get(i).getUuid();
 									if (uuid.equalsIgnoreCase(unwantedUuid)) {
-										personAttributeTypes.remove(i);
+										entities.remove(i);
 									}
 								}
 							}
+							personAttributeTypes.addAll(entities);
 							patientRegistrationView.loadPersonAttributeTypes(personAttributeTypes);
 						} else {
 							patientRegistrationView
@@ -349,12 +349,10 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 
 					@Override
 					public void onError(Throwable t) {
-						patientRegistrationView
-								.showToast(ApplicationConstants.entityName.ATTRIBUTE_TPYES + ApplicationConstants
-										.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
+						ToastUtil.error(t.getMessage());
 					}
-				};
-		personAttributeTypeDataService.getAll(QueryOptions.LOAD_RELATED_OBJECTS, null, getMultipleCallback);
+				});
+		return personAttributeTypes;
 	}
 
 	@Override
@@ -386,6 +384,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		if (null != getPatient() && null != getPatient().getPerson().getAttributes()) {
 			for (PersonAttribute personAttribute : getPatient().getPerson().getAttributes()) {
 				if (personAttribute.getAttributeType().getUuid().equalsIgnoreCase(personAttributeType.getUuid())) {
+					System.out.println((T)personAttribute.getValue() + " the person attribute value ");
 					return (T)personAttribute.getValue();
 				}
 			}
@@ -413,7 +412,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		this.registeringPatient = registering;
 	}
 
-	public ArrayList<String> createUnwantedPersonAttributes() {
+	private ArrayList<String> createUnwantedPersonAttributes() {
 		ArrayList<String> unwantedPersonAttributes = new ArrayList<>();
 		unwantedPersonAttributes.add(ApplicationConstants.unwantedPersonAttributes.TEST_PATIENT_UUID);
 		unwantedPersonAttributes.add(ApplicationConstants.unwantedPersonAttributes.UNKNOWN_PATIENT_UUID);

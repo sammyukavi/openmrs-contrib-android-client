@@ -201,7 +201,7 @@
 	<string name="last_vitals_label">Last Vitals: </string>
 	<string name="last_vitals_none_label">None</string>
 	<!-- fragment_patient_diagnosis layout -->
-	<string name="empty_diagnoses_list">Patient has no diagnoses yet.</string>
+	<string name="no_diagnoses_label">No diagnoses</string>
 	<string name="diagnosis_note_label">Text of encounter note</string>
 
 	<!-- Visit dashboard activity -->
@@ -507,4 +507,5 @@
 	<string name="no_predefined_tasks">No predefined tasks</string>
 	<string name="started">Started:</string>
 	<string name="duration">Dur: %1$s</string>
+	<string name="no_visit">Patient has no visit</string>
 </resources>

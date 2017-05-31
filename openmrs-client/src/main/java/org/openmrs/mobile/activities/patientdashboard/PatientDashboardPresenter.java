@@ -14,7 +14,6 @@
 
 package org.openmrs.mobile.activities.patientdashboard;
 
-import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.DataService;
@@ -45,8 +44,8 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	private LocationDataService locationDataService;
 	private ProviderDataService providerDataService;
 	private final static int page = 1;
-	private final int startIndex = 0;
 	private int limit = 5;
+	private int startIndex = 0;
 
 	public PatientDashboardPresenter(PatientDashboardContract.View view) {
 		this.patientDashboardView = view;
@@ -69,6 +68,11 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	}
 
 	@Override
+	public void setStartIndex(int startIndex) {
+		this.startIndex = startIndex;
+	}
+
+	@Override
 	public void fetchPatientData(String uuid) {
 
 		patientDataService.getByUUID(uuid, QueryOptions.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Patient>() {
@@ -88,6 +92,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
 	@Override
 	public void fetchVisits(Patient patient) {
+
 		visitDataService.getByPatient(patient, new QueryOptions(true, true), new PagingInfo(startIndex, limit),
 				new DataService.GetCallback<List<Visit>>() {
 					@Override
@@ -102,6 +107,20 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 						t.printStackTrace();
 					}
 				});
+
+		DataService.GetCallback<List<Visit>> visitsFetchedCallback = new DataService.GetCallback<List<Visit>>() {
+			@Override
+			public void onCompleted(List<Visit> visits) {
+
+			}
+
+			@Override
+			public void onError(Throwable t) {
+
+			}
+		};
+		visitDataService.getByPatient(patient, QueryOptions.LOAD_RELATED_OBJECTS, new PagingInfo(0, 1),
+				visitsFetchedCallback);
 	}
 
 	@Override
@@ -156,9 +175,11 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
 	@Override
 	public void saveEncounter(Encounter encounter, boolean isNewEncounter) {
+		patientDashboardView.upDateProgressBar(true);
 		DataService.GetCallback<Encounter> serverResponceCallback = new DataService.GetCallback<Encounter>() {
 			@Override
 			public void onCompleted(Encounter encounter) {
+				patientDashboardView.upDateProgressBar(false);
 
 				if (encounter.equals(null)) {
 				} else {
@@ -171,6 +192,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
 					//patientDashboardView.setEncounterUuid(encounter.getUuid());
 					//patientDashboardView.updateFormFields(encounter);
+					patientDashboardView.upDateProgressBar(false);
 				}
 			}
 

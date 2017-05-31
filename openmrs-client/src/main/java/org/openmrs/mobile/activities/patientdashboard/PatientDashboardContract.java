@@ -40,6 +40,8 @@ public interface PatientDashboardContract {
 		void setLocation(Location location);
 
 		Context getContext();
+
+		void upDateProgressBar(boolean show);
 	}
 
 	interface Presenter extends BasePresenterContract {
@@ -51,6 +53,8 @@ public interface PatientDashboardContract {
 		Patient getPatient();
 
 		void setLimit(int limit);
+
+		void setStartIndex(int startIndex);
 
 		void fetchLocation(String locationUuid);
 

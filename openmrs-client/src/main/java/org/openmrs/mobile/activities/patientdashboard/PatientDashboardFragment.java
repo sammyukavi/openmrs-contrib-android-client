@@ -14,13 +14,11 @@
 
 package org.openmrs.mobile.activities.patientdashboard;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,11 +26,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import com.github.clans.fab.FloatingActionButton;
 
 import org.openmrs.mobile.R;
-import org.openmrs.mobile.activities.ACBaseActivity;
 import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.activities.addeditpatient.AddEditPatientActivity;
 import org.openmrs.mobile.activities.addeditvisit.AddEditVisitActivity;
@@ -53,7 +51,7 @@ import static org.openmrs.mobile.utilities.ApplicationConstants.BundleKeys.PATIE
 public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardContract.Presenter>
 		implements PatientDashboardContract.View {
 
-	private View fragmentView;
+	private View fragmentView, borderLine;
 	private FloatingActionButton startVisitButton, editPatient;
 	private Patient patient;
 	private OpenMRS instance = OpenMRS.getInstance();
@@ -61,9 +59,9 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	private Intent intent;
 	private NestedScrollView scrollView;
 	private LinearLayout patientContactInfo;
-	private View borderLine, shadowLine;
 	private String providerUuid;
 	private Location location;
+	private ProgressBar savingProgressBar;
 
 	public static PatientDashboardFragment newInstance() {
 		return new PatientDashboardFragment();
@@ -121,9 +119,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		scrollView = (NestedScrollView)fragmentView.findViewById(R.id.scrollView);
 		patientContactInfo = (LinearLayout)fragmentView.findViewById(R.id.patientContactInfo);
 		borderLine = fragmentView.findViewById(R.id.borderLine);
-		shadowLine = getActivity().findViewById(R.id.shadowLine);
-
-		//System.out.println(shadowLine);
+		savingProgressBar = (ProgressBar)fragmentView.findViewById(R.id.savingProgressBar);
 	}
 
 	@Override
@@ -138,6 +134,10 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	@Override
 	public void updateActiveVisitCard(List<Visit> visits) {
 
+		if (visits.size() == 0) {
+
+		}
+
 		for (Visit visit : visits) {
 			if (!StringUtils.notNull(visit.getStopDatetime())) {
 				startVisitButton.setVisibility(View.GONE);
@@ -148,6 +148,8 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
 		final Rect scrollBounds = new Rect();
 		scrollView.getHitRect(scrollBounds);
+
+		PatientDashboardActivity patientDashboardActivity = (PatientDashboardActivity)getActivity();
 
 		scrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
 			@Override
@@ -162,31 +164,34 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 						} else {
 							//contact info is now being showed fully, hide shadow, show line
 							//shadowLine.setVisibility(View.GONE);
-							//borderLine.setVisibility(View.VISIBLE);
+							borderLine.setVisibility(View.VISIBLE);
+							patientDashboardActivity.updateHeaderShadowLine(false);
 						}
 					} else {
 						//contact info is not being shown, show shadow
-						//shadowLine.setVisibility(View.VISIBLE);
-						//borderLine.setVisibility(View.GONE);
+						borderLine.setVisibility(View.GONE);
+						patientDashboardActivity.updateHeaderShadowLine(true);
 					}
 				}
 
 			}
 		});
 
-		HashMap<String, String> uuids = new HashMap<>();
+		HashMap<String, String> uuidsHashmap = new HashMap<>();
 
-		uuids.put(PATIENT_UUID_BUNDLE, patient.getUuid());
-		uuids.put(LOCATION_UUID_BUNDLE, location.getUuid());
+		uuidsHashmap.put(PATIENT_UUID_BUNDLE, patient.getUuid());
+		uuidsHashmap.put(LOCATION_UUID_BUNDLE, location.getUuid());
 
 		RecyclerView pastVisitsRecyclerView = (RecyclerView)fragmentView.findViewById(R.id.pastVisits);
 		pastVisitsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 		VisitsRecyclerAdapter visitsRecyclerAdapter = new VisitsRecyclerAdapter(
 				pastVisitsRecyclerView,
-				visits, getActivity(), uuids
+				visits, getActivity(), uuidsHashmap
 		);
 		pastVisitsRecyclerView.setAdapter(visitsRecyclerAdapter);
-
+		/**
+		 * TODO this listener is useless for now, the rest service fetches all visits. Needs to be fixed
+		 */
 		visitsRecyclerAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
 			@Override
 			public void onLoadMore() {
@@ -230,6 +235,11 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	@Override
 	public void setLocation(Location location) {
 		this.location = location;
+	}
+
+	@Override
+	public void upDateProgressBar(boolean show) {
+		savingProgressBar.setVisibility(show ? View.VISIBLE : View.GONE);
 	}
 
 }

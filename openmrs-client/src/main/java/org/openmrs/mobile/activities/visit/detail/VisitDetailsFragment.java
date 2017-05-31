@@ -60,6 +60,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import static org.openmrs.mobile.utilities.StringUtils.getConceptName;
+
 public class VisitDetailsFragment extends VisitFragment implements VisitContract.VisitDetailsView {
 
 	private TextView visitStartDate;
@@ -469,7 +471,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 						.equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.CLINICAL_NOTE_UUID)) {
 					submitVisitNote.setText(getString(R.string.update_visit_note));
 					for (Observation obs : encounter.getObs()) {
-						if (obs.getDisplay().startsWith(ApplicationConstants.ObservationLocators.DIANOSES)) {
+						if (obs.getDisplay().startsWith(ApplicationConstants.ObservationLocators.DIAGNOSES)) {
 							if (obs.getDisplay().contains(ApplicationConstants.ObservationLocators.PRIMARY_DIAGNOSIS)) {
 								encounterDiagnosis.put("order", ApplicationConstants.DiagnosisStrings.PRIMARY_ORDER);
 								encounterDiagnosis.put("certainty", checkObsCertainty(obs.getDisplay()));
@@ -561,21 +563,6 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		}
 	}
 
-	private String getConceptName(String obsDisplay) {
-		String diagnosisStringOne = "", diagnosisStringTwo = "", diagnosisStringThree = "", diagnosisStringFour = "",
-				diagnosisStringFive = "", diagnosisStringSix = "";
-		String diagnosisString = (obsDisplay.replaceAll(ApplicationConstants.ObservationLocators.DIANOSES, ""));
-		diagnosisStringOne += (diagnosisString.replaceAll(ApplicationConstants.ObservationLocators.PRIMARY_DIAGNOSIS, ""));
-		diagnosisStringTwo +=
-				(diagnosisStringOne.replaceAll(ApplicationConstants.ObservationLocators.SECONDARY_DIAGNOSIS, ""));
-		diagnosisStringThree +=
-				(diagnosisStringTwo.replaceAll(ApplicationConstants.ObservationLocators.PRESUMED_DIAGNOSIS, ""));
-		diagnosisStringFour +=
-				(diagnosisStringThree.replaceAll(ApplicationConstants.ObservationLocators.CONFIRMED_DIAGNOSIS, ""));
-		diagnosisStringFive += (diagnosisStringFour.replaceAll(",", ""));
-		diagnosisStringSix += (diagnosisStringFive.replaceAll(":", ""));
 
-		return diagnosisStringSix;
-	}
 
 }

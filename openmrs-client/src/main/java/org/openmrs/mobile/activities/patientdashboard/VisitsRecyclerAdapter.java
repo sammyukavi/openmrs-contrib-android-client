@@ -23,7 +23,6 @@ import org.joda.time.LocalDateTime;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.visit.VisitActivity;
 import org.openmrs.mobile.application.OpenMRS;
-import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.EncounterType;
@@ -57,7 +56,6 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 	private boolean isLoading;
 	private Context context;
 	private List<Visit> visits;
-	private CustomDialogBundle createEditVisitNoteDialog;
 	private ImageView showVisitDetails;
 	private Intent intent;
 	private LayoutInflater layoutInflater;
@@ -65,10 +63,11 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 	private OpenMRS instance = OpenMRS.getInstance();
 	private TextView visitNote;
 	private Handler handler = new Handler();
-	long delay = 3000; // 1 seconds after user stops typing
-	long last_text_edit = 0;
+	private long delay = 3000; //seconds after user stops typing
+	private long last_text_edit = 0;
 	private Encounter visitNoteEncounter;
 	private LocalDateTime localDateTime;
+	PatientDashboardActivity patientDashboardActivity;
 
 	Runnable input_finish_checker = new Runnable() {
 		public void run() {
@@ -116,7 +115,6 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
 				visitNoteEncounter.setObs(observationList);
 
-				PatientDashboardActivity patientDashboardActivity = (PatientDashboardActivity)context;
 				patientDashboardActivity.mPresenter.saveEncounter(visitNoteEncounter, isNewEncounter);
 
 			}
@@ -132,14 +130,6 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 		@Override
 		public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
 			super.onScrolled(recyclerView, dx, dy);
-			/*totalItemCount = layoutManager.getItemCount();
-				lastVisibleItem = layoutManager.findLastVisibleItemPosition();
-				if (!isLoading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
-					if (onLoadMoreListener != null) {
-						onLoadMoreListener.onLoadMore();
-					}
-					isLoading = true;
-				}*/
 			if (!isLoading && onLoadMoreListener != null) {
 				isLoading = true;
 				onLoadMoreListener.onLoadMore();
@@ -173,16 +163,14 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 	private Visit activeVisit;
 	private Observation clinicalNoteObs;
 
-	public VisitsRecyclerAdapter(RecyclerView recyclerView, List<Visit> visits, Context context, HashMap uuIds) {
+	public VisitsRecyclerAdapter(RecyclerView recyclerView, List<Visit> visits, Context context, HashMap uuidsHashmap) {
 		this.visits = visits;
 		this.context = context;
-		this.createEditVisitNoteDialog = new CustomDialogBundle();
-		this.createEditVisitNoteDialog.setTitleViewMessage(context.getString(R.string.visit_note));
-		this.createEditVisitNoteDialog.setRightButtonText(context.getString(R.string.label_save));
 		this.layoutInflater = LayoutInflater.from(context);
-		this.uuIds = uuIds;
+		this.uuIds = uuidsHashmap;
 		this.localDateTime = new LocalDateTime();
 		recyclerView.addOnScrollListener(onScrollListener);
+		this.patientDashboardActivity = (PatientDashboardActivity)context;
 	}
 
 	private void loadVisitDetails(Visit visit) {
@@ -241,18 +229,14 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 				activeVisit = visit;
 				isActiveVisit = true;
 				singleVisitView.findViewById(R.id.active_visit_badge).setVisibility(View.VISIBLE);
-				startDate = context.getString(R.string.started) + " " + startDate;
 			}
 
 			visitStartDate.setText(startDate);
 
-			((TextView)singleVisitView.findViewById(R.id.visitTimeago)).setText(DateUtils.calculateTimeDifference(
-					(visit.getStartDatetime())));
-
 			if (isActiveVisit) {
 				((TextView)singleVisitView.findViewById(R.id.visitDuration))
 						.setText(context.getString(R.string.duration,
-								DateUtils.calculateTimeDifference(visit.getStartDatetime(), false)));
+								DateUtils.calculateTimeDifference(visit.getStartDatetime(), true)));
 			} else {
 				((TextView)singleVisitView.findViewById(R.id.visitDuration))
 						.setText(context.getString(R.string.duration,
@@ -311,7 +295,10 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 		boolean hasVisitNote = false;
 
 		for (Observation observation : encounter.getObs()) {
-			if (observation.getDisplay().startsWith("Text of")) {
+
+			ConsoleLogger.dump(observation.getDisplay());
+
+			/*if (observation.getDisplay().startsWith("Text of")) {
 				this.visitNoteEncounter = encounter;
 				this.clinicalNoteObs = observation;
 				visitNoteStr = observation.getDisplay();
@@ -324,7 +311,8 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 			} else {
 				otherObsStr += observation.getDisplay();
 				hasVisitNote = true;
-			}
+			}*/
+
 		}
 
 		primaryDiagnosis.setText(primaryObsStr.replaceAll("Presumed diagnosis", "").replaceAll(", ", ", ").replace(",",
@@ -347,7 +335,7 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
 		if (!hasVisitNote && !isActiveVisit) {
 			view.findViewById(R.id.visitNoteTitle).setVisibility(View.GONE);
-			visitNote.setText("No Diagnosis");
+			visitNote.setText(context.getString(R.string.no_diagnoses_label));
 		}
 
 	}
@@ -415,7 +403,8 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 		encounter.setForm(form);
 		encounter.setLocation(activeVisit.getLocation());
 		encounter.setVisit(new Visit(activeVisit.getUuid()));
-		encounter.setProvider(OpenMRS.getInstance().getCurrentLoggedInUserInfo().get(ApplicationConstants.UserKeys.USER_UUID));
+		encounter.setProvider(
+				OpenMRS.getInstance().getCurrentLoggedInUserInfo().get(ApplicationConstants.UserKeys.USER_UUID));
 		encounter.setEncounterType(mEncountertype);
 
 		return encounter;

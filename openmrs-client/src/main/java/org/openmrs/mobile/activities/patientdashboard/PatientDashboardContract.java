@@ -52,6 +52,8 @@ public interface PatientDashboardContract {
 
 		void setLimit(int limit);
 
+		void setStartIndex(int startIndex);
+
 		void fetchLocation(String locationUuid);
 
 		void saveEncounter(Encounter encounter, boolean isNew);

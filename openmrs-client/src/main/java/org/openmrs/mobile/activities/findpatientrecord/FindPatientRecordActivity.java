@@ -17,7 +17,6 @@ package org.openmrs.mobile.activities.findpatientrecord;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
@@ -88,18 +87,6 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 		super.onSaveInstanceState(outState);
 		//String query = searchView.getQuery().toString();
 		//outState.putString(ApplicationConstants.BundleKeys.PATIENT_QUERY_BUNDLE, query);
-	}
-
-	@Override
-	public void onBackPressed() {
-		if (drawer.isDrawerOpen(GravityCompat.START)) {
-			drawer.closeDrawer(GravityCompat.START);
-		} else {
-			Intent intent = new Intent(Intent.ACTION_MAIN);
-			intent.addCategory(Intent.CATEGORY_HOME);
-			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			startActivity(intent);
-		}
 	}
 
 	@Override

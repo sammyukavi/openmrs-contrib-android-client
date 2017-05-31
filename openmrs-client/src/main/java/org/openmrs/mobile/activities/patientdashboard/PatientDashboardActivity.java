@@ -22,7 +22,6 @@ import org.openmrs.mobile.activities.ACBaseActivity;
 import org.openmrs.mobile.activities.addeditvisit.AddEditVisitContract;
 import org.openmrs.mobile.activities.patientheader.PatientHeaderFragment;
 import org.openmrs.mobile.activities.patientheader.PatientHeaderPresenter;
-import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.StringUtils;
 
@@ -31,6 +30,7 @@ public class PatientDashboardActivity extends ACBaseActivity {
 	public PatientDashboardContract.Presenter mPresenter;
 
 	public AddEditVisitContract.Presenter addEditVisitPresenter;
+	private PatientHeaderFragment headerFragment;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -53,7 +53,7 @@ public class PatientDashboardActivity extends ACBaseActivity {
 			patientUuid = extras.getString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
 			if (StringUtils.notEmpty(patientUuid)) {
 				// patient header
-				PatientHeaderFragment headerFragment = (PatientHeaderFragment)getSupportFragmentManager()
+				headerFragment = (PatientHeaderFragment)getSupportFragmentManager()
 						.findFragmentById(R.id.patientHeader);
 				if (headerFragment == null) {
 					headerFragment = PatientHeaderFragment.newInstance();
@@ -74,4 +74,7 @@ public class PatientDashboardActivity extends ACBaseActivity {
 		return true;
 	}
 
+	public void updateHeaderShadowLine(boolean visible) {
+		headerFragment.updateShadowLine(visible);
+	}
 }

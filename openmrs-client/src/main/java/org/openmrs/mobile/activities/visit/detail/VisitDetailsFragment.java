@@ -60,6 +60,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import static org.openmrs.mobile.utilities.StringUtils.getConceptName;
+
 public class VisitDetailsFragment extends VisitFragment implements VisitContract.VisitDetailsView {
 
 	private TextView visitStartDate;
@@ -535,21 +537,6 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		}
 	}
 
-	private String getConceptName(String obsDisplay) {
-		String diagnosisStringOne = "", diagnosisStringTwo = "", diagnosisStringThree = "", diagnosisStringFour = "",
-				diagnosisStringFive = "", diagnosisStringSix = "";
-		String diagnosisString = (obsDisplay.replaceAll(ApplicationConstants.ObservationLocators.DIANOSES, ""));
-		diagnosisStringOne += (diagnosisString.replaceAll(ApplicationConstants.ObservationLocators.PRIMARY_DIAGNOSIS, ""));
-		diagnosisStringTwo +=
-				(diagnosisStringOne.replaceAll(ApplicationConstants.ObservationLocators.SECONDARY_DIAGNOSIS, ""));
-		diagnosisStringThree +=
-				(diagnosisStringTwo.replaceAll(ApplicationConstants.ObservationLocators.PRESUMED_DIAGNOSIS, ""));
-		diagnosisStringFour +=
-				(diagnosisStringThree.replaceAll(ApplicationConstants.ObservationLocators.CONFIRMED_DIAGNOSIS, ""));
-		diagnosisStringFive += (diagnosisStringFour.replaceAll(",", ""));
-		diagnosisStringSix += (diagnosisStringFive.replaceAll(":", ""));
 
-		return diagnosisStringSix;
-	}
 
 }

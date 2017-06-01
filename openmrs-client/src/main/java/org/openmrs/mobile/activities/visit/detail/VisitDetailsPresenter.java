@@ -32,8 +32,10 @@ import org.openmrs.mobile.models.ConceptAnswer;
 import org.openmrs.mobile.models.ConceptName;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Visit;
+import org.openmrs.mobile.models.VisitAttribute;
 import org.openmrs.mobile.models.VisitAttributeType;
 import org.openmrs.mobile.utilities.ApplicationConstants;
+import org.openmrs.mobile.utilities.DateUtils;
 import org.openmrs.mobile.utilities.ToastUtil;
 
 import java.util.List;
@@ -50,6 +52,7 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 	private int page = 1;
 	private int limit = 10;
 	private ConceptAnswerDataService conceptAnswerDataService;
+	private Visit visit;
 
 	public VisitDetailsPresenter(String patientUuid, String visitUuid, String providerUuid, String visitStopDate,
 			VisitContract
@@ -86,6 +89,7 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 						if (entity != null) {
 							visitDetailsView.setVisit(entity);
 							loadVisitAttributeTypes();
+							visit = entity;
 						} else {
 							visitDetailsView.showTabSpinner(false);
 						}
@@ -176,7 +180,9 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 
 	private void loadVisitAttributeTypes() {
 		visitDetailsView.showTabSpinner(true);
-		visitAttributeTypeDataService.getAll(new QueryOptions(false, true), new PagingInfo(0, 100), new DataService
+		visitAttributeTypeDataService.getAll(new QueryOptions(false,true,ApplicationConstants.CacheKays
+				.VISIT_ATTRIBUTE_TYPE), new PagingInfo(0, 100), new
+				DataService
 				.GetCallback<List<VisitAttributeType>>() {
 			@Override
 			public void onCompleted(List<VisitAttributeType> entities) {

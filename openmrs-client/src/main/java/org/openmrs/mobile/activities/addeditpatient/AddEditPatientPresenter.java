@@ -28,7 +28,6 @@ import org.openmrs.mobile.data.impl.LocationDataService;
 import org.openmrs.mobile.data.impl.PatientDataService;
 import org.openmrs.mobile.data.impl.PatientIdentifierTypeDataService;
 import org.openmrs.mobile.data.impl.PersonAttributeTypeDataService;
-import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.ConceptAnswer;
 import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Patient;
@@ -314,7 +313,9 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 										.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 					}
 				};
-		patientIdentifierTypeDataService.getAll(QueryOptions.LOAD_RELATED_OBJECTS, null, callback);
+		patientIdentifierTypeDataService
+				.getAll(new QueryOptions(false, true, ApplicationConstants.CacheKays.PERSON_ATTRIBUTE_TYPE), null,
+						callback);
 	}
 
 	@Override

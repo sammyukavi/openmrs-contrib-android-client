@@ -142,8 +142,8 @@ public class VisitPhotoFragment extends VisitFragment implements VisitContract.V
 	@Override
 	public void refresh() {
 		fileCaption.setText(ApplicationConstants.EMPTY_STRING);
-		/*FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-		fragmentTransaction.detach(this).attach(this).commit();*/
+		FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+		fragmentTransaction.detach(this).attach(this).commit();
 		mPresenter.subscribe();
 	}
 

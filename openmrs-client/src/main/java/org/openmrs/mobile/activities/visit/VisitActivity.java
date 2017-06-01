@@ -52,8 +52,7 @@ import org.openmrs.mobile.utilities.TabUtil;
 import java.util.ArrayList;
 
 public class VisitActivity extends ACBaseActivity {
-
-	private VisitContract.VisitDetailsMainPresenter visitDetailsPresenter;
+	public VisitContract.VisitDetailsMainPresenter visitDetailsMainPresenter;
 	private PatientHeaderContract.Presenter patientHeaderPresenter;
 	private String patientUuid;
 	private String visitUuid;
@@ -149,12 +148,12 @@ public class VisitActivity extends ACBaseActivity {
 		patientUuid = String.valueOf(patientBundle.get(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE));
 		visitUuid = String.valueOf(patientBundle.get(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE));
 		if (fragment instanceof VisitTasksFragment) {
-			visitDetailsPresenter = new VisitTasksPresenter(patientUuid, visitUuid, ((VisitTasksFragment)fragment));
+			visitDetailsMainPresenter = new VisitTasksPresenter(patientUuid, visitUuid, ((VisitTasksFragment)fragment));
 		} else if (fragment instanceof VisitPhotoFragment) {
-			visitDetailsPresenter =
+			visitDetailsMainPresenter =
 					new VisitPhotoPresenter(((VisitPhotoFragment)fragment), patientUuid, visitUuid, providerUuid);
 		} else if (fragment instanceof VisitDetailsFragment) {
-			visitDetailsPresenter = new VisitDetailsPresenter(patientUuid, visitUuid, providerUuid, visitClosedDate, (
+			visitDetailsMainPresenter = new VisitDetailsPresenter(patientUuid, visitUuid, providerUuid, visitClosedDate, (
 					(VisitDetailsFragment)fragment));
 		}
 	}

@@ -27,6 +27,7 @@ import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
 import org.openmrs.mobile.activities.patientheader.PatientHeaderFragment;
 import org.openmrs.mobile.activities.patientheader.PatientHeaderPresenter;
 import org.openmrs.mobile.activities.visit.VisitActivity;
+import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.StringUtils;
 import org.openmrs.mobile.utilities.TabUtil;
@@ -77,7 +78,9 @@ public class AddEditVisitActivity extends ACBaseActivity {
 				addEditVisitPresenter = new AddEditVisitPresenter(addEditVisitFragment, patientUuid);
 
 				if (extras.getBoolean(ApplicationConstants.BundleKeys.END_VISIT_TAG, false)) {
-					showEndVisitDialog();
+					Visit visit = new Visit();
+					visit.setUuid(visitUuid);
+					showEndVisitDialog(visit);
 				}
 
 				// patient header

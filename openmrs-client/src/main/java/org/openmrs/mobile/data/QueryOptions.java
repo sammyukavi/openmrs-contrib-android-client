@@ -25,6 +25,12 @@ public class QueryOptions {
 		this.loadRelatedObjects = loadRelatedObjects;
 	}
 
+	public QueryOptions(boolean includeInactive, boolean loadRelatedObjects,String cacheKey) {
+		this.includeInactive = includeInactive;
+		this.loadRelatedObjects = loadRelatedObjects;
+		this.cacheKey = cacheKey;
+	}
+
 	public QueryOptions(String cacheKey) {
 		this.cacheKey = cacheKey;
 	}

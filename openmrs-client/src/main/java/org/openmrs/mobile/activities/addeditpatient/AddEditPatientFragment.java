@@ -439,9 +439,9 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 	public void fillFields(final Patient patient) {
 		if (patient != null && patient.getPerson() != null) {
 			//Change to Update Patient Form
-			String updatePatientStr = getResources().getString(R.string.action_update_patient_data);
-			this.getActivity().setTitle(updatePatientStr);
-			submitConfirm.setText(updatePatientStr);
+			String patientHeaderString = getResources().getString(R.string.action_update_patient_data);
+			this.getActivity().setTitle(patientHeaderString);
+			submitConfirm.setText(patientHeaderString);
 			submitConfirm.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {

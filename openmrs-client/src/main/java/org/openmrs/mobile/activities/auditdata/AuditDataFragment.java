@@ -24,6 +24,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -92,7 +93,8 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 	private CheckBox auditComplete;
 
 	private Spinner inpatientServiceType;
-	private RelativeLayout progressBar;
+	private RelativeLayout progressBar, auditDataFormProgressBar;
+	private LinearLayout auditDataFormScreen;
 	private ScrollView auditScrollView;
 	private Button submitForm;
 
@@ -178,6 +180,8 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		});
 
 		progressBar = (RelativeLayout)fragmentView.findViewById(R.id.auditDataRelativeView);
+		auditDataFormProgressBar = (RelativeLayout)fragmentView.findViewById(R.id.auditDataFormProgressBar);
+		auditDataFormScreen = (LinearLayout)fragmentView.findViewById(R.id.auditDataFormScreen);
 		auditScrollView = (ScrollView)fragmentView.findViewById(R.id.auditDataForm);
 	}
 
@@ -427,6 +431,17 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 	@Override
 	public void updateSubmitButtonText() {
 		submitForm.setText(R.string.update_audit_data);
+	}
+
+	@Override
+	public void showPageSpinner(boolean visibility) {
+		if (visibility) {
+			auditDataFormProgressBar.setVisibility(View.VISIBLE);
+			auditDataFormScreen.setVisibility(View.GONE);
+		} else {
+			auditDataFormProgressBar.setVisibility(View.GONE);
+			auditDataFormScreen.setVisibility(View.VISIBLE);
+		}
 	}
 
 	@Override

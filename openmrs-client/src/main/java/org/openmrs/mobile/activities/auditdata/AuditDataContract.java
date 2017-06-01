@@ -41,6 +41,8 @@ public interface AuditDataContract {
 		void goBackToVisitPage();
 
 		void updateSubmitButtonText();
+
+		void showPageSpinner(boolean visibility);
 	}
 
 	interface Presenter extends BasePresenterContract {

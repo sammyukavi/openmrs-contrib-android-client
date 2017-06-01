@@ -52,12 +52,12 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 
 	@Override
 	public void fetchVisit(String visitUuid) {
-		auditDataView.showProgressBar(true);
+		auditDataView.showPageSpinner(true);
 		DataService.GetCallback<Visit> fetchEncountersCallback = new DataService.GetCallback<Visit>() {
 			@Override
 			public void onCompleted(Visit visit) {
 				auditDataView.setVisit(visit);
-				auditDataView.showProgressBar(false);
+				auditDataView.showPageSpinner(false);
 				for (Encounter encounter : visit.getEncounters()) {
 					switch (encounter.getEncounterType().getDisplay()) {
 						case AUDITDATA:
@@ -70,7 +70,7 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 
 			@Override
 			public void onError(Throwable t) {
-				auditDataView.showProgressBar(false);
+				auditDataView.showPageSpinner(false);
 				t.printStackTrace();
 			}
 		};
@@ -78,18 +78,18 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 	}
 
 	private void fetchEncounter(String uuid) {
-		auditDataView.showProgressBar(true);
+		auditDataView.showPageSpinner(true);
 		DataService.GetCallback<Encounter> fetchEncountercallback = new DataService.GetCallback<Encounter>() {
 			@Override
 			public void onCompleted(Encounter encounter) {
-				auditDataView.showProgressBar(false);
+				auditDataView.showPageSpinner(false);
 				auditDataView.setEncounterUuid(encounter.getUuid());
 				auditDataView.updateFormFields(encounter);
 			}
 
 			@Override
 			public void onError(Throwable t) {
-				auditDataView.showProgressBar(false);
+				auditDataView.showPageSpinner(false);
 				t.printStackTrace();
 			}
 		};

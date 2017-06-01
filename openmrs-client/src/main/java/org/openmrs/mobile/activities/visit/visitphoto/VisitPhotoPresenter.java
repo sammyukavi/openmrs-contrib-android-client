@@ -15,7 +15,6 @@
 package org.openmrs.mobile.activities.visit.visitphoto;
 
 import android.graphics.Bitmap;
-import android.support.annotation.NonNull;
 
 import org.openmrs.mobile.activities.visit.VisitContract;
 import org.openmrs.mobile.activities.visit.VisitPresenterImpl;
@@ -39,18 +38,17 @@ import java.util.List;
 
 public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitContract.VisitPhotoPresenter {
 
-	@NonNull
-	private VisitContract.VisitPhotoView view;
+	private VisitContract.VisitPhotoView visitPhotoView;
 	private String patientUuid, visitUuid, providerUuid;
 	private boolean loading;
 	private VisitPhotoDataService visitPhotoDataService;
 	private ObsDataService obsDataService;
 	private VisitPhoto visitPhoto;
 
-	public VisitPhotoPresenter(VisitContract.VisitPhotoView view, String patientUuid, String visitUuid,
+	public VisitPhotoPresenter(VisitContract.VisitPhotoView visitPhotoView, String patientUuid, String visitUuid,
 			String providerUuid) {
-		this.view = view;
-		this.view.setPresenter(this);
+		this.visitPhotoView = visitPhotoView;
+		this.visitPhotoView.setPresenter(this);
 		this.patientUuid = patientUuid;
 		this.visitUuid = visitUuid;
 		this.providerUuid = providerUuid;
@@ -59,6 +57,7 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 	}
 
 	private void loadVisitDocumentObservations() {
+		visitPhotoView.showTabSpinner(true);
 		// get obs for patient.
 		obsDataService.getVisitDocumentsObsByPatientAndConceptList(patientUuid, QueryOptions.DEFAULT,
 				new DataService.GetCallback<List<Observation>>() {
@@ -82,29 +81,34 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 						}
 
 						if (!visitPhotos.isEmpty()) {
-							view.updateVisitImageMetadata(visitPhotos);
+							visitPhotoView.updateVisitImageMetadata(visitPhotos);
 						} else {
-							view.showNoVisitPhoto();
+							visitPhotoView.showNoVisitPhoto();
 						}
+						visitPhotoView.showTabSpinner(false);
 					}
 
 					@Override
 					public void onError(Throwable t) {
+						visitPhotoView.showTabSpinner(false);
 					}
 				});
 	}
 
 	@Override
 	public void downloadImage(String obsUuid, DataService.GetCallback<Bitmap> callback) {
+		visitPhotoView.showTabSpinner(true);
 		visitPhotoDataService.downloadPhoto(obsUuid, ApplicationConstants.THUMBNAIL_VIEW,
 				new DataService.GetCallback<VisitPhoto>() {
 					@Override
 					public void onCompleted(VisitPhoto entity) {
 						callback.onCompleted(entity.getDownloadedImage());
+						visitPhotoView.showTabSpinner(false);
 					}
 
 					@Override
 					public void onError(Throwable t) {
+						visitPhotoView.showTabSpinner(false);
 						callback.onError(t);
 						ToastUtil.error(t.getMessage());
 					}
@@ -138,7 +142,7 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 		visitPhotoDataService.uploadPhoto(visitPhoto, new DataService.GetCallback<VisitPhoto>() {
 			@Override
 			public void onCompleted(VisitPhoto entity) {
-				view.refresh();
+				visitPhotoView.refresh();
 			}
 
 			@Override

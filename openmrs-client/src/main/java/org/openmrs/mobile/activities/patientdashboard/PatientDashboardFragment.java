@@ -27,6 +27,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import com.github.clans.fab.FloatingActionButton;
 
@@ -62,6 +63,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	private String providerUuid;
 	private Location location;
 	private ProgressBar savingProgressBar;
+	private RelativeLayout dashboardProgressBar, dashboardScreen;
 
 	public static PatientDashboardFragment newInstance() {
 		return new PatientDashboardFragment();
@@ -120,6 +122,8 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		patientContactInfo = (LinearLayout)fragmentView.findViewById(R.id.patientContactInfo);
 		borderLine = fragmentView.findViewById(R.id.borderLine);
 		savingProgressBar = (ProgressBar)fragmentView.findViewById(R.id.savingProgressBar);
+		dashboardScreen = (RelativeLayout)fragmentView.findViewById(R.id.dashboardScreen);
+		dashboardProgressBar = (RelativeLayout)fragmentView.findViewById(R.id.dashboardProgressBar);
 	}
 
 	@Override
@@ -127,7 +131,6 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		this.patient = patient;
 		int visitsStartLimit = 5;
 		mPresenter.setLimit(visitsStartLimit);
-		mPresenter.fetchVisits(patient);
 		setPatientUuid(patient);
 	}
 
@@ -203,6 +206,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 				//visitsRecyclerAdapter.notifyDataSetChanged();
 			}
 		});
+		showPageSpinner(false);
 	}
 
 	@Override
@@ -240,6 +244,17 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	@Override
 	public void upDateProgressBar(boolean show) {
 		savingProgressBar.setVisibility(show ? View.VISIBLE : View.GONE);
+	}
+
+	@Override
+	public void showPageSpinner(boolean visibility) {
+		if (visibility) {
+			dashboardProgressBar.setVisibility(View.VISIBLE);
+			dashboardScreen.setVisibility(View.GONE);
+		} else {
+			dashboardProgressBar.setVisibility(View.GONE);
+			dashboardScreen.setVisibility(View.VISIBLE);
+		}
 	}
 
 }

@@ -18,6 +18,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -25,7 +26,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -77,7 +77,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	private Visit visit;
 	private TableLayout visitVitalsTableLayout, auditInfoTableLayout;
 	private static TableRow.LayoutParams marginParams;
-	private Button submitVisitNote;
+	private AppCompatButton submitVisitNote;
 	private TextInputEditText clinicalNote;
 	private AutoCompleteTextView addDiagnosis;
 	private RecyclerView primaryDiagnosesRecycler, secondaryDiagnosesRecycler;
@@ -93,7 +93,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	private FlexboxLayout visitAttributesLayout;
 	private RelativeLayout visitNoteAuditInfo, visitVitalsAuditInfo, auditDataMetadata, visitDetailsProgressBar;
 	private View visitDetailsView;
-	private ScrollView visitDetailsFragment;
+	private ScrollView visitDetailsScrollView;
 
 	private Map<String, Object> encounterDiagnosis = new HashMap<>();
 
@@ -132,7 +132,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		noVitals = (TextView)v.findViewById(R.id.noVitals);
 		visitVitalsTableLayout = (TableLayout)v.findViewById(R.id.visitVitalsTable);
 		auditInfoTableLayout = (TableLayout)v.findViewById(R.id.auditInfoTable);
-		submitVisitNote = (Button)v.findViewById(R.id.submitVisitNote);
+		submitVisitNote = (AppCompatButton)v.findViewById(R.id.submitVisitNote);
 		clinicalNote = (TextInputEditText)v.findViewById(R.id.clinicalNotes);
 		addDiagnosis = (AutoCompleteTextView)v.findViewById(R.id.diagnosisInput);
 		noPrimaryDiagnoses = (TextView)v.findViewById(R.id.noPrimaryDiagnosis);
@@ -161,8 +161,8 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 
 		visitDetailsView = v.findViewById(R.id.visitDetailsView);
 
-		visitDetailsProgressBar = (RelativeLayout)v.findViewById(R.id.visitDetailsScreenProgressBar);
-		visitDetailsFragment = (ScrollView)v.findViewById(R.id.visitDetailsScreen);
+		visitDetailsProgressBar = (RelativeLayout)v.findViewById(R.id.visitDetailsTabProgressBar);
+		visitDetailsScrollView = (ScrollView)v.findViewById(R.id.visitDetailsTab);
 
 	}
 
@@ -312,10 +312,10 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	public void showTabSpinner(boolean visibility) {
 		if (visibility) {
 			visitDetailsProgressBar.setVisibility(View.VISIBLE);
-			visitDetailsFragment.setVisibility(View.GONE);
+			visitDetailsScrollView.setVisibility(View.GONE);
 		} else {
 			visitDetailsProgressBar.setVisibility(View.GONE);
-			visitDetailsFragment.setVisibility(View.VISIBLE);
+			visitDetailsScrollView.setVisibility(View.VISIBLE);
 		}
 	}
 

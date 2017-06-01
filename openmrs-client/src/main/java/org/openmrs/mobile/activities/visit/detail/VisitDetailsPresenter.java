@@ -83,10 +83,11 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 				new DataService.GetCallback<Visit>() {
 					@Override
 					public void onCompleted(Visit entity) {
-						visitDetailsView.showTabSpinner(false);
 						if (entity != null) {
 							visitDetailsView.setVisit(entity);
 							loadVisitAttributeTypes();
+						} else {
+							visitDetailsView.showTabSpinner(false);
 						}
 					}
 
@@ -143,10 +144,12 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 
 	@Override
 	public void getObservation(String uuid) {
+		visitDetailsView.showTabSpinner(true);
 		DataService.GetCallback<Observation> getSingleCallback =
 				new DataService.GetCallback<Observation>() {
 					@Override
 					public void onCompleted(Observation entity) {
+						visitDetailsView.showTabSpinner(false);
 						if (entity != null) {
 							if (!entity.getConcept().getUuid().equalsIgnoreCase(ApplicationConstants.ObservationLocators
 									.PRIMARY_DIAGNOSIS) && !entity.getConcept().getUuid()
@@ -163,6 +166,7 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 
 					@Override
 					public void onError(Throwable t) {
+						visitDetailsView.showTabSpinner(false);
 						visitDetailsView
 								.showToast("Could not fetch", ToastUtil.ToastType.ERROR);
 					}
@@ -171,15 +175,18 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 	}
 
 	private void loadVisitAttributeTypes() {
+		visitDetailsView.showTabSpinner(true);
 		visitAttributeTypeDataService.getAll(new QueryOptions(false, true), new PagingInfo(0, 100), new DataService
 				.GetCallback<List<VisitAttributeType>>() {
 			@Override
 			public void onCompleted(List<VisitAttributeType> entities) {
+				visitDetailsView.showTabSpinner(false);
 				visitDetailsView.setAttributeTypes(entities);
 			}
 
 			@Override
 			public void onError(Throwable t) {
+				visitDetailsView.showTabSpinner(false);
 				ToastUtil.error(t.getMessage());
 			}
 		});

@@ -22,14 +22,13 @@
 		android:focusableInTouchMode="true">
 	
 	<RelativeLayout
-			android:id="@+id/visitDetailsScreenProgressBar"
+			android:id="@+id/visitDetailsTabProgressBar"
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
+			android:layout_height="match_parent"
 			android:orientation="vertical"
 			android:visibility="gone">
 		
 		<ProgressBar
-				android:id="@+id/visitDetailsScreenLoader"
 				android:layout_width="wrap_content"
 				android:layout_height="match_parent"
 				android:layout_centerInParent="true"
@@ -38,7 +37,7 @@
 	</RelativeLayout>
 	
 	<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-			android:id="@+id/visitDetailsScreen"
+			android:id="@+id/visitDetailsTab"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
 			android:focusable="true"
@@ -439,18 +438,17 @@
 							android:layout_marginTop="10dp"
 							android:orientation="vertical">
 						
-						<Button
+						<android.support.v7.widget.AppCompatButton
 								android:id="@+id/submitVisitNote"
-								style="@style/Widget.AppCompat.Button.Borderless"
 								android:layout_width="match_parent"
 								android:layout_height="wrap_content"
 								android:layout_marginLeft="10dp"
 								android:layout_marginRight="10dp"
 								android:layout_marginBottom="10dp"
-								android:background="@drawable/button_apply"
-								android:backgroundTint="@color/primary"
+								android:background="@drawable/button_submit"
 								android:textColor="@color/white"
-								android:text="@string/save_visit_note" />
+								android:text="@string/save_visit_note"
+								style="@style/Widget.AppCompat.Button.Borderless" />
 					
 					</LinearLayout>
 				</LinearLayout>

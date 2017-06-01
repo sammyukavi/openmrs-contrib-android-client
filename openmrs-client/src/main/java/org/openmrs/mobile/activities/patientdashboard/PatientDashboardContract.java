@@ -42,6 +42,8 @@ public interface PatientDashboardContract {
 		Context getContext();
 
 		void upDateProgressBar(boolean show);
+
+		void showPageSpinner(boolean visibility);
 	}
 
 	interface Presenter extends BasePresenterContract {

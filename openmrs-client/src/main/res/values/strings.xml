@@ -497,7 +497,7 @@
 	<string name="sign_pulse">/min</string>
 	<string name="error_text_vitals_maximum">Maximum: %1$d</string>
 	<string name="error_text_vitals_minimum">Minimum: %1$d</string>
-	<string name="error_occured">An error occured making your request</string>
+	<string name="error_occured">An error occurred making your request</string>
 	<string name="saved">Saved</string>
 	<string name="in_complete">Incomplete</string>
 	<string name="update_visit">Update Visit</string>
@@ -507,6 +507,7 @@
 	<string name="no_predefined_tasks">No predefined tasks</string>
 	<string name="started">Started:</string>
 	<string name="duration">Dur: %1$s</string>
+	<string name="visit_duration">Duration: %1$s</string>
 	<string name="no_visit">Patient has no visit</string>
 	<string name="save_photo">Save Photo</string>
 </resources>

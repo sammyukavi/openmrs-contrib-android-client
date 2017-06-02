@@ -39,7 +39,6 @@ import com.google.android.flexbox.FlexboxLayout;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.auditdata.AuditDataActivity;
 import org.openmrs.mobile.activities.capturevitals.CaptureVitalsActivity;
-import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
 import org.openmrs.mobile.activities.visit.VisitContract;
 import org.openmrs.mobile.activities.visit.VisitFragment;
 import org.openmrs.mobile.models.Concept;
@@ -273,7 +272,8 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 					.setText(getContext().getResources().getString(R.string.date_closed) + ": " + DateUtils
 							.convertTime1(visit.getStopDatetime(), DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT));
 			startDuration.setText(DateUtils.calculateTimeDifference(visit.getStartDatetime()));
-			visitDuration.setText(DateUtils.calculateTimeDifference(visit.getStartDatetime(), visit.getStopDatetime()));
+			visitDuration.setText(getContext().getString(R.string.visit_duration, DateUtils.calculateTimeDifference(visit
+					.getStartDatetime(), visit.getStopDatetime())));
 
 		} else {
 			activeVisitBadge.setVisibility(View.VISIBLE);
@@ -380,7 +380,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	}
 
 	public void setVitals(Visit visit) {
-		if (visit.getEncounters().size() != 0) {
+		if (visit.getEncounters().size() > 0) {
 			for (int i = 0; i < visit.getEncounters().size(); i++) {
 				if (visit.getEncounters().get(i).getDisplay().contains(ApplicationConstants.EncounterTypeDisplays.VITALS)
 						&& i == 0) {
@@ -402,24 +402,23 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 									visitVitalsProvider.setText(names.get(0).toString());
 								}
 							}
-
 							noVitals.setVisibility(View.GONE);
 							addVisitVitals.setVisibility(View.GONE);
 							visitVitalsTableLayout.setVisibility(View.VISIBLE);
 							loadObservationFields(visit.getEncounters().get(i).getObs(), EncounterTypeData.VITALS);
-						} else {
-							noVitals.setVisibility(View.VISIBLE);
-							addVisitVitals.setVisibility(View.VISIBLE);
-							visitVitalsTableLayout.setVisibility(View.GONE);
 						}
 					}
 				}
 			}
+		} else {
+			noVitals.setVisibility(View.VISIBLE);
+			addVisitVitals.setVisibility(View.GONE);
+			visitVitalsTableLayout.setVisibility(View.GONE);
 		}
 	}
 
 	public void setAuditData(Visit visit) {
-		if (visit.getEncounters().size() != 0) {
+		if (visit.getEncounters().size() > 0) {
 			for (int i = 0; i < visit.getEncounters().size(); i++) {
 				if (visit.getEncounters().get(i).getEncounterType().getUuid()
 						.equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.AUDIT_DATA_UUID) || visit.getEncounters()
@@ -529,11 +528,12 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 			TableRow.LayoutParams labelParams = new TableRow.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT);
 			labelParams.weight = 1;
 
-			label.setText(splitValues.get(0) + " :");
 			label.setTextSize(14);
 			if (type == EncounterTypeData.VITALS) {
+				label.setText(splitValues.get(0) + " :");
 				label.setGravity(Gravity.RIGHT | Gravity.END);
 			} else {
+				label.setText(splitValues.get(0).toString());
 				label.setGravity(Gravity.LEFT | Gravity.START);
 			}
 			label.setLayoutParams(labelParams);
@@ -541,8 +541,13 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 			row.addView(label, 0);
 
 			TextView value = new TextView(getContext());
-			value.setText(splitValues.get(1).toString());
 			value.setTextSize(14);
+			if (type == EncounterTypeData.VITALS) {
+				value.setText(splitValues.get(1).toString());
+				value.setGravity(Gravity.END | Gravity.RIGHT);
+			} else {
+				value.setText(": " + splitValues.get(1).toString());
+			}
 			value.setLayoutParams(labelParams);
 			row.addView(value, 1);
 

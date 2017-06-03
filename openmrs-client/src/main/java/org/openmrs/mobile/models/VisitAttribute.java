@@ -1,19 +1,27 @@
 package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.Table;
 
+import org.openmrs.mobile.data.db.AppDatabase;
+
+@Table(database = AppDatabase.class)
 public class VisitAttribute extends BaseOpenmrsEntity {
-
 	@Expose
+	@ForeignKey
 	private Visit visit;
 
 	@Expose
 	private Object value;
 
 	@Expose
+	@Column
 	private String valueReference;
 
 	@Expose
+	@ForeignKey
 	private VisitAttributeType attributeType;
 
 	public Visit getVisit() {

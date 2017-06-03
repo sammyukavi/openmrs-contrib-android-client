@@ -15,6 +15,11 @@ package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.OneToMany;
+import com.raizlabs.android.dbflow.annotation.Table;
+
+import org.openmrs.mobile.data.db.AppDatabase;
 
 import java.io.Serializable;
 import java.util.List;
@@ -22,31 +27,37 @@ import java.util.List;
 /**
  * Model class that represents a Patient List.
  */
+@Table(database = AppDatabase.class)
 public class PatientList extends BaseOpenmrsMetadata implements Serializable {
-	private Long id;
-
 	@SerializedName("patientListConditions")
 	@Expose
 	private List<PatientListCondition> patientListConditions;
 
-	@SerializedName("ordering")
+	@SerializedName("patientListOrders")
 	@Expose
-	private List<PatientListOrder> ordering;
+	private List<PatientListOrder> patientListOrders;
 
 	@SerializedName("headerTemplate")
 	@Expose
+	@Column
 	private String headerTemplate;
 
 	@SerializedName("bodyTemplate")
 	@Expose
+	@Column
 	private String bodyTemplate;
 
-	public Long getId() {
-		return id;
+	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "patientListConditions", isVariablePrivate = true)
+	List<PatientListCondition> loadConditions() {
+		return loadRelatedObject(PatientListCondition.class, patientListConditions, () ->
+				PatientListCondition_Table.patientList_uuid.eq(super.getUuid())
+		);
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "patientListOrders", isVariablePrivate = true)
+	List<PatientListOrder> loadOrdering() {
+		return loadRelatedObject(PatientListOrder.class, patientListOrders,
+				() -> PatientListOrder_Table.patientList_uuid.eq(super.getUuid()));
 	}
 
 	public List<PatientListCondition> getPatientListConditions() {
@@ -57,12 +68,12 @@ public class PatientList extends BaseOpenmrsMetadata implements Serializable {
 		this.patientListConditions = patientListConditions;
 	}
 
-	public List<PatientListOrder> getOrdering() {
-		return ordering;
+	public List<PatientListOrder> getPatientListOrders() {
+		return patientListOrders;
 	}
 
-	public void setOrdering(List<PatientListOrder> ordering) {
-		this.ordering = ordering;
+	public void setPatientListOrders(List<PatientListOrder> patientListOrders) {
+		this.patientListOrders = patientListOrders;
 	}
 
 	public String getHeaderTemplate() {

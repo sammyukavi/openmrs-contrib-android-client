@@ -16,15 +16,16 @@ package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.Table;
 
-/**
- * Created by dubdabasoduba on 05/05/2017.
- */
+import org.openmrs.mobile.data.db.AppDatabase;
 
+@Table(database = AppDatabase.class)
 public class Privilege extends BaseOpenmrsMetadata {
-
 	@Expose
 	@SerializedName("privilege")
+	@Column
 	private String privilege;
 
 	public String getPrivilege() {

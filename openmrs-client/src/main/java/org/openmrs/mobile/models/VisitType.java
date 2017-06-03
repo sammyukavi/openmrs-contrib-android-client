@@ -10,7 +10,15 @@
 
 package org.openmrs.mobile.models;
 
+import com.raizlabs.android.dbflow.annotation.Table;
+
+import org.openmrs.mobile.data.db.AppDatabase;
+
+@Table(database = AppDatabase.class)
 public class VisitType extends BaseOpenmrsMetadata {
+	public VisitType() {
+
+	}
 
 	public VisitType(String display) {
 		this.display = display;

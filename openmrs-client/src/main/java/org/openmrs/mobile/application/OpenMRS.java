@@ -23,17 +23,12 @@ import android.preference.PreferenceManager;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
-import org.openmrs.mobile.api.FormListService;
-import org.openmrs.mobile.databases.OpenMRSDBOpenHelper;
 import org.openmrs.mobile.security.SecretKeyGenerator;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-
-//import org.openmrs.mobile.models.DaoMaster;
-//import org.openmrs.mobile.models.DaoSession;
 
 public class OpenMRS extends Application {
 	private static final String OPENMRS_DIR_NAME = "OpenMRS";
@@ -64,11 +59,10 @@ public class OpenMRS extends Application {
 		}
 		mLogger = new OpenMRSLogger();
 		generateKey();
-		OpenMRSDBOpenHelper.init();
 		initializeDB();
 
-		Intent i = new Intent(this, FormListService.class);
-		startService(i);
+//		Intent i = new Intent(this, FormListService.class);
+//		startService(i);
 	}
 
 	protected void initializeDB() {

@@ -16,24 +16,46 @@ package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.Table;
 
+import org.openmrs.mobile.data.db.AppDatabase;
+
+@Table(database = AppDatabase.class)
 public class VisitTask extends BaseOpenmrsEntity {
-
 	@SerializedName("status")
 	@Expose
+	@Column
 	private VisitTaskStatus status;
 
 	@SerializedName("visit")
 	@Expose
+	@ForeignKey(stubbedRelationship = true)
 	private Visit visit;
 
 	@SerializedName("name")
 	@Expose
+	@Column
 	private String name;
 
 	@SerializedName("patient")
 	@Expose
+	@ForeignKey(stubbedRelationship = true)
 	private Patient patient;
+
+	@Override
+	protected void processRelationships() {
+		super.processRelationships();
+
+		if (visit != null) {
+			visit.processRelationships();
+		}
+
+		if (patient != null) {
+			patient.processRelationships();
+		}
+	}
 
 	public VisitTaskStatus getStatus() {
 		return status;

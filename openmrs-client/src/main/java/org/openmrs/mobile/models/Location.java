@@ -14,26 +14,43 @@
 package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.Table;
 
+import org.openmrs.mobile.data.db.AppDatabase;
+
+@Table(database = AppDatabase.class)
 public class Location extends BaseOpenmrsMetadata {
 	@Expose
-	private Long id;
+	private String parentLocationUuid;
 
 	@Expose
-	private String parentLocationUuid;
-	@Expose
+	@Column
 	private String address2;
+
 	@Expose
+	@Column
 	private String address1;
+
 	@Expose
+	@Column
 	private String cityVillage;
+
 	@Expose
+	@Column
 	private String stateProvince;
+
 	@Expose
+	@Column
 	private String country;
+
 	@Expose
+	@Column
 	private String postalCode;
+
 	@Expose
+	@ForeignKey(stubbedRelationship = true)
 	private Location parentLocation;
 
 	public Location() {
@@ -45,7 +62,7 @@ public class Location extends BaseOpenmrsMetadata {
 
 	public Location(Long id, String name, String parentLocationUuid, String description, String address2, String address1,
 			String cityVillage, String stateProvince, String country, String postalCode) {
-		this.id = id;
+		setId(id);
 		setName(name);
 		this.parentLocationUuid = parentLocationUuid;
 		setDescription(description);
@@ -55,14 +72,6 @@ public class Location extends BaseOpenmrsMetadata {
 		this.stateProvince = stateProvince;
 		this.country = country;
 		this.postalCode = postalCode;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public String getParentLocationUuid() {

@@ -12,20 +12,42 @@ package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.OneToMany;
+import com.raizlabs.android.dbflow.annotation.Table;
+
+import org.openmrs.mobile.data.db.AppDatabase;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Page implements Serializable {
-
+@Table(database = AppDatabase.class)
+public class Page extends Resource implements Serializable {
 	@SerializedName("label")
 	@Expose
+	@Column
 	private String label;
+
+	@ForeignKey(stubbedRelationship = true)
+	private Form form;
 
 	@SerializedName("sections")
 	@Expose
 	private List<Section> sections = new ArrayList<Section>();
+
+	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "sections", isVariablePrivate = true)
+	List<Section> loadSections() {
+		return loadRelatedObject(Section.class, sections, () -> Section_Table.page_uuid.eq(getUuid()));
+	}
+
+	@Override
+	protected void processRelationships() {
+		super.processRelationships();
+
+		processRelatedObjects(sections, (s) -> s.setPage(this));
+	}
 
 	/**
 	 * @return The label
@@ -41,6 +63,14 @@ public class Page implements Serializable {
 		this.label = label;
 	}
 
+	public Form getForm() {
+		return form;
+	}
+
+	public void setForm(Form form) {
+		this.form = form;
+	}
+
 	/**
 	 * @return The sections
 	 */
@@ -54,5 +84,4 @@ public class Page implements Serializable {
 	public void setSections(List<Section> sections) {
 		this.sections = sections;
 	}
-
 }

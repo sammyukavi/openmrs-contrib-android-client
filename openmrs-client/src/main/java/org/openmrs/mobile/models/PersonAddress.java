@@ -12,38 +12,62 @@ package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.Table;
 
+import org.openmrs.mobile.data.db.AppDatabase;
 import org.openmrs.mobile.utilities.StringUtils;
 
+@Table(database = AppDatabase.class)
 public class PersonAddress extends BaseOpenmrsEntity {
-
 	@SerializedName("preferred")
 	@Expose
+	@Column
 	private Boolean preferred;
+
 	@SerializedName("address1")
 	@Expose
+	@Column
 	private String address1;
+
 	@SerializedName("address2")
 	@Expose
+	@Column
 	private String address2;
+
 	@SerializedName("cityVillage")
 	@Expose
+	@Column
 	private String cityVillage;
+
 	@SerializedName("stateProvince")
 	@Expose
+	@Column
 	private String stateProvince;
+
 	@SerializedName("country")
 	@Expose
+	@Column
 	private String country;
+
 	@SerializedName("postalCode")
 	@Expose
+	@Column
 	private String postalCode;
+
+	@ForeignKey
+	private Person person;
 
 	/**
 	 * @return The preferred
 	 */
 	public Boolean getPreferred() {
 		return preferred;
+	}
+
+	Boolean isPreferred() {
+		return getPreferred();
 	}
 
 	/**
@@ -144,5 +168,13 @@ public class PersonAddress extends BaseOpenmrsEntity {
 	 */
 	public void setPostalCode(String postalCode) {
 		this.postalCode = postalCode;
+	}
+
+	public Person getPerson() {
+		return person;
+	}
+
+	public void setPerson(Person person) {
+		this.person = person;
 	}
 }

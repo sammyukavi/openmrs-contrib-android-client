@@ -10,10 +10,14 @@
 
 package org.openmrs.mobile.models;
 
+import com.raizlabs.android.dbflow.annotation.Table;
+
+import org.openmrs.mobile.data.db.AppDatabase;
+
 import java.io.Serializable;
 
+@Table(database = AppDatabase.class)
 public class EncounterType extends BaseOpenmrsMetadata implements Serializable {
-
 	public EncounterType() {
 	}
 

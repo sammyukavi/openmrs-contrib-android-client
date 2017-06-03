@@ -1,25 +1,35 @@
 package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+
+import org.openmrs.mobile.data.db.AppDatabase;
 
 import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
 
+@Table(database = AppDatabase.class)
 public class VisitPhoto extends BaseOpenmrsObject {
-
 	@Expose
+	@ForeignKey(stubbedRelationship = true)
 	private Visit visit;
 
 	@Expose
+	@ForeignKey(stubbedRelationship = true)
 	private Patient patient;
 
 	@Expose
+	@ForeignKey(stubbedRelationship = true)
 	private Provider provider;
 
 	@Expose
+	@Column
 	private String fileCaption;
 
 	@Expose
+	@Column
 	private String instructions;
 
 	@Expose

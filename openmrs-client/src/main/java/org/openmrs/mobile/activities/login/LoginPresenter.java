@@ -16,14 +16,8 @@ package org.openmrs.mobile.activities.login;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.BasePresenter;
-import org.openmrs.mobile.api.RestApi;
-import org.openmrs.mobile.api.RestServiceBuilder;
-import org.openmrs.mobile.api.UserService;
-import org.openmrs.mobile.api.retrofit.VisitApi;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.application.OpenMRSLogger;
-import org.openmrs.mobile.dao.LocationDAO;
-import org.openmrs.mobile.databases.OpenMRSSQLiteOpenHelper;
 import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.models.Session;
@@ -35,6 +29,7 @@ import org.openmrs.mobile.utilities.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -44,14 +39,13 @@ import rx.schedulers.Schedulers;
 
 public class LoginPresenter extends BasePresenter implements LoginContract.Presenter {
 
-	private RestApi restApi;
-	private VisitApi visitApi;
-	private UserService userService;
+//	private RestApi restApi;
+//	private VisitApi visitApi;
+//	private UserService userService;
 	private LoginContract.View loginView;
 	private OpenMRS mOpenMRS;
 	private OpenMRSLogger mLogger;
 	private AuthorizationManager authorizationManager;
-	private LocationDAO locationDAO;
 	private boolean mWipeRequired;
 
 	public LoginPresenter(LoginContract.View loginView, OpenMRS openMRS) {
@@ -60,19 +54,21 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 		this.mLogger = openMRS.getOpenMRSLogger();
 		this.loginView.setPresenter(this);
 		this.authorizationManager = new AuthorizationManager();
-		this.locationDAO = new LocationDAO();
-		this.restApi = RestServiceBuilder.createService(RestApi.class);
+		/*this.restApi = RestServiceBuilder.createService(RestApi.class);
 		this.visitApi = new VisitApi();
-		this.userService = new UserService();
+		this.userService = new UserService();*/
 	}
 
-	public LoginPresenter(RestApi restApi, VisitApi visitApi, LocationDAO locationDAO,
+	/*public LoginPresenter(RestApi restApi, VisitApi visitApi, LocationDAO locationDAO,
 			UserService userService, LoginContract.View loginView, OpenMRS mOpenMRS,
-			OpenMRSLogger mLogger, AuthorizationManager authorizationManager) {
-		this.restApi = restApi;
+			OpenMRSLogger mLogger, AuthorizationManager authorizationManager) {*/
+		public LoginPresenter(Object restApi, Object visitApi, Object locationDAO,
+				Object userService, LoginContract.View loginView, OpenMRS mOpenMRS,
+				OpenMRSLogger mLogger, AuthorizationManager authorizationManager) {
+		/*this.restApi = restApi;
 		this.visitApi = visitApi;
 		this.locationDAO = locationDAO;
-		this.userService = userService;
+		this.userService = userService;*/
 		this.loginView = loginView;
 		this.mOpenMRS = mOpenMRS;
 		this.mLogger = mLogger;
@@ -112,9 +108,9 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 		loginView.showLoadingAnimation();
 		if (NetworkUtils.isOnline()) {
 			mWipeRequired = wipeDatabase;
-			RestApi restApi = RestServiceBuilder.createService(RestApi.class, username, password);
-			Call<Session> call = restApi.getSession();
-			call.enqueue(new Callback<Session>() {
+			/*RestApi restApi = RestServiceBuilder.createService(RestApi.class, username, password);
+			Call<Session> call = restApi.getSession();*/
+			/*call.enqueue(new Callback<Session>() {
 				@Override
 				public void onResponse(Call<Session> call, Response<Session> response) {
 					if (response.isSuccessful()) {
@@ -145,14 +141,14 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 						loginView.hideLoadingAnimation();
 						loginView.showToast(response.message(), ToastUtil.ToastType.ERROR);
 					}
-				}
+				}*/
 
-				@Override
+				/*@Override
 				public void onFailure(Call<Session> call, Throwable t) {
 					loginView.hideLoadingAnimation();
 					loginView.showToast(t.getMessage(), ToastUtil.ToastType.ERROR);
 				}
-			});
+			});*/
 		} else {
 			if (mOpenMRS.isUserLoggedOnline() && url.equals(mOpenMRS.getLastLoginServerUrl())) {
 				if (mOpenMRS.getUsername().equals(username) && mOpenMRS.getPassword().equals(password)) {
@@ -180,19 +176,19 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 	@Override
 	public void saveLocationsToDatabase(List<Location> locationList, String selectedLocation) {
 		mOpenMRS.setLocation(selectedLocation);
-		locationDAO.deleteAllLocations();
+		/*locationDAO.deleteAllLocations();
 		for (int i = 0; i < locationList.size(); i++) {
 			locationDAO.saveLocation(locationList.get(i))
 					.observeOn(Schedulers.io())
 					.subscribe();
-		}
+		}*/
 	}
 
 	@Override
 	public void loadLocations(final String url) {
 		loginView.showLocationLoadingAnimation();
 
-		if (NetworkUtils.hasNetwork()) {
+		/*if (NetworkUtils.hasNetwork()) {
 			String locationEndPoint = url + ApplicationConstants.API.REST_ENDPOINT_V1 + "location";
 			Call<Results<Location>> call =
 					restApi.getLocations(locationEndPoint, "Login Location", "full");
@@ -235,7 +231,7 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 						loginView.hideLoadingAnimation();
 					}));
 		}
-
+*/
 	}
 
 	@Override

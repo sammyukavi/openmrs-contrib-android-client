@@ -12,31 +12,42 @@ package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.Table;
 
+import org.openmrs.mobile.data.db.AppDatabase;
+
+@Table(database = AppDatabase.class)
 public class PersonAttributeType extends BaseOpenmrsMetadata {
-
 	@Expose
 	@SerializedName("concept")
+	@ForeignKey(stubbedRelationship = true)
 	private Concept concept;
 
-	@SerializedName("format")
 	@Expose
+	@SerializedName("format")
+	@Column
 	private String format;
 
 	@Expose
 	@SerializedName("foreignKey")
+	@Column
 	private Integer foreignKey;
 
 	@Expose
 	@SerializedName("sortWeight")
+	@Column
 	private Double sortWeight;
 
 	@Expose
 	@SerializedName("searchable")
+	@Column
 	private Boolean searchable = false;
 
 	@Expose
 	@SerializedName("editPrivilege")
+	@ForeignKey
 	private Privilege editPrivilege;
 
 	public Concept getConcept() {

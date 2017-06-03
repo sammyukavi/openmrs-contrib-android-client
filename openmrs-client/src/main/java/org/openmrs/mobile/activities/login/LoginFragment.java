@@ -35,7 +35,7 @@ import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
 import org.openmrs.mobile.activities.patientlist.PatientListActivity;
-import org.openmrs.mobile.api.FormListService;
+//import org.openmrs.mobile.api.FormListService;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.listeners.watcher.LoginValidatorWatcher;
@@ -255,8 +255,8 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 
 	@Override
 	public void startFormListService() {
-		Intent i = new Intent(getContext(), FormListService.class);
-		getActivity().startService(i);
+//		Intent i = new Intent(getContext(), FormListService.class);
+//		getActivity().startService(i);
 	}
 
 	@Override

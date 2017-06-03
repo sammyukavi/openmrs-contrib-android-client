@@ -15,30 +15,40 @@ package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+
+import org.openmrs.mobile.data.db.AppDatabase;
 
 /**
  * Represents {@link PatientList} model data
  */
+@Table(database = AppDatabase.class)
 public class PatientListContext extends BaseOpenmrsObject {
-
 	@SerializedName("patient")
 	@Expose
+	@ForeignKey(stubbedRelationship = true)
 	private Patient patient;
 
 	@SerializedName("visit")
 	@Expose
+	@ForeignKey(stubbedRelationship = true)
 	private Visit visit;
 
 	@SerializedName("patientList")
 	@Expose
+	@ForeignKey(stubbedRelationship = true)
 	private PatientList patientList;
 
 	@SerializedName("headerContent")
 	@Expose
+	@Column
 	private String headerContent;
 
 	@SerializedName("bodyContent")
 	@Expose
+	@Column
 	private String bodyContent;
 
 	public Patient getPatient() {

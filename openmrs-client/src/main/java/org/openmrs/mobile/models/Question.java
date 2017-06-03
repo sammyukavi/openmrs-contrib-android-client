@@ -12,28 +12,58 @@ package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.OneToMany;
+import com.raizlabs.android.dbflow.annotation.Table;
+
+import org.openmrs.mobile.data.db.AppDatabase;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Question implements Serializable {
-
+@Table(database = AppDatabase.class)
+public class Question extends Resource implements Serializable {
 	@SerializedName("type")
 	@Expose
+	@Column
 	private String type;
 
 	@SerializedName("label")
 	@Expose
+	@Column
 	private String label;
 
 	@SerializedName("questionOptions")
 	@Expose
+	@ForeignKey
 	private QuestionOptions questionOptions;
+
+	@ForeignKey(stubbedRelationship = true)
+	private Question parentQuestion;
+
+	@ForeignKey(stubbedRelationship = true)
+	private Section section;
 
 	@SerializedName("questions")
 	@Expose
 	private List<Question> questions = new ArrayList<Question>();
+
+	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "questions", isVariablePrivate = true)
+	List<Question> loadQuestions() {
+		return loadRelatedObject(Question.class, questions, () -> Question_Table.parentQuestion_uuid.eq(getUuid()));
+	}
+
+	@Override
+	protected void processRelationships() {
+		super.processRelationships();
+
+		if (questionOptions != null) {
+			questionOptions.processRelationships();
+		}
+		processRelatedObjects(questions, (q) -> q.setParentQuestion(this));
+	}
 
 	/**
 	 * @return The type
@@ -77,6 +107,22 @@ public class Question implements Serializable {
 		this.questionOptions = questionOptions;
 	}
 
+	public Question getParentQuestion() {
+		return parentQuestion;
+	}
+
+	public void setParentQuestion(Question parentQuestion) {
+		this.parentQuestion = parentQuestion;
+	}
+
+	public Section getSection() {
+		return section;
+	}
+
+	public void setSection(Section section) {
+		this.section = section;
+	}
+
 	/**
 	 * @return The questions
 	 */
@@ -90,5 +136,4 @@ public class Question implements Serializable {
 	public void setQuestions(List<Question> questions) {
 		this.questions = questions;
 	}
-
 }

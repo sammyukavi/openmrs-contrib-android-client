@@ -7,57 +7,85 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-
 package org.openmrs.mobile.models;
 
 import android.graphics.Bitmap;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.OneToMany;
+import com.raizlabs.android.dbflow.annotation.Table;
+
+import org.openmrs.mobile.data.db.AppDatabase;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+@Table(database = AppDatabase.class)
 public class Person extends BaseOpenmrsEntity implements Serializable {
-
-	private Integer personId;
-
-	@SerializedName("names")
-	@Expose
-	private List<PersonName> names = new ArrayList<PersonName>();
 	@SerializedName("gender")
 	@Expose
+	@Column
 	private String gender;
+
 	@SerializedName("birthdate")
 	@Expose
+	@Column
 	private String birthdate;
+
 	@SerializedName("birthdateEstimated")
 	@Expose
+	@Column
 	private boolean birthdateEstimated;
-	@SerializedName("addresses")
-	@Expose
-	private List<PersonAddress> addresses = new ArrayList<PersonAddress>();
-	@SerializedName("attributes")
-	@Expose
-	private List<PersonAttribute> attributes = new ArrayList<PersonAttribute>();
 
 	private Bitmap photo;
 
 	@SerializedName("deathDate")
 	@Expose
+	@Column
 	private String deathDate;
 
 	@SerializedName("age")
 	@Expose
+	@Column
 	private Integer age;
 
-	public Integer getPersonId() {
-		return personId;
+	@SerializedName("names")
+	@Expose
+	private List<PersonName> names = new ArrayList<PersonName>();
+
+	@SerializedName("addresses")
+	@Expose
+	private List<PersonAddress> addresses = new ArrayList<PersonAddress>();
+
+	@SerializedName("attributes")
+	@Expose
+	private List<PersonAttribute> attributes = new ArrayList<PersonAttribute>();
+
+	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "names", isVariablePrivate = true)
+	List<PersonName> loadNames() {
+		return loadRelatedObject(PersonName.class, names, () -> PersonName_Table.person_uuid.eq(getUuid()));
 	}
 
-	public void setPersonId(Integer personId) {
-		this.personId = personId;
+	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "addresses", isVariablePrivate = true)
+	List<PersonAddress> loadAddresses() {
+		return loadRelatedObject(PersonAddress.class, addresses, () -> PersonAddress_Table.person_uuid.eq(getUuid()));
+	}
+
+	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "attributes", isVariablePrivate = true)
+	List<PersonAttribute> loadAttributes() {
+		return loadRelatedObject(PersonAttribute.class, attributes, () -> PersonAttribute_Table.person_uuid.eq(getUuid()));
+	}
+
+	@Override
+	protected void processRelationships() {
+		super.processRelationships();
+
+		processRelatedObjects(names, (n) -> n.setPerson(this));
+		processRelatedObjects(addresses, (a) -> a.setPerson(this));
+		processRelatedObjects(attributes, (a) -> a.setPerson(this));
 	}
 
 	/**
@@ -114,6 +142,10 @@ public class Person extends BaseOpenmrsEntity implements Serializable {
 	 * @return The birthdateEstimated
 	 */
 	public boolean getBirthdateEstimated() {
+		return birthdateEstimated;
+	}
+
+	boolean isBirthdateEstimated() {
 		return birthdateEstimated;
 	}
 

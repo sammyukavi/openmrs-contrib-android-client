@@ -9,12 +9,21 @@
  */
 package org.openmrs.mobile.models;
 
+import android.support.annotation.Nullable;
+
+import com.google.common.base.Supplier;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.sql.language.IConditional;
+import com.raizlabs.android.dbflow.sql.language.Operator;
+import com.raizlabs.android.dbflow.sql.language.SQLOperator;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class Resource implements Serializable {
 	private static final long serialVersionUID = 1;
@@ -31,6 +40,7 @@ public class Resource implements Serializable {
 
 	@SerializedName("uuid")
 	@Expose
+	@PrimaryKey
 	protected String uuid;
 
 	@SerializedName("display")
@@ -83,4 +93,34 @@ public class Resource implements Serializable {
 		this.links = links;
 	}
 
+	protected void processRelationships() {
+		return;
+	}
+
+	protected <E extends Resource> void processRelatedObjects(@Nullable List<E> resources) {
+		processRelatedObjects(resources, null);
+	}
+
+	protected <E extends Resource> void processRelatedObjects(@Nullable List<E> resources, @Nullable Consumer<E> process) {
+		if (resources != null && !resources.isEmpty()) {
+			for (E r : resources) {
+				if (process != null) {
+					process.accept(r);
+				}
+
+				r.processRelationships();
+			}
+		}
+	}
+
+	protected <E> List<E> loadRelatedObject(Class<E> cls, List<E> field, Supplier<SQLOperator> op) {
+		if (field == null || field.isEmpty()) {
+			field = SQLite.select()
+					.from(cls)
+					.where(op.get())
+					.queryList();
+		}
+
+		return field;
+	}
 }

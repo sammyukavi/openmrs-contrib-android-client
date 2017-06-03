@@ -12,19 +12,26 @@ package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.OneToMany;
+import com.raizlabs.android.dbflow.annotation.Table;
+
+import org.openmrs.mobile.data.db.AppDatabase;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+@Table(database = AppDatabase.class)
 public class Form extends Resource implements Serializable {
-
 	@SerializedName("name")
 	@Expose
+	@Column
 	private String name;
 
 	@SerializedName("processor")
 	@Expose
+	@Column
 	private String processor;
 
 	@SerializedName("pages")
@@ -33,7 +40,20 @@ public class Form extends Resource implements Serializable {
 
 	@SerializedName("valueReference")
 	@Expose
+	@Column
 	private String valueReference;
+
+	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "pages", isVariablePrivate = true)
+	List<Page> loadPages() {
+		return loadRelatedObject(Page.class, pages, () -> Page_Table.form_uuid.eq(getUuid()));
+	}
+
+	@Override
+	protected void processRelationships() {
+		super.processRelationships();
+
+		processRelatedObjects(pages, (p) -> p.setForm(this));
+	}
 
 	/**
 	 * @return The name
@@ -84,5 +104,4 @@ public class Form extends Resource implements Serializable {
 	public void setPages(List<Page> pages) {
 		this.pages = pages;
 	}
-
 }

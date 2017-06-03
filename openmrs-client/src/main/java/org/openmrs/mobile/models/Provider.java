@@ -1,24 +1,21 @@
 package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.Table;
 
+import org.openmrs.mobile.data.db.AppDatabase;
+
+@Table(database = AppDatabase.class)
 public class Provider extends BaseOpenmrsMetadata {
-
-	private Integer providerId;
-
 	@Expose
+	@ForeignKey(stubbedRelationship = true)
 	private Person person;
 
 	@Expose
+	@Column
 	private String identifier;
-
-	public Integer getProviderId() {
-		return providerId;
-	}
-
-	public void setProviderId(Integer providerId) {
-		this.providerId = providerId;
-	}
 
 	public Person getPerson() {
 		return person;

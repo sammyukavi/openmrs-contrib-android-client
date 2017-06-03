@@ -15,31 +15,26 @@
 package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.Table;
 
+import org.openmrs.mobile.data.db.AppDatabase;
+
+@Table(database = AppDatabase.class)
 public class ConceptAnswer extends BaseOpenmrsObject {
-
-	// Fields
-	private Integer conceptAnswerId;
-
 	/**
 	 * The question concept that this object is answering
 	 */
 	@Expose
+	@ForeignKey
 	private Concept concept;
 
 	/**
 	 * The answer to the question
 	 */
 	@Expose
+	@ForeignKey
 	private Concept answerConcept;
-
-	public Integer getConceptAnswerId() {
-		return conceptAnswerId;
-	}
-
-	public void setConceptAnswerId(Integer conceptAnswerId) {
-		this.conceptAnswerId = conceptAnswerId;
-	}
 
 	public Concept getConcept() {
 		return concept;

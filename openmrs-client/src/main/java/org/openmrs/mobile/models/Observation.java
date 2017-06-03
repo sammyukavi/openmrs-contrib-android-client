@@ -12,52 +12,79 @@ package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+
+import org.openmrs.mobile.data.db.AppDatabase;
 
 import java.io.Serializable;
 
+@Table(database = AppDatabase.class)
 public class Observation extends BaseOpenmrsEntity implements Serializable {
-
 	@SerializedName("concept")
 	@Expose
+	@ForeignKey(stubbedRelationship = true)
 	private Concept concept;
+
 	@SerializedName("person")
 	@Expose
+	@ForeignKey(stubbedRelationship = true)
 	private Person person;
+
 	@SerializedName("obsDatetime")
 	@Expose
+	@Column
 	private String obsDatetime;
 
 	@SerializedName("accessionNumber")
 	@Expose
+	@Column
 	private String accessionNumber;
 
 	@SerializedName("obsGroup")
 	@Expose
+	@ForeignKey(stubbedRelationship = true)
 	private Observation obsGroup;
+
 	@SerializedName("valueCodedName")
 	@Expose
+	@Column
 	private String valueCodedName;
+
 	@SerializedName("comment")
 	@Expose
+	@Column
 	private String comment;
+
 	@SerializedName("location")
 	@Expose
+	@Column
 	private String location = null;
+
 	@SerializedName("encounter")
 	@Expose
+	@ForeignKey
 	private Encounter encounter = null;
+
 	@SerializedName("formFieldPath")
 	@Expose
+	@Column
 	private String formFieldPath;
+
 	@SerializedName("formFieldNamespace")
 	@Expose
+	@Column
 	private String formFieldNamespace;
+
 	@SerializedName("resourceVersion")
 	@Expose
+	@Column
 	private String resourceVersion;
 
-	@Expose
 	@SerializedName("value")
+	@Expose
+	@Column
 	private String value;
 
 	@SerializedName("auditInfo")

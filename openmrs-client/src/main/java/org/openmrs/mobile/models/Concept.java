@@ -11,24 +11,47 @@ package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.OneToMany;
+import com.raizlabs.android.dbflow.annotation.Table;
+
+import org.openmrs.mobile.data.db.AppDatabase;
 
 import java.util.List;
 
+@Table(database = AppDatabase.class)
 public class Concept extends BaseOpenmrsObject {
 	@SerializedName("datatype")
 	@Expose
+	@ForeignKey
 	private Datatype datatype;
 
 	@SerializedName("description")
 	@Expose
+	@Column
 	private String description;
 
 	@SerializedName("conceptClass")
 	@Expose
+	@ForeignKey
 	private ConceptClass conceptClass;
+
 	@SerializedName("answers")
 	@Expose
 	private List<ConceptAnswer> answers;
+
+	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "answers", isVariablePrivate = true)
+	List<ConceptAnswer> loadAnswers() {
+		return loadRelatedObject(ConceptAnswer.class, answers, () -> ConceptAnswer_Table.concept_uuid.eq(getUuid()));
+	}
+
+	@Override
+	protected void processRelationships() {
+		super.processRelationships();
+
+		processRelatedObjects(answers, (a) -> a.setConcept(this));
+	}
 
 	public Datatype getDatatype() {
 		return datatype;

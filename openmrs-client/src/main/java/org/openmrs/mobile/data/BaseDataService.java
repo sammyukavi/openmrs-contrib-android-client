@@ -12,6 +12,8 @@ import org.openmrs.mobile.data.db.BaseDbService;
 import org.openmrs.mobile.data.rest.RestServiceBuilder;
 import org.openmrs.mobile.models.BaseOpenmrsObject;
 import org.openmrs.mobile.models.Results;
+import org.openmrs.mobile.utilities.Consumer;
+import org.openmrs.mobile.utilities.Function;
 import org.openmrs.mobile.utilities.NetworkUtils;
 import org.openmrs.mobile.utilities.StringUtils;
 
@@ -409,14 +411,6 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 
 	protected boolean isPagingValid(PagingInfo pagingInfo) {
 		return !(pagingInfo == null || pagingInfo.getPage() == 0);
-	}
-
-	private interface Consumer<T> {
-		void accept(T value);
-	}
-
-	private interface Function<R, T> {
-		T apply(R value);
 	}
 }
 

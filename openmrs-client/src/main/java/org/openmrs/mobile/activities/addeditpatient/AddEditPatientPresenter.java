@@ -388,7 +388,6 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		if (null != getPatient() && null != getPatient().getPerson().getAttributes()) {
 			for (PersonAttribute personAttribute : getPatient().getPerson().getAttributes()) {
 				if (personAttribute.getAttributeType().getUuid().equalsIgnoreCase(personAttributeType.getUuid())) {
-					System.out.println(personAttribute.getValue() + " the person attribute value ");
 					return (T)personAttribute.getValue();
 				}
 			}

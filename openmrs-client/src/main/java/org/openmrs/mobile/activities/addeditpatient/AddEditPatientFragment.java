@@ -354,19 +354,6 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 
 				textInputLayout.addView(booleanType);
 				viewPersonAttributeTypeMap.put(booleanType, personAttributeType);
-			} else if (datatypeClass.equalsIgnoreCase("org.openmrs.customdatatype.datatype.DateDatatype")) {
-				TextInputEditText inputEditText = new TextInputEditText(getContext());
-				inputEditText.setFocusable(true);
-				inputEditText.setTextSize(14);
-				inputEditText.setLayoutParams(marginParams);
-
-				// set default value
-				String defaultValue = mPresenter.searchPersonAttributeValueByType(personAttributeType);
-				if (StringUtils.notEmpty(defaultValue)) {
-					inputEditText.setText(defaultValue);
-				}
-				textInputLayout.addView(inputEditText);
-				viewPersonAttributeTypeMap.put(inputEditText, personAttributeType);
 			} else if (datatypeClass.equalsIgnoreCase("org.openmrs.Concept")) {
 				// get coded concept uuid
 				String conceptUuid = personAttributeType.getConcept().getUuid();
@@ -411,9 +398,6 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				ConceptAnswer conceptAnswer = conceptAnswers.get(position);
-
-				System.out.println(conceptAnswer.getUuid() + " the concept answer uuid ");
-				System.out.println(personAttributeType.getDisplay() + " the attribute type name ");
 
 				PersonAttribute personAttribute = new PersonAttribute();
 				personAttribute.setValue(conceptAnswer.getUuid());
@@ -552,9 +536,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 
 	private <T extends BaseOpenmrsObject> void setDefaultDropdownSelection(ArrayAdapter<T> arrayAdapter, String searchUuid,
 			Spinner dropdown) {
-		System.out.println("Array adapter " + arrayAdapter.getCount());
 		for (int count = 0; count < arrayAdapter.getCount(); count++) {
-			System.out.println("Search uuid " + searchUuid);
 			if (arrayAdapter.getItem(count).getUuid().equalsIgnoreCase(searchUuid)) {
 				dropdown.setSelection(count);
 			}

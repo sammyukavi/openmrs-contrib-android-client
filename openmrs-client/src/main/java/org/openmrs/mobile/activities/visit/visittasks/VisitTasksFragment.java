@@ -22,13 +22,11 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -58,8 +56,8 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 	private View mRootView;
 	private RecyclerView openViewTasksRecyclerView;
 	private LinearLayoutManager layoutManager;
-	private LinearLayout addTaskLayout;
-	private LinearLayout closedTasksLayout;
+	private LinearLayout addTaskLayout, closedTasksLayout, visitTasksTab;
+	private RelativeLayout visitTasksProgressBar;
 
 	private List<VisitPredefinedTask> predefinedTasks;
 	private List<VisitTask> visitTasksLists;
@@ -100,6 +98,8 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 		addtask = (AutoCompleteTextView)v.findViewById(R.id.addVisitTasks);
 		addTaskLayout = (LinearLayout)v.findViewById(R.id.addTaskLayout);
 		closedTasksLayout = (LinearLayout)v.findViewById(R.id.closedTasksLayout);
+		visitTasksTab = (LinearLayout)v.findViewById(R.id.visitTasksTab);
+		visitTasksProgressBar = (RelativeLayout)v.findViewById(R.id.visitTasksProgressBar);
 
 		noVisitTasks = (TextView)v.findViewById(R.id.noVisitTasks);
 	}
@@ -259,14 +259,28 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 	@Override
 	public void setVisit(Visit visit) {
 		this.visit = visit;
-		if (!visit.getStopDatetime().equalsIgnoreCase(null)) {
-			addTaskLayout.setVisibility(View.GONE);
+		if (visit != null){
+			if (!visit.getStopDatetime().equalsIgnoreCase(null)) {
+				addTaskLayout.setVisibility(View.GONE);
+			}
 		}
+
 	}
 
 	@Override
 	public void clearTextField() {
 		addtask.setText(ApplicationConstants.EMPTY_STRING);
+	}
+
+	@Override
+	public void showTabSpinner(boolean visibility) {
+		if (visibility) {
+			visitTasksProgressBar.setVisibility(View.VISIBLE);
+			visitTasksTab.setVisibility(View.GONE);
+		} else {
+			visitTasksProgressBar.setVisibility(View.GONE);
+			visitTasksTab.setVisibility(View.VISIBLE);
+		}
 	}
 
 	public List<VisitPredefinedTask> removeUsedPredefinedTasks(List<VisitPredefinedTask> visitPredefinedTask,

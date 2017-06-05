@@ -22,7 +22,6 @@ import java.util.List;
 
 public class Visit extends BaseOpenmrsEntity implements Serializable {
 
-	private Long id;
 	@SerializedName("visitType")
 	@Expose
 	private VisitType visitType;
@@ -60,14 +59,6 @@ public class Visit extends BaseOpenmrsEntity implements Serializable {
 
 	public void setPatient(Patient patient) {
 		this.patient = patient;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public VisitType getVisitType() {

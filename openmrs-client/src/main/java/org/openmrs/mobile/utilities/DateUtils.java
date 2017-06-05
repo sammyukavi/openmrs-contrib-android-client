@@ -213,33 +213,6 @@ public final class DateUtils {
 
 		long durationInSeconds = TimeUnit.MILLISECONDS.toSeconds(endDate.getTime() - startDate.getTime());
 
-		/*long SECONDS_IN_A_MINUTE = 60;
-		long MINUTES_IN_AN_HOUR = 60;
-		long HOURS_IN_A_DAY = 24;
-		long DAYS_IN_A_WEEK = 7;
-		long DAYS_IN_A_MONTH = 30;
-		long MONTHS_IN_A_YEAR = 12;
-
-		long sec = (durationInSeconds >= SECONDS_IN_A_MINUTE) ? durationInSeconds % SECONDS_IN_A_MINUTE : durationInSeconds;
-		long min = (durationInSeconds /= SECONDS_IN_A_MINUTE) >= MINUTES_IN_AN_HOUR ?
-				durationInSeconds % MINUTES_IN_AN_HOUR :
-				durationInSeconds;
-		long hrs = (durationInSeconds /= MINUTES_IN_AN_HOUR) >= HOURS_IN_A_DAY ?
-				durationInSeconds % HOURS_IN_A_DAY :
-				durationInSeconds;
-		long days = (durationInSeconds /= HOURS_IN_A_DAY) >= DAYS_IN_A_WEEK ?
-				durationInSeconds % DAYS_IN_A_WEEK :
-				durationInSeconds;
-		long weeks = (durationInSeconds /= DAYS_IN_A_WEEK) >= DAYS_IN_A_MONTH ?
-				durationInSeconds % DAYS_IN_A_MONTH :
-				durationInSeconds;
-		long months = (durationInSeconds /= DAYS_IN_A_MONTH) >= MONTHS_IN_A_YEAR ?
-				durationInSeconds % MONTHS_IN_A_YEAR :
-				durationInSeconds;
-		long years = (durationInSeconds /= MONTHS_IN_A_YEAR);
-
-		return getDuration(sec, min, hrs, days, weeks, months, years, minimum);*/
-
 		String relative = "";
 
 		long SECONDS_IN_A_MINUTE = 60;
@@ -251,25 +224,25 @@ public final class DateUtils {
 
 		if (minimum) {
 			if (Math.round(durationInSeconds / 60) < 1) {
-				return "1min";
+				relative = durationInSeconds <= 1 ? "1 sec" : durationInSeconds + "secs";
 			} else if (Math.round(durationInSeconds / SECONDS_IN_A_MINUTE) < 60) {
 				int minutes = Math.round(durationInSeconds / SECONDS_IN_A_MINUTE);
 				relative = (minutes == 1 ? "1 min" : minutes + " mins");
 			} else if (Math.round(durationInSeconds / SECONDS_IN_AN_HOUR) < 24) {
 				int minutes = Math.round(durationInSeconds / SECONDS_IN_AN_HOUR);
-				relative = (minutes == 1 ? "1 h" : minutes + " hrs");
+				relative = (minutes == 1 ? "1 hr" : minutes + " hrs");
 			} else if (Math.round(durationInSeconds / SECONDS_IN_A_DAY) < 7) {
 				int days = Math.round(durationInSeconds / SECONDS_IN_A_DAY);
-				relative = (days == 1 ? "1 d" : days + " ds");
+				relative = (days == 1 ? "1 day" : days + " days");
 			} else if (Math.round(durationInSeconds / SECONDS_IN_A_WEEK) < 4) {
 				int weeks = Math.round(durationInSeconds / SECONDS_IN_A_WEEK);
 				relative = (weeks == 1 ? "1 wk" : weeks + " wks");
 			} else if (Math.round(durationInSeconds / SECONDS_IN_A_MONTH) < 4) {
 				int months = Math.round(durationInSeconds / SECONDS_IN_A_MONTH);
-				relative = (months == 1 ? "1 m" : months + " ms");
+				relative = (months == 1 ? "1 month" : months + " months");
 			} else {
 				int years = Math.round(durationInSeconds / SECONDS_IN_A_YEAR);
-				relative = (years == 1 ? "1 y" : years + " yrs");
+				relative = (years == 1 ? "1 yr" : years + " yrs");
 			}
 		} else {
 
@@ -300,17 +273,17 @@ public final class DateUtils {
 	}
 
 	public static String calculateTimeDifference(String startDate, String stopDate) {
-		return calculateTimeDifference(startDate, stopDate, false);
+		return calculateTimeDifference(startDate, stopDate, true);
 	}
 
 	public static String calculateTimeDifference(String startDate, boolean minimum) {
 		return calculateTimeDifference(startDate, new SimpleDateFormat(OPEN_MRS_RESPONSE_FORMAT).format(new Date()),
-				minimum);
+				minimum) + " ago";
 	}
 
 	public static String calculateTimeDifference(String startDate) {
 		return calculateTimeDifference(startDate, new SimpleDateFormat(OPEN_MRS_RESPONSE_FORMAT).format(new Date()),
-				true);
+				true) + " ago";
 	}
 
 	private static String getDuration(long secs, long mins, long hrs, long days, long weeks, long months, long years,

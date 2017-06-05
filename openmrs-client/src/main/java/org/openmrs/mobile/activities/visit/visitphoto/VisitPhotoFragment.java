@@ -32,15 +32,17 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.openmrs.mobile.R;
@@ -81,7 +83,9 @@ public class VisitPhotoFragment extends VisitFragment implements VisitContract.V
 	private ImageView visitImageView;
 	private FloatingActionButton capturePhoto;
 	private Bitmap visitPhoto = null;
-	private Button uploadVisitPhotoButton;
+	private AppCompatButton uploadVisitPhotoButton;
+	private RelativeLayout visitPhotoProgressBar;
+	private LinearLayout visitPhotoTab;
 
 	private File output;
 	private EditText fileCaption;
@@ -106,9 +110,12 @@ public class VisitPhotoFragment extends VisitFragment implements VisitContract.V
 
 		capturePhoto = (FloatingActionButton)root.findViewById(R.id.capture_photo);
 		visitImageView = (ImageView)root.findViewById(R.id.visitPhoto);
-		uploadVisitPhotoButton = (Button)root.findViewById(R.id.uploadVisitPhoto);
+		uploadVisitPhotoButton = (AppCompatButton)root.findViewById(R.id.uploadVisitPhoto);
 		fileCaption = (EditText)root.findViewById(R.id.fileCaption);
 		noVisitImage = (TextView)root.findViewById(R.id.noVisitImage);
+
+		visitPhotoProgressBar = (RelativeLayout)root.findViewById(R.id.visitPhotoProgressBar);
+		visitPhotoTab = (LinearLayout)root.findViewById(R.id.visitPhotoTab);
 
 		addListeners();
 
@@ -137,6 +144,7 @@ public class VisitPhotoFragment extends VisitFragment implements VisitContract.V
 		fileCaption.setText(ApplicationConstants.EMPTY_STRING);
 		FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
 		fragmentTransaction.detach(this).attach(this).commit();
+		mPresenter.subscribe();
 	}
 
 	@Override
@@ -148,6 +156,17 @@ public class VisitPhotoFragment extends VisitFragment implements VisitContract.V
 	@Override
 	public String formatVisitImageDescription(String description, String uploadedOn, String uploadedBy) {
 		return getString(R.string.visit_image_description, description, uploadedOn, uploadedBy);
+	}
+
+	@Override
+	public void showTabSpinner(boolean visibility) {
+		if (visibility) {
+			visitPhotoTab.setVisibility(View.GONE);
+			visitPhotoProgressBar.setVisibility(View.VISIBLE);
+		} else {
+			visitPhotoTab.setVisibility(View.VISIBLE);
+			visitPhotoProgressBar.setVisibility(View.GONE);
+		}
 	}
 
 	@NeedsPermission({ Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE })

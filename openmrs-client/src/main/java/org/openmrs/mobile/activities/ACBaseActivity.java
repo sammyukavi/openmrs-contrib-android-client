@@ -42,6 +42,7 @@ import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.application.OpenMRSLogger;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.databases.OpenMRSDBOpenHelper;
+import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.net.AuthorizationManager;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 
@@ -129,10 +130,11 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 		createAndShowDialog(bundle, ApplicationConstants.DialogTAG.LOGOUT_DIALOG_TAG);
 	}
 
-	public void showEndVisitDialog() {
+	public void showEndVisitDialog(Visit visit) {
 		CustomDialogBundle bundle = new CustomDialogBundle();
 		bundle.setTitleViewMessage(getString(R.string.end_visit_dialog_title));
 		bundle.setTextViewMessage(getString(R.string.end_visit_dialog_message));
+		bundle.setVisit(visit);
 		bundle.setRightButtonAction(CustomFragmentDialog.OnClickAction.END_VISIT);
 		bundle.setRightButtonText(getString(R.string.dialog_button_confirm));
 		createAndShowDialog(bundle, ApplicationConstants.DialogTAG.END_VISIT_DIALOG_TAG);

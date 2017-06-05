@@ -89,6 +89,7 @@ public class CustomFragmentDialog extends DialogFragment {
 	private Button mLeftButton, mRightButton;
 	private CustomDialogBundle mCustomDialogBundle;
 	private AutoCompleteTextView autoCompleteTextView;
+	private Visit visit;
 
 	public static CustomFragmentDialog newInstance(CustomDialogBundle customDialogBundle) {
 		CustomFragmentDialog dialog = new CustomFragmentDialog();
@@ -235,6 +236,10 @@ public class CustomFragmentDialog extends DialogFragment {
 
 		if (null != mCustomDialogBundle.getEditNoteTextViewMessage()) {
 			mEditNoteText = addEditNoteTextField(mCustomDialogBundle.getEditNoteTextViewMessage());
+		}
+
+		if (null != mCustomDialogBundle.getVisit()){
+			this.visit = mCustomDialogBundle.getVisit();
 		}
 
 	}
@@ -418,7 +423,7 @@ public class CustomFragmentDialog extends DialogFragment {
 						dismiss();
 						break;
 					case END_VISIT:
-						((AddEditVisitActivity)getActivity()).addEditVisitPresenter.endVisit();
+						((AddEditVisitActivity)getActivity()).addEditVisitPresenter.endVisit(visit);
 						dismiss();
 						break;
 					case START_VISIT:

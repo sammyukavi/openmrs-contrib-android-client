@@ -29,7 +29,6 @@ import org.openmrs.mobile.data.impl.PatientDataService;
 import org.openmrs.mobile.data.impl.PatientIdentifierTypeDataService;
 import org.openmrs.mobile.data.impl.PersonAttributeTypeDataService;
 import org.openmrs.mobile.models.Concept;
-import org.openmrs.mobile.models.ConceptAnswer;
 import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.PatientIdentifierType;
@@ -58,6 +57,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 	private boolean registeringPatient = false;
 	private OpenMRS instance = OpenMRS.getInstance();
 	private String locationUuid;
+	private String conceptUuid;
 
 	private int page = 0;
 	private int limit = 10;
@@ -222,7 +222,6 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 			@Override
 			public void onCompleted(Patient entity) {
 				setRegistering(false);
-				patientRegistrationView.showPageSpinner(false);
 				if (entity != null) {
 					patientRegistrationView.finishAddPatientActivity();
 					patientRegistrationView.startPatientDashboardActivity(entity);
@@ -279,10 +278,10 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 
 	@Override
 	public void getConceptAnswer(String uuid, Spinner dropdown) {
-		conceptAnswerDataService.getByConceptUuid(uuid, null, new DataService.GetCallback<List<ConceptAnswer>>() {
+		conceptDataService.getByUUID(uuid, QueryOptions.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Concept>() {
 			@Override
-			public void onCompleted(List<ConceptAnswer> entities) {
-				patientRegistrationView.updateConceptAnswerView(dropdown, entities);
+			public void onCompleted(Concept concept) {
+				patientRegistrationView.updateConceptAnswerView(dropdown, concept.getAnswers());
 			}
 
 			@Override
@@ -315,7 +314,9 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 										.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 					}
 				};
-		patientIdentifierTypeDataService.getAll(QueryOptions.LOAD_RELATED_OBJECTS, null, callback);
+		patientIdentifierTypeDataService
+				.getAll(new QueryOptions(false, true, ApplicationConstants.CacheKays.PERSON_ATTRIBUTE_TYPE), null,
+						callback);
 	}
 
 	@Override
@@ -387,7 +388,6 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		if (null != getPatient() && null != getPatient().getPerson().getAttributes()) {
 			for (PersonAttribute personAttribute : getPatient().getPerson().getAttributes()) {
 				if (personAttribute.getAttributeType().getUuid().equalsIgnoreCase(personAttributeType.getUuid())) {
-					System.out.println((T)personAttribute.getValue() + " the person attribute value ");
 					return (T)personAttribute.getValue();
 				}
 			}

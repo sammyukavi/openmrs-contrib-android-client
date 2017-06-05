@@ -21,7 +21,7 @@
 	<string name="aadbname">aaopenmrs.db</string>
 
 
-	<!-- LoginActivity view -->
+	<!-- LoginActivity visitPhotoView -->
 	<string name="login_button">Login</string>
 	<string name="login_url_hint">URL address</string>
 	<string name="login_username_hint">Username</string>
@@ -404,7 +404,7 @@
 	<string name="no_patient_list">No patient lists found!</string>
 	<string name="number_of_patients">%1$s patients found</string>
 	<string name="search_for_patients">Please type the first 3 characters of the patient name on the search bar for you to
-		view meaningful results</string>
+		visitPhotoView meaningful results</string>
 	<string name="patient_metadata_label">Patient Contact Information</string>
 	<string name="add_visit_task_dialog_title">Add Visit Task</string>
 	<string name="visit_tasks_dialog_message">add a visit task</string>
@@ -497,7 +497,7 @@
 	<string name="sign_pulse">/min</string>
 	<string name="error_text_vitals_maximum">Maximum: %1$d</string>
 	<string name="error_text_vitals_minimum">Minimum: %1$d</string>
-	<string name="error_occured">An error occured making your request</string>
+	<string name="error_occured">An error occurred making your request</string>
 	<string name="saved">Saved</string>
 	<string name="in_complete">Incomplete</string>
 	<string name="update_visit">Update Visit</string>
@@ -507,5 +507,7 @@
 	<string name="no_predefined_tasks">No predefined tasks</string>
 	<string name="started">Started:</string>
 	<string name="duration">Dur: %1$s</string>
+	<string name="visit_duration">Duration: %1$s</string>
 	<string name="no_visit">Patient has no visit</string>
+	<string name="save_photo">Save Photo</string>
 </resources>

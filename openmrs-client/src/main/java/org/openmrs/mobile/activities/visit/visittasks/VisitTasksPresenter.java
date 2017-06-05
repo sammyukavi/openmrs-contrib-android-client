@@ -62,20 +62,19 @@ public class VisitTasksPresenter extends VisitPresenterImpl implements VisitCont
 
 	@Override
 	public void getPredefinedTasks() {
+		visitTasksView.showTabSpinner(true);
 		PagingInfo pagingInfo = new PagingInfo(page, 100);
 		DataService.GetCallback<List<VisitPredefinedTask>> callback = new DataService
 				.GetCallback<List<VisitPredefinedTask>>() {
 			@Override
 			public void onCompleted(List<VisitPredefinedTask> visitPredefinedTasks) {
-				if (visitPredefinedTasks.isEmpty()) {
-					visitTasksView.setPredefinedTasks(visitPredefinedTasks);
-				} else {
-					visitTasksView.setPredefinedTasks(visitPredefinedTasks);
-				}
+				visitTasksView.setPredefinedTasks(visitPredefinedTasks);
+				visitTasksView.showTabSpinner(false);
 			}
 
 			@Override
 			public void onError(Throwable t) {
+				visitTasksView.showTabSpinner(false);
 				visitTasksView
 						.showToast(ApplicationConstants.entityName.PREDEFINED_TASKS + ApplicationConstants.toastMessages
 								.fetchErrorMessage, ToastUtil.ToastType.ERROR);
@@ -86,8 +85,8 @@ public class VisitTasksPresenter extends VisitPresenterImpl implements VisitCont
 
 	@Override
 	public void getVisitTasks() {
+		visitTasksView.showTabSpinner(true);
 		PagingInfo pagingInfo = new PagingInfo(page, limit);
-
 		// get open tasks
 		visitTaskDataService.getAll("OPEN", patientUUID, visitUUID, QueryOptions.LOAD_RELATED_OBJECTS,
 				pagingInfo,
@@ -102,17 +101,20 @@ public class VisitTasksPresenter extends VisitPresenterImpl implements VisitCont
 								new DataService.GetCallback<List<VisitTask>>() {
 									@Override
 									public void onCompleted(List<VisitTask> visitTasksList) {
+										visitTasksView.showTabSpinner(false);
 										visitTasksView.setClosedVisitTasks(visitTasksList);
 									}
 
 									@Override
 									public void onError(Throwable t) {
+										visitTasksView.showTabSpinner(false);
 									}
 								});
 					}
 
 					@Override
 					public void onError(Throwable t) {
+						visitTasksView.showTabSpinner(false);
 					}
 				});
 
@@ -181,17 +183,18 @@ public class VisitTasksPresenter extends VisitPresenterImpl implements VisitCont
 
 	@Override
 	public void getVisit() {
+		visitTasksView.showTabSpinner(true);
 		DataService.GetCallback<Visit> getSingleCallback =
 				new DataService.GetCallback<Visit>() {
 					@Override
 					public void onCompleted(Visit entity) {
-						if (entity != null) {
+						visitTasksView.showTabSpinner(false);
 							visitTasksView.setVisit(entity);
-						}
 					}
 
 					@Override
 					public void onError(Throwable t) {
+						visitTasksView.showTabSpinner(false);
 						visitTasksView
 								.showToast(ApplicationConstants.entityName.VISITS + ApplicationConstants.toastMessages
 										.fetchErrorMessage, ToastUtil.ToastType.ERROR);

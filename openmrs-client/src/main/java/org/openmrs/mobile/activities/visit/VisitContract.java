@@ -53,6 +53,8 @@ public interface VisitContract {
 
 		void clearTextField();
 
+		void showTabSpinner(boolean visibility);
+
 	}
 
 	interface VisitDetailsView extends ViewVisitDetailsMain {
@@ -85,6 +87,8 @@ public interface VisitContract {
 		void showNoVisitPhoto();
 
 		String formatVisitImageDescription(String description, String uploadedOn, String uploadedBy);
+
+		void showTabSpinner(boolean visibility);
 	}
 
 	/*

@@ -19,6 +19,7 @@ import android.os.Bundle;
 
 import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
 import org.openmrs.mobile.models.Patient;
+import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitPredefinedTask;
 
 import java.io.Serializable;
@@ -43,6 +44,7 @@ public class CustomDialogBundle implements Serializable {
 	private boolean disableAutoCompleteText;
 	private String editNoteTextViewMessage;
 	private Bundle arguments;
+	private Visit visit;
 
 	public boolean hasProgressDialog() {
 		return progressDialog;
@@ -182,5 +184,13 @@ public class CustomDialogBundle implements Serializable {
 
 	public void setArguments(Bundle arguments) {
 		this.arguments = arguments;
+	}
+
+	public Visit getVisit() {
+		return visit;
+	}
+
+	public void setVisit(Visit visit) {
+		this.visit = visit;
 	}
 }

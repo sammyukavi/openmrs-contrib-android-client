@@ -27,7 +27,7 @@ import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
 import org.openmrs.mobile.activities.patientheader.PatientHeaderFragment;
 import org.openmrs.mobile.activities.patientheader.PatientHeaderPresenter;
 import org.openmrs.mobile.activities.visit.VisitActivity;
-import org.openmrs.mobile.application.OpenMRS;
+import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.StringUtils;
 import org.openmrs.mobile.utilities.TabUtil;
@@ -43,10 +43,11 @@ public class AddEditVisitActivity extends ACBaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getLayoutInflater().inflate(R.layout.activity_addedit_visit, frameLayout);
+		getLayoutInflater().inflate(R.layout.activity_add_edit_visit, frameLayout);
 
 		Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
 		toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white);
+		toolbar.setTitle(ApplicationConstants.EMPTY_STRING);
 		setSupportActionBar(toolbar);
 		if (getSupportActionBar() != null) {
 			getSupportActionBar().setElevation(0);
@@ -77,7 +78,9 @@ public class AddEditVisitActivity extends ACBaseActivity {
 				addEditVisitPresenter = new AddEditVisitPresenter(addEditVisitFragment, patientUuid);
 
 				if (extras.getBoolean(ApplicationConstants.BundleKeys.END_VISIT_TAG, false)) {
-					showEndVisitDialog();
+					Visit visit = new Visit();
+					visit.setUuid(visitUuid);
+					showEndVisitDialog(visit);
 				}
 
 				// patient header

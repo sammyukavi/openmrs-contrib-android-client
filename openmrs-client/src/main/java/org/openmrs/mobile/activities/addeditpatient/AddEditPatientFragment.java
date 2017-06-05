@@ -33,7 +33,6 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -54,6 +53,7 @@ import org.openmrs.mobile.application.OpenMRSLogger;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.listeners.watcher.PatientBirthdateValidatorWatcher;
 import org.openmrs.mobile.models.BaseOpenmrsObject;
+import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.ConceptAnswer;
 import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Patient;
@@ -115,6 +115,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 	private Location loginLocation;
 	private OpenMRS instance = OpenMRS.getInstance();
 	private RelativeLayout addEditPatientProgressBar;
+	private Concept answerConcept;
 
 	public static AddEditPatientFragment newInstance() {
 		return new AddEditPatientFragment();
@@ -298,7 +299,6 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
 	}
 
-
 	@Override
 	public void showSimilarPatientDialog(List<Patient> patients, Patient newPatient) {
 		CustomDialogBundle similarPatientsDialog = new CustomDialogBundle();
@@ -316,6 +316,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		Intent intent = new Intent(getActivity(), PatientDashboardActivity.class);
 		intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patient.getPerson().getUuid());
 		startActivity(intent);
+		showPageSpinner(false);
 	}
 
 	@Override
@@ -353,19 +354,6 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 
 				textInputLayout.addView(booleanType);
 				viewPersonAttributeTypeMap.put(booleanType, personAttributeType);
-			} else if (datatypeClass.equalsIgnoreCase("org.openmrs.customdatatype.datatype.DateDatatype")) {
-				TextInputEditText inputEditText = new TextInputEditText(getContext());
-				inputEditText.setFocusable(true);
-				inputEditText.setTextSize(14);
-				inputEditText.setLayoutParams(marginParams);
-
-				// set default value
-				String defaultValue = mPresenter.searchPersonAttributeValueByType(personAttributeType);
-				if (StringUtils.notEmpty(defaultValue)) {
-					inputEditText.setText(defaultValue);
-				}
-				textInputLayout.addView(inputEditText);
-				viewPersonAttributeTypeMap.put(inputEditText, personAttributeType);
 			} else if (datatypeClass.equalsIgnoreCase("org.openmrs.Concept")) {
 				// get coded concept uuid
 				String conceptUuid = personAttributeType.getConcept().getUuid();
@@ -402,18 +390,14 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		conceptNamesDropdown.setAdapter(conceptNameArrayAdapter);
 
 		// set existing patient attribute if any
-		String conceptAnswerUuid = mPresenter.searchPersonAttributeValueByType(personAttributeType);
-		System.out.println(conceptAnswerUuid + " Attribute type uuid");
-		if (null != conceptAnswerUuid) {
-			setDefaultDropdownSelection(conceptNameArrayAdapter, conceptAnswerUuid, conceptNamesDropdown);
-		}
-
+		/*System.out.println(conceptUuid + " Attribute type uuid");
+		if (null != conceptUuid) {
+			setDefaultDropdownSelection(conceptNameArrayAdapter, conceptUuid, conceptNamesDropdown);
+		}*/
 		conceptNamesDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				ConceptAnswer conceptAnswer = conceptAnswers.get(position);
-				System.out.println(conceptAnswer.getUuid() + " the concept uuid ");
-				System.out.println(personAttributeType.getDisplay() + " the attribute type name ");
 
 				PersonAttribute personAttribute = new PersonAttribute();
 				personAttribute.setValue(conceptAnswer.getUuid());
@@ -438,9 +422,9 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 	public void fillFields(final Patient patient) {
 		if (patient != null && patient.getPerson() != null) {
 			//Change to Update Patient Form
-			String updatePatientStr = getResources().getString(R.string.action_update_patient_data);
-			this.getActivity().setTitle(updatePatientStr);
-			submitConfirm.setText(updatePatientStr);
+			String patientHeaderString = getResources().getString(R.string.action_update_patient_data);
+			this.getActivity().setTitle(patientHeaderString);
+			submitConfirm.setText(patientHeaderString);
 			submitConfirm.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {

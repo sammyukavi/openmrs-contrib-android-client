@@ -33,6 +33,6 @@ public interface ConceptRestService {
 
 	@GET(RestConstants.REST_PATH)
 	Call<Results<Concept>> getByConceptName(@Path(value = "restPath", encoded = true) String restPath,
-			@Query("name") String uuid,
+			@Query("name") String name,
 			@Query("v") String representation);
 }

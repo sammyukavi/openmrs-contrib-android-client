@@ -32,6 +32,8 @@ import org.openmrs.mobile.models.VisitTaskStatus;
 
 import java.util.List;
 
+import static org.openmrs.mobile.R.color.black;
+
 class VisitTasksRecyclerViewAdapter extends RecyclerView.Adapter<VisitTasksRecyclerViewAdapter.FetchedVisitTasksHolder> {
 
 	private Activity mContext;
@@ -65,6 +67,7 @@ class VisitTasksRecyclerViewAdapter extends RecyclerView.Adapter<VisitTasksRecyc
 			}
 			if (visit.getStopDatetime() != null) {
 				holder.visitTasks.setEnabled(false);
+				holder.visitTasks.setTextColor(black);
 			} else {
 				holder.visitTasks.setEnabled(true);
 			}

@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -85,7 +86,8 @@ public class CaptureVitalsFragment extends ACBaseFragment<CaptureVitalsContract.
 	private String visitUuid, patientUuid, visitStopDate;
 	private OpenMRS instance = OpenMRS.getInstance();
 	private Button submitForm;
-	private RelativeLayout progressBar;
+	private RelativeLayout progressBar, captureVitalsProgressBar;
+	private LinearLayout captureVitalsScreen;
 	private ScrollView captureVitalsScrollView;
 
 	public static CaptureVitalsFragment newInstance() {
@@ -140,7 +142,9 @@ public class CaptureVitalsFragment extends ACBaseFragment<CaptureVitalsContract.
 		patientBloodPressureError = (TextView)root.findViewById(R.id.patientBloodPressureError);
 		patientBloodOxygenSaturationError = (TextView)root.findViewById(R.id.patientBloodOxygenSaturationError);
 
-		progressBar = (RelativeLayout)root.findViewById(R.id.captureVitalsProgressBar);
+		progressBar = (RelativeLayout)root.findViewById(R.id.captureVitalsSavingProgressBar);
+		captureVitalsProgressBar = (RelativeLayout)root.findViewById(R.id.captureVitalsProgressBar);
+		captureVitalsScreen = (LinearLayout)root.findViewById(R.id.captureVitalsScreen);
 		captureVitalsScrollView = (ScrollView)root.findViewById(R.id.captureVitalsForm);
 
 		submitForm = (Button)root.findViewById(R.id.submitConfirm);
@@ -383,6 +387,17 @@ public class CaptureVitalsFragment extends ACBaseFragment<CaptureVitalsContract.
 		} else {
 			progressBar.setVisibility(View.GONE);
 			captureVitalsScrollView.setVisibility(View.VISIBLE);
+		}
+	}
+
+	@Override
+	public void showPageSpinner(boolean visibility) {
+		if (visibility) {
+			captureVitalsScreen.setVisibility(View.GONE);
+			captureVitalsProgressBar.setVisibility(View.VISIBLE);
+		} else {
+			captureVitalsScreen.setVisibility(View.VISIBLE);
+			captureVitalsProgressBar.setVisibility(View.GONE);
 		}
 	}
 

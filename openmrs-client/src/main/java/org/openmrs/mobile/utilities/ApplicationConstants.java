@@ -251,4 +251,10 @@ public abstract class ApplicationConstants {
 		public static int VITALS_BLOOD_OXYGEN_MIN = 0;
 		public static int VITALS_BLOOD_OXYGEN_MAX = 100;
 	}
+
+	public static class CacheKays {
+		public static final String VISIT_ATTRIBUTE_TYPE= "visitAttributeType";
+		public static final String PERSON_ATTRIBUTE_TYPE = "personAttributeType";
+		public static final String VISIT_TYPE = "visitType";
+	}
 }

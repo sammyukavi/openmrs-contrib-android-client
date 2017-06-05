@@ -23,7 +23,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -42,15 +41,14 @@ import java.util.List;
  */
 public class PatientListFragment extends ACBaseFragment<PatientListContract.Presenter> implements PatientListContract.View {
 
-	private ProgressBar patientListSpinner;
 	private Spinner patientListDropdown;
 	private TextView emptyPatientList;
 	private TextView noPatientLists;
 	private TextView numberOfPatients;
 	private RecyclerView patientListModelRecyclerView;
 	private LinearLayoutManager layoutManager;
-	private LinearLayout patientListScreen;
-	private RelativeLayout patientListProgressBar;
+	private LinearLayout patientListScreen, patientListRecyclerView;
+	private RelativeLayout patientListProgressBar, patientListLoadingProgressBar;
 
 	private PatientList selectedPatientList;
 
@@ -92,13 +90,14 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View root = inflater.inflate(R.layout.fragment_patient_list, container, false);
-		patientListSpinner = (ProgressBar)root.findViewById(R.id.patientListLoadingProgressBar);
+		patientListLoadingProgressBar = (RelativeLayout)root.findViewById(R.id.patientListLoadingProgressBar);
 		patientListDropdown = (Spinner)root.findViewById(R.id.patientListDropdown);
 		emptyPatientList = (TextView)root.findViewById(R.id.emptyPatientList);
 		noPatientLists = (TextView)root.findViewById(R.id.noPatientLists);
 		numberOfPatients = (TextView)root.findViewById(R.id.numberOfPatients);
 		patientListProgressBar = (RelativeLayout)root.findViewById(R.id.patientListScreenProgressBar);
 		patientListScreen = (LinearLayout)root.findViewById(R.id.patientListScreen);
+		patientListRecyclerView = (LinearLayout)root.findViewById(R.id.patientListRecyclerView);
 
 		layoutManager = new LinearLayoutManager(this.getActivity());
 		patientListModelRecyclerView = (RecyclerView)root.findViewById(R.id.patientListModelRecyclerView);
@@ -133,7 +132,13 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 
 	@Override
 	public void setSpinnerVisibility(boolean visible) {
-		patientListSpinner.setVisibility(visible ? View.VISIBLE : View.GONE);
+		patientListLoadingProgressBar.setVisibility(visible ? View.VISIBLE : View.GONE);
+		patientListRecyclerView.setVisibility(visible ? View.GONE : View.VISIBLE);
+		if (visible) {
+			setNumberOfPatientsView(0);
+			setNoPatientListsVisibility(false);
+			setEmptyPatientListVisibility(false);
+		}
 	}
 
 	@Override

@@ -32,12 +32,20 @@ public abstract class ACBaseFragment<T extends BasePresenterContract> extends Fr
 	@Override
 	public void onResume() {
 		super.onResume();
-		mPresenter.subscribe();
+		if (mPresenter != null) {
+			mPresenter.subscribe();
+		}
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
-		mPresenter.unsubscribe();
+		if (mPresenter != null) {
+			mPresenter.unsubscribe();
+		}
+	}
+
+	public void createSnackbar(String message) {
+		((ACBaseActivity)getActivity()).createSnackbar(message);
 	}
 }

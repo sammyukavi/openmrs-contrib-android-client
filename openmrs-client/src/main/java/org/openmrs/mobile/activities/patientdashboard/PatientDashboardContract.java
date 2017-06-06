@@ -44,6 +44,8 @@ public interface PatientDashboardContract {
 		void upDateProgressBar(boolean show);
 
 		void showPageSpinner(boolean visibility);
+
+		void showNoVisits(boolean visibility);
 	}
 
 	interface Presenter extends BasePresenterContract {

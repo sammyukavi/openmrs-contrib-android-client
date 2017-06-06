@@ -28,6 +28,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.github.clans.fab.FloatingActionButton;
 
@@ -64,6 +65,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	private Location location;
 	private ProgressBar savingProgressBar;
 	private RelativeLayout dashboardProgressBar, dashboardScreen;
+	private TextView noVisitNoteLabel;
 
 	public static PatientDashboardFragment newInstance() {
 		return new PatientDashboardFragment();
@@ -124,6 +126,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		savingProgressBar = (ProgressBar)fragmentView.findViewById(R.id.savingProgressBar);
 		dashboardScreen = (RelativeLayout)fragmentView.findViewById(R.id.dashboardScreen);
 		dashboardProgressBar = (RelativeLayout)fragmentView.findViewById(R.id.dashboardProgressBar);
+		noVisitNoteLabel = (TextView)fragmentView.findViewById(R.id.noVisitNoteLabel);
 	}
 
 	@Override
@@ -254,6 +257,16 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		} else {
 			dashboardProgressBar.setVisibility(View.GONE);
 			dashboardScreen.setVisibility(View.VISIBLE);
+		}
+	}
+
+	@Override
+	public void showNoVisits(boolean visibility) {
+		System.out.println(" I reached here");
+		if (visibility) {
+			noVisitNoteLabel.setVisibility(View.VISIBLE);
+		} else {
+			noVisitNoteLabel.setVisibility(View.GONE);
 		}
 	}
 

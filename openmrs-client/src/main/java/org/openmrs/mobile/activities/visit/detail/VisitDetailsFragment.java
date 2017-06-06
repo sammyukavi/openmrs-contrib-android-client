@@ -182,6 +182,8 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 			setDiagnoses(visit);
 			setAuditData(visit);
 
+			addVisitVitals.setVisibility(visit.getStopDatetime().equalsIgnoreCase(null) ? View.VISIBLE : View.GONE);
+
 		}
 
 	}
@@ -296,7 +298,9 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	@Override
 	public void setAttributeTypes(List<VisitAttributeType> visitAttributeTypes) {
 		visitAttributesLayout.removeAllViews();
+		System.out.println(visit.getAttributes().size() + " this it the attribute size");
 		if (visit.getAttributes().size() == 0) {
+			System.out.println(" i was here ");
 			for (VisitAttributeType visitAttributeType : visitAttributeTypes) {
 				createVisitAttributeTypesLayout(visitAttributeType);
 			}
@@ -360,7 +364,8 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 
 		System.out.println(visitAttribute.getAttributeType().getDisplay() + " the datatype ");
 		if (null != visitAttribute.getAttributeType().getDatatypeConfig()) {
-			((VisitDetailsPresenter)mPresenter).getConceptAnswer(visitAttribute.getAttributeType().getDatatypeConfig(), (String)visitAttribute.getValue(), valueLabelView);
+			((VisitDetailsPresenter)mPresenter).getConceptAnswer(visitAttribute.getAttributeType().getDatatypeConfig(),
+					(String)visitAttribute.getValue(), valueLabelView);
 		} else {
 			valueLabelView.setText(valueLabel);
 		}
@@ -411,7 +416,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 			}
 		} else {
 			noVitals.setVisibility(View.VISIBLE);
-			addVisitVitals.setVisibility(View.GONE);
+			addVisitVitals.setVisibility(View.VISIBLE);
 			visitVitalsTableLayout.setVisibility(View.GONE);
 		}
 	}

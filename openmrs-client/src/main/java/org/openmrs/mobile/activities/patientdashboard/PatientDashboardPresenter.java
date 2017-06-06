@@ -101,28 +101,18 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 					public void onCompleted(List<Visit> visits) {
 						if (!visits.isEmpty()) {
 							patientDashboardView.updateActiveVisitCard(visits);
+						} else {
+							patientDashboardView.showPageSpinner(false);
+							patientDashboardView.showNoVisits(true);
 						}
 					}
 
 					@Override
 					public void onError(Throwable t) {
 						t.printStackTrace();
+						patientDashboardView.showPageSpinner(false);
 					}
 				});
-
-		DataService.GetCallback<List<Visit>> visitsFetchedCallback = new DataService.GetCallback<List<Visit>>() {
-			@Override
-			public void onCompleted(List<Visit> visits) {
-
-			}
-
-			@Override
-			public void onError(Throwable t) {
-
-			}
-		};
-		visitDataService.getByPatient(patient, QueryOptions.LOAD_RELATED_OBJECTS, new PagingInfo(0, 1),
-				visitsFetchedCallback);
 	}
 
 	@Override

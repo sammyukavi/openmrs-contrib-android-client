@@ -47,7 +47,7 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 	private TextView numberOfPatients;
 	private RecyclerView patientListModelRecyclerView;
 	private LinearLayoutManager layoutManager;
-	private LinearLayout patientListScreen, patientListRecyclerView;
+	private LinearLayout patientListScreen, patientListRecyclerView, numberOfPatientsLayout;
 	private RelativeLayout patientListProgressBar, patientListLoadingProgressBar;
 
 	private PatientList selectedPatientList;
@@ -98,6 +98,7 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 		patientListProgressBar = (RelativeLayout)root.findViewById(R.id.patientListScreenProgressBar);
 		patientListScreen = (LinearLayout)root.findViewById(R.id.patientListScreen);
 		patientListRecyclerView = (LinearLayout)root.findViewById(R.id.patientListRecyclerView);
+		numberOfPatientsLayout = (LinearLayout)root.findViewById(R.id.numberOfPatientsLayout);
 
 		layoutManager = new LinearLayoutManager(this.getActivity());
 		patientListModelRecyclerView = (RecyclerView)root.findViewById(R.id.patientListModelRecyclerView);
@@ -112,22 +113,23 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 	@Override
 	public void setEmptyPatientListVisibility(boolean visible) {
 		emptyPatientList.setVisibility(visible ? View.VISIBLE : View.GONE);
+		patientListRecyclerView.setVisibility(visible ? View.GONE : View.VISIBLE);
+		numberOfPatientsLayout.setVisibility(visible ? View.GONE : View.VISIBLE);
 	}
 
 	@Override
 	public void setNoPatientListsVisibility(boolean visible) {
 		noPatientLists.setVisibility(visible ? View.VISIBLE : View.GONE);
+		patientListRecyclerView.setVisibility(visible ? View.GONE : View.VISIBLE);
+		numberOfPatientsLayout.setVisibility(visible ? View.GONE : View.VISIBLE);
 	}
 
 	@Override
 	public void setPatientListScreenVisibility(boolean visible) {
-		if (visible) {
-			patientListScreen.setVisibility(View.VISIBLE);
-			patientListProgressBar.setVisibility(View.GONE);
-		} else {
-			patientListScreen.setVisibility(View.GONE);
-			patientListProgressBar.setVisibility(View.VISIBLE);
-		}
+		patientListScreen.setVisibility(visible ? View.VISIBLE : View.GONE);
+		patientListProgressBar.setVisibility(visible ? View.GONE : View.VISIBLE);
+		patientListRecyclerView.setVisibility(visible ? View.GONE : View.VISIBLE);
+		numberOfPatientsLayout.setVisibility(visible ? View.GONE : View.VISIBLE);
 	}
 
 	@Override

@@ -74,7 +74,7 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 	private long last_text_edit = 0;
 	private Encounter visitNoteEncounter;
 	private LocalDateTime localDateTime;
-	PatientDashboardActivity patientDashboardActivity;
+	private PatientDashboardActivity patientDashboardActivity;
 
 	Runnable input_finish_checker = new Runnable() {
 		public void run() {
@@ -118,7 +118,7 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 					observation = clinicalNoteObs;
 				}
 
-				observation.setValue(visitNote.getText().toString());
+				observation.setValueString(visitNote.getText().toString());
 
 				List<Observation> observationList;
 
@@ -249,13 +249,9 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 			((TextView)singleVisitView.findViewById(R.id.visitTimeago))
 					.setText(DateUtils.calculateTimeDifference(visit.getStartDatetime(), true));
 
-			if (isActiveVisit) {
+			if (!isActiveVisit) {
 				((TextView)singleVisitView.findViewById(R.id.visitDuration))
-						.setText(context.getString(R.string.duration,
-								DateUtils.calculateTimeDifference(visit.getStartDatetime(), true)));
-			} else {
-				((TextView)singleVisitView.findViewById(R.id.visitDuration))
-						.setText(context.getString(R.string.duration,
+						.setText(context.getString(R.string.visit_duration,
 								DateUtils.calculateTimeDifference(visit.getStartDatetime(), visit.getStopDatetime())));
 			}
 

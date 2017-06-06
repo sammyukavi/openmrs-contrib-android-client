@@ -168,9 +168,8 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	public List<VisitAttributeType> loadVisitAttributeTypes() {
 		final List<VisitAttributeType> visitAttributeTypes = new ArrayList<>();
 		visitAttributeTypeDataService
-				.getAll(new QueryOptions(false, true, ApplicationConstants.CacheKays.VISIT_ATTRIBUTE_TYPE),
-						new PagingInfo(0, 100), new DataService
-								.GetCallback<List<VisitAttributeType>>() {
+				.getAll(new QueryOptions(ApplicationConstants.CacheKays.VISIT_ATTRIBUTE_TYPE,true), null,
+						new DataService.GetCallback<List<VisitAttributeType>>() {
 							@Override
 							public void onCompleted(List<VisitAttributeType> entities) {
 								visitAttributeTypes.addAll(entities);
@@ -191,7 +190,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 
 	public void loadVisitTypes() {
 		visitTypeDataService
-				.getAll(new QueryOptions(false, false, ApplicationConstants.CacheKays.VISIT_TYPE), null, new DataService
+				.getAll(new QueryOptions(ApplicationConstants.CacheKays.VISIT_TYPE,false), null, new DataService
 						.GetCallback<List<VisitType>>() {
 					@Override
 					public void onCompleted(List<VisitType> entities) {

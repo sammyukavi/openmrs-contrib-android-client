@@ -315,7 +315,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 					}
 				};
 		patientIdentifierTypeDataService
-				.getAll(new QueryOptions(false, true, ApplicationConstants.CacheKays.PERSON_ATTRIBUTE_TYPE), null,
+				.getAll(new QueryOptions(ApplicationConstants.CacheKays.PERSON_IDENTIFIER_TYPE, false), null,
 						callback);
 	}
 
@@ -324,7 +324,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		patientRegistrationView.showPageSpinner(true);
 		final List<PersonAttributeType> personAttributeTypes = new ArrayList<>();
 		personAttributeTypeDataService
-				.getAll(QueryOptions.LOAD_RELATED_OBJECTS, new PagingInfo(0, 100), new DataService
+				.getAll(new QueryOptions(ApplicationConstants.CacheKays.PERSON_IDENTIFIER_TYPE, true), null, new DataService
 						.GetCallback<List<PersonAttributeType>>() {
 					@Override
 					public void onCompleted(List<PersonAttributeType> entities) {

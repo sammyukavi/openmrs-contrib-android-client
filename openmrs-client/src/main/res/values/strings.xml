@@ -506,7 +506,6 @@
 	<string name="predefined_tasks">Predefined Tasks</string>
 	<string name="no_predefined_tasks">No predefined tasks</string>
 	<string name="started">Started:</string>
-	<string name="duration">Dur: %1$s</string>
 	<string name="visit_duration">Duration: %1$s</string>
 	<string name="no_visit">Patient has no visit</string>
 	<string name="save_photo">Save Photo</string>

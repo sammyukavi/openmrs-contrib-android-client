@@ -25,7 +25,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -175,10 +174,6 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	@Override
 	public void updateActiveVisitCard(List<Visit> visits) {
 
-		if (visits.size() == 0) {
-
-		}
-
 		for (Visit visit : visits) {
 			if (!StringUtils.notNull(visit.getStopDatetime())) {
 				startVisitButton.setVisibility(View.GONE);
@@ -281,7 +276,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
 	@Override
 	public void upDateProgressBar(boolean show) {
-		savingProgressBar.setVisibility(show ? View.VISIBLE : View.GONE);
+		//savingProgressBar.setVisibility(show ? View.VISIBLE : View.GONE);
 	}
 
 	@Override

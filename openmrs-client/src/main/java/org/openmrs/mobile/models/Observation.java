@@ -60,6 +60,10 @@ public class Observation extends BaseOpenmrsEntity implements Serializable {
 	@Expose
 	private Object value;
 
+	@SerializedName("value")
+	@Expose
+	private Object valueString;
+
 	private Long id;
 	private Long encounterID;
 	private String displayValue;
@@ -308,6 +312,10 @@ public class Observation extends BaseOpenmrsEntity implements Serializable {
 
 	public void setValue(String value) {
 		this.value = value;
+	}
+
+	public void setValueString(String value) {
+		this.valueString = value;
 	}
 
 	public void setValue(Object value) {

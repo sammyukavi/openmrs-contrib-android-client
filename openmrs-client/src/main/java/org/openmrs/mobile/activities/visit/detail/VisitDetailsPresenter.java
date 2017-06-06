@@ -20,6 +20,7 @@ import android.widget.TextView;
 import org.openmrs.mobile.activities.visit.VisitContract;
 import org.openmrs.mobile.activities.visit.VisitPresenterImpl;
 import org.openmrs.mobile.data.DataService;
+import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.impl.ConceptAnswerDataService;
 import org.openmrs.mobile.data.impl.ConceptDataService;
@@ -177,20 +178,20 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 	private void loadVisitAttributeTypes() {
 		visitDetailsView.showTabSpinner(true);
 		visitAttributeTypeDataService
-				.getAll(new QueryOptions(ApplicationConstants.CacheKays.VISIT_ATTRIBUTE_TYPE, true), null, new DataService
-						.GetCallback<List<VisitAttributeType>>() {
-					@Override
-					public void onCompleted(List<VisitAttributeType> entities) {
-						visitDetailsView.showTabSpinner(false);
-						visitDetailsView.setAttributeTypes(entities);
-					}
+				.getAll(new QueryOptions(ApplicationConstants.CacheKays.VISIT_ATTRIBUTE_TYPE, true), new PagingInfo(0, 100),
+						new DataService.GetCallback<List<VisitAttributeType>>() {
+							@Override
+							public void onCompleted(List<VisitAttributeType> entities) {
+								visitDetailsView.showTabSpinner(false);
+								visitDetailsView.setAttributeTypes(entities);
+							}
 
-					@Override
-					public void onError(Throwable t) {
-						visitDetailsView.showTabSpinner(false);
-						ToastUtil.error(t.getMessage());
-					}
-				});
+							@Override
+							public void onError(Throwable t) {
+								visitDetailsView.showTabSpinner(false);
+								ToastUtil.error(t.getMessage());
+							}
+						});
 	}
 
 	@Override

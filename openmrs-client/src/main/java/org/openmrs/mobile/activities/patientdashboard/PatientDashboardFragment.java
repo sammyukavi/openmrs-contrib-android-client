@@ -25,7 +25,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -39,6 +38,7 @@ import org.openmrs.mobile.activities.addeditvisit.AddEditVisitActivity;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Patient;
+import org.openmrs.mobile.models.PersonAttribute;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.FontsUtil;
@@ -49,6 +49,9 @@ import java.util.List;
 
 import static org.openmrs.mobile.utilities.ApplicationConstants.BundleKeys.LOCATION_UUID_BUNDLE;
 import static org.openmrs.mobile.utilities.ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE;
+import static org.openmrs.mobile.utilities.ApplicationConstants.entityName.COUNTY;
+import static org.openmrs.mobile.utilities.ApplicationConstants.entityName.SUBCOUNTY;
+import static org.openmrs.mobile.utilities.ApplicationConstants.entityName.TELEPHONE;
 
 public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardContract.Presenter>
 		implements PatientDashboardContract.View {
@@ -60,12 +63,14 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	private SharedPreferences sharedPreferences = instance.getOpenMRSSharedPreferences();
 	private Intent intent;
 	private NestedScrollView scrollView;
-	private LinearLayout patientContactInfo;
+	private View patientContactInfo;
 	private String providerUuid;
 	private Location location;
 	private ProgressBar savingProgressBar;
 	private RelativeLayout dashboardProgressBar, dashboardScreen;
 	private TextView noVisitNoteLabel;
+	private TextView patientAddress, patientPhonenumber;
+	private String patientUuid;
 
 	public static PatientDashboardFragment newInstance() {
 		return new PatientDashboardFragment();
@@ -78,7 +83,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		fragmentView = inflater.inflate(R.layout.fragment_patient_dashboard, container, false);
-		String patientUuid = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
+		patientUuid = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
 		initViewFields();
 		initializeListeners(startVisitButton, editPatient);
 		//We start by fetching by location, required for creating encounters
@@ -121,29 +126,57 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		startVisitButton = (FloatingActionButton)fragmentView.findViewById(R.id.start_visit);
 		editPatient = (FloatingActionButton)fragmentView.findViewById(R.id.edit_Patient);
 		scrollView = (NestedScrollView)fragmentView.findViewById(R.id.scrollView);
-		patientContactInfo = (LinearLayout)fragmentView.findViewById(R.id.patientContactInfo);
+
 		borderLine = fragmentView.findViewById(R.id.borderLine);
 		savingProgressBar = (ProgressBar)fragmentView.findViewById(R.id.savingProgressBar);
 		dashboardScreen = (RelativeLayout)fragmentView.findViewById(R.id.dashboardScreen);
 		dashboardProgressBar = (RelativeLayout)fragmentView.findViewById(R.id.dashboardProgressBar);
 		noVisitNoteLabel = (TextView)fragmentView.findViewById(R.id.noVisitNoteLabel);
+
+		//Contact address header
+		patientContactInfo = fragmentView.findViewById(R.id.container_patient_address_info);
+		patientAddress = (TextView)patientContactInfo.findViewById(R.id.patientAddress);
+		patientPhonenumber = (TextView)patientContactInfo.findViewById(R.id.patientPhonenumber);
 	}
 
 	@Override
 	public void updateContactCard(Patient patient) {
+		showPageSpinner(true);
 		this.patient = patient;
 		int visitsStartLimit = 5;
 		mPresenter.setLimit(visitsStartLimit);
 		setPatientUuid(patient);
+		String county, subCounty, address, phone;
+		county = subCounty = address = phone = "";
+
+		for (PersonAttribute personAttribute : patient.getPerson().getAttributes()) {
+			String displayName = personAttribute.getDisplay().replaceAll("\\s+", "");
+			if (displayName.toLowerCase().startsWith(SUBCOUNTY)) {
+				subCounty = displayName.split("=")[1];
+			} else if (displayName.toLowerCase().startsWith(COUNTY)) {
+				county = displayName.split("=")[1];
+			} else if (displayName.toLowerCase().startsWith(TELEPHONE)) {
+				phone = displayName.split("=")[1];
+			}
+		}
+
+		if (!subCounty.equalsIgnoreCase("")) {
+			address += subCounty;
+		}
+
+		if (!address.equalsIgnoreCase("")) {
+			address += ", " + county;
+		} else {
+			address += county;
+		}
+
+		patientAddress.setText(address);
+		patientPhonenumber.setText(phone);
 	}
 
 	@Override
 	public void updateActiveVisitCard(List<Visit> visits) {
-
-		if (visits.size() == 0) {
-
-		}
-
+		showPageSpinner(true);
 		for (Visit visit : visits) {
 			if (!StringUtils.notNull(visit.getStopDatetime())) {
 				startVisitButton.setVisibility(View.GONE);
@@ -169,7 +202,6 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 							//contact info is now being showed parcially, do nothing
 						} else {
 							//contact info is now being showed fully, hide shadow, show line
-							//shadowLine.setVisibility(View.GONE);
 							borderLine.setVisibility(View.VISIBLE);
 							patientDashboardActivity.updateHeaderShadowLine(false);
 						}
@@ -246,7 +278,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
 	@Override
 	public void upDateProgressBar(boolean show) {
-		savingProgressBar.setVisibility(show ? View.VISIBLE : View.GONE);
+		//savingProgressBar.setVisibility(show ? View.VISIBLE : View.GONE);
 	}
 
 	@Override
@@ -262,7 +294,6 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
 	@Override
 	public void showNoVisits(boolean visibility) {
-		System.out.println(" I reached here");
 		if (visibility) {
 			noVisitNoteLabel.setVisibility(View.VISIBLE);
 		} else {

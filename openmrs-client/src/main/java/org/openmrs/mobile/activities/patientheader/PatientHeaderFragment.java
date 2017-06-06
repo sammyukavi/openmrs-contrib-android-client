@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -53,18 +52,18 @@ public class PatientHeaderFragment extends ACBaseFragment<PatientHeaderContract.
 				.drawable.male);
 		fileNumber.setText(patient.getIdentifier().getIdentifier());
 		DateTime date = DateUtils.convertTimeString(patient.getPerson().getBirthdate());
-		patientAge.setText(DateUtils.calculateAge(patient.getPerson().getBirthdate()));;
+		patientAge.setText(DateUtils.calculateAge(patient.getPerson().getBirthdate()));
+		;
 		patientDob.setText(
 				DateUtils.convertTime1(patient.getPerson().getBirthdate(), DateUtils.DATE_FORMAT));
 	}
 
 	public void updateShadowLine(boolean visible) {
-		//AlphaAnimation anim = new AlphaAnimation(1.0f, 0.0f);
-		//anim.setDuration(1000);
-		//anim.setRepeatCount(1000);
-		//anim.setRepeatMode(Animation.REVERSE);
-		//shadowLine.startAnimation(anim);
 		shadowLine.setVisibility(visible ? View.VISIBLE : View.GONE);
+		//AlphaAnimation anim = new AlphaAnimation(0.0f, 1.0f);
+		//anim.setDuration(500);
+		//shadowLine.startAnimation(anim);
+
 	}
 
 }

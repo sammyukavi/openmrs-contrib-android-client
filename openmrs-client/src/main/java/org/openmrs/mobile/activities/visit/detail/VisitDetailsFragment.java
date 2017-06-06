@@ -182,7 +182,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 			setDiagnoses(visit);
 			setAuditData(visit);
 
-			addVisitVitals.setVisibility(visit.getStopDatetime().equalsIgnoreCase(null) ? View.VISIBLE : View.GONE);
+			addVisitVitals.setVisibility(visit.getStopDatetime() == null ? View.VISIBLE : View.GONE);
 
 		}
 
@@ -298,9 +298,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	@Override
 	public void setAttributeTypes(List<VisitAttributeType> visitAttributeTypes) {
 		visitAttributesLayout.removeAllViews();
-		System.out.println(visit.getAttributes().size() + " this it the attribute size");
 		if (visit.getAttributes().size() == 0) {
-			System.out.println(" i was here ");
 			for (VisitAttributeType visitAttributeType : visitAttributeTypes) {
 				createVisitAttributeTypesLayout(visitAttributeType);
 			}

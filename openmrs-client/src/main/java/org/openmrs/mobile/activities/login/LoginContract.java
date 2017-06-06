@@ -14,14 +14,9 @@
 
 package org.openmrs.mobile.activities.login;
 
-import android.support.annotation.NonNull;
-
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
-import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.utilities.ToastUtil;
-
-import java.util.List;
 
 public interface LoginContract {
 
@@ -29,53 +24,36 @@ public interface LoginContract {
 
 		void hideSoftKeys();
 
-		void setPresenter(@NonNull Presenter presenter);
-
 		void showWarningDialog();
 
 		void showLoadingAnimation();
 
-		void hideLoadingAnimation();
-
-		void showLocationLoadingAnimation();
-
-		void hideUrlLoadingAnimation();
+		void userAuthenticated();
 
 		void finishLoginActivity();
 
-		void showInvalidURLSnackbar(String message);
+		void hideLoadingAnimation();
 
 		void showInvalidLoginOrPasswordSnackbar();
 
-		void setLocationErrorOccurred(boolean errorOccurred);
+		void showErrorOccured(String s);
 
 		void showToast(String message, ToastUtil.ToastType toastType);
 
 		void showToast(int textId, ToastUtil.ToastType toastType);
 
-		void initLoginForm(List<Location> locationList, String url);
-
-		void userAuthenticated();
-
-		void startFormListService();
-
-		void showEditUrlEditField(boolean visibility);
-
+		void showLocationLoadingAnimation();
 	}
 
 	interface Presenter extends BasePresenterContract {
 
-		void authenticateUser(final String username, final String password, final String url);
-
-		void authenticateUser(final String username, final String password, final String url, boolean wipeDatabase);
-
-		void login(String username, String password, String url, String oldUrl);
-
-		void saveLocationsToDatabase(List<Location> locationList, String selectedLocation);
+		void login(String s, String s1, String s2, String initialUrl);
 
 		void loadLocations(String url);
 
-		void showEditUrlEditText(boolean visibility);
+		void authenticateUser(final String username, final String password, final String url);
 
+		void authenticateUser(final String username, final String password, final String url, boolean wipeDatabase);
 	}
+
 }

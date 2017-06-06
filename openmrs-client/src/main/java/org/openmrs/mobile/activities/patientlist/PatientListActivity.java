@@ -15,7 +15,6 @@ package org.openmrs.mobile.activities.patientlist;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.Menu;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
@@ -45,17 +44,10 @@ public class PatientListActivity extends ACBaseActivity {
 					patientListFragment, R.id.patientListContentFrame);
 		}
 
-		patientListPresenter = new PatientListPresenter(patientListFragment);
-	}
+		if (mAuthorizationManager.isUserLoggedIn()) {
+			patientListPresenter = new PatientListPresenter(patientListFragment);
+		}
 
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-		return true;
 	}
 
 }

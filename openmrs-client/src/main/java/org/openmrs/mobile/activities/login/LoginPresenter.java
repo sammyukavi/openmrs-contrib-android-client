@@ -149,7 +149,7 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 		loginView.showLocationLoadingAnimation();
 		//ConsoleLogger.dump("Called");
 
-		
+
 
 	}
 

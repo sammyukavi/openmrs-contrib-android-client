@@ -16,7 +16,6 @@ package org.openmrs.mobile.activities.login;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.BasePresenter;
-import org.openmrs.mobile.activities.patientdashboard.ConsoleLogger;
 import org.openmrs.mobile.api.UserService;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.dao.LocationDAO;
@@ -103,7 +102,6 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 								setData(session.getSessionId(), url, username, password);
 								mWipeRequired = false;
 							}
-							ConsoleLogger.dump(url);
 							if (authorizationManager.isUserNameOrServerEmpty()) {
 								setData(session.getSessionId(), url, username, password);
 							} else {

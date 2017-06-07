@@ -66,7 +66,6 @@ public class PatientListModelRecyclerViewAdapter
 				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE,
 						patientListContext.getPatient().getUuid());
 				context.startActivity(intent);
-				context.finish();
 			}
 		});
 	}

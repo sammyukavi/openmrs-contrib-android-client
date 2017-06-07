@@ -96,7 +96,6 @@ class FindPatientRecyclerViewAdapter extends RecyclerView.Adapter<FindPatientRec
 				Intent intent = new Intent(mContext, PatientDashboardActivity.class);
 				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patient.getUuid());
 				mContext.startActivity(intent);
-				mContext.finish();
 			}
 		});
 	}

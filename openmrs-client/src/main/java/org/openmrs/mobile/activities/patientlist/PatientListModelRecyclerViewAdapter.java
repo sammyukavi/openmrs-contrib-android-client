@@ -63,8 +63,7 @@ public class PatientListModelRecyclerViewAdapter
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(context, PatientDashboardActivity.class);
-				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE,
-						patientListContext.getPatient().getUuid());
+				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientListContext.getPatient().getUuid());
 				context.startActivity(intent);
 			}
 		});

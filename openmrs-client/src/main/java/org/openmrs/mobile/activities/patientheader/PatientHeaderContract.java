@@ -9,6 +9,8 @@ public interface PatientHeaderContract {
 	interface View extends BaseView<Presenter> {
 
 		void updatePatientHeader(Patient patient);
+
+		void holdHeader(boolean visibility);
 	}
 
 	interface Presenter extends BasePresenterContract {

@@ -72,7 +72,7 @@ public class VisitDataService extends BaseEntityDataService<Visit, VisitDbServic
 	protected Call<Results<Visit>> _restGetByPatient(String restPath, String patientUuid, QueryOptions options,
 			PagingInfo pagingInfo) {
 		return restService.getByPatient(restPath, patientUuid, QueryOptions.getRepresentation(options),
-				QueryOptions.getIncludeInactive(options));
+				QueryOptions.getIncludeInactive(options), pagingInfo.getStartIndex(), pagingInfo.getLimit());
 	}
 
 	// End Retrofit Workaround
@@ -88,7 +88,7 @@ public class VisitDataService extends BaseEntityDataService<Visit, VisitDbServic
 				() -> restService.endVisit(buildRestRequestPath(), uuid, visit));
 	}
 
-	public void updateVisit(String visitUuid, Visit updatedVisit, GetCallback<Visit> callback){
+	public void updateVisit(String visitUuid, Visit updatedVisit, GetCallback<Visit> callback) {
 		executeSingleCallback(callback, null,
 				() -> null,
 				() -> restService.updateVisit(ApplicationConstants.API.REST_ENDPOINT_V2 + "/patientlist/visitedit",

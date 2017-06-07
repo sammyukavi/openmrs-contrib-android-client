@@ -143,8 +143,6 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	public void updateContactCard(Patient patient) {
 		showPageSpinner(true);
 		this.patient = patient;
-		int visitsStartLimit = 5;
-		mPresenter.setLimit(visitsStartLimit);
 		setPatientUuid(patient);
 		String county, subCounty, address, phone;
 		county = subCounty = address = phone = "";
@@ -229,9 +227,6 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 				visits, getActivity(), uuidsHashmap
 		);
 		pastVisitsRecyclerView.setAdapter(visitsRecyclerAdapter);
-		/**
-		 * TODO this listener is useless for now, the rest service fetches all visits. Needs to be fixed
-		 */
 		visitsRecyclerAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
 			@Override
 			public void onLoadMore() {

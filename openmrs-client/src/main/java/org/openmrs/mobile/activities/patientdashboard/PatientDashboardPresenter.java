@@ -43,8 +43,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	private VisitDataService visitDataService;
 	private LocationDataService locationDataService;
 	private ProviderDataService providerDataService;
-	private final static int page = 1;
-	private int limit = 5;
+	private int limit = 10;
 	private int startIndex = 0;
 	//private Patient patient;
 
@@ -79,9 +78,8 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 		patientDataService.getByUUID(uuid, QueryOptions.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Patient>() {
 			@Override
 			public void onCompleted(Patient patient) {
-				if (patient != null) {
-					fetchVisits(patient);
-				}
+				patientDashboardView.showPageSpinner(true);
+				fetchVisits(patient);
 			}
 
 			@Override
@@ -128,7 +126,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 		patientDashboardView.showPageSpinner(true);
 		String personUuid = OpenMRS.getInstance().getCurrentLoggedInUserInfo().get(ApplicationConstants.UserKeys.USER_UUID);
 		if (StringUtils.notEmpty(personUuid)) {
-			providerDataService.getAll(QueryOptions.LOAD_RELATED_OBJECTS, new PagingInfo(0, 100),
+			providerDataService.getAll(QueryOptions.LOAD_RELATED_OBJECTS, null,
 					new DataService.GetCallback<List<Provider>>() {
 						@Override
 						public void onCompleted(List<Provider> entities) {

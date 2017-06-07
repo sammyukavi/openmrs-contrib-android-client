@@ -54,6 +54,7 @@
 				<include
 						android:id="@+id/container_patient_address_info"
 						layout="@layout/container_patient_address_info"
+						android:visibility="gone"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content" />
 				

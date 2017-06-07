@@ -172,6 +172,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
 		patientAddress.setText(address);
 		patientPhonenumber.setText(phone);
+		patientContactInfo.setVisibility(View.VISIBLE);
 	}
 
 	@Override

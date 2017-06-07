@@ -284,6 +284,7 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 
 	@Override
 	public void showVisitDetails(String visitUUID) {
+		setSpinnerVisibility(true);
 		Intent intent = new Intent(getContext(), VisitActivity.class);
 		intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
 		if (visitUUID == null) {
@@ -293,6 +294,7 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 			intent.putExtra(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, visitStopDate);
 		}
 		getContext().startActivity(intent);
+		setSpinnerVisibility(false);
 	}
 
 	@Override

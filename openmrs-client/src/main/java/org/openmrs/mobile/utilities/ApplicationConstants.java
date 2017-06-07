@@ -258,6 +258,7 @@ public abstract class ApplicationConstants {
 	public static class CacheKays {
 		public static final String VISIT_ATTRIBUTE_TYPE= "visitAttributeType";
 		public static final String PERSON_ATTRIBUTE_TYPE = "personAttributeType";
+		public static final String PERSON_IDENTIFIER_TYPE = "personIdentifierType";
 		public static final String VISIT_TYPE = "visitType";
 	}
 }

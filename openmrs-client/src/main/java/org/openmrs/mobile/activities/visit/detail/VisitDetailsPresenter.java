@@ -22,20 +22,17 @@ import org.openmrs.mobile.activities.visit.VisitPresenterImpl;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
-import org.openmrs.mobile.data.impl.ConceptDataService;
 import org.openmrs.mobile.data.impl.ConceptAnswerDataService;
+import org.openmrs.mobile.data.impl.ConceptDataService;
 import org.openmrs.mobile.data.impl.ObsDataService;
 import org.openmrs.mobile.data.impl.VisitAttributeTypeDataService;
 import org.openmrs.mobile.data.impl.VisitDataService;
 import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.ConceptAnswer;
-import org.openmrs.mobile.models.ConceptName;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Visit;
-import org.openmrs.mobile.models.VisitAttribute;
 import org.openmrs.mobile.models.VisitAttributeType;
 import org.openmrs.mobile.utilities.ApplicationConstants;
-import org.openmrs.mobile.utilities.DateUtils;
 import org.openmrs.mobile.utilities.ToastUtil;
 
 import java.util.List;
@@ -180,22 +177,21 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 
 	private void loadVisitAttributeTypes() {
 		visitDetailsView.showTabSpinner(true);
-		visitAttributeTypeDataService.getAll(new QueryOptions(false,true,ApplicationConstants.CacheKays
-				.VISIT_ATTRIBUTE_TYPE), new PagingInfo(0, 100), new
-				DataService
-				.GetCallback<List<VisitAttributeType>>() {
-			@Override
-			public void onCompleted(List<VisitAttributeType> entities) {
-				visitDetailsView.showTabSpinner(false);
-				visitDetailsView.setAttributeTypes(entities);
-			}
+		visitAttributeTypeDataService
+				.getAll(new QueryOptions(ApplicationConstants.CacheKays.VISIT_ATTRIBUTE_TYPE, true), new PagingInfo(0, 100),
+						new DataService.GetCallback<List<VisitAttributeType>>() {
+							@Override
+							public void onCompleted(List<VisitAttributeType> entities) {
+								visitDetailsView.showTabSpinner(false);
+								visitDetailsView.setAttributeTypes(entities);
+							}
 
-			@Override
-			public void onError(Throwable t) {
-				visitDetailsView.showTabSpinner(false);
-				ToastUtil.error(t.getMessage());
-			}
-		});
+							@Override
+							public void onError(Throwable t) {
+								visitDetailsView.showTabSpinner(false);
+								ToastUtil.error(t.getMessage());
+							}
+						});
 	}
 
 	@Override

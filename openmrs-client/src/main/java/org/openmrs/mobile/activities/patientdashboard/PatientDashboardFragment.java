@@ -68,6 +68,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	private Location location;
 	private ProgressBar savingProgressBar;
 	private RelativeLayout dashboardProgressBar, dashboardScreen;
+	private TextView noVisitNoteLabel;
 	private TextView patientAddress, patientPhonenumber;
 	private String patientUuid;
 
@@ -92,6 +93,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		}
 
 		mPresenter.fetchLocation(locationUuid);
+		mPresenter.fetchPatientData(patientUuid);
 		FontsUtil.setFont((ViewGroup)this.getActivity().findViewById(android.R.id.content));
 		return fragmentView;
 	}
@@ -129,27 +131,28 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		savingProgressBar = (ProgressBar)fragmentView.findViewById(R.id.savingProgressBar);
 		dashboardScreen = (RelativeLayout)fragmentView.findViewById(R.id.dashboardScreen);
 		dashboardProgressBar = (RelativeLayout)fragmentView.findViewById(R.id.dashboardProgressBar);
+		noVisitNoteLabel = (TextView)fragmentView.findViewById(R.id.noVisitNoteLabel);
 
 		//Contact address header
 		patientContactInfo = fragmentView.findViewById(R.id.container_patient_address_info);
 		patientAddress = (TextView)patientContactInfo.findViewById(R.id.patientAddress);
 		patientPhonenumber = (TextView)patientContactInfo.findViewById(R.id.patientPhonenumber);
-
 	}
 
 	@Override
 	public void updateContactCard(Patient patient) {
+		showPageSpinner(true);
 		this.patient = patient;
 		int visitsStartLimit = 5;
 		mPresenter.setLimit(visitsStartLimit);
 		setPatientUuid(patient);
-		String county, subcounty, address, phone;
-		county = subcounty = address = phone = "";
+		String county, subCounty, address, phone;
+		county = subCounty = address = phone = "";
 
 		for (PersonAttribute personAttribute : patient.getPerson().getAttributes()) {
 			String displayName = personAttribute.getDisplay().replaceAll("\\s+", "");
 			if (displayName.toLowerCase().startsWith(SUBCOUNTY)) {
-				subcounty = displayName.split("=")[1];
+				subCounty = displayName.split("=")[1];
 			} else if (displayName.toLowerCase().startsWith(COUNTY)) {
 				county = displayName.split("=")[1];
 			} else if (displayName.toLowerCase().startsWith(TELEPHONE)) {
@@ -157,8 +160,8 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 			}
 		}
 
-		if (!subcounty.equalsIgnoreCase("")) {
-			address += subcounty;
+		if (!subCounty.equalsIgnoreCase("")) {
+			address += subCounty;
 		}
 
 		if (!address.equalsIgnoreCase("")) {
@@ -173,7 +176,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
 	@Override
 	public void updateActiveVisitCard(List<Visit> visits) {
-
+		showPageSpinner(true);
 		for (Visit visit : visits) {
 			if (!StringUtils.notNull(visit.getStopDatetime())) {
 				startVisitButton.setVisibility(View.GONE);
@@ -271,7 +274,6 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	@Override
 	public void setLocation(Location location) {
 		this.location = location;
-		mPresenter.fetchPatientData(patientUuid);
 	}
 
 	@Override
@@ -287,6 +289,15 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		} else {
 			dashboardProgressBar.setVisibility(View.GONE);
 			dashboardScreen.setVisibility(View.VISIBLE);
+		}
+	}
+
+	@Override
+	public void showNoVisits(boolean visibility) {
+		if (visibility) {
+			noVisitNoteLabel.setVisibility(View.VISIBLE);
+		} else {
+			noVisitNoteLabel.setVisibility(View.GONE);
 		}
 	}
 

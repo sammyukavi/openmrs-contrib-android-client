@@ -25,14 +25,9 @@ public class QueryOptions {
 		this.loadRelatedObjects = loadRelatedObjects;
 	}
 
-	public QueryOptions(boolean includeInactive, boolean loadRelatedObjects,String cacheKey) {
-		this.includeInactive = includeInactive;
+	public QueryOptions(String cacheKey, boolean loadRelatedObjects) {
+		this.cacheKey = cacheKey;
 		this.loadRelatedObjects = loadRelatedObjects;
-		this.cacheKey = cacheKey;
-	}
-
-	public QueryOptions(String cacheKey) {
-		this.cacheKey = cacheKey;
 	}
 
 	public static String getCacheKey(@Nullable QueryOptions options) {

@@ -46,6 +46,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	private final static int page = 1;
 	private int limit = 5;
 	private int startIndex = 0;
+	//private Patient patient;
 
 	public PatientDashboardPresenter(PatientDashboardContract.View view) {
 		this.patientDashboardView = view;
@@ -79,7 +80,6 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 			@Override
 			public void onCompleted(Patient patient) {
 				if (patient != null) {
-					patientDashboardView.updateContactCard(patient);
 					fetchVisits(patient);
 				}
 			}
@@ -100,29 +100,20 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 					@Override
 					public void onCompleted(List<Visit> visits) {
 						if (!visits.isEmpty()) {
+							patientDashboardView.updateContactCard(patient);
 							patientDashboardView.updateActiveVisitCard(visits);
+						} else {
+							patientDashboardView.showPageSpinner(false);
+							patientDashboardView.showNoVisits(true);
 						}
 					}
 
 					@Override
 					public void onError(Throwable t) {
 						t.printStackTrace();
+						patientDashboardView.showPageSpinner(false);
 					}
 				});
-
-		DataService.GetCallback<List<Visit>> visitsFetchedCallback = new DataService.GetCallback<List<Visit>>() {
-			@Override
-			public void onCompleted(List<Visit> visits) {
-
-			}
-
-			@Override
-			public void onError(Throwable t) {
-
-			}
-		};
-		visitDataService.getByPatient(patient, QueryOptions.LOAD_RELATED_OBJECTS, new PagingInfo(0, 1),
-				visitsFetchedCallback);
 	}
 
 	@Override
@@ -134,7 +125,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	 * TODO: create a service to getProviderByPerson, move code to commons
 	 */
 	private void getCurrentProvider() {
-
+		patientDashboardView.showPageSpinner(true);
 		String personUuid = OpenMRS.getInstance().getCurrentLoggedInUserInfo().get(ApplicationConstants.UserKeys.USER_UUID);
 		if (StringUtils.notEmpty(personUuid)) {
 			providerDataService.getAll(QueryOptions.LOAD_RELATED_OBJECTS, new PagingInfo(0, 100),
@@ -147,10 +138,12 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 									patientDashboardView.setProviderUuid(entity.getUuid());
 								}
 							}
+							patientDashboardView.showPageSpinner(false);
 						}
 
 						@Override
 						public void onError(Throwable t) {
+							patientDashboardView.showPageSpinner(false);
 							ToastUtil.error(t.getMessage());
 						}
 					});
@@ -159,15 +152,18 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
 	@Override
 	public void fetchLocation(String locationUuid) {
+		patientDashboardView.showPageSpinner(true);
 		DataService.GetCallback<Location> locationDataServiceCallback = new DataService.GetCallback<Location>() {
 			@Override
 			public void onCompleted(Location location) {
 				//set location in the fragment and start loading other fields
 				patientDashboardView.setLocation(location);
+
 			}
 
 			@Override
 			public void onError(Throwable t) {
+				patientDashboardView.showPageSpinner(true);
 				t.printStackTrace();
 			}
 		};

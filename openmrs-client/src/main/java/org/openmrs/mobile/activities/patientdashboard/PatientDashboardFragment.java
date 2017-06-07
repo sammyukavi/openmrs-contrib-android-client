@@ -150,13 +150,15 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		county = subCounty = address = phone = "";
 
 		for (PersonAttribute personAttribute : patient.getPerson().getAttributes()) {
-			String displayName = personAttribute.getDisplay().replaceAll("\\s+", "");
-			if (displayName.toLowerCase().startsWith(SUBCOUNTY)) {
-				subCounty = displayName.split("=")[1];
-			} else if (displayName.toLowerCase().startsWith(COUNTY)) {
-				county = displayName.split("=")[1];
-			} else if (displayName.toLowerCase().startsWith(TELEPHONE)) {
-				phone = displayName.split("=")[1];
+			if (personAttribute.getDisplay() != null) {
+				String displayName = personAttribute.getDisplay().replaceAll("\\s+", "");
+				if (displayName.toLowerCase().startsWith(SUBCOUNTY)) {
+					subCounty = displayName.split("=")[1];
+				} else if (displayName.toLowerCase().startsWith(COUNTY)) {
+					county = displayName.split("=")[1];
+				} else if (displayName.toLowerCase().startsWith(TELEPHONE)) {
+					phone = displayName.split("=")[1];
+				}
 			}
 		}
 

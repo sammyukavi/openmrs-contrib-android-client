@@ -84,7 +84,7 @@
 
 		<LinearLayout
 				android:visibility="gone"
-				android:id="@+id/editVisitNoteContainer"
+				android:id="@+id/editClinicNoteContainer"
 				android:orientation="horizontal"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent">
@@ -110,13 +110,13 @@
 						android:layout_marginEnd="5dp"
 						android:hint="@string/clinical_notes_label"
 						android:scrollbars="vertical"
-						android:id="@+id/editVisitNote" />
+						android:id="@+id/editClinicalNote" />
 			</android.support.design.widget.TextInputLayout>
 
 		</LinearLayout>
 
 		<LinearLayout
-				android:id="@+id/visitNoteTextContainer"
+				android:id="@+id/clinicNoteTextContainer"
 				android:visibility="gone"
 				android:layout_marginTop="5dp"
 				android:layout_marginBottom="5dp"

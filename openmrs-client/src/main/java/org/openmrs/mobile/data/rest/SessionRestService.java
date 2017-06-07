@@ -12,4 +12,7 @@ public interface SessionRestService {
 	@GET(RestConstants.REST_PATH)
 	Call<Session> getSession(@Path(value = "restPath", encoded = true) String restPath,
 			DataService.GetCallback<Session> sessionGetCallback);
+
+	@GET("session")
+	Call<Session> getSession();
 }

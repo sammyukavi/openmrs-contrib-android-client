@@ -1,11 +1,10 @@
 package org.openmrs.mobile.data.impl;
 
-import android.support.annotation.NonNull;
-
-import org.openmrs.mobile.data.BaseDataService;
+import org.openmrs.mobile.data.BaseMetadataDataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.db.impl.SessionDbService;
+import org.openmrs.mobile.data.rest.RestServiceBuilder;
 import org.openmrs.mobile.data.rest.SessionRestService;
 import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.models.Session;
@@ -13,9 +12,14 @@ import org.openmrs.mobile.utilities.ApplicationConstants;
 
 import retrofit2.Call;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+public class LoginDataService extends BaseMetadataDataService<Session, SessionDbService, SessionRestService> {
 
-public class SessionDataService extends BaseDataService<Session, SessionDbService, SessionRestService> {
+	@Override
+	protected Call<Results<Session>> _restGetByNameFragment(String restPath, String name, QueryOptions options,
+			PagingInfo pagingInfo) {
+		return null;
+	}
+
 	@Override
 	protected SessionDbService getDbService() {
 		return new SessionDbService();
@@ -61,11 +65,10 @@ public class SessionDataService extends BaseDataService<Session, SessionDbServic
 		return null;
 	}
 
-	/*public void getSession(@NonNull GetCallback<Session> callback) {
-		checkNotNull(callback);
-
+	public void getSession(String serverURl, String username, String password, GetCallback<Session> callback) {
+		restService = RestServiceBuilder.createService(getRestServiceClass(), serverURl, username, password);
 		executeSingleCallback(callback, null,
 				() -> null,
-				() -> restService.getSession(buildRestRequestPath()));
-	}*/
+				() -> restService.getSession());
+	}
 }

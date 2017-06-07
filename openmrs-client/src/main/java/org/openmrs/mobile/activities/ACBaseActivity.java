@@ -262,12 +262,11 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 		}
 	}
 
-	public void showSnackbar(String message) {
-		Snackbar snackbar =
-				Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT);
-		View sbView = snackbar.getView();
-		TextView textView = (TextView)sbView.findViewById(android.support.design.R.id.snackbar_text);
-		textView.setTextColor(Color.WHITE);
-		snackbar.show();
+	public Snackbar createSnackbar(View view, String message) {
+		return Snackbar.make(view, message, Snackbar.LENGTH_LONG);
+	}
+
+	public void createSnackbar(String message) {
+		//Snackbar.make(view, message, Snackbar.LENGTH_LONG);
 	}
 }

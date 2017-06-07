@@ -20,4 +20,8 @@ public interface LocationRestService {
 	Call<Location> getByUuid(@Path(value = "restPath", encoded = true) String restPath,
 			@Path("uuid") String uuid,
 			@Query("v") String representation);
+
+	@GET(RestConstants.LOCATION_PATH)
+	Call<Results<Location>> getLoginLocations(@Path(value = "restPath", encoded = true) String restPath);
+
 }

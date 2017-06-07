@@ -14,6 +14,8 @@
 
 package org.openmrs.mobile.activities.login;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -22,6 +24,7 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -30,11 +33,15 @@ import android.widget.Spinner;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
+import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
+import org.openmrs.mobile.activities.patientlist.PatientListActivity;
 import org.openmrs.mobile.application.OpenMRS;
+import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.listeners.watcher.LoginValidatorWatcher;
 import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.FontsUtil;
+import org.openmrs.mobile.utilities.ImageUtils;
 import org.openmrs.mobile.utilities.StringUtils;
 import org.openmrs.mobile.utilities.ToastUtil;
 import org.openmrs.mobile.utilities.URLValidator;
@@ -170,58 +177,83 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 	}
 
 	@Override
-	public void hideSoftKeys() {
+	public void showErrorOccured(String message) {
+		createSnackbar(message);
+	}
 
+	@Override
+	public void hideSoftKeys() {
+		View view = this.getActivity().getCurrentFocus();
+		if (view == null) {
+			view = new View(this.getActivity());
+		}
+		InputMethodManager inputMethodManager =
+				(InputMethodManager)this.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+		inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
 	}
 
 	@Override
 	public void showWarningDialog() {
-
+		CustomDialogBundle bundle = new CustomDialogBundle();
+		bundle.setTitleViewMessage(getString(R.string.warning_dialog_title));
+		bundle.setTextViewMessage(getString(R.string.warning_lost_data_dialog));
+		bundle.setRightButtonText(getString(R.string.dialog_button_ok));
+		bundle.setRightButtonAction(CustomFragmentDialog.OnClickAction.LOGIN);
+		((LoginActivity)this.getActivity())
+				.createAndShowDialog(bundle, ApplicationConstants.DialogTAG.WARNING_LOST_DATA_DIALOG_TAG);
 	}
 
 	@Override
 	public void showLoadingAnimation() {
-
+		//mLoginFormView.setVisibility(View.GONE);
+		//mSpinner.setVisibility(View.VISIBLE);
 	}
 
 	@Override
 	public void userAuthenticated() {
+		Intent intent = new Intent(mOpenMRS.getApplicationContext(), PatientListActivity.class);
+		//intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		mOpenMRS.getApplicationContext().startActivity(intent);
+		mPresenter.saveLocationsToDatabase(mLocationsList, mDropdownLocation.getSelectedItem().toString());
 
 	}
 
 	@Override
 	public void finishLoginActivity() {
-
+		getActivity().finish();
 	}
 
 	@Override
 	public void hideLoadingAnimation() {
-
+		//mLoginFormView.setVisibility(View.VISIBLE);
+		//mSpinner.setVisibility(View.GONE);
 	}
 
 	@Override
 	public void showInvalidLoginOrPasswordSnackbar() {
-
-	}
-
-	@Override
-	public void showErrorOccured(String s) {
-
+		String message = getResources().getString(R.string.invalid_login_or_password_message);
+		createSnackbar(mRootView, message)
+				.setAction(getResources().getString(R.string.snackbar_edit), view -> {
+					mPassword.requestFocus();
+					mPassword.selectAll();
+				})
+				.show();
 	}
 
 	@Override
 	public void showToast(String message, ToastUtil.ToastType toastType) {
-
+		ToastUtil.showShortToast(getContext(), toastType, message);
 	}
 
 	@Override
 	public void showToast(int textId, ToastUtil.ToastType toastType) {
-
+		ToastUtil.showShortToast(getContext(), toastType, getResources().getString(textId));
 	}
 
 	@Override
 	public void showLocationLoadingAnimation() {
-
+		mLoginButton.setEnabled(false);
+		mLocationLoadingProgressBar.setVisibility(View.VISIBLE);
 	}
 
 	@Override
@@ -232,14 +264,35 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 	}
 
 	private void bindDrawableResources() {
-
+		mBitmapCache = new SparseArray<>();
+		ImageView openMrsLogoImage = (ImageView)getActivity().findViewById(R.id.openmrsLogo);
+		createImageBitmap(R.drawable.banda_logo, openMrsLogoImage.getLayoutParams());
+		openMrsLogoImage.setImageBitmap(mBitmapCache.get(R.drawable.banda_logo));
 	}
 
-	private void hideUrlLoadingAnimation() {
+	private void createImageBitmap(Integer key, ViewGroup.LayoutParams layoutParams) {
+		if (mBitmapCache.get(key) == null) {
+			mBitmapCache.put(key, ImageUtils.decodeBitmapFromResource(getResources(), key,
+					layoutParams.width, layoutParams.height));
+		}
+	}
+
+	private void unbindDrawableResources() {
+		if (null != mBitmapCache) {
+			for (int i = 0; i < mBitmapCache.size(); i++) {
+				Bitmap bitmap = mBitmapCache.valueAt(i);
+				bitmap.recycle();
+			}
+		}
+	}
+
+	@Override
+	public void hideUrlLoadingAnimation() {
 		mLocationLoadingProgressBar.setVisibility(View.INVISIBLE);
 		mSpinner.setVisibility(View.GONE);
 	}
 
+	@Override
 	public void initLoginForm(List<Location> locationsList, String serverURL) {
 		setLocationErrorOccurred(false);
 		mLastCorrectURL = serverURL;
@@ -268,6 +321,7 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 		return list;
 	}
 
+	@Override
 	public void setLocationErrorOccurred(boolean errorOccurred) {
 		this.loginValidatorWatcher.setLocationErrorOccurred(errorOccurred);
 		mLoginButton.setEnabled(!errorOccurred);

@@ -1,6 +1,5 @@
 package org.openmrs.mobile.data.impl;
 
-import org.openmrs.mobile.activities.patientdashboard.ConsoleLogger;
 import org.openmrs.mobile.data.BaseMetadataDataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
@@ -9,8 +8,7 @@ import org.openmrs.mobile.data.rest.RestServiceBuilder;
 import org.openmrs.mobile.data.rest.SessionRestService;
 import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.models.Session;
-
-import java.io.Console;
+import org.openmrs.mobile.utilities.ApplicationConstants;
 
 import retrofit2.Call;
 
@@ -24,7 +22,7 @@ public class LoginDataService extends BaseMetadataDataService<Session, SessionDb
 
 	@Override
 	protected SessionDbService getDbService() {
-		return null;
+		return new SessionDbService();
 	}
 
 	@Override
@@ -34,12 +32,12 @@ public class LoginDataService extends BaseMetadataDataService<Session, SessionDb
 
 	@Override
 	protected String getRestPath() {
-		return null;
+		return ApplicationConstants.API.REST_ENDPOINT_V1;
 	}
 
 	@Override
 	protected String getEntityName() {
-		return null;
+		return "session";
 	}
 
 	@Override
@@ -68,9 +66,11 @@ public class LoginDataService extends BaseMetadataDataService<Session, SessionDb
 	}
 
 	public void getSession(String serverURl, String username, String password, GetCallback<Session> callback) {
-		//serviceClass, app.getServerUrl(), app.getUsername(), app.getPassword()
-		//restService = RestServiceBuilder.createService(getRestServiceClass());
-		//restService.getSession(buildRestRequestPath(), callback);
-		ConsoleLogger.dump(getRestServiceClass());
+		restService = RestServiceBuilder.createService(getRestServiceClass(), serverURl, username, password);
+
+		executeSingleCallback(callback, null,
+				() -> null,
+				() -> restService.getSession());
+
 	}
 }

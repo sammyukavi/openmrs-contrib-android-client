@@ -16,7 +16,10 @@ package org.openmrs.mobile.activities.login;
 
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
+import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.utilities.ToastUtil;
+
+import java.util.List;
 
 public interface LoginContract {
 
@@ -36,24 +39,34 @@ public interface LoginContract {
 
 		void showInvalidLoginOrPasswordSnackbar();
 
-		void showErrorOccured(String s);
-
 		void showToast(String message, ToastUtil.ToastType toastType);
 
 		void showToast(int textId, ToastUtil.ToastType toastType);
 
 		void showLocationLoadingAnimation();
+
+		void initLoginForm(List<Location> locations, String url);
+
+		void setLocationErrorOccurred(boolean errorOccurred);
+
+		void hideUrlLoadingAnimation();
+
+		void showInvalidURLSnackbar(String message);
+
+		void showErrorOccured(String message);
 	}
 
 	interface Presenter extends BasePresenterContract {
 
-		void login(String s, String s1, String s2, String initialUrl);
+		void login(String username, String password, String url, String oldUrl);
 
 		void loadLocations(String url);
 
 		void authenticateUser(final String username, final String password, final String url);
 
 		void authenticateUser(final String username, final String password, final String url, boolean wipeDatabase);
+
+		void saveLocationsToDatabase(List<Location> locationList, String selectedLocation);
 	}
 
 }

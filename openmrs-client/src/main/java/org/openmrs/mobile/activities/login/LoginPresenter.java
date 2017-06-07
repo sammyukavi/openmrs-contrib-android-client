@@ -16,18 +16,27 @@ package org.openmrs.mobile.activities.login;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.BasePresenter;
+import org.openmrs.mobile.activities.patientdashboard.ConsoleLogger;
 import org.openmrs.mobile.api.UserService;
 import org.openmrs.mobile.application.OpenMRS;
+import org.openmrs.mobile.dao.LocationDAO;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.impl.LocationDataService;
 import org.openmrs.mobile.data.impl.LoginDataService;
+import org.openmrs.mobile.data.rest.RestServiceBuilder;
 import org.openmrs.mobile.databases.OpenMRSSQLiteOpenHelper;
+import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Session;
 import org.openmrs.mobile.net.AuthorizationManager;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.NetworkUtils;
 import org.openmrs.mobile.utilities.StringUtils;
 import org.openmrs.mobile.utilities.ToastUtil;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import rx.schedulers.Schedulers;
 
 public class LoginPresenter extends BasePresenter implements LoginContract.Presenter {
 
@@ -38,6 +47,7 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 	private LoginDataService loginDataService;
 	private LocationDataService locationDataService;
 	private UserService userService;
+	private LocationDAO locationDAO;
 
 	public LoginPresenter(LoginContract.View view, OpenMRS mOpenMRS) {
 		this.loginView = view;
@@ -47,6 +57,7 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 		this.loginDataService = new LoginDataService();
 		this.userService = new UserService();
 		this.locationDataService = new LocationDataService();
+		this.locationDAO = new LocationDAO();
 	}
 
 	@Override
@@ -92,16 +103,14 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 								setData(session.getSessionId(), url, username, password);
 								mWipeRequired = false;
 							}
+							ConsoleLogger.dump(url);
 							if (authorizationManager.isUserNameOrServerEmpty()) {
 								setData(session.getSessionId(), url, username, password);
 							} else {
 								mOpenMRS.setSessionToken(session.getSessionId());
 							}
-
 							setLogin(true, url);
-
-							//userService.updateUserInformation(username);
-
+							userService.updateUserInformation(username);
 							loginView.userAuthenticated();
 							loginView.finishLoginActivity();
 						} else {
@@ -109,7 +118,7 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 							loginView.showInvalidLoginOrPasswordSnackbar();
 						}
 					} else {
-						loginView.showErrorOccured("An error occured loging you in. Is the server online?");
+						loginView.showErrorOccured("An error occured logging you in. Is the server online?");
 					}
 				}
 
@@ -118,6 +127,7 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 					loginView.showErrorOccured(t.getMessage());
 				}
 			};
+
 			loginDataService.getSession(url, username, password, loginUserCallback);
 
 		} else {
@@ -145,11 +155,37 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 	}
 
 	@Override
+	public void saveLocationsToDatabase(List<Location> locationList, String selectedLocation) {
+		mOpenMRS.setLocation(selectedLocation);
+		locationDAO.deleteAllLocations();
+		for (int i = 0; i < locationList.size(); i++) {
+			locationDAO.saveLocation(locationList.get(i))
+					.observeOn(Schedulers.io())
+					.subscribe();
+		}
+	}
+
+	@Override
 	public void loadLocations(String url) {
 		loginView.showLocationLoadingAnimation();
-		//ConsoleLogger.dump("Called");
 
+		locationDataService.getAll(new DataService.GetCallback<List<Location>>() {
+			@Override
+			public void onCompleted(List<Location> locations) {
+				RestServiceBuilder.changeBaseUrl(url.trim());
+				mOpenMRS.setServerUrl(url);
+				loginView.initLoginForm(locations, url);
+				loginView.setLocationErrorOccurred(false);
+			}
 
+			@Override
+			public void onError(Throwable t) {
+				loginView.hideUrlLoadingAnimation();
+				loginView.showInvalidURLSnackbar(t.getMessage());
+				loginView.initLoginForm(new ArrayList<Location>(), url);
+				loginView.setLocationErrorOccurred(true);
+			}
+		});
 
 	}
 

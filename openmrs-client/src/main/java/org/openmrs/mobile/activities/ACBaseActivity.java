@@ -262,7 +262,11 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 		}
 	}
 
-	public void createSnackbar(String message) {
+	public Snackbar createSnackbar(View view, String message) {
+		return Snackbar.make(view, message, Snackbar.LENGTH_LONG);
+	}
 
+	public void createSnackbar(String message) {
+		//Snackbar.make(view, message, Snackbar.LENGTH_LONG);
 	}
 }

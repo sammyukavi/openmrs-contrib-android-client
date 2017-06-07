@@ -227,7 +227,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 		if (StringUtils.notEmpty(locationUuid)) {
 
 			patientDashboardView.showPageSpinner(true);
-
+			
 			DataService.GetCallback<Location> locationDataServiceCallback = new DataService.GetCallback<Location>() {
 				@Override
 				public void onCompleted(Location location) {

@@ -26,6 +26,7 @@
 			android:supportsRtl="true"
 			android:theme="@style/AppTheme">
 		<activity
+				android:launchMode="singleInstance"
 				android:name=".activities.patientlist.PatientListActivity"
 				android:label="@string/app_name"
 				android:theme="@style/AppTheme">
@@ -37,7 +38,9 @@
 		</activity>
 		<activity android:name=".activities.capturevitals.CaptureVitalsActivity" />
 		<activity android:name=".activities.addeditpatient.AddEditPatientActivity" />
-		<activity android:name=".activities.findpatientrecord.FindPatientRecordActivity" />
+		<activity
+				android:name=".activities.findpatientrecord.FindPatientRecordActivity"
+				android:launchMode="singleInstance" />
 		<activity android:name=".activities.settings.SettingsActivity" />
 		<activity android:name=".activities.patientdashboard.PatientDashboardActivity" />
 		<activity android:name=".activities.login.LoginActivity" />

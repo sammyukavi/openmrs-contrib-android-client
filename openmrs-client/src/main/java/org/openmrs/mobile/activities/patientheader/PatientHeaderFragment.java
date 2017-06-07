@@ -5,8 +5,8 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.joda.time.DateTime;
@@ -21,6 +21,7 @@ public class PatientHeaderFragment extends ACBaseFragment<PatientHeaderContract.
 	private TextView patientDisplayName, patientAge, fileNumber, patientDob, patientAddress, patientPhonenumber;
 	ImageView patientGender;
 	private View shadowLine;
+	private RelativeLayout hideHeader, headerScreen;
 
 	public static PatientHeaderFragment newInstance() {
 		return new PatientHeaderFragment();
@@ -40,6 +41,9 @@ public class PatientHeaderFragment extends ACBaseFragment<PatientHeaderContract.
 		patientAddress = (TextView)fragmentView.findViewById(R.id.patientAddress);
 		patientPhonenumber = (TextView)fragmentView.findViewById(R.id.patientPhonenumber);
 
+		hideHeader = (RelativeLayout)fragmentView.findViewById(R.id.hideHeader);
+		headerScreen = (RelativeLayout)fragmentView.findViewById(R.id.headerScreen);
+
 		shadowLine = fragmentView.findViewById(R.id.shadowLine);
 
 		return fragmentView;
@@ -56,6 +60,12 @@ public class PatientHeaderFragment extends ACBaseFragment<PatientHeaderContract.
 		;
 		patientDob.setText(
 				DateUtils.convertTime1(patient.getPerson().getBirthdate(), DateUtils.DATE_FORMAT));
+	}
+
+	@Override
+	public void holdHeader(boolean visibility) {
+		hideHeader.setVisibility(visibility ? View.VISIBLE : View.GONE);
+		headerScreen.setVisibility(visibility ? View.GONE : View.VISIBLE);
 	}
 
 	public void updateShadowLine(boolean visible) {

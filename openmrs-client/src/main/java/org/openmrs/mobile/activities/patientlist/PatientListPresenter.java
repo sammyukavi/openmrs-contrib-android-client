@@ -70,7 +70,7 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 
 	@Override
 	public void getPatientList() {
-		patientListView.setPatientListScreenVisibility(false);
+		patientListView.setPatientListScreenVisibility(true);
 		setPage(1);
 		patientListDataService.getAll(new QueryOptions(false, false), new PagingInfo(1, 100),
 				new DataService.GetCallback<List<PatientList>>() {

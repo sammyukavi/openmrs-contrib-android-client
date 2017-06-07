@@ -324,7 +324,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		patientRegistrationView.showPageSpinner(true);
 		final List<PersonAttributeType> personAttributeTypes = new ArrayList<>();
 		personAttributeTypeDataService
-				.getAll(new QueryOptions(ApplicationConstants.CacheKays.PERSON_IDENTIFIER_TYPE, true), null, new DataService
+				.getAll(new QueryOptions(ApplicationConstants.CacheKays.PERSON_ATTRIBUTE_TYPE, true), null, new DataService
 						.GetCallback<List<PersonAttributeType>>() {
 					@Override
 					public void onCompleted(List<PersonAttributeType> entities) {

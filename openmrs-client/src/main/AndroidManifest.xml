@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 		package="org.openmrs.mobile">
-
+	
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.READ_LOGS" />
@@ -9,14 +9,14 @@
 	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 	<uses-permission android:name="android.permission.CAMERA" />
-
+	
 	<uses-feature
 			android:name="android.hardware.camera"
 			android:required="false" />
 	<uses-feature
 			android:name="android.hardware.camera.autofocus"
 			android:required="false" />
-
+	
 	<application
 			android:name=".application.OpenMRS"
 			android:allowBackup="true"
@@ -26,21 +26,18 @@
 			android:supportsRtl="true"
 			android:theme="@style/AppTheme">
 		<activity
-				android:launchMode="singleInstance"
 				android:name=".activities.patientlist.PatientListActivity"
 				android:label="@string/app_name"
 				android:theme="@style/AppTheme">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
-
+				
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
 		<activity android:name=".activities.capturevitals.CaptureVitalsActivity" />
 		<activity android:name=".activities.addeditpatient.AddEditPatientActivity" />
-		<activity
-				android:name=".activities.findpatientrecord.FindPatientRecordActivity"
-				android:launchMode="singleInstance" />
+		<activity android:name=".activities.findpatientrecord.FindPatientRecordActivity" />
 		<activity android:name=".activities.settings.SettingsActivity" />
 		<activity android:name=".activities.patientdashboard.PatientDashboardActivity" />
 		<activity android:name=".activities.login.LoginActivity" />

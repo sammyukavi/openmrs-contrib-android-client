@@ -40,6 +40,8 @@ import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.gson.internal.LinkedTreeMap;
+
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
@@ -382,6 +384,15 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		}
 	}
 
+	private PersonAttribute searchPersonAttribute(String attributeTypeUuid) {
+		for (Map.Entry<String, PersonAttribute> stringPersonAttributeEntry : personAttributeMap.entrySet()) {
+			if (stringPersonAttributeEntry.getValue().getAttributeType().getUuid().equalsIgnoreCase(attributeTypeUuid)) {
+				return stringPersonAttributeEntry.getValue();
+			}
+		}
+		return null;
+	}
+
 	@Override
 	public void updateConceptAnswerView(Spinner conceptNamesDropdown, List<ConceptAnswer> conceptAnswers) {
 		PersonAttributeType personAttributeType = viewPersonAttributeTypeMap.get(conceptNamesDropdown);
@@ -390,20 +401,26 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		conceptNamesDropdown.setAdapter(conceptNameArrayAdapter);
 
 		// set existing patient attribute if any
-		/*System.out.println(conceptUuid + " Attribute type uuid");
+		LinkedTreeMap<String, String > personAttribute = mPresenter.searchPersonAttributeValueByType(personAttributeType);
+		String conceptUuid = personAttribute.get("uuid");
 		if (null != conceptUuid) {
 			setDefaultDropdownSelection(conceptNameArrayAdapter, conceptUuid, conceptNamesDropdown);
-		}*/
+		}
+
 		conceptNamesDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				ConceptAnswer conceptAnswer = conceptAnswers.get(position);
+				PersonAttribute personAttribute = searchPersonAttribute(personAttributeType.getUuid());
+				if (personAttribute == null) {
+					personAttribute = new PersonAttribute();
+					personAttribute.setAttributeType(personAttributeType);
+					personAttribute.setValue(conceptAnswer.getUuid());
+					personAttributeMap.put(conceptAnswer.getUuid(), personAttribute);
+				} else {
+					personAttribute.setValue(conceptAnswer.getUuid());
+				}
 
-				PersonAttribute personAttribute = new PersonAttribute();
-				personAttribute.setValue(conceptAnswer.getUuid());
-				personAttribute.setAttributeType(personAttributeType);
-				personAttributeMap.clear();
-				personAttributeMap.put(conceptAnswer.getUuid(), personAttribute);
 			}
 
 			@Override

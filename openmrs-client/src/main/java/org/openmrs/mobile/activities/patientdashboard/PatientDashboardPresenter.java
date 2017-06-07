@@ -179,8 +179,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 			@Override
 			public void onCompleted(Encounter result) {
 				patientDashboardView.upDateProgressBar(false);
-
-				patientDashboardView.updateClinicVisitNote(encounter.getObs().get(0));
+				patientDashboardView.updateClinicVisitNote(result.getObs().get(0));
 			}
 
 			@Override

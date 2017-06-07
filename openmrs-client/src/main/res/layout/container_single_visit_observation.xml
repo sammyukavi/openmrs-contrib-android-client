@@ -126,7 +126,7 @@
 
 			<TextView
 					android:visibility="gone"
-					android:id="@+id/visitNoteTitle"
+					android:id="@+id/clinicalNoteTitle"
 					android:layout_marginTop="5dp"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
@@ -139,7 +139,7 @@
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:scrollbars="vertical"
-					android:id="@+id/visitNoteText" />
+					android:id="@+id/clinicalNoteText" />
 
 		</LinearLayout>
 

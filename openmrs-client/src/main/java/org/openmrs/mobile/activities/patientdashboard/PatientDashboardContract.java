@@ -20,6 +20,7 @@ import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Location;
+import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Visit;
 
@@ -46,6 +47,8 @@ public interface PatientDashboardContract {
 		void showPageSpinner(boolean visibility);
 
 		void showNoVisits(boolean visibility);
+
+		void updateClinicVisitNote(Observation observation);
 	}
 
 	interface Presenter extends BasePresenterContract {
@@ -63,5 +66,7 @@ public interface PatientDashboardContract {
 		void fetchLocation(String locationUuid);
 
 		void saveEncounter(Encounter encounter, boolean isNew);
+
+		void saveObservation(Observation observation, boolean isNewObservation);
 	}
 }

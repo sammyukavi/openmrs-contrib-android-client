@@ -37,6 +37,7 @@ import org.openmrs.mobile.activities.addeditpatient.AddEditPatientActivity;
 import org.openmrs.mobile.activities.addeditvisit.AddEditVisitActivity;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.models.Location;
+import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.PersonAttribute;
 import org.openmrs.mobile.models.Visit;
@@ -71,6 +72,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	private TextView noVisitNoteLabel;
 	private TextView patientAddress, patientPhonenumber;
 	private String patientUuid;
+	private VisitsRecyclerAdapter visitsRecyclerAdapter;
 
 	public static PatientDashboardFragment newInstance() {
 		return new PatientDashboardFragment();
@@ -223,7 +225,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
 		RecyclerView pastVisitsRecyclerView = (RecyclerView)fragmentView.findViewById(R.id.pastVisits);
 		pastVisitsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-		VisitsRecyclerAdapter visitsRecyclerAdapter = new VisitsRecyclerAdapter(
+		visitsRecyclerAdapter = new VisitsRecyclerAdapter(
 				pastVisitsRecyclerView,
 				visits, getActivity(), uuidsHashmap
 		);
@@ -297,6 +299,11 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		} else {
 			noVisitNoteLabel.setVisibility(View.GONE);
 		}
+	}
+
+	@Override
+	public void updateClinicVisitNote(Observation observation) {
+		visitsRecyclerAdapter.updateClinicalNoteObs(observation);
 	}
 
 }

@@ -5,6 +5,7 @@ import org.openmrs.mobile.models.Results;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -46,5 +47,9 @@ public interface ObsRestService {
 	@POST(RestConstants.CREATE)
 	Call<Observation> create(@Path(value = "restPath", encoded = true) String restPath,
 			@Body Observation entity);
+
+	@DELETE(RestConstants.GET_BY_UUID)
+	Call<Observation> purge(@Path(value = "restPath", encoded = true) String restPath,
+			@Path("uuid") String uuid);
 
 }

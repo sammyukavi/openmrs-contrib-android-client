@@ -77,6 +77,7 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 		initViewFields(mRootView);
 
 		initListeners();
+
 		if (mLastCorrectURL.equals(ApplicationConstants.EMPTY_STRING)) {
 			mUrl.setText(OpenMRS.getInstance().getServerUrl());
 			mLastCorrectURL = OpenMRS.getInstance().getServerUrl();
@@ -254,6 +255,12 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 	public void showLocationLoadingAnimation() {
 		mLoginButton.setEnabled(false);
 		mLocationLoadingProgressBar.setVisibility(View.VISIBLE);
+	}
+
+	@Override
+	public void hideLocationLoadingAnimation() {
+		mLoginButton.setEnabled(true);
+		mLocationLoadingProgressBar.setVisibility(View.INVISIBLE);
 	}
 
 	@Override

@@ -45,6 +45,8 @@ public interface LoginContract {
 
 		void showLocationLoadingAnimation();
 
+		void hideLocationLoadingAnimation();
+
 		void initLoginForm(List<Location> locations, String url);
 
 		void setLocationErrorOccurred(boolean errorOccurred);

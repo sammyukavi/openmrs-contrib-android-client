@@ -182,8 +182,6 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 			setDiagnoses(visit);
 			setAuditData(visit);
 
-			addVisitVitals.setVisibility(visit.getStopDatetime() == null ? View.VISIBLE : View.GONE);
-
 		}
 
 	}
@@ -390,7 +388,6 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 							.equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.VITALS_UUID)) {
 
 						if (visit.getEncounters().get(i).getObs().size() != 0) {
-
 							visitVitalsAuditInfo.setVisibility(View.VISIBLE);
 							visitVitalsDate
 									.setText(DateUtils.convertTime(visit.getEncounters().get(i).getEncounterDatetime(),
@@ -408,14 +405,18 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 							addVisitVitals.setVisibility(View.GONE);
 							visitVitalsTableLayout.setVisibility(View.VISIBLE);
 							loadObservationFields(visit.getEncounters().get(i).getObs(), EncounterTypeData.VITALS);
+						} else {
+							if (visit.getStopDatetime() == null) {
+								noVitals.setVisibility(View.VISIBLE);
+								addVisitVitals.setVisibility(View.VISIBLE);
+								visitVitalsTableLayout.setVisibility(View.GONE);
+							}
 						}
 					}
 				}
 			}
 		} else {
-			noVitals.setVisibility(View.VISIBLE);
-			addVisitVitals.setVisibility(View.VISIBLE);
-			visitVitalsTableLayout.setVisibility(View.GONE);
+			addVisitVitals.setVisibility(visit.getStopDatetime() == null ? View.VISIBLE : View.GONE);
 		}
 	}
 

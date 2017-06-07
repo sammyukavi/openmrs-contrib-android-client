@@ -91,4 +91,22 @@ public class ObsDataService extends BaseDataService<Observation, ObsDbService, O
 						pagingInfo.getLimit(), pagingInfo.getStartIndex())
 		);
 	}
+
+	@Override
+	public void purge(@NonNull Observation entity, @NonNull VoidCallback callback) {
+		GetCallback<Observation> callbackf = new GetCallback<Observation>() {
+			@Override
+			public void onCompleted(Observation observation) {
+
+			}
+
+			@Override
+			public void onError(Throwable t) {
+
+			}
+		};
+		executeSingleCallback(callbackf, null,
+				() -> null,
+				() -> restService.purge(getRestPath(), entity.getUuid()));
+	}
 }

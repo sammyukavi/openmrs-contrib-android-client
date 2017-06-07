@@ -21,11 +21,13 @@ import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.impl.EncounterDataService;
 import org.openmrs.mobile.data.impl.LocationDataService;
+import org.openmrs.mobile.data.impl.ObsDataService;
 import org.openmrs.mobile.data.impl.PatientDataService;
 import org.openmrs.mobile.data.impl.ProviderDataService;
 import org.openmrs.mobile.data.impl.VisitDataService;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Location;
+import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Provider;
 import org.openmrs.mobile.models.Visit;
@@ -37,7 +39,8 @@ import java.util.List;
 
 public class PatientDashboardPresenter extends BasePresenter implements PatientDashboardContract.Presenter {
 
-	private final EncounterDataService encounterDataService;
+	private EncounterDataService encounterDataService;
+	private ObsDataService observationDataService;
 	private PatientDashboardContract.View patientDashboardView;
 	private PatientDataService patientDataService;
 	private VisitDataService visitDataService;
@@ -56,6 +59,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 		this.providerDataService = new ProviderDataService();
 		this.locationDataService = new LocationDataService();
 		this.encounterDataService = new EncounterDataService();
+		this.observationDataService = new ObsDataService();
 	}
 
 	@Override
@@ -158,7 +162,6 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 			public void onCompleted(Location location) {
 				//set location in the fragment and start loading other fields
 				patientDashboardView.setLocation(location);
-
 			}
 
 			@Override
@@ -176,22 +179,10 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 		patientDashboardView.upDateProgressBar(true);
 		DataService.GetCallback<Encounter> serverResponceCallback = new DataService.GetCallback<Encounter>() {
 			@Override
-			public void onCompleted(Encounter encounter) {
+			public void onCompleted(Encounter result) {
 				patientDashboardView.upDateProgressBar(false);
 
-				if (encounter.equals(null)) {
-				} else {
-					/*TODO
-				Ask if the're a parameter you can pass when creating or updating the encounters so that you can get the
-				full representation and get to uncomment the commented lines below.
-				 */
-
-					//fetchEncounter(encounter.getUuid());
-
-					//patientDashboardView.setEncounterUuid(encounter.getUuid());
-					//patientDashboardView.updateFormFields(encounter);
-					patientDashboardView.upDateProgressBar(false);
-				}
+				patientDashboardView.updateClinicVisitNote(encounter.getObs().get(0));
 			}
 
 			@Override
@@ -204,6 +195,33 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 			encounterDataService.create(encounter, serverResponceCallback);
 		} else {
 			encounterDataService.update(encounter, serverResponceCallback);
+		}
+	}
+
+	@Override
+	public void saveObservation(Observation observation, boolean isNewObservation) {
+
+		patientDashboardView.upDateProgressBar(true);
+
+		DataService.GetCallback<Observation> serverResponceCallback = new DataService.GetCallback<Observation>() {
+			@Override
+			public void onCompleted(Observation result) {
+
+				patientDashboardView.upDateProgressBar(false);
+
+				patientDashboardView.updateClinicVisitNote(result);
+			}
+
+			@Override
+			public void onError(Throwable t) {
+				t.printStackTrace();
+			}
+		};
+
+		if (isNewObservation) {
+			observationDataService.create(observation, serverResponceCallback);
+		} else {
+			observationDataService.update(observation, serverResponceCallback);
 		}
 	}
 

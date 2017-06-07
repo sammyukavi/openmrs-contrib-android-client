@@ -175,17 +175,23 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 				mOpenMRS.setServerUrl(url);
 				loginView.initLoginForm(locations, url);
 				loginView.setLocationErrorOccurred(false);
+				hideLocationLoadingAnimation();
 			}
 
 			@Override
 			public void onError(Throwable t) {
-				loginView.hideUrlLoadingAnimation();
+				hideLocationLoadingAnimation();
 				loginView.showInvalidURLSnackbar(t.getMessage());
 				loginView.initLoginForm(new ArrayList<Location>(), url);
 				loginView.setLocationErrorOccurred(true);
 			}
 		});
 
+	}
+
+	private void hideLocationLoadingAnimation() {
+		loginView.hideLocationLoadingAnimation();
+		loginView.hideUrlLoadingAnimation();
 	}
 
 	private boolean validateLoginFields(String username, String password, String url) {

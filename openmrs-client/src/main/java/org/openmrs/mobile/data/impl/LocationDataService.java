@@ -70,7 +70,7 @@ public class LocationDataService extends BaseMetadataDataService<Location, Locat
 	public void getAll(GetCallback<List<Location>> callback) {
 		executeMultipleCallback(callback, null, null,
 				() -> null,
-				() -> restService.getLoginLocations(getRestPath())
+				() -> restService.getLoginLocations(buildRestRequestPath())
 		);
 	}
 }

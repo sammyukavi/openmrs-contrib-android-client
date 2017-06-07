@@ -97,6 +97,7 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 				public void onCompleted(Session session) {
 					if (session != null) {
 						if (session.isAuthenticated()) {
+							RestServiceBuilder.setBaseUrl(false);
 							if (wipeDatabase) {
 								mOpenMRS.deleteDatabase(OpenMRSSQLiteOpenHelper.DATABASE_NAME);
 								setData(session.getSessionId(), url, username, password);
@@ -170,7 +171,7 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 		locationDataService.getAll(new DataService.GetCallback<List<Location>>() {
 			@Override
 			public void onCompleted(List<Location> locations) {
-				RestServiceBuilder.changeBaseUrl(url.trim());
+				RestServiceBuilder.setBaseUrl(true);
 				mOpenMRS.setServerUrl(url);
 				loginView.initLoginForm(locations, url);
 				loginView.setLocationErrorOccurred(false);

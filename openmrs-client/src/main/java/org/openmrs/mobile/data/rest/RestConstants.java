@@ -8,7 +8,8 @@ public class RestConstants {
 	public static final String CREATE = REST_PATH;
 	public static final String UPDATE = GET_BY_UUID;
 	public static final String PURGE = GET_BY_UUID;
-	public static final String LOCATION_PATH = REST_PATH + "location?tag=Login Location";
+	public static final String LOCATION_PATH = REST_PATH + "?tag=Login Location";
+
 
 	public class Representations {
 		public static final String FULL = "full";

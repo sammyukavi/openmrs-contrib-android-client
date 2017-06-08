@@ -154,7 +154,7 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 			intent.putExtra(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, visit.getStopDatetime());
 
 			intent.setFlags(FLAG_ACTIVITY_CLEAR_TOP);
-			
+
 			context.startActivity(intent);
 		} else {
 			patientDashboardActivity.createToast(context.getString(R.string.pending_save));

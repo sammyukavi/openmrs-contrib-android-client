@@ -51,7 +51,4 @@ public abstract class ACBaseFragment<T extends BasePresenterContract> extends Fr
 		return ((ACBaseActivity)getActivity()).createSnackbar(view, message);
 	}
 
-	public void createSnackbar(String message) {
-		((ACBaseActivity)getActivity()).createSnackbar(message);
-	}
 }

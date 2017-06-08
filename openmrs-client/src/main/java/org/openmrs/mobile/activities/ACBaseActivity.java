@@ -32,6 +32,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
@@ -266,7 +267,8 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 		return Snackbar.make(view, message, Snackbar.LENGTH_LONG);
 	}
 
-	public void createSnackbar(String message) {
-		//Snackbar.make(view, message, Snackbar.LENGTH_LONG);
+	public void createToast(String message) {
+		Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
 	}
+
 }

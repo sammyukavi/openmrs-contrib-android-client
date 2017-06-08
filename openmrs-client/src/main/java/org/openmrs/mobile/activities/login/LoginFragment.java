@@ -174,12 +174,12 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 	}
 
 	public void showInvalidURLSnackbar(String message) {
-		createSnackbar(message);
+		createSnackbar(mRootView, message);
 	}
 
 	@Override
 	public void showErrorOccured(String message) {
-		createSnackbar(message);
+		createSnackbar(mRootView, message);
 	}
 
 	@Override

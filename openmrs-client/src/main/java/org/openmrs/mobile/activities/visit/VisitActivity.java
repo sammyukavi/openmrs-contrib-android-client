@@ -203,7 +203,7 @@ public class VisitActivity extends ACBaseActivity {
 				finish();
 				Intent intent = new Intent(getApplicationContext(), PatientDashboardActivity.class);
 				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
-				//fix for now
+				//fix for getDateToday
 				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
 				getApplicationContext().startActivity(intent);

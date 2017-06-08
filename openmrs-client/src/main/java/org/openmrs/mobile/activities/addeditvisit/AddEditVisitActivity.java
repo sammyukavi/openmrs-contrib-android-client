@@ -153,7 +153,7 @@ public class AddEditVisitActivity extends ACBaseActivity {
 					}
 
 					intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
-					//fix for now
+					//fix for getDateToday
 					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
 					getApplicationContext().startActivity(intent);

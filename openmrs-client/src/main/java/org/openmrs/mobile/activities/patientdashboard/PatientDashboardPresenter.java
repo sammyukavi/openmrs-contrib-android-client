@@ -46,9 +46,9 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	private VisitDataService visitDataService;
 	private LocationDataService locationDataService;
 	private ProviderDataService providerDataService;
-	private int limit = 10;
 	private int startIndex = 0;
-	//private Patient patient;
+	private int limit = 10;
+	private Patient patient;
 
 	public PatientDashboardPresenter(PatientDashboardContract.View view) {
 		this.patientDashboardView = view;
@@ -84,6 +84,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 		patientDataService.getByUUID(uuid, QueryOptions.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Patient>() {
 			@Override
 			public void onCompleted(Patient patient) {
+				setPatient(patient);
 				patientDashboardView.showPageSpinner(true);
 				fetchVisits(patient);
 			}
@@ -101,25 +102,50 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
 		patientDashboardView.showPageSpinner(true);
 
-		visitDataService.getByPatient(patient, new QueryOptions(true, true), new PagingInfo(startIndex, limit),
-				new DataService.GetCallback<List<Visit>>() {
-					@Override
-					public void onCompleted(List<Visit> visits) {
-						if (!visits.isEmpty()) {
-							patientDashboardView.updateContactCard(patient);
-							patientDashboardView.updateActiveVisitCard(visits);
-						} else {
-							patientDashboardView.showPageSpinner(false);
-							patientDashboardView.showNoVisits(true);
-						}
-					}
+		DataService.GetCallback<List<Visit>> fetchVisitsCallback = new DataService.GetCallback<List<Visit>>() {
+			@Override
+			public void onCompleted(List<Visit> visits) {
+				/*if (!visits.isEmpty()) {
+					patientDashboardView.updateContactCard(patient);
+					patientDashboardView.updateVisitsCard(visits);
+				} else {
+					patientDashboardView.showPageSpinner(false);
+					patientDashboardView.showNoVisits(true);
+				}*/
+				patientDashboardView.updateContactCard(patient);
+				patientDashboardView.updateVisitsCard(visits);
+			}
 
-					@Override
-					public void onError(Throwable t) {
-						t.printStackTrace();
-						patientDashboardView.showPageSpinner(false);
-					}
-				});
+			@Override
+			public void onError(Throwable t) {
+				t.printStackTrace();
+				patientDashboardView.showPageSpinner(false);
+			}
+		};
+
+		PagingInfo pagingInfo = new PagingInfo(startIndex, limit);
+
+		visitDataService.getByPatient(patient, new QueryOptions(true, true), pagingInfo, fetchVisitsCallback);
+	}
+
+	@Override
+	public void fetchVisits(int startIndex, int limit) {
+
+		PagingInfo pagingInfo = new PagingInfo(startIndex, limit);
+
+		DataService.GetCallback<List<Visit>> fetchVisitsCallback = new DataService.GetCallback<List<Visit>>() {
+			@Override
+			public void onCompleted(List<Visit> visits) {
+				patientDashboardView.updateVisits(visits);
+			}
+
+			@Override
+			public void onError(Throwable t) {
+
+			}
+		};
+
+		visitDataService.getByPatient(patient, QueryOptions.LOAD_RELATED_OBJECTS, pagingInfo, fetchVisitsCallback);
 	}
 
 	@Override
@@ -241,4 +267,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 		}
 	}
 
+	public void setPatient(Patient patient) {
+		this.patient = patient;
+	}
 }

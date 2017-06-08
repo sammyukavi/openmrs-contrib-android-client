@@ -32,7 +32,9 @@ public interface PatientDashboardContract {
 
 		void updateContactCard(Patient patient);
 
-		void updateActiveVisitCard(List<Visit> visits);
+		void updateVisitsCard(List<Visit> visits);
+
+		public void updateVisits(List<Visit> visits);
 
 		Patient getPatient();
 
@@ -58,6 +60,8 @@ public interface PatientDashboardContract {
 		void fetchPatientData(final String patientId);
 
 		void fetchVisits(Patient patient);
+
+		void fetchVisits(int startIndex, int limit);
 
 		Patient getPatient();
 

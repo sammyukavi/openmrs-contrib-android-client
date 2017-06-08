@@ -3,20 +3,20 @@
 		android:layout_width="match_parent"
 		android:orientation="vertical"
 		android:layout_height="wrap_content">
-	
+
 	<RelativeLayout
 			android:id="@+id/hideHeader"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent">
-	
+
 	</RelativeLayout>
-	
-	
+
+
 	<RelativeLayout
 			android:id="@+id/headerScreen"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent">
-		
+
 		<RelativeLayout
 				android:id="@+id/cardView"
 				android:layout_width="match_parent"
@@ -27,14 +27,14 @@
 				android:paddingStart="10dp"
 				android:paddingEnd="10dp"
 				android:background="@color/white">
-			
-			
+
+
 			<RelativeLayout
 					android:id="@+id/patientHeader"
 					android:layout_marginTop="10dp"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content">
-				
+
 				<TextView
 						android:id="@+id/fetchedPatientDisplayName"
 						android:textStyle="bold"
@@ -45,7 +45,7 @@
 						android:layout_centerHorizontal="true"
 						android:layout_alignParentLeft="true"
 						android:layout_alignParentStart="true" />
-				
+
 				<TextView
 						android:textColor="@color/color_white"
 						android:background="@drawable/label_badge"
@@ -58,17 +58,17 @@
 						android:layout_alignParentEnd="true"
 						android:gravity="center"
 						android:layout_height="wrap_content" />
-			
+
 			</RelativeLayout>
-			
-			
+
+
 			<LinearLayout
 					android:layout_below="@id/patientHeader"
 					android:id="@+id/patientGenderAgeDetails"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:orientation="horizontal">
-				
+
 				<ImageView
 						android:layout_marginStart="5dp"
 						android:layout_marginLeft="5dp"
@@ -76,7 +76,7 @@
 						android:layout_width="18dp"
 						android:layout_height="match_parent"
 						android:src="@drawable/male" />
-				
+
 				<TextView
 						android:layout_marginStart="5dp"
 						android:layout_marginLeft="10dp"
@@ -85,7 +85,7 @@
 						android:id="@+id/fetchedPatientBirthDate"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content" />
-				
+
 				<TextView
 						android:id="@+id/ageLabel"
 						android:layout_width="wrap_content"
@@ -94,7 +94,7 @@
 						android:layout_marginRight="5dp"
 						android:text="@string/label_age"
 						android:textStyle="italic" />
-				
+
 				<TextView
 						android:id="@+id/fetchedPatientAge"
 						android:layout_width="wrap_content"
@@ -102,15 +102,16 @@
 						android:layout_marginEnd="10dp"
 						android:layout_marginRight="10dp" />
 			</LinearLayout>
-		
+
 		</RelativeLayout>
-		
+
 		<View
 				android:visibility="gone"
+				android:layout_below="@+id/cardView"
 				android:id="@+id/shadowLine"
 				android:layout_width="match_parent"
 				android:layout_height="1dp"
 				android:background="@android:color/darker_gray" />
-	
+
 	</RelativeLayout>
 </LinearLayout>

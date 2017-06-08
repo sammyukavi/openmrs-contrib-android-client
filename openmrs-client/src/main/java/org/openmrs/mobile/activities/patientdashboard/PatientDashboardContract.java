@@ -42,13 +42,15 @@ public interface PatientDashboardContract {
 
 		Context getContext();
 
-		void upDateProgressBar(boolean show);
+		void showSavingClinicalNoteProgressBar(boolean show);
 
 		void showPageSpinner(boolean visibility);
 
 		void showNoVisits(boolean visibility);
 
 		void updateClinicVisitNote(Observation observation);
+
+		void allowUserNavigation(boolean allowNavigation);
 	}
 
 	interface Presenter extends BasePresenterContract {

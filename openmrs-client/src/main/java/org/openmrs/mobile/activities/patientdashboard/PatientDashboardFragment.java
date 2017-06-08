@@ -73,6 +73,8 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	private TextView patientAddress, patientPhonenumber;
 	private String patientUuid;
 	private VisitsRecyclerAdapter visitsRecyclerAdapter;
+	private boolean allowNavigation = true;
+	private PatientDashboardActivity patientDashboardActivity;
 
 	public static PatientDashboardFragment newInstance() {
 		return new PatientDashboardFragment();
@@ -84,10 +86,17 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+		patientDashboardActivity = (PatientDashboardActivity)getActivity();
+
 		fragmentView = inflater.inflate(R.layout.fragment_patient_dashboard, container, false);
+
 		patientUuid = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
+
 		initViewFields();
+
 		initializeListeners(startVisitButton, editPatient);
+
 		//We start by fetching by location, required for creating encounters
 		String locationUuid = "";
 		if (!instance.getLocation().equalsIgnoreCase(null)) {
@@ -95,8 +104,11 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		}
 
 		mPresenter.fetchLocation(locationUuid);
+
 		mPresenter.fetchPatientData(patientUuid);
+
 		FontsUtil.setFont((ViewGroup)this.getActivity().findViewById(android.R.id.content));
+
 		return fragmentView;
 	}
 
@@ -191,8 +203,6 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		final Rect scrollBounds = new Rect();
 		scrollView.getHitRect(scrollBounds);
 
-		PatientDashboardActivity patientDashboardActivity = (PatientDashboardActivity)getActivity();
-
 		scrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
 			@Override
 			public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
@@ -230,7 +240,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 				visits, getActivity(), uuidsHashmap
 		);
 		pastVisitsRecyclerView.setAdapter(visitsRecyclerAdapter);
-		visitsRecyclerAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
+		visitsRecyclerAdapter.setmOnLoadMoreListener(new OnLoadMoreListener() {
 			@Override
 			public void onLoadMore() {
 				//visitsRecyclerAdapter.notifyItemRemoved();
@@ -277,8 +287,8 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	}
 
 	@Override
-	public void upDateProgressBar(boolean show) {
-		//savingProgressBar.setVisibility(show ? View.VISIBLE : View.GONE);
+	public void showSavingClinicalNoteProgressBar(boolean show) {
+		visitsRecyclerAdapter.updateSavingClinicalNoteProgressBar(show);
 	}
 
 	@Override
@@ -306,4 +316,9 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		visitsRecyclerAdapter.updateClinicalNoteObs(observation);
 	}
 
+	@Override
+	public void allowUserNavigation(boolean allowNavigation) {
+		patientDashboardActivity.setHasPendingTransaction(!allowNavigation);
+		visitsRecyclerAdapter.allowUserNavigation(allowNavigation);
+	}
 }

@@ -12,7 +12,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TableLayout;
@@ -59,11 +58,10 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 	private final int VIEW_TYPE_ITEM = 0;
 	private final int VIEW_TYPE_LOADING = 1;
 	private HashMap uuIds = new HashMap();
-	private OnLoadMoreListener onLoadMoreListener;
-	private boolean isLoading;
+	private OnLoadMoreListener mOnLoadMoreListener;
+	private boolean mIsLoading, allowUserNavigation;
 	private Context context;
 	private List<Visit> visits;
-	private ImageView showVisitDetails;
 	private Intent intent;
 	private LayoutInflater layoutInflater;
 	private TableLayout visitVitalsTableLayout;
@@ -71,14 +69,15 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 	private TextView clinicalNote;
 	private Handler handler = new Handler();
 	private long delay = 3000; //seconds after user stops typing
-	private long last_text_edit = 0;
+	private long lastTextEdit = 0;
 	private LocalDateTime localDateTime;
 	private PatientDashboardActivity patientDashboardActivity;
 	private Visit activeVisit;
 	private Observation clinicalNoteObs;
+	private View activeVisitView;
 
-	Runnable input_finish_checker = () -> {
-		if (System.currentTimeMillis() > (last_text_edit + delay - 500)) {
+	Runnable inputFinishChecker = () -> {
+		if (System.currentTimeMillis() > (lastTextEdit + delay - 500)) {
 			if (clinicalNoteObs != null) {
 				clinicalNoteObs.setValue(clinicalNote.getText().toString());
 				patientDashboardActivity.mPresenter.saveObservation(clinicalNoteObs, false);
@@ -128,12 +127,13 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 		@Override
 		public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
 			super.onScrolled(recyclerView, dx, dy);
-			if (!isLoading && onLoadMoreListener != null) {
-				isLoading = true;
-				onLoadMoreListener.onLoadMore();
+			if (!mIsLoading && mOnLoadMoreListener != null) {
+				mIsLoading = true;
+				mOnLoadMoreListener.onLoadMore();
 			}
 		}
 	};
+
 	private TextWatcher clinicalNoteWatcher = new TextWatcher() {
 		@Override
 		public void beforeTextChanged(CharSequence s, int start, int count,
@@ -143,18 +143,22 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 		@Override
 		public void onTextChanged(final CharSequence s, int start, int before,
 				int count) {
-			//You need to remove this to run only once
-			handler.removeCallbacks(input_finish_checker);
+			//Remove this to run only once
+			handler.removeCallbacks(inputFinishChecker);
 		}
 
 		@Override
 		public void afterTextChanged(final Editable s) {
+
+			//Text has changed, stop navigaion until save is complete
+			patientDashboardActivity.setHasPendingTransaction(true);
+
+			allowUserNavigation = false;
+
 			//avoid triggering event when text is empty
 			if (s.length() > 0) {
-				last_text_edit = System.currentTimeMillis();
-				handler.postDelayed(input_finish_checker, delay);
-			} else {
-
+				lastTextEdit = System.currentTimeMillis();
+				handler.postDelayed(inputFinishChecker, delay);
 			}
 		}
 	};
@@ -167,20 +171,25 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 		this.localDateTime = new LocalDateTime();
 		recyclerView.addOnScrollListener(onScrollListener);
 		this.patientDashboardActivity = (PatientDashboardActivity)context;
+		this.allowUserNavigation = true;
 	}
 
 	private void loadVisitDetails(Visit visit) {
-		setVisitStopDate(visit);
-		intent = new Intent(context, VisitActivity.class);
-		intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, OpenMRS.getInstance()
-				.getPatientUuid());
-		intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visit.getUuid());
-		intent.putExtra(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, visit.getStopDatetime());
-		context.startActivity(intent);
+		if (allowUserNavigation) {
+			setVisitStopDate(visit);
+			intent = new Intent(context, VisitActivity.class);
+			intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, OpenMRS.getInstance()
+					.getPatientUuid());
+			intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visit.getUuid());
+			intent.putExtra(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, visit.getStopDatetime());
+			context.startActivity(intent);
+		} else {
+			patientDashboardActivity.createToast(context.getString(R.string.pending_save));
+		}
 	}
 
-	public void setOnLoadMoreListener(OnLoadMoreListener mOnLoadMoreListener) {
-		this.onLoadMoreListener = mOnLoadMoreListener;
+	public void setmOnLoadMoreListener(OnLoadMoreListener mOnLoadMoreListener) {
+		this.mOnLoadMoreListener = mOnLoadMoreListener;
 	}
 
 	@Override
@@ -222,6 +231,7 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 				activeVisit = visit;
 				isActiveVisit = true;
 				singleVisitView.findViewById(R.id.active_visit_badge).setVisibility(View.VISIBLE);
+				activeVisitView = singleVisitView;
 			}
 
 			visitStartDate.setText(startDate);
@@ -229,13 +239,14 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 					.setText(DateUtils.calculateTimeDifference(visit.getStartDatetime(), true));
 
 			if (!isActiveVisit) {
-				((TextView)singleVisitView.findViewById(R.id.visitDuration))
-						.setText(context.getString(R.string.visit_duration,
-								DateUtils.calculateTimeDifference(visit.getStartDatetime(), visit.getStopDatetime())));
+				TextView visitDuration = (TextView)singleVisitView.findViewById(R.id.visitDuration);
+				visitDuration.setText(context.getString(R.string.visit_duration,
+						DateUtils.calculateTimeDifference(visit.getStartDatetime(), visit.getStopDatetime())));
+				visitDuration.setVisibility(View.VISIBLE);
 			}
 
 			//Adding the link to the visit details page
-			showVisitDetails = (ImageView)singleVisitView.findViewById(R.id.loadVisitDetails);
+			LinearLayout showVisitDetails = (LinearLayout)singleVisitView.findViewById(R.id.loadVisitDetails);
 
 			if (isActiveVisit) {
 				showVisitDetails.setVisibility(View.VISIBLE);
@@ -388,7 +399,7 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 	}
 
 	public void setLoaded() {
-		isLoading = false;
+		mIsLoading = false;
 	}
 
 	private Encounter createClinicalNoteEncounter() {
@@ -418,6 +429,16 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 		encounter.setEncounterType(mEncountertype);
 
 		return encounter;
+	}
+
+	public void updateSavingClinicalNoteProgressBar(boolean show) {
+		if (activeVisitView != null) {
+			activeVisitView.findViewById(R.id.savingProgressBarView).setVisibility(show ? View.VISIBLE : View.GONE);
+		}
+	}
+
+	public void allowUserNavigation(boolean allowNavigation) {
+		this.allowUserNavigation = allowNavigation;
 	}
 
 	private class LoadingViewHolder extends RecyclerView.ViewHolder {

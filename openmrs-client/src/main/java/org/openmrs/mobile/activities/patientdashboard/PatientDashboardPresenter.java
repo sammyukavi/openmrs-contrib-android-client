@@ -78,7 +78,9 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
 	@Override
 	public void fetchPatientData(String uuid) {
+
 		patientDashboardView.showPageSpinner(true);
+
 		patientDataService.getByUUID(uuid, QueryOptions.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Patient>() {
 			@Override
 			public void onCompleted(Patient patient) {
@@ -96,7 +98,9 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
 	@Override
 	public void fetchVisits(Patient patient) {
+
 		patientDashboardView.showPageSpinner(true);
+
 		visitDataService.getByPatient(patient, new QueryOptions(true, true), new PagingInfo(startIndex, limit),
 				new DataService.GetCallback<List<Visit>>() {
 					@Override
@@ -127,9 +131,13 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	 * TODO: create a service to getProviderByPerson, move code to commons
 	 */
 	private void getCurrentProvider() {
+
 		patientDashboardView.showPageSpinner(true);
+
 		String personUuid = OpenMRS.getInstance().getCurrentLoggedInUserInfo().get(ApplicationConstants.UserKeys.USER_UUID);
+
 		if (StringUtils.notEmpty(personUuid)) {
+
 			providerDataService.getAll(QueryOptions.LOAD_RELATED_OBJECTS, null,
 					new DataService.GetCallback<List<Provider>>() {
 						@Override
@@ -174,11 +182,18 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
 	@Override
 	public void saveEncounter(Encounter encounter, boolean isNewEncounter) {
-		patientDashboardView.upDateProgressBar(true);
+
+		patientDashboardView.showSavingClinicalNoteProgressBar(true);
+
+		patientDashboardView.allowUserNavigation(false);
+
 		DataService.GetCallback<Encounter> serverResponceCallback = new DataService.GetCallback<Encounter>() {
 			@Override
 			public void onCompleted(Encounter result) {
-				patientDashboardView.upDateProgressBar(false);
+				patientDashboardView.showSavingClinicalNoteProgressBar(false);
+
+				patientDashboardView.allowUserNavigation(true);
+
 				patientDashboardView.updateClinicVisitNote(result.getObs().get(0));
 			}
 
@@ -198,13 +213,17 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	@Override
 	public void saveObservation(Observation observation, boolean isNewObservation) {
 
-		patientDashboardView.upDateProgressBar(true);
+		patientDashboardView.showSavingClinicalNoteProgressBar(true);
+
+		patientDashboardView.allowUserNavigation(false);
 
 		DataService.GetCallback<Observation> serverResponceCallback = new DataService.GetCallback<Observation>() {
 			@Override
 			public void onCompleted(Observation result) {
 
-				patientDashboardView.upDateProgressBar(false);
+				patientDashboardView.showSavingClinicalNoteProgressBar(false);
+
+				patientDashboardView.allowUserNavigation(true);
 
 				patientDashboardView.updateClinicVisitNote(result);
 			}

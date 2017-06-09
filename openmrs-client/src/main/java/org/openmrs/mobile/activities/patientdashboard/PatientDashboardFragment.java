@@ -61,8 +61,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	private String patientUuid;
 	private VisitsRecyclerAdapter visitsRecyclerAdapter;
 	private PatientDashboardActivity patientDashboardActivity;
-	private int startIndex = 0;
-	private int limit = 5;
+	private int startIndex = 0, limit = 5;
 
 	public static PatientDashboardFragment newInstance() {
 		return new PatientDashboardFragment();
@@ -85,14 +84,8 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
 		initializeListeners(startVisitButton, editPatient);
 
-		//We start by fetching by location, required for creating encounters
-		String locationUuid = "";
-
-		if (!instance.getLocation().equalsIgnoreCase(null)) {
-			locationUuid = instance.getLocation();
-		}
-
-		mPresenter.fetchLocation(locationUuid);
+		//set start index incase it's cached somewhere
+		mPresenter.setStartIndex(startIndex);
 
 		//set limit for visits
 		mPresenter.setLimit(limit);
@@ -160,9 +153,9 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
 		HashMap<String, String> uuidsHashmap = new HashMap<>();
 
-		uuidsHashmap.put(PATIENT_UUID_BUNDLE, patient.getUuid());
+		uuidsHashmap.put(PATIENT_UUID_BUNDLE, patient == null ? "" : patient.getUuid());
 
-		uuidsHashmap.put(LOCATION_UUID_BUNDLE, location.getUuid());
+		uuidsHashmap.put(LOCATION_UUID_BUNDLE, location == null ? "" : location.getUuid());
 
 		RecyclerView visitsRecyclerView = (RecyclerView)fragmentView.findViewById(R.id.pastVisits);
 
@@ -242,9 +235,4 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		visitsRecyclerAdapter.updateClinicalNoteObs(observation);
 	}
 
-	@Override
-	public void allowUserNavigation(boolean allowNavigation) {
-		patientDashboardActivity.setHasPendingTransaction(!allowNavigation);
-		visitsRecyclerAdapter.allowUserNavigation(allowNavigation);
-	}
 }

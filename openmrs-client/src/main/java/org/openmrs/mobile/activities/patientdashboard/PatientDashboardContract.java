@@ -52,8 +52,6 @@ public interface PatientDashboardContract {
 
 		void updateClinicVisitNote(Observation observation);
 
-		void allowUserNavigation(boolean allowNavigation);
-
 	}
 
 	interface Presenter extends BasePresenterContract {
@@ -69,8 +67,6 @@ public interface PatientDashboardContract {
 		void setLimit(int limit);
 
 		void setStartIndex(int startIndex);
-
-		void fetchLocation(String locationUuid);
 
 		void saveEncounter(Encounter encounter, boolean isNew);
 

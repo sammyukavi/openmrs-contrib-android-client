@@ -202,14 +202,12 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
 					if (!recyclerView.canScrollVertically(1)) {
 						// load next page
-						patientDashboardActivity.mPresenter.fetchVisits(startIndex + limit, limit);//change this to
-						// compute in the presenter
+						patientDashboardActivity.mPresenter.fetchVisits(true);
 					}
 
 					if (!recyclerView.canScrollVertically(-1) && dy < 0) {
 						// load previous page
-						patientDashboardActivity.mPresenter.fetchVisits(startIndex - limit, limit);////change this to
-						// compute in the presenter
+						patientDashboardActivity.mPresenter.fetchVisits(false);
 					}
 				}
 

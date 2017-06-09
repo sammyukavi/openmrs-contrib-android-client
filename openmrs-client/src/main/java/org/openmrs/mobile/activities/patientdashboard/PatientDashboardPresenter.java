@@ -144,9 +144,21 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	}
 
 	@Override
-	public void fetchVisits(int startIndex, int limit) {
+	public void fetchVisits(boolean loadNextResults) {
 
-		PagingInfo pagingInfo = new PagingInfo(0, 10);
+		if (loadNextResults) {
+			startIndex += limit;
+		} else {
+			startIndex -= limit;
+		}
+
+		if (startIndex < 0) {
+			startIndex = 0;
+		}
+
+		System.out.println("Start Index: " + startIndex);
+
+		PagingInfo pagingInfo = new PagingInfo(startIndex, limit);
 
 		setLoading(true);
 

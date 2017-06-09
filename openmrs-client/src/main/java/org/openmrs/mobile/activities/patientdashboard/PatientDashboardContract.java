@@ -62,7 +62,7 @@ public interface PatientDashboardContract {
 
 		void fetchVisits(Patient patient);
 
-		void fetchVisits(int startIndex, int limit);
+		void fetchVisits(boolean loadNextResults);
 
 		Patient getPatient();
 

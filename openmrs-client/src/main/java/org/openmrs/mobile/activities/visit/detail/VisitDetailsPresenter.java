@@ -27,11 +27,13 @@ import org.openmrs.mobile.data.impl.ConceptDataService;
 import org.openmrs.mobile.data.impl.ObsDataService;
 import org.openmrs.mobile.data.impl.VisitAttributeTypeDataService;
 import org.openmrs.mobile.data.impl.VisitDataService;
+import org.openmrs.mobile.data.impl.VisitNoteDataService;
 import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.ConceptAnswer;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitAttributeType;
+import org.openmrs.mobile.models.VisitNote;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.ToastUtil;
 
@@ -44,6 +46,7 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 	private VisitDataService visitDataService;
 	private ConceptDataService conceptDataService;
 	private ObsDataService obsDataService;
+	private VisitNoteDataService visitNoteDataService;
 	private String patientUUID, visitUUID, providerUuid, visitStopDate;
 
 	private int page = 1;
@@ -62,6 +65,7 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 		this.obsDataService = new ObsDataService();
 		this.conceptAnswerDataService = new ConceptAnswerDataService();
 		this.visitAttributeTypeDataService = new VisitAttributeTypeDataService();
+		this.visitNoteDataService = new VisitNoteDataService();
 		this.visitUUID = visitUuid;
 		this.providerUuid = providerUuid;
 		this.patientUUID = patientUuid;
@@ -209,6 +213,21 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 			@Override
 			public void onError(Throwable t) {
 				ToastUtil.error(t.getMessage());
+			}
+		});
+	}
+
+	@Override
+	public void saveVisitNote(VisitNote visitNote) {
+		visitNoteDataService.save(visitNote, new DataService.GetCallback<VisitNote>() {
+			@Override
+			public void onCompleted(VisitNote visitNote) {
+				System.out.println("RETURNED:::" + visitNote);
+			}
+
+			@Override
+			public void onError(Throwable t) {
+				System.out.println("FAILED:::" + t.getMessage());
 			}
 		});
 	}

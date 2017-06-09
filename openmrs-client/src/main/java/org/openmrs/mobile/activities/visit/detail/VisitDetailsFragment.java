@@ -44,11 +44,13 @@ import org.openmrs.mobile.activities.visit.VisitFragment;
 import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.ConceptName;
 import org.openmrs.mobile.models.Encounter;
+import org.openmrs.mobile.models.EncounterDiagnosis;
 import org.openmrs.mobile.models.EncounterType;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitAttribute;
 import org.openmrs.mobile.models.VisitAttributeType;
+import org.openmrs.mobile.models.VisitNote;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.DateUtils;
 import org.openmrs.mobile.utilities.StringUtils;
@@ -240,6 +242,34 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, visitStopDate);
 				startActivity(intent);
 			}
+		});
+
+
+		submitVisitNote.setOnClickListener(v -> {
+			VisitNote visitNote = new VisitNote();
+			visitNote.setPersonId("10527");
+			visitNote.setHtmlFormId("7");
+			visitNote.setCreateVisit("false");
+			visitNote.setFormModifiedTimestamp(String.valueOf(System.currentTimeMillis()));
+			visitNote.setEncounterModifiedTimestamp("0");
+			visitNote.setVisitId("13417");
+			visitNote.setReturnUrl("");
+			visitNote.setCloseAfterSubmission("");
+			visitNote.setEncounterId("7716");
+			visitNote.setW1("21228");
+			visitNote.setW3("4");
+			visitNote.setW5("2017-06-08");
+			visitNote.setW10("complaint: fever4");
+			visitNote.setW12("Note section.....4");
+
+			EncounterDiagnosis encounterDiagnosis = new EncounterDiagnosis();
+			encounterDiagnosis.setCertainty("PRESUMED");
+			encounterDiagnosis.setOrder("PRIMARY");
+			encounterDiagnosis.setDiagnosis("ConceptName:16603");
+
+			visitNote.addEncounterDiagnosis(encounterDiagnosis);
+
+			((VisitDetailsPresenter) mPresenter).saveVisitNote(visitNote);
 		});
 	}
 

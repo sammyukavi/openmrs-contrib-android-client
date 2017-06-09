@@ -49,10 +49,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	private int startIndex = 0;
 	private int limit = 10;
 	private Patient patient;
-<<<<<<< 94d7c89a08c96c8bf84cf965ebd6903feb5edd18
 	private boolean loading;
-=======
->>>>>>> Date on visit card if the date is current, show "Today"
 
 	public PatientDashboardPresenter(PatientDashboardContract.View view) {
 		this.patientDashboardView = view;
@@ -118,7 +115,6 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
 		patientDashboardView.showPageSpinner(true);
 
-<<<<<<< 94d7c89a08c96c8bf84cf965ebd6903feb5edd18
 		setLoading(true);
 
 		DataService.GetCallback<List<Visit>> fetchVisitsCallback = new DataService.GetCallback<List<Visit>>() {
@@ -134,30 +130,13 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 					patientDashboardView.showPageSpinner(false);
 					patientDashboardView.showNoVisits(true);
 				}
-=======
-		DataService.GetCallback<List<Visit>> fetchVisitsCallback = new DataService.GetCallback<List<Visit>>() {
-			@Override
-			public void onCompleted(List<Visit> visits) {
-				/*if (!visits.isEmpty()) {
-					patientDashboardView.updateContactCard(patient);
-					patientDashboardView.updateVisitsCard(visits);
-				} else {
-					patientDashboardView.showPageSpinner(false);
-					patientDashboardView.showNoVisits(true);
-				}*/
-				patientDashboardView.updateContactCard(patient);
-				patientDashboardView.updateVisitsCard(visits);
->>>>>>> Date on visit card if the date is current, show "Today"
 			}
 
 			@Override
 			public void onError(Throwable t) {
 				t.printStackTrace();
 				patientDashboardView.showPageSpinner(false);
-<<<<<<< 94d7c89a08c96c8bf84cf965ebd6903feb5edd18
 				setLoading(false);
-=======
->>>>>>> Date on visit card if the date is current, show "Today"
 			}
 		};
 
@@ -167,7 +146,6 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	}
 
 	@Override
-<<<<<<< 94d7c89a08c96c8bf84cf965ebd6903feb5edd18
 	public void fetchVisits(boolean loadNextResults) {
 
 		if (loadNextResults) {
@@ -193,33 +171,15 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 				patientDashboardView.updateVisits(results);
 
 				setLoading(false);
-=======
-	public void fetchVisits(int startIndex, int limit) {
-
-		PagingInfo pagingInfo = new PagingInfo(startIndex, limit);
-
-		DataService.GetCallback<List<Visit>> fetchVisitsCallback = new DataService.GetCallback<List<Visit>>() {
-			@Override
-			public void onCompleted(List<Visit> visits) {
-				patientDashboardView.updateVisits(visits);
->>>>>>> Date on visit card if the date is current, show "Today"
 			}
 
 			@Override
 			public void onError(Throwable t) {
-<<<<<<< 94d7c89a08c96c8bf84cf965ebd6903feb5edd18
 				setLoading(false);
 			}
 		};
 
 		visitDataService.getByPatient(patient, new QueryOptions(true, true), pagingInfo, fetchVisitsCallback);
-=======
-
-			}
-		};
-
-		visitDataService.getByPatient(patient, QueryOptions.LOAD_RELATED_OBJECTS, pagingInfo, fetchVisitsCallback);
->>>>>>> Date on visit card if the date is current, show "Today"
 	}
 
 	@Override
@@ -353,7 +313,6 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	public void setPatient(Patient patient) {
 		this.patient = patient;
 	}
-<<<<<<< 94d7c89a08c96c8bf84cf965ebd6903feb5edd18
 
 	@Override
 	public boolean isLoading() {
@@ -364,6 +323,4 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	public void setLoading(boolean loading) {
 		this.loading = loading;
 	}
-=======
->>>>>>> Date on visit card if the date is current, show "Today"
 }

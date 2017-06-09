@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.support.design.widget.TextInputEditText;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -60,11 +61,10 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
 	private final int VIEW_TYPE_HEADER = 0;
 	private final int VIEW_TYPE_ITEM = 1;
-	private HashMap uuIds = new HashMap();
-	private boolean allowUserNavigation, editIsAllowed;
+	private HashMap<String, String> uuids;
+	private boolean allowUserNavigation, editIsAllowed, loading = true;
 	private Context context;
 	private List<Visit> visits;
-	private Intent intent;
 	private LayoutInflater layoutInflater;
 	private TableLayout visitVitalsTableLayout;
 	private OpenMRS instance = OpenMRS.getInstance();
@@ -77,6 +77,7 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 	private Visit activeVisit;
 	private Observation clinicalNoteObs;
 	private View activeVisitView;
+	private PatientDashboardFragment.OnLoadMoreListener onLoadMoreListener;
 
 	private Runnable inputFinishChecker = () -> {
 
@@ -92,14 +93,14 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 				concept.setUuid(ClinicFormUUID);
 
 				Person person = new Person();
-				person.setUuid(uuIds.get(PATIENT_UUID_BUNDLE).toString());
+				person.setUuid(uuids.get(PATIENT_UUID_BUNDLE).toString());
 
 				Provider provider = new Provider();
 				provider.setUuid(OpenMRS.getInstance().getCurrentLoggedInUserInfo().get(ApplicationConstants.UserKeys
 						.USER_UUID));
 
 				Location location = new Location();
-				location.setUuid(uuIds.get(LOCATION_UUID_BUNDLE).toString());
+				location.setUuid(uuids.get(LOCATION_UUID_BUNDLE).toString());
 
 				//create observation
 				Observation observation = new Observation();
@@ -107,7 +108,7 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 				observation.setPerson(person);
 				observation.setObsDatetime(localDateTime.toString());
 				observation.setProvider(provider);
-				observation.setLocation(uuIds.get(LOCATION_UUID_BUNDLE).toString());
+				observation.setLocation(uuids.get(LOCATION_UUID_BUNDLE).toString());
 				observation.setValue(clinicalNote.getText().toString());
 
 				List<Observation> observationList = new ArrayList<>();
@@ -161,27 +162,7 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 		}
 	};
 
-	class RecyclerViewHeader extends RecyclerView.ViewHolder {
-		protected TextView patientAddress;
-		protected TextView patientPhonenumber;
-
-		public RecyclerViewHeader(View itemView) {
-			super(itemView);
-			this.patientAddress = (TextView)itemView.findViewById(R.id.patientAddress);
-			this.patientPhonenumber = (TextView)itemView.findViewById(R.id.patientPhonenumber);
-		}
-	}
-
-	private class VisitViewHolder extends RecyclerView.ViewHolder {
-		protected LinearLayout observationsContainer;
-
-		public VisitViewHolder(View view) {
-			super(view);
-			observationsContainer = (LinearLayout)view.findViewById(R.id.observationsContainer);
-		}
-	}
-
-	public VisitsRecyclerAdapter(List<Visit> visits, Context context, HashMap uuidsHashmap) {
+	public VisitsRecyclerAdapter(RecyclerView visitsRecyclerView, List<Visit> visits, Context context) {
 
 		this.visits = visits;
 
@@ -189,15 +170,42 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
 		this.layoutInflater = LayoutInflater.from(context);
 
-		this.uuIds = uuidsHashmap;
-
 		this.localDateTime = new LocalDateTime();
 
 		this.patientDashboardActivity = (PatientDashboardActivity)context;
 
 		this.allowUserNavigation = true;
 
-		setHasStableIds(true);
+		LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+
+		visitsRecyclerView.setLayoutManager(linearLayoutManager);
+
+		visitsRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+			@Override
+			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+				super.onScrolled(recyclerView, dx, dy);
+
+				//Contact address header
+				View patientContactInfo = recyclerView.findViewById(R.id.container_patient_address_info);
+				if (patientContactInfo == null) {
+					patientDashboardActivity.updateHeaderShadowLine(true);
+				} else {
+					patientDashboardActivity.updateHeaderShadowLine(false);
+				}
+
+				//Load more visits
+				if (dy > 0) //check for scroll down
+				{
+					if (onLoadMoreListener != null && !loading) {
+						onLoadMoreListener.onLoadMore();
+					} else {
+						System.out.println("Can't fetch more still loading");
+					}
+				}
+
+			}
+		});
 	}
 
 	public void updateSavingClinicalNoteProgressBar(boolean show) {
@@ -214,10 +222,14 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 		this.clinicalNoteObs = obs;
 	}
 
+	public void setOnLoadMoreListener(PatientDashboardFragment.OnLoadMoreListener mOnLoadMoreListener) {
+		this.onLoadMoreListener = mOnLoadMoreListener;
+	}
+
 	private void loadVisitDetails(Visit visit) {
 		if (allowUserNavigation) {
 			setVisitStopDate(visit);
-			intent = new Intent(context, VisitActivity.class);
+			Intent intent = new Intent(context, VisitActivity.class);
 			intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, OpenMRS.getInstance()
 					.getPatientUuid());
 			intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visit.getUuid());
@@ -259,6 +271,7 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
 		header.patientAddress.setText(address);
 		header.patientPhonenumber.setText(phone);
+
 	}
 
 	private void presentClinicalNotes(Encounter encounter, View view, boolean isActiveVisit) {
@@ -387,7 +400,7 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 		LocalDateTime localDateTime = new LocalDateTime();
 
 		Patient patient = new Patient();
-		patient.setUuid(uuIds.get(PATIENT_UUID_BUNDLE).toString());
+		patient.setUuid(uuids.get(PATIENT_UUID_BUNDLE).toString());
 
 		Form form = new Form();
 		form.setUuid(CLINICAL_FORM_UUID);
@@ -521,6 +534,38 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 	@Override
 	public int getItemCount() {
 		return visits == null ? 0 : visits.size() + 1;//Add an index for the header
+	}
+
+	public void setLoading() {
+		this.loading = true;
+	}
+
+	public void setLoaded() {
+		this.loading = false;
+	}
+
+	public void setUuids(HashMap<String, String> uuids) {
+		this.uuids = uuids;
+	}
+
+	private class RecyclerViewHeader extends RecyclerView.ViewHolder {
+		TextView patientAddress;
+		TextView patientPhonenumber;
+
+		RecyclerViewHeader(View itemView) {
+			super(itemView);
+			this.patientAddress = (TextView)itemView.findViewById(R.id.patientAddress);
+			this.patientPhonenumber = (TextView)itemView.findViewById(R.id.patientPhonenumber);
+		}
+	}
+
+	private class VisitViewHolder extends RecyclerView.ViewHolder {
+		LinearLayout observationsContainer;
+
+		VisitViewHolder(View view) {
+			super(view);
+			observationsContainer = (LinearLayout)view.findViewById(R.id.observationsContainer);
+		}
 	}
 
 }

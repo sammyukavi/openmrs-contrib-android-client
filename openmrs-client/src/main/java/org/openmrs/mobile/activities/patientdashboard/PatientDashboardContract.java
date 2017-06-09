@@ -53,6 +53,7 @@ public interface PatientDashboardContract {
 		void updateClinicVisitNote(Observation observation);
 
 		void allowUserNavigation(boolean allowNavigation);
+
 	}
 
 	interface Presenter extends BasePresenterContract {

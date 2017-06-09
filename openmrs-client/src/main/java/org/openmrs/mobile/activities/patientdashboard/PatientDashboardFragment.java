@@ -16,10 +16,8 @@ package org.openmrs.mobile.activities.patientdashboard;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,7 +62,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	private VisitsRecyclerAdapter visitsRecyclerAdapter;
 	private PatientDashboardActivity patientDashboardActivity;
 	private int startIndex = 0;
-	private int limit = 20;
+	private int limit = 5;
 	private List<Visit> visits;
 
 	public static PatientDashboardFragment newInstance() {
@@ -139,10 +137,6 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		dashboardProgressBar = (RelativeLayout)fragmentView.findViewById(R.id.dashboardProgressBar);
 		noVisitNoteLabel = (TextView)fragmentView.findViewById(R.id.noVisitNoteLabel);
 
-		//Contact address header
-		//patientContactInfo = fragmentView.findViewById(R.id.container_patient_address_info);
-		//patientAddress = (TextView)patientContactInfo.findViewById(R.id.patientAddress);
-		//patientPhonenumber = (TextView)patientContactInfo.findViewById(R.id.patientPhonenumber);
 	}
 
 	@Override
@@ -173,43 +167,38 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
 		uuidsHashmap.put(LOCATION_UUID_BUNDLE, location.getUuid());
 
-		RecyclerView pastVisitsRecyclerView = (RecyclerView)fragmentView.findViewById(R.id.pastVisits);
+		RecyclerView visitsRecyclerView = (RecyclerView)fragmentView.findViewById(R.id.pastVisits);
 
-		final Rect scrollBounds = new Rect();
-		pastVisitsRecyclerView.getHitRect(scrollBounds);
+		visitsRecyclerAdapter = new VisitsRecyclerAdapter(visitsRecyclerView, visits, getActivity());
 
-		pastVisitsRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+		visitsRecyclerAdapter.setUuids(uuidsHashmap);
 
-			@Override
-			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-				super.onScrolled(recyclerView, dx, dy);
+		visitsRecyclerView.setAdapter(visitsRecyclerAdapter);
 
-				//Contact address header
-				View patientContactInfo = recyclerView.findViewById(R.id.container_patient_address_info);
-				if (patientContactInfo == null) {
-					patientDashboardActivity.updateHeaderShadowLine(true);
-				} else {
-					patientDashboardActivity.updateHeaderShadowLine(false);
-				}
+		visitsRecyclerAdapter.setOnLoadMoreListener(() -> {
 
-			}
+			visitsRecyclerAdapter.setLoading();
+
+			mPresenter.fetchVisits(startIndex, limit);
 		});
 
-		LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-
-		pastVisitsRecyclerView.setLayoutManager(layoutManager);
-
-		visitsRecyclerAdapter = new VisitsRecyclerAdapter(visits, getActivity(), uuidsHashmap);
-
-		pastVisitsRecyclerView.setAdapter(visitsRecyclerAdapter);
-
 		showPageSpinner(false);
+
+		visitsRecyclerAdapter.setLoaded();
 	}
 
 	@Override
 	public void updateVisits(List<Visit> results) {
 
+		visits = results;
+
+		visitsRecyclerAdapter.notifyDataSetChanged();
+
 		startIndex += limit;
+
+		visitsRecyclerAdapter.setLoaded();
+
+		/*
 
 		visits.add(null);
 
@@ -217,13 +206,10 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
 		visitsRecyclerAdapter.notifyItemRemoved(visits.size());
 
-		//visits.addAll(visits);
-		visits = results;
 
-		//visitsRecyclerAdapter.notifyItemInserted(visits.size());
-		visitsRecyclerAdapter.notifyDataSetChanged();
 
-		System.out.println("loaded");
+		*/
+
 	}
 
 	@Override
@@ -291,5 +277,9 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	public void allowUserNavigation(boolean allowNavigation) {
 		patientDashboardActivity.setHasPendingTransaction(!allowNavigation);
 		visitsRecyclerAdapter.allowUserNavigation(allowNavigation);
+	}
+
+	protected interface OnLoadMoreListener {
+		void onLoadMore();
 	}
 }

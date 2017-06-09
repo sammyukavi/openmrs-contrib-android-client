@@ -105,15 +105,14 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 		DataService.GetCallback<List<Visit>> fetchVisitsCallback = new DataService.GetCallback<List<Visit>>() {
 			@Override
 			public void onCompleted(List<Visit> visits) {
-				/*if (!visits.isEmpty()) {
-					patientDashboardView.updateContactCard(patient);
-					patientDashboardView.updateVisitsCard(visits);
-				} else {
-					patientDashboardView.showPageSpinner(false);
-					patientDashboardView.showNoVisits(true);
-				}*/
+
 				patientDashboardView.updateContactCard(patient);
 				patientDashboardView.updateVisitsCard(visits);
+
+				if (visits.isEmpty()) {
+					patientDashboardView.showPageSpinner(false);
+					patientDashboardView.showNoVisits(true);
+				}
 			}
 
 			@Override

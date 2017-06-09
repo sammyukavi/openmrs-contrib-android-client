@@ -62,7 +62,7 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 	private final int VIEW_TYPE_HEADER = 0;
 	private final int VIEW_TYPE_ITEM = 1;
 	private HashMap<String, String> uuids;
-	private boolean allowUserNavigation, editIsAllowed, loading = true;
+	private boolean allowUserNavigation, editIsAllowed;
 	private Context context;
 	private List<Visit> visits;
 	private LayoutInflater layoutInflater;
@@ -77,7 +77,7 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 	private Visit activeVisit;
 	private Observation clinicalNoteObs;
 	private View activeVisitView;
-	private PatientDashboardFragment.OnLoadMoreListener onLoadMoreListener;
+	private int startIndex, limit;
 
 	private Runnable inputFinishChecker = () -> {
 
@@ -194,13 +194,16 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 					patientDashboardActivity.updateHeaderShadowLine(false);
 				}
 
-				//Load more visits
-				if (dy > 0) //check for scroll down
-				{
-					if (onLoadMoreListener != null && !loading) {
-						onLoadMoreListener.onLoadMore();
-					} else {
-						System.out.println("Can't fetch more still loading");
+				if (!patientDashboardActivity.mPresenter.isLoading()) {
+
+					if (!recyclerView.canScrollVertically(1)) {
+						// load next page
+						patientDashboardActivity.mPresenter.fetchVisits(startIndex, limit);
+					}
+
+					if (!recyclerView.canScrollVertically(-1) && dy < 0) {
+						// load previous page
+						patientDashboardActivity.mPresenter.fetchVisits(startIndex, limit);
 					}
 				}
 
@@ -220,10 +223,6 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
 	public void updateClinicalNoteObs(Observation obs) {
 		this.clinicalNoteObs = obs;
-	}
-
-	public void setOnLoadMoreListener(PatientDashboardFragment.OnLoadMoreListener mOnLoadMoreListener) {
-		this.onLoadMoreListener = mOnLoadMoreListener;
 	}
 
 	private void loadVisitDetails(Visit visit) {
@@ -536,16 +535,16 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 		return visits == null ? 0 : visits.size() + 1;//Add an index for the header
 	}
 
-	public void setLoading() {
-		this.loading = true;
-	}
-
-	public void setLoaded() {
-		this.loading = false;
-	}
-
 	public void setUuids(HashMap<String, String> uuids) {
 		this.uuids = uuids;
+	}
+
+	public void updateVisits(List<Visit> results, int startIndex, int limit) {
+		this.startIndex = startIndex;
+		this.limit = limit;
+		visits.clear();
+		visits.addAll(results);
+		notifyDataSetChanged();
 	}
 
 	private class RecyclerViewHeader extends RecyclerView.ViewHolder {

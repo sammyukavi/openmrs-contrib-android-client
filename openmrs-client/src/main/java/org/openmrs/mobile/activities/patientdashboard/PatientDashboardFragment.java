@@ -57,13 +57,12 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	private Intent intent;
 	private Location location;
 	private RelativeLayout dashboardProgressBar, dashboardScreen;
-	private TextView noVisitNoteLabel, patientAddress, patientPhonenumber;
+	private TextView noVisitNoteLabel;
 	private String patientUuid;
 	private VisitsRecyclerAdapter visitsRecyclerAdapter;
 	private PatientDashboardActivity patientDashboardActivity;
 	private int startIndex = 0;
 	private int limit = 5;
-	private List<Visit> visits;
 
 	public static PatientDashboardFragment newInstance() {
 		return new PatientDashboardFragment();
@@ -149,8 +148,6 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	@Override
 	public void updateVisitsCard(List<Visit> visits) {
 
-		this.visits = visits;
-
 		showPageSpinner(true);
 
 		for (Visit visit : visits) {
@@ -175,41 +172,16 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
 		visitsRecyclerView.setAdapter(visitsRecyclerAdapter);
 
-		visitsRecyclerAdapter.setOnLoadMoreListener(() -> {
-
-			visitsRecyclerAdapter.setLoading();
-
-			mPresenter.fetchVisits(startIndex, limit);
-		});
-
 		showPageSpinner(false);
 
-		visitsRecyclerAdapter.setLoaded();
 	}
 
 	@Override
 	public void updateVisits(List<Visit> results) {
 
-		visits = results;
-
-		visitsRecyclerAdapter.notifyDataSetChanged();
-
 		startIndex += limit;
 
-		visitsRecyclerAdapter.setLoaded();
-
-		/*
-
-		visits.add(null);
-
-		visits.remove(visits.size() - 1);
-
-		visitsRecyclerAdapter.notifyItemRemoved(visits.size());
-
-
-
-		*/
-
+		visitsRecyclerAdapter.updateVisits(results, startIndex, limit);
 	}
 
 	@Override
@@ -277,9 +249,5 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	public void allowUserNavigation(boolean allowNavigation) {
 		patientDashboardActivity.setHasPendingTransaction(!allowNavigation);
 		visitsRecyclerAdapter.allowUserNavigation(allowNavigation);
-	}
-
-	protected interface OnLoadMoreListener {
-		void onLoadMore();
 	}
 }

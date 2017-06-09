@@ -509,4 +509,7 @@
 	<string name="visit_duration">Duration: %1$s</string>
 	<string name="no_visit">Patient has no visits</string>
 	<string name="save_photo">Save Photo</string>
+	<string name="pending_save">Please wait. Saving....</string>
+	<string name="today">Today</string>
+	<string name="yesterday">Yesterday</string>y
 </resources>

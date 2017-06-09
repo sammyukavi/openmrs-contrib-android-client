@@ -46,9 +46,10 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	private VisitDataService visitDataService;
 	private LocationDataService locationDataService;
 	private ProviderDataService providerDataService;
-	private int limit = 10;
 	private int startIndex = 0;
-	//private Patient patient;
+	private int limit = 10;
+	private Patient patient;
+	private boolean loading;
 
 	public PatientDashboardPresenter(PatientDashboardContract.View view) {
 		this.patientDashboardView = view;
@@ -64,6 +65,8 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	@Override
 	public void subscribe() {
 		getCurrentProvider();
+
+		getCurrentLocation();
 	}
 
 	@Override
@@ -72,16 +75,29 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	}
 
 	@Override
+	public int getLimit() {
+		return limit;
+	}
+
+	@Override
 	public void setStartIndex(int startIndex) {
 		this.startIndex = startIndex;
 	}
 
 	@Override
+	public int getStartIndex() {
+		return startIndex;
+	}
+
+	@Override
 	public void fetchPatientData(String uuid) {
+
 		patientDashboardView.showPageSpinner(true);
+
 		patientDataService.getByUUID(uuid, QueryOptions.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Patient>() {
 			@Override
 			public void onCompleted(Patient patient) {
+				setPatient(patient);
 				patientDashboardView.showPageSpinner(true);
 				fetchVisits(patient);
 			}
@@ -96,26 +112,74 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
 	@Override
 	public void fetchVisits(Patient patient) {
-		patientDashboardView.showPageSpinner(true);
-		visitDataService.getByPatient(patient, new QueryOptions(true, true), new PagingInfo(startIndex, limit),
-				new DataService.GetCallback<List<Visit>>() {
-					@Override
-					public void onCompleted(List<Visit> visits) {
-						if (!visits.isEmpty()) {
-							patientDashboardView.updateContactCard(patient);
-							patientDashboardView.updateActiveVisitCard(visits);
-						} else {
-							patientDashboardView.showPageSpinner(false);
-							patientDashboardView.showNoVisits(true);
-						}
-					}
 
-					@Override
-					public void onError(Throwable t) {
-						t.printStackTrace();
-						patientDashboardView.showPageSpinner(false);
-					}
-				});
+		patientDashboardView.showPageSpinner(true);
+
+		setLoading(true);
+
+		DataService.GetCallback<List<Visit>> fetchVisitsCallback = new DataService.GetCallback<List<Visit>>() {
+			@Override
+			public void onCompleted(List<Visit> visits) {
+
+				setLoading(false);
+
+				patientDashboardView.updateContactCard(patient);
+				patientDashboardView.updateVisitsCard(visits);
+
+				if (visits.isEmpty()) {
+					patientDashboardView.showPageSpinner(false);
+					patientDashboardView.showNoVisits(true);
+				}
+			}
+
+			@Override
+			public void onError(Throwable t) {
+				t.printStackTrace();
+				patientDashboardView.showPageSpinner(false);
+				setLoading(false);
+			}
+		};
+
+		PagingInfo pagingInfo = new PagingInfo(startIndex, limit);
+
+		visitDataService.getByPatient(patient, new QueryOptions(true, true), pagingInfo, fetchVisitsCallback);
+	}
+
+	@Override
+	public void fetchVisits(boolean loadNextResults) {
+
+		if (loadNextResults) {
+			startIndex += limit;
+		} else {
+			startIndex -= limit;
+		}
+
+		if (startIndex < 0) {
+			startIndex = 0;
+		}
+
+		System.out.println("Start Index: " + startIndex);
+
+		PagingInfo pagingInfo = new PagingInfo(startIndex, limit);
+
+		setLoading(true);
+
+		DataService.GetCallback<List<Visit>> fetchVisitsCallback = new DataService.GetCallback<List<Visit>>() {
+			@Override
+			public void onCompleted(List<Visit> results) {
+
+				patientDashboardView.updateVisits(results);
+
+				setLoading(false);
+			}
+
+			@Override
+			public void onError(Throwable t) {
+				setLoading(false);
+			}
+		};
+
+		visitDataService.getByPatient(patient, new QueryOptions(true, true), pagingInfo, fetchVisitsCallback);
 	}
 
 	@Override
@@ -127,9 +191,13 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	 * TODO: create a service to getProviderByPerson, move code to commons
 	 */
 	private void getCurrentProvider() {
+
 		patientDashboardView.showPageSpinner(true);
+
 		String personUuid = OpenMRS.getInstance().getCurrentLoggedInUserInfo().get(ApplicationConstants.UserKeys.USER_UUID);
+
 		if (StringUtils.notEmpty(personUuid)) {
+
 			providerDataService.getAll(QueryOptions.LOAD_RELATED_OBJECTS, null,
 					new DataService.GetCallback<List<Provider>>() {
 						@Override
@@ -152,39 +220,53 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 		}
 	}
 
-	@Override
-	public void fetchLocation(String locationUuid) {
-		patientDashboardView.showPageSpinner(true);
-		DataService.GetCallback<Location> locationDataServiceCallback = new DataService.GetCallback<Location>() {
-			@Override
-			public void onCompleted(Location location) {
-				//set location in the fragment and start loading other fields
-				patientDashboardView.setLocation(location);
-			}
+	public void getCurrentLocation() {
+		//We start by fetching by location, required for creating encounters
+		String locationUuid = OpenMRS.getInstance().getLocation();
 
-			@Override
-			public void onError(Throwable t) {
-				patientDashboardView.showPageSpinner(true);
-				t.printStackTrace();
-			}
-		};
+		if (StringUtils.notEmpty(locationUuid)) {
 
-		locationDataService.getByUUID(locationUuid, QueryOptions.LOAD_RELATED_OBJECTS, locationDataServiceCallback);
+			patientDashboardView.showPageSpinner(true);
+
+			DataService.GetCallback<Location> locationDataServiceCallback = new DataService.GetCallback<Location>() {
+				@Override
+				public void onCompleted(Location location) {
+					//set location in the fragment and start loading other fields
+					patientDashboardView.setLocation(location);
+				}
+
+				@Override
+				public void onError(Throwable t) {
+					patientDashboardView.showPageSpinner(true);
+					t.printStackTrace();
+				}
+			};
+
+			locationDataService.getByUUID(locationUuid, QueryOptions.LOAD_RELATED_OBJECTS, locationDataServiceCallback);
+		}
+
 	}
 
 	@Override
 	public void saveEncounter(Encounter encounter, boolean isNewEncounter) {
-		patientDashboardView.upDateProgressBar(true);
+
+		patientDashboardView.showSavingClinicalNoteProgressBar(true);
+
+		setLoading(true);
+
 		DataService.GetCallback<Encounter> serverResponceCallback = new DataService.GetCallback<Encounter>() {
 			@Override
 			public void onCompleted(Encounter result) {
-				patientDashboardView.upDateProgressBar(false);
+				patientDashboardView.showSavingClinicalNoteProgressBar(false);
 
-				patientDashboardView.updateClinicVisitNote(encounter.getObs().get(0));
+				setLoading(false);
+
+				patientDashboardView.updateClinicVisitNote(result.getObs().get(0));
 			}
 
 			@Override
 			public void onError(Throwable t) {
+				setLoading(false);
 				t.printStackTrace();
 			}
 		};
@@ -199,19 +281,24 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	@Override
 	public void saveObservation(Observation observation, boolean isNewObservation) {
 
-		patientDashboardView.upDateProgressBar(true);
+		patientDashboardView.showSavingClinicalNoteProgressBar(true);
+
+		setLoading(true);
 
 		DataService.GetCallback<Observation> serverResponceCallback = new DataService.GetCallback<Observation>() {
 			@Override
 			public void onCompleted(Observation result) {
 
-				patientDashboardView.upDateProgressBar(false);
+				patientDashboardView.showSavingClinicalNoteProgressBar(false);
+
+				setLoading(false);
 
 				patientDashboardView.updateClinicVisitNote(result);
 			}
 
 			@Override
 			public void onError(Throwable t) {
+				setLoading(false);
 				t.printStackTrace();
 			}
 		};
@@ -223,4 +310,17 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 		}
 	}
 
+	public void setPatient(Patient patient) {
+		this.patient = patient;
+	}
+
+	@Override
+	public boolean isLoading() {
+		return loading;
+	}
+
+	@Override
+	public void setLoading(boolean loading) {
+		this.loading = loading;
+	}
 }

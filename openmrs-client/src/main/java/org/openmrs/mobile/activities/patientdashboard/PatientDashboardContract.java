@@ -32,7 +32,9 @@ public interface PatientDashboardContract {
 
 		void updateContactCard(Patient patient);
 
-		void updateActiveVisitCard(List<Visit> visits);
+		void updateVisitsCard(List<Visit> visits);
+
+		public void updateVisits(List<Visit> visits);
 
 		Patient getPatient();
 
@@ -42,13 +44,14 @@ public interface PatientDashboardContract {
 
 		Context getContext();
 
-		void upDateProgressBar(boolean show);
+		void showSavingClinicalNoteProgressBar(boolean show);
 
 		void showPageSpinner(boolean visibility);
 
 		void showNoVisits(boolean visibility);
 
 		void updateClinicVisitNote(Observation observation);
+
 	}
 
 	interface Presenter extends BasePresenterContract {
@@ -57,16 +60,24 @@ public interface PatientDashboardContract {
 
 		void fetchVisits(Patient patient);
 
+		void fetchVisits(boolean loadNextResults);
+
 		Patient getPatient();
 
 		void setLimit(int limit);
 
 		void setStartIndex(int startIndex);
 
-		void fetchLocation(String locationUuid);
-
 		void saveEncounter(Encounter encounter, boolean isNew);
 
 		void saveObservation(Observation observation, boolean isNewObservation);
+
+		boolean isLoading();
+
+		void setLoading(boolean loading);
+
+		int getStartIndex();
+
+		int getLimit();
 	}
 }

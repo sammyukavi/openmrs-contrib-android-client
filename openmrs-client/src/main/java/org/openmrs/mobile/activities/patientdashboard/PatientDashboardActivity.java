@@ -16,6 +16,7 @@ package org.openmrs.mobile.activities.patientdashboard;
 
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.View;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
@@ -31,10 +32,11 @@ public class PatientDashboardActivity extends ACBaseActivity {
 
 	public AddEditVisitContract.Presenter addEditVisitPresenter;
 	private PatientHeaderFragment headerFragment;
+	private View view;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getLayoutInflater().inflate(R.layout.activity_patient_dashboard, frameLayout);
+		view = getLayoutInflater().inflate(R.layout.activity_patient_dashboard, frameLayout);
 		setTitle(R.string.title_patient_dashboard);
 		// Create fragment
 		PatientDashboardFragment patientDashboardFragment =
@@ -76,5 +78,14 @@ public class PatientDashboardActivity extends ACBaseActivity {
 
 	public void updateHeaderShadowLine(boolean visible) {
 		headerFragment.updateShadowLine(visible);
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (!mPresenter.isLoading()) {
+			super.onBackPressed();
+		} else {
+			createToast(getString(R.string.pending_save));
+		}
 	}
 }

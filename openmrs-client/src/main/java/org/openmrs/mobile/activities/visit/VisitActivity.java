@@ -27,6 +27,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 
 import net.yanzm.mth.MaterialTabHost;
 
@@ -35,7 +36,6 @@ import org.openmrs.mobile.activities.ACBaseActivity;
 import org.openmrs.mobile.activities.addeditvisit.AddEditVisitActivity;
 import org.openmrs.mobile.activities.auditdata.AuditDataActivity;
 import org.openmrs.mobile.activities.capturevitals.CaptureVitalsActivity;
-import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
 import org.openmrs.mobile.activities.patientheader.PatientHeaderContract;
 import org.openmrs.mobile.activities.patientheader.PatientHeaderFragment;
 import org.openmrs.mobile.activities.patientheader.PatientHeaderPresenter;
@@ -61,6 +61,7 @@ public class VisitActivity extends ACBaseActivity {
 	private OpenMRS instance = OpenMRS.getInstance();
 	private SharedPreferences sharedPreferences = instance.getOpenMRSSharedPreferences();
 	private FloatingActionButton captureVitalsButton, endVisitButton, editVisitButton, auditData;
+	private FloatingActionMenu visitDetailsMenu;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +108,7 @@ public class VisitActivity extends ACBaseActivity {
 		auditData = (FloatingActionButton)findViewById(R.id.auditDataForm);
 		endVisitButton = (FloatingActionButton)findViewById(R.id.end_visit);
 		editVisitButton = (FloatingActionButton)findViewById(R.id.edit_visit);
+		visitDetailsMenu = (FloatingActionMenu)findViewById(R.id.visitDetailsMenu);
 
 		if (visitClosedDate != null && !visitClosedDate.isEmpty()) {
 			captureVitalsButton.setVisibility(View.GONE);
@@ -178,21 +180,17 @@ public class VisitActivity extends ACBaseActivity {
 	}
 
 	@Override
-	public void onBackPressed() {
-		if (drawer.isDrawerOpen(GravityCompat.START)) {
-			drawer.closeDrawer(GravityCompat.START);
-		} else {
-			Intent intent = new Intent(Intent.ACTION_MAIN);
-			intent.addCategory(Intent.CATEGORY_HOME);
-			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			startActivity(intent);
-		}
-	}
-
-	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		return true;
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (drawer.isDrawerOpen(GravityCompat.START)) {
+			drawer.closeDrawer(GravityCompat.START);
+		}
+		super.onBackPressed();
 	}
 
 	@Override
@@ -200,13 +198,17 @@ public class VisitActivity extends ACBaseActivity {
 		// Handle item selection
 		switch (item.getItemId()) {
 			case android.R.id.home:
-				finish();
-				Intent intent = new Intent(getApplicationContext(), PatientDashboardActivity.class);
-				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
-				//fix for getDateToday
-				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-				getApplicationContext().startActivity(intent);
+				//NavUtils.navigateUpFromSameTask(this);
+
+				/*
+				HACK
+				Normally this button recreates the caller activity when you use the commented line above by
+				default so we call a back pressed instead to resume our state
+				*/
+
+				onBackPressed();
+
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -221,6 +223,9 @@ public class VisitActivity extends ACBaseActivity {
 	}
 
 	private void startSelectedVisitActivity(int selectedId) {
+
+		visitDetailsMenu.close(true);
+
 		switch (selectedId) {
 			case R.id.edit_visit:
 				intent = new Intent(getApplicationContext(), AddEditVisitActivity.class);

@@ -79,5 +79,9 @@ public interface PatientDashboardContract {
 		boolean isLoading();
 
 		void setLoading(boolean loading);
+
+		int getStartIndex();
+
+		int getLimit();
 	}
 }

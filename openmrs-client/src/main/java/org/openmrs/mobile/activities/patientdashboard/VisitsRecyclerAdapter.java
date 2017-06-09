@@ -62,105 +62,19 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 	private final int VIEW_TYPE_HEADER = 0;
 	private final int VIEW_TYPE_ITEM = 1;
 	private HashMap<String, String> uuids;
-	private boolean allowUserNavigation, editIsAllowed;
 	private Context context;
 	private List<Visit> visits;
 	private LayoutInflater layoutInflater;
 	private TableLayout visitVitalsTableLayout;
 	private OpenMRS instance = OpenMRS.getInstance();
-	private TextView clinicalNote;
-	private Handler handler = new Handler();
 	private long delay = 3000; //seconds after user stops typing
 	private long lastTextEdit = 0;
 	private LocalDateTime localDateTime;
 	private PatientDashboardActivity patientDashboardActivity;
 	private Visit activeVisit;
-	private Observation clinicalNoteObs;
 	private View activeVisitView;
-	private int startIndex, limit;
-
-	private Runnable inputFinishChecker = () -> {
-
-		if (System.currentTimeMillis() > (lastTextEdit + delay - 500)) {
-			if (clinicalNoteObs != null) {
-				clinicalNoteObs.setValue(clinicalNote.getText().toString());
-				clinicalNoteObs.setObsDatetime(localDateTime.toString());
-				patientDashboardActivity.mPresenter.saveObservation(clinicalNoteObs, false);
-			} else {
-
-				//create concept
-				Concept concept = new Concept();
-				concept.setUuid(ClinicFormUUID);
-
-				Person person = new Person();
-				person.setUuid(uuids.get(PATIENT_UUID_BUNDLE).toString());
-
-				Provider provider = new Provider();
-				provider.setUuid(OpenMRS.getInstance().getCurrentLoggedInUserInfo().get(ApplicationConstants.UserKeys
-						.USER_UUID));
-
-				Location location = new Location();
-				location.setUuid(uuids.get(LOCATION_UUID_BUNDLE).toString());
-
-				//create observation
-				Observation observation = new Observation();
-				observation.setConcept(concept);
-				observation.setPerson(person);
-				observation.setObsDatetime(localDateTime.toString());
-				observation.setProvider(provider);
-				observation.setLocation(uuids.get(LOCATION_UUID_BUNDLE).toString());
-				observation.setValue(clinicalNote.getText().toString());
-
-				List<Observation> observationList = new ArrayList<>();
-
-				observationList.add(observation);
-
-				Encounter clinicNoteEncounter = createClinicalNoteEncounter();
-				clinicNoteEncounter.setObs(observationList);
-
-				patientDashboardActivity.mPresenter.saveEncounter(clinicNoteEncounter, true);
-			}
-
-		}
-	};
-
-	private TextWatcher clinicalNoteWatcher = new TextWatcher() {
-		@Override
-		public void beforeTextChanged(CharSequence s, int start, int count,
-				int after) {
-		}
-
-		@Override
-		public void onTextChanged(final CharSequence s, int start, int before,
-				int count) {
-			//Remove this to run only once
-			handler.removeCallbacks(inputFinishChecker);
-		}
-
-		@Override
-		public void afterTextChanged(final Editable s) {
-
-			/*Prevent sending of data back to sever after setting the value of the
-			 clinical note from the server for the first time after data load*/
-			if (editIsAllowed) {
-				//Text has changed, stop navigaion until save is complete
-				patientDashboardActivity.setHasPendingTransaction(true);
-
-				allowUserNavigation = false;
-
-				//avoid triggering event when text is empty
-				if (s.length() > 0) {
-					lastTextEdit = System.currentTimeMillis();
-					handler.postDelayed(inputFinishChecker, delay);
-				} else {
-					patientDashboardActivity.setHasPendingTransaction(false);
-					allowUserNavigation = true;
-				}
-			} else {
-				editIsAllowed = true;
-			}
-		}
-	};
+	private Observation clinicalNoteObservation;
+	private boolean firstTimeEdit;
 
 	public VisitsRecyclerAdapter(RecyclerView visitsRecyclerView, List<Visit> visits, Context context) {
 
@@ -173,8 +87,6 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 		this.localDateTime = new LocalDateTime();
 
 		this.patientDashboardActivity = (PatientDashboardActivity)context;
-
-		this.allowUserNavigation = true;
 
 		LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
 
@@ -195,10 +107,6 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 				}
 
 				if (!patientDashboardActivity.mPresenter.isLoading()) {
-
-					startIndex = patientDashboardActivity.mPresenter.getStartIndex();
-
-					limit = patientDashboardActivity.mPresenter.getLimit();
 
 					if (!recyclerView.canScrollVertically(1)) {
 						// load next page
@@ -231,16 +139,12 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 		}
 	}
 
-	public void allowUserNavigation(boolean allowNavigation) {
-		this.allowUserNavigation = allowNavigation;
-	}
-
 	public void updateClinicalNoteObs(Observation obs) {
-		this.clinicalNoteObs = obs;
+		this.clinicalNoteObservation = obs;
 	}
 
 	private void loadVisitDetails(Visit visit) {
-		if (allowUserNavigation) {
+		if (!patientDashboardActivity.mPresenter.isLoading()) {
 			setVisitStopDate(visit);
 			Intent intent = new Intent(context, VisitActivity.class);
 			intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, OpenMRS.getInstance()
@@ -289,14 +193,90 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
 	private void presentClinicalNotes(Encounter encounter, View view, boolean isActiveVisit) {
 
-		if (isActiveVisit && clinicalNoteObs == null) {
-			clinicalNote = (TextInputEditText)view.findViewById(R.id.editClinicalNote);
-			clinicalNote.addTextChangedListener(clinicalNoteWatcher);
-		}
+		firstTimeEdit = true;
+
+		TextInputEditText clinicalNote = (TextInputEditText)view.findViewById(R.id.editClinicalNote);
+
+		Handler handler = new Handler();
+
+		Runnable inputCompleteChecker = () -> {
+
+			if (System.currentTimeMillis() > (lastTextEdit + delay - 500)) {
+
+				if (clinicalNoteObservation != null) {
+
+					clinicalNoteObservation.setValue(clinicalNote.getText().toString());
+
+					clinicalNoteObservation.setObsDatetime(localDateTime.toString());
+
+					patientDashboardActivity.mPresenter.saveObservation(clinicalNoteObservation, false);
+
+				} else {
+
+					//create concept
+					Concept concept = new Concept();
+					concept.setUuid(ClinicFormUUID);
+
+					Person person = new Person();
+					person.setUuid(uuids.get(PATIENT_UUID_BUNDLE).toString());
+
+					Provider provider = new Provider();
+					provider.setUuid(OpenMRS.getInstance().getCurrentLoggedInUserInfo().get(ApplicationConstants.UserKeys
+							.USER_UUID));
+
+					Location location = new Location();
+					location.setUuid(uuids.get(LOCATION_UUID_BUNDLE).toString());
+
+					//create observation
+					Observation observation = new Observation();
+					observation.setConcept(concept);
+					observation.setPerson(person);
+					observation.setObsDatetime(localDateTime.toString());
+					observation.setProvider(provider);
+					observation.setLocation(uuids.get(LOCATION_UUID_BUNDLE).toString());
+					observation.setValue(clinicalNote.getText().toString());
+
+					List<Observation> observationList = new ArrayList<>();
+
+					observationList.add(observation);
+
+					Encounter clinicNoteEncounter = createClinicalNoteEncounter();
+					clinicNoteEncounter.setObs(observationList);
+
+					patientDashboardActivity.mPresenter.saveEncounter(clinicNoteEncounter, true);
+				}
+
+			}
+		};
+
+		clinicalNote.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+			}
+
+			@Override
+			public void onTextChanged(final CharSequence s, int start, int before,
+					int count) {
+				//Remove this to run only once
+				handler.removeCallbacks(inputCompleteChecker);
+			}
+
+			@Override
+			public void afterTextChanged(final Editable s) {
+
+				if (s.length() > 0 && !firstTimeEdit) {
+					lastTextEdit = System.currentTimeMillis();
+					handler.postDelayed(inputCompleteChecker, delay);
+				} else {
+					firstTimeEdit = false;
+				}
+
+			}
+		});
 
 		if (isActiveVisit) {
 			view.findViewById(R.id.editClinicNoteContainer).setVisibility(View.VISIBLE);
-
 		} else {
 			view.findViewById(R.id.clinicNoteTextContainer).setVisibility(View.VISIBLE);
 		}
@@ -336,8 +316,8 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 						.replace(":", " ")
 						.replaceAll("" + "( +)", " ").replaceAll("^\\W+|\\W+$", "");
 
-				if (isActiveVisit && clinicalNoteObs == null) {
-					this.clinicalNoteObs = observation;
+				if (isActiveVisit) {
+					clinicalNoteObservation = observation;
 					clinicalNote.setText(visitNoteStr);
 					view.findViewById(R.id.clinicalNoteTitle).setVisibility(View.VISIBLE);
 				} else {

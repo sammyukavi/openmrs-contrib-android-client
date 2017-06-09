@@ -65,6 +65,8 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	@Override
 	public void subscribe() {
 		getCurrentProvider();
+
+		getCurrentLocation();
 	}
 
 	@Override
@@ -218,24 +220,31 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 		}
 	}
 
-	@Override
-	public void fetchLocation(String locationUuid) {
-		patientDashboardView.showPageSpinner(true);
-		DataService.GetCallback<Location> locationDataServiceCallback = new DataService.GetCallback<Location>() {
-			@Override
-			public void onCompleted(Location location) {
-				//set location in the fragment and start loading other fields
-				patientDashboardView.setLocation(location);
-			}
+	public void getCurrentLocation() {
+		//We start by fetching by location, required for creating encounters
+		String locationUuid = OpenMRS.getInstance().getLocation();
 
-			@Override
-			public void onError(Throwable t) {
-				patientDashboardView.showPageSpinner(true);
-				t.printStackTrace();
-			}
-		};
+		if (StringUtils.notEmpty(locationUuid)) {
 
-		locationDataService.getByUUID(locationUuid, QueryOptions.LOAD_RELATED_OBJECTS, locationDataServiceCallback);
+			patientDashboardView.showPageSpinner(true);
+
+			DataService.GetCallback<Location> locationDataServiceCallback = new DataService.GetCallback<Location>() {
+				@Override
+				public void onCompleted(Location location) {
+					//set location in the fragment and start loading other fields
+					patientDashboardView.setLocation(location);
+				}
+
+				@Override
+				public void onError(Throwable t) {
+					patientDashboardView.showPageSpinner(true);
+					t.printStackTrace();
+				}
+			};
+
+			locationDataService.getByUUID(locationUuid, QueryOptions.LOAD_RELATED_OBJECTS, locationDataServiceCallback);
+		}
+
 	}
 
 	@Override
@@ -243,20 +252,21 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
 		patientDashboardView.showSavingClinicalNoteProgressBar(true);
 
-		patientDashboardView.allowUserNavigation(false);
+		setLoading(true);
 
 		DataService.GetCallback<Encounter> serverResponceCallback = new DataService.GetCallback<Encounter>() {
 			@Override
 			public void onCompleted(Encounter result) {
 				patientDashboardView.showSavingClinicalNoteProgressBar(false);
 
-				patientDashboardView.allowUserNavigation(true);
+				setLoading(false);
 
 				patientDashboardView.updateClinicVisitNote(result.getObs().get(0));
 			}
 
 			@Override
 			public void onError(Throwable t) {
+				setLoading(false);
 				t.printStackTrace();
 			}
 		};
@@ -273,7 +283,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
 		patientDashboardView.showSavingClinicalNoteProgressBar(true);
 
-		patientDashboardView.allowUserNavigation(false);
+		setLoading(true);
 
 		DataService.GetCallback<Observation> serverResponceCallback = new DataService.GetCallback<Observation>() {
 			@Override
@@ -281,13 +291,14 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
 				patientDashboardView.showSavingClinicalNoteProgressBar(false);
 
-				patientDashboardView.allowUserNavigation(true);
+				setLoading(false);
 
 				patientDashboardView.updateClinicVisitNote(result);
 			}
 
 			@Override
 			public void onError(Throwable t) {
+				setLoading(false);
 				t.printStackTrace();
 			}
 		};

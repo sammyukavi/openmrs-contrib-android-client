@@ -32,7 +32,6 @@ public class PatientDashboardActivity extends ACBaseActivity {
 
 	public AddEditVisitContract.Presenter addEditVisitPresenter;
 	private PatientHeaderFragment headerFragment;
-	private boolean hasPendingTransaction = false;
 	private View view;
 
 	protected void onCreate(Bundle savedInstanceState) {
@@ -81,13 +80,9 @@ public class PatientDashboardActivity extends ACBaseActivity {
 		headerFragment.updateShadowLine(visible);
 	}
 
-	public void setHasPendingTransaction(boolean hasPendingTransaction) {
-		this.hasPendingTransaction = hasPendingTransaction;
-	}
-
 	@Override
 	public void onBackPressed() {
-		if (!hasPendingTransaction) {
+		if (!mPresenter.isLoading()) {
 			super.onBackPressed();
 		} else {
 			createToast(getString(R.string.pending_save));

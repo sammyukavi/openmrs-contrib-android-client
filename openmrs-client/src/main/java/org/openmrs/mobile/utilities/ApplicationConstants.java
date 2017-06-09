@@ -261,4 +261,6 @@ public abstract class ApplicationConstants {
 		public static final String PERSON_IDENTIFIER_TYPE = "personIdentifierType";
 		public static final String VISIT_TYPE = "visitType";
 	}
+
+
 }

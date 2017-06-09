@@ -73,8 +73,18 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	}
 
 	@Override
+	public int getLimit() {
+		return limit;
+	}
+
+	@Override
 	public void setStartIndex(int startIndex) {
 		this.startIndex = startIndex;
+	}
+
+	@Override
+	public int getStartIndex() {
+		return startIndex;
 	}
 
 	@Override

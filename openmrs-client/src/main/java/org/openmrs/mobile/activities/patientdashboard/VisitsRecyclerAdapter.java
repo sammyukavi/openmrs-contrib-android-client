@@ -196,19 +196,35 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
 				if (!patientDashboardActivity.mPresenter.isLoading()) {
 
+					startIndex = patientDashboardActivity.mPresenter.getStartIndex();
+
+					limit = patientDashboardActivity.mPresenter.getLimit();
+
 					if (!recyclerView.canScrollVertically(1)) {
 						// load next page
-						patientDashboardActivity.mPresenter.fetchVisits(startIndex, limit);
+						patientDashboardActivity.mPresenter.fetchVisits(startIndex + limit, limit);//change this to
+						// compute in the presenter
 					}
 
 					if (!recyclerView.canScrollVertically(-1) && dy < 0) {
 						// load previous page
-						patientDashboardActivity.mPresenter.fetchVisits(startIndex, limit);
+						patientDashboardActivity.mPresenter.fetchVisits(startIndex - limit, limit);////change this to
+						// compute in the presenter
 					}
 				}
 
 			}
 		});
+	}
+
+	public void setUuids(HashMap<String, String> uuids) {
+		this.uuids = uuids;
+	}
+
+	public void updateVisits(List<Visit> results) {
+		visits.clear();
+		visits.addAll(results);
+		notifyDataSetChanged();
 	}
 
 	public void updateSavingClinicalNoteProgressBar(boolean show) {
@@ -533,18 +549,6 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 	@Override
 	public int getItemCount() {
 		return visits == null ? 0 : visits.size() + 1;//Add an index for the header
-	}
-
-	public void setUuids(HashMap<String, String> uuids) {
-		this.uuids = uuids;
-	}
-
-	public void updateVisits(List<Visit> results, int startIndex, int limit) {
-		this.startIndex = startIndex;
-		this.limit = limit;
-		visits.clear();
-		visits.addAll(results);
-		notifyDataSetChanged();
 	}
 
 	private class RecyclerViewHeader extends RecyclerView.ViewHolder {

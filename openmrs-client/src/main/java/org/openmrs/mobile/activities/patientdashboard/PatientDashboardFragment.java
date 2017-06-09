@@ -178,10 +178,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
 	@Override
 	public void updateVisits(List<Visit> results) {
-
-		startIndex += limit;
-
-		visitsRecyclerAdapter.updateVisits(results, startIndex, limit);
+		visitsRecyclerAdapter.updateVisits(results);
 	}
 
 	@Override

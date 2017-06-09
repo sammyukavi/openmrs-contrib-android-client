@@ -49,6 +49,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	private int startIndex = 0;
 	private int limit = 10;
 	private Patient patient;
+	private boolean loading;
 
 	public PatientDashboardPresenter(PatientDashboardContract.View view) {
 		this.patientDashboardView = view;
@@ -102,9 +103,13 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
 		patientDashboardView.showPageSpinner(true);
 
+		setLoading(true);
+
 		DataService.GetCallback<List<Visit>> fetchVisitsCallback = new DataService.GetCallback<List<Visit>>() {
 			@Override
 			public void onCompleted(List<Visit> visits) {
+
+				setLoading(false);
 
 				patientDashboardView.updateContactCard(patient);
 				patientDashboardView.updateVisitsCard(visits);
@@ -119,6 +124,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 			public void onError(Throwable t) {
 				t.printStackTrace();
 				patientDashboardView.showPageSpinner(false);
+				setLoading(false);
 			}
 		};
 
@@ -130,21 +136,26 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	@Override
 	public void fetchVisits(int startIndex, int limit) {
 
-		PagingInfo pagingInfo = new PagingInfo(startIndex, limit);
+		PagingInfo pagingInfo = new PagingInfo(0, 10);
+
+		setLoading(true);
 
 		DataService.GetCallback<List<Visit>> fetchVisitsCallback = new DataService.GetCallback<List<Visit>>() {
 			@Override
-			public void onCompleted(List<Visit> visits) {
-				patientDashboardView.updateVisits(visits);
+			public void onCompleted(List<Visit> results) {
+
+				patientDashboardView.updateVisits(results);
+
+				setLoading(false);
 			}
 
 			@Override
 			public void onError(Throwable t) {
-
+				setLoading(false);
 			}
 		};
 
-		visitDataService.getByPatient(patient, QueryOptions.LOAD_RELATED_OBJECTS, pagingInfo, fetchVisitsCallback);
+		visitDataService.getByPatient(patient, new QueryOptions(true, true), pagingInfo, fetchVisitsCallback);
 	}
 
 	@Override
@@ -268,5 +279,15 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
 	public void setPatient(Patient patient) {
 		this.patient = patient;
+	}
+
+	@Override
+	public boolean isLoading() {
+		return loading;
+	}
+
+	@Override
+	public void setLoading(boolean loading) {
+		this.loading = loading;
 	}
 }

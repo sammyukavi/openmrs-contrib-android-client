@@ -19,10 +19,15 @@ import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
+import org.openmrs.mobile.data.impl.EncounterDataService;
+import org.openmrs.mobile.data.impl.LocationDataService;
 import org.openmrs.mobile.data.impl.ObsDataService;
 import org.openmrs.mobile.data.impl.PatientDataService;
 import org.openmrs.mobile.data.impl.ProviderDataService;
 import org.openmrs.mobile.data.impl.VisitDataService;
+import org.openmrs.mobile.models.Encounter;
+import org.openmrs.mobile.models.Location;
+import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Provider;
 import org.openmrs.mobile.models.Visit;
@@ -34,22 +39,26 @@ import java.util.List;
 
 public class PatientDashboardPresenter extends BasePresenter implements PatientDashboardContract.Presenter {
 
+	private EncounterDataService encounterDataService;
+	private ObsDataService observationDataService;
 	private PatientDashboardContract.View patientDashboardView;
 	private PatientDataService patientDataService;
 	private VisitDataService visitDataService;
-	private ObsDataService observationDataService;
+	private LocationDataService locationDataService;
 	private ProviderDataService providerDataService;
-	private final static int page = 1;
-	private final int startIndex = 0;
-	private int limit = 5;
+	private int limit = 10;
+	private int startIndex = 0;
+	//private Patient patient;
 
 	public PatientDashboardPresenter(PatientDashboardContract.View view) {
 		this.patientDashboardView = view;
 		this.patientDashboardView.setPresenter(this);
 		this.patientDataService = new PatientDataService();
 		this.visitDataService = new VisitDataService();
-		this.observationDataService = new ObsDataService();
 		this.providerDataService = new ProviderDataService();
+		this.locationDataService = new LocationDataService();
+		this.encounterDataService = new EncounterDataService();
+		this.observationDataService = new ObsDataService();
 	}
 
 	@Override
@@ -63,41 +72,48 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	}
 
 	@Override
-	public void fetchPatientData(String uuid) {
+	public void setStartIndex(int startIndex) {
+		this.startIndex = startIndex;
+	}
 
+	@Override
+	public void fetchPatientData(String uuid) {
+		patientDashboardView.showPageSpinner(true);
 		patientDataService.getByUUID(uuid, QueryOptions.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Patient>() {
 			@Override
 			public void onCompleted(Patient patient) {
-				if (patient != null) {
-					patientDashboardView.updateContactCard(patient);
-				}
+				patientDashboardView.showPageSpinner(true);
+				fetchVisits(patient);
 			}
 
 			@Override
 			public void onError(Throwable t) {
+				patientDashboardView.showPageSpinner(false);
 				t.printStackTrace();
-				patientDashboardView.showSnack("Error occured: Unable to reach searver");
 			}
 		});
 	}
 
 	@Override
 	public void fetchVisits(Patient patient) {
+		patientDashboardView.showPageSpinner(true);
 		visitDataService.getByPatient(patient, new QueryOptions(true, true), new PagingInfo(startIndex, limit),
 				new DataService.GetCallback<List<Visit>>() {
 					@Override
 					public void onCompleted(List<Visit> visits) {
 						if (!visits.isEmpty()) {
+							patientDashboardView.updateContactCard(patient);
 							patientDashboardView.updateActiveVisitCard(visits);
 						} else {
-							patientDashboardView.showSnack("No visits found");
+							patientDashboardView.showPageSpinner(false);
+							patientDashboardView.showNoVisits(true);
 						}
 					}
 
 					@Override
 					public void onError(Throwable t) {
 						t.printStackTrace();
-						patientDashboardView.showSnack("Visit fetch error");
+						patientDashboardView.showPageSpinner(false);
 					}
 				});
 	}
@@ -111,10 +127,10 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	 * TODO: create a service to getProviderByPerson, move code to commons
 	 */
 	private void getCurrentProvider() {
-
+		patientDashboardView.showPageSpinner(true);
 		String personUuid = OpenMRS.getInstance().getCurrentLoggedInUserInfo().get(ApplicationConstants.UserKeys.USER_UUID);
 		if (StringUtils.notEmpty(personUuid)) {
-			providerDataService.getAll(QueryOptions.LOAD_RELATED_OBJECTS, new PagingInfo(page, 100),
+			providerDataService.getAll(QueryOptions.LOAD_RELATED_OBJECTS, null,
 					new DataService.GetCallback<List<Provider>>() {
 						@Override
 						public void onCompleted(List<Provider> entities) {
@@ -124,13 +140,86 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 									patientDashboardView.setProviderUuid(entity.getUuid());
 								}
 							}
+							patientDashboardView.showPageSpinner(false);
 						}
 
 						@Override
 						public void onError(Throwable t) {
+							patientDashboardView.showPageSpinner(false);
 							ToastUtil.error(t.getMessage());
 						}
 					});
+		}
+	}
+
+	@Override
+	public void fetchLocation(String locationUuid) {
+		patientDashboardView.showPageSpinner(true);
+		DataService.GetCallback<Location> locationDataServiceCallback = new DataService.GetCallback<Location>() {
+			@Override
+			public void onCompleted(Location location) {
+				//set location in the fragment and start loading other fields
+				patientDashboardView.setLocation(location);
+			}
+
+			@Override
+			public void onError(Throwable t) {
+				patientDashboardView.showPageSpinner(true);
+				t.printStackTrace();
+			}
+		};
+
+		locationDataService.getByUUID(locationUuid, QueryOptions.LOAD_RELATED_OBJECTS, locationDataServiceCallback);
+	}
+
+	@Override
+	public void saveEncounter(Encounter encounter, boolean isNewEncounter) {
+		patientDashboardView.upDateProgressBar(true);
+		DataService.GetCallback<Encounter> serverResponceCallback = new DataService.GetCallback<Encounter>() {
+			@Override
+			public void onCompleted(Encounter result) {
+				patientDashboardView.upDateProgressBar(false);
+
+				patientDashboardView.updateClinicVisitNote(encounter.getObs().get(0));
+			}
+
+			@Override
+			public void onError(Throwable t) {
+				t.printStackTrace();
+			}
+		};
+
+		if (isNewEncounter) {
+			encounterDataService.create(encounter, serverResponceCallback);
+		} else {
+			encounterDataService.update(encounter, serverResponceCallback);
+		}
+	}
+
+	@Override
+	public void saveObservation(Observation observation, boolean isNewObservation) {
+
+		patientDashboardView.upDateProgressBar(true);
+
+		DataService.GetCallback<Observation> serverResponceCallback = new DataService.GetCallback<Observation>() {
+			@Override
+			public void onCompleted(Observation result) {
+
+				patientDashboardView.upDateProgressBar(false);
+
+				patientDashboardView.updateClinicVisitNote(result);
+			}
+
+			@Override
+			public void onError(Throwable t) {
+				t.printStackTrace();
+			}
+		};
+
+		if (isNewObservation) {
+			observationDataService.create(observation, serverResponceCallback);
+		} else {
+			observationDataService.update(observation, serverResponceCallback);
 		}
 	}
 

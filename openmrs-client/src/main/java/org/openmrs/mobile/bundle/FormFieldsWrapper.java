@@ -90,7 +90,7 @@ public class FormFieldsWrapper implements Serializable, Parcelable {
 	private static Double getValue(List<Observation> observations, String conceptUuid) {
 		for (Observation observation : observations) {
 			if (observation.getConcept().getUuid().equals(conceptUuid)) {
-				return Double.valueOf(observation.getDisplayValue());
+				return Double.valueOf(observation.getDisplay());
 			}
 		}
 		return -1.0;

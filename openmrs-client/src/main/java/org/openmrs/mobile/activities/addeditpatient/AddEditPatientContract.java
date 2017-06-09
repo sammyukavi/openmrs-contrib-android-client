@@ -18,7 +18,8 @@ import android.widget.Spinner;
 
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
-import org.openmrs.mobile.models.ConceptName;
+import org.openmrs.mobile.models.Concept;
+import org.openmrs.mobile.models.ConceptAnswer;
 import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.PatientIdentifierType;
@@ -45,8 +46,6 @@ public interface AddEditPatientContract {
 
 		void hideSoftKeys();
 
-		void setProgressBarVisibility(boolean visibility);
-
 		void showSimilarPatientDialog(List<Patient> patients, Patient newPatient);
 
 		void startPatientDashboardActivity(Patient patient);
@@ -57,11 +56,13 @@ public interface AddEditPatientContract {
 
 		void loadPersonAttributeTypes(List<PersonAttributeType> personAttributeTypeList);
 
-		void updateConceptNamesView(Spinner conceptNamesDropdown, List<ConceptName> conceptNames);
+		void updateConceptAnswerView(Spinner conceptNamesDropdown, List<ConceptAnswer> conceptAnswers);
 
 		void setLoginLocation(Location location);
 
 		void fillFields(Patient patient);
+
+		void showPageSpinner(boolean visibility);
 
 	}
 
@@ -79,11 +80,11 @@ public interface AddEditPatientContract {
 
 		void addEditPatient(Patient patient);
 
-		void getConceptNames(String uuid, Spinner conceptAnswersDropdown);
+		void getConceptAnswer(String uuid, Spinner conceptAnswersDropdown);
 
 		void getPatientIdentifierTypes();
 
-		void getPersonAttributeTypes();
+		List<PersonAttributeType> getPersonAttributeTypes();
 
 		<T> T searchPersonAttributeValueByType(PersonAttributeType personAttributeType);
 

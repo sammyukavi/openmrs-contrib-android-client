@@ -15,6 +15,7 @@
 package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 
@@ -25,13 +26,12 @@ public class ConceptAnswer extends BaseOpenmrsObject {
 	/**
 	 * The question concept that this object is answering
 	 */
+	@SerializedName("concept")
 	@Expose
 	@ForeignKey
 	private Concept concept;
 
-	/**
-	 * The answer to the question
-	 */
+	@SerializedName("answerConcept")
 	@Expose
 	@ForeignKey
 	private Concept answerConcept;

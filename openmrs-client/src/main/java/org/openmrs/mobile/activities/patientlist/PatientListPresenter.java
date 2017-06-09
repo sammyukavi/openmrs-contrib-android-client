@@ -70,17 +70,22 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 
 	@Override
 	public void getPatientList() {
+		patientListView.setPatientListScreenVisibility(true);
 		setPage(1);
 		patientListDataService.getAll(new QueryOptions(false, false), new PagingInfo(1, 100),
 				new DataService.GetCallback<List<PatientList>>() {
 					@Override
 					public void onCompleted(List<PatientList> entities) {
-						patientListView.setNoPatientListsVisibility(false);
-						patientListView.updatePatientLists(entities);
+						if (entities != null) {
+							patientListView.setPatientListScreenVisibility(true);
+							patientListView.setNoPatientListsVisibility(false);
+							patientListView.updatePatientLists(entities);
+						}
 					}
 
 					@Override
 					public void onError(Throwable t) {
+						patientListView.setPatientListScreenVisibility(true);
 						patientListView.setNoPatientListsVisibility(true);
 					}
 				});
@@ -100,14 +105,12 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 				new DataService.GetCallback<List<PatientListContext>>() {
 					@Override
 					public void onCompleted(List<PatientListContext> entities) {
-						if (entities.isEmpty()){
+						if (entities.isEmpty()) {
 							setViewAfterLoadData(true);
-							patientListView.setNoPatientListSelected(false);
 							patientListView.setNumberOfPatientsView(0);
 							patientListView.updatePatientListData(entities);
 						} else {
 							setViewAfterLoadData(false);
-							patientListView.setNoPatientListSelected(false);
 							patientListView.updatePatientListData(entities);
 							setTotalNumberResults(pagingInfo.getTotalRecordCount());
 							if (pagingInfo.getTotalRecordCount() > 0) {
@@ -119,7 +122,6 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 
 					@Override
 					public void onError(Throwable t) {
-						patientListView.setNoPatientListSelected(false);
 						patientListView.updatePatientListData(new ArrayList<>());
 						setViewAfterLoadData(true);
 						patientListView.setNumberOfPatientsView(0);

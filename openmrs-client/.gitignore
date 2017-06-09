@@ -1,4 +1,4 @@
 /build
-/src/main/java/org/openmrs/mobile/utilities/ConsoleLogger.java
 *.log
-/src/main/java/org/openmrs/mobile/activities/auditdata/ConsoleLogger.java
+/src/main/java/org/openmrs/mobile/activities/patientdashboard/ConsoleLogger.java
+

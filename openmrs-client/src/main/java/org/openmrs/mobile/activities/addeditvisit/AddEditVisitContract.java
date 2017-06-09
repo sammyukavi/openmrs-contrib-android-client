@@ -17,7 +17,7 @@ import android.widget.Spinner;
 
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
-import org.openmrs.mobile.models.ConceptName;
+import org.openmrs.mobile.models.ConceptAnswer;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitAttribute;
@@ -38,9 +38,13 @@ public interface AddEditVisitContract {
 
 		void updateVisitTypes(List<VisitType> visitTypes);
 
-		void updateConceptNamesView(Spinner conceptNamesDropdown, List<ConceptName> conceptNames);
+		void updateConceptAnswersView(Spinner conceptNamesDropdown, List<ConceptAnswer> conceptAnswers);
 
 		void showPatientDashboard();
+
+		void showVisitDetails(String visitUuuid);
+
+		void showPageSpinner(boolean visibility);
 
 	}
 
@@ -58,13 +62,13 @@ public interface AddEditVisitContract {
 
 		<T> T searchVisitAttributeValueByType(VisitAttributeType visitAttributeType);
 
-		void getConceptNames(String uuid, Spinner conceptAnswersDropdown);
+		void getConceptAnswer(String uuid, Spinner conceptAnswersDropdown);
 
 		boolean isProcessing();
 
 		void setProcessing(boolean processing);
 
-		void endVisit();
+		void endVisit(Visit visit);
 	}
 }
 

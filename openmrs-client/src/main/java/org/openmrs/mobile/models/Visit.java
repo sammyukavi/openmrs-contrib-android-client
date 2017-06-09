@@ -27,25 +27,31 @@ import java.util.List;
 
 @Table(database = AppDatabase.class)
 public class Visit extends BaseOpenmrsEntity implements Serializable {
+	@SerializedName("visitType")
 	@Expose
 	@ForeignKey
 	private VisitType visitType;
 
+	@SerializedName("location")
 	@Expose
 	@ForeignKey
 	private Location location;
 
+	@SerializedName("startDatetime")
 	@Expose
 	@Column
 	private String startDatetime;
 
+	@SerializedName("stopDatetime")
 	@Expose
 	@Column
 	private String stopDatetime;
 
+	@SerializedName("encounters")
 	@Expose
 	private List<Encounter> encounters;
 
+	@SerializedName("attributes")
 	@Expose
 	private List<VisitAttribute> attributes;
 
@@ -54,14 +60,22 @@ public class Visit extends BaseOpenmrsEntity implements Serializable {
 	@ForeignKey(stubbedRelationship = true)
 	private Patient patient;
 
-	@SerializedName("auditInfo")
-	@Expose
-	private AuditInfo auditInfo;
+	public Visit() { }
+
+    public Visit(String visitUuid) {
+		this.uuid = visitUuid;
+	}
 
 	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "encounters", isVariablePrivate = true)
 	List<Encounter> loadEncounters() {
 		return loadRelatedObject(Encounter.class, encounters,
-				() -> PatientListOrder_Table.patientList_uuid.eq(super.getUuid()));
+				() -> Encounter_Table.visit_uuid.eq(getUuid()));
+	}
+
+	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "attributes", isVariablePrivate = true)
+	List<VisitAttribute> loadAttributes() {
+		return loadRelatedObject(VisitAttribute.class, attributes,
+				() -> VisitAttribute_Table.visit_uuid.eq(getUuid()));
 	}
 
 	@Override
@@ -126,14 +140,6 @@ public class Visit extends BaseOpenmrsEntity implements Serializable {
 
 	public void setAttributes(List<VisitAttribute> attributes) {
 		this.attributes = attributes;
-	}
-
-	public AuditInfo getAuditInfo() {
-		return auditInfo;
-	}
-
-	public void setAuditInfo(AuditInfo auditInfo) {
-		this.auditInfo = auditInfo;
 	}
 
 }

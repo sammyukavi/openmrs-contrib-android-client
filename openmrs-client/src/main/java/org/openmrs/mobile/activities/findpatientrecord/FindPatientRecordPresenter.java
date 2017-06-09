@@ -82,7 +82,7 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 				findPatientView.setProgressBarVisibility(false);
 			}
 		};
-		patientDataService.getByNameAndIdentifier(query, QueryOptions.LOAD_RELATED_OBJECTS, pagingInfo,
+		patientDataService.getByNameOrIdentifier(query, QueryOptions.LOAD_RELATED_OBJECTS, pagingInfo,
 				getMultipleCallback);
 	}
 

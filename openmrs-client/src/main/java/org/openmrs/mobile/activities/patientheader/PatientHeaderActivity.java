@@ -5,7 +5,7 @@ import android.view.Menu;
 
 import org.openmrs.mobile.activities.ACBaseActivity;
 
-public class PatientHeaderActivity extends ACBaseActivity{
+public class PatientHeaderActivity extends ACBaseActivity {
 
 	public PatientHeaderContract.Presenter presenter;
 

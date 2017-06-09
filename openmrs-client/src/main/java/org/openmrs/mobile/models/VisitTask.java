@@ -44,7 +44,12 @@ public class VisitTask extends BaseOpenmrsEntity {
 	@ForeignKey(stubbedRelationship = true)
 	private Patient patient;
 
-	@Override
+    @Expose
+	private String closedOn;
+
+	@Expose
+	private User closedBy;
+
 	protected void processRelationships() {
 		super.processRelationships();
 
@@ -87,5 +92,21 @@ public class VisitTask extends BaseOpenmrsEntity {
 
 	public void setPatient(Patient patient) {
 		this.patient = patient;
+	}
+
+	public String getClosedOn() {
+		return closedOn;
+	}
+
+	public void setClosedOn(String closedOn) {
+		this.closedOn = closedOn;
+	}
+
+	public User getClosedBy() {
+		return closedBy;
+	}
+
+	public void setClosedBy(User closedBy) {
+		this.closedBy = closedBy;
 	}
 }

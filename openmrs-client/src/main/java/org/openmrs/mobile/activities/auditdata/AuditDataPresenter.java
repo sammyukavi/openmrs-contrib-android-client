@@ -15,82 +15,54 @@
 package org.openmrs.mobile.activities.auditdata;
 
 import org.openmrs.mobile.activities.BasePresenter;
-import org.openmrs.mobile.activities.patientdashboard.PatientDashboardContract;
-import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.DataService;
-import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
-import org.openmrs.mobile.data.impl.ObsDataService;
+import org.openmrs.mobile.data.impl.EncounterDataService;
+import org.openmrs.mobile.data.impl.LocationDataService;
 import org.openmrs.mobile.data.impl.PatientDataService;
 import org.openmrs.mobile.data.impl.VisitDataService;
 import org.openmrs.mobile.models.Encounter;
-import org.openmrs.mobile.models.Observation;
+import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Visit;
-import org.openmrs.mobile.utilities.ApplicationConstants;
 
-import java.util.List;
+import static org.openmrs.mobile.utilities.ApplicationConstants.EncounterTypeDisplays.AUDITDATA;
 
 public class AuditDataPresenter extends BasePresenter implements AuditDataContract.Presenter {
 
 	private AuditDataContract.View auditDataView;
 	private DataService<Patient> patientDataService;
-	private PatientDashboardContract.View patientDashboardView;
 	private VisitDataService visitDataService;
-	private ObsDataService observationDataService;
 
-	public AuditDataPresenter(AuditDataContract.View view, OpenMRS openMRS) {
+	private EncounterDataService encounterDataService;
+	private LocationDataService locationDataService;
+
+	public AuditDataPresenter(AuditDataContract.View view) {
 		this.auditDataView = view;
 		this.auditDataView.setPresenter(this);
 		this.patientDataService = new PatientDataService();
 		this.visitDataService = new VisitDataService();
+		this.encounterDataService = new EncounterDataService();
+		this.locationDataService = new LocationDataService();
 	}
 
 	@Override
 	public void subscribe() {
-
 	}
 
 	@Override
-	public void fetchPatientData(String uuid) {
-
-		patientDataService.getByUUID(uuid, QueryOptions.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Patient>() {
-			@Override
-			public void onCompleted(Patient patient) {
-				if (patient != null) {
-					auditDataView.updateContactCard(patient);
-				}
-			}
-
-			@Override
-			public void onError(Throwable t) {
-				t.printStackTrace();
-				//auditDataView.showSnack("Error occured: Unable to reach server");
-			}
-		});
-	}
-
-	@Override
-	public void fetchVisitData(String visitUuid) {
-		visitDataService.getByUUID(visitUuid, QueryOptions.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Visit>() {
+	public void fetchVisit(String visitUuid) {
+		auditDataView.showPageSpinner(true);
+		DataService.GetCallback<Visit> fetchEncountersCallback = new DataService.GetCallback<Visit>() {
 			@Override
 			public void onCompleted(Visit visit) {
+				auditDataView.setVisit(visit);
+				auditDataView.showPageSpinner(false);
 				for (Encounter encounter : visit.getEncounters()) {
 					switch (encounter.getEncounterType().getDisplay()) {
-						case ApplicationConstants.EncounterTypeEntitys.AuditData:
-							observationDataService.getByEncounter(encounter, QueryOptions.LOAD_RELATED_OBJECTS, new
-									PagingInfo(0, 100), new DataService.GetCallback<List<Observation>>() {
-								@Override
-								public void onCompleted(List<Observation> observations) {
-									//ConsoleLogger.dump(observations);
-								}
-
-								@Override
-								public void onError(Throwable t) {
-
-								}
-							});
-
+						case AUDITDATA:
+							auditDataView.updateSubmitButtonText();
+							fetchEncounter(encounter.getUuid());
 							break;
 					}
 				}
@@ -98,8 +70,77 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 
 			@Override
 			public void onError(Throwable t) {
-
+				auditDataView.showPageSpinner(false);
+				t.printStackTrace();
 			}
-		});
+		};
+		visitDataService.getByUUID(visitUuid, QueryOptions.LOAD_RELATED_OBJECTS, fetchEncountersCallback);
 	}
+
+	private void fetchEncounter(String uuid) {
+		auditDataView.showPageSpinner(true);
+		DataService.GetCallback<Encounter> fetchEncountercallback = new DataService.GetCallback<Encounter>() {
+			@Override
+			public void onCompleted(Encounter encounter) {
+				auditDataView.showPageSpinner(false);
+				auditDataView.setEncounterUuid(encounter.getUuid());
+				auditDataView.updateFormFields(encounter);
+			}
+
+			@Override
+			public void onError(Throwable t) {
+				auditDataView.showPageSpinner(false);
+				t.printStackTrace();
+			}
+		};
+		encounterDataService.getByUUID(uuid, QueryOptions.LOAD_RELATED_OBJECTS, fetchEncountercallback);
+	}
+
+	@Override
+	public void saveEncounter(Encounter encounter, boolean isNewEncounter) {
+		auditDataView.showProgressBar(true);
+		DataService.GetCallback<Encounter> serverResponceCallback = new DataService.GetCallback<Encounter>() {
+			@Override
+			public void onCompleted(Encounter encounter) {
+				auditDataView.showProgressBar(false);
+				if (encounter == null) {
+
+				} else {
+					auditDataView.goBackToVisitPage();
+				}
+			}
+
+			@Override
+			public void onError(Throwable t) {
+				auditDataView.showProgressBar(false);
+				t.printStackTrace();
+			}
+		};
+
+		if (isNewEncounter) {
+			encounterDataService.create(encounter, serverResponceCallback);
+		} else {
+			encounterDataService.update(encounter, serverResponceCallback);
+		}
+	}
+
+	@Override
+	public void fetchLocation(String locationUuid) {
+		DataService.GetCallback<Location> locationDataServiceCallback = new DataService.GetCallback<Location>() {
+			@Override
+			public void onCompleted(Location location) {
+				//set location in the fragment and start loading other fields
+				auditDataView.setLocation(location);
+			}
+
+			@Override
+			public void onError(Throwable t) {
+				t.printStackTrace();
+			}
+		};
+
+		locationDataService.getByUUID(locationUuid, QueryOptions.LOAD_RELATED_OBJECTS, locationDataServiceCallback);
+	}
+
 }
+

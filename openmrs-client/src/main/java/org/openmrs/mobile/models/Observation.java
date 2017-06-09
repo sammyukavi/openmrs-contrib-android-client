@@ -7,7 +7,6 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-
 package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
@@ -84,16 +83,15 @@ public class Observation extends BaseOpenmrsEntity implements Serializable {
 
 	@SerializedName("value")
 	@Expose
-	@Column
-	private String value;
+	private Object value;
 
-	@SerializedName("auditInfo")
+	@SerializedName("voided")
 	@Expose
-	private AuditInfo auditInfo;
+	private String voided;
 
-	private Long id;
-	private Long encounterID;
-	private String displayValue;
+	@Expose
+	@ForeignKey(stubbedRelationship = true)
+	private Provider provider;
 
 	private String diagnosisList;
 	private String diagnosisCertainty;
@@ -269,31 +267,24 @@ public class Observation extends BaseOpenmrsEntity implements Serializable {
 		this.resourceVersion = resourceVersion;
 	}
 
-	public Long getId() {
-		return id;
+	public Object getValue() {
+		return value;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setValue(String value) {
+		this.value = value;
 	}
 
-	public Long getEncounterID() {
-		return encounterID;
+	public void setValue(Object value) {
+		this.value = value;
 	}
 
-	public void setEncounterID(Long encounterID) {
-		this.encounterID = encounterID;
+	public void setProvider(Provider provider) {
+		this.provider = provider;
 	}
 
-	public String getDisplayValue() {
-		if (displayValue == null && display != null && display.contains(":")) {
-			setDisplayValue(display.split(":")[1]);
-		}
-		return displayValue;
-	}
-
-	public void setDisplayValue(String displayValue) {
-		this.displayValue = displayValue;
+	public Provider getProvider() {
+		return provider;
 	}
 
 	public String getShortDiagnosisCertainty() {
@@ -307,6 +298,11 @@ public class Observation extends BaseOpenmrsEntity implements Serializable {
 	public void setDiagnosisCertanity(String certanity) {
 		this.diagnosisCertainty = certanity;
 	}
+
+	public void setDiagnosisCertainty(String diagnosisCertainty) {
+		this.diagnosisCertainty = diagnosisCertainty;
+	}
+
 
 	public String getDiagnosisOrder() {
 		return diagnosisOrder;
@@ -332,19 +328,4 @@ public class Observation extends BaseOpenmrsEntity implements Serializable {
 		this.diagnosisNote = diagnosisNote;
 	}
 
-	public String getValue() {
-		return value;
-	}
-
-	public void setValue(String value) {
-		this.value = value;
-	}
-
-	public AuditInfo getAuditInfo() {
-		return auditInfo;
-	}
-
-	public void setAuditInfo(AuditInfo auditInfo) {
-		this.auditInfo = auditInfo;
-	}
 }

@@ -119,13 +119,6 @@ public class PersonAttributeType extends BaseOpenmrsMetadata {
 	}
 
 	/**
-	 * @see java.lang.Object#toString()
-	 */
-	public String toString() {
-		return getName();
-	}
-
-	/**
 	 * The privilege required in order to edit this attribute
 	 * @return Returns the required privilege
 	 * @since 1.5

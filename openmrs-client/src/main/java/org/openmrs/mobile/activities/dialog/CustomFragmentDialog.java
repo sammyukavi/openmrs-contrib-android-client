@@ -59,7 +59,6 @@ import org.openmrs.mobile.data.impl.EncounterDataService;
 import org.openmrs.mobile.data.impl.LocationDataService;
 import org.openmrs.mobile.data.impl.ObsDataService;
 import org.openmrs.mobile.data.impl.VisitDataService;
-import org.openmrs.mobile.models.AuditInfo;
 import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.EncounterType;
@@ -90,6 +89,7 @@ public class CustomFragmentDialog extends DialogFragment {
 	private Button mLeftButton, mRightButton;
 	private CustomDialogBundle mCustomDialogBundle;
 	private AutoCompleteTextView autoCompleteTextView;
+	private Visit visit;
 
 	public static CustomFragmentDialog newInstance(CustomDialogBundle customDialogBundle) {
 		CustomFragmentDialog dialog = new CustomFragmentDialog();
@@ -236,6 +236,10 @@ public class CustomFragmentDialog extends DialogFragment {
 
 		if (null != mCustomDialogBundle.getEditNoteTextViewMessage()) {
 			mEditNoteText = addEditNoteTextField(mCustomDialogBundle.getEditNoteTextViewMessage());
+		}
+
+		if (null != mCustomDialogBundle.getVisit()){
+			this.visit = mCustomDialogBundle.getVisit();
 		}
 
 	}
@@ -419,7 +423,7 @@ public class CustomFragmentDialog extends DialogFragment {
 						dismiss();
 						break;
 					case END_VISIT:
-						((AddEditVisitActivity)getActivity()).addEditVisitPresenter.endVisit();
+						((AddEditVisitActivity)getActivity()).addEditVisitPresenter.endVisit(visit);
 						dismiss();
 						break;
 					case START_VISIT:
@@ -528,9 +532,6 @@ public class CustomFragmentDialog extends DialogFragment {
 							user.setUuid(instance.getCurrentLoggedInUserInfo().get(ApplicationConstants.UserKeys
 									.USER_UUID));
 
-							AuditInfo auditInfo = new AuditInfo();
-							auditInfo.setCreator(user);
-
 							//create concept
 							Concept concept = new Concept();
 							concept.setUuid("162169AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
@@ -548,7 +549,7 @@ public class CustomFragmentDialog extends DialogFragment {
 							observation.setPerson(patient.getPerson());
 							observation.setObsDatetime(localDateTime.toString());
 							observation.setCreator(user);
-							observation.setAuditInfo(auditInfo);
+
 							observation.setLocation(location.getUuid());
 
 							List<Observation> observationList = new ArrayList<>();
@@ -560,7 +561,7 @@ public class CustomFragmentDialog extends DialogFragment {
 							encounter.setObs(observationList);
 							encounter.setVisit(visit);
 							encounter.setEncounterDatetime(localDateTime.toString());
-							encounter.setAuditInfo(auditInfo);
+
 							encounter.setLocation(location);
 
 							EncounterDataService encounterDataService = new EncounterDataService();

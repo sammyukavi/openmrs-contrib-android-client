@@ -14,8 +14,6 @@
 
 package org.openmrs.mobile.activities.login;
 
-import android.support.annotation.NonNull;
-
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
 import org.openmrs.mobile.models.Location;
@@ -29,53 +27,48 @@ public interface LoginContract {
 
 		void hideSoftKeys();
 
-		void setPresenter(@NonNull Presenter presenter);
-
 		void showWarningDialog();
 
 		void showLoadingAnimation();
 
-		void hideLoadingAnimation();
-
-		void showLocationLoadingAnimation();
-
-		void hideUrlLoadingAnimation();
+		void userAuthenticated();
 
 		void finishLoginActivity();
 
-		void showInvalidURLSnackbar(String message);
+		void hideLoadingAnimation();
 
 		void showInvalidLoginOrPasswordSnackbar();
-
-		void setLocationErrorOccurred(boolean errorOccurred);
 
 		void showToast(String message, ToastUtil.ToastType toastType);
 
 		void showToast(int textId, ToastUtil.ToastType toastType);
 
-		void initLoginForm(List<Location> locationList, String url);
+		void showLocationLoadingAnimation();
 
-		void userAuthenticated();
+		void hideLocationLoadingAnimation();
 
-		void startFormListService();
+		void initLoginForm(List<Location> locations, String url);
 
-		void showEditUrlEditField(boolean visibility);
+		void setLocationErrorOccurred(boolean errorOccurred);
 
+		void hideUrlLoadingAnimation();
+
+		void showInvalidURLSnackbar(String message);
+
+		void showErrorOccured(String message);
 	}
 
 	interface Presenter extends BasePresenterContract {
+
+		void login(String username, String password, String url, String oldUrl);
+
+		void loadLocations(String url);
 
 		void authenticateUser(final String username, final String password, final String url);
 
 		void authenticateUser(final String username, final String password, final String url, boolean wipeDatabase);
 
-		void login(String username, String password, String url, String oldUrl);
-
 		void saveLocationsToDatabase(List<Location> locationList, String selectedLocation);
-
-		void loadLocations(String url);
-
-		void showEditUrlEditText(boolean visibility);
-
 	}
+
 }

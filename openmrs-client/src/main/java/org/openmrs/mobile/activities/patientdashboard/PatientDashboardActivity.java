@@ -30,11 +30,12 @@ public class PatientDashboardActivity extends ACBaseActivity {
 	public PatientDashboardContract.Presenter mPresenter;
 
 	public AddEditVisitContract.Presenter addEditVisitPresenter;
+	private PatientHeaderFragment headerFragment;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getLayoutInflater().inflate(R.layout.activity_patient_dashboard, frameLayout);
-		setTitle(R.string.title_patient_details);
+		setTitle(R.string.title_patient_dashboard);
 		// Create fragment
 		PatientDashboardFragment patientDashboardFragment =
 				(PatientDashboardFragment)getSupportFragmentManager().findFragmentById(R.id.contentFrame);
@@ -52,13 +53,13 @@ public class PatientDashboardActivity extends ACBaseActivity {
 			patientUuid = extras.getString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
 			if (StringUtils.notEmpty(patientUuid)) {
 				// patient header
-				PatientHeaderFragment headerFragment = (PatientHeaderFragment) getSupportFragmentManager()
+				headerFragment = (PatientHeaderFragment)getSupportFragmentManager()
 						.findFragmentById(R.id.patientHeader);
-				if(headerFragment == null){
+				if (headerFragment == null) {
 					headerFragment = PatientHeaderFragment.newInstance();
 				}
 
-				if(!headerFragment.isActive()){
+				if (!headerFragment.isActive()) {
 					addFragmentToActivity(getSupportFragmentManager(), headerFragment, R.id.patientHeader);
 				}
 
@@ -73,4 +74,7 @@ public class PatientDashboardActivity extends ACBaseActivity {
 		return true;
 	}
 
+	public void updateHeaderShadowLine(boolean visible) {
+		headerFragment.updateShadowLine(visible);
+	}
 }

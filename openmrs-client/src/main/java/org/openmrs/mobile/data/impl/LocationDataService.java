@@ -9,6 +9,8 @@ import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 
+import java.util.List;
+
 import retrofit2.Call;
 
 public class LocationDataService extends BaseMetadataDataService<Location, LocationDbService, LocationRestService> {
@@ -63,5 +65,12 @@ public class LocationDataService extends BaseMetadataDataService<Location, Locat
 	@Override
 	protected Call<Location> _restPurge(String restPath, String uuid) {
 		return null;
+	}
+
+	public void getAll(GetCallback<List<Location>> callback) {
+		executeMultipleCallback(callback, null, null,
+				() -> dbService.getAll(null, null),
+				() -> restService.getLoginLocations(buildRestRequestPath())
+		);
 	}
 }

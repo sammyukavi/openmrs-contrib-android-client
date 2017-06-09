@@ -42,6 +42,10 @@ public class PagingInfo {
 		return pagingInfo == null ? null : pagingInfo.getStartIndex();
 	}
 
+	public static boolean isValid(PagingInfo pagingInfo) {
+		return !(pagingInfo == null || pagingInfo.getPage() == 0);
+	}
+
 	public int getPage() {
 		return page;
 	}

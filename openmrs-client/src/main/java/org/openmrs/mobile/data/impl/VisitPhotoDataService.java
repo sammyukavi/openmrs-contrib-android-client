@@ -1,5 +1,6 @@
 package org.openmrs.mobile.data.impl;
 
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 
 import org.openmrs.mobile.data.BaseDataService;
@@ -35,7 +36,7 @@ public class VisitPhotoDataService
 
 	@Override
 	protected String getRestPath() {
-		return ApplicationConstants.API.REST_ENDPOINT_V2 + "/patientlist";
+		return ApplicationConstants.API.REST_ENDPOINT_V2 + "patientlist";
 	}
 
 	@Override
@@ -45,7 +46,7 @@ public class VisitPhotoDataService
 
 	public void uploadPhoto(VisitPhoto visitPhoto, @NonNull GetCallback<VisitPhoto> callback) {
 		executeSingleCallback(callback, null,
-				() -> null,
+				() -> dbService.save(visitPhoto),
 				() -> {
 					RequestBody patient =
 							RequestBody.create(MediaType.parse("text/plain"), visitPhoto.getPatient().getUuid());
@@ -61,21 +62,17 @@ public class VisitPhotoDataService
 	}
 
 	public void downloadPhoto(String obsUuid, String view, @NonNull GetCallback<VisitPhoto> callback) {
-		final VisitPhoto visitPhoto = new VisitPhoto();
-		Call<ResponseBody> call = restService.downloadVisitPhoto(buildRestRequestPath(), obsUuid, view);
-		call.enqueue(new Callback<ResponseBody>() {
-			@Override
-			public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-				visitPhoto.setResponseImage(response.body());
-				callback.onCompleted(visitPhoto);
-			}
+		executeSingleCallback(callback, null,
+				() -> dbService.getByUuid(obsUuid, null),
+				() -> restService.downloadVisitPhoto(buildRestRequestPath(), obsUuid, view),
+				(ResponseBody body) -> {
+					VisitPhoto photo = new VisitPhoto();
+					photo.setDownloadedImage(BitmapFactory.decodeStream(body.byteStream()));
 
-			@Override
-			public void onFailure(Call<ResponseBody> call, Throwable t) {
-				ToastUtil.error(t.getMessage());
-				callback.onError(t);
-			}
-		});
+					return photo;
+				},
+				(e) -> dbService.save(e)
+		);
 	}
 
 	@Override

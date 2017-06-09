@@ -1,5 +1,7 @@
 package org.openmrs.mobile.data.db;
 
+import com.raizlabs.android.dbflow.sql.language.SQLite;
+
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.models.BaseOpenmrsEntity;
@@ -11,7 +13,7 @@ public abstract class BaseEntityDbService<E extends BaseOpenmrsEntity> extends B
 		implements EntityDbService<E> {
 	@Override
 	public List<E> getByPatient(Patient patient, QueryOptions options, PagingInfo pagingInfo) {
-		return null;
+		return executeQuery(options, pagingInfo, (w) -> w.where(getEntityTable().getProperty("patient").eq(patient)));
 	}
 }
 

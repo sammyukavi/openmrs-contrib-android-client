@@ -1,5 +1,7 @@
 package org.openmrs.mobile.models;
 
+import android.graphics.Bitmap;
+
 import com.google.gson.annotations.Expose;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
@@ -35,7 +37,9 @@ public class VisitPhoto extends BaseOpenmrsObject {
 	@Expose
 	private MultipartBody.Part requestImage;
 
-	private ResponseBody responseImage;
+	private Bitmap downloadedImage;
+
+	private Observation observation;
 
 	public Visit getVisit() {
 		return visit;
@@ -85,11 +89,19 @@ public class VisitPhoto extends BaseOpenmrsObject {
 		this.instructions = instructions;
 	}
 
-	public ResponseBody getResponseImage() {
-		return responseImage;
+	public Bitmap getDownloadedImage() {
+		return downloadedImage;
 	}
 
-	public void setResponseImage(ResponseBody responseImage) {
-		this.responseImage = responseImage;
+	public void setDownloadedImage(Bitmap downloadedImage) {
+		this.downloadedImage = downloadedImage;
+	}
+
+	public Observation getObservation() {
+		return observation;
+	}
+
+	public void setObservation(Observation observation) {
+		this.observation = observation;
 	}
 }

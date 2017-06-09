@@ -1,6 +1,7 @@
 package org.openmrs.mobile.data.rest;
 
 import org.openmrs.mobile.models.Encounter;
+import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Results;
 
 import retrofit2.Call;
@@ -39,12 +40,12 @@ public interface EncounterRestService {
 			@Query("limit") Integer limit,
 			@Query("startIndex") Integer startIndex);
 
-	@POST(RestConstants.UPDATE)
-	Call<Encounter> update(@Path(value = "restPath", encoded = true) String restPath,
-			@Path("uuid") String uuid, @Body Encounter entity);
-
 	@POST(RestConstants.CREATE)
 	Call<Encounter> create(@Path(value = "restPath", encoded = true) String restPath,
 			@Body Encounter entity);
+
+	@POST(RestConstants.UPDATE)
+	Call<Encounter> update(@Path(value = "restPath", encoded = true) String restPath,
+			@Path("uuid") String uuid, @Body Encounter entity);
 
 }

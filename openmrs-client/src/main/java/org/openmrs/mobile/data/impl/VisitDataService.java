@@ -13,8 +13,6 @@ import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -73,8 +71,9 @@ public class VisitDataService extends BaseEntityDataService<Visit, VisitDbServic
 	@Override
 	protected Call<Results<Visit>> _restGetByPatient(String restPath, String patientUuid, QueryOptions options,
 			PagingInfo pagingInfo) {
-		return restService.getByPatient(restPath, patientUuid, QueryOptions.getRepresentation(options),
-				QueryOptions.getIncludeInactive(options));
+		return restService.getByPatient(restPath, patientUuid,
+				QueryOptions.getRepresentation(options), QueryOptions.getIncludeInactive(options),
+				PagingInfo.getStartIndex(pagingInfo), PagingInfo.getLimit(pagingInfo));
 	}
 
 	// End Retrofit Workaround
@@ -86,13 +85,13 @@ public class VisitDataService extends BaseEntityDataService<Visit, VisitDbServic
 		checkNotNull(callback);
 
 		executeSingleCallback(callback, options,
-				() -> null,
+				() -> dbService.endVisit(visit),
 				() -> restService.endVisit(buildRestRequestPath(), uuid, visit));
 	}
 
-	public void updateVisit(String visitUuid, Visit updatedVisit, GetCallback<Visit> callback){
+	public void updateVisit(String visitUuid, Visit updatedVisit, GetCallback<Visit> callback) {
 		executeSingleCallback(callback, null,
-				() -> null,
+				() -> dbService.save(updatedVisit),
 				() -> restService.updateVisit(ApplicationConstants.API.REST_ENDPOINT_V2 + "/patientlist/visitedit",
 						visitUuid, updatedVisit.getVisitType().getUuid(), updatedVisit.getAttributes()));
 	}

@@ -41,9 +41,17 @@ public class Concept extends BaseOpenmrsObject {
 	@Expose
 	private List<ConceptAnswer> answers;
 
+	@SerializedName("names")
+	@Expose
+	private List<ConceptName> names;
+
 	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "answers", isVariablePrivate = true)
 	List<ConceptAnswer> loadAnswers() {
 		return loadRelatedObject(ConceptAnswer.class, answers, () -> ConceptAnswer_Table.concept_uuid.eq(getUuid()));
+	}
+
+	List<ConceptName> loadNames() {
+		return loadRelatedObject(ConceptName.class, names, () -> ConceptName_Table.concept_uuid.eq(getUuid()));
 	}
 
 	@Override
@@ -51,6 +59,7 @@ public class Concept extends BaseOpenmrsObject {
 		super.processRelationships();
 
 		processRelatedObjects(answers, (a) -> a.setConcept(this));
+		processRelatedObjects(names, (n) -> n.setConcept(this));
 	}
 
 	public Datatype getDatatype() {
@@ -83,5 +92,13 @@ public class Concept extends BaseOpenmrsObject {
 
 	public void setAnswers(List<ConceptAnswer> answers) {
 		this.answers = answers;
+	}
+
+	public List<ConceptName> getNames() {
+		return names;
+	}
+
+	public void setNames(List<ConceptName> names) {
+		this.names = names;
 	}
 }

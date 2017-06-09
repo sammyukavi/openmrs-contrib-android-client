@@ -34,16 +34,14 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import org.openmrs.mobile.R;
-import org.openmrs.mobile.activities.activevisits.ActiveVisitsActivity;
-import org.openmrs.mobile.activities.capturevitals.CaptureVitalsActivity;
 import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
 import org.openmrs.mobile.activities.findpatientrecord.FindPatientRecordActivity;
 import org.openmrs.mobile.activities.login.LoginActivity;
 import org.openmrs.mobile.activities.patientlist.PatientListActivity;
-import org.openmrs.mobile.activities.settings.SettingsActivity;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.application.OpenMRSLogger;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
+import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.net.AuthorizationManager;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 
@@ -97,12 +95,6 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
-			case R.id.actionLogout:
-				showLogoutDialog();
-				return true;
-			case R.id.actionSettings:
-				startActivity(new Intent(this, SettingsActivity.class));
-				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}
@@ -110,10 +102,6 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 
 	@Override
 	public boolean onPrepareOptionsMenu(final Menu menu) {
-		MenuItem logoutMenuItem = menu.findItem(R.id.actionLogout);
-		if (logoutMenuItem != null) {
-			logoutMenuItem.setTitle(getString(R.string.action_logout) + " " + mOpenMRS.getUsername());
-		}
 		return true;
 	}
 
@@ -140,14 +128,13 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 		createAndShowDialog(bundle, ApplicationConstants.DialogTAG.LOGOUT_DIALOG_TAG);
 	}
 
-	public void showEndVisitDialog() {
+	public void showEndVisitDialog(Visit visit) {
 		CustomDialogBundle bundle = new CustomDialogBundle();
 		bundle.setTitleViewMessage(getString(R.string.end_visit_dialog_title));
 		bundle.setTextViewMessage(getString(R.string.end_visit_dialog_message));
+		bundle.setVisit(visit);
 		bundle.setRightButtonAction(CustomFragmentDialog.OnClickAction.END_VISIT);
 		bundle.setRightButtonText(getString(R.string.dialog_button_confirm));
-		//bundle.setLeftButtonAction(CustomFragmentDialog.OnClickAction.DISMISS);
-		//bundle.setLeftButtonText(getString(R.string.dialog_button_cancel));
 		createAndShowDialog(bundle, ApplicationConstants.DialogTAG.END_VISIT_DIALOG_TAG);
 	}
 
@@ -239,6 +226,11 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 		toggle.syncState();
 
 		NavigationView navigationView = (NavigationView)findViewById(R.id.nav_view);
+		Menu menu = navigationView.getMenu();
+		MenuItem logoutMenuItem = menu.findItem(R.id.navLogout);
+		if (logoutMenuItem != null) {
+			logoutMenuItem.setTitle(getString(R.string.action_logout) + " " + mOpenMRS.getUsername());
+		}
 		navigationView.setNavigationItemSelectedListener(this);
 	}
 
@@ -256,21 +248,22 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 			case R.id.navItemFindPatientRecord:
 				startActivity(new Intent(this, FindPatientRecordActivity.class));
 				break;
-			case R.id.navItemActiveVisits:
-				startActivity(new Intent(this, ActiveVisitsActivity.class));
-				break;
-			case R.id.navItemCaptureVitals:
-				startActivity(new Intent(this, CaptureVitalsActivity.class));
-				break;
 			case R.id.navItemPatientLists:
 				startActivity(new Intent(this, PatientListActivity.class));
 				break;
-			case R.id.navItemSettings:
-				startActivity(new Intent(this, SettingsActivity.class));
+			case R.id.navLogout:
+				showLogoutDialog();
 				break;
-
 			default:
 				break;
 		}
+	}
+
+	public Snackbar createSnackbar(View view, String message) {
+		return Snackbar.make(view, message, Snackbar.LENGTH_LONG);
+	}
+
+	public void createSnackbar(String message) {
+		//Snackbar.make(view, message, Snackbar.LENGTH_LONG);
 	}
 }

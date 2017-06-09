@@ -15,19 +15,80 @@
 package org.openmrs.mobile.activities.capturevitals;
 
 import org.openmrs.mobile.activities.BasePresenter;
-import org.openmrs.mobile.application.OpenMRS;
+import org.openmrs.mobile.data.DataService;
+import org.openmrs.mobile.data.QueryOptions;
+import org.openmrs.mobile.data.impl.EncounterDataService;
+import org.openmrs.mobile.data.impl.LocationDataService;
+import org.openmrs.mobile.data.impl.VisitDataService;
+import org.openmrs.mobile.models.Encounter;
+import org.openmrs.mobile.models.Location;
 
 public class CaptureVitalsPresenter extends BasePresenter implements CaptureVitalsContract.Presenter {
 
-	private CaptureVitalsContract.View findPatientView;
+	private CaptureVitalsContract.View captureVitalsView;
+	private VisitDataService visitDataService;
 
-	public CaptureVitalsPresenter(CaptureVitalsContract.View view, OpenMRS openMRS) {
-		this.findPatientView = view;
-		this.findPatientView.setPresenter(this);
+	private EncounterDataService encounterDataService;
+	private LocationDataService locationDataService;
+
+	public CaptureVitalsPresenter(CaptureVitalsContract.View view) {
+		this.captureVitalsView = view;
+		this.captureVitalsView.setPresenter(this);
+		this.visitDataService = new VisitDataService();
+		this.encounterDataService = new EncounterDataService();
+		this.locationDataService = new LocationDataService();
 	}
 
 	@Override
 	public void subscribe() {
+	}
+
+	@Override
+	public void fetchLocation(String locationUuid) {
+		captureVitalsView.showPageSpinner(true);
+		DataService.GetCallback<Location> locationDataServiceCallback = new DataService.GetCallback<Location>() {
+			@Override
+			public void onCompleted(Location location) {
+				//set location in the fragment and start loading other fields
+				captureVitalsView.setLocation(location);
+				captureVitalsView.showPageSpinner(false);
+			}
+
+			@Override
+			public void onError(Throwable t) {
+				captureVitalsView.showPageSpinner(false);
+				t.printStackTrace();
+			}
+		};
+
+		locationDataService.getByUUID(locationUuid, QueryOptions.LOAD_RELATED_OBJECTS, locationDataServiceCallback);
+	}
+
+	@Override
+	public void attemptSave(Encounter encounter) {
+		captureVitalsView.showProgressBar(true);
+		DataService.GetCallback<Encounter> serverResponceCallback = new DataService.GetCallback<Encounter>() {
+			@Override
+			public void onCompleted(Encounter encounter) {
+				if (encounter == null) {
+					captureVitalsView.showProgressBar(false);
+				} else {
+					captureVitalsView.goBackToVisitPage();
+					captureVitalsView.showProgressBar(false);
+					captureVitalsView.disableButton();
+				}
+			}
+
+			@Override
+			public void onError(Throwable t) {
+				captureVitalsView.showProgressBar(false);
+				t.printStackTrace();
+			}
+		};
+
+		encounterDataService.create(encounter, serverResponceCallback);
 
 	}
+
 }
+

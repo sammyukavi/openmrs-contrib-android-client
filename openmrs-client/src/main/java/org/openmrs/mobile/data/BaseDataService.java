@@ -223,6 +223,31 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 	}
 
 	/**
+	 * Executes a data operation which returns a single result. The result returned from the REST request will be
+	 * converted by the specified responseConverter function and then processed by the dbOperation.
+	 * @param callback			The operation callback
+	 * @param options			The query options
+	 * @param dbQuery			The database query operation to perform
+	 * @param restQuery			The REST query operation to perform
+	 * @param responseConverter	The response converter function
+	 * @param dbOperation		The database operation to perform when the results are returned from the REST query and
+	 *                             converted by the response converter
+	 * @param <T>				The entity type
+	 * @param <R>				The type of the object returned by the REST query
+	 */
+	protected <T, R> void executeSingleCallback(@NonNull GetCallback<T> callback, @Nullable QueryOptions options,
+			@NonNull Supplier<T> dbQuery, @NonNull Supplier<Call<R>> restQuery, @NonNull Function<R, T> responseConverter,
+			@NonNull Consumer<T> dbOperation) {
+		checkNotNull(callback);
+		checkNotNull(dbQuery);
+		checkNotNull(restQuery);
+		checkNotNull(responseConverter);
+		checkNotNull(dbOperation);
+
+		performCallback(callback, options, dbQuery, restQuery, responseConverter, dbOperation);
+	}
+
+	/**
 	 * Executes a data operation which can return multiple results. Results returned from the REST query will be saved to
 	 * the db.
 	 * @param callback   The operation callback
@@ -407,10 +432,6 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 		if (StringUtils.notEmpty(cacheKey) && value != null) {
 			cacheService.set(cacheKey, value);
 		}
-	}
-
-	protected boolean isPagingValid(PagingInfo pagingInfo) {
-		return !(pagingInfo == null || pagingInfo.getPage() == 0);
 	}
 }
 

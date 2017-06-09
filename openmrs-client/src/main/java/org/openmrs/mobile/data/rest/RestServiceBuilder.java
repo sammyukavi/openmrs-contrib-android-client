@@ -26,12 +26,10 @@ public class RestServiceBuilder {
 	protected static final OpenMRS app = OpenMRS.getInstance();
 	private static Retrofit.Builder builder;
 	private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+	private static String API_BASE_URL = OpenMRS.getInstance().getServerUrl() + ApplicationConstants.API.REST_ENDPOINT_V1;
 
 	static {
-		builder = new Retrofit.Builder()
-				.baseUrl(ApplicationConstants.DEFAULT_OPEN_MRS_URL)
-				.addConverterFactory(buildGsonConverter())
-				.client((httpClient).build());
+		setBaseUrl(false);
 	}
 
 	private static GsonConverterFactory buildGsonConverter() {
@@ -90,4 +88,12 @@ public class RestServiceBuilder {
 	public static <S> S createService(Class<S> serviceClass) {
 		return createService(serviceClass, app.getServerUrl(), app.getUsername(), app.getPassword());
 	}
+
+	public static void setBaseUrl(boolean loginUrl) {
+		builder = new Retrofit.Builder()
+				.baseUrl(loginUrl ? API_BASE_URL : ApplicationConstants.DEFAULT_OPEN_MRS_URL)
+				.addConverterFactory(buildGsonConverter());
+	}
+
+
 }

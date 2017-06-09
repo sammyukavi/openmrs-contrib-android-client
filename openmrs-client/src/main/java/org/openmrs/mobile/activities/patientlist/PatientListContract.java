@@ -36,11 +36,11 @@ public interface PatientListContract {
 
 		void updatePatientListData(List<PatientListContext> patientListData);
 
-		void setNoPatientListSelected(boolean visible);
-
 		void setSpinnerVisibility(boolean visibility);
 
 		boolean isActive();
+
+		void setPatientListScreenVisibility(boolean visible);
 	}
 
 	interface Presenter extends BasePresenterContract {

@@ -21,7 +21,7 @@
 	<string name="aadbname">aaopenmrs.db</string>
 
 
-	<!-- LoginActivity view -->
+	<!-- LoginActivity visitPhotoView -->
 	<string name="login_button">Login</string>
 	<string name="login_url_hint">URL address</string>
 	<string name="login_username_hint">Username</string>
@@ -53,7 +53,7 @@
 	<string name="reg_ques_phno">Phone number</string>
 	<string name="reg_address">Address</string>
 	<string name="reg_nationality">Nationality</string>
-	<string name="reg_ward">Ward</string>
+	<string name="reg_ward">Ward:</string>
 	<string name="reg_clinic">Clinic</string>
 	<string name="emergency_contact">Emergency Contact</string>
 	<string name="addr2_hint">Address 2</string>
@@ -135,6 +135,7 @@
 	<string name="dialog_button_merge">Merge</string>
 	<string name="action_next">Next</string>
 	<string name="action_submit">Submit</string>
+	<string name="action_update">Update</string>
 	<string name="action_register">Register Patient</string>
 	<!-- SettingsActivity activity -->
 	<string name="settings_logs">Logs</string>
@@ -193,14 +194,14 @@
 	<string name="action_find_visits">Find Active Visits</string>
 	<string name="search_visits_no_results">No visits in database</string>
 	<!-- fragment_patient_visits layout -->
-	<string name="active_visit_label">Active visit</string>
+	<string name="active_visit_label">Active Visit</string>
 	<string name="past_visit_label">Past visit</string>
 	<string name="visit_in">in %1$s</string>
 	<!-- fragment_patient_vitals layout -->
 	<string name="last_vitals_label">Last Vitals: </string>
 	<string name="last_vitals_none_label">None</string>
 	<!-- fragment_patient_diagnosis layout -->
-	<string name="empty_diagnoses_list">Patient has no diagnoses yet.</string>
+	<string name="no_diagnoses_label">No diagnoses</string>
 	<string name="diagnosis_note_label">Text of encounter note</string>
 
 	<!-- Visit dashboard activity -->
@@ -274,15 +275,17 @@
 
 
 	<string name="nav_find_patient">Find Patient Record</string>
-	<string name="nav_active_visits">Active Visits</string>
 	<string name="nav_capture_vitals">Capture Vitals</string>
 	<string name="nav_register_patient">Register Patient</string>
 	<string name="nav_patient_lists">Patient Lists</string>
+	<string name="nav_open_visit_tasks">Open Visit Tasks</string>
+	<string name="nav_closed_visit_tasks">Closed Visit Tasks</string>
+	<string name="nav_closed_visit_tasks_period">Closed Tasks (%1$s)</string>
 	<string name="nav_visit_tasks">Visit Tasks</string>
 	<string name="nav_settings">Settings</string>
 	<string name="nav_visit_details">Visit Details</string>
 
-	<string name="title_patient_details">Patient Details</string>
+	<string name="title_patient_dashboard">Patient Dashboard</string>
 	<string name="title_audit_data_form">Audit Data Form</string>
 	<string name="title_settings">Settings</string>
 
@@ -312,10 +315,10 @@
 	<string name="label_add_task">Add Task</string>
 
 
-	<string name="label_height">Height (cm)</string>
-	<string name="label_weight">Weigt (kg)</string>
+	<string name="label_height">Height</string>
+	<string name="label_weight">Weight</string>
 	<string name="label_bmi">(Calculated)BMI</string>
-	<string name="label_temperature">Temperature(c)</string>
+	<string name="label_temperature">Temperature</string>
 	<string name="label_pulse">Pulse</string>
 	<string name="label_respiratory_rate">Respiratory rate</string>
 	<string name="label_blood_presure">Blood Pressure</string>
@@ -327,7 +330,7 @@
 	<string name="label_day">Day</string>
 	<string name="label_month">Month</string>
 	<string name="label_year">Year</string>
-	<string name="label_address">Address</string>
+	<string name="label_address">Address:</string>
 	<string name="label_address_2">Address 2</string>
 	<string name="label_city">City</string>
 	<string name="label_province">Province</string>
@@ -401,7 +404,7 @@
 	<string name="no_patient_list">No patient lists found!</string>
 	<string name="number_of_patients">%1$s patients found</string>
 	<string name="search_for_patients">Please type the first 3 characters of the patient name on the search bar for you to
-		view meaningful results</string>
+		visitPhotoView meaningful results</string>
 	<string name="patient_metadata_label">Patient Contact Information</string>
 	<string name="add_visit_task_dialog_title">Add Visit Task</string>
 	<string name="visit_tasks_dialog_message">add a visit task</string>
@@ -421,38 +424,89 @@
 	<!--Audit data form -->
 	<string name="yes">Yes</string>
 	<string name="no">No</string>
-	<string name="admission_date">Date of Admission:</string>
-	<string name="is_audit_complete">Is the Audit Data Complete?</string>
+	<string name="admission_date">Date of admission:</string>
+	<string name="audit_complete">Audit data complete</string>
 	<string name="inpatient_service_type_prompt">Type of inpatient service</string>
-	<string name="is_death_in_hospital">Death in Hospital:</string>
-	<string name="is_palliative_consult">Palliative Consult</string>
-	<string name="is_preop_risk_assessment_only">Pre-Op Risk Assessment Only?</string>
+	<string name="is_death_in_hospital">Death in hospital:</string>
+	<string name="is_palliative_consult">Palliative consult</string>
+	<string name="is_preop_risk_assessment_only">Pre-Op risk assessment only?</string>
 	<string name="is_icu_stay">ICU stay during admission?</string>
 	<string name="is_hdu_stay">HDU stay during admission?</string>
-	<string name="is_hdu_comgmt">HDU CO-MGMT ONLY?</string>
+	<string name="is_hdu_comgmt">HDU Co-Management only?</string>
 	<string name="is_hiv_positive">HIV+:</string>
 	<string name="cd4">CD4:</string>
 	<string name="hba1c">HbA1c:</string>
-	<string name="inpatient_service_type">Type of inpatient service</string>
-	<string name="discharge_diagnosis">Discharge Diagnosis:</string>
+	<string name="inpatient_service_type">Inpatient service type</string>
+	<string name="discharge_diagnosis">Discharge diagnosis:</string>
 	<string name="unknown">Unknown</string>
 	<string name="nav_login">Login</string>
 
 	<string-array name="inpatient_service_types">
+		<item></item>
 		<item>General medicine service</item>
-		<item>Surgery service</item>
-		<item>Orthopedic department</item>
+		<item>Surgery Service</item>
+		<item>Orthopedic Department</item>
 		<item>Plastic Surgery Department</item>
-		<item>Obstetrics and gynecology department</item>
-		<item>Neurosurgery department</item>
-		<item>Ear nose and throat department</item>
-		<item>Urology department</item>
+		<item>Obstetrics and Gynecology Department</item>
+		<item>Neurosurgery Department</item>
+		<item>Ear Nose and Throat Department</item>
+		<item>Urology Department</item>
 	</string-array>
 
 	<string name="selectPatientList">Please select a patient list</string>
-	<string name="visit_scroll_tab_details_label">Visit Details</string>
-	<string name="visi_scroll_tab_visit_tasks_label">Visit Tasks</string>
-	<string name="visit_scroll_tab_visit_images_label">Visit Imaging</string>
+	<string name="visit_scroll_tab_details_label">Information</string>
+	<string name="visi_scroll_tab_visit_tasks_label">Tasks</string>
+	<string name="visit_scroll_tab_visit_images_label">Imaging</string>
 	<string name="visit_scroll_tab_patient_details_label">Patient Details</string>
-	
+
+	<string name="no_visit_images">No Visit Images</string>
+	<string name="bed_number">Bed Number:</string>
+	<string name="visit_note_diagnosis_label">Visit Note and Diagnosis</string>
+	<string name="primary_diagnosis_label">Primary Diagnosis</string>
+	<string name="secondary_diagnosis_label">Secondary Diagnosis</string>
+	<string name="clinical_notes_label">Clinical note</string>
+	<string name="visit_label">Visit</string>
+	<string name="no_vitals">No vitals recorded for this visit</string>
+	<string name="no_visit_tasks">No tasks for this visit</string>
+	<string name="add_diagnosis">Enter Diagnosis</string>
+	<string name="chief_complaint_label">Chief Complaint</string>
+	<string name="visit_image_description">Description: %1$s \r\n Uploaded: %2$s \r\n Uploaded By: %3$s</string>
+	<string name="add_patient">Add Patient</string>
+	<string name="telephone">Telephone:</string>
+	<string name="no_primary_diagnosis">No Primary Diagnosis</string>
+	<string name="no_secondary_diagnosis">No Secondary Diagnosis</string>
+	<string name="date_started">Date Started</string>
+	<string name="date_closed">Date Closed</string>
+	<string name="audit_info">Audit Info</string>
+	<string name="no_audit_infomation">No Audit Infomation</string>
+	<string name="primary_diagnosis">Primary</string>
+	<string name="confirmed_diagnosis">Confirmed</string>
+	<string name="audit_data_form_label">Audit Data</string>
+	<string name="save_vitals">Save Vitals</string>
+	<string name="save_visit_note">Save Visit Note</string>
+	<string name="save_audit_data">Save Audit Data</string>
+	<string name="capture_vitals">Capture Vitals</string>
+	<string name="update_visit_note">Update Visit Note</string>
+	<string name="slash">/</string>
+	<string name="percent_sign">%</string>
+	<string name="label_blood_presure_systolic">Systolic</string>
+	<string name="label_blood_presure_diastolic">Diastolic</string>
+	<string name="sign_cm">cm</string>
+	<string name="sign_kg">kg</string>
+	<string name="sign_celcius">c</string>
+	<string name="sign_pulse">/min</string>
+	<string name="error_text_vitals_maximum">Maximum: %1$d</string>
+	<string name="error_text_vitals_minimum">Minimum: %1$d</string>
+	<string name="error_occured">An error occurred making your request</string>
+	<string name="saved">Saved</string>
+	<string name="in_complete">Incomplete</string>
+	<string name="update_visit">Update Visit</string>
+	<string name="update_audit_data">Update Audit Data</string>
+	<string name="show_visit_tasks">Show visit tasks</string>
+	<string name="predefined_tasks">Predefined Tasks</string>
+	<string name="no_predefined_tasks">No predefined tasks</string>
+	<string name="started">Started:</string>
+	<string name="visit_duration">Duration: %1$s</string>
+	<string name="no_visit">Patient has no visits</string>
+	<string name="save_photo">Save Photo</string>
 </resources>

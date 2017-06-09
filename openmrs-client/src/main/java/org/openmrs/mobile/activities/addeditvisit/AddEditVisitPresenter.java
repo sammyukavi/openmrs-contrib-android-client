@@ -21,19 +21,20 @@ import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
-import org.openmrs.mobile.data.impl.ConceptNameDataService;
+import org.openmrs.mobile.data.impl.ConceptAnswerDataService;
 import org.openmrs.mobile.data.impl.LocationDataService;
 import org.openmrs.mobile.data.impl.PatientDataService;
 import org.openmrs.mobile.data.impl.VisitAttributeTypeDataService;
 import org.openmrs.mobile.data.impl.VisitDataService;
 import org.openmrs.mobile.data.impl.VisitTypeDataService;
-import org.openmrs.mobile.models.ConceptName;
+import org.openmrs.mobile.models.ConceptAnswer;
 import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitAttribute;
 import org.openmrs.mobile.models.VisitAttributeType;
 import org.openmrs.mobile.models.VisitType;
+import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.DateUtils;
 import org.openmrs.mobile.utilities.StringUtils;
 import org.openmrs.mobile.utilities.ToastUtil;
@@ -49,7 +50,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	private Visit visit;
 	private VisitAttributeTypeDataService visitAttributeTypeDataService;
 	private VisitTypeDataService visitTypeDataService;
-	private ConceptNameDataService conceptNameDataService;
+	private ConceptAnswerDataService conceptAnswerDataService;
 	private VisitDataService visitDataService;
 	private PatientDataService patientDataService;
 	private LocationDataService locationDataService;
@@ -64,7 +65,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	public AddEditVisitPresenter(@NonNull AddEditVisitContract.View addEditVisitView, String patientUuid,
 			VisitDataService visitDataService, PatientDataService patientDataService,
 			VisitTypeDataService visitTypeDataService, VisitAttributeTypeDataService visitAttributeTypeDataService,
-			ConceptNameDataService conceptNameDataService, LocationDataService locationDataService) {
+			ConceptAnswerDataService conceptAnswerDataService, LocationDataService locationDataService) {
 		this.addEditVisitView = addEditVisitView;
 		this.addEditVisitView.setPresenter(this);
 		this.patientUuid = patientUuid;
@@ -93,10 +94,10 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 			this.patientDataService = patientDataService;
 		}
 
-		if (conceptNameDataService == null) {
-			this.conceptNameDataService = new ConceptNameDataService();
+		if (conceptAnswerDataService == null) {
+			this.conceptAnswerDataService = new ConceptAnswerDataService();
 		} else {
-			this.conceptNameDataService = conceptNameDataService;
+			this.conceptAnswerDataService = conceptAnswerDataService;
 		}
 
 		if (locationDataService == null) {
@@ -116,6 +117,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	}
 
 	private void loadPatient() {
+		addEditVisitView.showPageSpinner(true);
 		if (StringUtils.notEmpty(patientUuid)) {
 			patientDataService
 					.getByUUID(patientUuid, QueryOptions.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Patient>() {
@@ -126,6 +128,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 
 						@Override
 						public void onError(Throwable t) {
+							addEditVisitView.showPageSpinner(false);
 							ToastUtil.error(t.getMessage());
 						}
 					});
@@ -133,25 +136,29 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	}
 
 	private void loadVisit(Patient patient) {
-		visitDataService.getByPatient(patient, new QueryOptions(false, true), new PagingInfo(1, 10),
+		visitDataService.getByPatient(patient, new QueryOptions(false, true), new PagingInfo(0, 10),
 				new DataService.GetCallback<List<Visit>>() {
 					@Override
 					public void onCompleted(List<Visit> entities) {
 						if (entities.size() > 0) {
 							visit = entities.get(0);
-							addEditVisitView.initView(false);
+							if (entities.get(0).getStopDatetime() == null) {
+								addEditVisitView.initView(false);
+							} else {
+								addEditVisitView.initView(true);
+							}
 						} else {
 							visit.setPatient(patient);
 							addEditVisitView.initView(true);
 						}
 
 						loadVisitTypes();
-
 						loadVisitAttributeTypes();
 					}
 
 					@Override
 					public void onError(Throwable t) {
+						addEditVisitView.showPageSpinner(false);
 						ToastUtil.error(t.getMessage());
 					}
 				});
@@ -161,13 +168,33 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	public List<VisitAttributeType> loadVisitAttributeTypes() {
 		final List<VisitAttributeType> visitAttributeTypes = new ArrayList<>();
 		visitAttributeTypeDataService
-				.getAll(new QueryOptions(false, true), new PagingInfo(0, 100), new DataService
-						.GetCallback<List<VisitAttributeType>>() {
+				.getAll(new QueryOptions(ApplicationConstants.CacheKays.VISIT_ATTRIBUTE_TYPE,true), null,
+						new DataService.GetCallback<List<VisitAttributeType>>() {
+							@Override
+							public void onCompleted(List<VisitAttributeType> entities) {
+								visitAttributeTypes.addAll(entities);
+								addEditVisitView.loadVisitAttributeTypeFields(visitAttributeTypes);
+								setProcessing(false);
+								addEditVisitView.showPageSpinner(false);
+							}
+
+							@Override
+							public void onError(Throwable t) {
+								addEditVisitView.showPageSpinner(false);
+								ToastUtil.error(t.getMessage());
+							}
+						});
+
+		return visitAttributeTypes;
+	}
+
+	public void loadVisitTypes() {
+		visitTypeDataService
+				.getAll(new QueryOptions(ApplicationConstants.CacheKays.VISIT_TYPE,false), null, new DataService
+						.GetCallback<List<VisitType>>() {
 					@Override
-					public void onCompleted(List<VisitAttributeType> entities) {
-						visitAttributeTypes.addAll(entities);
-						addEditVisitView.loadVisitAttributeTypeFields(visitAttributeTypes);
-						setProcessing(false);
+					public void onCompleted(List<VisitType> entities) {
+						addEditVisitView.updateVisitTypes(entities);
 					}
 
 					@Override
@@ -175,22 +202,6 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 						ToastUtil.error(t.getMessage());
 					}
 				});
-
-		return visitAttributeTypes;
-	}
-
-	public void loadVisitTypes() {
-		visitTypeDataService.getAll(new QueryOptions(false, false), null, new DataService.GetCallback<List<VisitType>>() {
-			@Override
-			public void onCompleted(List<VisitType> entities) {
-				addEditVisitView.updateVisitTypes(entities);
-			}
-
-			@Override
-			public void onError(Throwable t) {
-				ToastUtil.error(t.getMessage());
-			}
-		});
 	}
 
 	/**
@@ -212,11 +223,11 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	}
 
 	@Override
-	public void getConceptNames(String uuid, Spinner dropdown) {
-		conceptNameDataService.getByConceptUuid(uuid, null, new DataService.GetCallback<List<ConceptName>>() {
+	public void getConceptAnswer(String uuid, Spinner dropdown) {
+		conceptAnswerDataService.getByConceptUuid(uuid, null, new DataService.GetCallback<List<ConceptAnswer>>() {
 			@Override
-			public void onCompleted(List<ConceptName> entities) {
-				addEditVisitView.updateConceptNamesView(dropdown, entities);
+			public void onCompleted(List<ConceptAnswer> entities) {
+				addEditVisitView.updateConceptAnswersView(dropdown, entities);
 			}
 
 			@Override
@@ -253,7 +264,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 			public void onCompleted(Visit entity) {
 				setProcessing(false);
 				addEditVisitView.setSpinnerVisibility(false);
-				addEditVisitView.showPatientDashboard();
+				addEditVisitView.showVisitDetails(entity.getUuid());
 			}
 
 			@Override
@@ -277,39 +288,37 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 			public void onCompleted(Visit entity) {
 				setProcessing(false);
 				addEditVisitView.setSpinnerVisibility(false);
-				addEditVisitView.showPatientDashboard();
+				addEditVisitView.showVisitDetails(entity.getUuid());
 			}
 
 			@Override
 			public void onError(Throwable t) {
 				setProcessing(false);
 				addEditVisitView.setSpinnerVisibility(false);
-				addEditVisitView.showPatientDashboard();
+				addEditVisitView.showVisitDetails(null);
 			}
 		});
 	}
 
 	@Override
-	public void endVisit() {
-		if (null == visit || null == visit.getUuid())
+	public void endVisit(Visit visit) {
+		if (visit.getUuid() == null) {
 			return;
+		} else {
+			visit.setStopDatetime(DateUtils.convertTime(System.currentTimeMillis(), DateUtils.OPEN_MRS_REQUEST_FORMAT));
+			visitDataService.update(visit, new DataService.GetCallback<Visit>() {
+				@Override
+				public void onCompleted(Visit entity) {
+					addEditVisitView.showPatientDashboard();
+				}
 
-		String uuid = visit.getUuid();
-		visit = new Visit();
-		visit.setUuid(uuid);
-		visit.setStopDatetime(DateUtils.convertTime(System.currentTimeMillis(), DateUtils.OPEN_MRS_REQUEST_FORMAT));
-		visitDataService.endVisit(visit.getUuid(), visit, null, new DataService.GetCallback<Visit>() {
-			@Override
-			public void onCompleted(Visit entity) {
-				visit = entity;
-				addEditVisitView.showPatientDashboard();
-			}
-
-			@Override
-			public void onError(Throwable t) {
-				ToastUtil.error(t.getMessage());
-			}
-		});
+				@Override
+				public void onError(Throwable t) {
+					System.out.println(t.getLocalizedMessage());
+					ToastUtil.error(t.getMessage());
+				}
+			});
+		}
 	}
 
 	@Override

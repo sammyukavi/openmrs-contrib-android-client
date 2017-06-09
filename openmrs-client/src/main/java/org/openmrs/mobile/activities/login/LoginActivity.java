@@ -14,9 +14,7 @@
 
 package org.openmrs.mobile.activities.login;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.view.GravityCompat;
 import android.view.Menu;
 
 import org.openmrs.mobile.R;
@@ -43,30 +41,13 @@ public class LoginActivity extends ACBaseActivity {
 		}
 
 		mPresenter = new LoginPresenter(loginFragment, mOpenMRS);
-	}
 
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-	}
-
-	@Override
-	public void onBackPressed() {
-		if (drawer.isDrawerOpen(GravityCompat.START)) {
-			drawer.closeDrawer(GravityCompat.START);
-		} else {
-			Intent intent = new Intent(Intent.ACTION_MAIN);
-			intent.addCategory(Intent.CATEGORY_HOME);
-			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			startActivity(intent);
-		}
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
 		return true;
 	}
 
-	public void onFinishEditDialog(String s) {
-
-	}
 }

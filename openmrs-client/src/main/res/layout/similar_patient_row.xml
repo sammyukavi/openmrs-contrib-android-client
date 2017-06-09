@@ -18,7 +18,7 @@
 	
 	<android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
 			xmlns:android="http://schemas.android.com/apk/res/android"
-			android:id="@+id/contactCard"
+			android:id="@+id/addEditVisitCard"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_margin="10dp"
@@ -166,7 +166,7 @@
 						android:orientation="vertical">
 					
 					<TextView
-							android:id="@+id/patientAddres"
+							android:id="@+id/patientAddress"
 							android:layout_width="wrap_content"
 							android:layout_height="wrap_content" />
 					

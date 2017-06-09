@@ -86,7 +86,7 @@ public class EncounterDataService extends BaseDataService<Encounter, EncounterDb
 				() -> null,
 				() -> restService.getByEncounter(buildRestRequestPath(), encounter.getUuid(),
 						QueryOptions.getRepresentation(options), QueryOptions.getIncludeInactive(options),
-						pagingInfo.getLimit(), pagingInfo.getStartIndex())
+						PagingInfo.getLimit(pagingInfo), PagingInfo.getStartIndex(pagingInfo))
 		);
 	}
 }

@@ -16,18 +16,25 @@ package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Table;
 
-public class Session {
+import org.openmrs.mobile.data.db.AppDatabase;
 
+@Table(database = AppDatabase.class)
+public class Session extends BaseOpenmrsMetadata {
 	@SerializedName("sessionId")
 	@Expose
 	private String sessionId;
+
 	@SerializedName("authenticated")
 	@Expose
 	private boolean authenticated;
+
 	@SerializedName("user")
 	@Expose
 	private User user;
+
+	public Session(){}
 
 	public Session(String sessionId, boolean authenticated, User user) {
 		this.sessionId = sessionId;

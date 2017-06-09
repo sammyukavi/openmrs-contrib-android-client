@@ -25,8 +25,9 @@ public class QueryOptions {
 		this.loadRelatedObjects = loadRelatedObjects;
 	}
 
-	public QueryOptions(String cacheKey) {
+	public QueryOptions(String cacheKey, boolean loadRelatedObjects) {
 		this.cacheKey = cacheKey;
+		this.loadRelatedObjects = loadRelatedObjects;
 	}
 
 	public static String getCacheKey(@Nullable QueryOptions options) {

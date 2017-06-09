@@ -14,7 +14,9 @@
 
 package org.openmrs.mobile.activities;
 
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.view.View;
 
 public abstract class ACBaseFragment<T extends BasePresenterContract> extends Fragment implements BaseView<T> {
 
@@ -32,12 +34,24 @@ public abstract class ACBaseFragment<T extends BasePresenterContract> extends Fr
 	@Override
 	public void onResume() {
 		super.onResume();
-		mPresenter.subscribe();
+		if (mPresenter != null) {
+			mPresenter.subscribe();
+		}
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
-		mPresenter.unsubscribe();
+		if (mPresenter != null) {
+			mPresenter.unsubscribe();
+		}
+	}
+
+	public Snackbar createSnackbar(View view, String message) {
+		return ((ACBaseActivity)getActivity()).createSnackbar(view, message);
+	}
+
+	public void createSnackbar(String message) {
+		((ACBaseActivity)getActivity()).createSnackbar(message);
 	}
 }

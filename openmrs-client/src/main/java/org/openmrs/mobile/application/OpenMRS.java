@@ -23,7 +23,7 @@ import android.preference.PreferenceManager;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
-import org.openmrs.mobile.api.FormListService;
+
 import org.openmrs.mobile.databases.OpenMRSDBOpenHelper;
 import org.openmrs.mobile.security.SecretKeyGenerator;
 import org.openmrs.mobile.utilities.ApplicationConstants;
@@ -67,8 +67,7 @@ public class OpenMRS extends Application {
 		OpenMRSDBOpenHelper.init();
 		initializeDB();
 
-		Intent i = new Intent(this, FormListService.class);
-		startService(i);
+
 	}
 
 	protected void initializeDB() {

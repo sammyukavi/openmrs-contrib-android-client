@@ -36,6 +36,7 @@ import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.activities.visit.VisitActivity;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.models.Concept;
+import org.openmrs.mobile.models.ConceptAnswer;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.EncounterType;
 import org.openmrs.mobile.models.Form;
@@ -367,7 +368,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		Concept concept = new Concept();
 		concept.setUuid(questionConceptUuid);
 
-		Value obsValue = new Value();
+		ConceptAnswer obsValue = new ConceptAnswer();
 		obsValue.setUuid(answerConceptUuid);
 
 		Person person = new Person();

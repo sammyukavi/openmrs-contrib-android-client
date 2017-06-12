@@ -17,8 +17,8 @@ package org.openmrs.mobile.activities.login;
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
 import org.openmrs.mobile.models.Location;
-import org.openmrs.mobile.utilities.ToastUtil;
 
+import java.util.HashMap;
 import java.util.List;
 
 public interface LoginContract {
@@ -29,33 +29,19 @@ public interface LoginContract {
 
 		void showWarningDialog();
 
-		void showLoadingAnimation();
-
 		void userAuthenticated();
 
 		void finishLoginActivity();
 
-		void hideLoadingAnimation();
+		void setProgressBarVisibility(boolean visible);
 
-		void showInvalidLoginOrPasswordSnackbar();
+		void setViewsContainerVisibility(boolean visible);
 
-		void showToast(String message, ToastUtil.ToastType toastType);
+		void updateLoginFormLocations(List<Location> locations, String url);
 
-		void showToast(int textId, ToastUtil.ToastType toastType);
+		void showMessage(String message);
 
-		void showLocationLoadingAnimation();
-
-		void hideLocationLoadingAnimation();
-
-		void initLoginForm(List<Location> locations, String url);
-
-		void setLocationErrorOccurred(boolean errorOccurred);
-
-		void hideUrlLoadingAnimation();
-
-		void showInvalidURLSnackbar(String message);
-
-		void showErrorOccured(String message);
+		void showMessage(int errorCode);
 	}
 
 	interface Presenter extends BasePresenterContract {
@@ -64,11 +50,9 @@ public interface LoginContract {
 
 		void loadLocations(String url);
 
-		void authenticateUser(final String username, final String password, final String url);
-
 		void authenticateUser(final String username, final String password, final String url, boolean wipeDatabase);
 
-		void saveLocationsToDatabase(List<Location> locationList, String selectedLocation);
+		void saveLocationsInPreferences(List<HashMap<String, String>> locationList, int selectedItemPosition);
 	}
 
 }

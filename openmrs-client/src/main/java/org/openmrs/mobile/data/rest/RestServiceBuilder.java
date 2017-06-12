@@ -80,6 +80,7 @@ public class RestServiceBuilder {
 		httpClient.addInterceptor(logging);
 
 		OkHttpClient client = httpClient.build();
+
 		Retrofit retrofit = builder.client(client).build();
 
 		return retrofit.create(serviceClass);
@@ -95,5 +96,11 @@ public class RestServiceBuilder {
 				.addConverterFactory(buildGsonConverter());
 	}
 
+	public static void setBaseUrl(String url) {
+		builder = new Retrofit.Builder()
+				.baseUrl(url)
+				.addConverterFactory(buildGsonConverter());
+
+	}
 
 }

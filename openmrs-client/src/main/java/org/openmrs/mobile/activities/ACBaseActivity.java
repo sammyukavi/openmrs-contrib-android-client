@@ -22,6 +22,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -32,6 +33,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
@@ -104,15 +106,6 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 	@Override
 	public boolean onPrepareOptionsMenu(final Menu menu) {
 		return true;
-	}
-
-	private void showNoInternetConnectionSnackbar() {
-		Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content),
-				"No internet connection", Snackbar.LENGTH_SHORT);
-		View sbView = snackbar.getView();
-		TextView textView = (TextView)sbView.findViewById(android.support.design.R.id.snackbar_text);
-		textView.setTextColor(Color.WHITE);
-		snackbar.show();
 	}
 
 	public void logout() {
@@ -249,10 +242,22 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 		drawer.closeDrawer(GravityCompat.START);
 		switch (selectedId) {
 			case R.id.navItemFindPatientRecord:
-				startActivity(new Intent(this, FindPatientRecordActivity.class));
+
+				Intent intent = new Intent(mOpenMRS.getApplicationContext(), FindPatientRecordActivity.class);
+
+				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+				startActivity(intent);
+
 				break;
 			case R.id.navItemPatientLists:
-				startActivity(new Intent(this, PatientListActivity.class));
+
+				intent = new Intent(mOpenMRS.getApplicationContext(), PatientListActivity.class);
+
+				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+				startActivity(intent);
+
 				break;
 			case R.id.navLogout:
 				showLogoutDialog();
@@ -262,11 +267,43 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 		}
 	}
 
-	public Snackbar createSnackbar(View view, String message) {
-		return Snackbar.make(view, message, Snackbar.LENGTH_LONG);
+	public void createSnackbar(String message) {
+
+		int colorWhite = ContextCompat.getColor(getApplicationContext(), R.color.color_white);
+
+		// create instance
+		Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_INDEFINITE);
+
+		// set action button color
+		snackbar.setActionTextColor(colorWhite);
+
+		// get snackbar view
+		View snackbarView = snackbar.getView();
+
+		// change snackbar text color
+		int snackbarTextId = android.support.design.R.id.snackbar_text;
+		TextView textView = (TextView)snackbarView.findViewById(snackbarTextId);
+		textView.setTextColor(colorWhite);
+
+		// change snackbar background
+		//snackbarView.setBackgroundColor(Color.MAGENTA);
+
+		//change button text
+		snackbar.setActionTextColor(Color.YELLOW);
+
+		snackbar.setAction(R.string.label_dismiss, new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				snackbar.dismiss();
+			}
+		});
+
+		snackbar.show();
+
 	}
 
-	public void createSnackbar(String message) {
-		//Snackbar.make(view, message, Snackbar.LENGTH_LONG);
+	public void createToast(String message) {
+		Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
 	}
+
 }

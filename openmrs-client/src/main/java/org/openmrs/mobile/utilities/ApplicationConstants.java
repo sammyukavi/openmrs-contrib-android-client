@@ -21,11 +21,13 @@ public abstract class ApplicationConstants {
 	public static final String AUTHORIZATION_TOKEN = "authorisation";
 	public static final String SECRET_KEY = "secretKey";
 	public static final String LOCATION = "location";
+	public static final String PARENT_LOCATION = "parent_location";
+	public static final String LOGIN_LOCATIONS = "login_locations";
 	public static final String VISIT_TYPE_UUID = "visit_type_uuid";
 	public static final String LAST_SESSION_TOKEN = "last_session_id";
 	public static final String LAST_LOGIN_SERVER_URL = "last_login_server_url";
-	public static final String DEFAULT_OPEN_MRS_URL = "http://192.168.2.10:8080/openmrs/";
-	//public static final String DEFAULT_OPEN_MRS_URL = "http://sandbox.openhmisafrica.org/openmrs/";
+	//public static final String DEFAULT_OPEN_MRS_URL = "http://192.168.2.210:9997/openmrs";
+	public static final String DEFAULT_OPEN_MRS_URL = "http://sandbox.openhmisafrica.org/openmrs/";
 	public static final String THUMBNAIL_VIEW = "complexdata.view.thumbnail";
 
 	public abstract static class OpenMRSSharedPreferenceNames {
@@ -256,9 +258,21 @@ public abstract class ApplicationConstants {
 	}
 
 	public static class CacheKays {
-		public static final String VISIT_ATTRIBUTE_TYPE= "visitAttributeType";
+		public static final String VISIT_ATTRIBUTE_TYPE = "visitAttributeType";
 		public static final String PERSON_ATTRIBUTE_TYPE = "personAttributeType";
 		public static final String PERSON_IDENTIFIER_TYPE = "personIdentifierType";
 		public static final String VISIT_TYPE = "visitType";
+	}
+
+	public class ErrorCodes {
+		public static final int INVALID_URL = 100;
+		public static final int INVALID_USERNAME_PASSWORD = 101;
+		public static final int SERVER_ERROR = 102;
+		public static final int OFFLINE_LOGIN = 103;
+		public static final int AUTH_FAILED = 104;
+		public static final int OFFLINE_LOGIN_UNSUPPORTED = 105;
+		public static final int NO_INTERNET = 106;
+		public static final int USER_NOT_FOUND = 107;
+
 	}
 }

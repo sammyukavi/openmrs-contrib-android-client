@@ -8,6 +8,7 @@
 		android:paddingStart="15dp"
 		android:paddingEnd="15dp"
 		android:paddingBottom="5dp"
+		android:id="@+id/container_patient_address_info"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content">
 

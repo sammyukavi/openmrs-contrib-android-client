@@ -24,7 +24,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -47,7 +46,7 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 	private RecyclerView findPatientRecyclerView;
 	private TextView noPatientFound, numberOfFetchedPatients, searchForPatient, patientSearchTitle, noPatientFoundTitle;
 	private LinearLayoutManager layoutManager;
-	private RelativeLayout findPatientProgressBar;
+	private RelativeLayout findPatientProgressBar, findPatientText;
 	private LinearLayout findPatientLayout, noPatientsFoundLayout, foundPatientsLayout, patientListLayout;
 	private OpenMRS openMRS = OpenMRS.getInstance();
 	private AuthorizationManager authorizationManager;
@@ -86,6 +85,7 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 
 		findPatientProgressBar = (RelativeLayout)v.findViewById(R.id.findPatientLoadingProgressBar);
 		numberOfFetchedPatients = (TextView)v.findViewById(R.id.numberOfFetchedPatients);
+		findPatientText = (RelativeLayout)v.findViewById(R.id.findPatientText);
 		noPatientsFoundLayout = (LinearLayout)v.findViewById(R.id.noPatientsFoundLayout);
 		foundPatientsLayout = (LinearLayout)v.findViewById(R.id.resultsLayout);
 		patientListLayout = (LinearLayout)v.findViewById(R.id.patientsCardViewLayout);
@@ -112,8 +112,9 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 		authorizationManager = new AuthorizationManager();
 		if (authorizationManager.isUserLoggedIn()) {
 			if (OpenMRS.getInstance().getSearchQuery().equalsIgnoreCase(ApplicationConstants.EMPTY_STRING)) {
-				mPresenter.getLastViewed();
+				findPatientText.setVisibility(View.VISIBLE);
 			} else {
+				findPatientText.setVisibility(View.GONE);
 				mPresenter.findPatient(OpenMRS.getInstance().getSearchQuery());
 			}
 

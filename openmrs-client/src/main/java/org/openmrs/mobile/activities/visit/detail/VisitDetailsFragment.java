@@ -270,6 +270,18 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 
 			((VisitDetailsPresenter)mPresenter).saveVisitNote(visitNote);
 		});
+
+		auditDataCompleteness.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				intent = new Intent(getContext(), AuditDataActivity.class);
+				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
+				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visitUuid);
+				intent.putExtra(ApplicationConstants.BundleKeys.PROVIDER_UUID_BUNDLE, providerUuid);
+				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, visitStopDate);
+				startActivity(intent);
+			}
+		});
 	}
 
 	public void getDiagnosisOnFocusListener() {

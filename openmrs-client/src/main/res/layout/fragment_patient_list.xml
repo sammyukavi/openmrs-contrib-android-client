@@ -44,7 +44,10 @@
 		<LinearLayout
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:layout_margin="5dp"
+				android:layout_marginRight="5dp"
+				android:layout_marginStart="5dp"
+				android:layout_marginLeft="5dp"
+				android:layout_marginEnd="5dp"
 				android:background="@drawable/card"
 				android:orientation="vertical">
 			
@@ -61,7 +64,6 @@
 		<LinearLayout
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:layout_margin="5dp"
 				android:orientation="vertical">
 			
 			
@@ -94,7 +96,10 @@
 				android:id="@+id/numberOfPatientsLayout"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:layout_margin="5dp"
+				android:layout_marginRight="5dp"
+				android:layout_marginStart="5dp"
+				android:layout_marginLeft="5dp"
+				android:layout_marginEnd="5dp"
 				android:layout_gravity="center"
 				android:background="@drawable/card"
 				android:orientation="vertical"
@@ -105,7 +110,6 @@
 					android:layout_width="match_parent"
 					android:layout_height="match_parent"
 					android:layout_marginBottom="5dp"
-					android:layout_marginTop="5dp"
 					android:gravity="center"
 					android:textColor="@color/light_teal" />
 		</LinearLayout>
@@ -114,7 +118,10 @@
 				android:id="@+id/patientListRecyclerView"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:layout_margin="10dp"
+				android:layout_marginRight="10dp"
+				android:layout_marginStart="10dp"
+				android:layout_marginLeft="10dp"
+				android:layout_marginEnd="10dp"
 				android:orientation="vertical">
 			
 			<android.support.v7.widget.RecyclerView

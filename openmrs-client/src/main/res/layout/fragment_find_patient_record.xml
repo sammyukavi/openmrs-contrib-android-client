@@ -75,4 +75,19 @@
 				android:layout_gravity="center" />
 	
 	</RelativeLayout>
+	
+	<RelativeLayout
+			android:id="@+id/findPatientText"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:visibility="gone">
+		
+		<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"
+				android:text="@string/search_to_view"
+				android:layout_centerInParent="true"
+				android:layout_gravity="center" />
+	
+	</RelativeLayout>
 </LinearLayout>

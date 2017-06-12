@@ -22,6 +22,7 @@ import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RelativeLayout;
 
 import com.github.clans.fab.FloatingActionButton;
 
@@ -36,6 +37,7 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 	public FindPatientRecordContract.Presenter findPatientPresenter;
 	FindPatientRecordFragment findPatientRecordFragment;
 	SearchView searchView;
+	private RelativeLayout findPatientText;
 	private String query;
 	private OpenMRS instance = OpenMRS.getInstance();
 	private SharedPreferences sharedPreferences = instance.getOpenMRSSharedPreferences();
@@ -106,12 +108,14 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 			@Override
 			public boolean onQueryTextSubmit(String query) {
 				if (query.length() >= 3) {
+					//findPatientText.setVisibility(View.GONE);
 					findPatientPresenter.findPatient(query);
 					setSearchQuery(query);
 				} else {
 					if (OpenMRS.getInstance().getSearchQuery().equalsIgnoreCase(ApplicationConstants.EMPTY_STRING)) {
-						findPatientPresenter.getLastViewed();
+						findPatientText.setVisibility(View.GONE);
 					} else {
+						findPatientText.setVisibility(View.VISIBLE);
 						findPatientPresenter.findPatient(query);
 					}
 					findPatientRecordFragment.setNoPatientsVisibility(false);
@@ -122,9 +126,11 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 			@Override
 			public boolean onQueryTextChange(String query) {
 				if (query.length() >= 3) {
+					//findPatientText.setVisibility(View.GONE);
 					findPatientPresenter.findPatient(query);
 					setSearchQuery(query);
 				} else {
+					//findPatientText.setVisibility(View.VISIBLE);
 					findPatientRecordFragment.setNumberOfPatientsView(0);
 					findPatientRecordFragment.setNoPatientsVisibility(false);
 				}

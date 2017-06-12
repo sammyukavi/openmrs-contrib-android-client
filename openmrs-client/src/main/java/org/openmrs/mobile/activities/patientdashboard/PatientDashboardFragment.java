@@ -61,7 +61,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	private String patientUuid;
 	private VisitsRecyclerAdapter visitsRecyclerAdapter;
 	private PatientDashboardActivity patientDashboardActivity;
-	private int startIndex = 1, limit = 5;
+	private int startIndex = 0, limit = 5;
 
 	public static PatientDashboardFragment newInstance() {
 		return new PatientDashboardFragment();

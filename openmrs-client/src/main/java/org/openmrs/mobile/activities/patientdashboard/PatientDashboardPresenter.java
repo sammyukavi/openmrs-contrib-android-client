@@ -160,7 +160,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
 		System.out.println("Start Index: " + startIndex);
 
-		PagingInfo pagingInfo = new PagingInfo(1, limit);
+		PagingInfo pagingInfo = new PagingInfo(startIndex, limit);
 
 		setLoading(true);
 

@@ -515,5 +515,6 @@
 	<string name="plaease_wait_loading">Loading</string>
 	<string name="label_dismiss">Dismiss</string>
 	<string name="logged_in_in_offline_mode">LoggedIn in offline mode</string>
-	<string name="err_fetching_user_data">Couldn\'t fetch user data</string>y
+	<string name="err_fetching_user_data">Couldn\'t fetch user data</string>
+	<string name="search_to_view">Please search to see patients</string>y
 </resources>

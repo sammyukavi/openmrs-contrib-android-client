@@ -114,7 +114,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 				break;
 			case R.id.edit_Patient:
 				intent = new Intent(getContext(), AddEditPatientActivity.class);
-				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, instance.getPatientUuid());
+				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
 				startActivity(intent);
 
 				break;

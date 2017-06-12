@@ -388,7 +388,6 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		TextView valueLabelView = new TextView(getContext());
 		valueLabelView.setPadding(20, 10, 10, 10);
 
-		System.out.println(visitAttribute.getAttributeType().getDisplay() + " the datatype ");
 		if (null != visitAttribute.getAttributeType().getDatatypeConfig()) {
 			((VisitDetailsPresenter)mPresenter).getConceptAnswer(visitAttribute.getAttributeType().getDatatypeConfig(),
 					(String)visitAttribute.getValue(), valueLabelView);

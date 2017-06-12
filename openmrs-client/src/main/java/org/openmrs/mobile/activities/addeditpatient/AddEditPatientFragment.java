@@ -165,12 +165,6 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		mPresenter.getPatientIdentifierTypes();
 		mPresenter.getLoginLocation();
 
-		if (!patientUuuid.isEmpty()) {
-			mPresenter.getPatientToUpdate(instance.getPatientUuid());
-		} else {
-			mPresenter.getPersonAttributeTypes();
-		}
-
 		return root;
 
 	}
@@ -272,7 +266,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		patient.setIdentifiers(patientIdentifierList);
 
 		patient.setPerson(createPerson());
-		patient.setUuid(" ");
+		patient.setUuid("");
 		return patient;
 	}
 
@@ -401,11 +395,14 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		conceptNamesDropdown.setAdapter(conceptNameArrayAdapter);
 
 		// set existing patient attribute if any
-		/*LinkedTreeMap<String, String > personAttribute = mPresenter.searchPersonAttributeValueByType(personAttributeType);
-		String conceptUuid = personAttribute.get("uuid");
-		if (null != conceptUuid) {
-			setDefaultDropdownSelection(conceptNameArrayAdapter, conceptUuid, conceptNamesDropdown);
-		}*/
+		if (!patientUuuid.isEmpty()) {
+			LinkedTreeMap<String, String> personAttribute = mPresenter.searchPersonAttributeValueByType
+					(personAttributeType);
+			String conceptUuid = personAttribute.get("uuid");
+			if (null != conceptUuid) {
+				setDefaultDropdownSelection(conceptNameArrayAdapter, conceptUuid, conceptNamesDropdown);
+			}
+		}
 
 		conceptNamesDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override

@@ -271,9 +271,10 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 			}
 		};
 		//Just check if the identifier are the same. If not it saves the patient.
+		System.out.println(" the patient identifier " + patient.getIdentifier().getIdentifier());
 		patientDataService
-				.getByNameAndIdentifier(patient.getPerson().getName().getNameString(), QueryOptions
-						.LOAD_RELATED_OBJECTS, pagingInfo, callback);
+				.findByIdentifier(patient.getIdentifier().getIdentifier(), QueryOptions.LOAD_RELATED_OBJECTS, pagingInfo,
+						callback);
 	}
 
 	@Override

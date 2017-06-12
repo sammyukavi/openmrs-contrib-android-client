@@ -401,11 +401,11 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		conceptNamesDropdown.setAdapter(conceptNameArrayAdapter);
 
 		// set existing patient attribute if any
-		LinkedTreeMap<String, String > personAttribute = mPresenter.searchPersonAttributeValueByType(personAttributeType);
+		/*LinkedTreeMap<String, String > personAttribute = mPresenter.searchPersonAttributeValueByType(personAttributeType);
 		String conceptUuid = personAttribute.get("uuid");
 		if (null != conceptUuid) {
 			setDefaultDropdownSelection(conceptNameArrayAdapter, conceptUuid, conceptNamesDropdown);
-		}
+		}*/
 
 		conceptNamesDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override

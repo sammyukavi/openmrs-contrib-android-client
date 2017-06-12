@@ -23,6 +23,7 @@ import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitAttributeType;
+import org.openmrs.mobile.models.VisitNote;
 import org.openmrs.mobile.models.VisitPhoto;
 import org.openmrs.mobile.models.VisitPredefinedTask;
 import org.openmrs.mobile.models.VisitTask;
@@ -140,5 +141,7 @@ public interface VisitContract {
 		void getObservation(String uuid);
 
 		void getConceptAnswer(String uuid, String searchValue, TextView textView);
+
+		void saveVisitNote(VisitNote visitNote);
 	}
 }

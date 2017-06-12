@@ -15,14 +15,12 @@
 package org.openmrs.mobile.application;
 
 import android.app.Application;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 
 import net.sqlcipher.database.SQLiteDatabase;
-
 
 import org.openmrs.mobile.databases.OpenMRSDBOpenHelper;
 import org.openmrs.mobile.security.SecretKeyGenerator;
@@ -66,7 +64,6 @@ public class OpenMRS extends Application {
 		generateKey();
 		OpenMRSDBOpenHelper.init();
 		initializeDB();
-
 
 	}
 
@@ -172,6 +169,29 @@ public class OpenMRS extends Application {
 		SharedPreferences.Editor editor = getOpenMRSSharedPreferences().edit();
 		editor.putString(ApplicationConstants.LOCATION, location);
 		editor.commit();
+	}
+
+	public String getParentLocationUuid() {
+		SharedPreferences prefs = getOpenMRSSharedPreferences();
+		return prefs.getString(ApplicationConstants.PARENT_LOCATION, ApplicationConstants.EMPTY_STRING);
+	}
+
+	public void setParentLocationUuid(String uuid) {
+		SharedPreferences.Editor editor = getOpenMRSSharedPreferences().edit();
+		editor.putString(ApplicationConstants.PARENT_LOCATION, uuid);
+		editor.commit();
+	}
+
+	public void saveLocations(String locations) {
+		SharedPreferences.Editor editor = getOpenMRSSharedPreferences().edit();
+		editor.putString(ApplicationConstants.LOGIN_LOCATIONS, locations);
+		editor.commit();
+	}
+
+	public String getLocations() {
+		SharedPreferences sharedPreferences = instance.getOpenMRSSharedPreferences();
+		return sharedPreferences.getString(ApplicationConstants.LOGIN_LOCATIONS, ApplicationConstants
+				.EMPTY_STRING);
 	}
 
 	public String getPatientUuid() {

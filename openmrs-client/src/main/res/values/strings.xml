@@ -511,5 +511,9 @@
 	<string name="save_photo">Save Photo</string>
 	<string name="pending_save">Please wait. Saving....</string>
 	<string name="today">Today</string>
-	<string name="yesterday">Yesterday</string>y
+	<string name="yesterday">Yesterday</string>
+	<string name="plaease_wait_loading">Loading</string>
+	<string name="label_dismiss">Dismiss</string>
+	<string name="logged_in_in_offline_mode">LoggedIn in offline mode</string>
+	<string name="err_fetching_user_data">Couldn\'t fetch user data</string>y
 </resources>

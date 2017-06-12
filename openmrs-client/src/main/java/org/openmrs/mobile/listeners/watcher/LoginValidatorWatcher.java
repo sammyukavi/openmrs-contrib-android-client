@@ -1,6 +1,5 @@
 package org.openmrs.mobile.listeners.watcher;
 
-import android.graphics.Color;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -8,7 +7,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.utilities.StringUtils;
@@ -80,7 +78,7 @@ public class LoginValidatorWatcher implements TextWatcher, AdapterView.OnItemSel
 
 	@Override
 	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-		if (position >= 0 && id >= 1) {
+		/*if (position >= 0 && id >= 1) {
 			//  ((LocationArrayAdapter) parent.getAdapter()).notifyDataSetChanged();
 			//Set Text Color to black once option selected
 			// TextView currentText = (TextView) parent.getChildAt(0);
@@ -94,6 +92,8 @@ public class LoginValidatorWatcher implements TextWatcher, AdapterView.OnItemSel
 				currentText.setTextColor(Color.RED);
 			}
 		}
+		*/
+
 		mLoginButton.setEnabled(isAllDataValid());
 	}
 

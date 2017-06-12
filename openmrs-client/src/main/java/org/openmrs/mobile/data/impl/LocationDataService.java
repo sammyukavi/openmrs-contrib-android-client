@@ -5,6 +5,7 @@ import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.db.impl.LocationDbService;
 import org.openmrs.mobile.data.rest.LocationRestService;
+import org.openmrs.mobile.data.rest.RestServiceBuilder;
 import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.utilities.ApplicationConstants;
@@ -67,10 +68,16 @@ public class LocationDataService extends BaseMetadataDataService<Location, Locat
 		return null;
 	}
 
-	public void getAll(GetCallback<List<Location>> callback) {
+	public void getAll(String url, GetCallback<List<Location>> callback) {
+
+		RestServiceBuilder.setBaseUrl(url);
+
+		restService = RestServiceBuilder.createService(getRestServiceClass(), url, "", "");
+
 		executeMultipleCallback(callback, null, null,
 				() -> null,
 				() -> restService.getLoginLocations(buildRestRequestPath())
 		);
+
 	}
 }

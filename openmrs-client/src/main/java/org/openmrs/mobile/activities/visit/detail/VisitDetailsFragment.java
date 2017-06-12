@@ -244,7 +244,6 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 			}
 		});
 
-
 		submitVisitNote.setOnClickListener(v -> {
 			VisitNote visitNote = new VisitNote();
 			visitNote.setPersonId("10527");
@@ -269,7 +268,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 
 			visitNote.addEncounterDiagnosis(encounterDiagnosis);
 
-			((VisitDetailsPresenter) mPresenter).saveVisitNote(visitNote);
+			((VisitDetailsPresenter)mPresenter).saveVisitNote(visitNote);
 		});
 	}
 
@@ -576,7 +575,6 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 			value.setTextSize(14);
 			if (type == EncounterTypeData.VITALS) {
 				value.setText(splitValues.get(1).toString());
-				value.setGravity(Gravity.END | Gravity.RIGHT);
 			} else {
 				value.setText(": " + splitValues.get(1).toString());
 			}

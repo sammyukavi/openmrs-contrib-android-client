@@ -108,8 +108,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		switch (selectedId) {
 			case R.id.start_visit:
 				intent = new Intent(getContext(), AddEditVisitActivity.class);
-				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, sharedPreferences.getString
-						(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING));
+				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
 				startActivity(intent);
 				break;
 			case R.id.edit_Patient:

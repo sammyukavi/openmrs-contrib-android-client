@@ -42,7 +42,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.joda.time.LocalDateTime;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
 import org.openmrs.mobile.activities.addeditpatient.AddEditPatientActivity;
@@ -53,26 +52,13 @@ import org.openmrs.mobile.activities.login.LoginFragment;
 import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
-import org.openmrs.mobile.data.DataService;
-import org.openmrs.mobile.data.QueryOptions;
-import org.openmrs.mobile.data.impl.EncounterDataService;
-import org.openmrs.mobile.data.impl.LocationDataService;
-import org.openmrs.mobile.data.impl.ObsDataService;
-import org.openmrs.mobile.data.impl.VisitDataService;
-import org.openmrs.mobile.models.Concept;
-import org.openmrs.mobile.models.Encounter;
-import org.openmrs.mobile.models.EncounterType;
-import org.openmrs.mobile.models.Location;
-import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
-import org.openmrs.mobile.models.User;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitPredefinedTask;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.FontsUtil;
 import org.openmrs.mobile.utilities.StringUtils;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -238,7 +224,7 @@ public class CustomFragmentDialog extends DialogFragment {
 			mEditNoteText = addEditNoteTextField(mCustomDialogBundle.getEditNoteTextViewMessage());
 		}
 
-		if (null != mCustomDialogBundle.getVisit()){
+		if (null != mCustomDialogBundle.getVisit()) {
 			this.visit = mCustomDialogBundle.getVisit();
 		}
 
@@ -455,138 +441,12 @@ public class CustomFragmentDialog extends DialogFragment {
 							dismiss();
 							break;
 						}
-					case SAVE_VISIT_NOTE:
-
-						Bundle bundle = mCustomDialogBundle.getArguments();
-						Observation observation =
-								(Observation)bundle.getSerializable(ApplicationConstants.BundleKeys.OBSERVATION);
-						observation.setValue(getEditNoteTextValue());
-
-						ObsDataService observationDataService = new ObsDataService();
-
-						observationDataService.update(observation, new DataService.GetCallback<Observation>() {
-							@Override
-							public void onCompleted(Observation entity) {
-								((PatientDashboardActivity)getActivity()).mPresenter
-										.fetchPatientData(bundle.getString(ApplicationConstants
-												.BundleKeys.PATIENT_UUID_BUNDLE));
-								dismiss();
-							}
-
-							@Override
-							public void onError(Throwable t) {
-
-							}
-						});
-						break;
-					case CREATE_VISIT_NOTE:
-
-						bundle = mCustomDialogBundle.getArguments();
-						VisitDataService visitDataService = new VisitDataService();
-						visitDataService.getByUUID(bundle.getString(ApplicationConstants
-										.BundleKeys.VISIT_UUID_BUNDLE), QueryOptions.LOAD_RELATED_OBJECTS,
-								new DataService.GetCallback<Visit>() {
-									@Override
-									public void onCompleted(Visit visit) {
-										saveEncounter(visit);
-									}
-
-									@Override
-									public void onError(Throwable t) {
-
-									}
-								});
-
-						break;
 					default:
 						break;
 				}
 			}
 			//CHECKSTYLE:ON
 		};
-	}
-
-	private void saveEncounter(Visit visit) {
-		if (visit != null) {
-			OpenMRS instance = OpenMRS.getInstance();
-
-			String locationUuid = "";
-			Location location = null;
-
-			PatientDashboardActivity patientDashboardActivity = (PatientDashboardActivity)getActivity();
-			Patient patient = patientDashboardActivity.mPresenter.getPatient();
-
-			//get Location
-			if (!OpenMRS.getInstance().getLocation().equalsIgnoreCase(null)) {
-				locationUuid = instance.getLocation();
-			}
-
-			LocationDataService locationDataService = new LocationDataService();
-			locationDataService.getByUUID
-					(locationUuid, QueryOptions
-							.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Location>() {
-						@Override
-						public void onCompleted(Location location) {
-							//create audit info
-							User user = new User();
-							user.setUuid(instance.getCurrentLoggedInUserInfo().get(ApplicationConstants.UserKeys
-									.USER_UUID));
-
-							//create concept
-							Concept concept = new Concept();
-							concept.setUuid("162169AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-
-							//create encountertType
-							EncounterType mEncountertype = new EncounterType();
-							mEncountertype.setUuid("d7151f82-c1f3-4152-a605-2f9ea7414a79");
-
-							LocalDateTime localDateTime = new LocalDateTime();
-
-							//create observation
-							Observation observation = new Observation();
-							observation.setConcept(concept);
-							observation.setValue(getEditNoteTextValue());
-							observation.setPerson(patient.getPerson());
-							observation.setObsDatetime(localDateTime.toString());
-							observation.setCreator(user);
-
-							observation.setLocation(location.getUuid());
-
-							List<Observation> observationList = new ArrayList<>();
-							observationList.add(observation);
-
-							Encounter encounter = new Encounter();
-							encounter.setPatient(patient);
-							encounter.setEncounterType(mEncountertype);
-							encounter.setObs(observationList);
-							encounter.setVisit(visit);
-							encounter.setEncounterDatetime(localDateTime.toString());
-
-							encounter.setLocation(location);
-
-							EncounterDataService encounterDataService = new EncounterDataService();
-							encounterDataService.create(encounter, new DataService.GetCallback<Encounter>() {
-								@Override
-								public void onCompleted(Encounter encounter) {
-									((PatientDashboardActivity)getActivity()).mPresenter
-											.fetchPatientData(patient.getUuid());
-									dismiss();
-								}
-
-								@Override
-								public void onError(Throwable t) {
-									t.printStackTrace();
-								}
-							});
-						}
-
-						@Override
-						public void onError(Throwable t) {
-
-						}
-					});
-
-		}
 	}
 
 	private void doStartVisitAction() {

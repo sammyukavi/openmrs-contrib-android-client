@@ -26,6 +26,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
@@ -60,7 +61,8 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	private TextView noVisitNoteLabel;
 	private String patientUuid;
 	private VisitsRecyclerAdapter visitsRecyclerAdapter;
-	private PatientDashboardActivity patientDashboardActivity;
+	private FloatingActionMenu patientDashboardMenu;
+
 	private int startIndex = 0, limit = 5;
 
 	public static PatientDashboardFragment newInstance() {
@@ -73,8 +75,6 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-		patientDashboardActivity = (PatientDashboardActivity)getActivity();
 
 		fragmentView = inflater.inflate(R.layout.fragment_patient_dashboard, container, false);
 
@@ -105,6 +105,9 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	}
 
 	private void startSelectedPatientDashboardActivity(int selectedId) {
+
+		patientDashboardMenu.close(true);
+
 		switch (selectedId) {
 			case R.id.start_visit:
 				intent = new Intent(getContext(), AddEditVisitActivity.class);
@@ -128,6 +131,10 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		dashboardScreen = (RelativeLayout)fragmentView.findViewById(R.id.dashboardScreen);
 		dashboardProgressBar = (RelativeLayout)fragmentView.findViewById(R.id.dashboardProgressBar);
 		noVisitNoteLabel = (TextView)fragmentView.findViewById(R.id.noVisitNoteLabel);
+
+		patientDashboardMenu = (FloatingActionMenu)fragmentView.findViewById(R.id.patientDashboardMenu);
+
+		patientDashboardMenu.setClosedOnTouchOutside(true);
 
 	}
 

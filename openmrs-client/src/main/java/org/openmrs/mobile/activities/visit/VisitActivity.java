@@ -109,6 +109,7 @@ public class VisitActivity extends ACBaseActivity {
 		endVisitButton = (FloatingActionButton)findViewById(R.id.end_visit);
 		editVisitButton = (FloatingActionButton)findViewById(R.id.edit_visit);
 		visitDetailsMenu = (FloatingActionMenu)findViewById(R.id.visitDetailsMenu);
+		visitDetailsMenu.setClosedOnTouchOutside(true);
 
 		if (visitClosedDate != null && !visitClosedDate.isEmpty()) {
 			captureVitalsButton.setVisibility(View.GONE);

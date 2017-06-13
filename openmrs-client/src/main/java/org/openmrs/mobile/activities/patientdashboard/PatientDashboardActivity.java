@@ -16,11 +16,11 @@ package org.openmrs.mobile.activities.patientdashboard;
 
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.View;
+
+import com.github.clans.fab.FloatingActionMenu;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
-import org.openmrs.mobile.activities.addeditvisit.AddEditVisitContract;
 import org.openmrs.mobile.activities.patientheader.PatientHeaderFragment;
 import org.openmrs.mobile.activities.patientheader.PatientHeaderPresenter;
 import org.openmrs.mobile.utilities.ApplicationConstants;
@@ -29,14 +29,12 @@ import org.openmrs.mobile.utilities.StringUtils;
 public class PatientDashboardActivity extends ACBaseActivity {
 
 	public PatientDashboardContract.Presenter mPresenter;
-
-	public AddEditVisitContract.Presenter addEditVisitPresenter;
 	private PatientHeaderFragment headerFragment;
-	private View view;
+
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		view = getLayoutInflater().inflate(R.layout.activity_patient_dashboard, frameLayout);
+		getLayoutInflater().inflate(R.layout.activity_patient_dashboard, frameLayout);
 		setTitle(R.string.title_patient_dashboard);
 		// Create fragment
 		PatientDashboardFragment patientDashboardFragment =

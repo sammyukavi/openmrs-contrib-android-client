@@ -66,6 +66,7 @@ public class LoginDataService extends BaseMetadataDataService<Session, SessionDb
 	}
 
 	public void getSession(String serverURl, String username, String password, GetCallback<Session> callback) {
+
 		restService = RestServiceBuilder.createService(getRestServiceClass(), serverURl, username, password);
 		executeSingleCallback(callback, null,
 				() -> null,

@@ -263,4 +263,9 @@ public class VisitActivity extends ACBaseActivity {
 				break;
 		}
 	}
+
+	@Override
+	public void onRestart() {
+		super.onRestart();
+	}
 }

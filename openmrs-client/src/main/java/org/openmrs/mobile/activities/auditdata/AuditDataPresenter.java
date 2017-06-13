@@ -106,7 +106,9 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 				if (encounter == null) {
 
 				} else {
-					auditDataView.goBackToVisitPage();
+					auditDataView.hideSoftKeys();
+
+					((AuditDataActivity)auditDataView.getContext()).finish();
 				}
 			}
 

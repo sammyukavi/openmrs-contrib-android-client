@@ -61,7 +61,8 @@ public class AddEditVisitActivity extends ACBaseActivity {
 							.EMPTY_STRING);
 			this.visitUuid =
 					extras.getString(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING);
-			this.providerUuid = extras.getString(ApplicationConstants.BundleKeys.PROVIDER_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING);
+			this.providerUuid = extras.getString(ApplicationConstants.BundleKeys.PROVIDER_UUID_BUNDLE,
+					ApplicationConstants.EMPTY_STRING);
 			this.visitStopDate = extras.getString(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, ApplicationConstants
 					.EMPTY_STRING);
 			if (StringUtils.notEmpty(patientUuid)) {
@@ -123,11 +124,13 @@ public class AddEditVisitActivity extends ACBaseActivity {
 		if (drawer.isDrawerOpen(GravityCompat.START)) {
 			drawer.closeDrawer(GravityCompat.START);
 		} else {
-			Intent intent = new Intent(Intent.ACTION_MAIN);
-			intent.addCategory(Intent.CATEGORY_HOME);
-			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			startActivity(intent);
+			//Intent intent = new Intent(Intent.ACTION_MAIN);
+			//intent.addCategory(Intent.CATEGORY_HOME);
+			//intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			//startActivity(intent);
 		}
+
+		super.onBackPressed();
 	}
 
 	@Override
@@ -154,7 +157,7 @@ public class AddEditVisitActivity extends ACBaseActivity {
 
 					intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
 					//fix for getDateToday
-					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					//intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
 					getApplicationContext().startActivity(intent);
 				}

@@ -94,6 +94,8 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 
 		loginView.setViewsContainerVisibility(false);
 
+		RestServiceBuilder.setloginUrl(url);
+
 		if (NetworkUtils.isOnline()) {
 
 			mWipeRequired = wipeDatabase;
@@ -137,11 +139,12 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 					if (session != null) {
 						if (session.isAuthenticated()) {
 
-							RestServiceBuilder.setBaseUrl(false);
-
 							if (wipeDatabase) {
+
 								mOpenMRS.deleteDatabase(OpenMRSSQLiteOpenHelper.DATABASE_NAME);
+
 								setData(session.getSessionId(), url, username, password);
+
 								mWipeRequired = false;
 							}
 
@@ -152,6 +155,8 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 							}
 
 							setLogin(true, url);
+
+							RestServiceBuilder.restoreDefaultBaseUrl();
 
 							//Instantiate the user service  here to use our new session
 							userService = new UserDataService();
@@ -264,12 +269,12 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 
 		loginView.setViewsContainerVisibility(false);
 
+		RestServiceBuilder.setBaseUrl(url);
+
 		DataService.GetCallback<List<Location>> locationDataServiceCallback = new DataService.GetCallback<List<Location>>
 				() {
 			@Override
 			public void onCompleted(List<Location> locations) {
-
-				RestServiceBuilder.setBaseUrl(true);
 
 				mOpenMRS.setServerUrl(url);
 

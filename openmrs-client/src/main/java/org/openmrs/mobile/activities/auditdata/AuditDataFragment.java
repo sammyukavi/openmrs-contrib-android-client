@@ -32,6 +32,7 @@ import android.widget.Spinner;
 
 import org.joda.time.LocalDateTime;
 import org.openmrs.mobile.R;
+import org.openmrs.mobile.activities.ACBaseActivity;
 import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.activities.visit.VisitActivity;
 import org.openmrs.mobile.application.OpenMRS;
@@ -44,7 +45,6 @@ import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Person;
 import org.openmrs.mobile.models.Provider;
-import org.openmrs.mobile.models.Value;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.FontsUtil;
@@ -443,6 +443,11 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 			auditDataFormProgressBar.setVisibility(View.GONE);
 			auditDataFormScreen.setVisibility(View.VISIBLE);
 		}
+	}
+
+	@Override
+	public void hideSoftKeys() {
+		ACBaseActivity.hideSoftKeyboard(getActivity());
 	}
 
 	@Override

@@ -14,7 +14,6 @@
 
 package org.openmrs.mobile.activities.addeditpatient;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.view.Menu;
@@ -75,11 +74,7 @@ public class AddEditPatientActivity extends ACBaseActivity {
 	public void onBackPressed() {
 		if (drawer.isDrawerOpen(GravityCompat.START)) {
 			drawer.closeDrawer(GravityCompat.START);
-		} else {
-			Intent intent = new Intent(Intent.ACTION_MAIN);
-			intent.addCategory(Intent.CATEGORY_HOME);
-			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			startActivity(intent);
 		}
+		super.onBackPressed();
 	}
 }

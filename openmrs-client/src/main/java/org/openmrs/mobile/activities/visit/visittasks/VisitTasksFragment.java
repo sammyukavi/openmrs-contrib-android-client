@@ -18,7 +18,6 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -52,7 +51,6 @@ import java.util.Map;
 
 public class VisitTasksFragment extends VisitFragment implements VisitContract.VisitTasksView {
 
-	FloatingActionButton fab;
 	private View mRootView;
 	private RecyclerView openViewTasksRecyclerView;
 	private LinearLayoutManager layoutManager;
@@ -94,7 +92,6 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 
 	private void resolveViews(View v) {
 		openViewTasksRecyclerView = (RecyclerView)v.findViewById(R.id.openVisitTasksRecyclerView);
-		fab = (FloatingActionButton)v.findViewById(R.id.visitTaskFab);
 		addtask = (AutoCompleteTextView)v.findViewById(R.id.addVisitTasks);
 		addTaskLayout = (LinearLayout)v.findViewById(R.id.addTaskLayout);
 		closedTasksLayout = (LinearLayout)v.findViewById(R.id.closedTasksLayout);
@@ -259,7 +256,7 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 	@Override
 	public void setVisit(Visit visit) {
 		this.visit = visit;
-		if (visit != null){
+		if (visit != null) {
 			if (!visit.getStopDatetime().equalsIgnoreCase(null)) {
 				addTaskLayout.setVisibility(View.GONE);
 			}

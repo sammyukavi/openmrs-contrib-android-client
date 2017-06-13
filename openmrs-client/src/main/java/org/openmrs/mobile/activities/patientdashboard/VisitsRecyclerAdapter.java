@@ -9,13 +9,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 import org.joda.time.LocalDateTime;
@@ -351,38 +349,6 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 			clinicalNoteText.setText(context.getString(R.string.no_diagnoses_label));
 		}
 
-	}
-
-	private void presentVitals(Encounter encounter, View singleVisitView) {
-		TableLayout visitVitalsTableLayout = (TableLayout)singleVisitView.findViewById(R.id.visitVitalsTable);
-
-		if (encounter.getObs().size() != 0) {
-			for (Observation observation : encounter.getObs()) {
-
-				TableRow row = new TableRow(context);
-				row.setPadding(0, 20, 0, 10);
-				row.setGravity(Gravity.CENTER);
-
-				ArrayList splitValues = StringUtils.splitStrings(observation.getDisplay());
-
-				TextView label = new TextView(context);
-				label.setText(splitValues.get(0) + " :");
-				label.setTextSize(14);
-				label.setGravity(Gravity.RIGHT | Gravity.END);
-				label.setTextColor(context.getResources().getColor(R.color.black));
-				row.addView(label, 0);
-
-				TextView vitalValue = new TextView(context);
-				vitalValue.setText(splitValues.get(1).toString());
-				vitalValue.setTextSize(14);
-				vitalValue.setTextColor(context.getResources().getColor(R.color.dark_grey));
-				row.addView(vitalValue, 1);
-
-				visitVitalsTableLayout.addView(row);
-			}
-		} else {
-
-		}
 	}
 
 	private Encounter createClinicalNoteEncounter() {

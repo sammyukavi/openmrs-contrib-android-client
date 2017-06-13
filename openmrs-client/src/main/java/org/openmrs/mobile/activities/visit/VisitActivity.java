@@ -52,6 +52,7 @@ import org.openmrs.mobile.utilities.TabUtil;
 import java.util.ArrayList;
 
 public class VisitActivity extends ACBaseActivity {
+	private static final int END_VISIT_RESULT = 1;
 	public VisitContract.VisitDetailsMainPresenter visitDetailsMainPresenter;
 	private PatientHeaderContract.Presenter patientHeaderPresenter;
 	private String patientUuid;
@@ -173,12 +174,12 @@ public class VisitActivity extends ACBaseActivity {
 		attachPresenterToFragment(fragment);
 	}
 
-	@Override
+	/*@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
-		outState.putString(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visitUuid);
-	}
+		//outState.putString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
+		//outState.putString(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visitUuid);
+	}*/
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -243,7 +244,7 @@ public class VisitActivity extends ACBaseActivity {
 				intent.putExtra(ApplicationConstants.BundleKeys.PROVIDER_UUID_BUNDLE, providerUuid);
 				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, visitClosedDate);
 				intent.putExtra(ApplicationConstants.BundleKeys.END_VISIT_TAG, true);
-				startActivity(intent);
+				startActivityForResult(intent, END_VISIT_RESULT);
 				break;
 			case R.id.capture_vitals:
 				intent = new Intent(getApplicationContext(), CaptureVitalsActivity.class);
@@ -263,6 +264,21 @@ public class VisitActivity extends ACBaseActivity {
 				startActivity(intent);
 				break;
 		}
+	}
+
+	@Override
+	public void finish() {
+		super.finish();
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == END_VISIT_RESULT) {
+			if (resultCode == RESULT_OK) {
+				finish();
+			}
+		}
+		super.onActivityResult(requestCode, resultCode, data);
 	}
 
 	@Override

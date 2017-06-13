@@ -102,9 +102,8 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 		DataService.GetCallback<Encounter> serverResponceCallback = new DataService.GetCallback<Encounter>() {
 			@Override
 			public void onCompleted(Encounter encounter) {
-				auditDataView.showProgressBar(false);
 				if (encounter == null) {
-
+					auditDataView.showProgressBar(false);
 				} else {
 					auditDataView.hideSoftKeys();
 

@@ -29,7 +29,7 @@ public class RestServiceBuilder {
 	private static String API_BASE_URL = OpenMRS.getInstance().getServerUrl();
 
 	static {
-		restoreDefaultBaseUrl();
+		applyDefaultBaseUrl();
 	}
 
 	private static GsonConverterFactory buildGsonConverter() {
@@ -90,7 +90,7 @@ public class RestServiceBuilder {
 		return createService(serviceClass, app.getServerUrl(), app.getUsername(), app.getPassword());
 	}
 
-	public static void restoreDefaultBaseUrl() {
+	public static void applyDefaultBaseUrl() {
 
 		API_BASE_URL = OpenMRS.getInstance().getServerUrl();
 

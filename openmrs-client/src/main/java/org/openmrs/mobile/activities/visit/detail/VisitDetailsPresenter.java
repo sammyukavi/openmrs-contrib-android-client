@@ -54,6 +54,7 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 	private ConceptAnswerDataService conceptAnswerDataService;
 	private Visit visit;
 
+
 	public VisitDetailsPresenter(String patientUuid, String visitUuid, String providerUuid, String visitStopDate,
 			VisitContract
 					.VisitDetailsView

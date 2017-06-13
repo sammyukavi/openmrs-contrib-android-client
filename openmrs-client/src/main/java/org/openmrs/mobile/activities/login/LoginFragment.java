@@ -218,11 +218,6 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 	}
 
 	@Override
-	public void hideSoftKeys() {
-		ACBaseActivity.hideSoftKeyboard(getActivity());
-	}
-
-	@Override
 	public void showWarningDialog() {
 		CustomDialogBundle bundle = new CustomDialogBundle();
 		bundle.setTitleViewMessage(getString(R.string.warning_dialog_title));
@@ -348,6 +343,9 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 
 	@Override
 	public void setProgressBarVisibility(boolean visible) {
+		if (visible) {
+			ACBaseActivity.hideSoftKeyboard(getActivity());
+		}
 		mLoadingProgressBar.setVisibility(visible ? View.VISIBLE : View.GONE);
 	}
 

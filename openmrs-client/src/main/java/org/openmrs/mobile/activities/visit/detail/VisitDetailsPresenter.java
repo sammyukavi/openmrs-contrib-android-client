@@ -160,10 +160,7 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 									.PRIMARY_DIAGNOSIS) && !entity.getConcept().getUuid()
 									.equalsIgnoreCase(ApplicationConstants.ObservationLocators
 											.SECONDARY_DIAGNOSIS)) {
-								System.out.println(entity.getConcept() + " Concept uuid");
-								Concept concept;
-								concept = (Concept)entity.getValue();
-								System.out.println(entity.getObsGroup().getDisplay() + " Concept name");
+								Concept concept = (Concept)entity.getValue();
 							}
 
 						}

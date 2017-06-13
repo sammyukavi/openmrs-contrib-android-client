@@ -29,6 +29,7 @@ import org.openmrs.mobile.models.VisitPredefinedTask;
 import org.openmrs.mobile.models.VisitTask;
 import org.openmrs.mobile.utilities.ToastUtil;
 
+import java.util.HashMap;
 import java.util.List;
 
 public interface VisitContract {
@@ -76,6 +77,14 @@ public interface VisitContract {
 		void setAttributeTypes(List<VisitAttributeType> visitAttributeTypes);
 
 		void showTabSpinner(boolean visibility);
+
+		void setPrimaryDiagnosis(HashMap<String, Object> primaryDiagnosis);
+
+		void setSecondaryDiagnosis(HashMap<String, Object> secondaryDiagnosis);
+
+		void setDiagnosisCertainty(HashMap<String, Object> confirmedDiagnosis,String order);
+
+		void removeDiagnosis(HashMap<String, Object> removeDiagnosis,String order);
 	}
 
 	interface VisitPhotoView extends ViewVisitDetailsMain {

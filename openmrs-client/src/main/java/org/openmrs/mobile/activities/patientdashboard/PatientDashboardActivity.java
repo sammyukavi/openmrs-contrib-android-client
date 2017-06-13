@@ -17,8 +17,6 @@ package org.openmrs.mobile.activities.patientdashboard;
 import android.os.Bundle;
 import android.view.Menu;
 
-import com.github.clans.fab.FloatingActionMenu;
-
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
 import org.openmrs.mobile.activities.patientheader.PatientHeaderFragment;
@@ -30,7 +28,6 @@ public class PatientDashboardActivity extends ACBaseActivity {
 
 	public PatientDashboardContract.Presenter mPresenter;
 	private PatientHeaderFragment headerFragment;
-
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -85,5 +82,21 @@ public class PatientDashboardActivity extends ACBaseActivity {
 		} else {
 			createToast(getString(R.string.pending_save));
 		}
+	}
+
+	@Override
+	protected void onRestart() {
+		refreshUiData();
+		super.onRestart();
+	}
+
+	@Override
+	protected void onResume() {
+		refreshUiData();
+		super.onResume();
+	}
+
+	private void refreshUiData() {
+		PatientDashboardFragment.fetchPatientData();
 	}
 }

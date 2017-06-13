@@ -446,6 +446,8 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 			//Change to Update Patient Form
 			String patientHeaderString = getResources().getString(R.string.action_update_patient_data);
 			this.getActivity().setTitle(patientHeaderString);
+			AddEditPatientActivity addEditPatientActivity = (AddEditPatientActivity)getActivity();
+			addEditPatientActivity.updateToolbar();
 			submitConfirm.setText(patientHeaderString);
 			submitConfirm.setOnClickListener(new View.OnClickListener() {
 				@Override

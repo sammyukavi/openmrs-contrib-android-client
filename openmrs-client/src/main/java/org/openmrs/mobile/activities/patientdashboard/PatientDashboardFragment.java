@@ -22,6 +22,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -57,13 +58,17 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	private SharedPreferences sharedPreferences = instance.getOpenMRSSharedPreferences();
 	private Intent intent;
 	private Location location;
-	private RelativeLayout dashboardProgressBar, dashboardScreen;
+	private RelativeLayout dashboardScreen;
+	private ProgressBar dashboardProgressBar;
 	private TextView noVisitNoteLabel;
 	private String patientUuid;
 	private VisitsRecyclerAdapter visitsRecyclerAdapter;
 	private FloatingActionMenu patientDashboardMenu;
-
 	private int startIndex = 0, limit = 5;
+	private static PatientDashboardContract.Presenter staticPresenter;
+	private static String staticPatientUuid;
+	private static boolean hasActiveVisit;
+	private static FloatingActionButton staticStartVisitButton;
 
 	public static PatientDashboardFragment newInstance() {
 		return new PatientDashboardFragment();
@@ -78,7 +83,8 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
 		fragmentView = inflater.inflate(R.layout.fragment_patient_dashboard, container, false);
 
-		patientUuid = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
+		staticPatientUuid = patientUuid = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys
+				.PATIENT_UUID_BUNDLE);
 
 		initViewFields();
 
@@ -93,6 +99,8 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		mPresenter.fetchPatientData(patientUuid);
 
 		FontsUtil.setFont((ViewGroup)this.getActivity().findViewById(android.R.id.content));
+
+		staticPresenter = mPresenter;
 
 		return fragmentView;
 	}
@@ -125,11 +133,15 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	}
 
 	private void initViewFields() {
-		startVisitButton = (FloatingActionButton)fragmentView.findViewById(R.id.start_visit);
+
+		staticStartVisitButton = startVisitButton = (FloatingActionButton)fragmentView.findViewById(R.id.start_visit);
+
 		editPatient = (FloatingActionButton)fragmentView.findViewById(R.id.edit_Patient);
 
 		dashboardScreen = (RelativeLayout)fragmentView.findViewById(R.id.dashboardScreen);
-		dashboardProgressBar = (RelativeLayout)fragmentView.findViewById(R.id.dashboardProgressBar);
+
+		dashboardProgressBar = (ProgressBar)fragmentView.findViewById(R.id.dashboardProgressBar);
+
 		noVisitNoteLabel = (TextView)fragmentView.findViewById(R.id.noVisitNoteLabel);
 
 		patientDashboardMenu = (FloatingActionMenu)fragmentView.findViewById(R.id.patientDashboardMenu);
@@ -140,18 +152,16 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
 	@Override
 	public void updateContactCard(Patient patient) {
-		showPageSpinner(true);
 		this.patient = patient;
 		setPatientUuid(patient);
 	}
 
 	@Override
 	public void updateVisitsCard(List<Visit> visits) {
-
-		showPageSpinner(true);
-
+		hasActiveVisit = false;
 		for (Visit visit : visits) {
 			if (!StringUtils.notNull(visit.getStopDatetime())) {
+				hasActiveVisit = true;
 				startVisitButton.setVisibility(View.GONE);
 				setVisitUuid(visit);
 				break;
@@ -171,8 +181,6 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		visitsRecyclerAdapter.setUuids(uuidsHashmap);
 
 		visitsRecyclerView.setAdapter(visitsRecyclerAdapter);
-
-		showPageSpinner(false);
 
 	}
 
@@ -242,4 +250,8 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		visitsRecyclerAdapter.updateClinicalNoteObs(observation);
 	}
 
+	public static void fetchPatientData() {
+		staticPresenter.fetchPatientData(staticPatientUuid);
+		staticStartVisitButton.setVisibility(hasActiveVisit ? View.GONE : View.VISIBLE);
+	}
 }

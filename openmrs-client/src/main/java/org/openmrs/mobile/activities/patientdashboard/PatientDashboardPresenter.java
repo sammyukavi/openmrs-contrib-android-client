@@ -98,7 +98,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 			@Override
 			public void onCompleted(Patient patient) {
 				setPatient(patient);
-				patientDashboardView.showPageSpinner(true);
+				patientDashboardView.showPageSpinner(false);
 				fetchVisits(patient);
 			}
 
@@ -123,11 +123,12 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
 				setLoading(false);
 
+				patientDashboardView.showPageSpinner(false);
+
 				patientDashboardView.updateContactCard(patient);
 				patientDashboardView.updateVisitsCard(visits);
 
 				if (visits.isEmpty()) {
-					patientDashboardView.showPageSpinner(false);
 					patientDashboardView.showNoVisits(true);
 				}
 			}
@@ -229,13 +230,14 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 			DataService.GetCallback<Location> locationDataServiceCallback = new DataService.GetCallback<Location>() {
 				@Override
 				public void onCompleted(Location location) {
+					patientDashboardView.showPageSpinner(false);
 					//set location in the fragment and start loading other fields
 					patientDashboardView.setLocation(location);
 				}
 
 				@Override
 				public void onError(Throwable t) {
-					patientDashboardView.showPageSpinner(true);
+					patientDashboardView.showPageSpinner(false);
 					t.printStackTrace();
 				}
 			};

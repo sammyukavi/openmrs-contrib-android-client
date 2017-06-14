@@ -14,7 +14,6 @@
 
 package org.openmrs.mobile.activities.auditdata;
 
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
@@ -27,8 +26,6 @@ import org.openmrs.mobile.activities.ACBaseActivity;
 import org.openmrs.mobile.activities.patientheader.PatientHeaderContract;
 import org.openmrs.mobile.activities.patientheader.PatientHeaderFragment;
 import org.openmrs.mobile.activities.patientheader.PatientHeaderPresenter;
-import org.openmrs.mobile.activities.visit.VisitActivity;
-import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.TabUtil;
 
@@ -112,12 +109,8 @@ public class AuditDataActivity extends ACBaseActivity {
 	public void onBackPressed() {
 		if (drawer.isDrawerOpen(GravityCompat.START)) {
 			drawer.closeDrawer(GravityCompat.START);
-		} else {
-			Intent intent = new Intent(Intent.ACTION_MAIN);
-			intent.addCategory(Intent.CATEGORY_HOME);
-			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			startActivity(intent);
 		}
+		super.onBackPressed();
 	}
 
 	@Override
@@ -131,17 +124,7 @@ public class AuditDataActivity extends ACBaseActivity {
 		// Handle item selection
 		switch (item.getItemId()) {
 			case android.R.id.home:
-				finish();
-				Intent intent = new Intent(getApplicationContext(), VisitActivity.class);
-				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
-				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visitUuid);
-				intent.putExtra(ApplicationConstants.BundleKeys.PROVIDER_UUID_BUNDLE, providerUuid);
-				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, visitStopDate);
-
-				//fix for now
-				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-				getApplicationContext().startActivity(intent);
+				onBackPressed();
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);

@@ -15,7 +15,6 @@
 package org.openmrs.mobile.application;
 
 import android.app.Application;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Environment;
@@ -61,8 +60,6 @@ public class OpenMRS extends Application {
 		generateKey();
 		initializeDB();
 
-//		Intent i = new Intent(this, FormListService.class);
-//		startService(i);
 	}
 
 	protected void initializeDB() {
@@ -167,6 +164,29 @@ public class OpenMRS extends Application {
 		SharedPreferences.Editor editor = getOpenMRSSharedPreferences().edit();
 		editor.putString(ApplicationConstants.LOCATION, location);
 		editor.commit();
+	}
+
+	public String getParentLocationUuid() {
+		SharedPreferences prefs = getOpenMRSSharedPreferences();
+		return prefs.getString(ApplicationConstants.PARENT_LOCATION, ApplicationConstants.EMPTY_STRING);
+	}
+
+	public void setParentLocationUuid(String uuid) {
+		SharedPreferences.Editor editor = getOpenMRSSharedPreferences().edit();
+		editor.putString(ApplicationConstants.PARENT_LOCATION, uuid);
+		editor.commit();
+	}
+
+	public void saveLocations(String locations) {
+		SharedPreferences.Editor editor = getOpenMRSSharedPreferences().edit();
+		editor.putString(ApplicationConstants.LOGIN_LOCATIONS, locations);
+		editor.commit();
+	}
+
+	public String getLocations() {
+		SharedPreferences sharedPreferences = instance.getOpenMRSSharedPreferences();
+		return sharedPreferences.getString(ApplicationConstants.LOGIN_LOCATIONS, ApplicationConstants
+				.EMPTY_STRING);
 	}
 
 	public String getPatientUuid() {
@@ -297,6 +317,7 @@ public class OpenMRS extends Application {
 		editor.remove(ApplicationConstants.SESSION_TOKEN);
 		editor.remove(ApplicationConstants.AUTHORIZATION_TOKEN);
 		editor.remove(ApplicationConstants.BundleKeys.PATIENT_QUERY_BUNDLE);
+		editor.remove(ApplicationConstants.LOGIN_LOCATIONS);
 		clearCurrentLoggedInUserInfo();
 		editor.commit();
 	}

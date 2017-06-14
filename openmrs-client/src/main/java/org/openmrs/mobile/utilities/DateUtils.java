@@ -114,8 +114,19 @@ public final class DateUtils {
 		return dateAsString;
 	}
 
-	public static String now(String format) {
+	public static String getDateToday(String format) {
 		return new SimpleDateFormat(format).format(new Date());
+	}
+
+	private static Date yesterday() {
+		final Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.DATE, -1);
+		return cal.getTime();
+	}
+
+	public static String getDateYesterday(String format) {
+		DateFormat dateFormat = new SimpleDateFormat(format);
+		return dateFormat.format(yesterday());
 	}
 
 	public static String calculateAge(String date) {
@@ -155,8 +166,12 @@ public final class DateUtils {
 
 		if (years > 0) {
 			return String.valueOf(years);
-		} else if (months > 0) {
+		} else if (months == 1) {
+			return months + " month";
+		} else if (months > 1) {
 			return months + " months";
+		} else if (days == 1) {
+			return days + " day";
 		} else
 			return days + " days";
 	}
@@ -177,7 +192,7 @@ public final class DateUtils {
 		if (days == 0) {
 			relative = "today";
 		} else if (days < 7) {
-			relative = (days == 1 ? "yesterday" : days + " days ago");
+			relative = (days == 1 ? "getDateYesterday" : days + " days ago");
 		} else if (days < 30) {
 			relative = Math.round(days / 7) + " week" + (days / 7 > 1 ? "s " : " ") + "ago";
 		} else {
@@ -318,4 +333,5 @@ public final class DateUtils {
 		//sb.append("ago");
 		return sb.toString();
 	}
+
 }

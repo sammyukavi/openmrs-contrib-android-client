@@ -19,7 +19,6 @@ import android.view.Menu;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
-import org.openmrs.mobile.activities.addeditvisit.AddEditVisitContract;
 import org.openmrs.mobile.activities.patientheader.PatientHeaderFragment;
 import org.openmrs.mobile.activities.patientheader.PatientHeaderPresenter;
 import org.openmrs.mobile.utilities.ApplicationConstants;
@@ -28,8 +27,6 @@ import org.openmrs.mobile.utilities.StringUtils;
 public class PatientDashboardActivity extends ACBaseActivity {
 
 	public PatientDashboardContract.Presenter mPresenter;
-
-	public AddEditVisitContract.Presenter addEditVisitPresenter;
 	private PatientHeaderFragment headerFragment;
 
 	protected void onCreate(Bundle savedInstanceState) {
@@ -76,5 +73,30 @@ public class PatientDashboardActivity extends ACBaseActivity {
 
 	public void updateHeaderShadowLine(boolean visible) {
 		headerFragment.updateShadowLine(visible);
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (!mPresenter.isLoading()) {
+			super.onBackPressed();
+		} else {
+			createToast(getString(R.string.pending_save));
+		}
+	}
+
+	@Override
+	protected void onRestart() {
+		refreshUiData();
+		super.onRestart();
+	}
+
+	@Override
+	protected void onResume() {
+		refreshUiData();
+		super.onResume();
+	}
+
+	private void refreshUiData() {
+		PatientDashboardFragment.fetchPatientData();
 	}
 }

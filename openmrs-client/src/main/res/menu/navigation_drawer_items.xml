@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-	<group android:id="@+id/grp1" android:checkableBehavior="single">
+	<group android:checkableBehavior="single">
 		<item
 				android:id="@+id/navItemFindPatientRecord"
 				android:icon="@drawable/ic_nav_find_patient"
@@ -11,7 +11,7 @@
 				android:title="@string/nav_patient_list" />
 	</group>
 	
-	<group android:id="@+id/grp2" android:checkableBehavior="single">
+	<group android:checkableBehavior="single">
 		<item
 				android:id="@+id/navLogout"
 				android:icon="@drawable/ic_logout"

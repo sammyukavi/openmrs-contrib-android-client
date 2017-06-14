@@ -40,6 +40,8 @@ public interface CaptureVitalsContract {
 		void showProgressBar(Boolean visibility);
 
 		void showPageSpinner(boolean visibility);
+
+		void hideSoftKeys();
 	}
 
 	interface Presenter extends BasePresenterContract {

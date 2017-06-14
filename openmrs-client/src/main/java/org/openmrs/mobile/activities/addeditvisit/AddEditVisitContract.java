@@ -42,7 +42,7 @@ public interface AddEditVisitContract {
 
 		void showPatientDashboard();
 
-		void showVisitDetails(String visitUuuid);
+		void showVisitDetails(String visitUuuid, boolean isNewInstance);
 
 		void showPageSpinner(boolean visibility);
 

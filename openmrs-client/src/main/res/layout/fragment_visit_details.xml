@@ -54,7 +54,6 @@
 				android:orientation="vertical">
 			
 			<android.support.v7.widget.CardView
-					android:id="@+id/visitActiveStatus"
 					android:layout_margin="10dp"
 					card_view:cardBackgroundColor="@color/white"
 					card_view:cardCornerRadius="4dp"
@@ -203,7 +202,6 @@
 			</android.support.v7.widget.CardView>
 			
 			<android.support.v7.widget.CardView
-					android:id="@+id/visitNote"
 					android:layout_margin="10dp"
 					card_view:cardBackgroundColor="@color/white"
 					card_view:cardCornerRadius="4dp"
@@ -223,7 +221,6 @@
 							android:orientation="vertical">
 						
 						<TextView
-								android:id="@+id/visitNoteLabel"
 								android:layout_width="wrap_content"
 								android:layout_height="wrap_content"
 								android:layout_marginTop="5dp"
@@ -457,7 +454,6 @@
 			</android.support.v7.widget.CardView>
 			
 			<android.support.v7.widget.CardView
-					android:id="@+id/visitVitals"
 					android:layout_margin="10dp"
 					card_view:cardBackgroundColor="@color/white"
 					card_view:cardCornerRadius="4dp"
@@ -471,14 +467,12 @@
 						android:orientation="vertical">
 					
 					<RelativeLayout
-							android:id="@+id/visitVitalsHeader"
 							android:layout_marginBottom="5dp"
 							android:layout_width="match_parent"
 							android:layout_height="wrap_content"
 							android:orientation="vertical">
 						
 						<TextView
-								android:id="@+id/visitVitalsLabel"
 								android:layout_width="match_parent"
 								android:layout_height="wrap_content"
 								android:layout_marginTop="5dp"
@@ -584,7 +578,6 @@
 			</android.support.v7.widget.CardView>
 			
 			<android.support.v7.widget.CardView
-					android:id="@+id/auditInfo"
 					android:layout_margin="10dp"
 					card_view:cardBackgroundColor="@color/white"
 					card_view:cardCornerRadius="4dp"
@@ -603,7 +596,6 @@
 							android:orientation="vertical">
 						
 						<TextView
-								android:id="@+id/auditInfoLabel"
 								android:layout_width="match_parent"
 								android:layout_height="wrap_content"
 								android:layout_marginTop="5dp"

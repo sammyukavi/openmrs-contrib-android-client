@@ -71,7 +71,6 @@
 					android:orientation="vertical">
 				
 				<android.support.v7.widget.CardView
-						android:id="@+id/predefinedTasks"
 						android:layout_margin="10dp"
 						card_view:cardBackgroundColor="@color/white"
 						card_view:cardCornerRadius="4dp"
@@ -86,7 +85,6 @@
 							android:orientation="vertical">
 						
 						<TextView
-								android:id="@+id/predefinedTasksLabel"
 								android:layout_width="wrap_content"
 								android:layout_height="wrap_content"
 								android:layout_marginTop="5dp"
@@ -102,7 +100,6 @@
 								android:background="@android:color/darker_gray" />
 						
 						<TextView
-								android:id="@+id/noPredefinedTasks"
 								android:layout_width="match_parent"
 								android:layout_height="wrap_content"
 								android:layout_marginTop="5dp"
@@ -112,7 +109,6 @@
 								android:text="@string/no_predefined_tasks" />
 						
 						<android.support.v7.widget.RecyclerView
-								android:id="@+id/predefinedTasksListView"
 								android:layout_width="match_parent"
 								android:layout_height="match_parent"
 								android:layout_marginTop="5dp"
@@ -126,7 +122,6 @@
 				</android.support.v7.widget.CardView>
 				
 				<android.support.v7.widget.CardView
-						android:id="@+id/visitTasks"
 						android:layout_margin="10dp"
 						card_view:cardBackgroundColor="@color/white"
 						card_view:cardCornerRadius="4dp"
@@ -140,7 +135,6 @@
 							android:orientation="vertical">
 						
 						<TextView
-								android:id="@+id/visitTasksLabel"
 								android:layout_width="wrap_content"
 								android:layout_height="wrap_content"
 								android:layout_marginTop="5dp"

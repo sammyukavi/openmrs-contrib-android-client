@@ -97,6 +97,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	private ScrollView visitDetailsScrollView;
 
 	private Map<String, Object> encounterDiagnosis = new HashMap<>();
+	static VisitContract.VisitDetailsMainPresenter staticPresenter;
 
 	public static VisitDetailsFragment newInstance() {
 		return new VisitDetailsFragment();
@@ -123,6 +124,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		((VisitDetailsPresenter)mPresenter).getPatientUUID();
 		((VisitDetailsPresenter)mPresenter).getVisitUUID();
 		((VisitDetailsPresenter)mPresenter).getProviderUUID();
+		staticPresenter = mPresenter;
 		//buildMarginLayout();
 		return root;
 	}
@@ -243,7 +245,6 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 			}
 		});
 
-
 		submitVisitNote.setOnClickListener(v -> {
 			VisitNote visitNote = new VisitNote();
 			visitNote.setPersonId("10527");
@@ -268,7 +269,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 
 			visitNote.addEncounterDiagnosis(encounterDiagnosis);
 
-			((VisitDetailsPresenter) mPresenter).saveVisitNote(visitNote);
+			((VisitDetailsPresenter)mPresenter).saveVisitNote(visitNote);
 		});
 	}
 
@@ -433,6 +434,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 							noVitals.setVisibility(View.GONE);
 							addVisitVitals.setVisibility(View.GONE);
 							visitVitalsTableLayout.setVisibility(View.VISIBLE);
+							visitVitalsTableLayout.removeAllViews();
 							loadObservationFields(visit.getEncounters().get(i).getObs(), EncounterTypeData.VITALS);
 						} else {
 							if (visit.getStopDatetime() == null) {
@@ -476,6 +478,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 						noAuditData.setVisibility(View.GONE);
 						addAuditData.setVisibility(View.GONE);
 						auditInfoTableLayout.setVisibility(View.VISIBLE);
+						auditInfoTableLayout.removeAllViews();
 						loadObservationFields(visit.getEncounters().get(i).getObs(), EncounterTypeData.AUDIT_DATA);
 					} else {
 						noAuditData.setVisibility(View.VISIBLE);
@@ -617,4 +620,10 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		}
 	}
 
+	public static void refreshVitalsDetails() {
+		((VisitDetailsPresenter)staticPresenter).getVisit();
+		//((VisitDetailsPresenter)mPresenter).getPatientUUID();
+		//((VisitDetailsPresenter)mPresenter).getVisitUUID();
+		//((VisitDetailsPresenter)mPresenter).getProviderUUID();
+	}
 }

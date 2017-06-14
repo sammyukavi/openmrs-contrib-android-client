@@ -1,7 +1,6 @@
 package org.openmrs.mobile.data.rest;
 
 import org.openmrs.mobile.models.Encounter;
-import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Results;
 
 import retrofit2.Call;

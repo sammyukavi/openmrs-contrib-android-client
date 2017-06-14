@@ -5,15 +5,22 @@ import android.support.annotation.Nullable;
 
 import org.openmrs.mobile.data.BaseDataService;
 import org.openmrs.mobile.data.PagingInfo;
+import org.openmrs.mobile.data.QueryOptions;
+import org.openmrs.mobile.data.db.impl.PatientDbService;
 import org.openmrs.mobile.data.rest.PatientRestService;
-import org.openmrs.mobile.data.rest.RestConstants;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 
+import java.util.List;
+
 import retrofit2.Call;
 
-public class PatientDataService extends BaseDataService<Patient, PatientRestService> {
+public class PatientDataService extends BaseDataService<Patient, PatientDbService, PatientRestService> {
+	@Override
+	protected PatientDbService getDbService() {
+		return new PatientDbService();
+	}
 
 	@Override
 	protected Class<PatientRestService> getRestServiceClass() {
@@ -31,8 +38,8 @@ public class PatientDataService extends BaseDataService<Patient, PatientRestServ
 	}
 
 	@Override
-	public void getAll(boolean includeInactive, @Nullable PagingInfo pagingInfo,
-			@NonNull GetMultipleCallback<Patient> callback) {
+	public void getAll(@Nullable QueryOptions options, @Nullable PagingInfo pagingInfo,
+			@NonNull GetCallback<List<Patient>> callback) {
 		// The patient rest service does not support getting all patients
 		return;
 	}
@@ -40,12 +47,13 @@ public class PatientDataService extends BaseDataService<Patient, PatientRestServ
 	// Begin Retrofit Workaround
 
 	@Override
-	protected Call<Patient> _restGetByUuid(String restPath, String uuid, String representation) {
-		return restService.getByUuid(restPath, uuid, representation);
+	protected Call<Patient> _restGetByUuid(String restPath, String uuid, QueryOptions options) {
+		return restService.getByUuid(restPath, uuid, QueryOptions.getRepresentation(options),
+				QueryOptions.getIncludeInactive(options));
 	}
 
 	@Override
-	protected Call<Results<Patient>> _restGetAll(String restPath, PagingInfo pagingInfo, String representation) {
+	protected Call<Results<Patient>> _restGetAll(String restPath, QueryOptions options, PagingInfo pagingInfo) {
 		throw new UnsupportedOperationException("The patients rest service does not support a get all method.");
 	}
 
@@ -66,27 +74,42 @@ public class PatientDataService extends BaseDataService<Patient, PatientRestServ
 
 	// End Retrofit Workaround
 
-	public void getByNameAndIdentifier(String query, PagingInfo pagingInfo, GetMultipleCallback<Patient> callback) {
-		executeMultipleCallback(callback, null, () -> {
-			if (isPagingValid(pagingInfo)) {
-				return restService.getByNameAndIdentifier(buildRestRequestPath(), RestConstants.Representations
-								.FULL, query, query,
-						pagingInfo.getLimit(), pagingInfo.getStartIndex());
-			} else {
-				return restService.getByNameAndIdentifier(buildRestRequestPath(), RestConstants.Representations
-						.FULL, query, query);
-			}
-		});
+	public void getByName(String name, QueryOptions options, PagingInfo pagingInfo, GetCallback<List<Patient>> callback) {
+		executeMultipleCallback(callback, options, pagingInfo,
+				() -> dbService.getByName(name, options, pagingInfo),
+				() -> {
+					return restService.getByName(buildRestRequestPath(), name, QueryOptions.getRepresentation(options),
+							QueryOptions.getIncludeInactive(options), PagingInfo.getLimit(pagingInfo),
+							PagingInfo.getStartIndex(pagingInfo));
+				});
 	}
 
-	public void getLastViewed(String lastviewed, PagingInfo pagingInfo, GetMultipleCallback<Patient> callback) {
-		executeMultipleCallback(callback, null, () -> {
-			if (isPagingValid(pagingInfo)) {
-				return restService.getLastViewed(buildRestRequestPath(), lastviewed, RestConstants.Representations.FULL,
-						pagingInfo.getLimit(), pagingInfo.getStartIndex());
-			} else {
-				return restService.getLastViewed(buildRestRequestPath(), lastviewed, RestConstants.Representations.FULL);
-			}
-		});
+	public void findByNameAndIdentifier(String query, QueryOptions options, PagingInfo pagingInfo,
+			GetCallback<List<Patient>> callback) {
+		executeMultipleCallback(callback, options, pagingInfo,
+				() -> null,
+				() -> restService.findByNameAndIdentifier(buildRestRequestPath(), query, query,
+						QueryOptions.getRepresentation(options), QueryOptions.getIncludeInactive(options),
+						PagingInfo.getLimit(pagingInfo), PagingInfo.getStartIndex(pagingInfo))
+		);
+	}
+
+	public void findByIdentifier(String identifier, QueryOptions options, PagingInfo pagingInfo,
+			GetCallback<List<Patient>> callback) {
+		executeMultipleCallback(callback, options, pagingInfo,
+				() -> null,
+				() -> restService.findByIdentifier(buildRestRequestPath(), identifier,
+						QueryOptions.getRepresentation(options), QueryOptions.getIncludeInactive(options))
+		);
+	}
+
+	public void getLastViewed(String lastViewed, QueryOptions options, PagingInfo pagingInfo,
+			GetCallback<List<Patient>> callback) {
+		executeMultipleCallback(callback, options, pagingInfo,
+				() -> null,
+				() -> restService.getLastViewed(buildRestRequestPath(), lastViewed,
+						QueryOptions.getRepresentation(options), QueryOptions.getIncludeInactive(options),
+						PagingInfo.getLimit(pagingInfo), PagingInfo.getStartIndex(pagingInfo))
+		);
 	}
 }

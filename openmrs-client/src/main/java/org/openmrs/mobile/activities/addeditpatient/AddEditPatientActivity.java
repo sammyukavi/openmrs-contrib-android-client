@@ -14,10 +14,11 @@
 
 package org.openmrs.mobile.activities.addeditpatient;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuItem;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
@@ -29,6 +30,7 @@ import java.util.List;
 public class AddEditPatientActivity extends ACBaseActivity {
 
 	public AddEditPatientContract.Presenter mPresenter;
+	private boolean updatingPatient;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,13 +52,13 @@ public class AddEditPatientActivity extends ACBaseActivity {
 		//Check if bundle includes patient ID
 		Bundle patientBundle = savedInstanceState;
 		if (patientBundle != null) {
-			patientBundle.getString(ApplicationConstants.BundleKeys.PATIENT_ID_BUNDLE);
+			patientBundle.getString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
 		} else {
 			patientBundle = getIntent().getExtras();
 		}
 		String patientID = "";
 		if (patientBundle != null) {
-			patientID = patientBundle.getString(ApplicationConstants.BundleKeys.PATIENT_ID_BUNDLE);
+			patientID = patientBundle.getString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
 		}
 
 		List<String> counties = Arrays.asList(getResources().getStringArray(R.array.countiesArray));
@@ -75,11 +77,31 @@ public class AddEditPatientActivity extends ACBaseActivity {
 	public void onBackPressed() {
 		if (drawer.isDrawerOpen(GravityCompat.START)) {
 			drawer.closeDrawer(GravityCompat.START);
-		} else {
-			Intent intent = new Intent(Intent.ACTION_MAIN);
-			intent.addCategory(Intent.CATEGORY_HOME);
-			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			startActivity(intent);
 		}
+		super.onBackPressed();
+	}
+
+	/**
+	 * This method updates the activity toolbar is the activity is editing a patient
+	 */
+	public void updateToolbar() {
+		Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+		toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white);
+		setSupportActionBar(toolbar);
+		if (getSupportActionBar() != null) {
+			getSupportActionBar().setElevation(0);
+			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+			getSupportActionBar().setDisplayShowHomeEnabled(true);
+		}
+		updatingPatient = true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		//if the arrow is pressed on the navigation we close the activity
+		if (updatingPatient && item.getItemId() == android.R.id.home) {
+			onBackPressed();
+		}
+		return super.onOptionsItemSelected(item);
 	}
 }

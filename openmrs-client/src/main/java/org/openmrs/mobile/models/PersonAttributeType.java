@@ -13,7 +13,7 @@ package org.openmrs.mobile.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class PersonAttributeType extends BaseOpenmrsMetadata {
+public class PersonAttributeType extends BaseOpenmrsObject {
 
 	@Expose
 	@SerializedName("concept")
@@ -105,13 +105,6 @@ public class PersonAttributeType extends BaseOpenmrsMetadata {
 	 */
 	public void setSearchable(Boolean searchable) {
 		this.searchable = searchable;
-	}
-
-	/**
-	 * @see java.lang.Object#toString()
-	 */
-	public String toString() {
-		return getName();
 	}
 
 	/**

@@ -1,0 +1,82 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:fab="http://schemas.android.com/apk/res-auto"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
+
+	<ProgressBar
+			android:visibility="gone"
+			android:layout_centerInParent="true"
+			android:gravity="center"
+			android:layout_gravity="center"
+			android:id="@+id/dashboardProgressBar"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent" />
+
+	<RelativeLayout
+			android:id="@+id/dashboardScreen"
+			android:visibility="gone"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent">
+
+		<FrameLayout
+				android:id="@+id/patientHeader"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content" />
+
+		<android.support.v7.widget.RecyclerView
+				android:layout_below="@id/patientHeader"
+				android:paddingTop="0dp"
+				android:id="@+id/pastVisits"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content" />
+
+		<TextView
+				android:visibility="gone"
+				android:layout_centerInParent="true"
+				android:gravity="center"
+				android:layout_gravity="center"
+				android:id="@+id/noVisitNoteLabel"
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"
+				android:textColor="@color/openmrs_color_grey"
+				android:text="@string/no_visit" />
+
+		<com.github.clans.fab.FloatingActionMenu
+				android:id="@+id/patientDashboardMenu"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:layout_gravity="bottom|end"
+				android:layout_margin="0dp"
+				fab:menu_backgroundColor="@android:color/transparent"
+				fab:menu_fab_label="@string/label_close"
+				fab:menu_labels_showAnimation="@anim/fab_slide_in_from_right"
+				fab:menu_labels_hideAnimation="@anim/fab_slide_out_to_right"
+				fab:menu_labels_ellipsize="end"
+				fab:menu_labels_singleLine="true"
+				fab:menu_colorNormal="@color/color_primary_dark"
+				fab:menu_colorPressed="@color/color_primary">
+
+			<com.github.clans.fab.FloatingActionButton
+					android:id="@+id/start_visit"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:src="@drawable/ic_add_location"
+					fab:fab_label="@string/label_start_visit"
+					fab:fab_size="mini"
+					fab:fab_colorNormal="@color/color_primary_dark"
+					fab:fab_colorPressed="@color/color_primary" />
+
+
+			<com.github.clans.fab.FloatingActionButton
+					android:id="@+id/edit_Patient"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:src="@drawable/ic_edit"
+					fab:fab_label="@string/edit_patient"
+					fab:fab_size="mini"
+					fab:fab_colorNormal="@color/color_primary_dark"
+					fab:fab_colorPressed="@color/color_primary" />
+		</com.github.clans.fab.FloatingActionMenu>
+	</RelativeLayout>
+
+</RelativeLayout>

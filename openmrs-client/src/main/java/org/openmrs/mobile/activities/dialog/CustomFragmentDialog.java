@@ -46,17 +46,18 @@ import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
 import org.openmrs.mobile.activities.addeditpatient.AddEditPatientActivity;
 import org.openmrs.mobile.activities.addeditpatient.SimilarPatientsRecyclerViewAdapter;
+import org.openmrs.mobile.activities.addeditvisit.AddEditVisitActivity;
 import org.openmrs.mobile.activities.login.LoginActivity;
+import org.openmrs.mobile.activities.login.LoginFragment;
 import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
-import org.openmrs.mobile.activities.visittasks.VisitTasksActivity;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.models.Patient;
+import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitPredefinedTask;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.FontsUtil;
 import org.openmrs.mobile.utilities.StringUtils;
-import org.openmrs.mobile.utilities.ToastUtil;
 
 import java.util.Arrays;
 import java.util.List;
@@ -69,13 +70,12 @@ public class CustomFragmentDialog extends DialogFragment {
 	protected LayoutInflater mInflater;
 	protected LinearLayout mFieldsLayout;
 	protected RecyclerView mRecyclerView;
-	protected TextView mTextView;
-	protected TextView mTitleTextView;
-	protected EditText mEditText;
-	private Button mLeftButton;
-	private Button mRightButton;
+	protected TextView mTextView, mTitleTextView;
+	protected EditText mEditText, mEditNoteText;
+	private Button mLeftButton, mRightButton;
 	private CustomDialogBundle mCustomDialogBundle;
 	private AutoCompleteTextView autoCompleteTextView;
+	private Visit visit;
 
 	public static CustomFragmentDialog newInstance(CustomDialogBundle customDialogBundle) {
 		CustomFragmentDialog dialog = new CustomFragmentDialog();
@@ -220,6 +220,14 @@ public class CustomFragmentDialog extends DialogFragment {
 					.getAutoCompleteTextView());
 		}
 
+		if (null != mCustomDialogBundle.getEditNoteTextViewMessage()) {
+			mEditNoteText = addEditNoteTextField(mCustomDialogBundle.getEditNoteTextViewMessage());
+		}
+
+		if (null != mCustomDialogBundle.getVisit()) {
+			this.visit = mCustomDialogBundle.getVisit();
+		}
+
 	}
 
 	private RecyclerView addRecycleView(List<Patient> patientsList, Patient newPatient) {
@@ -269,6 +277,16 @@ public class CustomFragmentDialog extends DialogFragment {
 
 		mFieldsLayout.addView(field);
 		return autoCompleteText;
+	}
+
+	public EditText addEditNoteTextField(String defaultMessage) {
+		LinearLayout field = (LinearLayout)mInflater.inflate(R.layout.openmrs_edit_note_text_field, null);
+		EditText editText = (EditText)field.findViewById(R.id.openmrsEditNoteText);
+		if (null != defaultMessage) {
+			editText.setText(defaultMessage);
+		}
+		mFieldsLayout.addView(field);
+		return editText;
 	}
 
 	public TextView addTextField(String message) {
@@ -334,6 +352,14 @@ public class CustomFragmentDialog extends DialogFragment {
 		return value;
 	}
 
+	public String getEditNoteTextValue() {
+		String value = "";
+		if (mEditNoteText != null) {
+			value = mEditNoteText.getText().toString();
+		}
+		return value;
+	}
+
 	public String getAutoCompleteTextValue() {
 		String value = "";
 		if (autoCompleteTextView != null) {
@@ -347,26 +373,22 @@ public class CustomFragmentDialog extends DialogFragment {
 	}
 
 	private View.OnClickListener onClickActionSolver(final OnClickAction action) {
+
+		//LoginActivity activity = (LoginActivity)getActivity();
+		//activity.onFinishEditDialog(mEditText.getText().toString());
+		//this.dismiss();
+
 		return new View.OnClickListener() {
 			//CHECKSTYLE:OFF
 			@Override
 			public void onClick(View v) {
 				switch (action) {
-					case DISMISS_URL_DIALOG:
-						/*((FindPatientRecordFragment) getActivity()
-                                .getSupportFragmentManager()
-                                .findFragmentById(R.id.loginContentFrame))
-                                .hideURLDialog();*/
+					case DISMISS:
 						dismiss();
 						break;
 					case LOGIN:
-                        /*((FindPatientRecordFragment) getActivity()
-                                .getSupportFragmentManager()
-                                .findFragmentById(R.id.loginContentFrame))
-                                .login(true);*/
-						dismiss();
-						break;
-					case DISMISS:
+						((LoginFragment)getActivity().getSupportFragmentManager().findFragmentById(R.id.loginContentFrame))
+								.login(true);
 						dismiss();
 						break;
 					case LOGOUT:
@@ -387,7 +409,7 @@ public class CustomFragmentDialog extends DialogFragment {
 						dismiss();
 						break;
 					case END_VISIT:
-						//((VisitDashboardActivity) getActivity()).findPatientPresenter.endVisit();
+						((AddEditVisitActivity)getActivity()).addEditVisitPresenter.endVisit(visit);
 						dismiss();
 						break;
 					case START_VISIT:
@@ -395,7 +417,8 @@ public class CustomFragmentDialog extends DialogFragment {
 						dismiss();
 						break;
 					case REGISTER_PATIENT:
-						//((AddEditPatientActivity) getActivity()).mPresenter.registerPatient();
+						((AddEditPatientActivity)getActivity()).mPresenter
+								.addEditPatient(mCustomDialogBundle.getNewPatient());
 						dismiss();
 						break;
 					case CANCEL_REGISTERING:
@@ -403,16 +426,17 @@ public class CustomFragmentDialog extends DialogFragment {
 						dismiss();
 						break;
 					case DELETE_PATIENT:
-						PatientDashboardActivity activity = (PatientDashboardActivity)getActivity();
+						PatientDashboardActivity patientDashboardActivity = (PatientDashboardActivity)getActivity();
 						//activity.findPatientPresenter.deletePatient();
 						dismiss();
-						activity.finish();
+						patientDashboardActivity.finish();
 						break;
 					case ADD_VISIT_TASKS:
 						if (StringUtils.notEmpty(getAutoCompleteTextValue())) {
-							((VisitTasksActivity)getActivity()).mPresenter.createVisitTasksObject(getAutoCompleteTextValue());
+							/*((VisitTasksActivity)getActivity()).mPresenter
+									.createVisitTasksObject(getAutoCompleteTextValue());
 							dismiss();
-							break;
+							break;*/
 						} else {
 							dismiss();
 							break;
@@ -429,8 +453,8 @@ public class CustomFragmentDialog extends DialogFragment {
 		Activity activity = getActivity();
 		if (activity instanceof PatientDashboardActivity) {
 			PatientDashboardActivity pda = ((PatientDashboardActivity)activity);
-            /*List<Fragment> fragments = pda.getSupportFragmentManager().getFragments();
-            PatientVisitsFragment fragment = null;
+			/*List<Fragment> fragments = pda.getSupportFragmentManager().getFragments();
+			PatientVisitsFragment fragment = null;
             for (Fragment frag : fragments) {
                 if (frag instanceof PatientVisitsFragment) {
                     fragment = (PatientVisitsFragment) frag;
@@ -458,6 +482,12 @@ public class CustomFragmentDialog extends DialogFragment {
 		REGISTER_PATIENT,
 		CANCEL_REGISTERING,
 		DELETE_PATIENT,
-		ADD_VISIT_TASKS
+		ADD_VISIT_TASKS,
+		SAVE_VISIT_NOTE,
+		CREATE_VISIT_NOTE
+	}
+
+	public interface DialogActionClickedListener {
+		void onFinish(CustomFragmentDialog.OnClickAction action);
 	}
 }

@@ -14,64 +14,43 @@
 
 package org.openmrs.mobile.activities.login;
 
-import android.support.annotation.NonNull;
-
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
 import org.openmrs.mobile.models.Location;
-import org.openmrs.mobile.utilities.ToastUtil;
 
+import java.util.HashMap;
 import java.util.List;
 
 public interface LoginContract {
 
 	interface View extends BaseView<Presenter> {
 
-		void hideSoftKeys();
-
-		void setPresenter(@NonNull Presenter presenter);
-
 		void showWarningDialog();
-
-		void showLoadingAnimation();
-
-		void hideLoadingAnimation();
-
-		void showLocationLoadingAnimation();
-
-		void hideUrlLoadingAnimation();
-
-		void finishLoginActivity();
-
-		void showInvalidURLSnackbar(String message);
-
-		void showInvalidLoginOrPasswordSnackbar();
-
-		void setLocationErrorOccurred(boolean errorOccurred);
-
-		void showToast(String message, ToastUtil.ToastType toastType);
-
-		void showToast(int textId, ToastUtil.ToastType toastType);
-
-		void initLoginForm(List<Location> locationList, String url);
 
 		void userAuthenticated();
 
-		void startFormListService();
+		void finishLoginActivity();
 
+		void setProgressBarVisibility(boolean visible);
+
+		void setViewsContainerVisibility(boolean visible);
+
+		void updateLoginFormLocations(List<Location> locations, String url);
+
+		void showMessage(String message);
+
+		void showMessage(int errorCode);
 	}
 
 	interface Presenter extends BasePresenterContract {
 
-		void authenticateUser(final String username, final String password, final String url);
-
-		void authenticateUser(final String username, final String password, final String url, boolean wipeDatabase);
-
 		void login(String username, String password, String url, String oldUrl);
-
-		void saveLocationsToDatabase(List<Location> locationList, String selectedLocation);
 
 		void loadLocations(String url);
 
+		void authenticateUser(final String username, final String password, final String url, boolean wipeDatabase);
+
+		void saveLocationsInPreferences(List<HashMap<String, String>> locationList, int selectedItemPosition);
 	}
+
 }

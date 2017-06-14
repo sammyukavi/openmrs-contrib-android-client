@@ -10,12 +10,15 @@ import retrofit2.http.Query;
 
 public interface ProviderRestService {
 
-    @GET(RestConstants.GET_ALL)
-    Call<Results<Provider>> getAll(@Path(value = "restPath", encoded = true) String restPath,
-                                @Query("v") String representation);
+	@GET(RestConstants.GET_ALL)
+	Call<Results<Provider>> getAll(@Path(value = "restPath", encoded = true) String restPath,
+			@Query("v") String representation,
+			@Query("includeAll") Boolean includeAll,
+			@Query("limit") Integer limit,
+			@Query("startIndex") Integer startIndex);
 
-    @GET(RestConstants.GET_BY_UUID)
-    Call<Provider> getByUuid(@Path(value = "restPath", encoded = true) String restPath,
-                             @Path("uuid") String uuid,
-                             @Query("v") String representation);
+	@GET(RestConstants.GET_BY_UUID)
+	Call<Provider> getByUuid(@Path(value = "restPath", encoded = true) String restPath,
+			@Path("uuid") String uuid,
+			@Query("v") String representation);
 }

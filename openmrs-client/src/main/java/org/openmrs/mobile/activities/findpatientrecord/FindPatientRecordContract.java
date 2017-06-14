@@ -31,11 +31,9 @@ public interface FindPatientRecordContract {
 
 		void setNoPatientsVisibility(boolean visibility);
 
-		void setFetchedPatientsVisibility(int length);
+		void setFetchedPatientsVisibility(boolean visibility);
 
 		void fetchPatients(List<Patient> patients);
-
-		void setSearchPatientVisibility(boolean visibility);
 
 		void setProgressBarVisibility(boolean visibility);
 
@@ -57,9 +55,7 @@ public interface FindPatientRecordContract {
 
 		void setLoading(boolean loading);
 
-		void setTotalNumberResults(int totalNumberResults);
-
-		void loadResults(String patientListUuid, boolean loadNextResults);
+		void loadResults(boolean loadNextResults);
 
 		void refresh();
 

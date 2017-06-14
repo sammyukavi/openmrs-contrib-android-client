@@ -7,14 +7,10 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-
 package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
-import org.greenrobot.greendao.annotation.Generated;
-import org.greenrobot.greendao.annotation.Transient;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -23,28 +19,27 @@ import java.util.List;
 public class Resource implements Serializable {
 	private static final long serialVersionUID = 1;
 
+	private Long id;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	@SerializedName("uuid")
 	@Expose
 	protected String uuid;
 
-	@Transient
 	@SerializedName("display")
 	@Expose
 	protected String display;
 
-	@Transient
 	@SerializedName("links")
 	@Expose
 	protected List<Link> links = new ArrayList<Link>();
-
-	@Generated(hash = 561006165)
-	public Resource(String uuid) {
-		this.uuid = uuid;
-	}
-
-	@Generated(hash = 632359988)
-	public Resource() {
-	}
 
 	/**
 	 * @return The uuid
@@ -87,4 +82,5 @@ public class Resource implements Serializable {
 	public void setLinks(List<Link> links) {
 		this.links = links;
 	}
+
 }

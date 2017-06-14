@@ -19,41 +19,41 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Model class that represents the ordering of {@link PatientList}s.
  */
-public class PatientListOrder extends Resource{
+public class PatientListOrder extends Resource {
 
-    @SerializedName("identifiers")
-    @Expose
-    private PatientList patientList;
+	@SerializedName("identifiers")
+	@Expose
+	private PatientList patientList;
 
-    @SerializedName("field")
-    @Expose
-    private String field;
+	@SerializedName("field")
+	@Expose
+	private String field;
 
-    @SerializedName("sortOrder")
-    @Expose
-    private String sortOrder;
+	@SerializedName("sortOrder")
+	@Expose
+	private String sortOrder;
 
-    public PatientList getPatientList() {
-        return patientList;
-    }
+	public PatientList getPatientList() {
+		return patientList;
+	}
 
-    public void setPatientList(PatientList patientList) {
-        this.patientList = patientList;
-    }
+	public void setPatientList(PatientList patientList) {
+		this.patientList = patientList;
+	}
 
-    public String getField() {
-        return field;
-    }
+	public String getField() {
+		return field;
+	}
 
-    public void setField(String field) {
-        this.field = field;
-    }
+	public void setField(String field) {
+		this.field = field;
+	}
 
-    public String getSortOrder() {
-        return sortOrder;
-    }
+	public String getSortOrder() {
+		return sortOrder;
+	}
 
-    public void setSortOrder(String sortOrder) {
-        this.sortOrder = sortOrder;
-    }
+	public void setSortOrder(String sortOrder) {
+		this.sortOrder = sortOrder;
+	}
 }

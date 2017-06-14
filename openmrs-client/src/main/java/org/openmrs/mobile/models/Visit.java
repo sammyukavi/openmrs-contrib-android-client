@@ -15,50 +15,50 @@
 package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
-import org.greenrobot.greendao.annotation.Generated;
-
+import java.io.Serializable;
 import java.util.List;
 
-public class Visit extends BaseOpenmrsEntity  {
+public class Visit extends BaseOpenmrsEntity implements Serializable {
 
-    private Long id;
-
-    @Expose
-    private VisitType visitType;
-
-    @Expose
-    private Location location;
-
+	@SerializedName("visitType")
+	@Expose
+	private VisitType visitType;
+	@SerializedName("location")
+	@Expose
+	private Location location;
+	@SerializedName("startDatetime")
 	@Expose
 	private String startDatetime;
-
+	@SerializedName("stopDatetime")
 	@Expose
 	private String stopDatetime;
-
-    @Expose
-    private List<Encounter> encounters;
-
+	@SerializedName("encounters")
+	@Expose
+	private List<Encounter> encounters;
+	@SerializedName("attributes")
 	@Expose
 	private List<VisitAttribute> attributes;
 
-    @Generated(hash = 284896357)
-    public Visit(Long id, String startDatetime, String stopDatetime) {
-        this.id = id;
-        this.startDatetime = startDatetime;
-        this.stopDatetime = stopDatetime;
-    }
+	@Expose
+	@SerializedName("patient")
+	private Patient patient;
 
-    @Generated(hash = 808752442)
-    public Visit() {
-    }
+	public Visit() {
 
-	public Long getId() {
-		return id;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public Visit(String visitUuid) {
+		this.uuid = visitUuid;
+	}
+
+	public Patient getPatient() {
+		return patient;
+	}
+
+	public void setPatient(Patient patient) {
+		this.patient = patient;
 	}
 
 	public VisitType getVisitType() {
@@ -97,15 +97,16 @@ public class Visit extends BaseOpenmrsEntity  {
 		return encounters;
 	}
 
-    public void setEncounters(List<Encounter> encounters) {
-        this.encounters = encounters;
-    }
+	public void setEncounters(List<Encounter> encounters) {
+		this.encounters = encounters;
+	}
 
-    public List<VisitAttribute> getAttributes() {
-        return attributes;
-    }
+	public List<VisitAttribute> getAttributes() {
+		return attributes;
+	}
 
-    public void setAttributes(List<VisitAttribute> attributes) {
-        this.attributes = attributes;
-    }
+	public void setAttributes(List<VisitAttribute> attributes) {
+		this.attributes = attributes;
+	}
+
 }

@@ -14,20 +14,17 @@
   -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/dialogRelativeForm"
-                android:orientation="vertical"
-                style="@style/BackgroundThemeEEE"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-	
+		android:orientation="vertical"
+		style="@style/BackgroundThemeEEE"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
 	<LinearLayout
 			android:id="@+id/dialogForm"
 			android:orientation="vertical"
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content"/>
-	
+			android:layout_height="wrap_content" />
+
 	<LinearLayout
-			android:id="@+id/dialogFormButtons"
 			android:orientation="horizontal"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
@@ -35,7 +32,6 @@
 			android:paddingLeft="10dp"
 			android:paddingRight="10dp"
 			android:gravity="center">
-		
 		<Button
 				android:layout_marginRight="5dp"
 				android:layout_marginEnd="5dp"
@@ -50,7 +46,6 @@
 				android:textColor="@color/white"
 				style="@style/Widget.AppCompat.Button.Borderless"
 				/>
-		
 		<Button
 				android:id="@+id/dialogFormButtonsSubmitButton"
 				android:layout_marginLeft="5dp"
@@ -61,7 +56,7 @@
 				android:layout_marginTop="20dp"
 				android:layout_marginBottom="20dp"
 				android:gravity="center"
-				android:background="@drawable/button_apply"
+				android:background="@drawable/button_submit"
 				android:textColor="@color/white"
 				style="@style/Widget.AppCompat.Button.Borderless"
 				/>

@@ -15,14 +15,17 @@
 package org.openmrs.mobile.activities.findpatientrecord;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RelativeLayout;
+
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
@@ -35,7 +38,10 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 	public FindPatientRecordContract.Presenter findPatientPresenter;
 	FindPatientRecordFragment findPatientRecordFragment;
 	SearchView searchView;
+	private RelativeLayout findPatientText;
 	private String query;
+	private OpenMRS instance = OpenMRS.getInstance();
+	private SharedPreferences sharedPreferences = instance.getOpenMRSSharedPreferences();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,11 +60,23 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 			addFragmentToActivity(getSupportFragmentManager(), findPatientRecordFragment, R.id.findPatientContentFrame);
 		}
 
+		if (savedInstanceState != null) {
+			query = savedInstanceState.getString(ApplicationConstants.BundleKeys.PATIENT_QUERY_BUNDLE, "");
+			findPatientPresenter = new FindPatientRecordPresenter(findPatientRecordFragment, query);
+		} else {
+			findPatientPresenter = new FindPatientRecordPresenter(findPatientRecordFragment);
+		}
+
+		//Add menu autocolse
+		FloatingActionMenu findPatientMenu = (FloatingActionMenu)findViewById(R.id.findPatientMenu);
+		findPatientMenu.setClosedOnTouchOutside(true);
+
 		//adding
-		FloatingActionButton floatingActionButton = (FloatingActionButton)findViewById(R.id.findPatientFab);
+		FloatingActionButton floatingActionButton = (FloatingActionButton)findViewById(R.id.add_Patient);
 		floatingActionButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				findPatientMenu.close(true);
 				Intent intent = new Intent(FindPatientRecordActivity.this, AddEditPatientActivity.class);
 				startActivity(intent);
 			}
@@ -80,19 +98,8 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 	}
 
 	@Override
-	public void onBackPressed() {
-		if (drawer.isDrawerOpen(GravityCompat.START)) {
-			drawer.closeDrawer(GravityCompat.START);
-		} else {
-			Intent intent = new Intent(Intent.ACTION_MAIN);
-			intent.addCategory(Intent.CATEGORY_HOME);
-			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			startActivity(intent);
-		}
-	}
-
-	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
 		getMenuInflater().inflate(R.menu.menu_find_patient_record, menu);
 		MenuItem mFindPatientMenuItem = menu.findItem(R.id.action_search);
 
@@ -108,9 +115,11 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 			public boolean onQueryTextSubmit(String query) {
 				if (query.length() >= 3) {
 					findPatientPresenter.findPatient(query);
+					setSearchQuery(query);
 				} else {
-					findPatientPresenter.getLastViewed();
-					findPatientRecordFragment.setSearchPatientVisibility(true);
+					if (!OpenMRS.getInstance().getSearchQuery().equalsIgnoreCase(ApplicationConstants.EMPTY_STRING)) {
+						findPatientPresenter.findPatient(query);
+					}
 					findPatientRecordFragment.setNoPatientsVisibility(false);
 				}
 				return true;
@@ -120,10 +129,9 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 			public boolean onQueryTextChange(String query) {
 				if (query.length() >= 3) {
 					findPatientPresenter.findPatient(query);
+					setSearchQuery(query);
 				} else {
-					//findPatientPresenter.getLastViewed();
 					findPatientRecordFragment.setNumberOfPatientsView(0);
-					findPatientRecordFragment.setSearchPatientVisibility(true);
 					findPatientRecordFragment.setNoPatientsVisibility(false);
 				}
 				return false;
@@ -132,4 +140,9 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 		return true;
 	}
 
+	public void setSearchQuery(String query) {
+		SharedPreferences.Editor editor = instance.getOpenMRSSharedPreferences().edit();
+		editor.putString(ApplicationConstants.BundleKeys.PATIENT_QUERY_BUNDLE, query);
+		editor.commit();
+	}
 }

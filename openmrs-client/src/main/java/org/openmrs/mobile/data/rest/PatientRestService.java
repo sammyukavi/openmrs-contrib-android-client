@@ -15,7 +15,8 @@ public interface PatientRestService {
 	@GET(RestConstants.GET_BY_UUID)
 	Call<Patient> getByUuid(@Path(value = "restPath", encoded = true) String restPath,
 			@Path("uuid") String uuid,
-			@Query("v") String representation);
+			@Query("v") String representation,
+			@Query("includeAll") Boolean includeAll);
 
 	@POST(RestConstants.CREATE)
 	Call<Patient> create(@Path(value = "restPath", encoded = true) String restPath, @Body Patient entity);
@@ -26,31 +27,36 @@ public interface PatientRestService {
 
 	@DELETE(RestConstants.PURGE)
 	Call<Patient> purge(@Path(value = "restPath", encoded = true) String restPath,
-			@Path("uuid") String uuid);
+			@Path("uuid") @Body String uuid);
 
 	@GET(RestConstants.REST_PATH)
-	Call<Results<Patient>> getByNameAndIdentifier(@Path(value = "restPath", encoded = true) String restPath,
-			@Query("v") String representation,
+	Call<Results<Patient>> getByName(@Path(value = "restPath", encoded = true) String restPath,
 			@Query("q") String name,
-			@Query("identifier") String identifier);
+			@Query("v") String representation,
+			@Query("includeAll") Boolean includeAll,
+			@Query("limit") Integer limit,
+			@Query("startIndex") Integer startIndex);
 
 	@GET(RestConstants.REST_PATH)
-	Call<Results<Patient>> getByNameAndIdentifier(@Path(value = "restPath", encoded = true) String restPath,
-			@Query("v") String representation,
+	Call<Results<Patient>> findByNameAndIdentifier(@Path(value = "restPath", encoded = true) String restPath,
 			@Query("q") String name,
 			@Query("identifier") String identifier,
-			@Query("limit") int limit,
-			@Query("startIndex") int startIndex);
+			@Query("v") String representation,
+			@Query("includeAll") Boolean includeAll,
+			@Query("limit") Integer limit,
+			@Query("startIndex") Integer startIndex);
 
 	@GET(RestConstants.REST_PATH)
-	Call<Results<Patient>> getLastViewed(@Path(value = "restPath", encoded = true) String restPath,
-			@Query("lastviewed") String lastviewed,
-			@Query("v") String representation);
+	Call<Results<Patient>> findByIdentifier(@Path(value = "restPath", encoded = true) String restPath,
+			@Query("identifier") String identifier,
+			@Query("v") String representation,
+			@Query("includeAll") Boolean includeAll);
 
 	@GET(RestConstants.REST_PATH)
 	Call<Results<Patient>> getLastViewed(@Path(value = "restPath", encoded = true) String restPath,
 			@Query("lastviewed") String lastviewed,
 			@Query("v") String representation,
-			@Query("limit") int limit,
-			@Query("startIndex") int startIndex);
+			@Query("includeAll") Boolean includeAll,
+			@Query("limit") Integer limit,
+			@Query("startIndex") Integer startIndex);
 }

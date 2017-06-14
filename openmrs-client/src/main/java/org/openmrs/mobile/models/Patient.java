@@ -7,26 +7,27 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-
 package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import org.greenrobot.greendao.annotation.Transient;
 import org.openmrs.mobile.utilities.StringUtils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Patient extends BaseOpenmrsEntity {
+public class Patient extends BaseOpenmrsAuditableObject implements Serializable {
+	private static final long serialVersionUID = 1L;
 
-	private Long id;
 	private String encounters = "";
 
-	@Transient
+	private String personUuid;
+
+	@SerializedName("identifiers")
 	@Expose
 	private List<PatientIdentifier> identifiers = new ArrayList<PatientIdentifier>();
 
@@ -41,14 +42,6 @@ public class Patient extends BaseOpenmrsEntity {
 	@SerializedName("resourceVersion")
 	@Expose
 	private String resourceVersion;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	/**
 	 * @return The identifiers

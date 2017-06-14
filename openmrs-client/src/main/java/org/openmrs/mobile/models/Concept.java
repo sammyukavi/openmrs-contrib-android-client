@@ -7,7 +7,6 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-
 package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
@@ -15,24 +14,25 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-
 public class Concept extends BaseOpenmrsObject {
-
-
 	@SerializedName("datatype")
 	@Expose
 	private Datatype datatype;
 
 	@SerializedName("description")
 	@Expose
-	private String description;
+	private Object description;
 
 	@SerializedName("conceptClass")
 	@Expose
 	private ConceptClass conceptClass;
-    @SerializedName("answers")
-    @Expose
-    private List<ConceptAnswer> answers;
+	@SerializedName("answers")
+	@Expose
+	private List<ConceptAnswer> answers;
+	@SerializedName("names")
+	@Expose
+	private List<ConceptName> names;
+
 	public Datatype getDatatype() {
 		return datatype;
 	}
@@ -41,11 +41,11 @@ public class Concept extends BaseOpenmrsObject {
 		this.datatype = datatype;
 	}
 
-	public String getDescription() {
+	public Object getDescription() {
 		return description;
 	}
 
-	public void setDescription(String description) {
+	public void setDescription(Object description) {
 		this.description = description;
 	}
 
@@ -63,5 +63,18 @@ public class Concept extends BaseOpenmrsObject {
 
 	public void setAnswers(List<ConceptAnswer> answers) {
 		this.answers = answers;
+	}
+
+	public List<ConceptName> getNames() {
+		return names;
+	}
+
+	public void setNames(List<ConceptName> names) {
+		this.names = names;
+	}
+
+	@Override
+	public String toString() {
+		return getDisplay();
 	}
 }

@@ -17,9 +17,8 @@ import android.widget.Spinner;
 
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
-import org.openmrs.mobile.models.ConceptName;
+import org.openmrs.mobile.models.ConceptAnswer;
 import org.openmrs.mobile.models.Patient;
-import org.openmrs.mobile.models.Provider;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitAttribute;
 import org.openmrs.mobile.models.VisitAttributeType;
@@ -29,48 +28,47 @@ import java.util.List;
 
 public interface AddEditVisitContract {
 
-    interface View extends BaseView<Presenter> {
+	interface View extends BaseView<Presenter> {
 
-        void setVisitTitleText(String text);
+		void initView(boolean startVisit);
 
-        void initView(boolean startVisit);
+		void setSpinnerVisibility(boolean visibility);
 
-        void setSpinnerVisibility(boolean visibility);
+		void loadVisitAttributeTypeFields(List<VisitAttributeType> visitAttributeTypes);
 
-        void loadVisitAttributeTypeFields(List<VisitAttributeType> visitAttributeTypes);
+		void updateVisitTypes(List<VisitType> visitTypes);
 
-        void updateVisitTypes(List<VisitType> visitTypes);
+		void updateConceptAnswersView(Spinner conceptNamesDropdown, List<ConceptAnswer> conceptAnswers);
 
-        void updateConceptNamesView(Spinner conceptNamesDropdown, List<ConceptName> conceptNames);
+		void showPatientDashboard();
 
-        void showPatientDashboard();
-    }
+		void showVisitDetails(String visitUuuid, boolean isNewInstance);
 
-    interface Presenter extends BasePresenterContract {
+		void showPageSpinner(boolean visibility);
 
-        List<VisitAttributeType> loadVisitAttributeTypes();
+	}
 
-        Patient getPatient();
+	interface Presenter extends BasePresenterContract {
 
-        void setPatient(Patient patient);
+		List<VisitAttributeType> loadVisitAttributeTypes();
 
-        Visit getVisit();
+		Visit getVisit();
 
-        void startVisit(List<VisitAttribute> attributes);
+		void startVisit(List<VisitAttribute> attributes);
 
-        void updateVisit(List<VisitAttribute> attributes);
+		void updateVisit(List<VisitAttribute> attributes);
 
-        <T> T searchVisitAttributeValueByType(VisitAttributeType visitAttributeType);
+		Patient getPatient();
 
-        void getConceptNames(String uuid, Spinner conceptAnswersDropdown);
+		<T> T searchVisitAttributeValueByType(VisitAttributeType visitAttributeType);
 
-        boolean isProcessing();
+		void getConceptAnswer(String uuid, Spinner conceptAnswersDropdown);
 
-        void setProcessing(boolean processing);
+		boolean isProcessing();
 
-        Provider getProvider();
+		void setProcessing(boolean processing);
 
-        void endVisit(String uuid);
-    }
+		void endVisit(Visit visit);
+	}
 }
 

@@ -56,9 +56,10 @@ public final class URLValidator {
 
 	public static String trimLastSlash(String url) {
 		String validUrl = url;
+		/*
 		while (validUrl.endsWith(SLASH)) {
 			validUrl = validUrl.substring(0, validUrl.lastIndexOf(SLASH));
-		}
+		}*/
 		return validUrl;
 	}
 

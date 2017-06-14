@@ -15,7 +15,6 @@
 package org.openmrs.mobile.application;
 
 import android.app.Application;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Environment;
@@ -23,17 +22,16 @@ import android.preference.PreferenceManager;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
-import org.greenrobot.greendao.database.Database;
-import org.openmrs.mobile.api.FormListService;
 import org.openmrs.mobile.databases.OpenMRSDBOpenHelper;
-import org.openmrs.mobile.models.DaoMaster;
-import org.openmrs.mobile.models.DaoSession;
 import org.openmrs.mobile.security.SecretKeyGenerator;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+
+//import org.openmrs.mobile.models.DaoMaster;
+//import org.openmrs.mobile.models.DaoSession;
 
 public class OpenMRS extends Application {
 	private static final String OPENMRS_DIR_NAME = "OpenMRS";
@@ -67,14 +65,12 @@ public class OpenMRS extends Application {
 		OpenMRSDBOpenHelper.init();
 		initializeDB();
 
-		Intent i = new Intent(this, FormListService.class);
-		startService(i);
 	}
 
 	protected void initializeDB() {
-		DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, ENCRYPTED ? "notes-db-encrypted" : "notes-db");
-		Database db = ENCRYPTED ? helper.getEncryptedWritableDb("super-secret") : helper.getWritableDb();
-		DaoSession daoSession = new DaoMaster(db).newSession();
+		//DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, ENCRYPTED ? "notes-db-encrypted" : "notes-db");
+		//Database db = ENCRYPTED ? helper.getEncryptedWritableDb("super-secret") : helper.getWritableDb();
+		//DaoSession daoSession = new DaoMaster(db).newSession();
 	}
 
 	public SharedPreferences getOpenMRSSharedPreferences() {
@@ -175,9 +171,54 @@ public class OpenMRS extends Application {
 		editor.commit();
 	}
 
+	public String getParentLocationUuid() {
+		SharedPreferences prefs = getOpenMRSSharedPreferences();
+		return prefs.getString(ApplicationConstants.PARENT_LOCATION, ApplicationConstants.EMPTY_STRING);
+	}
+
+	public void setParentLocationUuid(String uuid) {
+		SharedPreferences.Editor editor = getOpenMRSSharedPreferences().edit();
+		editor.putString(ApplicationConstants.PARENT_LOCATION, uuid);
+		editor.commit();
+	}
+
+	public void saveLocations(String locations) {
+		SharedPreferences.Editor editor = getOpenMRSSharedPreferences().edit();
+		editor.putString(ApplicationConstants.LOGIN_LOCATIONS, locations);
+		editor.commit();
+	}
+
+	public String getLocations() {
+		SharedPreferences sharedPreferences = instance.getOpenMRSSharedPreferences();
+		return sharedPreferences.getString(ApplicationConstants.LOGIN_LOCATIONS, ApplicationConstants
+				.EMPTY_STRING);
+	}
+
+	public String getPatientUuid() {
+		SharedPreferences sharedPreferences = instance.getOpenMRSSharedPreferences();
+		return sharedPreferences.getString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, ApplicationConstants
+				.EMPTY_STRING);
+	}
+
+	public String getVisitUuid() {
+		SharedPreferences sharedPreferences = instance.getOpenMRSSharedPreferences();
+		return sharedPreferences.getString(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, ApplicationConstants
+				.EMPTY_STRING);
+	}
+
 	public String getVisitTypeUUID() {
 		SharedPreferences prefs = getOpenMRSSharedPreferences();
 		return prefs.getString(ApplicationConstants.VISIT_TYPE_UUID, ApplicationConstants.EMPTY_STRING);
+	}
+
+	public String getCurrentProviderUUID() {
+		SharedPreferences prefs = getOpenMRSSharedPreferences();
+		return prefs.getString(ApplicationConstants.BundleKeys.PROVIDER_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING);
+	}
+
+	public String getSearchQuery() {
+		SharedPreferences prefs = getOpenMRSSharedPreferences();
+		return prefs.getString(ApplicationConstants.BundleKeys.PATIENT_QUERY_BUNDLE, ApplicationConstants.EMPTY_STRING);
 	}
 
 	public void setVisitTypeUUID(String visitTypeUUID) {
@@ -280,6 +321,8 @@ public class OpenMRS extends Application {
 				prefs.getString(ApplicationConstants.SESSION_TOKEN, ApplicationConstants.EMPTY_STRING));
 		editor.remove(ApplicationConstants.SESSION_TOKEN);
 		editor.remove(ApplicationConstants.AUTHORIZATION_TOKEN);
+		editor.remove(ApplicationConstants.BundleKeys.PATIENT_QUERY_BUNDLE);
+		editor.remove(ApplicationConstants.LOGIN_LOCATIONS);
 		clearCurrentLoggedInUserInfo();
 		editor.commit();
 	}

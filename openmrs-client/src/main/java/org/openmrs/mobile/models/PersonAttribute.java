@@ -13,43 +13,37 @@ package org.openmrs.mobile.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.io.Serializable;
+public class PersonAttribute extends BaseOpenmrsEntity {
 
-public class PersonAttribute extends BaseOpenmrsObject implements Serializable {
+	@SerializedName("attributeType")
+	@Expose
+	private PersonAttributeType attributeType;
 
-    @SerializedName("attributeType")
-    @Expose
-    private PersonAttributeType personAttributeType;
+	@SerializedName("value")
+	@Expose
+	private Object value;
 
-    @SerializedName("value")
-    @Expose
-    private Object value;
+	public PersonAttributeType getAttributeType() {
+		return attributeType;
+	}
 
-    public PersonAttributeType getPersonAttributeType() {
-        return personAttributeType;
-    }
+	public void setAttributeType(PersonAttributeType attributeType) {
+		this.attributeType = attributeType;
+	}
 
-    public void setPersonAttributeType(PersonAttributeType personAttributeType) {
-        this.personAttributeType = personAttributeType;
-    }
+	/**
+	 * @return The value
+	 */
+	public Object getValue() {
+		return value;
+	}
 
-    /**
-     * 
-     * @return
-     *     The value
-     */
-    public Object getValue() {
-        return value;
-    }
-
-    /**
-     * 
-     * @param value
-     *     The value
-     */
-    public void setValue(Object value) {
-        this.value = value;
-    }
+	/**
+	 * @param value The value
+	 */
+	public void setValue(Object value) {
+		this.value = value;
+	}
 
 }
 

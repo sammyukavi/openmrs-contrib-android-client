@@ -19,8 +19,13 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import org.openmrs.mobile.application.OpenMRS;
+
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public final class NetworkUtils {
 
@@ -53,5 +58,24 @@ public final class NetworkUtils {
 		} else
 			return false;
 
+	}
+
+	public static boolean checkIfServerOnline() {
+		if (hasNetwork()) {
+			try {
+				HttpURLConnection urlc = (HttpURLConnection)(new URL(OpenMRS.getInstance().getServerUrl()).openConnection
+						());
+				urlc.setRequestProperty("User-Agent", "Test");
+				urlc.setRequestProperty("Connection", "close");
+				urlc.setConnectTimeout(1500);
+				urlc.connect();
+				return (urlc.getResponseCode() == 200);
+			} catch (IOException e) {
+				Log.e("Error", "Error: ", e);
+			}
+		} else {
+			Log.d("error", "No network present");
+		}
+		return false;
 	}
 }

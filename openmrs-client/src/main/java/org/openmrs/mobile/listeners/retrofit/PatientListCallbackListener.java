@@ -14,7 +14,7 @@
 package org.openmrs.mobile.listeners.retrofit;
 
 import org.openmrs.mobile.models.PatientList;
-import org.openmrs.mobile.models.PatientListContextModel;
+import org.openmrs.mobile.models.PatientListContext;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ import java.util.List;
  */
 public interface PatientListCallbackListener extends DefaultResponseCallbackListener {
 
-    void onGetPatientList(List<PatientList> patientLists);
+	void onGetPatientList(List<PatientList> patientLists);
 
-    void onGetPatientListData(List<PatientListContextModel> listContextModels);
+	void onGetPatientListData(List<PatientListContext> listContextModels);
 }

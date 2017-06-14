@@ -13,53 +13,54 @@
  */
 package org.openmrs.mobile.activities.patientlist;
 
-import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
 import org.openmrs.mobile.models.PatientList;
-import org.openmrs.mobile.models.PatientListContextModel;
+import org.openmrs.mobile.models.PatientListContext;
 
 import java.util.List;
 
 public interface PatientListContract {
 
-    interface View extends BaseView<Presenter>{
+	interface View extends BaseView<Presenter> {
 
-        void setNumberOfPatientsView(int length);
+		void setNumberOfPatientsView(int length);
 
-        void setSelectedPatientList(PatientList selectedPatientList);
+		void setSelectedPatientList(PatientList selectedPatientList);
 
-        void setEmptyPatientListVisibility(boolean visibility);
+		void setEmptyPatientListVisibility(boolean visibility);
 
-        void setNoPatientListsVisibility(boolean visibility);
+		void setNoPatientListsVisibility(boolean visibility);
 
-        void updatePatientLists(List<PatientList> patientList);
+		void updatePatientLists(List<PatientList> patientList);
 
-        void updatePatientListData(List<PatientListContextModel> patientListData);
+		void updatePatientListData(List<PatientListContext> patientListData);
 
-        void setSpinnerVisibility(boolean visibility);
+		void setSpinnerVisibility(boolean visibility);
 
-        boolean isActive();
-    }
+		boolean isActive();
 
-    interface Presenter extends BasePresenterContract{
+		void setPatientListScreenVisibility(boolean visible);
+	}
 
-        void refresh();
+	interface Presenter extends BasePresenterContract {
 
-        void getPatientList();
+		void refresh();
 
-        void getPatientListData(String patientListUuid, int startIndex);
+		void getPatientList();
 
-        void setPage(int page);
+		void getPatientListData(String patientListUuid, int startIndex);
 
-        void setTotalNumberResults(int totalNumberResults);
+		void setTotalNumberResults(int totalNumberResults);
 
-        int getPage();
+		int getPage();
 
-        boolean isLoading();
+		void setPage(int page);
 
-        void setLoading(boolean loading);
+		boolean isLoading();
 
-        void loadResults(String patientListUuid, boolean loadNextResults);
-    }
+		void setLoading(boolean loading);
+
+		void loadResults(String patientListUuid, boolean loadNextResults);
+	}
 }

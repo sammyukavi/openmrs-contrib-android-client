@@ -15,48 +15,39 @@ package org.openmrs.mobile.activities.patientlist;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.Menu;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
-import org.openmrs.mobile.api.RestServiceBuilder;
-import org.openmrs.mobile.utilities.ApplicationConstants;
 
 /**
  * Patient List activity
  */
 public class PatientListActivity extends ACBaseActivity {
 
-    private PatientListContract.Presenter patientListPresenter;
+	private PatientListContract.Presenter patientListPresenter;
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getLayoutInflater().inflate(R.layout.activity_patient_list, frameLayout);
-        setTitle(R.string.nav_patient_list);
+	@Override
+	protected void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		getLayoutInflater().inflate(R.layout.activity_patient_list, frameLayout);
+		setTitle(R.string.nav_patient_list);
 
-        // create fragment
-        PatientListFragment patientListFragment =
-                (PatientListFragment) getSupportFragmentManager().findFragmentById(R.id.patientListContentFrame);
-        if(patientListFragment == null){
-            patientListFragment = PatientListFragment.newInstance();
-        }
+		// create fragment
+		PatientListFragment patientListFragment =
+				(PatientListFragment)getSupportFragmentManager().findFragmentById(R.id.patientListContentFrame);
+		if (patientListFragment == null) {
+			patientListFragment = PatientListFragment.newInstance();
+		}
 
-        if (!patientListFragment.isActive()) {
-            addFragmentToActivity(getSupportFragmentManager(),
-                    patientListFragment, R.id.patientListContentFrame);
-        }
+		if (!patientListFragment.isActive()) {
+			addFragmentToActivity(getSupportFragmentManager(),
+					patientListFragment, R.id.patientListContentFrame);
+		}
 
-        patientListPresenter = new PatientListPresenter(patientListFragment);
-    }
+		if (mAuthorizationManager.isUserLoggedIn()) {
+			patientListPresenter = new PatientListPresenter(patientListFragment);
+		}
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return true;
-    }
+	}
 
 }

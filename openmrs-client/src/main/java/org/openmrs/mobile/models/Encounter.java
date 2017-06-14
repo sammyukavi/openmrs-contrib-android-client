@@ -40,7 +40,7 @@ public class Encounter extends BaseOpenmrsAuditableObject implements Serializabl
 	private EncounterType encounterType;
 	@SerializedName("obs")
 	@Expose
-	private List<Observation> observations = new ArrayList<Observation>();
+	private List<Observation> obs = new ArrayList<Observation>();
 	@SerializedName("orders")
 	@Expose
 	private List<Object> orders = new ArrayList<Object>();
@@ -52,7 +52,11 @@ public class Encounter extends BaseOpenmrsAuditableObject implements Serializabl
 	private Visit visit;
 	@SerializedName("encounterProviders")
 	@Expose
-	private List<Resource> encounterProviders = new ArrayList<Resource>();
+	private List<Provider> encounterProviders = new ArrayList<Provider>();
+	@SerializedName("provider")
+	@Expose
+	private String provider;
+
 	@SerializedName("resourceVersion")
 	@Expose
 	private String resourceVersion;
@@ -182,15 +186,15 @@ public class Encounter extends BaseOpenmrsAuditableObject implements Serializabl
 	/**
 	 * @return The obs
 	 */
-	public List<Observation> getObservations() {
-		return observations;
+	public List<Observation> getObs() {
+		return obs;
 	}
 
 	/**
 	 * The obs
 	 */
-	public void setObservations(List<Observation> observations) {
-		this.observations = observations;
+	public void setObs(List<Observation> obs) {
+		this.obs = obs;
 	}
 
 	/**
@@ -238,14 +242,14 @@ public class Encounter extends BaseOpenmrsAuditableObject implements Serializabl
 	/**
 	 * @return The encounterProviders
 	 */
-	public List<Resource> getEncounterProviders() {
+	public List<Provider> getEncounterProviders() {
 		return encounterProviders;
 	}
 
 	/**
 	 * @param encounterProviders The encounterProviders
 	 */
-	public void setEncounterProviders(List<Resource> encounterProviders) {
+	public void setEncounterProviders(List<Provider> encounterProviders) {
 		this.encounterProviders = encounterProviders;
 	}
 
@@ -284,4 +288,11 @@ public class Encounter extends BaseOpenmrsAuditableObject implements Serializabl
 			return null;
 	}
 
+	public String getProvider() {
+		return provider;
+	}
+
+	public void setProvider(String provider) {
+		this.provider = provider;
+	}
 }

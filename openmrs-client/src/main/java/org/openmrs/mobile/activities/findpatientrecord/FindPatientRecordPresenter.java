@@ -14,39 +14,35 @@
 
 package org.openmrs.mobile.activities.findpatientrecord;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.annotation.NonNull;
 
 import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
+import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.impl.PatientDataService;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.utilities.ApplicationConstants;
-import org.openmrs.mobile.utilities.NetworkUtils;
-import org.openmrs.mobile.utilities.ToastUtil;
 
 import java.util.List;
 
 public class FindPatientRecordPresenter extends BasePresenter implements FindPatientRecordContract.Presenter {
 
+	@NonNull
 	private FindPatientRecordContract.View findPatientView;
-	private int totalNumberResults;
-	private int page = 1;
+	private int page = 0;
 	private int limit = 10;
 	private PatientDataService patientDataService;
-	private String lastQuery = "";
 	private boolean loading;
 
-	public FindPatientRecordPresenter(FindPatientRecordContract.View view, String lastQuery) {
+	public FindPatientRecordPresenter(@NonNull FindPatientRecordContract.View view, String lastQuery) {
 		this.findPatientView = view;
 		this.findPatientView.setPresenter(this);
-		this.lastQuery = lastQuery;
 		this.patientDataService = new PatientDataService();
 	}
 
-	public FindPatientRecordPresenter(FindPatientRecordContract.View view) {
+	public FindPatientRecordPresenter(@NonNull FindPatientRecordContract.View view) {
 		this.findPatientView = view;
 		this.findPatientView.setPresenter(this);
 		this.patientDataService = new PatientDataService();
@@ -63,99 +59,61 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 
 	public void findPatient(String query) {
 		findPatientView.setProgressBarVisibility(true);
-		findPatientView.setFetchedPatientsVisibility(0);
-		if (NetworkUtils.hasNetwork()) {
-			DataService.GetMultipleCallback<Patient> getMultipleCallback = new DataService.GetMultipleCallback<Patient>() {
-				@Override
-				public void onCompleted(List<Patient> patients, int length) {
-					findPatientView.setProgressBarVisibility(false);
-					if (patients.isEmpty()) {
-						findPatientView.setNumberOfPatientsView(0);
-						findPatientView.setSearchPatientVisibility(false);
-						findPatientView.setNoPatientsVisibility(true);
-						findPatientView.setFetchedPatientsVisibility(0);
-						/*findPatientView.showToast(ApplicationConstants.toastMessages.findPatientInfo, ToastUtil.ToastType
-								.NOTICE);*/
-						//findPatientView.showRegistration();
-					} else {
-						findPatientView.setNoPatientsVisibility(false);
-						findPatientView.setSearchPatientVisibility(false);
-						findPatientView.setNumberOfPatientsView(patients.size());
-						findPatientView.setFetchedPatientsVisibility(patients.size());
-						findPatientView.fetchPatients(patients);
-						findPatientView.showToast(ApplicationConstants.entityName.PATIENTS + ApplicationConstants
-								.toastMessages.fetchSuccessMessage, ToastUtil.ToastType.SUCCESS);
-					}
+		findPatientView.setFetchedPatientsVisibility(false);
+		PagingInfo pagingInfo = new PagingInfo(page, 100);
+		DataService.GetCallback<List<Patient>> getMultipleCallback = new DataService.GetCallback<List<Patient>>() {
+			@Override
+			public void onCompleted(List<Patient> patients) {
+				findPatientView.setProgressBarVisibility(false);
+				if (patients.isEmpty()) {
+					findPatientView.setNumberOfPatientsView(0);
+					findPatientView.setNoPatientsVisibility(true);
+					findPatientView.setFetchedPatientsVisibility(false);
+				} else {
+					findPatientView.setNoPatientsVisibility(false);
+					findPatientView.setNumberOfPatientsView(patients.size());
+					findPatientView.setFetchedPatientsVisibility(true);
+					findPatientView.fetchPatients(patients);
 				}
+			}
 
-				@Override
-				public void onError(Throwable t) {
-					findPatientView.setProgressBarVisibility(false);
-					Log.e("Patient Error", "Error", t.fillInStackTrace());
-					findPatientView
-							.showToast(ApplicationConstants.entityName.PATIENTS + ApplicationConstants.toastMessages
-									.fetchErrorMessage, ToastUtil.ToastType.ERROR);
-				}
-			};
-			patientDataService.getByNameAndIdentifier(query, null, getMultipleCallback);
-		} else {
-			// get the users from the local storage.
-		}
+			@Override
+			public void onError(Throwable t) {
+				findPatientView.setProgressBarVisibility(false);
+			}
+		};
+		patientDataService.findByNameAndIdentifier(query, QueryOptions.LOAD_RELATED_OBJECTS, pagingInfo,
+				getMultipleCallback);
 	}
 
 	public void getLastViewed() {
 		findPatientView.setProgressBarVisibility(true);
-		findPatientView.setFetchedPatientsVisibility(0);
-		if (NetworkUtils.hasNetwork()) {
-			PagingInfo pagingInfo = new PagingInfo(page, limit);
-			DataService.GetMultipleCallback<Patient> getMultipleCallback = new DataService.GetMultipleCallback<Patient>() {
-				@Override
-				public void onCompleted(List<Patient> patients, int length) {
-					findPatientView.setProgressBarVisibility(false);
-					if (!patients.isEmpty()) {
-						findPatientView.setNumberOfPatientsView(0);
-						findPatientView.setFetchedPatientsVisibility(patients.size());
-						findPatientView.fetchPatients(patients);
-						findPatientView.showToast(ApplicationConstants.entityName.LAST_VIEWED_PATIENT + ApplicationConstants
-								.toastMessages.fetchSuccessMessage, ToastUtil.ToastType.SUCCESS);
-					} else {
-						findPatientView.setNumberOfPatientsView(0);
-						findPatientView.setFetchedPatientsVisibility(0);
-						/*findPatientView
-								.showToast(ApplicationConstants.toastMessages.lastviewedPatientInfo, ToastUtil.ToastType
-										.NOTICE);*/
+		findPatientView.setFetchedPatientsVisibility(false);
+		setLoading(true);
+		PagingInfo pagingInfo = new PagingInfo(page, limit);
+		patientDataService.getLastViewed(ApplicationConstants.EMPTY_STRING, QueryOptions.LOAD_RELATED_OBJECTS, pagingInfo,
+				new DataService.GetCallback<List<Patient>>() {
+					@Override
+					public void onCompleted(List<Patient> patients) {
+						findPatientView.setProgressBarVisibility(false);
+
+						if (!patients.isEmpty()) {
+							findPatientView.setNumberOfPatientsView(0);
+							findPatientView.setFetchedPatientsVisibility(true);
+							findPatientView.fetchPatients(patients);
+						} else {
+							findPatientView.setNumberOfPatientsView(patients.size());
+							findPatientView.setFetchedPatientsVisibility(false);
+						}
+						setLoading(false);
 					}
-				}
 
-				@Override
-				public void onError(Throwable t) {
-					findPatientView.setProgressBarVisibility(false);
-					Log.e("User Error", "Error", t.fillInStackTrace());
-					findPatientView
-							.showToast(ApplicationConstants.entityName.LAST_VIEWED_PATIENT + ApplicationConstants.toastMessages
-									.fetchErrorMessage, ToastUtil.ToastType.ERROR);
-				}
-			};
-			patientDataService.getLastViewed(ApplicationConstants.EMPTY_STRING, pagingInfo, getMultipleCallback);
-		}
-	}
-
-	private int computePage(boolean next) {
-		int tmpPage = getPage();
-		// check if pagination is required.
-		if (page < Math.round(getTotalNumberResults() / limit)) {
-			if (next) {
-				// set next page
-				tmpPage += 1;
-			} else {
-				// set previous page.
-				tmpPage -= 1;
-			}
-		} else {
-			tmpPage = -1;
-		}
-
-		return tmpPage;
+					@Override
+					public void onError(Throwable t) {
+						setLoading(false);
+						findPatientView.setProgressBarVisibility(false);
+					}
+				});
 	}
 
 	@Override
@@ -168,18 +126,9 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 		this.loading = loading;
 	}
 
-	private int getTotalNumberResults() {
-		return totalNumberResults;
-	}
-
 	@Override
-	public void setTotalNumberResults(int totalNumberResults) {
-		this.totalNumberResults = totalNumberResults;
-	}
-
-	@Override
-	public void loadResults(String patientListUuid, boolean loadNextResults) {
-
+	public void loadResults(boolean loadNextResults) {
+		getLastViewed();
 	}
 
 	@Override

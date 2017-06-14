@@ -11,12 +11,15 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-
 package org.openmrs.mobile.data.impl;
 
+import org.openmrs.mobile.data.BaseDataService;
 import org.openmrs.mobile.data.BaseMetadataDataService;
+import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.MetadataDataService;
 import org.openmrs.mobile.data.PagingInfo;
+import org.openmrs.mobile.data.QueryOptions;
+import org.openmrs.mobile.data.db.impl.PersonAttributeTypeDbService;
 import org.openmrs.mobile.data.rest.PersonAttributeTypeRestService;
 import org.openmrs.mobile.models.PersonAttributeType;
 import org.openmrs.mobile.models.Results;
@@ -25,21 +28,16 @@ import org.openmrs.mobile.utilities.ApplicationConstants;
 import retrofit2.Call;
 
 public class PersonAttributeTypeDataService
-		extends BaseMetadataDataService<PersonAttributeType, PersonAttributeTypeRestService>
-		implements MetadataDataService<PersonAttributeType> {
-	@Override
-	protected Call<Results<PersonAttributeType>> _restGetByNameFragment(String restPath, PagingInfo pagingInfo, String name,
-			String representation) {
-		if (isPagingValid(pagingInfo)) {
-			return restService.getByName(restPath, name, representation, pagingInfo.getLimit(), pagingInfo.getStartIndex());
-		} else {
-			return restService.getByName(restPath, name, representation);
-		}
-	}
-
+		extends BaseDataService<PersonAttributeType, PersonAttributeTypeDbService, PersonAttributeTypeRestService>
+		implements DataService<PersonAttributeType> {
 	@Override
 	protected Class<PersonAttributeTypeRestService> getRestServiceClass() {
 		return PersonAttributeTypeRestService.class;
+	}
+
+	@Override
+	protected PersonAttributeTypeDbService getDbService() {
+		return new PersonAttributeTypeDbService();
 	}
 
 	@Override
@@ -52,19 +50,23 @@ public class PersonAttributeTypeDataService
 		return "personattributetype";
 	}
 
-	@Override
-	protected Call<PersonAttributeType> _restGetByUuid(String restPath, String uuid, String representation) {
-		return restService.getByUuid(restPath, uuid, representation);
+	public Call<Results<PersonAttributeType>> getByName(String restPath, String name, QueryOptions options,
+			PagingInfo pagingInfo) {
+		return restService.getByName(restPath, name,
+				QueryOptions.getRepresentation(options), QueryOptions.getIncludeInactive(options),
+				PagingInfo.getLimit(pagingInfo), PagingInfo.getStartIndex(pagingInfo));
 	}
 
 	@Override
-	protected Call<Results<PersonAttributeType>> _restGetAll(String restPath, PagingInfo pagingInfo, String
-			representation) {
-		if (isPagingValid(pagingInfo)) {
-			return restService.getAll(restPath, representation, pagingInfo.getLimit(), pagingInfo.getStartIndex());
-		} else {
-			return restService.getAll(restPath, representation);
-		}
+	protected Call<PersonAttributeType> _restGetByUuid(String restPath, String uuid, QueryOptions options) {
+		return restService.getByUuid(restPath, uuid, QueryOptions.getRepresentation(options));
+	}
+
+	@Override
+	protected Call<Results<PersonAttributeType>> _restGetAll(String restPath, QueryOptions options, PagingInfo pagingInfo) {
+		return restService.getAll(restPath,
+				QueryOptions.getRepresentation(options), QueryOptions.getIncludeInactive(options),
+				PagingInfo.getLimit(pagingInfo), PagingInfo.getStartIndex(pagingInfo));
 	}
 
 	@Override

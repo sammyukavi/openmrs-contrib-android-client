@@ -13,6 +13,7 @@
  */
 package org.openmrs.mobile.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -30,22 +32,21 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.openmrs.mobile.R;
-import org.openmrs.mobile.activities.activevisits.ActiveVisitsActivity;
-import org.openmrs.mobile.activities.capturevitals.CaptureVitalsActivity;
 import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
 import org.openmrs.mobile.activities.findpatientrecord.FindPatientRecordActivity;
 import org.openmrs.mobile.activities.login.LoginActivity;
 import org.openmrs.mobile.activities.patientlist.PatientListActivity;
-import org.openmrs.mobile.activities.settings.SettingsActivity;
-import org.openmrs.mobile.activities.visittasks.VisitTasksActivity;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.application.OpenMRSLogger;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.databases.OpenMRSDBOpenHelper;
+import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.net.AuthorizationManager;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 
@@ -61,6 +62,7 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 	protected FrameLayout frameLayout;
 	private MenuItem mSyncbutton;
 	private Toolbar toolbar;
+	private OpenMRS instance = OpenMRS.getInstance();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -95,29 +97,17 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 	}
 
 	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle item selection
+		switch (item.getItemId()) {
+			default:
+				return super.onOptionsItemSelected(item);
+		}
+	}
+
+	@Override
 	public boolean onPrepareOptionsMenu(final Menu menu) {
-		MenuItem logoutMenuItem = menu.findItem(R.id.actionLogout);
-		if (logoutMenuItem != null) {
-			logoutMenuItem.setTitle(getString(R.string.action_logout) + " " + mOpenMRS.getUsername());
-		}
 		return true;
-	}
-
-	private void setSyncButtonState(boolean syncState) {
-		if (syncState) {
-			mSyncbutton.setIcon(R.drawable.ic_sync_on);
-		} else {
-			mSyncbutton.setIcon(R.drawable.ic_sync_off);
-		}
-	}
-
-	private void showNoInternetConnectionSnackbar() {
-		Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content),
-				"No internet connection", Snackbar.LENGTH_SHORT);
-		View sbView = snackbar.getView();
-		TextView textView = (TextView)sbView.findViewById(android.support.design.R.id.snackbar_text);
-		textView.setTextColor(Color.WHITE);
-		snackbar.show();
 	}
 
 	public void logout() {
@@ -132,9 +122,17 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 		bundle.setTextViewMessage(getString(R.string.logout_dialog_message));
 		bundle.setRightButtonAction(CustomFragmentDialog.OnClickAction.LOGOUT);
 		bundle.setRightButtonText(getString(R.string.logout_dialog_button));
-		bundle.setLeftButtonAction(CustomFragmentDialog.OnClickAction.DISMISS);
-		bundle.setLeftButtonText(getString(R.string.dialog_button_cancel));
 		createAndShowDialog(bundle, ApplicationConstants.DialogTAG.LOGOUT_DIALOG_TAG);
+	}
+
+	public void showEndVisitDialog(Visit visit) {
+		CustomDialogBundle bundle = new CustomDialogBundle();
+		bundle.setTitleViewMessage(getString(R.string.end_visit_dialog_title));
+		bundle.setTextViewMessage(getString(R.string.end_visit_dialog_message));
+		bundle.setVisit(visit);
+		bundle.setRightButtonAction(CustomFragmentDialog.OnClickAction.END_VISIT);
+		bundle.setRightButtonText(getString(R.string.dialog_button_confirm));
+		createAndShowDialog(bundle, ApplicationConstants.DialogTAG.END_VISIT_DIALOG_TAG);
 	}
 
 	public void showStartVisitImpossibleDialog(CharSequence title) {
@@ -226,6 +224,11 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 		toggle.syncState();
 
 		NavigationView navigationView = (NavigationView)findViewById(R.id.nav_view);
+		Menu menu = navigationView.getMenu();
+		MenuItem logoutMenuItem = menu.findItem(R.id.navLogout);
+		if (logoutMenuItem != null) {
+			logoutMenuItem.setTitle(getString(R.string.action_logout) + " " + mOpenMRS.getUsername());
+		}
 		navigationView.setNavigationItemSelectedListener(this);
 	}
 
@@ -241,26 +244,79 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 		drawer.closeDrawer(GravityCompat.START);
 		switch (selectedId) {
 			case R.id.navItemFindPatientRecord:
-				startActivity(new Intent(this, FindPatientRecordActivity.class));
-				break;
-			case R.id.navItemActiveVisits:
-				startActivity(new Intent(this, ActiveVisitsActivity.class));
-				break;
-			case R.id.navItemCaptureVitals:
-				startActivity(new Intent(this, CaptureVitalsActivity.class));
+
+				Intent intent = new Intent(mOpenMRS.getApplicationContext(), FindPatientRecordActivity.class);
+
+				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+				startActivity(intent);
+
 				break;
 			case R.id.navItemPatientLists:
-				startActivity(new Intent(this, PatientListActivity.class));
-				break;
-			case R.id.navItemVisitTasks:
-				startActivity(new Intent(this, VisitTasksActivity.class));
-				break;
-			case R.id.navItemSettings:
-				startActivity(new Intent(this, SettingsActivity.class));
-				break;
 
+				intent = new Intent(mOpenMRS.getApplicationContext(), PatientListActivity.class);
+
+				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+				startActivity(intent);
+
+				break;
+			case R.id.navLogout:
+				showLogoutDialog();
+				break;
 			default:
 				break;
+		}
+	}
+
+	public void createSnackbar(String message) {
+
+		int colorWhite = ContextCompat.getColor(getApplicationContext(), R.color.color_white);
+
+		// create instance
+		Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_INDEFINITE);
+
+		// set action button color
+		snackbar.setActionTextColor(colorWhite);
+
+		// get snackbar view
+		View snackbarView = snackbar.getView();
+
+		// change snackbar text color
+		int snackbarTextId = android.support.design.R.id.snackbar_text;
+		TextView textView = (TextView)snackbarView.findViewById(snackbarTextId);
+		textView.setTextColor(colorWhite);
+
+		// change snackbar background
+		//snackbarView.setBackgroundColor(Color.MAGENTA);
+
+		//change button text
+		snackbar.setActionTextColor(Color.YELLOW);
+
+		snackbar.setAction(R.string.label_dismiss, new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				snackbar.dismiss();
+			}
+		});
+
+		snackbar.show();
+
+	}
+
+	public void createToast(String message) {
+		Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+	}
+
+	public static void hideSoftKeyboard(Activity activity) {
+		InputMethodManager inputMethodManager =
+				(InputMethodManager)activity.getSystemService(
+						Activity.INPUT_METHOD_SERVICE);
+		View windowToken = activity.getCurrentFocus();
+
+		if (windowToken != null) {
+			inputMethodManager.hideSoftInputFromWindow(
+					windowToken.getWindowToken(), 0);
 		}
 	}
 }

@@ -1,25 +1,55 @@
 package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
-
-import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Transient;
+import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.Date;
 
-//@Entity
 public class BaseOpenmrsEntity extends BaseOpenmrsAuditableObject implements Serializable {
 	private static final long serialVersionUID = 1;
 
-	@Transient
 	@Expose
-	private Patient patient;
+	private Boolean voided = Boolean.FALSE;
 
-	public Patient getPatient() {
-		return patient;
+	@Expose
+	private Date dateVoided;
+
+	@Expose
+	private User voidedBy;
+
+	@Expose
+	private String voidReason;
+
+	public Boolean getVoided() {
+		return getActive();
 	}
 
-	public void setPatient(Patient patient) {
-		this.patient = patient;
+	public void setVoided(Boolean voided) {
+		setActive(voided);
+	}
+
+	public Date getDateVoided() {
+		return dateVoided;
+	}
+
+	public void setDateVoided(Date dateVoided) {
+		this.dateVoided = dateVoided;
+	}
+
+	public User getVoidedBy() {
+		return voidedBy;
+	}
+
+	public void setVoidedBy(User voidedBy) {
+		this.voidedBy = voidedBy;
+	}
+
+	public String getVoidReason() {
+		return voidReason;
+	}
+
+	public void setVoidReason(String voidReason) {
+		this.voidReason = voidReason;
 	}
 }

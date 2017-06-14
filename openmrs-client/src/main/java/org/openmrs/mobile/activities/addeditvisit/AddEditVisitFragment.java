@@ -16,14 +16,8 @@ package org.openmrs.mobile.activities.addeditvisit;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-
-import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
-import org.openmrs.mobile.activities.visitphoto.upload.UploadVisitPhotoActivity;
-import org.openmrs.mobile.models.BaseOpenmrsObject;
-import org.openmrs.mobile.models.ConceptName;
-import org.openmrs.mobile.utilities.ApplicationConstants;
-import org.openmrs.mobile.utilities.ViewUtils;
-
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,9 +25,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -41,271 +35,298 @@ import android.widget.TextView;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
+import org.openmrs.mobile.activities.visit.VisitActivity;
+import org.openmrs.mobile.models.BaseOpenmrsObject;
+import org.openmrs.mobile.models.ConceptAnswer;
 import org.openmrs.mobile.models.VisitAttribute;
 import org.openmrs.mobile.models.VisitAttributeType;
 import org.openmrs.mobile.models.VisitType;
+import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.StringUtils;
+import org.openmrs.mobile.utilities.ViewUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Presenter> implements AddEditVisitContract.View{
+import static android.app.Activity.RESULT_OK;
 
-    private TextView visitTitle;
-    private TableLayout visitTableLayout;
-    private ProgressBar progressBar;
-    private TextView confirmMessage;
-    private Spinner visitTypeDropdown;
-    private Button visitSubmitButton;
-    private ImageView capturePhoto;
-    private Map<String, VisitAttribute> visitAttributeMap = new HashMap<>();
-    private Map<View, VisitAttributeType> viewVisitAttributeTypeMap = new HashMap<>();
-    private static TableRow.LayoutParams marginParams;
+public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Presenter>
+		implements AddEditVisitContract.View {
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_addedit_visit, container, false);
-        visitTitle = (TextView) root.findViewById(R.id.visitTitle);
-        capturePhoto = (ImageView) root.findViewById(R.id.capture_photo);
-        visitTableLayout = (TableLayout) root.findViewById(R.id.visitTableLayout);
-        progressBar = (ProgressBar) root.findViewById(R.id.visitLoadingProgressBar);
-        confirmMessage = (TextView) root.findViewById(R.id.confirmMessage);
-        visitTypeDropdown = (Spinner) root.findViewById(R.id.visit_type);
-        visitSubmitButton = (Button) root.findViewById(R.id.visitSubmitButton);
-        addListeners();
-        buildMarginLayout();
+	private static TableRow.LayoutParams marginParams;
+	private TableLayout visitTableLayout;
+	private RelativeLayout progressBar, addEditVisitProgressBar;
+	private LinearLayout addEditVisitScreen;
+	private Spinner visitTypeDropdown;
+	private Button visitSubmitButton;
+	private Map<String, VisitAttribute> visitAttributeMap = new HashMap<>();
+	private Map<View, VisitAttributeType> viewVisitAttributeTypeMap = new HashMap<>();
+	private String patientUuid, visitUuid, providerUuid, visitStopDate;
+	private CardView addEditVisitCard;
 
-        return root;
-    }
+	public static AddEditVisitFragment newInstance() {
+		return new AddEditVisitFragment();
+	}
 
-    private void addListeners(){
-        visitSubmitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!mPresenter.isProcessing()) {
-                    buildVisitAttributeValues();
-                }
-            }
-        });
+	@Nullable
+	@Override
+	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+		View root = inflater.inflate(R.layout.fragment_add_edit_visit, container, false);
+		visitTableLayout = (TableLayout)root.findViewById(R.id.visitTableLayout);
+		progressBar = (RelativeLayout)root.findViewById(R.id.visitLoadingProgressBar);
+		addEditVisitProgressBar = (RelativeLayout)root.findViewById(R.id.addEditVisitProgressBar);
+		addEditVisitScreen = (LinearLayout)root.findViewById(R.id.addEditVisitScreen);
+		addEditVisitCard = (CardView)root.findViewById(R.id.addEditVisitCard);
+		visitTypeDropdown = (Spinner)root.findViewById(R.id.visit_type);
+		visitSubmitButton = (Button)root.findViewById(R.id.visitSubmitButton);
 
-        capturePhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), UploadVisitPhotoActivity.class);
-                intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_ID_BUNDLE,
-                       mPresenter.getPatient().getUuid());
-                intent.putExtra(ApplicationConstants.BundleKeys.VISIT_ID_BUNDLE,
-                       mPresenter.getVisit().getUuid());
-                intent.putExtra(ApplicationConstants.BundleKeys.PROVIDER_ID_BUNDLE,
-                       mPresenter.getProvider().getUuid());
-                getContext().startActivity(intent);
-            }
-        });
-    }
+		this.patientUuid = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
+		this.visitUuid = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE);
+		this.providerUuid = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys.PROVIDER_UUID_BUNDLE);
+		this.visitStopDate = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE);
 
-    @Override
-    public void initView(boolean startVisit) {
-        if(startVisit && mPresenter.getPatient() != null){
-          confirmMessage.setText(getString(R.string.start_visit_dialog_message,
-                 mPresenter.getPatient().getPerson().getName().getNameString()));
-        } else {
-            confirmMessage.setVisibility(View.GONE);
-        }
+		addListeners();
+		buildMarginLayout();
 
-        setVisitTitleText(startVisit ? getString(R.string.label_start_visit) : getString(R.string.label_edit_visit));
-        setSpinnerVisibility(false);
-    }
+		return root;
+	}
 
-    private void buildVisitAttributeValues(){
-        for(Map.Entry<View, VisitAttributeType> set : viewVisitAttributeTypeMap.entrySet()){
-            View componentType = set.getKey();
-            VisitAttribute visitAttribute = new VisitAttribute();
-            visitAttribute.setAttributeType(set.getValue());
+	private void addListeners() {
+		visitSubmitButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (!mPresenter.isProcessing()) {
+					buildVisitAttributeValues();
+				}
+			}
+		});
+	}
 
-            if(componentType instanceof RadioButton){
-                visitAttribute.setValue(((RadioButton) componentType).isChecked());
-            } else if(componentType instanceof EditText){
-                visitAttribute.setValue(ViewUtils.getInput((EditText) componentType));
-            }
+	@Override
+	public void initView(boolean startVisit) {
+		Toolbar toolbar = (Toolbar)getActivity().findViewById(R.id.toolbar);
+		if (startVisit) {
+			toolbar.setTitle(getString(R.string.label_start_visit));
+		} else {
+			visitSubmitButton.setText(R.string.update_visit);
+			toolbar.setTitle(getString(R.string.label_edit_visit));
+		}
+		setSpinnerVisibility(false);
+	}
 
-            if(visitAttribute.getValue() != null) {
-                visitAttributeMap.put(set.getValue().getUuid(), visitAttribute);
-            }
-        }
+	private void buildVisitAttributeValues() {
+		for (Map.Entry<View, VisitAttributeType> set : viewVisitAttributeTypeMap.entrySet()) {
+			View componentType = set.getKey();
+			VisitAttribute visitAttribute = new VisitAttribute();
+			visitAttribute.setAttributeType(set.getValue());
 
-        if(!mPresenter.isProcessing()) {
-            setSpinnerVisibility(true);
-            if(StringUtils.notEmpty(mPresenter.getVisit().getUuid())){
-                mPresenter.updateVisit(new ArrayList<>(visitAttributeMap.values()));
-            } else {
-                mPresenter.startVisit(new ArrayList<>(visitAttributeMap.values()));
-            }
-        }
-    }
+			if (componentType instanceof RadioButton) {
+				visitAttribute.setValue(((RadioButton)componentType).isChecked());
+			} else if (componentType instanceof EditText) {
+				visitAttribute.setValue(ViewUtils.getInput((EditText)componentType));
+			}
 
-    @Override
-    public void loadVisitAttributeTypeFields(List<VisitAttributeType> visitAttributeTypes) {
-        for (VisitAttributeType visitAttributeType : visitAttributeTypes) {
-            TableRow row = new TableRow(getContext());
-            row.setPadding(0, 20, 0, 10);
-            TextView label = new TextView(getContext());
-            label.setText(visitAttributeType.getDisplay() + ":");
-            label.setTextSize(17);
-            label.setTextColor(getResources().getColor(R.color.dark_grey));
-            row.addView(label, 0);
+			if (visitAttribute.getValue() != null) {
+				visitAttributeMap.put(set.getValue().getUuid(), visitAttribute);
+			}
+		}
 
-            String datatypeClass = visitAttributeType.getDatatypeClassname();
-            if (StringUtils.isBlank(datatypeClass)) {
-                continue;
-            }
+		if (!mPresenter.isProcessing()) {
+			setSpinnerVisibility(true);
+			if (StringUtils.notEmpty(mPresenter.getVisit().getUuid())) {
+				mPresenter.updateVisit(new ArrayList<>(visitAttributeMap.values()));
+			} else {
+				mPresenter.startVisit(new ArrayList<>(visitAttributeMap.values()));
+			}
+		}
+	}
 
-            if (datatypeClass.equalsIgnoreCase("org.openmrs.customdatatype.datatype.BooleanDatatype")) {
-                RadioButton booleanType = new RadioButton(getContext());
-                booleanType.setLayoutParams(marginParams);
+	@Override
+	public void loadVisitAttributeTypeFields(List<VisitAttributeType> visitAttributeTypes) {
+		for (VisitAttributeType visitAttributeType : visitAttributeTypes) {
+			TableRow row = new TableRow(getContext());
+			row.setPadding(0, 20, 0, 10);
+			TextView label = new TextView(getContext());
+			label.setText(visitAttributeType.getDisplay() + ":");
+			label.setTextSize(17);
+			label.setTextColor(getResources().getColor(R.color.dark_grey));
+			row.addView(label, 0);
 
-                // set default value
-                Boolean defaultValue = mPresenter.searchVisitAttributeValueByType(visitAttributeType);
-                if(defaultValue != null){
-                    booleanType.setChecked(defaultValue);
-                }
+			String datatypeClass = visitAttributeType.getDatatypeClassname();
+			if (StringUtils.isBlank(datatypeClass)) {
+				continue;
+			}
 
-                row.addView(booleanType, 1);
-                viewVisitAttributeTypeMap.put(booleanType, visitAttributeType);
-            } else if (datatypeClass.equalsIgnoreCase("org.openmrs.customdatatype.datatype.DateDatatype")) {
-                EditText dateType = new EditText(getContext());
-                dateType.setFocusable(true);
-                dateType.setTextSize(17);
-                dateType.setLayoutParams(marginParams);
+			if (datatypeClass.equalsIgnoreCase("org.openmrs.customdatatype.datatype.BooleanDatatype")) {
+				RadioButton booleanType = new RadioButton(getContext());
+				booleanType.setLayoutParams(marginParams);
 
-                // set default value
-                String defaultValue = mPresenter.searchVisitAttributeValueByType(visitAttributeType);
-                if(StringUtils.notEmpty(defaultValue)){
-                    dateType.setText(defaultValue);
-                }
-                row.addView(dateType, 1);
-                viewVisitAttributeTypeMap.put(dateType, visitAttributeType);
-            } else if (datatypeClass.equalsIgnoreCase("org.openmrs.module.coreapps.customdatatype.CodedConceptDatatype")) {
-                // get coded concept uuid
-                String conceptUuid = visitAttributeType.getDatatypeConfig();
-                Spinner conceptAnswersDropdown = new Spinner(getContext());
-                conceptAnswersDropdown.setLayoutParams(marginParams);
-                mPresenter.getConceptNames(conceptUuid, conceptAnswersDropdown);
-                row.addView(conceptAnswersDropdown, 1);
-                viewVisitAttributeTypeMap.put(conceptAnswersDropdown, visitAttributeType);
-            } else if (datatypeClass.equalsIgnoreCase("org.openmrs.customdatatype.datatype.FreeTextDatatype")) {
-                EditText freeTextType = new EditText(getContext());
-                freeTextType.setFocusable(true);
-                freeTextType.setTextSize(17);
-                freeTextType.setLayoutParams(marginParams);
+				// set default value
+				Boolean defaultValue = mPresenter.searchVisitAttributeValueByType(visitAttributeType);
+				if (defaultValue != null) {
+					booleanType.setChecked(defaultValue);
+				}
 
-                // set default value
-                String defaultValue = mPresenter.searchVisitAttributeValueByType(visitAttributeType);
-                if(StringUtils.notEmpty(defaultValue)){
-                    freeTextType.setText(defaultValue);
-                }
+				row.addView(booleanType, 1);
+				viewVisitAttributeTypeMap.put(booleanType, visitAttributeType);
+			} else if (datatypeClass.equalsIgnoreCase("org.openmrs.customdatatype.datatype.DateDatatype")) {
+				EditText dateType = new EditText(getContext());
+				dateType.setFocusable(true);
+				dateType.setTextSize(17);
+				dateType.setLayoutParams(marginParams);
 
-                row.addView(freeTextType, 1);
-                viewVisitAttributeTypeMap.put(freeTextType, visitAttributeType);
-            }
+				// set default value
+				String defaultValue = mPresenter.searchVisitAttributeValueByType(visitAttributeType);
+				if (StringUtils.notEmpty(defaultValue)) {
+					dateType.setText(defaultValue);
+				}
+				row.addView(dateType, 1);
+				viewVisitAttributeTypeMap.put(dateType, visitAttributeType);
+			} else if (datatypeClass.equalsIgnoreCase("org.openmrs.module.coreapps.customdatatype.CodedConceptDatatype")) {
+				// get coded concept uuid
+				String conceptUuid = visitAttributeType.getDatatypeConfig();
+				Spinner conceptAnswersDropdown = new Spinner(getContext());
+				conceptAnswersDropdown.setLayoutParams(marginParams);
+				mPresenter.getConceptAnswer(conceptUuid, conceptAnswersDropdown);
+				row.addView(conceptAnswersDropdown, 1);
+				viewVisitAttributeTypeMap.put(conceptAnswersDropdown, visitAttributeType);
+			} else if (datatypeClass.equalsIgnoreCase("org.openmrs.customdatatype.datatype.FreeTextDatatype")) {
+				EditText freeTextType = new EditText(getContext());
+				freeTextType.setFocusable(true);
+				freeTextType.setTextSize(17);
+				freeTextType.setLayoutParams(marginParams);
 
-            visitTableLayout.addView(row);
-        }
-    }
+				// set default value
+				String defaultValue = mPresenter.searchVisitAttributeValueByType(visitAttributeType);
+				if (StringUtils.notEmpty(defaultValue)) {
+					freeTextType.setText(defaultValue);
+				}
 
-    @Override
-    public void updateConceptNamesView(Spinner conceptNamesDropdown, List<ConceptName> conceptNames){
-        VisitAttributeType visitAttributeType = viewVisitAttributeTypeMap.get(conceptNamesDropdown);
-        ArrayAdapter<ConceptName> conceptNameArrayAdapter = new ArrayAdapter<ConceptName>(this.getActivity(),
-                android.R.layout.simple_spinner_dropdown_item, conceptNames);
-        conceptNamesDropdown.setAdapter(conceptNameArrayAdapter);
+				row.addView(freeTextType, 1);
+				viewVisitAttributeTypeMap.put(freeTextType, visitAttributeType);
+			}
 
-        // set existing visit attribute if any
-        String visitTypeUuid = mPresenter.searchVisitAttributeValueByType(visitAttributeType);
-        if(null != visitTypeUuid){
-            setDefaultDropdownSelection(conceptNameArrayAdapter, visitTypeUuid, conceptNamesDropdown);
-        }
+			visitTableLayout.addView(row);
+		}
+	}
 
-        conceptNamesDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                ConceptName conceptName = conceptNames.get(position);
-                VisitAttribute visitAttribute = new VisitAttribute();
-                visitAttribute.setValue(conceptName.getUuid());
-                visitAttribute.setAttributeType(visitAttributeType);
-                visitAttributeMap.clear();
-                visitAttributeMap.put(conceptName.getUuid(), visitAttribute);
-            }
+	@Override
+	public void updateConceptAnswersView(Spinner conceptNamesDropdown, List<ConceptAnswer> conceptAnswers) {
+		VisitAttributeType visitAttributeType = viewVisitAttributeTypeMap.get(conceptNamesDropdown);
+		ArrayAdapter<ConceptAnswer> conceptNameArrayAdapter = new ArrayAdapter<>(this.getActivity(),
+				android.R.layout.simple_spinner_dropdown_item, conceptAnswers);
+		conceptNamesDropdown.setAdapter(conceptNameArrayAdapter);
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
-        });
-    }
+		// set existing visit attribute if any
+		String visitTypeUuid = mPresenter.searchVisitAttributeValueByType(visitAttributeType);
+		if (null != visitTypeUuid) {
+			setDefaultDropdownSelection(conceptNameArrayAdapter, visitTypeUuid, conceptNamesDropdown);
+		}
 
-    @Override
-    public void updateVisitTypes(List<VisitType> visitTypes) {
-        ArrayAdapter<VisitType> visitTypeArrayAdapter = new ArrayAdapter(this.getActivity(),
-                android.R.layout.simple_spinner_dropdown_item, visitTypes);
-        visitTypeDropdown.setAdapter(visitTypeArrayAdapter);
+		conceptNamesDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				ConceptAnswer conceptAnswer = conceptAnswers.get(position);
+				VisitAttribute visitAttribute = new VisitAttribute();
+				visitAttribute.setValue(conceptAnswer.getUuid());
+				visitAttribute.setAttributeType(visitAttributeType);
+				visitAttributeMap.clear();
+				visitAttributeMap.put(conceptAnswer.getUuid(), visitAttribute);
+			}
 
-        // set existing visit type if any
-        if(null != mPresenter.getVisit().getVisitType()){
-            setDefaultDropdownSelection(visitTypeArrayAdapter, mPresenter.getVisit().getVisitType().getUuid(), visitTypeDropdown);
-        }
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+			}
+		});
+	}
 
-        visitTypeDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mPresenter.getVisit().setVisitType(visitTypes.get(position));
-            }
+	@Override
+	public void updateVisitTypes(List<VisitType> visitTypes) {
+		ArrayAdapter<VisitType> visitTypeArrayAdapter = new ArrayAdapter<>(this.getActivity(),
+				android.R.layout.simple_spinner_dropdown_item, visitTypes);
+		visitTypeDropdown.setAdapter(visitTypeArrayAdapter);
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
-        });
-    }
+		// set existing visit type if any
+		if (null != mPresenter.getVisit().getVisitType()) {
+			setDefaultDropdownSelection(visitTypeArrayAdapter, mPresenter.getVisit().getVisitType().getUuid(),
+					visitTypeDropdown);
+		}
 
-    @Override
-    public void setSpinnerVisibility(boolean visible) {
-        progressBar.setVisibility(visible ? View.VISIBLE : View.GONE);
-    }
+		visitTypeDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				mPresenter.getVisit().setVisitType(visitTypes.get(position));
+			}
 
-    public static AddEditVisitFragment newInstance(){
-        return new AddEditVisitFragment();
-    }
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+			}
+		});
+	}
 
-    @Override
-    public boolean isActive() {
-        return isAdded();
-    }
+	@Override
+	public void setSpinnerVisibility(boolean visible) {
+		progressBar.setVisibility(visible ? View.VISIBLE : View.GONE);
+	}
 
-    @Override
-    public void setVisitTitleText(String text) {
-        visitTitle.setText(text);
-    }
+	@Override
+	public boolean isActive() {
+		return isAdded();
+	}
 
-    @Override
-    public void showPatientDashboard() {
-        Intent intent = new Intent(getContext(), PatientDashboardActivity.class);
-        intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_ID_BUNDLE,
-                mPresenter.getPatient().getUuid());
-        getContext().startActivity(intent);
-    }
+	@Override
+	public void showPatientDashboard() {
+		Intent intent = getActivity().getIntent();
+		getActivity().setResult(RESULT_OK, intent);
+		getActivity().finish();
+		//Intent intent = new Intent(getContext(), PatientDashboardActivity.class);
+		//intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
+		//getContext().startActivity(intent);
+	}
 
-    private void buildMarginLayout(){
-        if(marginParams == null) {
-            marginParams = new TableRow.LayoutParams(
-                    TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT);
-            marginParams.setMargins(70, 0, 0, 0);
-        }
-    }
+	@Override
+	public void showVisitDetails(String visitUUID, boolean isNewInstance) {
+		getActivity().finish();
+		if (isNewInstance) {
+			Intent intent = new Intent(getContext(), VisitActivity.class);
+			intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
+			if (visitUUID == null) {
+				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visitUuid);
+			} else {
+				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visitUUID);
+				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, visitStopDate);
+			}
+			getContext().startActivity(intent);
+		}
+	}
 
-    private <T extends BaseOpenmrsObject> void setDefaultDropdownSelection(ArrayAdapter<T> arrayAdapter, String searchUuid, Spinner dropdown){
-        for(int count = 0; count < arrayAdapter.getCount(); count++){
-            if(arrayAdapter.getItem(count).getUuid().equalsIgnoreCase(searchUuid)){
-                dropdown.setSelection(count);
-            }
-        }
-    }
+	@Override
+	public void showPageSpinner(boolean visibility) {
+		if (visibility) {
+			addEditVisitProgressBar.setVisibility(View.VISIBLE);
+			addEditVisitScreen.setVisibility(View.GONE);
+		} else {
+			addEditVisitProgressBar.setVisibility(View.GONE);
+			addEditVisitScreen.setVisibility(View.VISIBLE);
+		}
+	}
+
+	private void buildMarginLayout() {
+		if (marginParams == null) {
+			marginParams = new TableRow.LayoutParams(
+					TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT);
+			marginParams.setMargins(70, 0, 0, 0);
+		}
+	}
+
+	private <T extends BaseOpenmrsObject> void setDefaultDropdownSelection(ArrayAdapter<T> arrayAdapter, String searchUuid,
+			Spinner dropdown) {
+		for (int count = 0; count < arrayAdapter.getCount(); count++) {
+			if (arrayAdapter.getItem(count).getUuid().equalsIgnoreCase(searchUuid)) {
+				dropdown.setSelection(count);
+			}
+		}
+	}
 }

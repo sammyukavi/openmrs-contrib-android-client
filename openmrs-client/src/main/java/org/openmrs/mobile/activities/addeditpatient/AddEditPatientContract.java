@@ -18,7 +18,9 @@ import android.widget.Spinner;
 
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
-import org.openmrs.mobile.models.ConceptName;
+import org.openmrs.mobile.models.Concept;
+import org.openmrs.mobile.models.ConceptAnswer;
+import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.PatientIdentifierType;
 import org.openmrs.mobile.models.PersonAttributeType;
@@ -33,7 +35,7 @@ public interface AddEditPatientContract {
 		void finishAddPatientActivity();
 
 		void setErrorsVisibility(boolean givenNameError, boolean familyNameError, boolean dayOfBirthError,
-				boolean addressError, boolean county_Error, boolean genderError, boolean patientFileNumberError,
+				boolean county_Error, boolean genderError, boolean patientFileNumberError,
 				boolean civilStatusError, boolean occupationError, boolean subCounty_Error, boolean nationality_Error,
 				boolean patientIdNo_Error, boolean clinic_Error, boolean ward_Error, boolean phonenumber_Error,
 				boolean kinName_Error, boolean kinRelationship_Error, boolean kinPhonenumber_Error,
@@ -44,13 +46,9 @@ public interface AddEditPatientContract {
 
 		void hideSoftKeys();
 
-		void setProgressBarVisibility(boolean visibility);
-
 		void showSimilarPatientDialog(List<Patient> patients, Patient newPatient);
 
 		void startPatientDashboardActivity(Patient patient);
-
-		void showUpgradeRegistrationModuleInfo();
 
 		void setPatientIdentifierType(PatientIdentifierType patientIdentifierType);
 
@@ -58,39 +56,44 @@ public interface AddEditPatientContract {
 
 		void loadPersonAttributeTypes(List<PersonAttributeType> personAttributeTypeList);
 
-		void updateConceptNamesView(Spinner conceptNamesDropdown, List<ConceptName> conceptNames);
+		void updateConceptAnswerView(Spinner conceptNamesDropdown, List<ConceptAnswer> conceptAnswers);
+
+		void setLoginLocation(Location location);
+
+		void fillFields(Patient patient);
+
+		void showPageSpinner(boolean visibility);
 
 	}
 
 	interface Presenter extends BasePresenterContract {
 
-		Patient getPatientToUpdate();
+		void getPatientToUpdate(String patientUuid);
 
 		boolean isRegisteringPatient();
 
 		void setRegistering(boolean processing);
 
-		void confirmRegister(Patient patient);
-
-		void confirmUpdate(Patient patient);
+		void confirmPatient(Patient patient);
 
 		void finishAddPatientActivity();
 
-		void registerPatient(Patient patient);
+		void addEditPatient(Patient patient);
 
-		void updatePatient(Patient patient);
-
-		void getConceptNames(String uuid, Spinner conceptAnswersDropdown);
+		void getConceptAnswer(String uuid, Spinner conceptAnswersDropdown);
 
 		void getPatientIdentifierTypes();
 
-		void getPersonAttributeTypes();
+		List<PersonAttributeType> getPersonAttributeTypes();
 
 		<T> T searchPersonAttributeValueByType(PersonAttributeType personAttributeType);
 
 		Patient getPatient();
 
 		void setPatient(Patient patient);
+
+		void getLoginLocation();
+
 	}
 
 }

@@ -21,61 +21,61 @@ import com.google.gson.annotations.SerializedName;
  */
 public class PatientListCondition extends Resource {
 
-    @SerializedName("patientList")
-    @Expose
-    private PatientList patientList;
+	@SerializedName("patientList")
+	@Expose
+	private PatientList patientList;
 
-    @SerializedName("field")
-    @Expose
-    private String field;
+	@SerializedName("field")
+	@Expose
+	private String field;
 
-    @SerializedName("value")
-    @Expose
-    private String value;
+	@SerializedName("value")
+	@Expose
+	private String value;
 
-    @Expose
-    private String operator;
+	@Expose
+	private String operator;
 
-    @Expose
-    private Integer conditionOrder;
+	@Expose
+	private Integer conditionOrder;
 
-    public PatientList getPatientList() {
-        return patientList;
-    }
+	public PatientList getPatientList() {
+		return patientList;
+	}
 
-    public void setPatientList(PatientList patientList) {
-        this.patientList = patientList;
-    }
+	public void setPatientList(PatientList patientList) {
+		this.patientList = patientList;
+	}
 
-    public String getField() {
-        return field;
-    }
+	public String getField() {
+		return field;
+	}
 
-    public void setField(String field) {
-        this.field = field;
-    }
+	public void setField(String field) {
+		this.field = field;
+	}
 
-    public String getValue() {
-        return value;
-    }
+	public String getValue() {
+		return value;
+	}
 
-    public void setValue(String value) {
-        this.value = value;
-    }
+	public void setValue(String value) {
+		this.value = value;
+	}
 
-    public String getOperator() {
-        return operator;
-    }
+	public String getOperator() {
+		return operator;
+	}
 
-    public void setOperator(String operator) {
-        this.operator = operator;
-    }
+	public void setOperator(String operator) {
+		this.operator = operator;
+	}
 
-    public Integer getConditionOrder() {
-        return conditionOrder;
-    }
+	public Integer getConditionOrder() {
+		return conditionOrder;
+	}
 
-    public void setConditionOrder(Integer conditionOrder) {
-        this.conditionOrder = conditionOrder;
-    }
+	public void setConditionOrder(Integer conditionOrder) {
+		this.conditionOrder = conditionOrder;
+	}
 }

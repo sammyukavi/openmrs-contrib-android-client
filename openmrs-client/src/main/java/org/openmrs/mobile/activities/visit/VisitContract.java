@@ -21,6 +21,7 @@ import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.models.Concept;
+import org.openmrs.mobile.models.EncounterDiagnosis;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitAttributeType;
 import org.openmrs.mobile.models.VisitNote;
@@ -29,7 +30,6 @@ import org.openmrs.mobile.models.VisitPredefinedTask;
 import org.openmrs.mobile.models.VisitTask;
 import org.openmrs.mobile.utilities.ToastUtil;
 
-import java.util.HashMap;
 import java.util.List;
 
 public interface VisitContract {
@@ -78,13 +78,15 @@ public interface VisitContract {
 
 		void showTabSpinner(boolean visibility);
 
-		void setPrimaryDiagnosis(HashMap<String, Object> primaryDiagnosis);
+		void setPrimaryDiagnosis(EncounterDiagnosis primaryDiagnosis);
 
-		void setSecondaryDiagnosis(HashMap<String, Object> secondaryDiagnosis);
+		void setSecondaryDiagnosis(EncounterDiagnosis secondaryDiagnosis);
 
-		void setDiagnosisCertainty(HashMap<String, Object> confirmedDiagnosis,String order);
+		void setDiagnosisCertainty(EncounterDiagnosis confirmedDiagnosis);
 
-		void removeDiagnosis(HashMap<String, Object> removeDiagnosis,String order);
+		void removeDiagnosis(EncounterDiagnosis removeDiagnosis, String order);
+
+		void setDiagnoses(List<Concept> concepts);
 	}
 
 	interface VisitPhotoView extends ViewVisitDetailsMain {
@@ -138,6 +140,8 @@ public interface VisitContract {
 		void getVisit();
 
 		void getConcept(String name);
+
+		void findConcept(String searchQuery);
 
 		void getPatientUUID();
 

@@ -23,7 +23,6 @@ import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.db.impl.ConceptDbService;
 import org.openmrs.mobile.data.rest.ConceptRestService;
 import org.openmrs.mobile.models.Concept;
-import org.openmrs.mobile.models.ConceptName;
 import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 
@@ -86,6 +85,19 @@ public class ConceptDataService extends BaseDataService<Concept, ConceptDbServic
 
 		executeMultipleCallback(callback, options, null,
 				() -> null,
-				() -> restService.getByConceptName(buildRestRequestPath(), conceptName, QueryOptions.getRepresentation(options)));
+				() -> restService
+						.getByConceptName(buildRestRequestPath(), conceptName, QueryOptions.getRepresentation(options)));
+	}
+
+	public void findConcept(@NonNull String searchQuery, @Nullable QueryOptions options, @NonNull PagingInfo pagingInfo,
+			@NonNull GetCallback<List<Concept>> callback) {
+		checkNotNull(searchQuery);
+		checkNotNull(pagingInfo);
+		checkNotNull(callback);
+
+		executeMultipleCallback(callback, options, pagingInfo,
+				() -> null,
+				() -> restService.findConcept(buildRestRequestPath(), searchQuery, QueryOptions.getRepresentation(options)
+						, PagingInfo.getStartIndex(pagingInfo), PagingInfo.getLimit(pagingInfo)));
 	}
 }

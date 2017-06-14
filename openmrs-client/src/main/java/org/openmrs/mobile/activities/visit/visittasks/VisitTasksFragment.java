@@ -25,6 +25,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
@@ -222,9 +223,9 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 	}
 
 	public void addListeners() {
-		addtask.setOnClickListener(new View.OnClickListener() {
+		addtask.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
-			public void onClick(View v) {
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				if (ViewUtils.getInput(addtask) != null) {
 					((VisitTasksPresenter)mPresenter).createVisitTasksObject(ViewUtils.getInput(addtask));
 				}
@@ -259,7 +260,7 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 	@Override
 	public void setVisit(Visit visit) {
 		this.visit = visit;
-		if (visit != null){
+		if (visit != null) {
 			if (!visit.getStopDatetime().equalsIgnoreCase(null)) {
 				addTaskLayout.setVisibility(View.GONE);
 			}

@@ -12,19 +12,19 @@ import android.widget.TextView;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.visit.VisitContract;
+import org.openmrs.mobile.models.EncounterDiagnosis;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 
-import java.util.HashMap;
 import java.util.List;
 
 public class DiagnosisRecyclerViewAdapter extends RecyclerView.Adapter<DiagnosisRecyclerViewAdapter.DiagnosisViewHolder> {
 
 	private Activity context;
 	private VisitContract.VisitDetailsView visitDetailsView;
-	private List<HashMap<String, Object>> diagnoses;
+	private List<EncounterDiagnosis> diagnoses;
 
 	public DiagnosisRecyclerViewAdapter(Activity context,
-			List<HashMap<String, Object>> diagnoses, VisitContract.VisitDetailsView visitDetailsView) {
+			List<EncounterDiagnosis> diagnoses, VisitContract.VisitDetailsView visitDetailsView) {
 		this.context = context;
 		this.diagnoses = diagnoses;
 		this.visitDetailsView = visitDetailsView;
@@ -38,11 +38,11 @@ public class DiagnosisRecyclerViewAdapter extends RecyclerView.Adapter<Diagnosis
 
 	@Override
 	public void onBindViewHolder(DiagnosisViewHolder holder, int position) {
-		HashMap<String, Object> hashMap = diagnoses.get(position);
+		EncounterDiagnosis encounterDiagnosis = diagnoses.get(position);
 
-		String confirmedDiagnosis = (String)hashMap.get("certainty");
-		String diagnosisOrder = (String)hashMap.get("order");
-		String diagnosis = (String)hashMap.get("diagnosis");
+		String confirmedDiagnosis = encounterDiagnosis.getCertainty();
+		String diagnosisOrder = encounterDiagnosis.getOrder();
+		String diagnosis = encounterDiagnosis.getDiagnosis();
 
 		if (confirmedDiagnosis != null) {
 			if (confirmedDiagnosis.equalsIgnoreCase(ApplicationConstants.DiagnosisStrings.PRESUMED)) {
@@ -68,12 +68,12 @@ public class DiagnosisRecyclerViewAdapter extends RecyclerView.Adapter<Diagnosis
 			@Override
 			public void onCheckedChanged(CompoundButton orderCheckBox, boolean isChecked) {
 				if (orderCheckBox.isChecked()) {
-					hashMap.replace("order", ApplicationConstants.DiagnosisStrings.PRIMARY_ORDER);
-					visitDetailsView.setPrimaryDiagnosis(hashMap);
+					encounterDiagnosis.setOrder(ApplicationConstants.DiagnosisStrings.PRIMARY_ORDER);
+					visitDetailsView.setPrimaryDiagnosis(encounterDiagnosis);
 
 				} else {
-					hashMap.replace("order", ApplicationConstants.DiagnosisStrings.SECONDARY_ORDER);
-					visitDetailsView.setSecondaryDiagnosis(hashMap);
+					encounterDiagnosis.setOrder(ApplicationConstants.DiagnosisStrings.SECONDARY_ORDER);
+					visitDetailsView.setSecondaryDiagnosis(encounterDiagnosis);
 				}
 			}
 		});
@@ -82,11 +82,11 @@ public class DiagnosisRecyclerViewAdapter extends RecyclerView.Adapter<Diagnosis
 			@Override
 			public void onCheckedChanged(CompoundButton certaintyCheckBox, boolean isChecked) {
 				if (certaintyCheckBox.isChecked()) {
-					hashMap.replace("certainty", ApplicationConstants.DiagnosisStrings.CONFIRMED);
-					visitDetailsView.setDiagnosisCertainty(hashMap, diagnosisOrder);
+					encounterDiagnosis.setCertainty(ApplicationConstants.DiagnosisStrings.CONFIRMED);
+					visitDetailsView.setDiagnosisCertainty(encounterDiagnosis);
 				} else {
-					hashMap.replace("certainty", ApplicationConstants.DiagnosisStrings.PRESUMED);
-					visitDetailsView.setDiagnosisCertainty(hashMap, diagnosisOrder);
+					encounterDiagnosis.setCertainty(ApplicationConstants.DiagnosisStrings.PRESUMED);
+					visitDetailsView.setDiagnosisCertainty(encounterDiagnosis);
 				}
 			}
 		});
@@ -95,7 +95,7 @@ public class DiagnosisRecyclerViewAdapter extends RecyclerView.Adapter<Diagnosis
 		holder.rowLayout.setOnLongClickListener(new View.OnLongClickListener() {
 			@Override
 			public boolean onLongClick(View v) {
-				visitDetailsView.removeDiagnosis(hashMap, diagnosisOrder);
+				visitDetailsView.removeDiagnosis(encounterDiagnosis, diagnosisOrder);
 				return true;
 			}
 		});

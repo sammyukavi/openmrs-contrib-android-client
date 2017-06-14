@@ -19,17 +19,20 @@ import android.widget.TextView;
 
 import org.openmrs.mobile.activities.visit.VisitContract;
 import org.openmrs.mobile.activities.visit.VisitPresenterImpl;
+import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.impl.ConceptAnswerDataService;
 import org.openmrs.mobile.data.impl.ConceptDataService;
+import org.openmrs.mobile.data.impl.LocationDataService;
 import org.openmrs.mobile.data.impl.ObsDataService;
 import org.openmrs.mobile.data.impl.VisitAttributeTypeDataService;
 import org.openmrs.mobile.data.impl.VisitDataService;
 import org.openmrs.mobile.data.impl.VisitNoteDataService;
 import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.ConceptAnswer;
+import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitAttributeType;
@@ -48,11 +51,16 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 	private ObsDataService obsDataService;
 	private VisitNoteDataService visitNoteDataService;
 	private String patientUUID, visitUUID, providerUuid, visitStopDate;
+	private String locationUuid;
 
-	private int page = 1;
+	private OpenMRS instance = OpenMRS.getInstance();
+	private LocationDataService locationDataService;
+
+	private int startIndex = 1;
 	private int limit = 10;
 	private ConceptAnswerDataService conceptAnswerDataService;
 	private Visit visit;
+
 
 	public VisitDetailsPresenter(String patientUuid, String visitUuid, String providerUuid, String visitStopDate,
 			VisitContract
@@ -66,6 +74,7 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 		this.conceptAnswerDataService = new ConceptAnswerDataService();
 		this.visitAttributeTypeDataService = new VisitAttributeTypeDataService();
 		this.visitNoteDataService = new VisitNoteDataService();
+		this.locationDataService = new LocationDataService();
 		this.visitUUID = visitUuid;
 		this.providerUuid = providerUuid;
 		this.patientUUID = patientUuid;
@@ -125,6 +134,24 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 		};
 		conceptDataService.getByName(name, QueryOptions.LOAD_RELATED_OBJECTS, getCallback);
 
+	}
+
+	@Override
+	public void findConcept(String searchQuery) {
+		PagingInfo pagingInfo = new PagingInfo(startIndex, limit);
+		DataService.GetCallback<List<Concept>> getCallback = new DataService.GetCallback<List<Concept>>() {
+
+			@Override
+			public void onCompleted(List<Concept> concepts) {
+				visitDetailsView.setDiagnoses(concepts);
+			}
+
+			@Override
+			public void onError(Throwable t) {
+				Log.e("error", t.getLocalizedMessage());
+			}
+		};
+		conceptDataService.findConcept(searchQuery, QueryOptions.DEFAULT, pagingInfo, getCallback);
 	}
 
 	@Override

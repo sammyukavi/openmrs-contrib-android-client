@@ -72,4 +72,9 @@ public class Concept extends BaseOpenmrsObject {
 	public void setNames(List<ConceptName> names) {
 		this.names = names;
 	}
+
+	@Override
+	public String toString() {
+		return getDisplay();
+	}
 }

@@ -52,7 +52,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 	private ConceptAnswerDataService conceptAnswerDataService;
 	private LocationDataService locationDataService;
 	private Patient patient;
-	private String patientToUpdateId;
+	private String patientToUpdateUuid;
 	private List<String> mCounties;
 	private boolean registeringPatient = false;
 	private OpenMRS instance = OpenMRS.getInstance();
@@ -64,11 +64,11 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 
 	public AddEditPatientPresenter(AddEditPatientContract.View patientRegistrationView,
 			List<String> countries,
-			String patientToUpdateId) {
+			String patientToUpdateUuid) {
 		this.patientRegistrationView = patientRegistrationView;
 		this.patientRegistrationView.setPresenter(this);
 		this.mCounties = countries;
-		this.patientToUpdateId = patientToUpdateId;
+		this.patientToUpdateUuid = patientToUpdateUuid;
 		this.patientDataService = new PatientDataService();
 		this.conceptDataService = new ConceptDataService();
 		this.patientIdentifierTypeDataService = new PatientIdentifierTypeDataService();
@@ -83,7 +83,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		this.patientDataService = new PatientDataService();
 		this.conceptDataService = new ConceptDataService();
 		this.patient = mPatient;
-		this.patientToUpdateId = patientToUpdateId;
+		this.patientToUpdateUuid = patientToUpdateId;
 		this.mCounties = mCounties;
 		this.patientRegistrationView.setPresenter(this);
 		this.patientIdentifierTypeDataService = new PatientIdentifierTypeDataService();
@@ -162,10 +162,15 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 
 	@Override
 	public void subscribe() {
+		if (!patientToUpdateUuid.isEmpty()) {
+			getPatientToUpdate(patientToUpdateUuid);
+		} else {
+			getPersonAttributeTypes();
+		}
 	}
 
 	@Override
-	public void getPatientToUpdate(String uuid) {
+	public void getPatientToUpdate(String patientToUpdateUuid) {
 		patientRegistrationView.showPageSpinner(true);
 		DataService.GetCallback<Patient> singleCallback = new DataService.GetCallback<Patient>() {
 			@Override
@@ -190,7 +195,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 			}
 		};
 		//Just check if the identifier are the same. If not it saves the patient.
-		patientDataService.getByUUID(uuid, new QueryOptions(false, true), singleCallback);
+		patientDataService.getByUUID(patientToUpdateUuid, new QueryOptions(false, true), singleCallback);
 	}
 
 	@Override
@@ -198,7 +203,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		if (!registeringPatient && validate(patient)) {
 			patientRegistrationView.hideSoftKeys();
 			registeringPatient = true;
-			if (patient.getUuid().equalsIgnoreCase(null)) {
+			if (patient.getUuid() == null || patient.getUuid().equalsIgnoreCase("")) {
 				findSimilarPatients(patient);
 			} else {
 				addEditPatient(patient);
@@ -241,7 +246,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 								.addErrorMessage, ToastUtil.ToastType.ERROR);
 			}
 		};
-		if (patient.getUuid().equalsIgnoreCase(null)) {
+		if (patient.getUuid() == null || patient.getUuid().equalsIgnoreCase("")) {
 			patientDataService.create(patient, getSingleCallback);
 		} else {
 			patientDataService.update(patient, getSingleCallback);
@@ -271,8 +276,8 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 			}
 		};
 		//Just check if the identifier are the same. If not it saves the patient.
-		patientDataService.getByNameOrIdentifier(patient.getPerson().getName().getNameString(),
-				QueryOptions.LOAD_RELATED_OBJECTS, pagingInfo, callback);
+				.findByIdentifier(patient.getIdentifier().getIdentifier(), QueryOptions.LOAD_RELATED_OBJECTS, pagingInfo,
+						callback);
 	}
 
 	@Override

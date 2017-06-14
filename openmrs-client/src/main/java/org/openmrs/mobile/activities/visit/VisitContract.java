@@ -21,6 +21,7 @@ import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.models.Concept;
+import org.openmrs.mobile.models.EncounterDiagnosis;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitAttributeType;
 import org.openmrs.mobile.models.VisitNote;
@@ -76,6 +77,16 @@ public interface VisitContract {
 		void setAttributeTypes(List<VisitAttributeType> visitAttributeTypes);
 
 		void showTabSpinner(boolean visibility);
+
+		void setPrimaryDiagnosis(EncounterDiagnosis primaryDiagnosis);
+
+		void setSecondaryDiagnosis(EncounterDiagnosis secondaryDiagnosis);
+
+		void setDiagnosisCertainty(EncounterDiagnosis confirmedDiagnosis);
+
+		void removeDiagnosis(EncounterDiagnosis removeDiagnosis, String order);
+
+		void setDiagnoses(List<Concept> concepts);
 	}
 
 	interface VisitPhotoView extends ViewVisitDetailsMain {
@@ -129,6 +140,8 @@ public interface VisitContract {
 		void getVisit();
 
 		void getConcept(String name);
+
+		void findConcept(String searchQuery);
 
 		void getPatientUUID();
 

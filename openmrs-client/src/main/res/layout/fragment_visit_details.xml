@@ -331,6 +331,7 @@
 									android:layout_marginLeft="5dp"
 									android:layout_marginStart="5dp"
 									android:layout_marginRight="5dp"
+									android:inputType="textAutoComplete|textAutoCorrect"
 									android:textSize="15sp"
 									android:layout_marginEnd="5dp"
 									android:hint="@string/add_diagnosis" />

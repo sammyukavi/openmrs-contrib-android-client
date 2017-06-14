@@ -148,9 +148,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
 	@Override
 	public void fetchVisits(boolean loadNextResults) {
-
 		patientDashboardView.showSavingClinicalNoteProgressBar(true);
-
 		if (loadNextResults) {
 			startIndex += 1;
 		} else {
@@ -160,7 +158,6 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 		if (startIndex < 0) {
 			startIndex = 0;
 		}
-
 		PagingInfo pagingInfo = new PagingInfo(startIndex, limit);
 
 		setLoading(true);
@@ -168,11 +165,8 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 		DataService.GetCallback<List<Visit>> fetchVisitsCallback = new DataService.GetCallback<List<Visit>>() {
 			@Override
 			public void onCompleted(List<Visit> results) {
-
 				patientDashboardView.updateVisits(results);
-
 				patientDashboardView.showSavingClinicalNoteProgressBar(false);
-
 				setLoading(false);
 			}
 

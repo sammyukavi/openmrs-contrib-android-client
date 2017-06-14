@@ -50,7 +50,7 @@ public interface PatientRestService {
 			@Query("q") String name,
 			@Query("identifier") String identifier,
 			@Query("v") String representation,
-			@Query("includeAll") Boolean includeAll,
+			@Query("includeAll") Boolean includeAll);
 			@Query("limit") Integer limit,
 			@Query("startIndex") Integer startIndex);
 

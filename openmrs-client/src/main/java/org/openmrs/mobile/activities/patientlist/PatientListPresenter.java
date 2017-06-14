@@ -77,7 +77,7 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 					@Override
 					public void onCompleted(List<PatientList> entities) {
 						if (entities != null) {
-							patientListView.setPatientListScreenVisibility(true);
+							patientListView.setPatientListScreenVisibility(false);
 							patientListView.setNoPatientListsVisibility(false);
 							patientListView.updatePatientLists(entities);
 						}
@@ -85,7 +85,7 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 
 					@Override
 					public void onError(Throwable t) {
-						patientListView.setPatientListScreenVisibility(true);
+						patientListView.setPatientListScreenVisibility(false);
 						patientListView.setNoPatientListsVisibility(true);
 					}
 				});

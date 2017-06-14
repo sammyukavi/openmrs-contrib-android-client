@@ -220,14 +220,14 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 					concept.setUuid(ClinicFormUUID);
 
 					Person person = new Person();
-					person.setUuid(uuids.get(PATIENT_UUID_BUNDLE).toString());
+					person.setUuid(uuids.get(PATIENT_UUID_BUNDLE));
 
 					Provider provider = new Provider();
 					provider.setUuid(OpenMRS.getInstance().getCurrentLoggedInUserInfo().get(ApplicationConstants.UserKeys
 							.USER_UUID));
 
 					Location location = new Location();
-					location.setUuid(uuids.get(LOCATION_UUID_BUNDLE).toString());
+					location.setUuid(uuids.get(LOCATION_UUID_BUNDLE));
 
 					//create observation
 					Observation observation = new Observation();
@@ -235,7 +235,7 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 					observation.setPerson(person);
 					observation.setObsDatetime(localDateTime.toString());
 					observation.setProvider(provider);
-					observation.setLocation(uuids.get(LOCATION_UUID_BUNDLE).toString());
+					observation.setLocation(uuids.get(LOCATION_UUID_BUNDLE));
 					observation.setValue(clinicalNote.getText().toString());
 
 					List<Observation> observationList = new ArrayList<>();

@@ -149,6 +149,8 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	@Override
 	public void fetchVisits(boolean loadNextResults) {
 
+		patientDashboardView.showSavingClinicalNoteProgressBar(true);
+
 		if (loadNextResults) {
 			startIndex += 1;
 		} else {
@@ -169,12 +171,15 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
 				patientDashboardView.updateVisits(results);
 
+				patientDashboardView.showSavingClinicalNoteProgressBar(false);
+
 				setLoading(false);
 			}
 
 			@Override
 			public void onError(Throwable t) {
 				setLoading(false);
+				patientDashboardView.showSavingClinicalNoteProgressBar(false);
 			}
 		};
 
@@ -266,6 +271,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
 			@Override
 			public void onError(Throwable t) {
+				patientDashboardView.showSavingClinicalNoteProgressBar(false);
 				setLoading(false);
 				t.printStackTrace();
 			}
@@ -298,6 +304,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
 			@Override
 			public void onError(Throwable t) {
+				patientDashboardView.showSavingClinicalNoteProgressBar(false);
 				setLoading(false);
 				t.printStackTrace();
 			}

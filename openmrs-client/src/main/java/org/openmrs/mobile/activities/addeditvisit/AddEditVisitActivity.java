@@ -23,10 +23,8 @@ import android.view.MenuItem;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
-import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
 import org.openmrs.mobile.activities.patientheader.PatientHeaderFragment;
 import org.openmrs.mobile.activities.patientheader.PatientHeaderPresenter;
-import org.openmrs.mobile.activities.visit.VisitActivity;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.StringUtils;
@@ -61,7 +59,8 @@ public class AddEditVisitActivity extends ACBaseActivity {
 							.EMPTY_STRING);
 			this.visitUuid =
 					extras.getString(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING);
-			this.providerUuid = extras.getString(ApplicationConstants.BundleKeys.PROVIDER_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING);
+			this.providerUuid = extras.getString(ApplicationConstants.BundleKeys.PROVIDER_UUID_BUNDLE,
+					ApplicationConstants.EMPTY_STRING);
 			this.visitStopDate = extras.getString(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, ApplicationConstants
 					.EMPTY_STRING);
 			if (StringUtils.notEmpty(patientUuid)) {
@@ -122,12 +121,8 @@ public class AddEditVisitActivity extends ACBaseActivity {
 	public void onBackPressed() {
 		if (drawer.isDrawerOpen(GravityCompat.START)) {
 			drawer.closeDrawer(GravityCompat.START);
-		} else {
-			Intent intent = new Intent(Intent.ACTION_MAIN);
-			intent.addCategory(Intent.CATEGORY_HOME);
-			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			startActivity(intent);
 		}
+		super.onBackPressed();
 	}
 
 	@Override
@@ -141,24 +136,7 @@ public class AddEditVisitActivity extends ACBaseActivity {
 		// Handle item selection
 		switch (item.getItemId()) {
 			case android.R.id.home:
-				finish();
-				if (extras != null) {
-					if (visitUuid.isEmpty() && providerUuid.isEmpty()) {
-						intent = new Intent(getApplicationContext(), PatientDashboardActivity.class);
-					} else {
-						intent = new Intent(getApplicationContext(), VisitActivity.class);
-						intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visitUuid);
-						intent.putExtra(ApplicationConstants.BundleKeys.PROVIDER_UUID_BUNDLE, providerUuid);
-						intent.putExtra(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, visitStopDate);
-					}
-
-					intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
-					//fix for getDateToday
-					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-					getApplicationContext().startActivity(intent);
-				}
-
+				onBackPressed();
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);

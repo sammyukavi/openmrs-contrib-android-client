@@ -1,7 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:id="@+id/parentViewsContainer"
 		android:gravity="center">
 
 	<ProgressBar
@@ -48,6 +47,7 @@
 					android:layout_marginTop="8dp">
 
 				<android.support.design.widget.TextInputEditText
+						android:imeOptions="actionDone"
 						android:id="@+id/loginUrlField"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
@@ -62,11 +62,12 @@
 					android:layout_marginTop="8dp">
 
 				<android.support.design.widget.TextInputEditText
+						android:imeOptions="actionDone"
 						android:id="@+id/loginUsernameField"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:hint="@string/username"
-						android:inputType="text"></android.support.design.widget.TextInputEditText>
+						android:inputType="text" />
 			</android.support.design.widget.TextInputLayout>
 
 
@@ -77,6 +78,7 @@
 					android:layout_marginTop="8dp">
 
 				<android.support.design.widget.TextInputEditText
+						android:imeOptions="actionDone"
 						android:id="@+id/loginPasswordField"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"

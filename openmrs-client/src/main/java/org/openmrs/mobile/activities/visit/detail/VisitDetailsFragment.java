@@ -102,6 +102,9 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	private ScrollView visitDetailsScrollView;
 	private List<Concept> diagnosis;
 
+
+	static VisitContract.VisitDetailsMainPresenter staticPresenter;
+
 	public static VisitDetailsFragment newInstance() {
 		return new VisitDetailsFragment();
 	}
@@ -131,6 +134,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		primaryDiagnosesList = new ArrayList<>();
 		secondaryDiagnosesList = new ArrayList<>();
 		diagnosis = new ArrayList<>();
+		staticPresenter = mPresenter;
 		//buildMarginLayout();
 		return root;
 	}
@@ -306,6 +310,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 
 		submitVisitNote.setOnClickListener(v -> {
 			((VisitDetailsPresenter)mPresenter).saveVisitNote(createVisitNote(encounterUuid));
+
 		});
 
 		auditDataCompleteness.setOnClickListener(new View.OnClickListener() {
@@ -551,6 +556,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 							noVitals.setVisibility(View.GONE);
 							addVisitVitals.setVisibility(View.GONE);
 							visitVitalsTableLayout.setVisibility(View.VISIBLE);
+							visitVitalsTableLayout.removeAllViews();
 							loadObservationFields(visit.getEncounters().get(i).getObs(), EncounterTypeData.VITALS);
 						} else {
 							if (visit.getStopDatetime() == null) {
@@ -594,6 +600,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 						noAuditData.setVisibility(View.GONE);
 						addAuditData.setVisibility(View.GONE);
 						auditInfoTableLayout.setVisibility(View.VISIBLE);
+						auditInfoTableLayout.removeAllViews();
 						loadObservationFields(visit.getEncounters().get(i).getObs(), EncounterTypeData.AUDIT_DATA);
 					} else {
 						noAuditData.setVisibility(View.VISIBLE);
@@ -781,4 +788,10 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		return visitNote;
 	}
 
+	public static void refreshVitalsDetails() {
+		((VisitDetailsPresenter)staticPresenter).getVisit();
+		//((VisitDetailsPresenter)mPresenter).getPatientUUID();
+		//((VisitDetailsPresenter)mPresenter).getVisitUUID();
+		//((VisitDetailsPresenter)mPresenter).getProviderUUID();
+	}
 }

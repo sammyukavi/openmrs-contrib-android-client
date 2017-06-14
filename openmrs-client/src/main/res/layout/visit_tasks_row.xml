@@ -26,7 +26,6 @@
 			card_view:cardCornerRadius="4dp">
 		
 		<LinearLayout
-				android:id="@+id/topRow"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:orientation="vertical">

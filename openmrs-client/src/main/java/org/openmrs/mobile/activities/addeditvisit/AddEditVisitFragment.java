@@ -35,7 +35,6 @@ import android.widget.TextView;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
-import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
 import org.openmrs.mobile.activities.visit.VisitActivity;
 import org.openmrs.mobile.models.BaseOpenmrsObject;
 import org.openmrs.mobile.models.ConceptAnswer;
@@ -50,6 +49,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static android.app.Activity.RESULT_OK;
 
 public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Presenter>
 		implements AddEditVisitContract.View {
@@ -277,24 +278,28 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 
 	@Override
 	public void showPatientDashboard() {
-		Intent intent = new Intent(getContext(), PatientDashboardActivity.class);
-		intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
-		getContext().startActivity(intent);
+		Intent intent = getActivity().getIntent();
+		getActivity().setResult(RESULT_OK, intent);
+		getActivity().finish();
+		//Intent intent = new Intent(getContext(), PatientDashboardActivity.class);
+		//intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
+		//getContext().startActivity(intent);
 	}
 
 	@Override
-	public void showVisitDetails(String visitUUID) {
-		setSpinnerVisibility(true);
-		Intent intent = new Intent(getContext(), VisitActivity.class);
-		intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
-		if (visitUUID == null) {
-			intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visitUuid);
-		} else {
-			intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visitUUID);
-			intent.putExtra(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, visitStopDate);
+	public void showVisitDetails(String visitUUID, boolean isNewInstance) {
+		getActivity().finish();
+		if (isNewInstance) {
+			Intent intent = new Intent(getContext(), VisitActivity.class);
+			intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
+			if (visitUUID == null) {
+				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visitUuid);
+			} else {
+				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visitUUID);
+				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, visitStopDate);
+			}
+			getContext().startActivity(intent);
 		}
-		getContext().startActivity(intent);
-		setSpinnerVisibility(false);
 	}
 
 	@Override

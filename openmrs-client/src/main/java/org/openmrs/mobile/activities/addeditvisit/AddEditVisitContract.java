@@ -18,7 +18,6 @@ import android.widget.Spinner;
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
 import org.openmrs.mobile.models.ConceptAnswer;
-import org.openmrs.mobile.models.ConceptName;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitAttribute;
@@ -43,7 +42,7 @@ public interface AddEditVisitContract {
 
 		void showPatientDashboard();
 
-		void showVisitDetails(String visitUuuid);
+		void showVisitDetails(String visitUuuid, boolean isNewInstance);
 
 		void showPageSpinner(boolean visibility);
 

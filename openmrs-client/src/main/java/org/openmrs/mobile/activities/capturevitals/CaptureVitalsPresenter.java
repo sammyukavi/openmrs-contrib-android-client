@@ -19,22 +19,18 @@ import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.impl.EncounterDataService;
 import org.openmrs.mobile.data.impl.LocationDataService;
-import org.openmrs.mobile.data.impl.VisitDataService;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Location;
 
 public class CaptureVitalsPresenter extends BasePresenter implements CaptureVitalsContract.Presenter {
 
 	private CaptureVitalsContract.View captureVitalsView;
-	private VisitDataService visitDataService;
-
 	private EncounterDataService encounterDataService;
 	private LocationDataService locationDataService;
 
 	public CaptureVitalsPresenter(CaptureVitalsContract.View view) {
 		this.captureVitalsView = view;
 		this.captureVitalsView.setPresenter(this);
-		this.visitDataService = new VisitDataService();
 		this.encounterDataService = new EncounterDataService();
 		this.locationDataService = new LocationDataService();
 	}
@@ -66,16 +62,21 @@ public class CaptureVitalsPresenter extends BasePresenter implements CaptureVita
 
 	@Override
 	public void attemptSave(Encounter encounter) {
+
 		captureVitalsView.showProgressBar(true);
+
 		DataService.GetCallback<Encounter> serverResponceCallback = new DataService.GetCallback<Encounter>() {
 			@Override
 			public void onCompleted(Encounter encounter) {
 				if (encounter == null) {
 					captureVitalsView.showProgressBar(false);
 				} else {
-					captureVitalsView.goBackToVisitPage();
-					captureVitalsView.showProgressBar(false);
+
+					captureVitalsView.hideSoftKeys();
+
 					captureVitalsView.disableButton();
+
+					((CaptureVitalsActivity)captureVitalsView.getContext()).finish();
 				}
 			}
 

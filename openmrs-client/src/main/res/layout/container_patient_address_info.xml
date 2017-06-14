@@ -15,20 +15,17 @@
 	<View
 			android:layout_marginTop="0dp"
 			android:layout_marginBottom="1dp"
-			android:id="@+id/borderLine"
 			android:layout_width="match_parent"
 			android:layout_height="1dp"
 			android:background="@android:color/darker_gray" />
 
 	<LinearLayout
-			android:id="@+id/patientAddressContainer"
 			android:layout_width="match_parent"
 			android:orientation="horizontal"
 			android:layout_height="wrap_content">
 
 		<TextView
 				android:textStyle="italic"
-				android:id="@+id/addressLabel"
 				android:layout_width="wrap_content"
 				android:text="@string/label_address"
 				android:layout_height="match_parent" />
@@ -42,14 +39,12 @@
 	</LinearLayout>
 
 	<LinearLayout
-			android:id="@+id/patientPhonenoContainer"
 			android:layout_width="fill_parent"
 			android:orientation="horizontal"
 			android:layout_height="wrap_content">
 
 		<TextView
 				android:textStyle="italic"
-				android:id="@+id/phoneLabel"
 				android:layout_width="wrap_content"
 				android:text="@string/telephone"
 				android:layout_height="match_parent" />

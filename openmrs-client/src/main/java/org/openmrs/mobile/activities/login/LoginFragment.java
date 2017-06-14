@@ -14,7 +14,6 @@
 
 package org.openmrs.mobile.activities.login;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -25,7 +24,6 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -36,6 +34,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.openmrs.mobile.R;
+import org.openmrs.mobile.activities.ACBaseActivity;
 import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
 import org.openmrs.mobile.activities.patientlist.PatientListActivity;
@@ -219,19 +218,6 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 	}
 
 	@Override
-	public void hideSoftKeys() {
-
-		View view = getActivity().getCurrentFocus();
-
-		if (view == null) {
-			view = new View(getActivity());
-		}
-
-		InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-		imm.hideSoftInputFromInputMethod(view.getWindowToken(), 0);
-	}
-
-	@Override
 	public void showWarningDialog() {
 		CustomDialogBundle bundle = new CustomDialogBundle();
 		bundle.setTitleViewMessage(getString(R.string.warning_dialog_title));
@@ -357,6 +343,9 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 
 	@Override
 	public void setProgressBarVisibility(boolean visible) {
+		if (visible) {
+			ACBaseActivity.hideSoftKeyboard(getActivity());
+		}
 		mLoadingProgressBar.setVisibility(visible ? View.VISIBLE : View.GONE);
 	}
 

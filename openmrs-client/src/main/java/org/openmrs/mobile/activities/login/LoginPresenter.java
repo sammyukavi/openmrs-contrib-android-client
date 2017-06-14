@@ -74,7 +74,6 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 
 	@Override
 	public void login(String username, String password, String url, String oldUrl) {
-		loginView.hideSoftKeys();
 		if ((!mOpenMRS.getUsername().equals(ApplicationConstants.EMPTY_STRING) &&
 				!mOpenMRS.getUsername().equals(username)) ||
 				((!mOpenMRS.getServerUrl().equals(ApplicationConstants.EMPTY_STRING) &&
@@ -93,6 +92,8 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 		loginView.setProgressBarVisibility(true);
 
 		loginView.setViewsContainerVisibility(false);
+
+		RestServiceBuilder.setloginUrl(url);
 
 		if (NetworkUtils.isOnline()) {
 
@@ -130,45 +131,45 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 				@Override
 				public void onCompleted(Session session) {
 
+					if (session != null && session.isAuthenticated()) {
+
+						if (wipeDatabase) {
+
+							mOpenMRS.deleteDatabase(OpenMRSSQLiteOpenHelper.DATABASE_NAME);
+
+							setData(session.getSessionId(), url, username, password);
+
+							mWipeRequired = false;
+						}
+
+						if (authorizationManager.isUserNameOrServerEmpty()) {
+							setData(session.getSessionId(), url, username, password);
+						} else {
+							mOpenMRS.setSessionToken(session.getSessionId());
+						}
+
+						setLogin(true, url);
+
+						RestServiceBuilder.applyDefaultBaseUrl();
+
+						//Instantiate the user service  here to use our new session
+						userService = new UserDataService();
+
+						userService.getByUsername(username, QueryOptions.LOAD_RELATED_OBJECTS, pagingInfo,
+								loginUsersFoundCallback);
+
+						loginView.userAuthenticated();
+
+						loginView.finishLoginActivity();
+
+					} else {
+						loginView.showMessage(INVALID_USERNAME_PASSWORD);
+					}
+
 					loginView.setProgressBarVisibility(false);
 
 					loginView.setViewsContainerVisibility(true);
 
-					if (session != null) {
-						if (session.isAuthenticated()) {
-
-							RestServiceBuilder.setBaseUrl(false);
-
-							if (wipeDatabase) {
-								mOpenMRS.deleteDatabase(OpenMRSSQLiteOpenHelper.DATABASE_NAME);
-								setData(session.getSessionId(), url, username, password);
-								mWipeRequired = false;
-							}
-
-							if (authorizationManager.isUserNameOrServerEmpty()) {
-								setData(session.getSessionId(), url, username, password);
-							} else {
-								mOpenMRS.setSessionToken(session.getSessionId());
-							}
-
-							setLogin(true, url);
-
-							//Instantiate the user service  here to use our new session
-							userService = new UserDataService();
-
-							userService.getByUsername(username, QueryOptions.LOAD_RELATED_OBJECTS, pagingInfo,
-									loginUsersFoundCallback);
-
-							loginView.userAuthenticated();
-
-							loginView.finishLoginActivity();
-
-						} else {
-							loginView.showMessage(INVALID_USERNAME_PASSWORD);
-						}
-					} else {
-						loginView.showMessage(SERVER_ERROR);
-					}
 				}
 
 				@Override
@@ -186,7 +187,9 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 
 			loginDataService.getSession(url, username, password, loginUserCallback);
 
-		} else {
+		} else
+
+		{
 			if (mOpenMRS.isUserLoggedOnline() && url.equals(mOpenMRS.getLastLoginServerUrl())) {
 
 				loginView.setProgressBarVisibility(false);
@@ -224,6 +227,7 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 
 			}
 		}
+
 	}
 
 	private void fetchFullUserInformation(String uuid) {
@@ -258,18 +262,16 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 	@Override
 	public void loadLocations(String url) {
 
-		loginView.hideSoftKeys();
-
 		loginView.setProgressBarVisibility(true);
 
 		loginView.setViewsContainerVisibility(false);
+
+		RestServiceBuilder.setBaseUrl(url);
 
 		DataService.GetCallback<List<Location>> locationDataServiceCallback = new DataService.GetCallback<List<Location>>
 				() {
 			@Override
 			public void onCompleted(List<Location> locations) {
-
-				RestServiceBuilder.setBaseUrl(true);
 
 				mOpenMRS.setServerUrl(url);
 

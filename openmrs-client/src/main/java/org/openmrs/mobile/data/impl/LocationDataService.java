@@ -70,8 +70,6 @@ public class LocationDataService extends BaseMetadataDataService<Location, Locat
 
 	public void getAll(String url, GetCallback<List<Location>> callback) {
 
-		RestServiceBuilder.setBaseUrl(url);
-
 		restService = RestServiceBuilder.createService(getRestServiceClass(), url, "", "");
 
 		executeMultipleCallback(callback, null, null,

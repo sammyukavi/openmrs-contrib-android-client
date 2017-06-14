@@ -98,7 +98,6 @@
 
 		<TextView
 				android:visibility="gone"
-				android:id="@+id/visitNoteLabel"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_marginTop="5dp"
@@ -138,7 +137,7 @@
 						android:layout_marginLeft="5dp"
 						android:layout_marginStart="5dp"
 						android:layout_marginRight="5dp"
-						android:textSize="16sp"
+						android:textSize="@dimen/default_text_size"
 						android:layout_marginEnd="5dp"
 						android:hint="@string/clinical_notes_label"
 						android:scrollbars="vertical"
@@ -231,7 +230,6 @@
 			android:stretchColumns="1">
 
 		<TableRow
-				android:id="@+id/tableRow1"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content">
 
@@ -261,7 +259,7 @@
 		<ImageView
 				android:contentDescription="@string/app_name"
 				android:src="@drawable/ic_chevron_right_black"
-				android:clickable="true"
+				android:clickable="false"
 				android:layout_gravity="end"
 				android:gravity="end"
 				android:layout_width="25dp"

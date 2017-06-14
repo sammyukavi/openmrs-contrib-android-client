@@ -13,6 +13,7 @@
  */
 package org.openmrs.mobile.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -306,4 +308,15 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 		Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
 	}
 
+	public static void hideSoftKeyboard(Activity activity) {
+		InputMethodManager inputMethodManager =
+				(InputMethodManager)activity.getSystemService(
+						Activity.INPUT_METHOD_SERVICE);
+		View windowToken = activity.getCurrentFocus();
+
+		if (windowToken != null) {
+			inputMethodManager.hideSoftInputFromWindow(
+					windowToken.getWindowToken(), 0);
+		}
+	}
 }

@@ -25,8 +25,6 @@ public interface LoginContract {
 
 	interface View extends BaseView<Presenter> {
 
-		void hideSoftKeys();
-
 		void showWarningDialog();
 
 		void userAuthenticated();

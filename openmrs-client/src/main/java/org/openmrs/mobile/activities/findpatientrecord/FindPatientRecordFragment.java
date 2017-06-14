@@ -24,7 +24,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -111,9 +110,7 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 		FontsUtil.setFont((ViewGroup)this.getActivity().findViewById(android.R.id.content));
 		authorizationManager = new AuthorizationManager();
 		if (authorizationManager.isUserLoggedIn()) {
-			if (OpenMRS.getInstance().getSearchQuery().equalsIgnoreCase(ApplicationConstants.EMPTY_STRING)) {
-				mPresenter.getLastViewed();
-			} else {
+			if (!OpenMRS.getInstance().getSearchQuery().equalsIgnoreCase(ApplicationConstants.EMPTY_STRING)) {
 				mPresenter.findPatient(OpenMRS.getInstance().getSearchQuery());
 			}
 

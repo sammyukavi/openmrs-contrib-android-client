@@ -84,13 +84,22 @@ public class PatientDataService extends BaseDataService<Patient, PatientDbServic
 				});
 	}
 
-	public void getByNameAndIdentifier(String query, QueryOptions options, PagingInfo pagingInfo,
+	public void findByNameAndIdentifier(String query, QueryOptions options, PagingInfo pagingInfo,
 			GetCallback<List<Patient>> callback) {
 		executeMultipleCallback(callback, options, pagingInfo,
 				() -> null,
-				() -> restService.getByNameAndIdentifier(buildRestRequestPath(), query, query,
+				() -> restService.findByNameAndIdentifier(buildRestRequestPath(), query, query,
 						QueryOptions.getRepresentation(options), QueryOptions.getIncludeInactive(options),
 						PagingInfo.getLimit(pagingInfo), PagingInfo.getStartIndex(pagingInfo))
+		);
+	}
+
+	public void findByIdentifier(String identifier, QueryOptions options, PagingInfo pagingInfo,
+			GetCallback<List<Patient>> callback) {
+		executeMultipleCallback(callback, options, pagingInfo,
+				() -> null,
+				() -> restService.findByIdentifier(buildRestRequestPath(), identifier,
+						QueryOptions.getRepresentation(options), QueryOptions.getIncludeInactive(options))
 		);
 	}
 

@@ -63,6 +63,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	private TextView noVisitNoteLabel;
 	private String patientUuid;
 	private VisitsRecyclerAdapter visitsRecyclerAdapter;
+	private PatientDashboardActivity patientDashboardActivity;
 	private FloatingActionMenu patientDashboardMenu;
 	private int startIndex = 0, limit = 5;
 	private static PatientDashboardContract.Presenter staticPresenter;
@@ -119,13 +120,12 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		switch (selectedId) {
 			case R.id.start_visit:
 				intent = new Intent(getContext(), AddEditVisitActivity.class);
-				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, sharedPreferences.getString
-						(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING));
+				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
 				startActivity(intent);
 				break;
 			case R.id.edit_Patient:
 				intent = new Intent(getContext(), AddEditPatientActivity.class);
-				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, instance.getPatientUuid());
+				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
 				startActivity(intent);
 
 				break;
@@ -135,17 +135,11 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	private void initViewFields() {
 
 		staticStartVisitButton = startVisitButton = (FloatingActionButton)fragmentView.findViewById(R.id.start_visit);
-
 		editPatient = (FloatingActionButton)fragmentView.findViewById(R.id.edit_Patient);
-
 		dashboardScreen = (RelativeLayout)fragmentView.findViewById(R.id.dashboardScreen);
-
 		dashboardProgressBar = (ProgressBar)fragmentView.findViewById(R.id.dashboardProgressBar);
-
 		noVisitNoteLabel = (TextView)fragmentView.findViewById(R.id.noVisitNoteLabel);
-
 		patientDashboardMenu = (FloatingActionMenu)fragmentView.findViewById(R.id.patientDashboardMenu);
-
 		patientDashboardMenu.setClosedOnTouchOutside(true);
 
 	}
@@ -169,17 +163,11 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		}
 
 		HashMap<String, String> uuidsHashmap = new HashMap<>();
-
 		uuidsHashmap.put(PATIENT_UUID_BUNDLE, patient == null ? "" : patient.getUuid());
-
 		uuidsHashmap.put(LOCATION_UUID_BUNDLE, location == null ? "" : location.getUuid());
-
 		RecyclerView visitsRecyclerView = (RecyclerView)fragmentView.findViewById(R.id.pastVisits);
-
 		visitsRecyclerAdapter = new VisitsRecyclerAdapter(visitsRecyclerView, visits, getActivity());
-
 		visitsRecyclerAdapter.setUuids(uuidsHashmap);
-
 		visitsRecyclerView.setAdapter(visitsRecyclerAdapter);
 
 	}
@@ -252,6 +240,6 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
 	public static void fetchPatientData() {
 		staticPresenter.fetchPatientData(staticPatientUuid);
-		staticStartVisitButton.setVisibility(hasActiveVisit ? View.GONE : View.VISIBLE);
+		//staticStartVisitButton.setVisibility(hasActiveVisit ? View.GONE : View.VISIBLE);
 	}
 }

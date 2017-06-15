@@ -36,7 +36,7 @@ public class VisitNoteDataService extends BaseDataService<VisitNote, VisitNoteDb
 
 	@Override
 	protected String getRestPath() {
-		return ApplicationConstants.API.REST_ENDPOINT_V2 + "patientlist";
+		return ApplicationConstants.API.REST_ENDPOINT_V2 + "custom";
 	}
 
 	@Override

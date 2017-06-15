@@ -79,6 +79,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.openmrs.mobile.utilities.ApplicationConstants.EMPTY_STRING;
+
 public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContract.Presenter>
 		implements AddEditPatientContract.View {
 
@@ -155,7 +157,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		if (getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE) != null) {
 			patientUuuid = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
 		} else {
-			patientUuuid = ApplicationConstants.EMPTY_STRING;
+			patientUuuid = EMPTY_STRING;
 		}
 
 		resolveViews(root);
@@ -164,12 +166,6 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 
 		mPresenter.getPatientIdentifierTypes();
 		mPresenter.getLoginLocation();
-
-		if (!patientUuuid.isEmpty()) {
-			mPresenter.getPatientToUpdate(instance.getPatientUuid());
-		} else {
-			mPresenter.getPersonAttributeTypes();
-		}
 
 		return root;
 
@@ -272,7 +268,7 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		patient.setIdentifiers(patientIdentifierList);
 
 		patient.setPerson(createPerson());
-		patient.setUuid(" ");
+		patient.setUuid("");
 		return patient;
 	}
 
@@ -315,10 +311,13 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 
 	@Override
 	public void startPatientDashboardActivity(Patient patient) {
-		Intent intent = new Intent(getActivity(), PatientDashboardActivity.class);
-		intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patient.getPerson().getUuid());
-		startActivity(intent);
-		showPageSpinner(false);
+		//check for patient id if it's empty patient has just been added, open the dashboard
+		if (patientUuuid.equalsIgnoreCase(EMPTY_STRING)) {
+			Intent intent = new Intent(getActivity(), PatientDashboardActivity.class);
+			intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patient.getPerson().getUuid());
+			startActivity(intent);
+			showPageSpinner(false);
+		}
 	}
 
 	@Override
@@ -401,10 +400,13 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		conceptNamesDropdown.setAdapter(conceptNameArrayAdapter);
 
 		// set existing patient attribute if any
-		LinkedTreeMap<String, String > personAttribute = mPresenter.searchPersonAttributeValueByType(personAttributeType);
-		String conceptUuid = personAttribute.get("uuid");
-		if (null != conceptUuid) {
-			setDefaultDropdownSelection(conceptNameArrayAdapter, conceptUuid, conceptNamesDropdown);
+		if (!patientUuuid.isEmpty()) {
+			LinkedTreeMap<String, String> personAttribute = mPresenter.searchPersonAttributeValueByType
+					(personAttributeType);
+			String conceptUuid = personAttribute.get("uuid");
+			if (null != conceptUuid) {
+				setDefaultDropdownSelection(conceptNameArrayAdapter, conceptUuid, conceptNamesDropdown);
+			}
 		}
 
 		conceptNamesDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -441,6 +443,8 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 			//Change to Update Patient Form
 			String patientHeaderString = getResources().getString(R.string.action_update_patient_data);
 			this.getActivity().setTitle(patientHeaderString);
+			AddEditPatientActivity addEditPatientActivity = (AddEditPatientActivity)getActivity();
+			addEditPatientActivity.updateToolbar();
 			submitConfirm.setText(patientHeaderString);
 			submitConfirm.setOnClickListener(new View.OnClickListener() {
 				@Override

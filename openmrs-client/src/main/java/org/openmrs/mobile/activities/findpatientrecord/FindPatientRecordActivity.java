@@ -22,8 +22,10 @@ import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RelativeLayout;
 
 import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
@@ -36,6 +38,7 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 	public FindPatientRecordContract.Presenter findPatientPresenter;
 	FindPatientRecordFragment findPatientRecordFragment;
 	SearchView searchView;
+	private RelativeLayout findPatientText;
 	private String query;
 	private OpenMRS instance = OpenMRS.getInstance();
 	private SharedPreferences sharedPreferences = instance.getOpenMRSSharedPreferences();
@@ -64,11 +67,16 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 			findPatientPresenter = new FindPatientRecordPresenter(findPatientRecordFragment);
 		}
 
+		//Add menu autocolse
+		FloatingActionMenu findPatientMenu = (FloatingActionMenu)findViewById(R.id.findPatientMenu);
+		findPatientMenu.setClosedOnTouchOutside(true);
+
 		//adding
 		FloatingActionButton floatingActionButton = (FloatingActionButton)findViewById(R.id.add_Patient);
 		floatingActionButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				findPatientMenu.close(true);
 				Intent intent = new Intent(FindPatientRecordActivity.this, AddEditPatientActivity.class);
 				startActivity(intent);
 			}
@@ -109,9 +117,7 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 					findPatientPresenter.findPatient(query);
 					setSearchQuery(query);
 				} else {
-					if (OpenMRS.getInstance().getSearchQuery().equalsIgnoreCase(ApplicationConstants.EMPTY_STRING)) {
-						findPatientPresenter.getLastViewed();
-					} else {
+					if (!OpenMRS.getInstance().getSearchQuery().equalsIgnoreCase(ApplicationConstants.EMPTY_STRING)) {
 						findPatientPresenter.findPatient(query);
 					}
 					findPatientRecordFragment.setNoPatientsVisibility(false);

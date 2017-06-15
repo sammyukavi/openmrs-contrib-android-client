@@ -18,13 +18,13 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
@@ -52,7 +52,6 @@ import java.util.Map;
 
 public class VisitTasksFragment extends VisitFragment implements VisitContract.VisitTasksView {
 
-	FloatingActionButton fab;
 	private View mRootView;
 	private RecyclerView openViewTasksRecyclerView;
 	private LinearLayoutManager layoutManager;
@@ -94,7 +93,6 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 
 	private void resolveViews(View v) {
 		openViewTasksRecyclerView = (RecyclerView)v.findViewById(R.id.openVisitTasksRecyclerView);
-		fab = (FloatingActionButton)v.findViewById(R.id.visitTaskFab);
 		addtask = (AutoCompleteTextView)v.findViewById(R.id.addVisitTasks);
 		addTaskLayout = (LinearLayout)v.findViewById(R.id.addTaskLayout);
 		closedTasksLayout = (LinearLayout)v.findViewById(R.id.closedTasksLayout);
@@ -222,9 +220,9 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 	}
 
 	public void addListeners() {
-		addtask.setOnClickListener(new View.OnClickListener() {
+		addtask.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
-			public void onClick(View v) {
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				if (ViewUtils.getInput(addtask) != null) {
 					((VisitTasksPresenter)mPresenter).createVisitTasksObject(ViewUtils.getInput(addtask));
 				}
@@ -259,7 +257,7 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 	@Override
 	public void setVisit(Visit visit) {
 		this.visit = visit;
-		if (visit != null){
+		if (visit != null) {
 			if (!visit.getStopDatetime().equalsIgnoreCase(null)) {
 				addTaskLayout.setVisibility(View.GONE);
 			}

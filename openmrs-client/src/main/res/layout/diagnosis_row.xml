@@ -1,41 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-		xmlns:android="http://schemas.android.com/apk/res/android"
-		xmlns:card_view="http://schemas.android.com/apk/res-auto"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
 		xmlns:app="http://schemas.android.com/apk/res-auto"
-		xmlns:fab="http://schemas.android.com/apk/res-auto"
-		android:orientation="vertical"
+		xmlns:card_view="http://schemas.android.com/tools"
+		android:id="@+id/diagnosisLayout"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent">
+		android:layout_height="wrap_content"
+		android:longClickable="true"
+		android:layout_margin="5dp"
+		card_view:cardCornerRadius="7dp"
+		android:backgroundTint="@color/color_light_grey"
+		android:background="@color/color_light_grey"
+		android:orientation="vertical">
 	
 	<LinearLayout
-			android:id="@+id/diagnosisLayout"
+			android:orientation="vertical"
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_marginBottom="10dp"
-			android:background="@drawable/card"
-			android:backgroundTint="@color/color_light_grey"
-			android:orientation="vertical">
+			android:layout_height="wrap_content">
 		
 		<RelativeLayout
-				android:id="@+id/secondRow"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:orientation="vertical">
-			
 			
 			<TextView
 					android:id="@+id/diagnosisDisplay"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:layout_marginTop="10dp"
-					android:layout_marginLeft="10dp"
-					android:layout_marginStart="10dp"
+					android:layout_marginTop="5dp"
+					android:layout_marginLeft="5dp"
+					android:layout_marginStart="5dp"
 					android:layout_marginRight="10dp"
 					android:layout_marginEnd="10dp"
 					android:gravity="start"
-					android:textSize="15sp"
-					android:textStyle="bold" />
+					android:textSize="15sp" />
 		
 		</RelativeLayout>
 		
@@ -43,7 +40,7 @@
 				android:layout_marginEnd="30dp"
 				android:layout_marginLeft="5dp"
 				android:layout_marginRight="5dp"
-				android:layout_marginStart="10dp"
+				android:layout_marginStart="5dp"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:orientation="vertical"
@@ -54,9 +51,7 @@
 				android:layout_marginTop="5dp">
 			
 			<CheckBox
-					android:id="@+id/primary"
-					android:layout_marginLeft="10dp"
-					android:layout_marginStart="10dp"
+					android:id="@+id/order"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:layout_marginRight="40dp"
@@ -64,14 +59,12 @@
 					android:text="@string/primary_diagnosis" />
 			
 			<CheckBox
-					android:id="@+id/confirmed"
+					android:id="@+id/certainty"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:layout_marginLeft="10dp"
 					android:layout_marginStart="10dp"
 					android:text="@string/confirmed_diagnosis" />
 		</com.google.android.flexbox.FlexboxLayout>
-	
 	</LinearLayout>
-
-</LinearLayout>
+</android.support.v7.widget.CardView>

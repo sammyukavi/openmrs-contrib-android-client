@@ -38,13 +38,19 @@ public interface PatientRestService {
 			@Query("startIndex") Integer startIndex);
 
 	@GET(RestConstants.REST_PATH)
-	Call<Results<Patient>> getByNameAndIdentifier(@Path(value = "restPath", encoded = true) String restPath,
+	Call<Results<Patient>> findByNameAndIdentifier(@Path(value = "restPath", encoded = true) String restPath,
 			@Query("q") String name,
 			@Query("identifier") String identifier,
 			@Query("v") String representation,
 			@Query("includeAll") Boolean includeAll,
 			@Query("limit") Integer limit,
 			@Query("startIndex") Integer startIndex);
+
+	@GET(RestConstants.REST_PATH)
+	Call<Results<Patient>> findByIdentifier(@Path(value = "restPath", encoded = true) String restPath,
+			@Query("identifier") String identifier,
+			@Query("v") String representation,
+			@Query("includeAll") Boolean includeAll);
 
 	@GET(RestConstants.REST_PATH)
 	Call<Results<Patient>> getLastViewed(@Path(value = "restPath", encoded = true) String restPath,

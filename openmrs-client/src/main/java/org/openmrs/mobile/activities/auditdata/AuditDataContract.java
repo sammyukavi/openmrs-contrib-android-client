@@ -43,6 +43,8 @@ public interface AuditDataContract {
 		void updateSubmitButtonText();
 
 		void showPageSpinner(boolean visibility);
+
+		void hideSoftKeys();
 	}
 
 	interface Presenter extends BasePresenterContract {

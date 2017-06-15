@@ -90,4 +90,9 @@ public class Concept extends BaseOpenmrsObject {
 	public void setConceptMappings(List<ConceptMap> conceptMappings) {
 		this.conceptMappings = conceptMappings;
 	}
+
+	@Override
+	public String toString() {
+		return getDisplay();
+	}
 }

@@ -18,7 +18,7 @@ public class VisitDbService extends BaseEntityDbService<Visit> implements Entity
 	}
 
 	public Visit endVisit(Visit visit) {
-		visit.setStopDatetime(DateUtils.convertTime(new Date().getTime()));
+		visit.setStopDatetime(new Date());
 
 		return save(visit);
 	}

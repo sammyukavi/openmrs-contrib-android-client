@@ -61,6 +61,7 @@ import org.openmrs.mobile.utilities.StringUtils;
 import org.openmrs.mobile.utilities.ToastUtil;
 import org.openmrs.mobile.utilities.ViewUtils;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -69,7 +70,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class VisitDetailsFragment extends VisitFragment implements VisitContract.VisitDetailsView {
-
+	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT);
 	private TextView visitStartDate;
 	private TextView activeVisitBadge;
 	private TextView startDuration;
@@ -335,23 +336,18 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	}
 
 	public void setVisitDates(Visit visit) {
-		if (StringUtils.notNull(visit.getStopDatetime())) {
+		if (visit.getStopDatetime() != null) {
 			activeVisitBadge.setVisibility(View.GONE);
-			visitStartDate.setText(DateUtils
-					.convertTime1(visit.getStartDatetime(), DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT));
-			visitEndDate
-					.setText(getContext().getResources().getString(R.string.date_closed) + ": " + DateUtils
-							.convertTime1(visit.getStopDatetime(), DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT));
+			visitStartDate.setText(DATE_FORMAT.format(visit.getStartDatetime()));
+			visitEndDate.setText(getContext().getResources().getString(R.string.date_closed) + ": " + DATE_FORMAT.format(visit.getStopDatetime()));
 			startDuration.setText(DateUtils.calculateTimeDifference(visit.getStartDatetime()));
-			visitDuration.setText(getContext().getString(R.string.visit_duration, DateUtils.calculateTimeDifference(visit
-					.getStartDatetime(), visit.getStopDatetime())));
-
+			visitDuration.setText(getContext().getString(R.string.visit_duration,
+					DateUtils.calculateTimeDifference(visit.getStartDatetime(), visit.getStopDatetime())));
 		} else {
 			activeVisitBadge.setVisibility(View.VISIBLE);
 			visitEndDate.setVisibility(View.GONE);
 			visitDuration.setVisibility(View.GONE);
-			visitStartDate.setText(
-					DateUtils.convertTime1(visit.getStartDatetime(), DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT));
+			visitStartDate.setText(DATE_FORMAT.format(visit.getStartDatetime()));
 			startDuration.setText(DateUtils.calculateTimeDifference(visit.getStartDatetime()));
 		}
 	}
@@ -540,9 +536,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 
 						if (visit.getEncounters().get(i).getObs().size() != 0) {
 							visitVitalsAuditInfo.setVisibility(View.VISIBLE);
-							visitVitalsDate
-									.setText(DateUtils.convertTime(visit.getEncounters().get(i).getEncounterDatetime(),
-											DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT));
+							visitVitalsDate.setText(DATE_FORMAT.format(visit.getEncounters().get(i).getEncounterDatetime()));
 
 							for (int v = 0; v < visit.getEncounters().get(i).getEncounterProviders().size(); v++) {
 								if (v == 0) {
@@ -574,6 +568,8 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 
 	public void setAuditData(Visit visit) {
 		if (visit.getEncounters().size() > 0) {
+			SimpleDateFormat dateFormat = new SimpleDateFormat(DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT);
+
 			for (int i = 0; i < visit.getEncounters().size(); i++) {
 				if (visit.getEncounters().get(i).getEncounterType().getUuid()
 						.equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.AUDIT_DATA_UUID) || visit.getEncounters()
@@ -581,11 +577,10 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 								.EncounterTypeDisplays.AUDITDATA)) {
 
 					if (visit.getEncounters().get(i).getObs().size() != 0) {
-
 						auditDataMetadata.setVisibility(View.VISIBLE);
-						auditDataMetadataDate
-								.setText(DateUtils.convertTime(visit.getEncounters().get(i).getEncounterDatetime(),
-										DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT));
+						auditDataMetadataDate.setText(
+								DATE_FORMAT.format(visit.getEncounters().get(i).getEncounterDatetime()))
+						;
 
 						for (int v = 0; v < visit.getEncounters().get(i).getEncounterProviders().size(); v++) {
 							if (v == 0) {

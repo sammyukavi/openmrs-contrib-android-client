@@ -28,6 +28,16 @@ public abstract class BaseDbService<E extends BaseOpenmrsObject> implements DbSe
 
 	protected abstract ModelAdapter<E> getEntityTable();
 
+	protected void postLoad(E entity) {	}
+
+	protected void preSave(E entity) { }
+
+	protected void postSave(E entity) { }
+
+	protected void preDelete(E entity) { }
+
+	protected void postDelete(E entity) { }
+
 	@Override
 	public List<E> getAll(@Nullable QueryOptions options, @Nullable PagingInfo pagingInfo) {
 		return executeQuery(options, pagingInfo, getEntityClass());
@@ -37,20 +47,38 @@ public abstract class BaseDbService<E extends BaseOpenmrsObject> implements DbSe
 	public E getByUuid(@NonNull String uuid, @Nullable QueryOptions options) {
 		checkNotNull(uuid);
 
-		return SQLite.select()
+		E result = SQLite.select()
 				.from(getEntityClass())
 				.where(getEntityTable().getProperty("uuid").eq(uuid))
 				.querySingle();
+
+		if (result != null) {
+			postLoad(result);
+		}
+
+		return result;
 	}
 
 	@Override
 	public List<E> saveAll(@NonNull List<E> entities) {
 		checkNotNull(entities);
 
+		for (E entity : entities) {
+			if (entity != null) {
+				preSave(entity);
+			}
+		}
+
 		FastStoreModelTransaction
 				.saveBuilder(FlowManager.getModelAdapter(getEntityClass()))
 				.addAll(entities)
 				.build();
+
+		for (E entity : entities) {
+			if (entity != null) {
+				postSave(entity);
+			}
+		}
 
 		return entities;
 	}
@@ -59,7 +87,11 @@ public abstract class BaseDbService<E extends BaseOpenmrsObject> implements DbSe
 	public E save(@NonNull E entity) {
 		checkNotNull(entity);
 
+		preSave(entity);
+
 		if (FlowManager.getModelAdapter(getEntityClass()).save(entity)) {
+			postSave(entity);
+
 			return entity;
 		} else {
 			throw new DataOperationException("Entity save failed.");
@@ -69,6 +101,12 @@ public abstract class BaseDbService<E extends BaseOpenmrsObject> implements DbSe
 	@Override
 	public void delete(@NonNull E entity) {
 		checkNotNull(entity);
+
+		preDelete(entity);
+
+		delete(entity.getUuid());
+
+		postDelete(entity);
 	}
 
 	@Override
@@ -119,12 +157,29 @@ public abstract class BaseDbService<E extends BaseOpenmrsObject> implements DbSe
 
 		// Add Where clauses, if defined
 		if (where != null) {
-
 			where.accept(from);
 		}
 
 		// Return the results
-		return from.queryList();
+		List<M> results = from.queryList();
+
+		// Ensure entity class is loaded
+		getEntityClass();
+
+		// Call post-load hook
+		Boolean isEntity = null;
+		if (results != null && !results.isEmpty()) {
+			for (M item : results) {
+				if (Boolean.TRUE.equals(isEntity) || entityClass.isInstance(item)) {
+					postLoad((E)item);
+
+					isEntity = true;
+				} else {
+					isEntity = false;
+				}
+			}
+		}
+		return results;
 	}
 
 	/**

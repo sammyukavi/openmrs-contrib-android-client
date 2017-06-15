@@ -62,7 +62,7 @@ public class QuestionOptions extends Resource implements Serializable {
 	}
 
 	@Override
-	protected void processRelationships() {
+	public void processRelationships() {
 		super.processRelationships();
 
 		processRelatedObjects(answers, (a) -> a.setQuestionOptions(this));

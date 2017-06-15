@@ -43,7 +43,7 @@ public class Page extends Resource implements Serializable {
 	}
 
 	@Override
-	protected void processRelationships() {
+	public void processRelationships() {
 		super.processRelationships();
 
 		processRelatedObjects(sections, (s) -> s.setPage(this));

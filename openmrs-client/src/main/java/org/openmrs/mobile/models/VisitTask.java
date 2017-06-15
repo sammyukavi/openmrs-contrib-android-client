@@ -50,7 +50,7 @@ public class VisitTask extends BaseOpenmrsEntity {
 	@Expose
 	private User closedBy;
 
-	protected void processRelationships() {
+	public void processRelationships() {
 		super.processRelationships();
 
 		if (visit != null) {

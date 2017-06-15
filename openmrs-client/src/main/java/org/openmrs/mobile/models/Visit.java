@@ -23,6 +23,7 @@ import com.raizlabs.android.dbflow.annotation.Table;
 import org.openmrs.mobile.data.db.AppDatabase;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 @Table(database = AppDatabase.class)
@@ -40,12 +41,12 @@ public class Visit extends BaseOpenmrsEntity implements Serializable {
 	@SerializedName("startDatetime")
 	@Expose
 	@Column
-	private String startDatetime;
+	private Date startDatetime;
 
 	@SerializedName("stopDatetime")
 	@Expose
 	@Column
-	private String stopDatetime;
+	private Date stopDatetime;
 
 	@SerializedName("encounters")
 	@Expose
@@ -79,7 +80,7 @@ public class Visit extends BaseOpenmrsEntity implements Serializable {
 	}
 
 	@Override
-	protected void processRelationships() {
+	public void processRelationships() {
 		super.processRelationships();
 
 		processRelatedObjects(encounters);
@@ -110,19 +111,19 @@ public class Visit extends BaseOpenmrsEntity implements Serializable {
 		this.location = location;
 	}
 
-	public String getStartDatetime() {
+	public Date getStartDatetime() {
 		return startDatetime;
 	}
 
-	public void setStartDatetime(String startDatetime) {
+	public void setStartDatetime(Date startDatetime) {
 		this.startDatetime = startDatetime;
 	}
 
-	public String getStopDatetime() {
+	public Date getStopDatetime() {
 		return stopDatetime;
 	}
 
-	public void setStopDatetime(String stopDatetime) {
+	public void setStopDatetime(Date stopDatetime) {
 		this.stopDatetime = stopDatetime;
 	}
 

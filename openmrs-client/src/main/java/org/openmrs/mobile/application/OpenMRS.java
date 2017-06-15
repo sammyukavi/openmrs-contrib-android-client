@@ -44,9 +44,11 @@ public class OpenMRS extends Application {
 
 	@Override
 	public void onCreate() {
-		initializeSQLCipher();
 		super.onCreate();
+
+		initializeSQLCipher();
 		instance = this;
+
 		if (mExternalDirectoryPath == null) {
 			//mExternalDirectoryPath = this.getExternalFilesDir(null).toString();
 			String state = Environment.getExternalStorageState();
@@ -56,10 +58,11 @@ public class OpenMRS extends Application {
 				mExternalDirectoryPath = getFilesDir().toString();
 			}
 		}
+
 		mLogger = new OpenMRSLogger();
+
 		generateKey();
 		initializeDB();
-
 	}
 
 	protected void initializeDB() {

@@ -15,8 +15,6 @@ import com.google.common.base.Supplier;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
-import com.raizlabs.android.dbflow.sql.language.IConditional;
-import com.raizlabs.android.dbflow.sql.language.Operator;
 import com.raizlabs.android.dbflow.sql.language.SQLOperator;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
@@ -93,17 +91,15 @@ public class Resource implements Serializable {
 		this.links = links;
 	}
 
-	protected void processRelationships() {
-		return;
-	}
+	public void processRelationships() { }
 
-	protected <E extends Resource> void processRelatedObjects(@Nullable List<E> resources) {
+	protected <R extends Resource> void processRelatedObjects(@Nullable List<R> resources) {
 		processRelatedObjects(resources, null);
 	}
 
-	protected <E extends Resource> void processRelatedObjects(@Nullable List<E> resources, @Nullable Consumer<E> process) {
+	protected <R extends Resource> void processRelatedObjects(@Nullable List<R> resources, @Nullable Consumer<R> process) {
 		if (resources != null && !resources.isEmpty()) {
-			for (E r : resources) {
+			for (R r : resources) {
 				if (process != null) {
 					process.accept(r);
 				}

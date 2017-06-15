@@ -154,7 +154,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	public void updateVisitsCard(List<Visit> visits) {
 		hasActiveVisit = false;
 		for (Visit visit : visits) {
-			if (!StringUtils.notNull(visit.getStopDatetime())) {
+			if (visit.getStopDatetime() == null) {
 				hasActiveVisit = true;
 				startVisitButton.setVisibility(View.GONE);
 				setVisitUuid(visit);

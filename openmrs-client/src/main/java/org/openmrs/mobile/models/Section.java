@@ -43,7 +43,7 @@ public class Section extends Resource implements Serializable {
 	}
 
 	@Override
-	protected void processRelationships() {
+	public void processRelationships() {
 		super.processRelationships();
 
 		processRelatedObjects(questions, (q) -> q.setSection(this));

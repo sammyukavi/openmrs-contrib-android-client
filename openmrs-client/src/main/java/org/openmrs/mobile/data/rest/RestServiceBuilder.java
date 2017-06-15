@@ -24,6 +24,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class RestServiceBuilder {
 	protected static final OpenMRS app = OpenMRS.getInstance();
+	private static final String REST_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+
 	private static Retrofit.Builder builder;
 	private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 	private static String API_BASE_URL = OpenMRS.getInstance().getServerUrl();
@@ -36,6 +38,7 @@ public class RestServiceBuilder {
 		GsonBuilder gsonBuilder = new GsonBuilder();
 		Gson myGson = gsonBuilder
 				.excludeFieldsWithoutExposeAnnotation()
+				.setDateFormat(REST_DATE_FORMAT)
 				.registerTypeHierarchyAdapter(Resource.class, new ResourceSerializer())
 				.registerTypeHierarchyAdapter(Observation.class, new ObservationDeserializer())
 				.create();

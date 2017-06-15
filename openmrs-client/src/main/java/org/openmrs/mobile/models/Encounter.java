@@ -23,6 +23,7 @@ import org.openmrs.mobile.data.db.AppDatabase;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Table(database = AppDatabase.class)
@@ -31,7 +32,7 @@ public class Encounter extends BaseOpenmrsAuditableObject implements Serializabl
 	@SerializedName("encounterDatetime")
 	@Expose
 	@Column
-	private String encounterDatetime;
+	private Date encounterDatetime;
 
 	@SerializedName("patient")
 	@Expose
@@ -92,7 +93,7 @@ public class Encounter extends BaseOpenmrsAuditableObject implements Serializabl
 	}
 
 	@Override
-	protected void processRelationships() {
+	public void processRelationships() {
 		super.processRelationships();
 
 		if (form != null) {
@@ -148,14 +149,14 @@ public class Encounter extends BaseOpenmrsAuditableObject implements Serializabl
 	/**
 	 * @return The encounterDatetime
 	 */
-	public String getEncounterDatetime() {
+	public Date getEncounterDatetime() {
 		return encounterDatetime;
 	}
 
 	/**
 	 * @param encounterDatetime The encounterDatetime
 	 */
-	public void setEncounterDatetime(String encounterDatetime) {
+	public void setEncounterDatetime(Date encounterDatetime) {
 		this.encounterDatetime = encounterDatetime;
 	}
 

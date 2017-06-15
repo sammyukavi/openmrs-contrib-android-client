@@ -86,20 +86,16 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 	@Override
 	public void authenticateUser(final String username, final String password, final String url,
 			final boolean wipeDatabase) {
-
 		loginView.setProgressBarVisibility(true);
-
 		loginView.setViewsContainerVisibility(false);
 
 		RestServiceBuilder.setloginUrl(url);
 
 		if (NetworkUtils.isOnline()) {
-
 			mWipeRequired = wipeDatabase;
 
 			DataService.GetCallback<List<User>> loginUsersFoundCallback =
 					new DataService.GetCallback<List<User>>() {
-
 						@Override
 						public void onCompleted(List<User> users) {
 							boolean matchFound = false;
@@ -128,15 +124,10 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 			DataService.GetCallback<Session> loginUserCallback = new DataService.GetCallback<Session>() {
 				@Override
 				public void onCompleted(Session session) {
-
 					if (session != null && session.isAuthenticated()) {
-
 						if (wipeDatabase) {
-
 							mOpenMRS.deleteDatabase(OpenMRSSQLiteOpenHelper.DATABASE_NAME);
-
 							setData(session.getSessionId(), url, username, password);
-
 							mWipeRequired = false;
 						}
 
@@ -147,17 +138,14 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 						}
 
 						setLogin(true, url);
-
 						RestServiceBuilder.applyDefaultBaseUrl();
 
 						//Instantiate the user service  here to use our new session
 						userService = new UserDataService();
-
 						userService.getByUsername(username, QueryOptions.LOAD_RELATED_OBJECTS, pagingInfo,
 								loginUsersFoundCallback);
 
 						loginView.userAuthenticated();
-
 						loginView.finishLoginActivity();
 
 					} else {
@@ -165,67 +153,43 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 					}
 
 					loginView.setProgressBarVisibility(false);
-
 					loginView.setViewsContainerVisibility(true);
-
 				}
 
 				@Override
 				public void onError(Throwable t) {
-
 					t.printStackTrace();
 
 					loginView.setProgressBarVisibility(false);
-
 					loginView.setViewsContainerVisibility(true);
-
 					loginView.showMessage(SERVER_ERROR);
 				}
 			};
 
 			loginDataService.getSession(url, username, password, loginUserCallback);
-
-		} else
-
-		{
+		} else {
 			if (mOpenMRS.isUserLoggedOnline() && url.equals(mOpenMRS.getLastLoginServerUrl())) {
-
 				loginView.setProgressBarVisibility(false);
-
 				loginView.setViewsContainerVisibility(true);
 
 				if (mOpenMRS.getUsername().equals(username) && mOpenMRS.getPassword().equals(password)) {
-
 					mOpenMRS.setSessionToken(mOpenMRS.getLastSessionToken());
-
 					loginView.showMessage(OFFLINE_LOGIN);
-
 					loginView.userAuthenticated();
-
 					loginView.finishLoginActivity();
-
 				} else {
 					loginView.showMessage(AUTH_FAILED);
 				}
 			} else if (NetworkUtils.hasNetwork()) {
-
 				loginView.showMessage(OFFLINE_LOGIN_UNSUPPORTED);
-
 				loginView.setProgressBarVisibility(false);
-
 				loginView.setViewsContainerVisibility(true);
-
 			} else {
-
 				loginView.showMessage(NO_INTERNET);
-
 				loginView.setProgressBarVisibility(false);
-
 				loginView.setViewsContainerVisibility(true);
-
 			}
 		}
-
 	}
 
 	private void fetchFullUserInformation(String uuid) {

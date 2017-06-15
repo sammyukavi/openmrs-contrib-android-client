@@ -49,7 +49,7 @@ public class Form extends Resource implements Serializable {
 	}
 
 	@Override
-	protected void processRelationships() {
+	public void processRelationships() {
 		super.processRelationships();
 
 		processRelatedObjects(pages, (p) -> p.setForm(this));

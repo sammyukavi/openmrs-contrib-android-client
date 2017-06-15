@@ -41,7 +41,7 @@ public class PersonAttribute extends BaseOpenmrsObject implements Serializable {
 	private Person person;
 
 	@Override
-	protected void processRelationships() {
+	public void processRelationships() {
 		super.processRelationships();
 
 		if (conceptValue != null) {

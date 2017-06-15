@@ -35,6 +35,7 @@ import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.DateUtils;
 import org.openmrs.mobile.utilities.StringUtils;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -57,6 +58,8 @@ import static org.openmrs.mobile.utilities.ApplicationConstants.entityName.SUBCO
 import static org.openmrs.mobile.utilities.ApplicationConstants.entityName.TELEPHONE;
 
 public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(DateUtils.DATE_FORMAT);
+	private static final SimpleDateFormat SERIALIZE_DATE_FORMAT = new SimpleDateFormat(DateUtils.OPEN_MRS_RESPONSE_FORMAT);
 
 	private final int VIEW_TYPE_HEADER = 0;
 	private final int VIEW_TYPE_ITEM = 1;
@@ -382,7 +385,8 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
 	private void setVisitStopDate(Visit visit) {
 		SharedPreferences.Editor editor = instance.getOpenMRSSharedPreferences().edit();
-		editor.putString(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, visit.getStopDatetime());
+		editor.putString(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE,
+				SERIALIZE_DATE_FORMAT.format(visit.getStopDatetime()));
 		editor.commit();
 	}
 
@@ -435,7 +439,7 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 			TextView visitStartDate = (TextView)singleVisitView.findViewById(R.id.startDate);
 
 			//Let's set the visit title
-			String startDate = DateUtils.convertTime1(visit.getStartDatetime(), DateUtils.DATE_FORMAT);
+			String startDate = DATE_FORMAT.format(visit.getStartDatetime());
 
 			if (startDate.equalsIgnoreCase(DateUtils.getDateToday(DateUtils.DATE_FORMAT))) {
 				startDate = context.getString(R.string.today);
@@ -443,7 +447,7 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 				startDate = context.getString(R.string.yesterday);
 			}
 
-			String stopDate = visit.getStopDatetime();
+			String stopDate = DATE_FORMAT.format(visit.getStopDatetime());
 			if (!StringUtils.notNull(stopDate)) {
 				activeVisit = visit;
 				isActiveVisit = true;

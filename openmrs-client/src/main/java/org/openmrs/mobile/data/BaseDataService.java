@@ -11,6 +11,7 @@ import org.openmrs.mobile.data.cache.SimpleCacheService;
 import org.openmrs.mobile.data.db.BaseDbService;
 import org.openmrs.mobile.data.rest.RestServiceBuilder;
 import org.openmrs.mobile.models.BaseOpenmrsObject;
+import org.openmrs.mobile.models.Resource;
 import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.utilities.Consumer;
 import org.openmrs.mobile.utilities.Function;
@@ -18,6 +19,7 @@ import org.openmrs.mobile.utilities.NetworkUtils;
 import org.openmrs.mobile.utilities.StringUtils;
 
 import java.io.IOException;
+import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
 import retrofit2.Call;
@@ -41,6 +43,8 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 	protected RS restService;
 
 	protected CacheService cacheService;
+
+	private Class<E> entityClass;
 
 	protected BaseDataService() {
 		dbService = getDbService();
@@ -343,6 +347,9 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 					// Save the resulting model to the db
 					try {
 						T result = responseConverter.apply(response.body());
+						if (result instanceof Resource) {
+							((Resource)result).processRelationships();
+						}
 
 						dbOperation.accept(result);
 
@@ -432,6 +439,21 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 		if (StringUtils.notEmpty(cacheKey) && value != null) {
 			cacheService.set(cacheKey, value);
 		}
+	}
+
+	/**
+	 * Gets a usable instance of the actual class of the generic type E defined by the implementing sub-class.
+	 * @return The class object for the entity.
+	 */
+	@SuppressWarnings("unchecked")
+	protected Class<E> getEntityClass() {
+		if (entityClass == null) {
+			ParameterizedType parameterizedType = (ParameterizedType)getClass().getGenericSuperclass();
+
+			entityClass = (Class<E>)parameterizedType.getActualTypeArguments()[0];
+		}
+
+		return entityClass;
 	}
 }
 

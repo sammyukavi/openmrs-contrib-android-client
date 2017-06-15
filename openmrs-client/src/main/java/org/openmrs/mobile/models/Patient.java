@@ -57,7 +57,7 @@ public class Patient extends BaseOpenmrsAuditableObject implements Serializable 
 	}
 
 	@Override
-	protected void processRelationships() {
+	public void processRelationships() {
 		super.processRelationships();
 
 		if (person != null) {

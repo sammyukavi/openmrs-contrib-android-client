@@ -50,12 +50,13 @@ public class Concept extends BaseOpenmrsObject {
 		return loadRelatedObject(ConceptAnswer.class, answers, () -> ConceptAnswer_Table.concept_uuid.eq(getUuid()));
 	}
 
+	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "names", isVariablePrivate = true)
 	List<ConceptName> loadNames() {
 		return loadRelatedObject(ConceptName.class, names, () -> ConceptName_Table.concept_uuid.eq(getUuid()));
 	}
 
 	@Override
-	protected void processRelationships() {
+	public void processRelationships() {
 		super.processRelationships();
 
 		processRelatedObjects(answers, (a) -> a.setConcept(this));

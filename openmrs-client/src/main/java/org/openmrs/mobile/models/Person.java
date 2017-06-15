@@ -80,7 +80,7 @@ public class Person extends BaseOpenmrsEntity implements Serializable {
 	}
 
 	@Override
-	protected void processRelationships() {
+	public void processRelationships() {
 		super.processRelationships();
 
 		processRelatedObjects(names, (n) -> n.setPerson(this));

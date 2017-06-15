@@ -22,7 +22,7 @@ import com.raizlabs.android.dbflow.annotation.Table;
 import org.openmrs.mobile.data.db.AppDatabase;
 
 @Table(database = AppDatabase.class)
-public class User extends Resource {
+public class User extends BaseOpenmrsObject {
 	@Expose
 	@Column
 	private String username;

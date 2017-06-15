@@ -97,7 +97,8 @@ public class ConceptDataService extends BaseDataService<Concept, ConceptDbServic
 
 		executeMultipleCallback(callback, options, pagingInfo,
 				() -> null,
-				() -> restService.findConcept(buildRestRequestPath(), searchQuery, QueryOptions.getRepresentation(options)
+				() -> restService.findConcept(ApplicationConstants.API.REST_ENDPOINT_V2 + "/custom/diagnoses", searchQuery,
+						QueryOptions.getRepresentation(options)
 						, PagingInfo.getStartIndex(pagingInfo), PagingInfo.getLimit(pagingInfo)));
 	}
 }

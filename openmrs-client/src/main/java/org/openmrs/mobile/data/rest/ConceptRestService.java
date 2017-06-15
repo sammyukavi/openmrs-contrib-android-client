@@ -15,10 +15,7 @@
 package org.openmrs.mobile.data.rest;
 
 import org.openmrs.mobile.models.Concept;
-import org.openmrs.mobile.models.ConceptName;
 import org.openmrs.mobile.models.Results;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -38,7 +35,7 @@ public interface ConceptRestService {
 
 	@GET(RestConstants.REST_PATH)
 	Call<Results<Concept>> findConcept(@Path(value = "restPath", encoded = true) String restPath,
-			@Query("q") String name,
+			@Query("term") String name,
 			@Query("v") String representation,
 			@Query("startIndex") Integer startIndex,
 			@Query("limit") Integer limit);

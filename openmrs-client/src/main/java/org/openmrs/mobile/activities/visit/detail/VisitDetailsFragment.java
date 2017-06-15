@@ -43,9 +43,12 @@ import com.google.android.flexbox.FlexboxLayout;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.auditdata.AuditDataActivity;
 import org.openmrs.mobile.activities.capturevitals.CaptureVitalsActivity;
+import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
+import org.openmrs.mobile.activities.visit.VisitActivity;
 import org.openmrs.mobile.activities.visit.VisitContract;
 import org.openmrs.mobile.activities.visit.VisitFragment;
 import org.openmrs.mobile.application.OpenMRS;
+import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.ConceptName;
 import org.openmrs.mobile.models.Encounter;
@@ -101,7 +104,15 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	private View visitDetailsView;
 	private ScrollView visitDetailsScrollView;
 	private List<Concept> diagnosis;
+	private Boolean changesMade;
+	private int initialPrimaryDiagnosesListHashcode;
+	private int initialSecondaryDiagnosesListHashcode;
+	private int initialClinicNoteHashcode;
+	private int clinicalNoteLength;
 
+	private int subsequentPrimaryDiagnosesListHashcode;
+	private int subsequentSecondaryDiagnosesListHashcode;
+	private int subsequentClinicalNoteHashcode;
 
 	static VisitContract.VisitDetailsMainPresenter staticPresenter;
 
@@ -136,6 +147,8 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		diagnosis = new ArrayList<>();
 		staticPresenter = mPresenter;
 		//buildMarginLayout();
+		changesMade = false;
+		visitNoteWatcher();
 		return root;
 	}
 
@@ -179,6 +192,29 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		visitDetailsProgressBar = (RelativeLayout)v.findViewById(R.id.visitDetailsTabProgressBar);
 		visitDetailsScrollView = (ScrollView)v.findViewById(R.id.visitDetailsTab);
 
+	}
+
+	private void visitNoteWatcher() {
+		clinicalNote.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				subsequentClinicalNoteHashcode = s.toString().hashCode();
+				if (subsequentClinicalNoteHashcode != initialClinicNoteHashcode) {
+					changesMade = true;
+					submitVisitNote.setEnabled(true);
+				} else {
+					submitVisitNote.setEnabled(false);
+				}
+			}
+		});
 	}
 
 	@Override
@@ -244,10 +280,6 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 				if (addDiagnosis.getText().length() >= 2) {
 					((VisitDetailsPresenter)mPresenter).findConcept(addDiagnosis.getText().toString());
 				}
-				if (Arrays.asList(diagnosis)
-						.contains(addDiagnosis.getText().toString())) {
-					addDiagnosis.dismissDropDown();
-				}
 			}
 
 			@Override
@@ -284,6 +316,8 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	}
 
 	private void addListeners() {
+		submitVisitNote.setEnabled(false);
+
 		addAuditData.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -401,6 +435,10 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 			}
 		}
 		setRecyclerViews();
+		subsequentPrimaryDiagnosesListHashcode = primaryDiagnosesList.hashCode();
+		if (initialPrimaryDiagnosesListHashcode != subsequentPrimaryDiagnosesListHashcode) {
+			submitVisitNote.setEnabled(true);
+		}
 	}
 
 	@Override
@@ -412,6 +450,10 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 			}
 		}
 		setRecyclerViews();
+		subsequentSecondaryDiagnosesListHashcode = secondaryDiagnosesRecycler.hashCode();
+		if (initialSecondaryDiagnosesListHashcode != subsequentSecondaryDiagnosesListHashcode) {
+			submitVisitNote.setEnabled(true);
+		}
 	}
 
 	@Override
@@ -420,6 +462,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 			for (int i = 0; i < primaryDiagnosesList.size(); i++) {
 				if (primaryDiagnosesList.get(i) == diagnosisCertainty) {
 					primaryDiagnosesList.remove(i);
+					subsequentPrimaryDiagnosesListHashcode = primaryDiagnosesList.hashCode();
 					primaryDiagnosesList.add(i, diagnosisCertainty);
 				}
 			}
@@ -427,11 +470,16 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 			for (int i = 0; i < secondaryDiagnosesList.size(); i++) {
 				if (secondaryDiagnosesList.get(i) == diagnosisCertainty) {
 					secondaryDiagnosesList.remove(i);
+					subsequentSecondaryDiagnosesListHashcode = secondaryDiagnosesList.hashCode();
 					secondaryDiagnosesList.add(i, diagnosisCertainty);
 				}
 			}
 		}
 		setRecyclerViews();
+		if (initialPrimaryDiagnosesListHashcode != subsequentPrimaryDiagnosesListHashcode ||
+				initialSecondaryDiagnosesListHashcode != subsequentSecondaryDiagnosesListHashcode) {
+			submitVisitNote.setEnabled(true);
+		}
 	}
 
 	@Override
@@ -450,11 +498,18 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 			}
 		}
 		setRecyclerViews();
+		subsequentPrimaryDiagnosesListHashcode = primaryDiagnosesList.hashCode();
+		subsequentSecondaryDiagnosesListHashcode = secondaryDiagnosesList.hashCode();
+		if (initialPrimaryDiagnosesListHashcode != subsequentPrimaryDiagnosesListHashcode
+				|| initialSecondaryDiagnosesListHashcode != subsequentSecondaryDiagnosesListHashcode) {
+			submitVisitNote.setEnabled(true);
+		} else {
+			submitVisitNote.setEnabled(false);
+		}
 	}
 
 	@Override
 	public void setDiagnoses(List<Concept> concepts) {
-		//this.diagnosis = concepts;
 		ArrayAdapter<Concept> adapter =
 				new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line,
 						concepts);
@@ -582,7 +637,6 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 								.EncounterTypeDisplays.AUDITDATA)) {
 
 					if (visit.getEncounters().get(i).getObs().size() != 0) {
-
 						auditDataMetadata.setVisibility(View.VISIBLE);
 						auditDataMetadataDate
 								.setText(DateUtils.convertTime(visit.getEncounters().get(i).getEncounterDatetime(),
@@ -629,6 +683,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 
 						if (locators.get(0).toString()
 								.equalsIgnoreCase(ApplicationConstants.ObservationLocators.CLINICAL_NOTE)) {
+							initialClinicNoteHashcode = locators.get(1).toString().hashCode();
 							clinicalNote.setText(locators.get(1).toString());
 						}
 					}
@@ -653,6 +708,8 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		} else {
 			showNoDiagnoses();
 		}
+		initialPrimaryDiagnosesListHashcode = primaryDiagnosesList.hashCode();
+		initialSecondaryDiagnosesListHashcode = secondaryDiagnosesList.hashCode();
 	}
 
 	public void loadObservationFields(List<Observation> observations, EncounterTypeData type) {
@@ -790,8 +847,24 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 
 	public static void refreshVitalsDetails() {
 		((VisitDetailsPresenter)staticPresenter).getVisit();
-		//((VisitDetailsPresenter)mPresenter).getPatientUUID();
-		//((VisitDetailsPresenter)mPresenter).getVisitUUID();
-		//((VisitDetailsPresenter)mPresenter).getProviderUUID();
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		if (changesMade || (initialPrimaryDiagnosesListHashcode != subsequentPrimaryDiagnosesListHashcode) ||
+				(initialSecondaryDiagnosesListHashcode != subsequentSecondaryDiagnosesListHashcode)) {
+			showPendingVisitNoteCahngesDialog();
+		}
+	}
+
+	private void showPendingVisitNoteCahngesDialog() {
+		CustomDialogBundle bundle = new CustomDialogBundle();
+		bundle.setTitleViewMessage(getString(R.string.visit_note_changes_pending_title));
+		bundle.setTextViewMessage(getString(R.string.visit_note_changes_pending_message));
+		bundle.setRightButtonAction(CustomFragmentDialog.OnClickAction.END_VISIT);
+		bundle.setRightButtonText(getString(R.string.dialog_button_confirm));
+		((VisitActivity)this.getActivity())
+				.createAndShowDialog(bundle, ApplicationConstants.DialogTAG.PENDING_VISIT_NOTE_CHANGES_TAG);
 	}
 }

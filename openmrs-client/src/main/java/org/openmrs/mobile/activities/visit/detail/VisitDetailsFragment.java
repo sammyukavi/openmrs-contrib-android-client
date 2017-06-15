@@ -51,6 +51,7 @@ import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.ConceptName;
+import org.openmrs.mobile.models.ConceptSearchResult;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.EncounterDiagnosis;
 import org.openmrs.mobile.models.EncounterType;
@@ -509,8 +510,8 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	}
 
 	@Override
-	public void setDiagnoses(List<Concept> concepts) {
-		ArrayAdapter<Concept> adapter =
+	public void setDiagnoses(List<ConceptSearchResult> concepts) {
+		ArrayAdapter<ConceptSearchResult> adapter =
 				new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line,
 						concepts);
 		addDiagnosis.setAdapter(adapter);

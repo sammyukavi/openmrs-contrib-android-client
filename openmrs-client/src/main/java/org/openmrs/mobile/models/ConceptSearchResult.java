@@ -1,21 +1,20 @@
 package org.openmrs.mobile.models;
 
-import java.io.Serializable;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
-public class ConceptSearchResult extends BaseOpenmrsObject{
+import org.openmrs.mobile.utilities.ApplicationConstants;
 
+public class ConceptSearchResult extends BaseOpenmrsObject {
+	@SerializedName("concept")
+	@Expose
 	private Concept concept;
+	@SerializedName("conceptName")
+	@Expose
 	private ConceptName conceptName;
+	@SerializedName("word")
+	@Expose
 	private String word;
-
-	public ConceptSearchResult() {
-	}
-
-	public ConceptSearchResult(String word, Concept concept, ConceptName conceptName) {
-		this.concept = concept;
-		this.conceptName = conceptName;
-		this.word = word;
-	}
 
 	public Concept getConcept() {
 		return this.concept;
@@ -39,5 +38,18 @@ public class ConceptSearchResult extends BaseOpenmrsObject{
 
 	public void setWord(String word) {
 		this.word = word;
+	}
+
+	@Override
+	public String toString() {
+		String conceptCode = ApplicationConstants.EMPTY_STRING;
+		for (ConceptMap conceptMap : concept.getConceptMappings()) {
+			if (conceptMap.getConceptReferenceTerm().getConceptSource().getName().equalsIgnoreCase(
+					ApplicationConstants.ConceptSource.ICD_10_WHO)) {
+				conceptCode = conceptMap.getConceptReferenceTerm().getCode();
+			}
+		}
+
+		return conceptCode + " - " + conceptName.getName();
 	}
 }

@@ -32,7 +32,11 @@ public class Concept extends BaseOpenmrsObject {
 	@SerializedName("names")
 	@Expose
 	private List<ConceptName> names;
+	@SerializedName("preferredName")
+	@Expose
 	private String preferredName;
+	@SerializedName("conceptMappings")
+	@Expose
 	private List<ConceptMap> conceptMappings;
 
 	public Datatype getDatatype() {

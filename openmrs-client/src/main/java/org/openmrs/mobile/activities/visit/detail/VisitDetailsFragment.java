@@ -51,6 +51,7 @@ import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.ConceptName;
+import org.openmrs.mobile.models.ConceptSearchResult;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.EncounterDiagnosis;
 import org.openmrs.mobile.models.EncounterType;
@@ -363,7 +364,10 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				if (ViewUtils.getInput(addDiagnosis) != null) {
-					createEncounterDiagnosis(null, ViewUtils.getInput(addDiagnosis));
+					ConceptSearchResult conceptSearchResult =
+							(ConceptSearchResult)addDiagnosis.getAdapter().getItem(position);
+					createEncounterDiagnosis(null, ViewUtils.getInput(addDiagnosis),
+							conceptSearchResult.getConcept().getUuid());
 				}
 			}
 		});
@@ -509,8 +513,8 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	}
 
 	@Override
-	public void setDiagnoses(List<Concept> concepts) {
-		ArrayAdapter<Concept> adapter =
+	public void setDiagnoses(List<ConceptSearchResult> concepts) {
+		ArrayAdapter<ConceptSearchResult> adapter =
 				new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line,
 						concepts);
 		addDiagnosis.setAdapter(adapter);
@@ -700,7 +704,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 						.equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.CLINICAL_NOTE_UUID)) {
 					submitVisitNote.setText(getString(R.string.update_visit_note));
 					for (Observation obs : encounter.getObs()) {
-						createEncounterDiagnosis(obs, null);
+						createEncounterDiagnosis(obs, null, null);
 					}
 				}
 			}
@@ -784,13 +788,16 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		}
 	}
 
-	private EncounterDiagnosis createEncounterDiagnosis(Observation observation, String diagnosis) {
+	private EncounterDiagnosis createEncounterDiagnosis(Observation observation, String diagnosis, String uuid) {
 		EncounterDiagnosis encounterDiagnosis = new EncounterDiagnosis();
 		if (observation != null) {
 
 			if (observation.getDisplay().startsWith(ApplicationConstants.ObservationLocators.DIAGNOSES)) {
 				encounterDiagnosis.setCertainty(checkObsCertainty(observation.getDisplay()));
-				encounterDiagnosis.setDiagnosis(StringUtils.getConceptName(observation.getDisplay()));
+				diagnosis = "ConceptName:" + StringUtils.getConceptName(observation.getDisplay());
+				encounterDiagnosis.setDisplay(StringUtils.getConceptName(observation.getDisplay()));
+				encounterDiagnosis.setDiagnosis(diagnosis);
+
 				if (observation.getDisplay().contains(ApplicationConstants.ObservationLocators.PRIMARY_DIAGNOSIS)) {
 					encounterDiagnosis.setOrder(ApplicationConstants.DiagnosisStrings.PRIMARY_ORDER);
 					primaryDiagnosesList.add(encounterDiagnosis);
@@ -803,7 +810,8 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 			}
 		} else {
 			encounterDiagnosis.setCertainty(ApplicationConstants.DiagnosisStrings.PRESUMED);
-			encounterDiagnosis.setDiagnosis(diagnosis);
+			encounterDiagnosis.setDisplay(diagnosis);
+			encounterDiagnosis.setDiagnosis("ConceptName:" + uuid);
 			encounterDiagnosis.setExistingObs(null);
 			if (primaryDiagnosesList.size() <= 0) {
 				encounterDiagnosis.setOrder(ApplicationConstants.DiagnosisStrings.PRIMARY_ORDER);

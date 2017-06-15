@@ -184,7 +184,7 @@ public class AddEditVisitPresenterTest extends ACUnitTestBase {
     public void shouldStartVisit(){
         presenter.startVisit(new ArrayList<>());
         verify(view).setSpinnerVisibility(false);
-        verify(view).showVisitDetails("24-65-9");
+        verify(view).showVisitDetails("24-65-9", true);
     }
 
     //@Test

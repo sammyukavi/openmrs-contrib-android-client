@@ -41,6 +41,8 @@ public interface PatientListContract {
 		boolean isActive();
 
 		void setPatientListScreenVisibility(boolean visible);
+
+		void updatePagingLabel(int currentPage, int totalNumberOfPages);
 	}
 
 	interface Presenter extends BasePresenterContract {

@@ -814,7 +814,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		visitNote.setEncounterId(encounterUuid == null ? ApplicationConstants.EMPTY_STRING : encounterUuid);
 		visitNote.setW1(OpenMRS.getInstance().getCurrentUserUuid());
 		visitNote.setW3(OpenMRS.getInstance().getParentLocationUuid());
-		visitNote.setW5(DateUtils.getDateToday(DateUtils.OPEN_MRS_REQUEST_PATIENT_FORMAT));
+		visitNote.setW5(visit.getStartDatetime());
 		visitNote.setW10(ApplicationConstants.EMPTY_STRING);
 		visitNote.setW12(ViewUtils.getInput(clinicalNote));
 

@@ -173,22 +173,12 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 					@Override
 					public void onCompleted(Observation entity) {
 						visitDetailsView.showTabSpinner(false);
-						if (entity != null) {
-							if (!entity.getConcept().getUuid().equalsIgnoreCase(ApplicationConstants.ObservationLocators
-									.PRIMARY_DIAGNOSIS) && !entity.getConcept().getUuid()
-									.equalsIgnoreCase(ApplicationConstants.ObservationLocators
-											.SECONDARY_DIAGNOSIS)) {
-								Concept concept = (Concept)entity.getValue();
-							}
-
-						}
+						visitDetailsView.createEncounterDiagnosis(entity, entity.getDisplay(), entity.getValueCodedName());
 					}
 
 					@Override
 					public void onError(Throwable t) {
 						visitDetailsView.showTabSpinner(false);
-						visitDetailsView
-								.showToast("Could not fetch", ToastUtil.ToastType.ERROR);
 					}
 				};
 		obsDataService.getByUUID(uuid, QueryOptions.LOAD_RELATED_OBJECTS, getSingleCallback);

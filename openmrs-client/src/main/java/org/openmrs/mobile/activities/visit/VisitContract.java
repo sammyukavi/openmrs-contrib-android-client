@@ -23,6 +23,7 @@ import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.ConceptSearchResult;
 import org.openmrs.mobile.models.EncounterDiagnosis;
+import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitAttributeType;
 import org.openmrs.mobile.models.VisitNote;
@@ -88,6 +89,8 @@ public interface VisitContract {
 		void removeDiagnosis(EncounterDiagnosis removeDiagnosis, String order);
 
 		void setDiagnoses(List<ConceptSearchResult> concepts);
+
+		void createEncounterDiagnosis(Observation observation, String diagnosis, String conceptNameId);
 	}
 
 	interface VisitPhotoView extends ViewVisitDetailsMain {

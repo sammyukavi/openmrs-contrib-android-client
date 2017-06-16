@@ -30,11 +30,9 @@ public interface PatientDashboardContract {
 
 	interface View extends BaseView<Presenter> {
 
-		void updateContactCard(Patient patient);
+		void patientContacts(Patient patient);
 
-		void updateVisitsCard(List<Visit> visits);
-
-		public void updateVisits(List<Visit> visits);
+		void patientVisits(List<Visit> visits);
 
 		Patient getPatient();
 
@@ -58,9 +56,7 @@ public interface PatientDashboardContract {
 
 		void fetchPatientData(final String patientId);
 
-		void fetchVisits(Patient patient);
-
-		void fetchVisits(boolean loadNextResults);
+		void fetchVisits(Patient patient, int startIndex);
 
 		Patient getPatient();
 
@@ -79,5 +75,9 @@ public interface PatientDashboardContract {
 		int getStartIndex();
 
 		int getLimit();
+
+		void loadResults(Patient patient, boolean loadNextResults);
+
+		void setTotalNumberResults(int totalNumberResults);
 	}
 }

@@ -358,6 +358,7 @@
 	<string name="err_fetching_user_data">Couldn\'t fetch user data</string>
 	<string name="search_to_view">Please search to see patients</string>
 	<string name="visit_note_changes_pending_title">Pending Changes</string>
-	<string name="visit_note_changes_pending_message">You have have unsaved changes on the visit note. Leaving this
+	<string name="visit_note_changes_pending_message">You have unsaved changes on the visit note. Leaving this
 		screen while discard your changes</string>
+	<string name="no_clinical_note">No Clinical Note</string>
 </resources>

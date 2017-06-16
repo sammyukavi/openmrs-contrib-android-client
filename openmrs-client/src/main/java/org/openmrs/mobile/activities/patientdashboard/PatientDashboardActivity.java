@@ -86,17 +86,12 @@ public class PatientDashboardActivity extends ACBaseActivity {
 
 	@Override
 	protected void onRestart() {
-		refreshUiData();
 		super.onRestart();
 	}
 
 	@Override
 	protected void onResume() {
-		refreshUiData();
 		super.onResume();
 	}
 
-	private void refreshUiData() {
-		PatientDashboardFragment.fetchPatientData();
-	}
 }

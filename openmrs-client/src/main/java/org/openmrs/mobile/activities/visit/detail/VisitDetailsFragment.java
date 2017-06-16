@@ -68,7 +68,6 @@ import org.openmrs.mobile.utilities.ViewUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -300,8 +299,16 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 			noSecondaryDiagnoses.setVisibility(View.GONE);
 		}
 
-		primaryDiagnosesRecycler.setAdapter(
-				new DiagnosisRecyclerViewAdapter(this.getActivity(), primaryDiagnosesList, this));
+		if (initialPrimaryDiagnosesListHashcode != subsequentPrimaryDiagnosesListHashcode
+				|| initialSecondaryDiagnosesListHashcode != subsequentSecondaryDiagnosesListHashcode) {
+			submitVisitNote.setEnabled(true);
+		} else {
+			submitVisitNote.setEnabled(false);
+		}
+
+		DiagnosisRecyclerViewAdapter primaryDiagnosesAdapter =
+				new DiagnosisRecyclerViewAdapter(this.getActivity(), primaryDiagnosesList, this);
+		primaryDiagnosesRecycler.setAdapter(primaryDiagnosesAdapter);
 
 		secondaryDiagnosesRecycler.setAdapter(
 				new DiagnosisRecyclerViewAdapter(this.getActivity(), secondaryDiagnosesList, this)
@@ -429,9 +436,6 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		}
 		setRecyclerViews();
 		subsequentPrimaryDiagnosesListHashcode = primaryDiagnosesList.hashCode();
-		if (initialPrimaryDiagnosesListHashcode != subsequentPrimaryDiagnosesListHashcode) {
-			submitVisitNote.setEnabled(true);
-		}
 	}
 
 	@Override
@@ -444,9 +448,6 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		}
 		setRecyclerViews();
 		subsequentSecondaryDiagnosesListHashcode = secondaryDiagnosesRecycler.hashCode();
-		if (initialSecondaryDiagnosesListHashcode != subsequentSecondaryDiagnosesListHashcode) {
-			submitVisitNote.setEnabled(true);
-		}
 	}
 
 	@Override
@@ -469,10 +470,6 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 			}
 		}
 		setRecyclerViews();
-		if (initialPrimaryDiagnosesListHashcode != subsequentPrimaryDiagnosesListHashcode ||
-				initialSecondaryDiagnosesListHashcode != subsequentSecondaryDiagnosesListHashcode) {
-			submitVisitNote.setEnabled(true);
-		}
 	}
 
 	@Override
@@ -493,12 +490,6 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		setRecyclerViews();
 		subsequentPrimaryDiagnosesListHashcode = primaryDiagnosesList.hashCode();
 		subsequentSecondaryDiagnosesListHashcode = secondaryDiagnosesList.hashCode();
-		if (initialPrimaryDiagnosesListHashcode != subsequentPrimaryDiagnosesListHashcode
-				|| initialSecondaryDiagnosesListHashcode != subsequentSecondaryDiagnosesListHashcode) {
-			submitVisitNote.setEnabled(true);
-		} else {
-			submitVisitNote.setEnabled(false);
-		}
 	}
 
 	@Override
@@ -596,7 +587,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 							for (int v = 0; v < visit.getEncounters().get(i).getEncounterProviders().size(); v++) {
 								if (v == 0) {
 
-									ArrayList names = splitStrings(
+									ArrayList names = StringUtils.splitStrings(
 											visit.getEncounters().get(i).getEncounterProviders().get(v).getDisplay(), ":");
 									visitVitalsProvider.setText(names.get(0).toString());
 								}
@@ -638,7 +629,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 						for (int v = 0; v < visit.getEncounters().get(i).getEncounterProviders().size(); v++) {
 							if (v == 0) {
 
-								ArrayList names = splitStrings(
+								ArrayList names = StringUtils.splitStrings(
 										visit.getEncounters().get(i).getEncounterProviders().get(v).getDisplay(), ":");
 								auditDataMetadataProvider.setText(names.get(0).toString());
 							}
@@ -672,7 +663,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 
 					for (int v = 0; v < encounter.getObs().size(); v++) {
 
-						ArrayList locators = splitStrings(encounter.getObs().get(v).getDisplay(), ":");
+						ArrayList locators = StringUtils.splitStrings(encounter.getObs().get(v).getDisplay(), ":");
 
 						if (locators.get(0).toString()
 								.equalsIgnoreCase(ApplicationConstants.ObservationLocators.CLINICAL_NOTE)) {
@@ -715,7 +706,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 					LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 			row.setLayoutParams(params);
 
-			ArrayList splitValues = splitStrings(observation.getDisplay(), ":");
+			ArrayList splitValues = StringUtils.splitStrings(observation.getDisplay(), ":");
 
 			TextView label = new TextView(getContext());
 			TableRow.LayoutParams labelParams = new TableRow.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -753,12 +744,6 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 				auditInfoTableLayout.addView(row);
 			}
 		}
-	}
-
-	private ArrayList splitStrings(String display, String splitter) {
-		ArrayList<String> displayArray = new ArrayList<>();
-		Collections.addAll(displayArray, display.split(splitter));
-		return displayArray;
 	}
 
 	private void showNoDiagnoses() {
@@ -846,8 +831,8 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	}
 
 	@Override
-	public void onStop() {
-		super.onStop();
+	public void onPause() {
+		super.onPause();
 		if (changesMade || (initialPrimaryDiagnosesListHashcode != subsequentPrimaryDiagnosesListHashcode) ||
 				(initialSecondaryDiagnosesListHashcode != subsequentSecondaryDiagnosesListHashcode)) {
 			showPendingVisitNoteCahngesDialog();

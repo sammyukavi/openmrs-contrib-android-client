@@ -110,4 +110,27 @@ public final class StringUtils {
 	public static String stripHtmlTags(String htmlString) {
 		return htmlString.replaceAll("\\<[^>]*>", "").replaceAll("\\s", " ");
 	}
+
+	public static ArrayList splitStrings(String display, String splitter) {
+		ArrayList<String> displayArray = new ArrayList<>();
+		Collections.addAll(displayArray, display.split(splitter));
+		return displayArray;
+	}
+
+	public static String getConceptName(String obsDisplay) {
+		String diagnosisStringOne = "", diagnosisStringTwo = "", diagnosisStringThree = "", diagnosisStringFour = "",
+				diagnosisStringFive = "", diagnosisStringSix = "";
+		String diagnosisString = (obsDisplay.replaceAll(ApplicationConstants.ObservationLocators.DIAGNOSES, ""));
+		diagnosisStringOne += (diagnosisString.replaceAll(ApplicationConstants.ObservationLocators.PRIMARY_DIAGNOSIS, ""));
+		diagnosisStringTwo +=
+				(diagnosisStringOne.replaceAll(ApplicationConstants.ObservationLocators.SECONDARY_DIAGNOSIS, ""));
+		diagnosisStringThree +=
+				(diagnosisStringTwo.replaceAll(ApplicationConstants.ObservationLocators.PRESUMED_DIAGNOSIS, ""));
+		diagnosisStringFour +=
+				(diagnosisStringThree.replaceAll(ApplicationConstants.ObservationLocators.CONFIRMED_DIAGNOSIS, ""));
+		diagnosisStringFive += (diagnosisStringFour.replaceAll(",", ""));
+		diagnosisStringSix += (diagnosisStringFive.replaceAll(":", ""));
+
+		return diagnosisStringSix;
+	}
 }

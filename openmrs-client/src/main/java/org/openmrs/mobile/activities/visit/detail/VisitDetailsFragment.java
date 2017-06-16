@@ -307,6 +307,13 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 			noSecondaryDiagnoses.setVisibility(View.GONE);
 		}
 
+		if (initialPrimaryDiagnosesListHashcode != subsequentPrimaryDiagnosesListHashcode
+				|| initialSecondaryDiagnosesListHashcode != subsequentSecondaryDiagnosesListHashcode) {
+			submitVisitNote.setEnabled(true);
+		} else {
+			submitVisitNote.setEnabled(false);
+		}
+
 		DiagnosisRecyclerViewAdapter primaryDiagnosesAdapter =
 				new DiagnosisRecyclerViewAdapter(this.getActivity(), primaryDiagnosesList, this);
 		primaryDiagnosesRecycler.setAdapter(primaryDiagnosesAdapter);
@@ -440,9 +447,6 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		}
 		setRecyclerViews();
 		subsequentPrimaryDiagnosesListHashcode = primaryDiagnosesList.hashCode();
-		if (initialPrimaryDiagnosesListHashcode != subsequentPrimaryDiagnosesListHashcode) {
-			submitVisitNote.setEnabled(true);
-		}
 	}
 
 	@Override
@@ -455,9 +459,6 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		}
 		setRecyclerViews();
 		subsequentSecondaryDiagnosesListHashcode = secondaryDiagnosesRecycler.hashCode();
-		if (initialSecondaryDiagnosesListHashcode != subsequentSecondaryDiagnosesListHashcode) {
-			submitVisitNote.setEnabled(true);
-		}
 	}
 
 	@Override
@@ -480,10 +481,6 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 			}
 		}
 		setRecyclerViews();
-		if (initialPrimaryDiagnosesListHashcode != subsequentPrimaryDiagnosesListHashcode ||
-				initialSecondaryDiagnosesListHashcode != subsequentSecondaryDiagnosesListHashcode) {
-			submitVisitNote.setEnabled(true);
-		}
 	}
 
 	@Override
@@ -504,12 +501,6 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		setRecyclerViews();
 		subsequentPrimaryDiagnosesListHashcode = primaryDiagnosesList.hashCode();
 		subsequentSecondaryDiagnosesListHashcode = secondaryDiagnosesList.hashCode();
-		if (initialPrimaryDiagnosesListHashcode != subsequentPrimaryDiagnosesListHashcode
-				|| initialSecondaryDiagnosesListHashcode != subsequentSecondaryDiagnosesListHashcode) {
-			submitVisitNote.setEnabled(true);
-		} else {
-			submitVisitNote.setEnabled(false);
-		}
 	}
 
 	@Override

@@ -111,9 +111,9 @@ public final class StringUtils {
 		return htmlString.replaceAll("\\<[^>]*>", "").replaceAll("\\s", " ");
 	}
 
-	public static ArrayList splitStrings(String display) {
+	public static ArrayList splitStrings(String display, String splitter) {
 		ArrayList<String> displayArray = new ArrayList<>();
-		Collections.addAll(displayArray, display.split(":"));
+		Collections.addAll(displayArray, display.split(splitter));
 		return displayArray;
 	}
 

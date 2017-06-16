@@ -344,8 +344,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		});
 
 		submitVisitNote.setOnClickListener(v -> {
-			((VisitDetailsPresenter)mPresenter).saveVisitNote(createVisitNote(encounterUuid));
-
+			((VisitDetailsPresenter) mPresenter).saveVisitNote(createVisitNote(encounterUuid));
 		});
 
 		auditDataCompleteness.setOnClickListener(new View.OnClickListener() {
@@ -367,7 +366,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 					ConceptSearchResult conceptSearchResult =
 							(ConceptSearchResult)addDiagnosis.getAdapter().getItem(position);
 					createEncounterDiagnosis(null, ViewUtils.getInput(addDiagnosis),
-							conceptSearchResult.getConcept().getUuid());
+							conceptSearchResult.getValue());
 				}
 			}
 		});
@@ -788,7 +787,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		}
 	}
 
-	private EncounterDiagnosis createEncounterDiagnosis(Observation observation, String diagnosis, String uuid) {
+	private EncounterDiagnosis createEncounterDiagnosis(Observation observation, String diagnosis, String value) {
 		EncounterDiagnosis encounterDiagnosis = new EncounterDiagnosis();
 		if (observation != null) {
 
@@ -811,7 +810,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		} else {
 			encounterDiagnosis.setCertainty(ApplicationConstants.DiagnosisStrings.PRESUMED);
 			encounterDiagnosis.setDisplay(diagnosis);
-			encounterDiagnosis.setDiagnosis("ConceptName:" + uuid);
+			encounterDiagnosis.setDiagnosis(value);
 			encounterDiagnosis.setExistingObs(null);
 			if (primaryDiagnosesList.size() <= 0) {
 				encounterDiagnosis.setOrder(ApplicationConstants.DiagnosisStrings.PRIMARY_ORDER);
@@ -839,9 +838,9 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		visitNote.setReturnUrl("");
 		visitNote.setCloseAfterSubmission("");
 		visitNote.setEncounterId(encounterUuid == null ? ApplicationConstants.EMPTY_STRING : encounterUuid);
-		visitNote.setW1(providerUuid);
+		visitNote.setW1(OpenMRS.getInstance().getCurrentUserUuid());
 		visitNote.setW3(OpenMRS.getInstance().getParentLocationUuid());
-		visitNote.setW5(String.valueOf(new Date()));
+		visitNote.setW5(DateUtils.getDateToday(DateUtils.OPEN_MRS_REQUEST_PATIENT_FORMAT));
 		visitNote.setW10(ApplicationConstants.EMPTY_STRING);
 		visitNote.setW12(ViewUtils.getInput(clinicalNote));
 

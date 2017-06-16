@@ -12,9 +12,9 @@ public class ConceptSearchResult extends BaseOpenmrsObject {
 	@SerializedName("conceptName")
 	@Expose
 	private ConceptName conceptName;
-	@SerializedName("word")
+	@SerializedName("value")
 	@Expose
-	private String word;
+	private String value;
 
 	public Concept getConcept() {
 		return this.concept;
@@ -32,12 +32,12 @@ public class ConceptSearchResult extends BaseOpenmrsObject {
 		this.conceptName = conceptName;
 	}
 
-	public String getWord() {
-		return this.word;
+	public String getValue() {
+		return this.value;
 	}
 
-	public void setWord(String word) {
-		this.word = word;
+	public void setValue(String value) {
+		this.value = value;
 	}
 
 	@Override

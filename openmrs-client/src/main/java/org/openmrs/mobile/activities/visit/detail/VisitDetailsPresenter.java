@@ -11,7 +11,6 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-
 package org.openmrs.mobile.activities.visit.detail;
 
 import android.util.Log;
@@ -26,7 +25,6 @@ import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.impl.ConceptAnswerDataService;
 import org.openmrs.mobile.data.impl.ConceptDataService;
 import org.openmrs.mobile.data.impl.ConceptSearchDataService;
-import org.openmrs.mobile.data.impl.LocationDataService;
 import org.openmrs.mobile.data.impl.ObsDataService;
 import org.openmrs.mobile.data.impl.VisitAttributeTypeDataService;
 import org.openmrs.mobile.data.impl.VisitDataService;
@@ -53,15 +51,8 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 	private ObsDataService obsDataService;
 	private VisitNoteDataService visitNoteDataService;
 	private String patientUUID, visitUUID, providerUuid, visitStopDate;
-	private String locationUuid;
 
-	private OpenMRS instance = OpenMRS.getInstance();
-	private LocationDataService locationDataService;
-
-	private int startIndex = 1;
-	private int limit = 10;
 	private ConceptAnswerDataService conceptAnswerDataService;
-	private Visit visit;
 
 	public VisitDetailsPresenter(String patientUuid, String visitUuid, String providerUuid, String visitStopDate,
 			VisitContract
@@ -75,7 +66,6 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 		this.conceptAnswerDataService = new ConceptAnswerDataService();
 		this.visitAttributeTypeDataService = new VisitAttributeTypeDataService();
 		this.visitNoteDataService = new VisitNoteDataService();
-		this.locationDataService = new LocationDataService();
 		this.visitUUID = visitUuid;
 		this.providerUuid = providerUuid;
 		this.patientUUID = patientUuid;
@@ -101,7 +91,6 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 						if (entity != null) {
 							visitDetailsView.setVisit(entity);
 							loadVisitAttributeTypes();
-							visit = entity;
 						} else {
 							visitDetailsView.showTabSpinner(false);
 						}

@@ -364,4 +364,6 @@
 	<string name="visit_note_changes_pending_message">You have unsaved changes on the visit note. Leaving this
 		screen while discard your changes</string>
 	<string name="no_clinical_note">No Clinical Note</string>
+	<string name="civil_status">Civil Status</string>
+	<string name="kin_relationship">Kin Relationship</string>
 </resources>

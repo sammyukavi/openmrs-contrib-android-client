@@ -29,6 +29,8 @@ public abstract class ApplicationConstants {
 	public static final String DEFAULT_OPEN_MRS_URL = "http://192.168.137.231:8080/openmrs/";
 	//public static final String DEFAULT_OPEN_MRS_URL = "http://sandbox.openhmisafrica.org/openmrs/";
 	public static final String THUMBNAIL_VIEW = "complexdata.view.thumbnail";
+	public static final String CIVIL_STATUS = "Civil Status";
+	public static final String KIN_RELATIONSHIP = "Kin Relationship";
 
 	public abstract static class OpenMRSSharedPreferenceNames {
 		public static final String SHARED_PREFERENCES_NAME = "shared_preferences";

@@ -68,9 +68,7 @@ import org.openmrs.mobile.utilities.ViewUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class VisitDetailsFragment extends VisitFragment implements VisitContract.VisitDetailsView {
 
@@ -310,9 +308,9 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 				new DiagnosisRecyclerViewAdapter(this.getActivity(), primaryDiagnosesList, this);
 		primaryDiagnosesRecycler.setAdapter(primaryDiagnosesAdapter);
 
-		secondaryDiagnosesRecycler.setAdapter(
-				new DiagnosisRecyclerViewAdapter(this.getActivity(), secondaryDiagnosesList, this)
-		);
+		DiagnosisRecyclerViewAdapter secondaryDiagnosesAdapter =
+				new DiagnosisRecyclerViewAdapter(this.getActivity(), secondaryDiagnosesList, this);
+		secondaryDiagnosesRecycler.setAdapter(secondaryDiagnosesAdapter);
 	}
 
 	private void addListeners() {
@@ -341,7 +339,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		});
 
 		submitVisitNote.setOnClickListener(v -> {
-			((VisitDetailsPresenter) mPresenter).saveVisitNote(createVisitNote(encounterUuid));
+			((VisitDetailsPresenter)mPresenter).saveVisitNote(createVisitNote(encounterUuid));
 		});
 
 		auditDataCompleteness.setOnClickListener(new View.OnClickListener() {
@@ -684,7 +682,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 						.equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.CLINICAL_NOTE_UUID)) {
 					submitVisitNote.setText(getString(R.string.update_visit_note));
 					for (Observation obs : encounter.getObs()) {
-						((VisitDetailsPresenter) mPresenter).getObservation(obs.getUuid());
+						((VisitDetailsPresenter)mPresenter).getObservation(obs.getUuid());
 					}
 				}
 			}
@@ -832,18 +830,18 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 
 	@Override
 	public void onPause() {
-		super.onPause();
 		if (changesMade || (initialPrimaryDiagnosesListHashcode != subsequentPrimaryDiagnosesListHashcode) ||
 				(initialSecondaryDiagnosesListHashcode != subsequentSecondaryDiagnosesListHashcode)) {
 			showPendingVisitNoteCahngesDialog();
 		}
+		super.onPause();
 	}
 
 	private void showPendingVisitNoteCahngesDialog() {
 		CustomDialogBundle bundle = new CustomDialogBundle();
 		bundle.setTitleViewMessage(getString(R.string.visit_note_changes_pending_title));
 		bundle.setTextViewMessage(getString(R.string.visit_note_changes_pending_message));
-		bundle.setRightButtonAction(CustomFragmentDialog.OnClickAction.END_VISIT);
+		//bundle.setRightButtonAction(CustomFragmentDialog.OnClickAction.END_VISIT);
 		bundle.setRightButtonText(getString(R.string.dialog_button_confirm));
 		((VisitActivity)this.getActivity())
 				.createAndShowDialog(bundle, ApplicationConstants.DialogTAG.PENDING_VISIT_NOTE_CHANGES_TAG);

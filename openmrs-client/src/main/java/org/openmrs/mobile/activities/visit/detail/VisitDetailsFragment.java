@@ -71,6 +71,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class VisitDetailsFragment extends VisitFragment implements VisitContract.VisitDetailsView {
 
@@ -113,6 +115,9 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	private int subsequentPrimaryDiagnosesListHashcode;
 	private int subsequentSecondaryDiagnosesListHashcode;
 	private int subsequentClinicalNoteHashcode;
+
+	private Timer timer = new Timer();
+	private final long DELAY = 1000;
 
 	static VisitContract.VisitDetailsMainPresenter staticPresenter;
 
@@ -264,20 +269,26 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	private void addDiagnosisAdapter() {
 		addDiagnosis.addTextChangedListener(new TextWatcher() {
 			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-			}
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				if (addDiagnosis.getText().length() >= 2) {
-					((VisitDetailsPresenter)mPresenter).findConcept(addDiagnosis.getText().toString());
+				if(timer != null){
+					timer.cancel();
 				}
 			}
 
 			@Override
 			public void afterTextChanged(Editable s) {
-
+				if (addDiagnosis.getText().length() >= 2) {
+					timer = new Timer();
+					timer.schedule(new TimerTask() {
+						@Override
+						public void run() {
+							((VisitDetailsPresenter)mPresenter).findConcept(addDiagnosis.getText().toString());
+						}
+					}, DELAY);
+				}
 			}
 		});
 	}

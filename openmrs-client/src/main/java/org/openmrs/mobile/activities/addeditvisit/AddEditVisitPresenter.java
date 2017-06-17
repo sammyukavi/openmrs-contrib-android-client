@@ -263,6 +263,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 			@Override
 			public void onCompleted(Visit entity) {
 				setProcessing(false);
+				addEditVisitView.setSpinnerVisibility(false);
 				addEditVisitView.showVisitDetails(entity.getUuid(), true);
 			}
 

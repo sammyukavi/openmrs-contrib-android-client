@@ -37,6 +37,7 @@ public class ObservationDeserializer implements JsonDeserializer<Observation> {
 	private static final String VALUE_KEY = "value";
 	private static final String COMMENT_KEY = "comment";
 	private static final String DATE_KEY = "obsDatetime";
+	private static final String NAME_KEY = "name";
 
 	@Override
 	public Observation deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
@@ -92,6 +93,9 @@ public class ObservationDeserializer implements JsonDeserializer<Observation> {
 					try {
 						observation.setDiagnosisList(
 								diagnosisDetails.getAsJsonObject().get(VALUE_KEY).getAsJsonObject().get(DISPLAY_KEY)
+										.getAsString());
+						observation.setValueCodedName(
+								diagnosisDetails.getAsJsonObject().get(VALUE_KEY).getAsJsonObject().get(UUID_KEY)
 										.getAsString());
 					} catch (IllegalStateException e) {
 						observation.setDiagnosisList(diagnosisDetails.getAsJsonObject().get(VALUE_KEY).getAsString());

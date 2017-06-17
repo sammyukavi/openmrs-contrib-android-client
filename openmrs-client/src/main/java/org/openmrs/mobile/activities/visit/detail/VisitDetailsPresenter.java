@@ -11,7 +11,6 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-
 package org.openmrs.mobile.activities.visit.detail;
 
 import android.util.Log;
@@ -25,14 +24,14 @@ import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.impl.ConceptAnswerDataService;
 import org.openmrs.mobile.data.impl.ConceptDataService;
-import org.openmrs.mobile.data.impl.LocationDataService;
+import org.openmrs.mobile.data.impl.ConceptSearchDataService;
 import org.openmrs.mobile.data.impl.ObsDataService;
 import org.openmrs.mobile.data.impl.VisitAttributeTypeDataService;
 import org.openmrs.mobile.data.impl.VisitDataService;
 import org.openmrs.mobile.data.impl.VisitNoteDataService;
 import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.ConceptAnswer;
-import org.openmrs.mobile.models.Location;
+import org.openmrs.mobile.models.ConceptSearchResult;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitAttributeType;
@@ -48,19 +47,12 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 	private VisitAttributeTypeDataService visitAttributeTypeDataService;
 	private VisitDataService visitDataService;
 	private ConceptDataService conceptDataService;
+	private ConceptSearchDataService conceptSearchDataService;
 	private ObsDataService obsDataService;
 	private VisitNoteDataService visitNoteDataService;
 	private String patientUUID, visitUUID, providerUuid, visitStopDate;
-	private String locationUuid;
 
-	private OpenMRS instance = OpenMRS.getInstance();
-	private LocationDataService locationDataService;
-
-	private int startIndex = 1;
-	private int limit = 10;
 	private ConceptAnswerDataService conceptAnswerDataService;
-	private Visit visit;
-
 
 	public VisitDetailsPresenter(String patientUuid, String visitUuid, String providerUuid, String visitStopDate,
 			VisitContract
@@ -74,11 +66,11 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 		this.conceptAnswerDataService = new ConceptAnswerDataService();
 		this.visitAttributeTypeDataService = new VisitAttributeTypeDataService();
 		this.visitNoteDataService = new VisitNoteDataService();
-		this.locationDataService = new LocationDataService();
 		this.visitUUID = visitUuid;
 		this.providerUuid = providerUuid;
 		this.patientUUID = patientUuid;
 		this.visitStopDate = visitStopDate;
+		this.conceptSearchDataService = new ConceptSearchDataService();
 	}
 
 	@Override
@@ -99,7 +91,6 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 						if (entity != null) {
 							visitDetailsView.setVisit(entity);
 							loadVisitAttributeTypes();
-							visit = entity;
 						} else {
 							visitDetailsView.showTabSpinner(false);
 						}
@@ -138,20 +129,20 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 
 	@Override
 	public void findConcept(String searchQuery) {
-		PagingInfo pagingInfo = new PagingInfo(startIndex, limit);
-		DataService.GetCallback<List<Concept>> getCallback = new DataService.GetCallback<List<Concept>>() {
+		DataService.GetCallback<List<ConceptSearchResult>> getCallback =
+				new DataService.GetCallback<List<ConceptSearchResult>>() {
 
-			@Override
-			public void onCompleted(List<Concept> concepts) {
-				visitDetailsView.setDiagnoses(concepts);
-			}
+					@Override
+					public void onCompleted(List<ConceptSearchResult> concepts) {
+						visitDetailsView.setDiagnoses(concepts);
+					}
 
-			@Override
-			public void onError(Throwable t) {
-				Log.e("error", t.getLocalizedMessage());
-			}
-		};
-		conceptDataService.findConcept(searchQuery, QueryOptions.DEFAULT, pagingInfo, getCallback);
+					@Override
+					public void onError(Throwable t) {
+						Log.e("error", t.getLocalizedMessage());
+					}
+				};
+		conceptSearchDataService.search(searchQuery, getCallback);
 	}
 
 	@Override
@@ -182,22 +173,12 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 					@Override
 					public void onCompleted(Observation entity) {
 						visitDetailsView.showTabSpinner(false);
-						if (entity != null) {
-							if (!entity.getConcept().getUuid().equalsIgnoreCase(ApplicationConstants.ObservationLocators
-									.PRIMARY_DIAGNOSIS) && !entity.getConcept().getUuid()
-									.equalsIgnoreCase(ApplicationConstants.ObservationLocators
-											.SECONDARY_DIAGNOSIS)) {
-								Concept concept = (Concept)entity.getValue();
-							}
-
-						}
+						visitDetailsView.createEncounterDiagnosis(entity, entity.getDisplay(), entity.getValueCodedName());
 					}
 
 					@Override
 					public void onError(Throwable t) {
 						visitDetailsView.showTabSpinner(false);
-						visitDetailsView
-								.showToast("Could not fetch", ToastUtil.ToastType.ERROR);
 					}
 				};
 		obsDataService.getByUUID(uuid, QueryOptions.LOAD_RELATED_OBJECTS, getSingleCallback);

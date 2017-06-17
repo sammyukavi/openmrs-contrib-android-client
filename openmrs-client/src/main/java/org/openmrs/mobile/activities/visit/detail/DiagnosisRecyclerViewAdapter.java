@@ -42,7 +42,7 @@ public class DiagnosisRecyclerViewAdapter extends RecyclerView.Adapter<Diagnosis
 
 		String confirmedDiagnosis = encounterDiagnosis.getCertainty();
 		String diagnosisOrder = encounterDiagnosis.getOrder();
-		String diagnosis = encounterDiagnosis.getDiagnosis();
+		String diagnosis = encounterDiagnosis.getDisplay();
 
 		if (confirmedDiagnosis != null) {
 			if (confirmedDiagnosis.equalsIgnoreCase(ApplicationConstants.DiagnosisStrings.PRESUMED)) {

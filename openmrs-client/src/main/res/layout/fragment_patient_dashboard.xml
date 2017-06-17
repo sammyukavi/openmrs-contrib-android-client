@@ -26,7 +26,7 @@
 		<android.support.v7.widget.RecyclerView
 				android:layout_below="@id/patientHeader"
 				android:paddingTop="0dp"
-				android:id="@+id/pastVisits"
+				android:id="@+id/patientVisitsRecyclerView"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content" />
 

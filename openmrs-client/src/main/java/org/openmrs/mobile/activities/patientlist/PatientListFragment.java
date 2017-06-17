@@ -44,10 +44,10 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 	private Spinner patientListDropdown;
 	private TextView emptyPatientList;
 	private TextView noPatientLists;
-	private TextView numberOfPatients;
+	private TextView numberOfPatients, pagingLabel;
 	private RecyclerView patientListModelRecyclerView;
 	private LinearLayoutManager layoutManager;
-	private LinearLayout patientListScreen, patientListRecyclerView, numberOfPatientsLayout;
+	private LinearLayout patientListScreen, patientListRecyclerView, numberOfPatientsLayout, pagingLayout;
 	private RelativeLayout patientListProgressBar, patientListLoadingProgressBar;
 
 	private PatientList selectedPatientList;
@@ -95,10 +95,12 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 		emptyPatientList = (TextView)root.findViewById(R.id.emptyPatientList);
 		noPatientLists = (TextView)root.findViewById(R.id.noPatientLists);
 		numberOfPatients = (TextView)root.findViewById(R.id.numberOfPatients);
+		pagingLabel = (TextView)root.findViewById(R.id.pagingLabel);
 		patientListProgressBar = (RelativeLayout)root.findViewById(R.id.patientListScreenProgressBar);
 		patientListScreen = (LinearLayout)root.findViewById(R.id.patientListScreen);
 		patientListRecyclerView = (LinearLayout)root.findViewById(R.id.patientListRecyclerView);
 		numberOfPatientsLayout = (LinearLayout)root.findViewById(R.id.numberOfPatientsLayout);
+		pagingLayout = (LinearLayout)root.findViewById(R.id.pagingLayout);
 
 		layoutManager = new LinearLayoutManager(this.getActivity());
 		patientListModelRecyclerView = (RecyclerView)root.findViewById(R.id.patientListModelRecyclerView);
@@ -115,6 +117,7 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 		emptyPatientList.setVisibility(visible ? View.VISIBLE : View.GONE);
 		patientListRecyclerView.setVisibility(visible ? View.GONE : View.VISIBLE);
 		numberOfPatientsLayout.setVisibility(visible ? View.GONE : View.VISIBLE);
+		pagingLayout.setVisibility(visible ? View.GONE : View.VISIBLE);
 	}
 
 	@Override
@@ -122,6 +125,7 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 		noPatientLists.setVisibility(visible ? View.VISIBLE : View.GONE);
 		patientListRecyclerView.setVisibility(visible ? View.GONE : View.VISIBLE);
 		numberOfPatientsLayout.setVisibility(visible ? View.GONE : View.VISIBLE);
+		pagingLayout.setVisibility(visible ? View.GONE : View.VISIBLE);
 	}
 
 	@Override
@@ -130,6 +134,7 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 		patientListProgressBar.setVisibility(visible ? View.VISIBLE : View.GONE);
 		patientListRecyclerView.setVisibility(visible ? View.GONE : View.VISIBLE);
 		numberOfPatientsLayout.setVisibility(visible ? View.GONE : View.VISIBLE);
+		pagingLayout.setVisibility(visible ? View.GONE : View.VISIBLE);
 	}
 
 	@Override
@@ -194,5 +199,10 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 	@Override
 	public boolean isActive() {
 		return isAdded();
+	}
+
+	@Override
+	public void updatePagingLabel(int currentPage, int totalNumberOfPages) {
+		pagingLabel.setText(getString(R.string.paging_label, String.valueOf(currentPage), String.valueOf(totalNumberOfPages)));
 	}
 }

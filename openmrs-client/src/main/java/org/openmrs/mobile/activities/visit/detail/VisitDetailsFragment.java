@@ -313,6 +313,9 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		secondaryDiagnosesRecycler.setAdapter(
 				new DiagnosisRecyclerViewAdapter(this.getActivity(), secondaryDiagnosesList, this)
 		);
+
+		// clear auto-complete input field
+		addDiagnosis.setText("");
 	}
 
 	private void addListeners() {

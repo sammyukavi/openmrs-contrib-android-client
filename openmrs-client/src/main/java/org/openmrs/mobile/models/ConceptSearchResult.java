@@ -42,14 +42,18 @@ public class ConceptSearchResult extends BaseOpenmrsObject {
 
 	@Override
 	public String toString() {
-		String conceptCode = ApplicationConstants.EMPTY_STRING;
-		for (ConceptMap conceptMap : concept.getConceptMappings()) {
-			if (conceptMap.getConceptReferenceTerm().getConceptSource().getName().equalsIgnoreCase(
-					ApplicationConstants.ConceptSource.ICD_10_WHO)) {
-				conceptCode = conceptMap.getConceptReferenceTerm().getCode();
+		if (concept != null) {
+			String conceptCode = ApplicationConstants.EMPTY_STRING;
+			for (ConceptMap conceptMap : concept.getConceptMappings()) {
+				if (conceptMap.getConceptReferenceTerm().getConceptSource().getName().equalsIgnoreCase(
+						ApplicationConstants.ConceptSource.ICD_10_WHO)) {
+					conceptCode = conceptMap.getConceptReferenceTerm().getCode();
+				}
 			}
-		}
 
-		return conceptCode + " - " + conceptName.getName();
+			return conceptCode + " - " + conceptName.getName();
+		} else {
+			return "Non-Coded " + getDisplay();
+		}
 	}
 }

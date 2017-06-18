@@ -43,7 +43,6 @@ import com.google.android.flexbox.FlexboxLayout;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.auditdata.AuditDataActivity;
 import org.openmrs.mobile.activities.capturevitals.CaptureVitalsActivity;
-import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
 import org.openmrs.mobile.activities.visit.VisitActivity;
 import org.openmrs.mobile.activities.visit.VisitContract;
 import org.openmrs.mobile.activities.visit.VisitFragment;
@@ -69,6 +68,8 @@ import org.openmrs.mobile.utilities.ViewUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class VisitDetailsFragment extends VisitFragment implements VisitContract.VisitDetailsView {
 
@@ -111,6 +112,9 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	private int subsequentPrimaryDiagnosesListHashcode;
 	private int subsequentSecondaryDiagnosesListHashcode;
 	private int subsequentClinicalNoteHashcode;
+
+	private Timer timer = new Timer();
+	private final long DELAY = 1000;
 
 	static VisitContract.VisitDetailsMainPresenter staticPresenter;
 
@@ -263,19 +267,26 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		addDiagnosis.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
 			}
 
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				if (addDiagnosis.getText().length() >= 2) {
-					((VisitDetailsPresenter)mPresenter).findConcept(addDiagnosis.getText().toString());
+				if (timer != null) {
+					timer.cancel();
 				}
 			}
 
 			@Override
 			public void afterTextChanged(Editable s) {
-
+				if (addDiagnosis.getText().length() >= 2) {
+					timer = new Timer();
+					timer.schedule(new TimerTask() {
+						@Override
+						public void run() {
+							((VisitDetailsPresenter)mPresenter).findConcept(addDiagnosis.getText().toString());
+						}
+					}, DELAY);
+				}
 			}
 		});
 	}
@@ -311,6 +322,8 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		DiagnosisRecyclerViewAdapter secondaryDiagnosesAdapter =
 				new DiagnosisRecyclerViewAdapter(this.getActivity(), secondaryDiagnosesList, this);
 		secondaryDiagnosesRecycler.setAdapter(secondaryDiagnosesAdapter);
+		// clear auto-complete input field
+		addDiagnosis.setText("");
 	}
 
 	private void addListeners() {

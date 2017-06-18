@@ -18,7 +18,6 @@ import android.widget.TextView;
 
 import org.openmrs.mobile.activities.visit.VisitContract;
 import org.openmrs.mobile.activities.visit.VisitPresenterImpl;
-import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
@@ -129,20 +128,23 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 
 	@Override
 	public void findConcept(String searchQuery) {
-		DataService.GetCallback<List<ConceptSearchResult>> getCallback =
-				new DataService.GetCallback<List<ConceptSearchResult>>() {
+		conceptSearchDataService.search(searchQuery, new DataService.GetCallback<List<ConceptSearchResult>>() {
+			@Override
+			public void onCompleted(List<ConceptSearchResult> entities) {
+				if (entities.isEmpty()) {
+					ConceptSearchResult nonCodedDiagnosis = new ConceptSearchResult();
+					nonCodedDiagnosis.setDisplay(searchQuery);
+					nonCodedDiagnosis.setValue("Non-Coded:" + searchQuery);
+					entities.add(nonCodedDiagnosis);
+				}
+				visitDetailsView.setDiagnoses(entities);
+			}
 
-					@Override
-					public void onCompleted(List<ConceptSearchResult> concepts) {
-						visitDetailsView.setDiagnoses(concepts);
-					}
-
-					@Override
-					public void onError(Throwable t) {
-						Log.e("error", t.getLocalizedMessage());
-					}
-				};
-		conceptSearchDataService.search(searchQuery, getCallback);
+			@Override
+			public void onError(Throwable t) {
+				Log.e("error", t.getLocalizedMessage());
+			}
+		});
 	}
 
 	@Override
@@ -167,21 +169,17 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 
 	@Override
 	public void getObservation(String uuid) {
-		visitDetailsView.showTabSpinner(true);
-		DataService.GetCallback<Observation> getSingleCallback =
-				new DataService.GetCallback<Observation>() {
-					@Override
-					public void onCompleted(Observation entity) {
-						visitDetailsView.showTabSpinner(false);
-						visitDetailsView.createEncounterDiagnosis(entity, entity.getDisplay(), entity.getValueCodedName());
-					}
+		obsDataService.getByUUID(uuid, QueryOptions.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Observation>() {
+			@Override
+			public void onCompleted(Observation entity) {
+				visitDetailsView.createEncounterDiagnosis(entity, entity.getDisplay(), entity.getValueCodedName());
+			}
 
-					@Override
-					public void onError(Throwable t) {
-						visitDetailsView.showTabSpinner(false);
-					}
-				};
-		obsDataService.getByUUID(uuid, QueryOptions.LOAD_RELATED_OBJECTS, getSingleCallback);
+			@Override
+			public void onError(Throwable t) {
+				visitDetailsView.showTabSpinner(false);
+			}
+		});
 	}
 
 	private void loadVisitAttributeTypes() {
@@ -224,9 +222,11 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 
 	@Override
 	public void saveVisitNote(VisitNote visitNote) {
+		visitDetailsView.showTabSpinner(true);
 		visitNoteDataService.save(visitNote, new DataService.GetCallback<VisitNote>() {
 			@Override
 			public void onCompleted(VisitNote visitNote) {
+				visitDetailsView.showTabSpinner(false);
 				System.out.println("RETURNED:::" + visitNote);
 			}
 

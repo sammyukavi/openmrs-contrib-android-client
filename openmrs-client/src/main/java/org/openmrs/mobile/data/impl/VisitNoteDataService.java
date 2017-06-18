@@ -3,6 +3,7 @@ package org.openmrs.mobile.data.impl;
 import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.openmrs.mobile.data.BaseDataService;
 import org.openmrs.mobile.data.DataService;
@@ -13,6 +14,7 @@ import org.openmrs.mobile.data.rest.VisitNoteRestService;
 import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.models.VisitNote;
 import org.openmrs.mobile.utilities.ApplicationConstants;
+import org.openmrs.mobile.utilities.CustomExclusionStrategy;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +38,7 @@ public class VisitNoteDataService extends BaseDataService<VisitNote, VisitNoteDb
 
 	@Override
 	protected String getRestPath() {
-		return ApplicationConstants.API.REST_ENDPOINT_V2 + "patientlist";
+		return ApplicationConstants.API.REST_ENDPOINT_V2 + "custom";
 	}
 
 	@Override
@@ -73,7 +75,7 @@ public class VisitNoteDataService extends BaseDataService<VisitNote, VisitNoteDb
 		executeSingleCallback(callback, null,
 				() -> null,
 				() -> {
-					Gson gson = new Gson();
+					Gson gson = new GsonBuilder().setExclusionStrategies(new CustomExclusionStrategy()).create();
 					Map<String, String> params = new HashMap<>();
 					params.put("personId", visitNote.getPersonId());
 					params.put("htmlFormId", visitNote.getHtmlFormId());

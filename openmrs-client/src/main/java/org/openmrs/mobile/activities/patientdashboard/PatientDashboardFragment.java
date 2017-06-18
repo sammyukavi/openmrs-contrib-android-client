@@ -62,14 +62,46 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	private ProgressBar dashboardProgressBar;
 	private TextView noVisitNoteLabel;
 	private String patientUuid;
-	private VisitsRecyclerAdapter visitsRecyclerAdapter;
+	private PatientVisitsRecyclerAdapter patientVisitsRecyclerAdapter;
 	private PatientDashboardActivity patientDashboardActivity;
 	private FloatingActionMenu patientDashboardMenu;
-	private int startIndex = 0, limit = 5;
-	private static PatientDashboardContract.Presenter staticPresenter;
-	private static String staticPatientUuid;
 	private static boolean hasActiveVisit;
-	private static FloatingActionButton staticStartVisitButton;
+	private RecyclerView patientVisitsRecyclerView;
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		patientVisitsRecyclerView.removeOnScrollListener(new RecyclerView.OnScrollListener() {
+			@Override
+			public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+				super.onScrollStateChanged(recyclerView, newState);
+			}
+
+			@Override
+			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+				super.onScrolled(recyclerView, dx, dy);
+
+				View patientContactInfo = recyclerView.findViewById(R.id.container_patient_address_info);
+				if (patientContactInfo == null) {
+					patientDashboardActivity.updateHeaderShadowLine(true);
+				} else {
+					patientDashboardActivity.updateHeaderShadowLine(false);
+				}
+
+				if (!mPresenter.isLoading()) {
+					if (!recyclerView.canScrollVertically(1)) {
+						// load next page
+						mPresenter.loadResults(patient, true);
+					}
+
+					if (!recyclerView.canScrollVertically(-1) && dy < 0) {
+						// load previous page
+						mPresenter.loadResults(patient, false);
+					}
+				}
+			}
+		});
+	}
 
 	public static PatientDashboardFragment newInstance() {
 		return new PatientDashboardFragment();
@@ -81,27 +113,17 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
 		fragmentView = inflater.inflate(R.layout.fragment_patient_dashboard, container, false);
-
-		staticPatientUuid = patientUuid = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys
+		patientUuid = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys
 				.PATIENT_UUID_BUNDLE);
 
 		initViewFields();
-
 		initializeListeners(startVisitButton, editPatient);
+		patientDashboardActivity = (PatientDashboardActivity)getContext();
 
 		//set start index incase it's cached somewhere
-		mPresenter.setStartIndex(startIndex);
-
-		//set limit for visits
-		mPresenter.setLimit(limit);
-
 		mPresenter.fetchPatientData(patientUuid);
-
 		FontsUtil.setFont((ViewGroup)this.getActivity().findViewById(android.R.id.content));
-
-		staticPresenter = mPresenter;
 
 		return fragmentView;
 	}
@@ -111,12 +133,41 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 			patientActionButtons.setOnClickListener(
 					view -> startSelectedPatientDashboardActivity(patientActionButtons.getId()));
 		}
+
+		patientVisitsRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+			@Override
+			public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+				super.onScrollStateChanged(recyclerView, newState);
+			}
+
+			@Override
+			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+				super.onScrolled(recyclerView, dx, dy);
+				//Contact address header
+				View patientContactInfo = recyclerView.findViewById(R.id.container_patient_address_info);
+				if (patientContactInfo == null) {
+					patientDashboardActivity.updateHeaderShadowLine(true);
+				} else {
+					patientDashboardActivity.updateHeaderShadowLine(false);
+				}
+
+				if (!mPresenter.isLoading()) {
+					if (!recyclerView.canScrollVertically(1)) {
+						// load next page
+						mPresenter.loadResults(patient, true);
+					}
+
+					if (!recyclerView.canScrollVertically(-1) && dy < 0) {
+						// load previous page
+						mPresenter.loadResults(patient, false);
+					}
+				}
+			}
+		});
 	}
 
 	private void startSelectedPatientDashboardActivity(int selectedId) {
-
 		patientDashboardMenu.close(true);
-
 		switch (selectedId) {
 			case R.id.start_visit:
 				intent = new Intent(getContext(), AddEditVisitActivity.class);
@@ -127,31 +178,30 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 				intent = new Intent(getContext(), AddEditPatientActivity.class);
 				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
 				startActivity(intent);
-
 				break;
 		}
 	}
 
 	private void initViewFields() {
-
-		staticStartVisitButton = startVisitButton = (FloatingActionButton)fragmentView.findViewById(R.id.start_visit);
+		startVisitButton = (FloatingActionButton)fragmentView.findViewById(R.id.start_visit);
 		editPatient = (FloatingActionButton)fragmentView.findViewById(R.id.edit_Patient);
 		dashboardScreen = (RelativeLayout)fragmentView.findViewById(R.id.dashboardScreen);
 		dashboardProgressBar = (ProgressBar)fragmentView.findViewById(R.id.dashboardProgressBar);
 		noVisitNoteLabel = (TextView)fragmentView.findViewById(R.id.noVisitNoteLabel);
 		patientDashboardMenu = (FloatingActionMenu)fragmentView.findViewById(R.id.patientDashboardMenu);
 		patientDashboardMenu.setClosedOnTouchOutside(true);
+		patientVisitsRecyclerView = (RecyclerView)fragmentView.findViewById(R.id.patientVisitsRecyclerView);
 
 	}
 
 	@Override
-	public void updateContactCard(Patient patient) {
+	public void patientContacts(Patient patient) {
 		this.patient = patient;
 		setPatientUuid(patient);
 	}
 
 	@Override
-	public void updateVisitsCard(List<Visit> visits) {
+	public void patientVisits(List<Visit> visits) {
 		hasActiveVisit = false;
 		for (Visit visit : visits) {
 			if (!StringUtils.notNull(visit.getStopDatetime())) {
@@ -162,19 +212,17 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 			}
 		}
 
-		HashMap<String, String> uuidsHashmap = new HashMap<>();
-		uuidsHashmap.put(PATIENT_UUID_BUNDLE, patient == null ? "" : patient.getUuid());
-		uuidsHashmap.put(LOCATION_UUID_BUNDLE, location == null ? "" : location.getUuid());
-		RecyclerView visitsRecyclerView = (RecyclerView)fragmentView.findViewById(R.id.pastVisits);
-		visitsRecyclerAdapter = new VisitsRecyclerAdapter(visitsRecyclerView, visits, getActivity());
-		visitsRecyclerAdapter.setUuids(uuidsHashmap);
-		visitsRecyclerView.setAdapter(visitsRecyclerAdapter);
+		if (!visits.isEmpty()) {
+			HashMap<String, String> uuidsHashmap = new HashMap<>();
+			uuidsHashmap.put(PATIENT_UUID_BUNDLE, patient == null ? "" : patient.getUuid());
+			uuidsHashmap.put(LOCATION_UUID_BUNDLE, location == null ? "" : location.getUuid());
 
-	}
+			patientVisitsRecyclerAdapter =
+					new PatientVisitsRecyclerAdapter(patientVisitsRecyclerView, visits, getActivity());
+			patientVisitsRecyclerAdapter.setUuids(uuidsHashmap);
+			patientVisitsRecyclerView.setAdapter(patientVisitsRecyclerAdapter);
+		}
 
-	@Override
-	public void updateVisits(List<Visit> results) {
-		visitsRecyclerAdapter.updateVisits(results);
 	}
 
 	@Override
@@ -210,7 +258,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
 	@Override
 	public void showSavingClinicalNoteProgressBar(boolean show) {
-		visitsRecyclerAdapter.updateSavingClinicalNoteProgressBar(show);
+		patientVisitsRecyclerAdapter.updateSavingClinicalNoteProgressBar(show);
 	}
 
 	@Override
@@ -235,11 +283,6 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
 	@Override
 	public void updateClinicVisitNote(Observation observation) {
-		visitsRecyclerAdapter.updateClinicalNoteObs(observation);
-	}
-
-	public static void fetchPatientData() {
-		staticPresenter.fetchPatientData(staticPatientUuid);
-		//staticStartVisitButton.setVisibility(hasActiveVisit ? View.GONE : View.VISIBLE);
+		patientVisitsRecyclerAdapter.updateClinicalNoteObs(observation);
 	}
 }

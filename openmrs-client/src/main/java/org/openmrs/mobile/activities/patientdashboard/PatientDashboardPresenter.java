@@ -47,7 +47,9 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	private LocationDataService locationDataService;
 	private ProviderDataService providerDataService;
 	private int startIndex = 0;
+	private int totalNumberResults;
 	private int limit = 10;
+	private int page;
 	private Patient patient;
 	private boolean loading;
 
@@ -65,41 +67,18 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	@Override
 	public void subscribe() {
 		getCurrentProvider();
-
 		getCurrentLocation();
 	}
 
 	@Override
-	public void setLimit(int limit) {
-		this.limit = limit;
-	}
-
-	@Override
-	public int getLimit() {
-		return limit;
-	}
-
-	@Override
-	public void setStartIndex(int startIndex) {
-		this.startIndex = startIndex;
-	}
-
-	@Override
-	public int getStartIndex() {
-		return startIndex;
-	}
-
-	@Override
 	public void fetchPatientData(String uuid) {
-
 		patientDashboardView.showPageSpinner(true);
-
 		patientDataService.getByUUID(uuid, QueryOptions.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Patient>() {
 			@Override
 			public void onCompleted(Patient patient) {
 				setPatient(patient);
 				patientDashboardView.showPageSpinner(false);
-				fetchVisits(patient);
+				fetchVisits(patient, getStartIndex());
 			}
 
 			@Override
@@ -111,26 +90,29 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	}
 
 	@Override
-	public void fetchVisits(Patient patient) {
-
-		patientDashboardView.showPageSpinner(true);
-
+	public void fetchVisits(Patient patient, int startIndex) {
+		if (startIndex < 0) {
+			return;
+		}
+		setStartIndex(startIndex);
 		setLoading(true);
-
+		setTotalNumberResults(0);
+		patientDashboardView.showPageSpinner(true);
+		setLoading(true);
+		PagingInfo pagingInfo = new PagingInfo(startIndex, limit);
 		DataService.GetCallback<List<Visit>> fetchVisitsCallback = new DataService.GetCallback<List<Visit>>() {
 			@Override
 			public void onCompleted(List<Visit> visits) {
-
 				setLoading(false);
-
-				patientDashboardView.showPageSpinner(false);
-
-				patientDashboardView.updateContactCard(patient);
-				patientDashboardView.updateVisitsCard(visits);
+				patientDashboardView.patientContacts(patient);
+				patientDashboardView.patientVisits(visits);
 
 				if (visits.isEmpty()) {
 					patientDashboardView.showNoVisits(true);
+				} else {
+					setTotalNumberResults(pagingInfo.getTotalRecordCount());
 				}
+				patientDashboardView.showPageSpinner(false);
 			}
 
 			@Override
@@ -140,43 +122,6 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 				setLoading(false);
 			}
 		};
-
-		PagingInfo pagingInfo = new PagingInfo(startIndex, limit);
-
-		visitDataService.getByPatient(patient, new QueryOptions(true, true), pagingInfo, fetchVisitsCallback);
-	}
-
-	@Override
-	public void fetchVisits(boolean loadNextResults) {
-		patientDashboardView.showSavingClinicalNoteProgressBar(true);
-		if (loadNextResults) {
-			startIndex += 1;
-		} else {
-			startIndex -= 1;
-		}
-
-		if (startIndex < 0) {
-			startIndex = 0;
-		}
-		PagingInfo pagingInfo = new PagingInfo(startIndex, limit);
-
-		setLoading(true);
-
-		DataService.GetCallback<List<Visit>> fetchVisitsCallback = new DataService.GetCallback<List<Visit>>() {
-			@Override
-			public void onCompleted(List<Visit> results) {
-				patientDashboardView.updateVisits(results);
-				patientDashboardView.showSavingClinicalNoteProgressBar(false);
-				setLoading(false);
-			}
-
-			@Override
-			public void onError(Throwable t) {
-				setLoading(false);
-				patientDashboardView.showSavingClinicalNoteProgressBar(false);
-			}
-		};
-
 		visitDataService.getByPatient(patient, new QueryOptions(true, true), pagingInfo, fetchVisitsCallback);
 	}
 
@@ -189,13 +134,9 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	 * TODO: create a service to getProviderByPerson, move code to commons
 	 */
 	private void getCurrentProvider() {
-
 		patientDashboardView.showPageSpinner(true);
-
 		String personUuid = OpenMRS.getInstance().getCurrentLoggedInUserInfo().get(ApplicationConstants.UserKeys.USER_UUID);
-
 		if (StringUtils.notEmpty(personUuid)) {
-
 			providerDataService.getAll(QueryOptions.LOAD_RELATED_OBJECTS, null,
 					new DataService.GetCallback<List<Provider>>() {
 						@Override
@@ -221,11 +162,8 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	public void getCurrentLocation() {
 		//We start by fetching by location, required for creating encounters
 		String locationUuid = OpenMRS.getInstance().getLocation();
-
 		if (StringUtils.notEmpty(locationUuid)) {
-
 			patientDashboardView.showPageSpinner(true);
-
 			DataService.GetCallback<Location> locationDataServiceCallback = new DataService.GetCallback<Location>() {
 				@Override
 				public void onCompleted(Location location) {
@@ -248,19 +186,14 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
 	@Override
 	public void saveEncounter(Encounter encounter, boolean isNewEncounter) {
-
 		patientDashboardView.showSavingClinicalNoteProgressBar(true);
-
 		setLoading(true);
-
 		DataService.GetCallback<Encounter> serverResponceCallback = new DataService.GetCallback<Encounter>() {
 			@Override
 			public void onCompleted(Encounter result) {
 				patientDashboardView.showSavingClinicalNoteProgressBar(false);
-
-				setLoading(false);
-
 				patientDashboardView.updateClinicVisitNote(result.getObs().get(0));
+				setLoading(false);
 			}
 
 			@Override
@@ -280,20 +213,14 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
 	@Override
 	public void saveObservation(Observation observation, boolean isNewObservation) {
-
 		patientDashboardView.showSavingClinicalNoteProgressBar(true);
-
 		setLoading(true);
-
 		DataService.GetCallback<Observation> serverResponceCallback = new DataService.GetCallback<Observation>() {
 			@Override
 			public void onCompleted(Observation result) {
-
 				patientDashboardView.showSavingClinicalNoteProgressBar(false);
-
-				setLoading(false);
-
 				patientDashboardView.updateClinicVisitNote(result);
+				setLoading(false);
 			}
 
 			@Override
@@ -323,5 +250,57 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	@Override
 	public void setLoading(boolean loading) {
 		this.loading = loading;
+	}
+
+	@Override
+	public void setLimit(int limit) {
+		this.limit = limit;
+	}
+
+	@Override
+	public int getLimit() {
+		return limit;
+	}
+
+	@Override
+	public void setStartIndex(int startIndex) {
+		this.startIndex = startIndex;
+	}
+
+	@Override
+	public int getStartIndex() {
+		return startIndex;
+	}
+
+	@Override
+	public void loadResults(Patient patient, boolean loadNextResults) {
+		fetchVisits(patient, computePage(loadNextResults));
+	}
+
+	private int getTotalNumberResults() {
+		return totalNumberResults;
+	}
+
+	@Override
+	public void setTotalNumberResults(int totalNumberResults) {
+		this.totalNumberResults = totalNumberResults;
+	}
+
+	private int computePage(boolean next) {
+		int tmpPage = getStartIndex();
+		// check if pagination is required.
+		if (startIndex < (Math.round(getTotalNumberResults() / limit))) {
+			if (next) {
+				// set next page
+				tmpPage += 1;
+			} else {
+				// set previous page.
+				tmpPage -= 1;
+			}
+		} else {
+			tmpPage = -1;
+		}
+
+		return tmpPage;
 	}
 }

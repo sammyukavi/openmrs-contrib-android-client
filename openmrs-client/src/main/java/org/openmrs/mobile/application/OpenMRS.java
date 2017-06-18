@@ -216,6 +216,11 @@ public class OpenMRS extends Application {
 		return prefs.getString(ApplicationConstants.BundleKeys.PROVIDER_UUID_BUNDLE, ApplicationConstants.EMPTY_STRING);
 	}
 
+	public String getCurrentUserUuid() {
+		SharedPreferences prefs = getOpenMRSSharedPreferences();
+		return prefs.getString(ApplicationConstants.UserKeys.USER_UUID, ApplicationConstants.EMPTY_STRING);
+	}
+
 	public String getSearchQuery() {
 		SharedPreferences prefs = getOpenMRSSharedPreferences();
 		return prefs.getString(ApplicationConstants.BundleKeys.PATIENT_QUERY_BUNDLE, ApplicationConstants.EMPTY_STRING);

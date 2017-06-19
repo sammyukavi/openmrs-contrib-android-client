@@ -10,7 +10,7 @@ public class VisitNote extends BaseOpenmrsEntity {
 	@Expose
 	private String personId;
 	@Expose
-	private String htmlFormId;
+	private String htmlFormUuid;
 	@Expose
 	private String createVisit;
 	@Expose
@@ -46,12 +46,12 @@ public class VisitNote extends BaseOpenmrsEntity {
 		this.personId = personId;
 	}
 
-	public String getHtmlFormId() {
-		return htmlFormId;
+	public String getHtmlFormUuid() {
+		return htmlFormUuid;
 	}
 
-	public void setHtmlFormId(String htmlFormId) {
-		this.htmlFormId = htmlFormId;
+	public void setHtmlFormUuid(String htmlFormUuid) {
+		this.htmlFormUuid = htmlFormUuid;
 	}
 
 	public String getCreateVisit() {

@@ -115,8 +115,8 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 							setTotalNumberResults(pagingInfo.getTotalRecordCount());
 							if (pagingInfo.getTotalRecordCount() > 0) {
 								patientListView.setNumberOfPatientsView(pagingInfo.getTotalRecordCount());
-								patientListView.updatePagingLabel(page, Math.round(pagingInfo.getTotalRecordCount() /
-										limit));
+								patientListView.updatePagingLabel(page,
+										(limit + pagingInfo.getTotalRecordCount() - 1) / limit);
 							}
 						}
 						setLoading(false);
@@ -159,7 +159,8 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 	private int computePage(boolean next) {
 		int tmpPage = getPage();
 		// check if pagination is required.
-		if (page < Math.round(getTotalNumberResults() / limit)) {
+		int totalPages = (limit + getTotalNumberResults() - 1) / limit;
+		if (page <= totalPages) {
 			if (next) {
 				// set next page
 				tmpPage += 1;
@@ -167,11 +168,9 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 				// set previous page.
 				tmpPage -= 1;
 			}
-		} else {
-			tmpPage = -1;
 		}
 
-		return tmpPage;
+		return tmpPage > totalPages ? -1 : tmpPage;
 	}
 
 	@Override

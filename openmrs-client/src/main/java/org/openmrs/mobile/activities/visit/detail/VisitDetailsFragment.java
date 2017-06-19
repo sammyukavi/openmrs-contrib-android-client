@@ -68,9 +68,7 @@ import org.openmrs.mobile.utilities.ViewUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -818,13 +816,13 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 
 		VisitNote visitNote = new VisitNote();
 		visitNote.setPersonId(patientUuid);
-		visitNote.setHtmlFormId("7");
+		visitNote.setHtmlFormUuid(ApplicationConstants.FORM_UUIDS.CLINICAL_FORM_UUID);
 		visitNote.setCreateVisit("false");
 		visitNote.setFormModifiedTimestamp(String.valueOf(System.currentTimeMillis()));
-		visitNote.setEncounterModifiedTimestamp("0");
+		visitNote.setEncounterModifiedTimestamp(ApplicationConstants.EMPTY_STRING);
 		visitNote.setVisitId(visitUuid);
-		visitNote.setReturnUrl("");
-		visitNote.setCloseAfterSubmission("");
+		visitNote.setReturnUrl(ApplicationConstants.EMPTY_STRING);
+		visitNote.setCloseAfterSubmission(ApplicationConstants.EMPTY_STRING);
 		visitNote.setEncounterId(encounterUuid == null ? ApplicationConstants.EMPTY_STRING : encounterUuid);
 		visitNote.setW1(OpenMRS.getInstance().getCurrentUserUuid());
 		visitNote.setW3(OpenMRS.getInstance().getParentLocationUuid());

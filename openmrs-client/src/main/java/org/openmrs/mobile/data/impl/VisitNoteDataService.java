@@ -19,8 +19,6 @@ import org.openmrs.mobile.utilities.CustomExclusionStrategy;
 import java.util.HashMap;
 import java.util.Map;
 
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 
 public class VisitNoteDataService extends BaseDataService<VisitNote, VisitNoteDbService, VisitNoteRestService>
@@ -78,7 +76,7 @@ public class VisitNoteDataService extends BaseDataService<VisitNote, VisitNoteDb
 					Gson gson = new GsonBuilder().setExclusionStrategies(new CustomExclusionStrategy()).create();
 					Map<String, String> params = new HashMap<>();
 					params.put("personId", visitNote.getPersonId());
-					params.put("htmlFormId", visitNote.getHtmlFormId());
+					params.put("htmlFormId", visitNote.getHtmlFormUuid());
 					params.put("createVisit", visitNote.getCreateVisit());
 					params.put("formModifiedTimestamp", visitNote.getFormModifiedTimestamp());
 					params.put("encounterModifiedTimestamp", visitNote.getEncounterModifiedTimestamp());

@@ -1,11 +1,14 @@
 package org.openmrs.mobile.data;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.google.common.base.Supplier;
 
+import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.cache.CacheService;
 import org.openmrs.mobile.data.cache.SimpleCacheService;
 import org.openmrs.mobile.data.db.BaseDbService;
@@ -26,6 +29,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.app.PendingIntent.getActivity;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends BaseDbService<E>, RS>
@@ -322,10 +326,14 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 				T result = dbSupplier.get();
 
 				setCachedResult(options, result);
-				callback.onCompleted(result);
+
+				// Execute callback on the current UI Thread
+				new Handler(Looper.getMainLooper()).post(() -> callback.onCompleted(result));
 			} catch (Exception ex) {
 				// An exception occurred while trying to get the entity from the db
-				callback.onError(ex);
+
+				// Execute callback on the current UI Thread
+				new Handler(Looper.getMainLooper()).post(() -> callback.onError(ex));
 			}
 		}).start();
 	}

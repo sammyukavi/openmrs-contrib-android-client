@@ -434,7 +434,7 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
 			viewHolder.setIsRecyclable(false);
 
-			Visit visit = visits.get(position - 1);//Subtract one to get the first index taken by the header
+			Visit visit = visits.get(position - 1); //Subtract one to get the first index taken by the header
 			View singleVisitView = layoutInflater.inflate(R.layout.container_single_visit_observation, null);
 			TextView visitStartDate = (TextView)singleVisitView.findViewById(R.id.startDate);
 
@@ -447,8 +447,7 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 				startDate = context.getString(R.string.yesterday);
 			}
 
-			String stopDate = DATE_FORMAT.format(visit.getStopDatetime());
-			if (!StringUtils.notNull(stopDate)) {
+			if (visit.getStopDatetime() != null) {
 				activeVisit = visit;
 				isActiveVisit = true;
 				singleVisitView.findViewById(R.id.active_visit_badge).setVisibility(View.VISIBLE);
@@ -462,7 +461,7 @@ public class VisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 			if (!isActiveVisit) {
 				TextView visitDuration = (TextView)singleVisitView.findViewById(R.id.visitDuration);
 				visitDuration.setText(context.getString(R.string.visit_duration,
-						DateUtils.calculateTimeDifference(visit.getStartDatetime(), visit.getStopDatetime())));
+						DateUtils.calculateTimeDifference(visit.getStartDatetime())));
 				visitDuration.setVisibility(View.VISIBLE);
 			}
 

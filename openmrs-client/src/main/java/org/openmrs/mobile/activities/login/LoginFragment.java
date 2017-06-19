@@ -363,7 +363,7 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 			HashMap<String, String> location = new HashMap<>();
 
 			location.put("uuid", loc.getUuid());
-			location.put("display", loc.getDisplay());
+			location.put("display", loc.getName());
 			location.put("parentlocationuuid", loc.getParentLocation().getUuid());
 
 			locations.add(location);

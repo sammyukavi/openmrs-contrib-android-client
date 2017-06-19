@@ -4,11 +4,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.raizlabs.android.dbflow.config.FlowManager;
-import com.raizlabs.android.dbflow.sql.language.BaseTransformable;
 import com.raizlabs.android.dbflow.sql.language.From;
-import com.raizlabs.android.dbflow.sql.language.Method;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
-import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.ModelAdapter;
 import com.raizlabs.android.dbflow.structure.database.transaction.FastStoreModelTransaction;
 
@@ -16,10 +13,10 @@ import org.openmrs.mobile.data.DataOperationException;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.models.BaseOpenmrsObject;
+import org.openmrs.mobile.utilities.Consumer;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
-import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -69,10 +66,12 @@ public abstract class BaseDbService<E extends BaseOpenmrsObject> implements DbSe
 			}
 		}
 
-		FastStoreModelTransaction
+		FlowManager.getDatabase(AppDatabase.class).executeTransaction(
+			FastStoreModelTransaction
 				.saveBuilder(FlowManager.getModelAdapter(getEntityClass()))
 				.addAll(entities)
-				.build();
+				.build()
+		);
 
 		for (E entity : entities) {
 			if (entity != null) {

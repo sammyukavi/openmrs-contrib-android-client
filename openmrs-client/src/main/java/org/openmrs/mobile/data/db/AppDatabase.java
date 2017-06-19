@@ -4,7 +4,7 @@ import com.raizlabs.android.dbflow.annotation.Database;
 
 @Database(name = AppDatabase.NAME, version = AppDatabase.VERSION)
 public class AppDatabase {
-  public static final String NAME = "OpenHMIS"; // Will get added with a .db extension
+  public static final String NAME = "BandaHealth"; // Will get added with a .db extension
 
   public static final int VERSION = 1;
 }

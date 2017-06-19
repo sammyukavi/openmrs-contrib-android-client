@@ -18,10 +18,11 @@ import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.sql.language.SQLOperator;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
+import org.openmrs.mobile.utilities.Consumer;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class Resource implements Serializable {
 	private static final long serialVersionUID = 1;

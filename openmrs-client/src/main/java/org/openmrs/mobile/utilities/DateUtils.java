@@ -14,6 +14,8 @@
 
 package org.openmrs.mobile.utilities;
 
+import android.support.annotation.NonNull;
+
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -27,6 +29,8 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public final class DateUtils {
 	public static final String DEFAULT_DATE_FORMAT = "dd/MM/yyyy";
@@ -255,7 +259,10 @@ public final class DateUtils {
 		return calculateTimeDifference(startDate, endDate, true);
 	}
 
-	public static String calculateTimeDifference(Date startDate, Date endDate, boolean minimum) {
+	public static String calculateTimeDifference(@NonNull Date startDate, @NonNull Date endDate, boolean minimum) {
+		checkNotNull(startDate);
+		checkNotNull(endDate);
+
 		long durationInSeconds = TimeUnit.MILLISECONDS.toSeconds(endDate.getTime() - startDate.getTime());
 
 		String relative = "";

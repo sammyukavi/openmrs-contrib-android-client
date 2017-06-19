@@ -20,6 +20,7 @@ import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
+import org.openmrs.mobile.data.db.AppDatabase;
 import org.openmrs.mobile.data.impl.LocationDataService;
 import org.openmrs.mobile.data.impl.LoginDataService;
 import org.openmrs.mobile.data.impl.UserDataService;
@@ -126,7 +127,7 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 				public void onCompleted(Session session) {
 					if (session != null && session.isAuthenticated()) {
 						if (wipeDatabase) {
-							mOpenMRS.deleteDatabase(OpenMRSSQLiteOpenHelper.DATABASE_NAME);
+							mOpenMRS.deleteDatabase(AppDatabase.NAME);
 							setData(session.getSessionId(), url, username, password);
 							mWipeRequired = false;
 						}
@@ -207,25 +208,21 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 				loginView.showMessage(SERVER_ERROR);
 			}
 		};
+
 		userService.getByUUID(uuid, new QueryOptions(true, true), fetchUserCallback);
 	}
 
 	@Override
 	public void saveLocationsInPreferences(List<HashMap<String, String>> locationList, int selectedItemPosition) {
-
 		mOpenMRS.setLocation(locationList.get(selectedItemPosition).get("uuid"));
-
 		mOpenMRS.setParentLocationUuid(locationList.get(selectedItemPosition).get("parentlocationuuid"));
-
 		mOpenMRS.saveLocations(new Gson().toJson(locationList));
 
 	}
 
 	@Override
 	public void loadLocations(String url) {
-
 		loginView.setProgressBarVisibility(true);
-
 		loginView.setViewsContainerVisibility(false);
 
 		RestServiceBuilder.setBaseUrl(url);
@@ -234,58 +231,37 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 				() {
 			@Override
 			public void onCompleted(List<Location> locations) {
-
 				mOpenMRS.setServerUrl(url);
-
 				loginView.updateLoginFormLocations(locations, url);
-
 			}
 
 			@Override
 			public void onError(Throwable t) {
-
 				loginView.setProgressBarVisibility(false);
-
 				loginView.setViewsContainerVisibility(true);
-
 				t.printStackTrace();
-
 				loginView.showMessage(INVALID_URL);
-
 			}
 		};
 
 		try {
-
 			locationDataService.getAll(url, locationDataServiceCallback);
-
 		} catch (IllegalArgumentException ex) {
-
 			loginView.setProgressBarVisibility(false);
-
 			loginView.setViewsContainerVisibility(true);
-
 			loginView.showMessage(INVALID_URL);
 		}
-
 	}
 
 	private void setData(String sessionToken, String url, String username, String password) {
-
 		mOpenMRS.setSessionToken(sessionToken);
-
 		mOpenMRS.setServerUrl(url);
-
 		mOpenMRS.setUsername(username);
-
 		mOpenMRS.setPassword(password);
 	}
 
 	private void setLogin(boolean isLogin, String serverUrl) {
-
 		mOpenMRS.setUserLoggedOnline(isLogin);
-
 		mOpenMRS.setLastLoginServerUrl(serverUrl);
-
 	}
 }

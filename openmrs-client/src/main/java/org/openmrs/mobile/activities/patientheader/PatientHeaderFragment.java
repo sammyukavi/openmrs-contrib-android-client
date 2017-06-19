@@ -70,9 +70,6 @@ public class PatientHeaderFragment extends ACBaseFragment<PatientHeaderContract.
 
 	public void updateShadowLine(boolean visible) {
 		shadowLine.setVisibility(visible ? View.VISIBLE : View.GONE);
-		//AlphaAnimation anim = new AlphaAnimation(0.0f, 1.0f);
-		//anim.setDuration(500);
-		//shadowLine.startAnimation(anim);
 
 	}
 

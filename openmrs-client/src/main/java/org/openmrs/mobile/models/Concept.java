@@ -44,6 +44,12 @@ public class Concept extends BaseOpenmrsObject {
 	@SerializedName("names")
 	@Expose
 	private List<ConceptName> names;
+	@SerializedName("preferredName")
+	@Expose
+	private String preferredName;
+	@SerializedName("conceptMappings")
+	@Expose
+	private List<ConceptMap> conceptMappings;
 
 	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "answers", isVariablePrivate = true)
 	List<ConceptAnswer> loadAnswers() {
@@ -101,6 +107,22 @@ public class Concept extends BaseOpenmrsObject {
 
 	public void setNames(List<ConceptName> names) {
 		this.names = names;
+	}
+
+	public String getPreferredName() {
+		return preferredName;
+	}
+
+	public void setPreferredName(String preferredName) {
+		this.preferredName = preferredName;
+	}
+
+	public List<ConceptMap> getConceptMappings() {
+		return conceptMappings;
+	}
+
+	public void setConceptMappings(List<ConceptMap> conceptMappings) {
+		this.conceptMappings = conceptMappings;
 	}
 
 	@Override

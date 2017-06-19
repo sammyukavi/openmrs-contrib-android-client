@@ -59,7 +59,6 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 
 	public void findPatient(String query) {
 		findPatientView.setProgressBarVisibility(true);
-		findPatientView.setFetchedPatientsVisibility(false);
 		PagingInfo pagingInfo = new PagingInfo(page, 100);
 		DataService.GetCallback<List<Patient>> getMultipleCallback = new DataService.GetCallback<List<Patient>>() {
 			@Override
@@ -68,11 +67,9 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 				if (patients.isEmpty()) {
 					findPatientView.setNumberOfPatientsView(0);
 					findPatientView.setNoPatientsVisibility(true);
-					findPatientView.setFetchedPatientsVisibility(false);
 				} else {
 					findPatientView.setNoPatientsVisibility(false);
 					findPatientView.setNumberOfPatientsView(patients.size());
-					findPatientView.setFetchedPatientsVisibility(true);
 					findPatientView.fetchPatients(patients);
 				}
 			}
@@ -88,7 +85,6 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 
 	public void getLastViewed() {
 		findPatientView.setProgressBarVisibility(true);
-		findPatientView.setFetchedPatientsVisibility(false);
 		setLoading(true);
 		PagingInfo pagingInfo = new PagingInfo(page, limit);
 		patientDataService.getLastViewed(ApplicationConstants.EMPTY_STRING, QueryOptions.LOAD_RELATED_OBJECTS, pagingInfo,
@@ -99,11 +95,9 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 
 						if (!patients.isEmpty()) {
 							findPatientView.setNumberOfPatientsView(0);
-							findPatientView.setFetchedPatientsVisibility(true);
 							findPatientView.fetchPatients(patients);
 						} else {
 							findPatientView.setNumberOfPatientsView(patients.size());
-							findPatientView.setFetchedPatientsVisibility(false);
 						}
 						setLoading(false);
 					}

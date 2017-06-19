@@ -92,7 +92,7 @@ public class VisitDataService extends BaseEntityDataService<Visit, VisitDbServic
 	public void updateVisit(String visitUuid, Visit updatedVisit, GetCallback<Visit> callback) {
 		executeSingleCallback(callback, null,
 				() -> dbService.save(updatedVisit),
-				() -> restService.updateVisit(ApplicationConstants.API.REST_ENDPOINT_V2 + "/patientlist/visitedit",
+				() -> restService.updateVisit(ApplicationConstants.API.REST_ENDPOINT_V2 + "/custom/visitedit",
 						visitUuid, updatedVisit.getVisitType().getUuid(), updatedVisit.getAttributes()));
 	}
 }

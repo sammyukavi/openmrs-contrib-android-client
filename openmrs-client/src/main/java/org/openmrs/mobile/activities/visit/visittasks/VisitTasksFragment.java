@@ -220,6 +220,15 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 	}
 
 	public void addListeners() {
+		addtask.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (ViewUtils.getInput(addtask) != null) {
+					((VisitTasksPresenter)mPresenter).createVisitTasksObject(ViewUtils.getInput(addtask));
+				}
+			}
+		});
+
 		addtask.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

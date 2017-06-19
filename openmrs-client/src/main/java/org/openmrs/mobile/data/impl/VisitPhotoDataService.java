@@ -36,7 +36,7 @@ public class VisitPhotoDataService
 
 	@Override
 	protected String getRestPath() {
-		return ApplicationConstants.API.REST_ENDPOINT_V2 + "patientlist";
+		return ApplicationConstants.API.REST_ENDPOINT_V2 + "custom";
 	}
 
 	@Override

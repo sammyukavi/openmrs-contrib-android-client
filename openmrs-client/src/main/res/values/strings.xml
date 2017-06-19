@@ -277,6 +277,9 @@
 	<string name="select_patient_list">Select Patient List</string>
 	<string name="no_patient_list">No patient lists found!</string>
 	<string name="number_of_patients">%1$s patients found</string>
+	<string name="paging_label">%1$s of %2$s</string>
+	<string name="search_for_patients">Please type the first 3 characters of the patient name on the search bar for you to
+		visitPhotoView meaningful results</string>
 	<string name="patient_metadata_label">Patient Contact Information</string>
 	<string name="visit_tasks_dialog_message">add a visit task</string>
 	<string name="nav_patient_list">Patient List</string>
@@ -356,5 +359,12 @@
 	<string name="label_dismiss">Dismiss</string>
 	<string name="logged_in_in_offline_mode">LoggedIn in offline mode</string>
 	<string name="err_fetching_user_data">Couldn\'t fetch user data</string>
-	<string name="search_to_view">Please search to see patients</string>y
+	<string name="search_to_view">Please search to see patients</string>
+	<string name="visit_note_changes_pending_title">Pending Changes</string>
+	<string name="visit_note_changes_pending_message">You have unsaved changes on the visit note. Leaving this
+		screen while discard your changes</string>
+	<string name="no_clinical_note">No Clinical Note</string>
+	<string name="civil_status">Civil Status</string>
+	<string name="kin_relationship">Kin Relationship</string>
+	<string name="change_server_url">Change Server URL</string>
 </resources>

@@ -29,6 +29,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -68,7 +69,7 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 	private Spinner mDropdownLocation;
 	private SparseArray<Bitmap> mBitmapCache;
 	private LoginValidatorWatcher mLoginValidatorWatcher;
-	private ImageView mChangeUrlIcon;
+	private TextView mChangeUrlIcon;
 	private TextInputLayout mLoginUrlTextLayout;
 	private View mViewsContainer;
 
@@ -83,13 +84,9 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 		if (mLoginUrl.equals(ApplicationConstants.EMPTY_STRING)) {
 			mLoginUrl = OpenMRS.getInstance().getServerUrl();
 		}
-
 		initViewFields(mRootView);
-
 		initListeners();
-
 		loadLocations();
-
 		// Font config
 		FontsUtil.setFont((ViewGroup)this.getActivity().findViewById(android.R.id.content));
 
@@ -97,53 +94,34 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 	}
 
 	private void initViewFields(View mRootView) {
-
 		mViewsContainer = mRootView.findViewById(R.id.viewsContainer);
-
 		mUrl = (TextInputEditText)mRootView.findViewById(R.id.loginUrlField);
-
 		mDropdownLocation = (Spinner)mRootView.findViewById(R.id.locationSpinner);
-
 		mUsername = (TextInputEditText)mRootView.findViewById(R.id.loginUsernameField);
-
 		mUsername.setText(OpenMRS.getInstance().getUsername());
-
 		mPassword = (TextInputEditText)mRootView.findViewById(R.id.loginPasswordField);
-
 		mLoginButton = (Button)mRootView.findViewById(R.id.loginButton);
-
 		mLoadingProgressBar = (ProgressBar)mRootView.findViewById(R.id.loadingProgressBar);
-
-		mChangeUrlIcon = (ImageView)mRootView.findViewById(R.id.changeUrlIcon);
-
+		mChangeUrlIcon = (TextView)mRootView.findViewById(R.id.changeUrlIcon);
 		mLoginUrlTextLayout = (TextInputLayout)mRootView.findViewById(R.id.loginUrlTextLayout);
-
 		mUrl.setText(mLoginUrl);
 	}
 
 	private void loadLocations() {
 
 		mLocationsList = new ArrayList<>();
-
 		String locationsStr = mOpenMRS.getLocations();
-
 		if (StringUtils.notEmpty(locationsStr)) {
 			Gson gson = new Gson();
 			Type type = new TypeToken<List<HashMap<String, String>>>() {
 			}.getType();
-
 			mLocationsList = gson.fromJson(locationsStr, type);
-
 		}
 
 		if (mLocationsList.isEmpty()) {
-
 			mPresenter.loadLocations(mLoginUrl);
-
 		} else {
-
 			updateLocationsSpinner(mLocationsList, mLoginUrl);
-
 		}
 
 	}
@@ -195,25 +173,17 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 	}
 
 	private void setUrl(String url) {
-
 		URLValidator.ValidationResult result = URLValidator.validate(url);
-
 		if (result.isURLValid()) {
-
 			//Append forward slash. Retrofit throws a serious error if a base url does not end with a forward slash
-
 			url = result.getUrl();
-
 			if (!url.endsWith("/")) {
 				url += "/";
 			}
-
 			mPresenter.loadLocations(url);
 
 		} else {
-
 			showMessage(INVALID_URL);
-
 		}
 	}
 
@@ -297,19 +267,12 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 	}
 
 	private void updateLocationsSpinner(List<HashMap<String, String>> locations, String serverURL) {
-
 		mLocationsList = locations;
-
 		setProgressBarVisibility(true);
-
 		setViewsContainerVisibility(false);
-
 		mLoginUrl = serverURL;
-
 		mUrl.setText(serverURL);
-
 		int selectedLocation = 0;
-
 		String[] spinnerArray = new String[locations.size()];
 		for (int i = 0; i < locations.size(); i++) {
 			spinnerArray[i] = locations.get(i).get("display");
@@ -322,11 +285,8 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 				new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, spinnerArray);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		mDropdownLocation.setAdapter(adapter);
-
 		mDropdownLocation.setSelection(selectedLocation);
-
 		setProgressBarVisibility(false);
-
 		setViewsContainerVisibility(true);
 
 	}
@@ -355,17 +315,12 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 	}
 
 	private List<HashMap<String, String>> getLocationStringList(List<Location> locationList) {
-
 		List<HashMap<String, String>> locations = new ArrayList<>();
-
 		for (Location loc : locationList) {
-
 			HashMap<String, String> location = new HashMap<>();
-
 			location.put("uuid", loc.getUuid());
 			location.put("display", loc.getName());
 			location.put("parentlocationuuid", loc.getParentLocation().getUuid());
-
 			locations.add(location);
 		}
 

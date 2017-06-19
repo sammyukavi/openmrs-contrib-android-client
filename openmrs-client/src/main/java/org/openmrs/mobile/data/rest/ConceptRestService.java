@@ -35,7 +35,7 @@ public interface ConceptRestService {
 
 	@GET(RestConstants.REST_PATH)
 	Call<Results<Concept>> findConcept(@Path(value = "restPath", encoded = true) String restPath,
-			@Query("q") String name,
+			@Query("term") String name,
 			@Query("v") String representation,
 			@Query("startIndex") Integer startIndex,
 			@Query("limit") Integer limit);

@@ -20,6 +20,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
@@ -61,7 +62,6 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 
 		@Override
 		public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-			super.onScrolled(recyclerView, dx, dy);
 			if (!mPresenter.isLoading()) {
 				if (!recyclerView.canScrollVertically(1)) {
 					// load next page
@@ -104,6 +104,7 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 		layoutManager = new LinearLayoutManager(this.getActivity());
 		patientListModelRecyclerView = (RecyclerView)root.findViewById(R.id.patientListModelRecyclerView);
 		patientListModelRecyclerView.setLayoutManager(layoutManager);
+		patientListModelRecyclerView.setNestedScrollingEnabled(false);
 
 		// Font config
 		FontsUtil.setFont((ViewGroup)this.getActivity().findViewById(android.R.id.content));
@@ -156,7 +157,7 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 					List<PatientListContext> patientListContextList = new ArrayList<>();
 					updatePatientListData(patientListContextList);
 				} else {
-					mPresenter.getPatientListData(selectedPatientList.getUuid(), mPresenter.getPage());
+					mPresenter.getPatientListData(selectedPatientList.getUuid(), 1);
 				}
 			}
 

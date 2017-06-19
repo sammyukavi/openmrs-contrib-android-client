@@ -510,8 +510,34 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		ArrayAdapter<ConceptSearchResult> adapter =
 				new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line,
 						diagnoses);
+		filterOutExistingDiagnoses(diagnoses);
 		addDiagnosis.setAdapter(adapter);
 		addDiagnosis.showDropDown();
+	}
+
+	/**
+	 * TODO: Use more effecient search algorithm
+	 * @param diagnoses
+	 */
+	private void filterOutExistingDiagnoses(List<ConceptSearchResult> diagnoses){
+		List<ConceptSearchResult> searchDiagnosis = new ArrayList<>(diagnoses);
+		List<String> existingDiagnoses = new ArrayList<>();
+		for (EncounterDiagnosis primaryDiagnosis : primaryDiagnosesList) {
+			existingDiagnoses.add(primaryDiagnosis.getDisplay());
+		}
+
+		for (EncounterDiagnosis secondaryDiagnosis : secondaryDiagnosesList) {
+			existingDiagnoses.add(secondaryDiagnosis.getDisplay());
+		}
+
+		for (ConceptSearchResult diagnosis : searchDiagnosis) {
+			for(String existingDiagnosis : existingDiagnoses) {
+				if (diagnosis.getConceptName().getName().equalsIgnoreCase(existingDiagnosis) ||
+						diagnosis.toString().equalsIgnoreCase(existingDiagnosis)) {
+					diagnoses.remove(diagnosis);
+				}
+			}
+		}
 	}
 
 	private void createVisitAttributeTypesLayout(VisitAttributeType visitAttributeType) {
@@ -775,6 +801,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 					encounterDiagnosis.setDiagnosis("ConceptUuid:" + conceptNameId);
 				} else {
 					encounterDiagnosis.setDiagnosis("Non-Coded:" + observation.getDiagnosisList());
+					encounterDiagnosis.setDisplay("Non-Coded:" + observation.getDiagnosisList());
 				}
 
 				if (diagnosis.contains(ApplicationConstants.ObservationLocators.PRIMARY_DIAGNOSIS)) {

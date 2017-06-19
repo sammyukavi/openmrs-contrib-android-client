@@ -169,7 +169,6 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 				tmpPage -= 1;
 			}
 		}
-
 		return tmpPage > totalPages ? -1 : tmpPage;
 	}
 

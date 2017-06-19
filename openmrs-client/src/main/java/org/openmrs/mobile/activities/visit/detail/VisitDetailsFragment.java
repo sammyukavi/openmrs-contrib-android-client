@@ -43,6 +43,7 @@ import com.google.android.flexbox.FlexboxLayout;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.auditdata.AuditDataActivity;
 import org.openmrs.mobile.activities.capturevitals.CaptureVitalsActivity;
+import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
 import org.openmrs.mobile.activities.visit.VisitActivity;
 import org.openmrs.mobile.activities.visit.VisitContract;
 import org.openmrs.mobile.activities.visit.VisitFragment;
@@ -66,13 +67,16 @@ import org.openmrs.mobile.utilities.ToastUtil;
 import org.openmrs.mobile.utilities.ViewUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class VisitDetailsFragment extends VisitFragment implements VisitContract.VisitDetailsView {
 
+	static VisitContract.VisitDetailsMainPresenter staticPresenter;
+	private static TableRow.LayoutParams marginParams;
+	private final long DELAY = 1000;
 	private TextView visitStartDate;
 	private TextView activeVisitBadge;
 	private TextView startDuration;
@@ -81,10 +85,8 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	private TextView visitType, noVitals, noPrimaryDiagnoses, noSecondaryDiagnoses, noAuditData, visitNoteProvider,
 			visitNoteDate, visitVitalsProvider, visitVitalsDate, auditDataCompleteness, auditDataMetadataProvider,
 			auditDataMetadataDate;
-
 	private Visit visit;
 	private TableLayout visitVitalsTableLayout, auditInfoTableLayout;
-	private static TableRow.LayoutParams marginParams;
 	private AppCompatButton submitVisitNote;
 	private TextInputEditText clinicalNote;
 	private AutoCompleteTextView addDiagnosis;
@@ -108,18 +110,17 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	private int initialSecondaryDiagnosesListHashcode;
 	private int initialClinicNoteHashcode;
 	private int clinicalNoteLength;
-
 	private int subsequentPrimaryDiagnosesListHashcode;
 	private int subsequentSecondaryDiagnosesListHashcode;
 	private int subsequentClinicalNoteHashcode;
-
 	private Timer timer = new Timer();
-	private final long DELAY = 1000;
-
-	static VisitContract.VisitDetailsMainPresenter staticPresenter;
 
 	public static VisitDetailsFragment newInstance() {
 		return new VisitDetailsFragment();
+	}
+
+	public static void refreshVitalsDetails() {
+		((VisitDetailsPresenter)staticPresenter).getVisit();
 	}
 
 	@Override
@@ -319,9 +320,10 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 				new DiagnosisRecyclerViewAdapter(this.getActivity(), primaryDiagnosesList, this);
 		primaryDiagnosesRecycler.setAdapter(primaryDiagnosesAdapter);
 
-		DiagnosisRecyclerViewAdapter secondaryDiagnosesAdapter =
-				new DiagnosisRecyclerViewAdapter(this.getActivity(), secondaryDiagnosesList, this);
-		secondaryDiagnosesRecycler.setAdapter(secondaryDiagnosesAdapter);
+		secondaryDiagnosesRecycler.setAdapter(
+				new DiagnosisRecyclerViewAdapter(this.getActivity(), secondaryDiagnosesList, this)
+		);
+
 		// clear auto-complete input field
 		addDiagnosis.setText("");
 	}
@@ -504,23 +506,12 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	}
 
 	@Override
-	public void setDiagnoses(List<ConceptSearchResult> concepts) {
+	public void setDiagnoses(List<ConceptSearchResult> diagnoses) {
 		ArrayAdapter<ConceptSearchResult> adapter =
 				new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line,
-						concepts);
+						diagnoses);
 		addDiagnosis.setAdapter(adapter);
-		addDiagnosis.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-				if (addDiagnosis.getText().length() >= 2) {
-					addDiagnosis.showDropDown();
-				}
-				if (Arrays.asList(concepts)
-						.contains(addDiagnosis.getText().toString())) {
-					addDiagnosis.dismissDropDown();
-				}
-			}
-		});
+		addDiagnosis.showDropDown();
 	}
 
 	private void createVisitAttributeTypesLayout(VisitAttributeType visitAttributeType) {
@@ -780,7 +771,11 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 			if (observation.getDisplay().startsWith(ApplicationConstants.ObservationLocators.DIAGNOSES)) {
 				encounterDiagnosis.setCertainty(checkObsCertainty(observation.getDisplay()));
 				encounterDiagnosis.setDisplay(observation.getDiagnosisList());
-				encounterDiagnosis.setDiagnosis("ConceptUuid:" + conceptNameId);
+				if (StringUtils.notEmpty(conceptNameId)) {
+					encounterDiagnosis.setDiagnosis("ConceptUuid:" + conceptNameId);
+				} else {
+					encounterDiagnosis.setDiagnosis("Non-Coded:" + observation.getDiagnosisList());
+				}
 
 				if (diagnosis.contains(ApplicationConstants.ObservationLocators.PRIMARY_DIAGNOSIS)) {
 					encounterDiagnosis.setOrder(ApplicationConstants.DiagnosisStrings.PRIMARY_ORDER);
@@ -815,10 +810,10 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 
 		VisitNote visitNote = new VisitNote();
 		visitNote.setPersonId(patientUuid);
-		visitNote.setHtmlFormUuid(ApplicationConstants.FORM_UUIDS.CLINICAL_FORM_UUID);
+		visitNote.setHtmlFormId("17");
 		visitNote.setCreateVisit("false");
 		visitNote.setFormModifiedTimestamp(String.valueOf(System.currentTimeMillis()));
-		visitNote.setEncounterModifiedTimestamp(ApplicationConstants.EMPTY_STRING);
+		visitNote.setEncounterModifiedTimestamp("0");
 		visitNote.setVisitId(visitUuid);
 		visitNote.setReturnUrl(ApplicationConstants.EMPTY_STRING);
 		visitNote.setCloseAfterSubmission(ApplicationConstants.EMPTY_STRING);
@@ -837,24 +832,20 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		return visitNote;
 	}
 
-	public static void refreshVitalsDetails() {
-		((VisitDetailsPresenter)staticPresenter).getVisit();
-	}
-
 	@Override
 	public void onPause() {
+		super.onPause();
 		if (changesMade || (initialPrimaryDiagnosesListHashcode != subsequentPrimaryDiagnosesListHashcode) ||
 				(initialSecondaryDiagnosesListHashcode != subsequentSecondaryDiagnosesListHashcode)) {
 			showPendingVisitNoteCahngesDialog();
 		}
-		super.onPause();
 	}
 
 	private void showPendingVisitNoteCahngesDialog() {
 		CustomDialogBundle bundle = new CustomDialogBundle();
 		bundle.setTitleViewMessage(getString(R.string.visit_note_changes_pending_title));
 		bundle.setTextViewMessage(getString(R.string.visit_note_changes_pending_message));
-		//bundle.setRightButtonAction(CustomFragmentDialog.OnClickAction.END_VISIT);
+		bundle.setRightButtonAction(CustomFragmentDialog.OnClickAction.END_VISIT);
 		bundle.setRightButtonText(getString(R.string.dialog_button_confirm));
 		((VisitActivity)this.getActivity())
 				.createAndShowDialog(bundle, ApplicationConstants.DialogTAG.PENDING_VISIT_NOTE_CHANGES_TAG);

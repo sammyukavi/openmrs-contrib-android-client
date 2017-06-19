@@ -76,7 +76,7 @@ public class VisitNoteDataService extends BaseDataService<VisitNote, VisitNoteDb
 					Gson gson = new GsonBuilder().setExclusionStrategies(new CustomExclusionStrategy()).create();
 					Map<String, String> params = new HashMap<>();
 					params.put("personId", visitNote.getPersonId());
-					params.put("htmlFormId", visitNote.getHtmlFormUuid());
+					params.put("htmlFormId", visitNote.getHtmlFormId());
 					params.put("createVisit", visitNote.getCreateVisit());
 					params.put("formModifiedTimestamp", visitNote.getFormModifiedTimestamp());
 					params.put("encounterModifiedTimestamp", visitNote.getEncounterModifiedTimestamp());

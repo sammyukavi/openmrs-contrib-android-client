@@ -122,16 +122,12 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 	public void setNumberOfPatientsView(int length) {
 		numberOfFetchedPatients.setText(getString(R.string.number_of_patients, String.valueOf(length)));
 		foundPatientsLayout.setVisibility(length <= 0 ? View.GONE : View.VISIBLE);
+		patientListLayout.setVisibility(length <= 0 ? View.GONE : View.VISIBLE);
 	}
 
 	@Override
 	public void setNoPatientsVisibility(boolean visibility) {
 		noPatientsFoundLayout.setVisibility(visibility ? View.VISIBLE : View.GONE);
-	}
-
-	@Override
-	public void setFetchedPatientsVisibility(boolean visibility) {
-		patientListLayout.setVisibility(visibility ? View.VISIBLE : View.GONE);
 	}
 
 	@Override

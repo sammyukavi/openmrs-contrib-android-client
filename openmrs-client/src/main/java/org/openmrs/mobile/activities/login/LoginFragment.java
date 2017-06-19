@@ -29,6 +29,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -68,7 +69,7 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 	private Spinner mDropdownLocation;
 	private SparseArray<Bitmap> mBitmapCache;
 	private LoginValidatorWatcher mLoginValidatorWatcher;
-	private ImageView mChangeUrlIcon;
+	private TextView mChangeUrlIcon;
 	private TextInputLayout mLoginUrlTextLayout;
 	private View mViewsContainer;
 
@@ -101,7 +102,7 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 		mPassword = (TextInputEditText)mRootView.findViewById(R.id.loginPasswordField);
 		mLoginButton = (Button)mRootView.findViewById(R.id.loginButton);
 		mLoadingProgressBar = (ProgressBar)mRootView.findViewById(R.id.loadingProgressBar);
-		mChangeUrlIcon = (ImageView)mRootView.findViewById(R.id.changeUrlIcon);
+		mChangeUrlIcon = (TextView)mRootView.findViewById(R.id.changeUrlIcon);
 		mLoginUrlTextLayout = (TextInputLayout)mRootView.findViewById(R.id.loginUrlTextLayout);
 		mUrl.setText(mLoginUrl);
 	}

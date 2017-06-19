@@ -87,11 +87,10 @@
 					android:text="@string/no_patients_found"
 					android:textColor="@color/openmrs_color_grey"
 					android:visibility="gone" />
-		
-		
+			
 		</LinearLayout>
 		
-		<LinearLayout
+		<RelativeLayout
 				android:id="@+id/numberOfPatientsLayout"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
@@ -107,32 +106,30 @@
 			<TextView
 					android:id="@+id/numberOfPatients"
 					android:layout_width="match_parent"
-					android:layout_height="match_parent"
+					android:layout_height="wrap_content"
 					android:layout_marginBottom="5dp"
-					android:gravity="center"
+					android:layout_marginTop="5dp"
+					android:gravity="start"
+					android:layout_marginLeft="5dp"
+					android:layout_marginStart="5dp"
+					android:layout_marginEnd="5dp"
+					android:layout_marginRight="5dp"
 					android:textColor="@color/light_teal" />
-		</LinearLayout>
-
-		<LinearLayout
-				android:id="@+id/pagingLayout"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_margin="5dp"
-				android:layout_gravity="center"
-				android:background="@drawable/card"
-				android:orientation="vertical"
-				android:visibility="gone">
-
+			
 			<TextView
 					android:id="@+id/pagingLabel"
 					android:layout_width="match_parent"
-					android:layout_height="match_parent"
+					android:layout_height="wrap_content"
 					android:layout_marginBottom="5dp"
 					android:layout_marginTop="5dp"
-					android:gravity="center"
+					android:gravity="end"
+					android:layout_marginLeft="5dp"
+					android:layout_marginStart="5dp"
+					android:layout_marginEnd="5dp"
+					android:layout_marginRight="5dp"
 					android:textColor="@color/light_teal" />
-		</LinearLayout>
-
+		</RelativeLayout>
+		
 		<LinearLayout
 				android:id="@+id/patientListRecyclerView"
 				android:layout_width="match_parent"
@@ -141,7 +138,8 @@
 				android:layout_marginStart="10dp"
 				android:layout_marginLeft="10dp"
 				android:layout_marginEnd="10dp"
-				android:orientation="vertical">
+				android:orientation="vertical"
+				android:visibility="gone">
 			
 			<android.support.v7.widget.RecyclerView
 					android:id="@+id/patientListModelRecyclerView"
@@ -149,7 +147,7 @@
 					android:layout_height="match_parent"
 					android:layout_gravity="left|bottom" />
 		</LinearLayout>
-
+		
 		<RelativeLayout
 				android:id="@+id/patientListLoadingProgressBar"
 				android:layout_width="match_parent"

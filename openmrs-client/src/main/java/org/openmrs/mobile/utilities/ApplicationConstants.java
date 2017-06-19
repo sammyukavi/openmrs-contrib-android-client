@@ -189,6 +189,7 @@ public abstract class ApplicationConstants {
 		public static final String AUDIT_DATA_FORM_UUID = "667dc18e-740f-44ce-ae0a-5ba6b33308b0";
 		public static final String VITALS_FORM_UUID = "a000cb34-9ec1-4344-a1c8-f692232f6edd";
 		public static final String CLINICAL_FORM_UUID = "6d071264-3932-41fe-95f2-1dbbf2e4cd31";
+		public static final String VISIT_NOTE_HTML_FORM_ID = "17";
 	}
 
 	public abstract static class AuditFormAnswers {

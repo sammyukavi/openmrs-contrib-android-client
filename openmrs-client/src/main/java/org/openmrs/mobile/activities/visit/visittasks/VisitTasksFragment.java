@@ -131,13 +131,13 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 		groupedClosedTasks.clear();
 		closedTasksLayout.removeAllViews();
 		for (VisitTask task : visitTaskList) {
-			String relativeDate = DateUtils.calculateRelativeDate(task.getClosedOn());
-			if (groupedClosedTasks.containsKey(relativeDate)) {
-				groupedClosedTasks.get(relativeDate).add(task);
+			String dateClosed = DateUtils.convertTime1(task.getClosedOn(), DateUtils.DATE_FORMAT);
+			if (groupedClosedTasks.containsKey(dateClosed)) {
+				groupedClosedTasks.get(dateClosed).add(task);
 			} else {
 				List<VisitTask> tasks = new ArrayList<>();
 				tasks.add(task);
-				groupedClosedTasks.put(relativeDate, tasks);
+				groupedClosedTasks.put(String.valueOf(dateClosed), tasks);
 			}
 		}
 

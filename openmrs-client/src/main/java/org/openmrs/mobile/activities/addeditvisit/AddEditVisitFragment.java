@@ -35,6 +35,7 @@ import android.widget.TextView;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
+import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
 import org.openmrs.mobile.activities.visit.VisitActivity;
 import org.openmrs.mobile.models.BaseOpenmrsObject;
 import org.openmrs.mobile.models.ConceptAnswer;
@@ -278,12 +279,9 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 
 	@Override
 	public void showPatientDashboard() {
-		Intent intent = getActivity().getIntent();
-		getActivity().setResult(RESULT_OK, intent);
-		getActivity().finish();
-		//Intent intent = new Intent(getContext(), PatientDashboardActivity.class);
-		//intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
-		//getContext().startActivity(intent);
+		Intent intent = new Intent(getContext(), PatientDashboardActivity.class);
+		intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
+		getContext().startActivity(intent);
 	}
 
 	@Override

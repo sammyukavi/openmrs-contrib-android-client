@@ -70,14 +70,14 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 
 	@Override
 	public void getPatientList() {
-		patientListView.setPatientListScreenVisibility(true);
+		patientListView.showPatientListProgressSpinner(true);
 		setPage(1);
 		patientListDataService.getAll(new QueryOptions(false, false), new PagingInfo(1, 100),
 				new DataService.GetCallback<List<PatientList>>() {
 					@Override
 					public void onCompleted(List<PatientList> entities) {
 						if (entities != null) {
-							patientListView.setPatientListScreenVisibility(false);
+							patientListView.showPatientListProgressSpinner(false);
 							patientListView.setNoPatientListsVisibility(false);
 							patientListView.updatePatientLists(entities);
 						}
@@ -85,7 +85,7 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 
 					@Override
 					public void onError(Throwable t) {
-						patientListView.setPatientListScreenVisibility(false);
+						patientListView.showPatientListProgressSpinner(false);
 						patientListView.setNoPatientListsVisibility(true);
 					}
 				});

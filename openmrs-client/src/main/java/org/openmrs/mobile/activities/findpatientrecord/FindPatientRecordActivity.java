@@ -33,6 +33,8 @@ import org.openmrs.mobile.activities.addeditpatient.AddEditPatientActivity;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 
+import java.util.Timer;
+
 public class FindPatientRecordActivity extends ACBaseActivity {
 
 	public FindPatientRecordContract.Presenter findPatientPresenter;
@@ -42,6 +44,9 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 	private String query;
 	private OpenMRS instance = OpenMRS.getInstance();
 	private SharedPreferences sharedPreferences = instance.getOpenMRSSharedPreferences();
+
+	private Timer timer = new Timer();
+	private final long DELAY = 1000;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

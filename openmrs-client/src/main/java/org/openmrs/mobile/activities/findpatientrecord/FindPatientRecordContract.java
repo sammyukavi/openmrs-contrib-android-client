@@ -31,8 +31,6 @@ public interface FindPatientRecordContract {
 
 		void setNoPatientsVisibility(boolean visibility);
 
-		void setFetchedPatientsVisibility(boolean visibility);
-
 		void fetchPatients(List<Patient> patients);
 
 		void setProgressBarVisibility(boolean visibility);

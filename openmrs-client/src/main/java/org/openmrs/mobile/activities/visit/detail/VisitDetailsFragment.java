@@ -43,7 +43,6 @@ import com.google.android.flexbox.FlexboxLayout;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.auditdata.AuditDataActivity;
 import org.openmrs.mobile.activities.capturevitals.CaptureVitalsActivity;
-import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
 import org.openmrs.mobile.activities.visit.VisitActivity;
 import org.openmrs.mobile.activities.visit.VisitContract;
 import org.openmrs.mobile.activities.visit.VisitFragment;
@@ -68,9 +67,7 @@ import org.openmrs.mobile.utilities.ViewUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -269,11 +266,12 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	private void addDiagnosisAdapter() {
 		addDiagnosis.addTextChangedListener(new TextWatcher() {
 			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			}
 
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				if(timer != null){
+				if (timer != null) {
 					timer.cancel();
 				}
 			}
@@ -321,10 +319,9 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 				new DiagnosisRecyclerViewAdapter(this.getActivity(), primaryDiagnosesList, this);
 		primaryDiagnosesRecycler.setAdapter(primaryDiagnosesAdapter);
 
-		secondaryDiagnosesRecycler.setAdapter(
-				new DiagnosisRecyclerViewAdapter(this.getActivity(), secondaryDiagnosesList, this)
-		);
-
+		DiagnosisRecyclerViewAdapter secondaryDiagnosesAdapter =
+				new DiagnosisRecyclerViewAdapter(this.getActivity(), secondaryDiagnosesList, this);
+		secondaryDiagnosesRecycler.setAdapter(secondaryDiagnosesAdapter);
 		// clear auto-complete input field
 		addDiagnosis.setText("");
 	}
@@ -355,7 +352,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		});
 
 		submitVisitNote.setOnClickListener(v -> {
-			((VisitDetailsPresenter) mPresenter).saveVisitNote(createVisitNote(encounterUuid));
+			((VisitDetailsPresenter)mPresenter).saveVisitNote(createVisitNote(encounterUuid));
 		});
 
 		auditDataCompleteness.setOnClickListener(new View.OnClickListener() {
@@ -698,7 +695,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 						.equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.CLINICAL_NOTE_UUID)) {
 					submitVisitNote.setText(getString(R.string.update_visit_note));
 					for (Observation obs : encounter.getObs()) {
-						((VisitDetailsPresenter) mPresenter).getObservation(obs.getUuid());
+						((VisitDetailsPresenter)mPresenter).getObservation(obs.getUuid());
 					}
 				}
 			}
@@ -846,18 +843,18 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 
 	@Override
 	public void onPause() {
-		super.onPause();
 		if (changesMade || (initialPrimaryDiagnosesListHashcode != subsequentPrimaryDiagnosesListHashcode) ||
 				(initialSecondaryDiagnosesListHashcode != subsequentSecondaryDiagnosesListHashcode)) {
 			showPendingVisitNoteCahngesDialog();
 		}
+		super.onPause();
 	}
 
 	private void showPendingVisitNoteCahngesDialog() {
 		CustomDialogBundle bundle = new CustomDialogBundle();
 		bundle.setTitleViewMessage(getString(R.string.visit_note_changes_pending_title));
 		bundle.setTextViewMessage(getString(R.string.visit_note_changes_pending_message));
-		bundle.setRightButtonAction(CustomFragmentDialog.OnClickAction.END_VISIT);
+		//bundle.setRightButtonAction(CustomFragmentDialog.OnClickAction.END_VISIT);
 		bundle.setRightButtonText(getString(R.string.dialog_button_confirm));
 		((VisitActivity)this.getActivity())
 				.createAndShowDialog(bundle, ApplicationConstants.DialogTAG.PENDING_VISIT_NOTE_CHANGES_TAG);

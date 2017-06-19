@@ -77,7 +77,6 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 			@Override
 			public void onCompleted(Patient patient) {
 				setPatient(patient);
-				patientDashboardView.showPageSpinner(false);
 				fetchVisits(patient, getStartIndex());
 			}
 

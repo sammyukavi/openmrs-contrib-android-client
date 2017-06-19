@@ -226,6 +226,7 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 				if (ViewUtils.getInput(addtask) != null) {
 					((VisitTasksPresenter)mPresenter).createVisitTasksObject(ViewUtils.getInput(addtask));
 				}
+				addtask.setText(ApplicationConstants.EMPTY_STRING);
 			}
 		});
 
@@ -235,6 +236,7 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 				if (ViewUtils.getInput(addtask) != null) {
 					((VisitTasksPresenter)mPresenter).createVisitTasksObject(ViewUtils.getInput(addtask));
 				}
+				addtask.setText(ApplicationConstants.EMPTY_STRING);
 			}
 		});
 	}

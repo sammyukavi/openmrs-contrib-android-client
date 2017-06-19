@@ -371,15 +371,6 @@ public class CaptureVitalsFragment extends ACBaseFragment<CaptureVitalsContract.
 
 	@Override
 	public void goBackToVisitPage() {
-
-		//Intent intent = new Intent(getContext(), VisitActivity.class);
-		//intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
-		//intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visitUuid);
-		//intent.putExtra(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, visitStopDate);		//getContext()
-		// .startActivity(intent);
-
-		//(getActivity()).onBackPressed();
-
 		getActivity().finish();
 	}
 

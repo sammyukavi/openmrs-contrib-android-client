@@ -619,6 +619,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 				}
 			}
 		} else {
+			System.out.println(" Checking the visit visit vitals " + visit.getStopDatetime());
 			addVisitVitals.setVisibility(visit.getStopDatetime() == null ? View.VISIBLE : View.GONE);
 		}
 	}

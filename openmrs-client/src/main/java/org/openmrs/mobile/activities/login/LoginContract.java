@@ -25,6 +25,8 @@ public interface LoginContract {
 
 	interface View extends BaseView<Presenter> {
 
+		void hideSoftKeys();
+
 		void showWarningDialog();
 
 		void userAuthenticated();
@@ -32,8 +34,6 @@ public interface LoginContract {
 		void finishLoginActivity();
 
 		void setProgressBarVisibility(boolean visible);
-
-		void setViewsContainerVisibility(boolean visible);
 
 		void updateLoginFormLocations(List<Location> locations, String url);
 

@@ -11,8 +11,9 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import org.openmrs.mobile.R;
-import org.openmrs.mobile.activities.visit.VisitContract;
+import org.openmrs.mobile.activities.IBaseDiagnosisView;
 import org.openmrs.mobile.models.EncounterDiagnosis;
+import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 
 import java.util.List;
@@ -20,13 +21,20 @@ import java.util.List;
 public class DiagnosisRecyclerViewAdapter extends RecyclerView.Adapter<DiagnosisRecyclerViewAdapter.DiagnosisViewHolder> {
 
 	private Activity context;
-	private VisitContract.VisitDetailsView visitDetailsView;
+	private IBaseDiagnosisView visitDetailsView;
 	private List<EncounterDiagnosis> diagnoses;
+	private String encounterUuid, patientUuid, clinicalNote;
+	private Visit visit;
 
 	public DiagnosisRecyclerViewAdapter(Activity context,
-			List<EncounterDiagnosis> diagnoses, VisitContract.VisitDetailsView visitDetailsView) {
+			List<EncounterDiagnosis> diagnoses, String encounterUuid,
+			String patientUuid, String clinicalNote, Visit visit, IBaseDiagnosisView visitDetailsView) {
 		this.context = context;
 		this.diagnoses = diagnoses;
+		this.encounterUuid = encounterUuid;
+		this.patientUuid = patientUuid;
+		this.clinicalNote = clinicalNote;
+		this.visit =  visit;
 		this.visitDetailsView = visitDetailsView;
 	}
 
@@ -75,6 +83,10 @@ public class DiagnosisRecyclerViewAdapter extends RecyclerView.Adapter<Diagnosis
 					encounterDiagnosis.setOrder(ApplicationConstants.DiagnosisStrings.SECONDARY_ORDER);
 					visitDetailsView.setSecondaryDiagnosis(encounterDiagnosis);
 				}
+
+				if(visitDetailsView.isAutoSaveEnabled()) {
+					visitDetailsView.saveVisitNote(encounterUuid, patientUuid, clinicalNote, visit);
+				}
 			}
 		});
 
@@ -88,6 +100,10 @@ public class DiagnosisRecyclerViewAdapter extends RecyclerView.Adapter<Diagnosis
 					encounterDiagnosis.setCertainty(ApplicationConstants.DiagnosisStrings.PRESUMED);
 					visitDetailsView.setDiagnosisCertainty(encounterDiagnosis);
 				}
+
+				if(visitDetailsView.isAutoSaveEnabled()) {
+					visitDetailsView.saveVisitNote(encounterUuid, patientUuid, clinicalNote, visit);
+				}
 			}
 		});
 
@@ -96,6 +112,11 @@ public class DiagnosisRecyclerViewAdapter extends RecyclerView.Adapter<Diagnosis
 			@Override
 			public boolean onLongClick(View v) {
 				visitDetailsView.removeDiagnosis(encounterDiagnosis, diagnosisOrder);
+
+				if(visitDetailsView.isAutoSaveEnabled()) {
+					visitDetailsView.saveVisitNote(encounterUuid, patientUuid, clinicalNote, visit);
+				}
+
 				return true;
 			}
 		});

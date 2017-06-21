@@ -53,10 +53,8 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 
 	private ConceptAnswerDataService conceptAnswerDataService;
 
-	public VisitDetailsPresenter(String patientUuid, String visitUuid, String providerUuid, String visitStopDate,
-			VisitContract
-					.VisitDetailsView
-					visitDetailsView) {
+	public VisitDetailsPresenter(String patientUuid, String visitUuid, String providerUuid,
+			String visitStopDate, VisitContract.VisitDetailsView visitDetailsView) {
 		this.visitDetailsView = visitDetailsView;
 		this.visitDetailsView.setPresenter(this);
 		this.visitDataService = new VisitDataService();
@@ -127,27 +125,6 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 	}
 
 	@Override
-	public void findConcept(String searchQuery) {
-		conceptSearchDataService.search(searchQuery, new DataService.GetCallback<List<ConceptSearchResult>>() {
-			@Override
-			public void onCompleted(List<ConceptSearchResult> entities) {
-				if (entities.isEmpty()) {
-					ConceptSearchResult nonCodedDiagnosis = new ConceptSearchResult();
-					nonCodedDiagnosis.setDisplay(searchQuery);
-					nonCodedDiagnosis.setValue("Non-Coded:" + searchQuery);
-					entities.add(nonCodedDiagnosis);
-				}
-				visitDetailsView.setDiagnoses(entities);
-			}
-
-			@Override
-			public void onError(Throwable t) {
-				Log.e("error", t.getLocalizedMessage());
-			}
-		});
-	}
-
-	@Override
 	public void getPatientUUID() {
 		visitDetailsView.setPatientUUID(patientUUID);
 	}
@@ -165,21 +142,6 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 	@Override
 	public void getVisitStopDate() {
 		visitDetailsView.setVisitStopDate(visitStopDate);
-	}
-
-	@Override
-	public void getObservation(String uuid) {
-		obsDataService.getByUUID(uuid, QueryOptions.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Observation>() {
-			@Override
-			public void onCompleted(Observation entity) {
-				visitDetailsView.createEncounterDiagnosis(entity, entity.getDisplay(), entity.getValueCodedName());
-			}
-
-			@Override
-			public void onError(Throwable t) {
-				visitDetailsView.showTabSpinner(false);
-			}
-		});
 	}
 
 	private void loadVisitAttributeTypes() {
@@ -216,23 +178,6 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 			@Override
 			public void onError(Throwable t) {
 				ToastUtil.error(t.getMessage());
-			}
-		});
-	}
-
-	@Override
-	public void saveVisitNote(VisitNote visitNote) {
-		visitDetailsView.showTabSpinner(true);
-		visitNoteDataService.save(visitNote, new DataService.GetCallback<VisitNote>() {
-			@Override
-			public void onCompleted(VisitNote visitNote) {
-				visitDetailsView.showTabSpinner(false);
-				System.out.println("RETURNED:::" + visitNote);
-			}
-
-			@Override
-			public void onError(Throwable t) {
-				System.out.println("FAILED:::" + t.getMessage());
 			}
 		});
 	}

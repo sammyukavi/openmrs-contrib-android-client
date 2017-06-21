@@ -30,7 +30,8 @@ import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 
 import org.openmrs.mobile.R;
-import org.openmrs.mobile.activities.ACBaseFragment;
+import org.openmrs.mobile.activities.BaseDiagnosisFragment;
+import org.openmrs.mobile.activities.IBaseDiagnosisView;
 import org.openmrs.mobile.activities.addeditpatient.AddEditPatientActivity;
 import org.openmrs.mobile.activities.addeditvisit.AddEditVisitActivity;
 import org.openmrs.mobile.application.OpenMRS;
@@ -38,6 +39,7 @@ import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Visit;
+import org.openmrs.mobile.models.VisitNote;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.FontsUtil;
 import org.openmrs.mobile.utilities.StringUtils;
@@ -48,14 +50,12 @@ import java.util.List;
 import static org.openmrs.mobile.utilities.ApplicationConstants.BundleKeys.LOCATION_UUID_BUNDLE;
 import static org.openmrs.mobile.utilities.ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE;
 
-public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardContract.Presenter>
+public class PatientDashboardFragment extends BaseDiagnosisFragment<PatientDashboardContract.Presenter>
 		implements PatientDashboardContract.View {
 
-	private View fragmentView;
 	private FloatingActionButton startVisitButton, editPatient;
 	private Patient patient;
 	private OpenMRS instance = OpenMRS.getInstance();
-	private SharedPreferences sharedPreferences = instance.getOpenMRSSharedPreferences();
 	private Intent intent;
 	private Location location;
 	private RelativeLayout dashboardScreen;
@@ -63,9 +63,7 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	private TextView noVisitNoteLabel;
 	private String patientUuid;
 	private PatientVisitsRecyclerAdapter patientVisitsRecyclerAdapter;
-	private PatientDashboardActivity patientDashboardActivity;
 	private FloatingActionMenu patientDashboardMenu;
-	private static boolean hasActiveVisit;
 	private RecyclerView patientVisitsRecyclerView;
 
 	@Override
@@ -83,9 +81,9 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
 				View patientContactInfo = recyclerView.findViewById(R.id.container_patient_address_info);
 				if (patientContactInfo == null) {
-					patientDashboardActivity.updateHeaderShadowLine(true);
+					((PatientDashboardActivity)getActivity()).updateHeaderShadowLine(true);
 				} else {
-					patientDashboardActivity.updateHeaderShadowLine(false);
+					((PatientDashboardActivity)getActivity()).updateHeaderShadowLine(false);
 				}
 
 				if (!mPresenter.isLoading()) {
@@ -113,13 +111,12 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		fragmentView = inflater.inflate(R.layout.fragment_patient_dashboard, container, false);
+		View fragmentView = inflater.inflate(R.layout.fragment_patient_dashboard, container, false);
 		patientUuid = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys
 				.PATIENT_UUID_BUNDLE);
 
-		initViewFields();
+		initializeViewFields(fragmentView);
 		initializeListeners(startVisitButton, editPatient);
-		patientDashboardActivity = (PatientDashboardActivity)getContext();
 
 		//set start index incase it's cached somewhere
 		mPresenter.fetchPatientData(patientUuid);
@@ -146,9 +143,9 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 				//Contact address header
 				View patientContactInfo = recyclerView.findViewById(R.id.container_patient_address_info);
 				if (patientContactInfo == null) {
-					patientDashboardActivity.updateHeaderShadowLine(true);
+					((PatientDashboardActivity)getActivity()).updateHeaderShadowLine(true);
 				} else {
-					patientDashboardActivity.updateHeaderShadowLine(false);
+					((PatientDashboardActivity)getActivity()).updateHeaderShadowLine(false);
 				}
 
 				if (!mPresenter.isLoading()) {
@@ -182,7 +179,8 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		}
 	}
 
-	private void initViewFields() {
+	@Override
+	public void initializeViewFields(View fragmentView) {
 		startVisitButton = (FloatingActionButton)fragmentView.findViewById(R.id.start_visit);
 		editPatient = (FloatingActionButton)fragmentView.findViewById(R.id.edit_Patient);
 		dashboardScreen = (RelativeLayout)fragmentView.findViewById(R.id.dashboardScreen);
@@ -191,7 +189,6 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 		patientDashboardMenu = (FloatingActionMenu)fragmentView.findViewById(R.id.patientDashboardMenu);
 		patientDashboardMenu.setClosedOnTouchOutside(true);
 		patientVisitsRecyclerView = (RecyclerView)fragmentView.findViewById(R.id.patientVisitsRecyclerView);
-
 	}
 
 	@Override
@@ -202,10 +199,10 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 
 	@Override
 	public void patientVisits(List<Visit> visits) {
-		hasActiveVisit = false;
+		//hasActiveVisit = false;
 		for (Visit visit : visits) {
 			if (!StringUtils.notNull(visit.getStopDatetime())) {
-				hasActiveVisit = true;
+				//hasActiveVisit = true;
 				startVisitButton.setVisibility(View.GONE);
 				setVisitUuid(visit);
 				break;
@@ -218,11 +215,10 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 			uuidsHashmap.put(LOCATION_UUID_BUNDLE, location == null ? "" : location.getUuid());
 
 			patientVisitsRecyclerAdapter =
-					new PatientVisitsRecyclerAdapter(patientVisitsRecyclerView, visits, getActivity());
+					new PatientVisitsRecyclerAdapter(patientVisitsRecyclerView, visits, getActivity(), this);
 			patientVisitsRecyclerAdapter.setUuids(uuidsHashmap);
 			patientVisitsRecyclerView.setAdapter(patientVisitsRecyclerAdapter);
 		}
-
 	}
 
 	@Override
@@ -284,5 +280,15 @@ public class PatientDashboardFragment extends ACBaseFragment<PatientDashboardCon
 	@Override
 	public void updateClinicVisitNote(Observation observation) {
 		patientVisitsRecyclerAdapter.updateClinicalNoteObs(observation);
+	}
+
+	@Override
+	public IBaseDiagnosisView getDiagnosisView() {
+		return this;
+	}
+
+	@Override
+	public boolean isAutoSaveEnabled() {
+		return true;
 	}
 }

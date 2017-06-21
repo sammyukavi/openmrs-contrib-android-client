@@ -431,10 +431,14 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 							}
 						}
 					}
+				} else {
+					addVisitVitals.setVisibility(View.VISIBLE);
 				}
 			}
 		} else {
 			addVisitVitals.setVisibility(visit.getStopDatetime() == null ? View.VISIBLE : View.GONE);
+			noVitals.setVisibility(View.VISIBLE);
+			visitVitalsTableLayout.setVisibility(View.GONE);
 		}
 	}
 
@@ -466,12 +470,8 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 						auditInfoTableLayout.setVisibility(View.VISIBLE);
 						auditInfoTableLayout.removeAllViews();
 						loadObservationFields(visit.getEncounters().get(i).getObs(), EncounterTypeData.AUDIT_DATA);
-					} else {
-						noAuditData.setVisibility(View.VISIBLE);
-						addAuditData.setVisibility(View.VISIBLE);
-						auditInfoTableLayout.setVisibility(View.GONE);
 					}
-
+					break;
 				}
 			}
 		}
@@ -544,9 +544,15 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 			if (type == EncounterTypeData.VITALS) {
 				visitVitalsTableLayout.addView(row);
 			} else {
-				if (observation.getDisplay().contains(ApplicationConstants.EncounterTypeDisplays.AUDIT_DATA_COMPLETENESS)
-						&& observation.getDisplay().contains("No")) {
+				if (!observation.getDisplay().contains(ApplicationConstants.EncounterTypeDisplays
+						.AUDIT_DATA_COMPLETENESS)) {
 					auditDataCompleteness.setVisibility(View.VISIBLE);
+				} else {
+					if (observation.getDisplay().contains(ApplicationConstants.EncounterTypeDisplays
+							.AUDIT_DATA_COMPLETENESS)
+							&& (observation.getDisplay().contains("No") || observation.getDisplay() == null)) {
+						auditDataCompleteness.setVisibility(View.VISIBLE);
+					}
 				}
 				auditInfoTableLayout.addView(row);
 			}
@@ -561,10 +567,10 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 	@Override
 	public void onPause() {
 		super.onPause();
-		if (changesMade || (initialPrimaryDiagnosesListHashcode != subsequentPrimaryDiagnosesListHashcode) ||
+		/*if (changesMade || (initialPrimaryDiagnosesListHashcode != subsequentPrimaryDiagnosesListHashcode) ||
 				(initialSecondaryDiagnosesListHashcode != subsequentSecondaryDiagnosesListHashcode)) {
 			showPendingVisitNoteChangesDialog();
-		}
+		}*/
 	}
 
 	private void showPendingVisitNoteChangesDialog() {

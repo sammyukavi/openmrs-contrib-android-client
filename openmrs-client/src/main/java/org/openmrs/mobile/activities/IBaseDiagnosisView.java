@@ -14,7 +14,7 @@ public interface IBaseDiagnosisView {
 
 	void saveVisitNote(VisitNote visitNote);
 
-	void saveVisitNote(String encounterUuid, String patientUuid, String clinicalNote, Visit visit);
+	void saveVisitNote(String encounterUuid, String clinicalNote, Visit visit);
 
 	void createEncounterDiagnosis(Observation observation, String diagnosis, String conceptNameId);
 

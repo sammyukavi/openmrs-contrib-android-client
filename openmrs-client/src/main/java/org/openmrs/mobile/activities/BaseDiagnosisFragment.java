@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.visit.detail.DiagnosisRecyclerViewAdapter;
-import org.openmrs.mobile.activities.visit.detail.VisitDetailsPresenter;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.models.ConceptSearchResult;
 import org.openmrs.mobile.models.Encounter;
@@ -32,26 +31,22 @@ import java.util.TimerTask;
 public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 		extends ACBaseFragment<T> implements IBaseDiagnosisFragment {
 
-	private Timer timer;
-	private long DELAY = 1000;
+	private static long DELAY = 1000;
 	protected List<EncounterDiagnosis> primaryDiagnoses = new ArrayList<>(), secondaryDiagnoses = new ArrayList<>();
-
 	protected AutoCompleteTextView searchDiagnosis;
 	protected RecyclerView primaryDiagnosesRecycler, secondaryDiagnosesRecycler;
 	protected AppCompatButton submitVisitNote;
 	protected TextView noPrimaryDiagnoses, noSecondaryDiagnoses;
-
 	protected int initialPrimaryDiagnosesListHashcode, initialSecondaryDiagnosesListHashcode,
 			subsequentPrimaryDiagnosesListHashcode, subsequentSecondaryDiagnosesListHashcode,
 			initialClinicNoteHashcode, subsequentClinicalNoteHashcode;
-
 	protected BaseDiagnosisPresenter diagnosisPresenter = new BaseDiagnosisPresenter();
-
+	private Timer timer;
 	private String encounterUuid, patientUuid, clinicalNote;
 	private Visit visit;
 
 	@Override
-	public void initializeListeners(){
+	public void initializeListeners() {
 		addDiagnosisListeners();
 	}
 
@@ -92,6 +87,10 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 							(ConceptSearchResult)searchDiagnosis.getAdapter().getItem(position);
 					createEncounterDiagnosis(null, ViewUtils.getInput(searchDiagnosis),
 							conceptSearchResult.getValue());
+					
+					if (getDiagnosisView().isAutoSaveEnabled()) {
+						getDiagnosisView().saveVisitNote(encounterUuid, clinicalNote, visit);
+					}
 				}
 			}
 		});
@@ -116,7 +115,7 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 		initialSecondaryDiagnosesListHashcode = secondaryDiagnoses.hashCode();
 	}
 
-	public void setDiagnoses(List<ConceptSearchResult> diagnoses){
+	public void setDiagnoses(List<ConceptSearchResult> diagnoses) {
 		ArrayAdapter<ConceptSearchResult> adapter =
 				new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, diagnoses);
 		filterOutExistingDiagnoses(diagnoses);
@@ -128,7 +127,7 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	 * TODO: Use more effecient search algorithm
 	 * @param diagnoses
 	 */
-	private void filterOutExistingDiagnoses(List<ConceptSearchResult> diagnoses){
+	private void filterOutExistingDiagnoses(List<ConceptSearchResult> diagnoses) {
 		List<ConceptSearchResult> searchDiagnosis = new ArrayList<>(diagnoses);
 		List<String> existingDiagnoses = new ArrayList<>();
 		for (EncounterDiagnosis primaryDiagnosis : primaryDiagnoses) {
@@ -140,7 +139,7 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 		}
 
 		for (ConceptSearchResult diagnosis : searchDiagnosis) {
-			for(String existingDiagnosis : existingDiagnoses) {
+			for (String existingDiagnosis : existingDiagnoses) {
 				if (null != diagnosis.getConceptName() &&
 						diagnosis.getConceptName().getName().equalsIgnoreCase(existingDiagnosis)
 						|| diagnosis.toString().equalsIgnoreCase(existingDiagnosis)) {
@@ -189,6 +188,7 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 		}
 
 		setRecyclerViews();
+
 	}
 
 	public void setPrimaryDiagnosis(EncounterDiagnosis primaryDiagnosis) {
@@ -273,11 +273,11 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 
 		primaryDiagnosesRecycler.setAdapter(
 				new DiagnosisRecyclerViewAdapter(getActivity(), primaryDiagnoses, getEncounterUuid(),
-						getPatientUuid(), getClinicalNote(), getVisit(), getDiagnosisView()));
+						getClinicalNote(), getVisit(), getDiagnosisView()));
 
 		secondaryDiagnosesRecycler.setAdapter(
 				new DiagnosisRecyclerViewAdapter(getActivity(), secondaryDiagnoses, getEncounterUuid(),
-						getPatientUuid(), getClinicalNote(), getVisit(), getDiagnosisView()));
+						getClinicalNote(), getVisit(), getDiagnosisView()));
 
 		// clear auto-complete input field
 		searchDiagnosis.setText(ApplicationConstants.EMPTY_STRING);
@@ -287,15 +287,15 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 		diagnosisPresenter.saveVisitNote(visitNote, getDiagnosisView());
 	}
 
-	public void saveVisitNote(String encounterUuid, String patientUuid, String clinicalNote, Visit visit) {
-		saveVisitNote(createVisitNote(encounterUuid, patientUuid, clinicalNote, visit));
+	public void saveVisitNote(String encounterUuid, String clinicalNote, Visit visit) {
+		saveVisitNote(createVisitNote(encounterUuid, clinicalNote, visit));
 	}
 
-	protected VisitNote createVisitNote(String encounterUuid, String patientUuid, String clinicalNote, Visit visit) {
+	protected VisitNote createVisitNote(String encounterUuid, String clinicalNote, Visit visit) {
 		List<EncounterDiagnosis> encounterDiagnosises = new ArrayList<>();
 
 		VisitNote visitNote = new VisitNote();
-		visitNote.setPersonId(patientUuid);
+		visitNote.setPersonId(visit.getPatient().getUuid());
 		visitNote.setHtmlFormId("17");
 		visitNote.setCreateVisit("false");
 		visitNote.setFormModifiedTimestamp(String.valueOf(System.currentTimeMillis()));
@@ -308,7 +308,7 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 		visitNote.setW3(OpenMRS.getInstance().getParentLocationUuid());
 		visitNote.setW5(visit.getStartDatetime());
 		visitNote.setW10(ApplicationConstants.EMPTY_STRING);
-		visitNote.setW12(clinicalNote);
+		visitNote.setW12(null == clinicalNote ? ApplicationConstants.EMPTY_STRING : clinicalNote);
 
 		encounterDiagnosises.addAll(primaryDiagnoses);
 		encounterDiagnosises.addAll(secondaryDiagnoses);
@@ -340,18 +340,13 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	}
 
 	@Override
-	public void setSearchDiagnosisView(AutoCompleteTextView searchDiagnosis) {
-		this.searchDiagnosis = searchDiagnosis;
-	}
-
-	@Override
 	public AutoCompleteTextView getSearchDiagnosisView() {
 		return searchDiagnosis;
 	}
 
 	@Override
-	public void setNoPrimaryDiagnoses(TextView view) {
-		this.noPrimaryDiagnoses = view;
+	public void setSearchDiagnosisView(AutoCompleteTextView searchDiagnosis) {
+		this.searchDiagnosis = searchDiagnosis;
 	}
 
 	@Override
@@ -360,8 +355,8 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	}
 
 	@Override
-	public void setNoSecondaryDiagnoses(TextView view) {
-		this.noSecondaryDiagnoses = view;
+	public void setNoPrimaryDiagnoses(TextView view) {
+		this.noPrimaryDiagnoses = view;
 	}
 
 	@Override
@@ -370,8 +365,8 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	}
 
 	@Override
-	public void setPrimaryDiagnosesRecycler(RecyclerView view) {
-		this.primaryDiagnosesRecycler = view;
+	public void setNoSecondaryDiagnoses(TextView view) {
+		this.noSecondaryDiagnoses = view;
 	}
 
 	@Override
@@ -380,8 +375,8 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	}
 
 	@Override
-	public void setSecondaryDiagnosesRecycler(RecyclerView view) {
-		this.secondaryDiagnosesRecycler = view;
+	public void setPrimaryDiagnosesRecycler(RecyclerView view) {
+		this.primaryDiagnosesRecycler = view;
 	}
 
 	@Override
@@ -390,8 +385,8 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	}
 
 	@Override
-	public void setSubmitVisitNote(AppCompatButton view) {
-		this.submitVisitNote = view;
+	public void setSecondaryDiagnosesRecycler(RecyclerView view) {
+		this.secondaryDiagnosesRecycler = view;
 	}
 
 	@Override
@@ -400,8 +395,8 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	}
 
 	@Override
-	public void setEncounterUuid(String encounterUuid) {
-		this.encounterUuid = encounterUuid;
+	public void setSubmitVisitNote(AppCompatButton view) {
+		this.submitVisitNote = view;
 	}
 
 	@Override
@@ -410,18 +405,8 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	}
 
 	@Override
-	public void setPatientUuid(String patientUuid) {
-		this.patientUuid = patientUuid;
-	}
-
-	@Override
-	public String getPatientUuid() {
-		return patientUuid;
-	}
-
-	@Override
-	public void setClinicalNote(String clinicalNote) {
-		this.clinicalNote = clinicalNote;
+	public void setEncounterUuid(String encounterUuid) {
+		this.encounterUuid = encounterUuid;
 	}
 
 	@Override
@@ -430,12 +415,17 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	}
 
 	@Override
-	public void setVisit(Visit visit) {
-		this.visit = visit;
+	public void setClinicalNote(String clinicalNote) {
+		this.clinicalNote = clinicalNote;
 	}
 
 	@Override
 	public Visit getVisit() {
 		return visit;
+	}
+
+	@Override
+	public void setVisit(Visit visit) {
+		this.visit = visit;
 	}
 }

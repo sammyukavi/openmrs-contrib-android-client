@@ -67,7 +67,6 @@ import org.openmrs.mobile.utilities.ToastUtil;
 import org.openmrs.mobile.utilities.ViewUtils;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -519,7 +518,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	 * TODO: Use more effecient search algorithm
 	 * @param diagnoses
 	 */
-	private void filterOutExistingDiagnoses(List<ConceptSearchResult> diagnoses){
+	private void filterOutExistingDiagnoses(List<ConceptSearchResult> diagnoses) {
 		List<ConceptSearchResult> searchDiagnosis = new ArrayList<>(diagnoses);
 		List<String> existingDiagnoses = new ArrayList<>();
 		for (EncounterDiagnosis primaryDiagnosis : primaryDiagnosesList) {
@@ -531,7 +530,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		}
 
 		for (ConceptSearchResult diagnosis : searchDiagnosis) {
-			for(String existingDiagnosis : existingDiagnoses) {
+			for (String existingDiagnosis : existingDiagnoses) {
 				if (diagnosis.getConceptName().getName().equalsIgnoreCase(existingDiagnosis) ||
 						diagnosis.toString().equalsIgnoreCase(existingDiagnosis)) {
 					diagnoses.remove(diagnosis);
@@ -633,10 +632,14 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 							}
 						}
 					}
+				} else {
+					addVisitVitals.setVisibility(View.VISIBLE);
 				}
 			}
 		} else {
 			addVisitVitals.setVisibility(visit.getStopDatetime() == null ? View.VISIBLE : View.GONE);
+			noVitals.setVisibility(View.VISIBLE);
+			visitVitalsTableLayout.setVisibility(View.GONE);
 		}
 	}
 
@@ -668,12 +671,8 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 						auditInfoTableLayout.setVisibility(View.VISIBLE);
 						auditInfoTableLayout.removeAllViews();
 						loadObservationFields(visit.getEncounters().get(i).getObs(), EncounterTypeData.AUDIT_DATA);
-					} else {
-						noAuditData.setVisibility(View.VISIBLE);
-						addAuditData.setVisibility(View.VISIBLE);
-						auditInfoTableLayout.setVisibility(View.GONE);
 					}
-
+					break;
 				}
 			}
 		}
@@ -765,9 +764,15 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 			if (type == EncounterTypeData.VITALS) {
 				visitVitalsTableLayout.addView(row);
 			} else {
-				if (observation.getDisplay().contains(ApplicationConstants.EncounterTypeDisplays.AUDIT_DATA_COMPLETENESS)
-						&& observation.getDisplay().contains("No")) {
+				if (!observation.getDisplay().contains(ApplicationConstants.EncounterTypeDisplays
+						.AUDIT_DATA_COMPLETENESS)) {
 					auditDataCompleteness.setVisibility(View.VISIBLE);
+				} else {
+					if (observation.getDisplay().contains(ApplicationConstants.EncounterTypeDisplays
+							.AUDIT_DATA_COMPLETENESS)
+							&& (observation.getDisplay().contains("No") || observation.getDisplay() == null)) {
+						auditDataCompleteness.setVisibility(View.VISIBLE);
+					}
 				}
 				auditInfoTableLayout.addView(row);
 			}
@@ -837,7 +842,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 
 		VisitNote visitNote = new VisitNote();
 		visitNote.setPersonId(patientUuid);
-		visitNote.setHtmlFormId("17");
+		visitNote.setHtmlFormId(ApplicationConstants.FORM_UUIDS.VISIT_NOTE_HTML_FORM_ID);
 		visitNote.setCreateVisit("false");
 		visitNote.setFormModifiedTimestamp(String.valueOf(System.currentTimeMillis()));
 		visitNote.setEncounterModifiedTimestamp("0");
@@ -862,10 +867,10 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	@Override
 	public void onPause() {
 		super.onPause();
-		if (changesMade || (initialPrimaryDiagnosesListHashcode != subsequentPrimaryDiagnosesListHashcode) ||
+		/*if (changesMade || (initialPrimaryDiagnosesListHashcode != subsequentPrimaryDiagnosesListHashcode) ||
 				(initialSecondaryDiagnosesListHashcode != subsequentSecondaryDiagnosesListHashcode)) {
 			showPendingVisitNoteCahngesDialog();
-		}
+		}*/
 	}
 
 	private void showPendingVisitNoteCahngesDialog() {

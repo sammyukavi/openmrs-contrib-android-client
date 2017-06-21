@@ -264,7 +264,7 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 		});
 
 		submitVisitNote.setOnClickListener(v -> {
-			saveVisitNote(encounterUuid, patientUuid, ViewUtils.getInput(clinicalNote), visit);
+			saveVisitNote(encounterUuid, ViewUtils.getInput(clinicalNote), visit);
 		});
 
 		auditDataCompleteness.setOnClickListener(new View.OnClickListener() {

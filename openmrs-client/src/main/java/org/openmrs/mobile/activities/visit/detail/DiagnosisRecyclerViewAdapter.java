@@ -23,16 +23,15 @@ public class DiagnosisRecyclerViewAdapter extends RecyclerView.Adapter<Diagnosis
 	private Activity context;
 	private IBaseDiagnosisView visitDetailsView;
 	private List<EncounterDiagnosis> diagnoses;
-	private String encounterUuid, patientUuid, clinicalNote;
+	private String encounterUuid, clinicalNote;
 	private Visit visit;
 
 	public DiagnosisRecyclerViewAdapter(Activity context,
 			List<EncounterDiagnosis> diagnoses, String encounterUuid,
-			String patientUuid, String clinicalNote, Visit visit, IBaseDiagnosisView visitDetailsView) {
+			String clinicalNote, Visit visit, IBaseDiagnosisView visitDetailsView) {
 		this.context = context;
 		this.diagnoses = diagnoses;
 		this.encounterUuid = encounterUuid;
-		this.patientUuid = patientUuid;
 		this.clinicalNote = clinicalNote;
 		this.visit =  visit;
 		this.visitDetailsView = visitDetailsView;
@@ -85,7 +84,7 @@ public class DiagnosisRecyclerViewAdapter extends RecyclerView.Adapter<Diagnosis
 				}
 
 				if(visitDetailsView.isAutoSaveEnabled()) {
-					visitDetailsView.saveVisitNote(encounterUuid, patientUuid, clinicalNote, visit);
+					visitDetailsView.saveVisitNote(encounterUuid, clinicalNote, visit);
 				}
 			}
 		});
@@ -102,7 +101,7 @@ public class DiagnosisRecyclerViewAdapter extends RecyclerView.Adapter<Diagnosis
 				}
 
 				if(visitDetailsView.isAutoSaveEnabled()) {
-					visitDetailsView.saveVisitNote(encounterUuid, patientUuid, clinicalNote, visit);
+					visitDetailsView.saveVisitNote(encounterUuid, clinicalNote, visit);
 				}
 			}
 		});
@@ -114,7 +113,7 @@ public class DiagnosisRecyclerViewAdapter extends RecyclerView.Adapter<Diagnosis
 				visitDetailsView.removeDiagnosis(encounterDiagnosis, diagnosisOrder);
 
 				if(visitDetailsView.isAutoSaveEnabled()) {
-					visitDetailsView.saveVisitNote(encounterUuid, patientUuid, clinicalNote, visit);
+					visitDetailsView.saveVisitNote(encounterUuid, clinicalNote, visit);
 				}
 
 				return true;

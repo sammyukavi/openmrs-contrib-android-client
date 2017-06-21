@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.joda.time.LocalDateTime;
@@ -75,7 +76,8 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 	private boolean hasStartedDiagnoses;
 
 	private LinearLayoutManager primaryDiagnosisLayoutManager, secondaryDiagnosisLayoutManager;
-	private LinearLayout diagnosesLayout, pastDiagnosisLayout;
+	private LinearLayout diagnosesLayout, pastDiagnosisLayout, loadVisitDetails;
+	private RelativeLayout singleVisitTitle;
 	private TextInputEditText clinicalNote;
 
 	public PatientVisitsRecyclerAdapter(RecyclerView visitsRecyclerView, List<Visit> visits,
@@ -139,10 +141,11 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 			View singleVisitView = layoutInflater.inflate(R.layout.container_single_visit_observation, null);
 			diagnosesLayout = (LinearLayout)singleVisitView.findViewById(R.id.diagnosesLayout);
 			pastDiagnosisLayout = (LinearLayout)singleVisitView.findViewById(R.id.pastDiagnosisLayout);
+			singleVisitTitle = (RelativeLayout)singleVisitView.findViewById(R.id.singleVisitTitle);
 			diagnosesLayout.setVisibility(View.GONE);
 			pastDiagnosisLayout.setVisibility(View.GONE);
-			TextView visitStartDate = (TextView) singleVisitView.findViewById(R.id.startDate);
-			clinicalNote = (TextInputEditText) singleVisitView.findViewById(R.id.editClinicalNote);
+			TextView visitStartDate = (TextView)singleVisitView.findViewById(R.id.startDate);
+			clinicalNote = (TextInputEditText)singleVisitView.findViewById(R.id.editClinicalNote);
 
 			//Let's set the visit title
 			String startDate = DateUtils.convertTime1(visit.getStartDatetime(), DateUtils.DATE_FORMAT);
@@ -153,6 +156,9 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 				startDate = context.getString(R.string.yesterday);
 			}
 
+			// init diagnoses
+			initDiagnosesComponents(singleVisitView);
+
 			String stopDate = visit.getStopDatetime();
 			if (!StringUtils.notNull(stopDate)) {
 				activeVisit = visit;
@@ -161,8 +167,6 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 				activeVisitView = singleVisitView;
 				diagnosesLayout.setVisibility(View.VISIBLE);
 				pastDiagnosisLayout.setVisibility(View.GONE);
-				// init diagnoses
-				initDiagnosesComponents(singleVisitView);
 				baseDiagnosisFragment.setVisit(visit);
 			}
 
@@ -209,18 +213,23 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 				}
 			}
 
-			if(!hasStartedDiagnoses) {
+			if (!hasStartedDiagnoses) {
 				baseDiagnosisFragment.initializeListeners();
 				baseDiagnosisFragment.setDiagnoses(activeVisit);
 				hasStartedDiagnoses = true;
+			}
+
+			if (isActiveVisit) {
+				singleVisitTitle.setClickable(true);
+				singleVisitTitle.setOnClickListener(v -> loadVisitDetails(visit));
 			}
 
 			viewHolder.patientVisitDetailsContainer.addView(singleVisitView);
 		}
 	}
 
-	private void initDiagnosesComponents(View view){
-		if(baseDiagnosisFragment.getSearchDiagnosisView() == null) {
+	private void initDiagnosesComponents(View view) {
+		if (baseDiagnosisFragment.getSearchDiagnosisView() == null) {
 			baseDiagnosisFragment.setSearchDiagnosisView(
 					(AutoCompleteTextView)view.findViewById(R.id.searchDiagnosis));
 			baseDiagnosisFragment.setNoPrimaryDiagnoses(

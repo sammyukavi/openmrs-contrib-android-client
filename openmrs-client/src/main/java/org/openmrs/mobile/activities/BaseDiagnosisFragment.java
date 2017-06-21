@@ -88,16 +88,16 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 					createEncounterDiagnosis(null, ViewUtils.getInput(searchDiagnosis),
 							conceptSearchResult.getValue());
 					
-					if (getDiagnosisView().isAutoSaveEnabled()) {
+					/*if (getDiagnosisView().isAutoSaveEnabled()) {
 						getDiagnosisView().saveVisitNote(encounterUuid, clinicalNote, visit);
-					}
+					}*/
 				}
 			}
 		});
 	}
 
 	public void setDiagnoses(Visit visit) {
-		if (!visit.getEncounters().isEmpty()) {
+		if (visit.getEncounters().size() != 0) {
 			for (Encounter encounter : visit.getEncounters()) {
 				if (encounter.getEncounterType().getUuid()
 						.equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.CLINICAL_NOTE_UUID)) {

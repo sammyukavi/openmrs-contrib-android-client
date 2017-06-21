@@ -40,9 +40,6 @@ public interface IBaseDiagnosisFragment {
 	void setEncounterUuid(String encounterUuid);
 	String getEncounterUuid();
 
-	void setPatientUuid(String patientUuid);
-	String getPatientUuid();
-
 	void setClinicalNote(String clinicalNote);
 	String getClinicalNote();
 

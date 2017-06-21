@@ -163,6 +163,7 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 				pastDiagnosisLayout.setVisibility(View.GONE);
 				// init diagnoses
 				initDiagnosesComponents(singleVisitView);
+				baseDiagnosisFragment.setVisit(visit);
 			}
 
 			visitStartDate.setText(startDate);
@@ -190,12 +191,12 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 			}
 
 			if (visit.getEncounters().size() == 0) {
+
 				presentClinicalNotes(new Encounter(), singleVisitView, isActiveVisit);
 			} else {
 				for (Encounter encounter : visit.getEncounters()) {
 					switch (encounter.getEncounterType().getDisplay()) {
 						case ApplicationConstants.EncounterTypeDisplays.VISIT_NOTE:
-							baseDiagnosisFragment.setPatientUuid(visit.getPatient().getUuid());
 							baseDiagnosisFragment.setEncounterUuid(encounter.getUuid());
 							baseDiagnosisFragment.setVisit(visit);
 							baseDiagnosisFragment.setClinicalNote(clinicalNote.getText().toString());

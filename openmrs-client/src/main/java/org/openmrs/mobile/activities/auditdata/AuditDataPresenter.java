@@ -83,7 +83,7 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 				auditDataView.setVisit(visit);
 				for (int i = 0; i < visit.getEncounters().size(); i++) {
 					if (visit.getEncounters().get(i).getEncounterType().getUuid().equalsIgnoreCase(ApplicationConstants
-							.EncounterTypeEntity.AUDIT_DATA_UUID) && i == 0) {
+							.EncounterTypeEntity.AUDIT_DATA_UUID)) {
 						fetchEncounter(visit.getEncounters().get(i).getUuid());
 					}
 				}

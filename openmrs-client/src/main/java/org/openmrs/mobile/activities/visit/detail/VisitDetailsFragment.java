@@ -646,10 +646,10 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	public void setAuditData(Visit visit) {
 		if (visit.getEncounters().size() > 0) {
 			for (int i = 0; i < visit.getEncounters().size(); i++) {
-				if ((visit.getEncounters().get(i).getEncounterType().getUuid()
+				if (visit.getEncounters().get(i).getEncounterType().getUuid()
 						.equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.AUDIT_DATA_UUID) || visit.getEncounters()
 						.get(i).getEncounterType().getDisplay().equalsIgnoreCase(ApplicationConstants
-								.EncounterTypeDisplays.AUDITDATA)) && i == 0) {
+								.EncounterTypeDisplays.AUDITDATA)) {
 
 					if (visit.getEncounters().get(i).getObs().size() != 0) {
 						auditDataMetadata.setVisibility(View.VISIBLE);
@@ -672,6 +672,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 						auditInfoTableLayout.removeAllViews();
 						loadObservationFields(visit.getEncounters().get(i).getObs(), EncounterTypeData.AUDIT_DATA);
 					}
+					break;
 				}
 			}
 		}

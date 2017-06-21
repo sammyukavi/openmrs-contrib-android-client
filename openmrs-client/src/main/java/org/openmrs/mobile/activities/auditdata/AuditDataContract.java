@@ -18,9 +18,12 @@ import android.content.Context;
 
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
+import org.openmrs.mobile.models.ConceptAnswer;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Visit;
+
+import java.util.List;
 
 public interface AuditDataContract {
 
@@ -31,8 +34,6 @@ public interface AuditDataContract {
 		void updateFormFields(Encounter encounter);
 
 		void setEncounterUuid(String uuid);
-
-		void setLocation(Location location);
 
 		Context getContext();
 
@@ -45,15 +46,17 @@ public interface AuditDataContract {
 		void showPageSpinner(boolean visibility);
 
 		void hideSoftKeys();
+
+		void setInpatientTypeServices(List<ConceptAnswer> conceptAnswers);
 	}
 
 	interface Presenter extends BasePresenterContract {
 
+		void fetchInpatientTypeServices();
+
 		void fetchVisit(String patientId);
 
-		void saveEncounter(Encounter encounter, boolean isNewEncounter);
-
-		void fetchLocation(String locationUuid);
+		void saveUpdateEncounter(Encounter encounter, boolean isNewEncounter);
 	}
 
 }

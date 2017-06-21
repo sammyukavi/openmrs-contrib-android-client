@@ -518,7 +518,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 	 * TODO: Use more effecient search algorithm
 	 * @param diagnoses
 	 */
-	private void filterOutExistingDiagnoses(List<ConceptSearchResult> diagnoses){
+	private void filterOutExistingDiagnoses(List<ConceptSearchResult> diagnoses) {
 		List<ConceptSearchResult> searchDiagnosis = new ArrayList<>(diagnoses);
 		List<String> existingDiagnoses = new ArrayList<>();
 		for (EncounterDiagnosis primaryDiagnosis : primaryDiagnosesList) {
@@ -530,7 +530,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		}
 
 		for (ConceptSearchResult diagnosis : searchDiagnosis) {
-			for(String existingDiagnosis : existingDiagnoses) {
+			for (String existingDiagnosis : existingDiagnoses) {
 				if (diagnosis.getConceptName().getName().equalsIgnoreCase(existingDiagnosis) ||
 						diagnosis.toString().equalsIgnoreCase(existingDiagnosis)) {
 					diagnoses.remove(diagnosis);
@@ -632,21 +632,24 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 							}
 						}
 					}
+				} else {
+					addVisitVitals.setVisibility(View.VISIBLE);
 				}
 			}
 		} else {
-			System.out.println(" Checking the visit visit vitals " + visit.getStopDatetime());
 			addVisitVitals.setVisibility(visit.getStopDatetime() == null ? View.VISIBLE : View.GONE);
+			noVitals.setVisibility(View.VISIBLE);
+			visitVitalsTableLayout.setVisibility(View.GONE);
 		}
 	}
 
 	public void setAuditData(Visit visit) {
 		if (visit.getEncounters().size() > 0) {
 			for (int i = 0; i < visit.getEncounters().size(); i++) {
-				if (visit.getEncounters().get(i).getEncounterType().getUuid()
+				if ((visit.getEncounters().get(i).getEncounterType().getUuid()
 						.equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.AUDIT_DATA_UUID) || visit.getEncounters()
 						.get(i).getEncounterType().getDisplay().equalsIgnoreCase(ApplicationConstants
-								.EncounterTypeDisplays.AUDITDATA)) {
+								.EncounterTypeDisplays.AUDITDATA)) && i == 0) {
 
 					if (visit.getEncounters().get(i).getObs().size() != 0) {
 						auditDataMetadata.setVisibility(View.VISIBLE);
@@ -668,12 +671,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 						auditInfoTableLayout.setVisibility(View.VISIBLE);
 						auditInfoTableLayout.removeAllViews();
 						loadObservationFields(visit.getEncounters().get(i).getObs(), EncounterTypeData.AUDIT_DATA);
-					} else {
-						noAuditData.setVisibility(View.VISIBLE);
-						addAuditData.setVisibility(View.VISIBLE);
-						auditInfoTableLayout.setVisibility(View.GONE);
 					}
-
 				}
 			}
 		}
@@ -765,9 +763,15 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 			if (type == EncounterTypeData.VITALS) {
 				visitVitalsTableLayout.addView(row);
 			} else {
-				if (observation.getDisplay().contains(ApplicationConstants.EncounterTypeDisplays.AUDIT_DATA_COMPLETENESS)
-						&& observation.getDisplay().contains("No")) {
+				if (!observation.getDisplay().contains(ApplicationConstants.EncounterTypeDisplays
+						.AUDIT_DATA_COMPLETENESS)) {
 					auditDataCompleteness.setVisibility(View.VISIBLE);
+				} else {
+					if (observation.getDisplay().contains(ApplicationConstants.EncounterTypeDisplays
+							.AUDIT_DATA_COMPLETENESS)
+							&& (observation.getDisplay().contains("No") || observation.getDisplay() == null)) {
+						auditDataCompleteness.setVisibility(View.VISIBLE);
+					}
 				}
 				auditInfoTableLayout.addView(row);
 			}

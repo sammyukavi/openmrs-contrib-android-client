@@ -1,11 +1,11 @@
 package org.openmrs.mobile.activities.patientdashboard;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.support.design.widget.TextInputEditText;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -13,11 +13,13 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.joda.time.LocalDateTime;
 import org.openmrs.mobile.R;
+import org.openmrs.mobile.activities.IBaseDiagnosisFragment;
 import org.openmrs.mobile.activities.visit.VisitActivity;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.models.Concept;
@@ -69,9 +71,15 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 	private View activeVisitView;
 	private Observation clinicalNoteObservation;
 	private boolean firstTimeEdit;
+	private IBaseDiagnosisFragment baseDiagnosisFragment;
+	private boolean hasStartedDiagnoses;
 
-	public PatientVisitsRecyclerAdapter(RecyclerView visitsRecyclerView, List<Visit> visits, Context context) {
+	private LinearLayoutManager primaryDiagnosisLayoutManager, secondaryDiagnosisLayoutManager;
+	private LinearLayout diagnosesLayout, pastDiagnosisLayout;
+	private TextInputEditText clinicalNote;
 
+	public PatientVisitsRecyclerAdapter(RecyclerView visitsRecyclerView, List<Visit> visits,
+			Context context, IBaseDiagnosisFragment baseDiagnosisFragment) {
 		this.visits = visits;
 		this.context = context;
 		this.localDateTime = new LocalDateTime();
@@ -79,6 +87,8 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 		this.patientDashboardActivity = (PatientDashboardActivity)context;
 		LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
 		visitsRecyclerView.setLayoutManager(linearLayoutManager);
+		this.baseDiagnosisFragment = baseDiagnosisFragment;
+		this.hasStartedDiagnoses = false;
 	}
 
 	// condition for header
@@ -127,7 +137,12 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 			viewHolder.setIsRecyclable(false);
 			Visit visit = getItem(position);//Subtract one to get the first index taken by the header
 			View singleVisitView = layoutInflater.inflate(R.layout.container_single_visit_observation, null);
-			TextView visitStartDate = (TextView)singleVisitView.findViewById(R.id.startDate);
+			diagnosesLayout = (LinearLayout)singleVisitView.findViewById(R.id.diagnosesLayout);
+			pastDiagnosisLayout = (LinearLayout)singleVisitView.findViewById(R.id.pastDiagnosisLayout);
+			diagnosesLayout.setVisibility(View.GONE);
+			pastDiagnosisLayout.setVisibility(View.GONE);
+			TextView visitStartDate = (TextView) singleVisitView.findViewById(R.id.startDate);
+			clinicalNote = (TextInputEditText) singleVisitView.findViewById(R.id.editClinicalNote);
 
 			//Let's set the visit title
 			String startDate = DateUtils.convertTime1(visit.getStartDatetime(), DateUtils.DATE_FORMAT);
@@ -144,6 +159,10 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 				isActiveVisit = true;
 				singleVisitView.findViewById(R.id.active_visit_badge).setVisibility(View.VISIBLE);
 				activeVisitView = singleVisitView;
+				diagnosesLayout.setVisibility(View.VISIBLE);
+				pastDiagnosisLayout.setVisibility(View.GONE);
+				// init diagnoses
+				initDiagnosesComponents(singleVisitView);
 			}
 
 			visitStartDate.setText(startDate);
@@ -155,6 +174,8 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 				visitDuration.setText(context.getString(R.string.visit_duration,
 						DateUtils.calculateTimeDifference(visit.getStartDatetime(), visit.getStopDatetime())));
 				visitDuration.setVisibility(View.VISIBLE);
+				pastDiagnosisLayout.setVisibility(View.VISIBLE);
+				diagnosesLayout.setVisibility(View.GONE);
 			}
 
 			//Adding the link to the visit details page
@@ -174,6 +195,10 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 				for (Encounter encounter : visit.getEncounters()) {
 					switch (encounter.getEncounterType().getDisplay()) {
 						case ApplicationConstants.EncounterTypeDisplays.VISIT_NOTE:
+							baseDiagnosisFragment.setPatientUuid(visit.getPatient().getUuid());
+							baseDiagnosisFragment.setEncounterUuid(encounter.getUuid());
+							baseDiagnosisFragment.setVisit(visit);
+							baseDiagnosisFragment.setClinicalNote(clinicalNote.getText().toString());
 							presentClinicalNotes(encounter, singleVisitView, isActiveVisit);
 							break;
 						default:
@@ -183,10 +208,39 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 				}
 			}
 
+			if(!hasStartedDiagnoses) {
+				baseDiagnosisFragment.initializeListeners();
+				baseDiagnosisFragment.setDiagnoses(activeVisit);
+				hasStartedDiagnoses = true;
+			}
+
 			viewHolder.patientVisitDetailsContainer.addView(singleVisitView);
+		}
+	}
+
+	private void initDiagnosesComponents(View view){
+		if(baseDiagnosisFragment.getSearchDiagnosisView() == null) {
+			baseDiagnosisFragment.setSearchDiagnosisView(
+					(AutoCompleteTextView)view.findViewById(R.id.searchDiagnosis));
+			baseDiagnosisFragment.setNoPrimaryDiagnoses(
+					(TextView)view.findViewById(R.id.noPrimaryDiagnosis));
+			baseDiagnosisFragment.setNoSecondaryDiagnoses(
+					(TextView)view.findViewById(R.id.noSecondaryDiagnosis));
+			baseDiagnosisFragment.setPrimaryDiagnosesRecycler(
+					(RecyclerView)view.findViewById(R.id.primaryDiagnosisRecyclerView));
+			baseDiagnosisFragment.setSecondaryDiagnosesRecycler(
+					(RecyclerView)view.findViewById(R.id.secondaryDiagnosisRecyclerView));
+			baseDiagnosisFragment.setSubmitVisitNote(
+					(AppCompatButton)view.findViewById(R.id.submitVisitNote));
+			baseDiagnosisFragment.getSubmitVisitNote().setVisibility(View.GONE);
+
+			primaryDiagnosisLayoutManager = new LinearLayoutManager(context);
+			secondaryDiagnosisLayoutManager = new LinearLayoutManager(context);
+
+			baseDiagnosisFragment.getPrimaryDiagnosesRecycler().setLayoutManager(primaryDiagnosisLayoutManager);
+			baseDiagnosisFragment.getSecondaryDiagnosesRecycler().setLayoutManager(secondaryDiagnosisLayoutManager);
 
 		}
-
 	}
 
 	public void setUuids(HashMap<String, String> uuids) {
@@ -256,7 +310,7 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 
 	private void presentClinicalNotes(Encounter encounter, View view, boolean isActiveVisit) {
 		firstTimeEdit = true;
-		TextInputEditText clinicalNote = (TextInputEditText)view.findViewById(R.id.editClinicalNote);
+
 		Handler handler = new Handler();
 		Runnable inputCompleteChecker = () -> {
 			if (System.currentTimeMillis() > (lastTextEdit + delay - 500)) {
@@ -433,5 +487,4 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 			patientVisitDetailsContainer = (LinearLayout)view.findViewById(R.id.patientVisitDetailsContainer);
 		}
 	}
-
 }

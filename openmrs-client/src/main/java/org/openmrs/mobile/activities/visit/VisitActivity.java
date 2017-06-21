@@ -284,7 +284,7 @@ public class VisitActivity extends ACBaseActivity {
 	@Override
 	public void onRestart() {
 
-		VisitDetailsFragment.refreshVitalsDetails();
+		//VisitDetailsFragment.refreshVitalsDetails();
 
 		super.onRestart();
 	}

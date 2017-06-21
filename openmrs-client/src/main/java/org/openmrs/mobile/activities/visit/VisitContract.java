@@ -17,16 +17,14 @@ package org.openmrs.mobile.activities.visit;
 import android.graphics.Bitmap;
 import android.widget.TextView;
 
+import org.openmrs.mobile.activities.IBaseDiagnosisView;
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.models.Concept;
-import org.openmrs.mobile.models.ConceptSearchResult;
-import org.openmrs.mobile.models.EncounterDiagnosis;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitAttributeType;
-import org.openmrs.mobile.models.VisitNote;
 import org.openmrs.mobile.models.VisitPhoto;
 import org.openmrs.mobile.models.VisitPredefinedTask;
 import org.openmrs.mobile.models.VisitTask;
@@ -61,7 +59,7 @@ public interface VisitContract {
 
 	}
 
-	interface VisitDetailsView extends ViewVisitDetailsMain {
+	interface VisitDetailsView extends ViewVisitDetailsMain, IBaseDiagnosisView {
 		void showToast(String message, ToastUtil.ToastType toastType);
 
 		void setVisit(Visit visit);
@@ -79,16 +77,6 @@ public interface VisitContract {
 		void setAttributeTypes(List<VisitAttributeType> visitAttributeTypes);
 
 		void showTabSpinner(boolean visibility);
-
-		void setPrimaryDiagnosis(EncounterDiagnosis primaryDiagnosis);
-
-		void setSecondaryDiagnosis(EncounterDiagnosis secondaryDiagnosis);
-
-		void setDiagnosisCertainty(EncounterDiagnosis confirmedDiagnosis);
-
-		void removeDiagnosis(EncounterDiagnosis removeDiagnosis, String order);
-
-		void setDiagnoses(List<ConceptSearchResult> concepts);
 
 		void createEncounterDiagnosis(Observation observation, String diagnosis, String conceptNameId);
 	}
@@ -145,8 +133,6 @@ public interface VisitContract {
 
 		void getConcept(String name);
 
-		void findConcept(String searchQuery);
-
 		void getPatientUUID();
 
 		void getVisitUUID();
@@ -155,10 +141,7 @@ public interface VisitContract {
 
 		void getVisitStopDate();
 
-		void getObservation(String uuid);
-
 		void getConceptAnswer(String uuid, String searchValue, TextView textView);
 
-		void saveVisitNote(VisitNote visitNote);
 	}
 }

@@ -632,8 +632,6 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 							}
 						}
 					}
-				} else {
-					addVisitVitals.setVisibility(View.VISIBLE);
 				}
 			}
 		} else {

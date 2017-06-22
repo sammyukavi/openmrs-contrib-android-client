@@ -12,7 +12,7 @@ public interface IBaseDiagnosisView {
 
 	boolean isAutoSaveEnabled();
 
-	void saveVisitNote(VisitNote visitNote);
+	void showTabSpinner(boolean show);
 
 	void saveVisitNote(String encounterUuid, String clinicalNote, Visit visit);
 

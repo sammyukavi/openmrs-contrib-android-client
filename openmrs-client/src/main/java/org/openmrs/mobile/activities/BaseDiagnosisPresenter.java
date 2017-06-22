@@ -54,17 +54,17 @@ public class BaseDiagnosisPresenter {
 
 			@Override
 			public void onError(Throwable t) {
-				//view.showTabSpinner(false);
+				view.showTabSpinner(false);
 			}
 		});
 	}
 
 	public void saveVisitNote(VisitNote visitNote, IBaseDiagnosisView view) {
-		//view.showTabSpinner(true);
+		view.showTabSpinner(true);
 		visitNoteDataService.save(visitNote, new DataService.GetCallback<VisitNote>() {
 			@Override
 			public void onCompleted(VisitNote visitNote) {
-				//view.showTabSpinner(false);
+				view.showTabSpinner(false);
 				System.out.println("RETURNED:::" + visitNote);
 			}
 

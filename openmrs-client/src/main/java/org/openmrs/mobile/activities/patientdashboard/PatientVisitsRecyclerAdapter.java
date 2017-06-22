@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.joda.time.LocalDateTime;
@@ -76,7 +77,8 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 	private boolean hasStartedDiagnoses;
 
 	private LinearLayoutManager primaryDiagnosisLayoutManager, secondaryDiagnosisLayoutManager;
-	private LinearLayout diagnosesLayout, pastDiagnosisLayout;
+	private LinearLayout diagnosesLayout, pastDiagnosisLayout, loadVisitDetails;
+	private RelativeLayout singleVisitTitle;
 	private TextInputEditText clinicalNote;
 	private TextView clinicalNoteText;
 	private TextView primaryDiagnosis;
@@ -143,6 +145,7 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 			View singleVisitView = layoutInflater.inflate(R.layout.container_single_visit_observation, null);
 			diagnosesLayout = (LinearLayout)singleVisitView.findViewById(R.id.diagnosesLayout);
 			pastDiagnosisLayout = (LinearLayout)singleVisitView.findViewById(R.id.pastDiagnosisLayout);
+			singleVisitTitle = (RelativeLayout)singleVisitView.findViewById(R.id.singleVisitTitle);
 			diagnosesLayout.setVisibility(View.GONE);
 			pastDiagnosisLayout.setVisibility(View.GONE);
 			TextView visitStartDate = (TextView)singleVisitView.findViewById(R.id.startDate);
@@ -159,6 +162,8 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 			} else if (startDate.equalsIgnoreCase(DateUtils.getDateYesterday(DateUtils.DATE_FORMAT))) {
 				startDate = context.getString(R.string.yesterday);
 			}
+
+
 
 			String stopDate = visit.getStopDatetime();
 			if (!StringUtils.notNull(stopDate)) {
@@ -220,6 +225,11 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 				baseDiagnosisFragment.initializeListeners();
 				baseDiagnosisFragment.setDiagnoses(activeVisit);
 				hasStartedDiagnoses = true;
+			}
+
+			if (isActiveVisit) {
+				singleVisitTitle.setClickable(true);
+				singleVisitTitle.setOnClickListener(v -> loadVisitDetails(visit));
 			}
 
 			viewHolder.patientVisitDetailsContainer.addView(singleVisitView);

@@ -431,8 +431,6 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 							}
 						}
 					}
-				} else {
-					addVisitVitals.setVisibility(View.VISIBLE);
 				}
 			}
 		} else {

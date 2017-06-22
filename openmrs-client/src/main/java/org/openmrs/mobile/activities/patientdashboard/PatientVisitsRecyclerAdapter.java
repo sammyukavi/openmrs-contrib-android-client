@@ -196,20 +196,20 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 			}
 
 			if (visit.getEncounters().size() == 0) {
-
 				presentClinicalNotes(new Encounter(), singleVisitView, isActiveVisit);
 			} else {
 				for (Encounter encounter : visit.getEncounters()) {
-					switch (encounter.getEncounterType().getDisplay()) {
-						case ApplicationConstants.EncounterTypeDisplays.VISIT_NOTE:
+					if (encounter.getEncounterType().getDisplay()
+							.equalsIgnoreCase(ApplicationConstants.EncounterTypeDisplays.VISIT_NOTE)) {
+						if (activeVisit == visit) {
 							baseDiagnosisFragment.setEncounterUuid(encounter.getUuid());
-							baseDiagnosisFragment.setVisit(visit);
 							baseDiagnosisFragment.setClinicalNote(clinicalNote.getText().toString());
-							presentClinicalNotes(encounter, singleVisitView, isActiveVisit);
-							break;
-						default:
-							presentClinicalNotes(new Encounter(), singleVisitView, isActiveVisit);
-							break;
+						}
+						presentClinicalNotes(encounter, singleVisitView, isActiveVisit);
+						break;
+					} else {
+						presentClinicalNotes(new Encounter(), singleVisitView, isActiveVisit);
+						break;
 					}
 				}
 			}
@@ -250,7 +250,6 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 
 			baseDiagnosisFragment.getPrimaryDiagnosesRecycler().setLayoutManager(primaryDiagnosisLayoutManager);
 			baseDiagnosisFragment.getSecondaryDiagnosesRecycler().setLayoutManager(secondaryDiagnosisLayoutManager);
-
 		}
 	}
 

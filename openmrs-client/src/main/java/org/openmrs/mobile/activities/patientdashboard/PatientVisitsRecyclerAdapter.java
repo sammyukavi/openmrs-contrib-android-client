@@ -37,7 +37,6 @@ import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.DateUtils;
 import org.openmrs.mobile.utilities.StringUtils;
-import org.openmrs.mobile.utilities.ViewUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -83,6 +82,7 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 	private TextView clinicalNoteText;
 	private TextView primaryDiagnosis;
 	private TextView secondaryDiagnosis;
+	private View initialDiagnosesView;
 
 	public PatientVisitsRecyclerAdapter(RecyclerView visitsRecyclerView, List<Visit> visits,
 			Context context, IBaseDiagnosisFragment baseDiagnosisFragment) {
@@ -163,8 +163,6 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 				startDate = context.getString(R.string.yesterday);
 			}
 
-
-
 			String stopDate = visit.getStopDatetime();
 			if (!StringUtils.notNull(stopDate)) {
 				activeVisit = visit;
@@ -174,8 +172,15 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 				diagnosesLayout.setVisibility(View.VISIBLE);
 				pastDiagnosisLayout.setVisibility(View.GONE);
 				// init diagnoses
-				initDiagnosesComponents(singleVisitView);
-				baseDiagnosisFragment.setVisit(visit);
+				if(initialDiagnosesView != null){
+					((ViewGroup)initialDiagnosesView.getParent()).removeView(initialDiagnosesView);
+					singleVisitView = initialDiagnosesView;
+				} else {
+					initDiagnosesComponents(singleVisitView);
+					baseDiagnosisFragment.setVisit(visit);
+					hasStartedDiagnoses = false;
+					initialDiagnosesView = singleVisitView;
+				}
 			}
 
 			visitStartDate.setText(startDate);

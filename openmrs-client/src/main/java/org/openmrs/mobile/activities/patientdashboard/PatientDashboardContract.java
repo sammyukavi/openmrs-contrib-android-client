@@ -50,7 +50,7 @@ public interface PatientDashboardContract {
 
 		void showNoVisits(boolean visibility);
 
-		void updateClinicVisitNote(Observation observation);
+		void updateClinicVisitNote(Observation observation, String encounterUuid);
 
 	}
 

@@ -42,7 +42,7 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 			initialClinicNoteHashcode, subsequentClinicalNoteHashcode;
 	protected BaseDiagnosisPresenter diagnosisPresenter = new BaseDiagnosisPresenter();
 	private Timer timer;
-	private String encounterUuid, patientUuid, clinicalNote;
+	private String encounterUuid, clinicalNote;
 	private Visit visit;
 
 	@Override
@@ -309,9 +309,7 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 		visitNote.setW3(OpenMRS.getInstance().getParentLocationUuid());
 		visitNote.setW5(visit.getStartDatetime());
 		visitNote.setW10(ApplicationConstants.EMPTY_STRING);
-		if(StringUtils.notNull(clinicalNote)) {
-			visitNote.setW12(null == clinicalNote ? ApplicationConstants.EMPTY_STRING : clinicalNote);
-		}
+		visitNote.setW12(null == clinicalNote ? ApplicationConstants.EMPTY_STRING : clinicalNote);
 
 		encounterDiagnosises.addAll(primaryDiagnoses);
 		encounterDiagnosises.addAll(secondaryDiagnoses);

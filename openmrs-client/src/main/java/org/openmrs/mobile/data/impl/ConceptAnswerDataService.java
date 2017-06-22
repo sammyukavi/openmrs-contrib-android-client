@@ -31,7 +31,8 @@ import retrofit2.Call;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class ConceptAnswerDataService extends BaseDataService<ConceptAnswer, ConceptAnswerDbService, ConceptAnswerRestService> {
+public class ConceptAnswerDataService
+		extends BaseDataService<ConceptAnswer, ConceptAnswerDbService, ConceptAnswerRestService> {
 	@Override
 	protected Class<ConceptAnswerRestService> getRestServiceClass() {
 		return ConceptAnswerRestService.class;

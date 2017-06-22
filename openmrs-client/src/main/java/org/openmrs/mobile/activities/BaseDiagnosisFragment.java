@@ -47,6 +47,8 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 
 	@Override
 	public void initializeListeners() {
+		primaryDiagnoses.clear();
+		secondaryDiagnoses.clear();
 		addDiagnosisListeners();
 	}
 
@@ -87,10 +89,10 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 							(ConceptSearchResult)searchDiagnosis.getAdapter().getItem(position);
 					createEncounterDiagnosis(null, ViewUtils.getInput(searchDiagnosis),
 							conceptSearchResult.getValue());
-					
-					/*if (getDiagnosisView().isAutoSaveEnabled()) {
+
+					if (getDiagnosisView().isAutoSaveEnabled()) {
 						getDiagnosisView().saveVisitNote(encounterUuid, clinicalNote, visit);
-					}*/
+					}
 				}
 			}
 		});

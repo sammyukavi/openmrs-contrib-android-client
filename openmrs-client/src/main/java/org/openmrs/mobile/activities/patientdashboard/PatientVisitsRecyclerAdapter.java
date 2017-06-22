@@ -156,8 +156,7 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 				startDate = context.getString(R.string.yesterday);
 			}
 
-			// init diagnoses
-			initDiagnosesComponents(singleVisitView);
+
 
 			String stopDate = visit.getStopDatetime();
 			if (!StringUtils.notNull(stopDate)) {
@@ -167,6 +166,8 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 				activeVisitView = singleVisitView;
 				diagnosesLayout.setVisibility(View.VISIBLE);
 				pastDiagnosisLayout.setVisibility(View.GONE);
+				// init diagnoses
+				initDiagnosesComponents(singleVisitView);
 				baseDiagnosisFragment.setVisit(visit);
 			}
 
@@ -213,7 +214,7 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 				}
 			}
 
-			if (!hasStartedDiagnoses) {
+			if (!hasStartedDiagnoses && isActiveVisit) {
 				baseDiagnosisFragment.initializeListeners();
 				baseDiagnosisFragment.setDiagnoses(activeVisit);
 				hasStartedDiagnoses = true;

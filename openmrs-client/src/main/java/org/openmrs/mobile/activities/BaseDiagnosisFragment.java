@@ -295,7 +295,6 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 
 	protected VisitNote createVisitNote(String encounterUuid, String clinicalNote, Visit visit) {
 		List<EncounterDiagnosis> encounterDiagnosises = new ArrayList<>();
-
 		VisitNote visitNote = new VisitNote();
 		visitNote.setPersonId(visit.getPatient().getUuid());
 		visitNote.setHtmlFormId("17");

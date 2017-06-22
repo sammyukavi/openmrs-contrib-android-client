@@ -20,6 +20,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 
+import com.raizlabs.android.dbflow.config.DatabaseConfig;
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
 
@@ -69,9 +70,9 @@ public class OpenMRS extends Application {
 	}
 
 	protected void initializeDB() {
-		//FlowConfig config = new FlowConfig.Builder(this)
-		//	.openDatabasesOnInit(true)
-		//	.build();
+		/*FlowConfig config = new FlowConfig.Builder(this)
+				.openDatabasesOnInit(true)
+				.build();*/
 
 
 		FlowManager.init(this);

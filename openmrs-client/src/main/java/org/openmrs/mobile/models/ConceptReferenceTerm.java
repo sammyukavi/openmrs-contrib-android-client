@@ -3,9 +3,9 @@ package org.openmrs.mobile.models;
 import com.google.gson.annotations.Expose;
 
 public class ConceptReferenceTerm extends BaseOpenmrsObject{
-
 	@Expose
 	private String code;
+
 	@Expose
 	private ConceptSource conceptSource;
 

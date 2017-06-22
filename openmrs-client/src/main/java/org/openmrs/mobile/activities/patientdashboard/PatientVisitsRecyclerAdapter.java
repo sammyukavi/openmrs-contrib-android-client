@@ -1,6 +1,5 @@
 package org.openmrs.mobile.activities.patientdashboard;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -54,8 +53,8 @@ import static org.openmrs.mobile.utilities.ApplicationConstants.entityName.SUBCO
 import static org.openmrs.mobile.utilities.ApplicationConstants.entityName.TELEPHONE;
 
 public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(DateUtils.DATE_FORMAT);
-	private static final SimpleDateFormat SERIALIZE_DATE_FORMAT = new SimpleDateFormat(DateUtils.OPEN_MRS_RESPONSE_FORMAT);
+	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT);
+
 
 	private final int VIEW_TYPE_HEADER = 0;
 	private final int VIEW_TYPE_ITEM = 1;
@@ -133,7 +132,7 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 			TextView visitStartDate = (TextView)singleVisitView.findViewById(R.id.startDate);
 
 			//Let's set the visit title
-			String startDate = DateUtils.convertTime1(visit.getStartDatetime(), DateUtils.DATE_FORMAT);
+			String startDate = DATE_FORMAT.format(visit.getStartDatetime());
 
 			if (startDate.equalsIgnoreCase(DateUtils.getDateToday(DateUtils.DATE_FORMAT))) {
 				startDate = context.getString(R.string.today);
@@ -141,8 +140,7 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 				startDate = context.getString(R.string.yesterday);
 			}
 
-			String stopDate = visit.getStopDatetime();
-			if (!StringUtils.notNull(stopDate)) {
+			if (visit.getStopDatetime() != null) {
 				activeVisit = visit;
 				isActiveVisit = true;
 				singleVisitView.findViewById(R.id.active_visit_badge).setVisibility(View.VISIBLE);
@@ -187,6 +185,7 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 			}
 
 			viewHolder.patientVisitDetailsContainer.addView(singleVisitView);
+
 		}
 
 	}
@@ -346,8 +345,8 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 
 		for (Observation observation : encounter.getObs()) {
 			String observationDisplay = observation.getDisplay();
-			if (observationDisplay.contains(PRIMARY_DIAGNOSIS)) {
 
+			if (observationDisplay.contains(PRIMARY_DIAGNOSIS)) {
 				if (!primaryDiagnosisString.equalsIgnoreCase("")) {
 					primaryDiagnosisString += ", ";
 				}
@@ -407,116 +406,8 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 
 	private void setVisitStopDate(Visit visit) {
 		SharedPreferences.Editor editor = instance.getOpenMRSSharedPreferences().edit();
-		editor.putString(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE,
-				SERIALIZE_DATE_FORMAT.format(visit.getStopDatetime()));
+		editor.putString(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, DATE_FORMAT.format(visit.getStopDatetime()));
 		editor.commit();
-	}
-
-	@Override
-	public int getItemViewType(int position) {
-		if (position == 0) {
-			return VIEW_TYPE_HEADER;
-		} else {
-			return VIEW_TYPE_ITEM;
-		}
-	}
-
-	@Override
-	public long getItemId(int position) {
-		return position;
-	}
-
-	@Override
-	public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-		if (viewType == VIEW_TYPE_HEADER) {
-			View v = LayoutInflater.from(parent.getContext()).inflate(
-					R.layout.container_patient_address_info, parent, false);
-			return new RecyclerViewHeader(v);
-		} else if (viewType == VIEW_TYPE_ITEM) {
-			View view = LayoutInflater.from(context).inflate(R.layout.container_visits_observations, parent, false);
-			return new VisitViewHolder(view);
-		}
-		return null;
-	}
-
-	@Override
-	public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-		if (holder instanceof RecyclerViewHeader) {
-
-			RecyclerViewHeader recyclerViewHeader = (RecyclerViewHeader)holder;
-
-			updateContactInformation(recyclerViewHeader);
-
-		} else if (holder instanceof VisitViewHolder) {
-
-			boolean isActiveVisit = false;
-
-			VisitViewHolder viewHolder = (VisitViewHolder)holder;
-
-			viewHolder.setIsRecyclable(false);
-
-			Visit visit = visits.get(position - 1); //Subtract one to get the first index taken by the header
-			View singleVisitView = layoutInflater.inflate(R.layout.container_single_visit_observation, null);
-			TextView visitStartDate = (TextView)singleVisitView.findViewById(R.id.startDate);
-
-			//Let's set the visit title
-			String startDate = DATE_FORMAT.format(visit.getStartDatetime());
-
-			if (startDate.equalsIgnoreCase(DateUtils.getDateToday(DateUtils.DATE_FORMAT))) {
-				startDate = context.getString(R.string.today);
-			} else if (startDate.equalsIgnoreCase(DateUtils.getDateYesterday(DateUtils.DATE_FORMAT))) {
-				startDate = context.getString(R.string.yesterday);
-			}
-
-			if (visit.getStopDatetime() != null) {
-				activeVisit = visit;
-				isActiveVisit = true;
-				singleVisitView.findViewById(R.id.active_visit_badge).setVisibility(View.VISIBLE);
-				activeVisitView = singleVisitView;
-			}
-
-			visitStartDate.setText(startDate);
-			((TextView)singleVisitView.findViewById(R.id.visitTimeago))
-					.setText(DateUtils.calculateTimeDifference(visit.getStartDatetime(), true));
-
-			if (!isActiveVisit) {
-				TextView visitDuration = (TextView)singleVisitView.findViewById(R.id.visitDuration);
-				visitDuration.setText(context.getString(R.string.visit_duration,
-						DateUtils.calculateTimeDifference(visit.getStartDatetime())));
-				visitDuration.setVisibility(View.VISIBLE);
-			}
-
-			//Adding the link to the visit details page
-			LinearLayout showVisitDetails = (LinearLayout)singleVisitView.findViewById(R.id.loadVisitDetails);
-
-			if (isActiveVisit) {
-				showVisitDetails.setVisibility(View.VISIBLE);
-				showVisitDetails.setOnClickListener(v -> loadVisitDetails(visit));
-			} else {
-				showVisitDetails.setVisibility(View.GONE);
-				singleVisitView.setOnClickListener(v -> loadVisitDetails(visit));
-			}
-
-			if (visit.getEncounters().size() == 0) {
-				presentClinicalNotes(new Encounter(), singleVisitView, isActiveVisit);
-			} else {
-				for (Encounter encounter : visit.getEncounters()) {
-					switch (encounter.getEncounterType().getDisplay()) {
-						case ApplicationConstants.EncounterTypeDisplays.VISIT_NOTE:
-							presentClinicalNotes(encounter, singleVisitView, isActiveVisit);
-							break;
-						default:
-							presentClinicalNotes(new Encounter(), singleVisitView, isActiveVisit);
-							break;
-					}
-				}
-			}
-
-			viewHolder.observationsContainer.addView(singleVisitView);
-
-		}
-
 	}
 
 	@Override
@@ -543,5 +434,4 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 			patientVisitDetailsContainer = (LinearLayout)view.findViewById(R.id.patientVisitDetailsContainer);
 		}
 	}
-
 }

@@ -14,6 +14,7 @@ import android.support.annotation.Nullable;
 import com.google.common.base.Supplier;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.sql.language.SQLOperator;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
@@ -44,6 +45,7 @@ public class Resource implements Serializable {
 
 	@SerializedName("display")
 	@Expose
+	@Column
 	protected String display;
 
 	@SerializedName("links")

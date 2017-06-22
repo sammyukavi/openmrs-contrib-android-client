@@ -17,7 +17,7 @@ apply plugin: 'com.github.triplet.play'
 apply plugin: 'me.tatarka.retrolambda'
 
 def version = "2.6.1-beta"
-def dbflow_version = "4.0.2"
+def dbflow_version = "4.0.4"
 def sqlcipher_version = "3.5.7"
 
 android {
@@ -107,7 +107,7 @@ dependencies {
 	)
 	androidTestCompile files('libs/the-missing-android-xml-junit-test-runner-release-1.3_2.jar')
 
-	compile 'com.google.guava:guava:18.0'
+	compile 'com.google.guava:guava:20.0'
 	compile 'com.android.support:appcompat-v7:25.0.0'
 	compile 'com.android.support:gridlayout-v7:25.0.0'
 	compile 'com.android.support:recyclerview-v7:25.0.0'
@@ -156,7 +156,8 @@ dependencies {
 			'org.powermock:powermock-module-junit4:1.6.6'
 	)
 
-    
+	testCompile "org.robolectric:robolectric:3.3.2"
+
 	compile 'com.android.support:support-annotations:24.2.0'
 }
 

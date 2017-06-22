@@ -611,8 +611,6 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 
 	public void setAuditData(Visit visit) {
 		if (visit.getEncounters().size() > 0) {
-			SimpleDateFormat dateFormat = new SimpleDateFormat(DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT);
-
 			for (int i = 0; i < visit.getEncounters().size(); i++) {
 				if (visit.getEncounters().get(i).getEncounterType().getUuid()
 						.equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.AUDIT_DATA_UUID) || visit.getEncounters()
@@ -817,7 +815,7 @@ public class VisitDetailsFragment extends VisitFragment implements VisitContract
 		visitNote.setEncounterId(encounterUuid == null ? ApplicationConstants.EMPTY_STRING : encounterUuid);
 		visitNote.setW1(OpenMRS.getInstance().getCurrentUserUuid());
 		visitNote.setW3(OpenMRS.getInstance().getParentLocationUuid());
-		visitNote.setW5(visit.getStartDatetime());
+		visitNote.setW5(DATE_FORMAT.format(visit.getStartDatetime()));
 		visitNote.setW10(ApplicationConstants.EMPTY_STRING);
 		visitNote.setW12(ViewUtils.getInput(clinicalNote));
 

@@ -87,6 +87,7 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 						fetchEncounter(visit.getEncounters().get(i).getUuid());
 					}
 				}
+				auditDataView.showPageSpinner(false);
 			}
 
 			@Override
@@ -126,6 +127,7 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 				auditDataView.showProgressBar(true);
 				if (encounter == null) {
 					auditDataView.showProgressBar(false);
+					auditDataView.hideSoftKeys();
 				} else {
 					auditDataView.hideSoftKeys();
 					((AuditDataActivity)auditDataView.getContext()).finish();

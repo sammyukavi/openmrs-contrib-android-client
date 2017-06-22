@@ -45,17 +45,13 @@ import org.openmrs.mobile.activities.capturevitals.CaptureVitalsActivity;
 import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
 import org.openmrs.mobile.activities.visit.VisitActivity;
 import org.openmrs.mobile.activities.visit.VisitContract;
-import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.Encounter;
-import org.openmrs.mobile.models.EncounterDiagnosis;
-import org.openmrs.mobile.models.EncounterType;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitAttribute;
 import org.openmrs.mobile.models.VisitAttributeType;
-import org.openmrs.mobile.models.VisitNote;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.DateUtils;
 import org.openmrs.mobile.utilities.StringUtils;
@@ -479,11 +475,29 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 		if (visit.getEncounters().size() != 0) {
 			for (int i = 0; i < visit.getEncounters().size(); i++) {
 				Encounter encounter = visit.getEncounters().get(i);
-				if(encounter.getVoided())
+				if (encounter.getVoided())
 					continue;
 
-				if(encounter.getEncounterType().getDisplay().equalsIgnoreCase(ApplicationConstants.EncounterTypeDisplays.VISIT_NOTE)){
+				if (encounter.getEncounterType().getDisplay()
+						.equalsIgnoreCase(ApplicationConstants.EncounterTypeDisplays.VISIT_NOTE)) {
 					this.encounterUuid = encounter.getUuid();
+
+					if (visit.getEncounters().get(i).getObs().size() != 0) {
+						visitNoteAuditInfo.setVisibility(View.VISIBLE);
+						visitNoteDate
+								.setText(DateUtils.convertTime(visit.getEncounters().get(i).getEncounterDatetime(),
+										DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT));
+
+						for (int v = 0; v < visit.getEncounters().get(i).getEncounterProviders().size(); v++) {
+							if (v == 0) {
+
+								ArrayList names = StringUtils.splitStrings(
+										visit.getEncounters().get(i).getEncounterProviders().get(v).getDisplay(), ":");
+								visitNoteProvider.setText(names.get(0).toString());
+							}
+						}
+					}
+
 					submitVisitNote.setText(getString(R.string.update_visit_note));
 					for (int v = 0; v < encounter.getObs().size(); v++) {
 						ArrayList locators = StringUtils.splitStrings(encounter.getObs().get(v).getDisplay(), ":");
@@ -539,16 +553,12 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 			if (type == EncounterTypeData.VITALS) {
 				visitVitalsTableLayout.addView(row);
 			} else {
-				if (!observation.getDisplay().contains(ApplicationConstants.EncounterTypeDisplays
-						.AUDIT_DATA_COMPLETENESS)) {
+				if (observation.getDisplay().contains(ApplicationConstants.EncounterTypeDisplays
+						.AUDIT_DATA_COMPLETENESS)
+						&& (observation.getDisplay().contains("No") || observation.getDisplay() == null)) {
 					auditDataCompleteness.setVisibility(View.VISIBLE);
-				} else {
-					if (observation.getDisplay().contains(ApplicationConstants.EncounterTypeDisplays
-							.AUDIT_DATA_COMPLETENESS)
-							&& (observation.getDisplay().contains("No") || observation.getDisplay() == null)) {
-						auditDataCompleteness.setVisibility(View.VISIBLE);
-					}
 				}
+
 				auditInfoTableLayout.addView(row);
 			}
 		}

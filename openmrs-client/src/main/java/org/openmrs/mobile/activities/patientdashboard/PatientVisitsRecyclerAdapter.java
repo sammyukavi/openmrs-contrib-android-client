@@ -172,7 +172,7 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 				diagnosesLayout.setVisibility(View.VISIBLE);
 				pastDiagnosisLayout.setVisibility(View.GONE);
 				// init diagnoses
-				if(initialDiagnosesView != null){
+				if (initialDiagnosesView != null) {
 					((ViewGroup)initialDiagnosesView.getParent()).removeView(initialDiagnosesView);
 					singleVisitView = initialDiagnosesView;
 				} else {
@@ -276,7 +276,7 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 	}
 
 	public void updateClinicalNoteObs(Observation observation, String encounterUuid) {
-		if(null == baseDiagnosisFragment.getEncounterUuid()){
+		if (null == baseDiagnosisFragment.getEncounterUuid()) {
 			baseDiagnosisFragment.setEncounterUuid(encounterUuid);
 		}
 		this.clinicalNoteObservation = observation;
@@ -380,7 +380,7 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 
 					baseDiagnosisFragment.setClinicalNote(clinicalNote.getText().toString());
 					patientDashboardActivity.mPresenter.saveEncounter(clinicNoteEncounter,
-							null == encounter.getUuid() ? true : false );
+							null == encounter.getUuid() ? true : false);
 				}
 			}
 		};
@@ -420,7 +420,7 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 		}
 	}
 
-	private void setExistingDiagnosesContent(Encounter encounter, View view, boolean isActiveVisit){
+	private void setExistingDiagnosesContent(Encounter encounter, View view, boolean isActiveVisit) {
 		ArrayList clinicalNoteString;
 		String primaryDiagnosisString = "";
 		String secondaryDiagnosisString = "";
@@ -466,7 +466,7 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 		form.setUuid(CLINICAL_FORM_UUID);
 
 		Encounter encounter = new Encounter();
-		if(null != baseDiagnosisFragment.getEncounterUuid()){
+		if (null != baseDiagnosisFragment.getEncounterUuid()) {
 			encounter.setUuid(baseDiagnosisFragment.getEncounterUuid());
 		}
 

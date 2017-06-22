@@ -25,7 +25,7 @@ public class BaseDiagnosisPresenter {
 		this.visitNoteDataService = new VisitNoteDataService();
 	}
 
-	public void findConcept(String searchQuery, IBaseDiagnosisView view) {
+	public void findConcept(String searchQuery,  IBaseDiagnosisFragment base) {
 		conceptSearchDataService.search(searchQuery, new DataService.GetCallback<List<ConceptSearchResult>>() {
 			@Override
 			public void onCompleted(List<ConceptSearchResult> entities) {
@@ -35,7 +35,7 @@ public class BaseDiagnosisPresenter {
 					nonCodedDiagnosis.setValue("Non-Coded:" + searchQuery);
 					entities.add(nonCodedDiagnosis);
 				}
-				view.setDiagnoses(entities);
+				base.getBaseDiagnosisView().setDiagnoses(entities);
 			}
 
 			@Override
@@ -45,27 +45,27 @@ public class BaseDiagnosisPresenter {
 		});
 	}
 
-	public void getObservation(String uuid,  IBaseDiagnosisView view) {
+	public void getObservation(String uuid, IBaseDiagnosisFragment base) {
 		obsDataService.getByUUID(uuid, QueryOptions.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Observation>() {
 			@Override
 			public void onCompleted(Observation entity) {
-				view.createEncounterDiagnosis(entity, entity.getDisplay(), entity.getValueCodedName());
+				base.getBaseDiagnosisView().createEncounterDiagnosis(entity, entity.getDisplay(), entity.getValueCodedName());
 			}
 
 			@Override
 			public void onError(Throwable t) {
-				view.showTabSpinner(false);
+				base.getBaseDiagnosisView().showTabSpinner(false);
 			}
 		});
 	}
 
-	public void saveVisitNote(VisitNote visitNote, IBaseDiagnosisView view) {
-		view.showTabSpinner(true);
+	public void saveVisitNote(VisitNote visitNote, IBaseDiagnosisFragment base) {
+		base.getBaseDiagnosisView().showTabSpinner(true);
 		visitNoteDataService.save(visitNote, new DataService.GetCallback<VisitNote>() {
 			@Override
 			public void onCompleted(VisitNote visitNote) {
-				view.showTabSpinner(false);
-				System.out.println("RETURNED:::" + visitNote);
+				base.getBaseDiagnosisView().showTabSpinner(false);
+				base.setEncounterUuid(visitNote.getEncounterId());
 			}
 
 			@Override

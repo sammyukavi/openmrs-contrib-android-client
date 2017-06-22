@@ -36,6 +36,7 @@ import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.DateUtils;
 import org.openmrs.mobile.utilities.StringUtils;
+import org.openmrs.mobile.utilities.ViewUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -77,6 +78,9 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 	private LinearLayoutManager primaryDiagnosisLayoutManager, secondaryDiagnosisLayoutManager;
 	private LinearLayout diagnosesLayout, pastDiagnosisLayout;
 	private TextInputEditText clinicalNote;
+	private TextView clinicalNoteText;
+	private TextView primaryDiagnosis;
+	private TextView secondaryDiagnosis;
 
 	public PatientVisitsRecyclerAdapter(RecyclerView visitsRecyclerView, List<Visit> visits,
 			Context context, IBaseDiagnosisFragment baseDiagnosisFragment) {
@@ -143,6 +147,9 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 			pastDiagnosisLayout.setVisibility(View.GONE);
 			TextView visitStartDate = (TextView)singleVisitView.findViewById(R.id.startDate);
 			clinicalNote = (TextInputEditText)singleVisitView.findViewById(R.id.editClinicalNote);
+			clinicalNoteText = (TextView)singleVisitView.findViewById(R.id.clinicalNoteText);
+			primaryDiagnosis = (TextView)singleVisitView.findViewById(R.id.primaryDiagnosis);
+			secondaryDiagnosis = (TextView)singleVisitView.findViewById(R.id.secondaryDiagnosis);
 
 			//Let's set the visit title
 			String startDate = DateUtils.convertTime1(visit.getStartDatetime(), DateUtils.DATE_FORMAT);
@@ -194,7 +201,7 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 				presentClinicalNotes(new Encounter(), singleVisitView, isActiveVisit);
 			} else {
 				for (Encounter encounter : visit.getEncounters()) {
-					if (encounter.getEncounterType().getDisplay()
+					if (!encounter.getVoided() && encounter.getEncounterType().getDisplay()
 							.equalsIgnoreCase(ApplicationConstants.EncounterTypeDisplays.VISIT_NOTE)) {
 						if (activeVisit == visit) {
 							baseDiagnosisFragment.setEncounterUuid(encounter.getUuid());
@@ -253,7 +260,10 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 		}
 	}
 
-	public void updateClinicalNoteObs(Observation observation) {
+	public void updateClinicalNoteObs(Observation observation, String encounterUuid) {
+		if(null == baseDiagnosisFragment.getEncounterUuid()){
+			baseDiagnosisFragment.setEncounterUuid(encounterUuid);
+		}
 		this.clinicalNoteObservation = observation;
 	}
 
@@ -310,6 +320,8 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 
 	private void presentClinicalNotes(Encounter encounter, View view, boolean isActiveVisit) {
 		firstTimeEdit = true;
+		TextInputEditText clinicalNote = (TextInputEditText)view.findViewById(R.id.editClinicalNote);
+		setExistingDiagnosesContent(encounter, view, isActiveVisit);
 
 		Handler handler = new Handler();
 		Runnable inputCompleteChecker = () -> {
@@ -317,6 +329,7 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 				if (clinicalNoteObservation != null) {
 					clinicalNoteObservation.setValue(clinicalNote.getText().toString());
 					clinicalNoteObservation.setObsDatetime(localDateTime.toString());
+					baseDiagnosisFragment.setClinicalNote(clinicalNote.getText().toString());
 					patientDashboardActivity.mPresenter.saveObservation(clinicalNoteObservation, false);
 
 				} else {
@@ -350,21 +363,20 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 					Encounter clinicNoteEncounter = createClinicalNoteEncounter();
 					clinicNoteEncounter.setObs(observationList);
 
-					patientDashboardActivity.mPresenter.saveEncounter(clinicNoteEncounter, true);
+					baseDiagnosisFragment.setClinicalNote(clinicalNote.getText().toString());
+					patientDashboardActivity.mPresenter.saveEncounter(clinicNoteEncounter,
+							null == encounter.getUuid() ? true : false );
 				}
-
 			}
 		};
 
 		clinicalNote.addTextChangedListener(new TextWatcher() {
 			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 			}
 
 			@Override
-			public void onTextChanged(final CharSequence s, int start, int before,
-					int count) {
+			public void onTextChanged(final CharSequence s, int start, int before, int count) {
 				//Remove this to run only once
 				handler.removeCallbacks(inputCompleteChecker);
 			}
@@ -388,17 +400,17 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 			view.findViewById(R.id.clinicNoteTextContainer).setVisibility(View.VISIBLE);
 		}
 
-		TextView clinicalNoteText = (TextView)view.findViewById(R.id.clinicalNoteText);
-		TextView primaryDiagnosis = (TextView)view.findViewById(R.id.primaryDiagnosis);
-		TextView secondaryDiagnosis = (TextView)view.findViewById(R.id.secondaryDiagnosis);
+		if (clinicalNoteText.getText().length() == 0) {
+			clinicalNoteText.setText(context.getString(R.string.no_clinical_note));
+		}
+	}
 
+	private void setExistingDiagnosesContent(Encounter encounter, View view, boolean isActiveVisit){
 		ArrayList clinicalNoteString;
 		String primaryDiagnosisString = "";
 		String secondaryDiagnosisString = "";
-
 		for (Observation observation : encounter.getObs()) {
 			String observationDisplay = observation.getDisplay();
-
 			if (observationDisplay.contains(PRIMARY_DIAGNOSIS)) {
 				if (!primaryDiagnosisString.equalsIgnoreCase("")) {
 					primaryDiagnosisString += ", ";
@@ -413,7 +425,7 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 				secondaryDiagnosis.setText(secondaryDiagnosisString);
 			} else if (observationDisplay.contains(CLINICAL_NOTE)) {
 				clinicalNoteString = StringUtils.splitStrings(observationDisplay, ":");
-
+				baseDiagnosisFragment.setClinicalNote(clinicalNote.getText().toString());
 				if (isActiveVisit) {
 					clinicalNoteObservation = observation;
 					clinicalNote.setText(clinicalNoteString.get(1).toString());
@@ -422,14 +434,8 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 					view.findViewById(R.id.clinicalNoteTitle).setVisibility(View.VISIBLE);
 					clinicalNoteText.setText(clinicalNoteString.get(1).toString());
 				}
-
 			}
 		}
-
-		if (clinicalNoteText.getText().length() == 0) {
-			clinicalNoteText.setText(context.getString(R.string.no_clinical_note));
-		}
-
 	}
 
 	private Encounter createClinicalNoteEncounter() {
@@ -439,13 +445,16 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 		//create encountertType
 		EncounterType mEncountertype = new EncounterType();
 		mEncountertype.setUuid(CLINICAL_NOTE_UUID);
-		LocalDateTime localDateTime = new LocalDateTime();
 		Patient patient = new Patient();
 		patient.setUuid(uuids.get(PATIENT_UUID_BUNDLE).toString());
 		Form form = new Form();
 		form.setUuid(CLINICAL_FORM_UUID);
 
 		Encounter encounter = new Encounter();
+		if(null != baseDiagnosisFragment.getEncounterUuid()){
+			encounter.setUuid(baseDiagnosisFragment.getEncounterUuid());
+		}
+
 		encounter.setPatient(patient);
 		encounter.setForm(form);
 		encounter.setLocation(activeVisit.getLocation());

@@ -189,9 +189,9 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 		setLoading(true);
 		DataService.GetCallback<Encounter> serverResponceCallback = new DataService.GetCallback<Encounter>() {
 			@Override
-			public void onCompleted(Encounter result) {
+			public void onCompleted(Encounter entity) {
 				patientDashboardView.showSavingClinicalNoteProgressBar(false);
-				patientDashboardView.updateClinicVisitNote(result.getObs().get(0));
+				patientDashboardView.updateClinicVisitNote(entity.getObs().get(0), entity.getUuid());
 				setLoading(false);
 			}
 
@@ -218,7 +218,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 			@Override
 			public void onCompleted(Observation result) {
 				patientDashboardView.showSavingClinicalNoteProgressBar(false);
-				patientDashboardView.updateClinicVisitNote(result);
+				patientDashboardView.updateClinicVisitNote(result, null);
 				setLoading(false);
 			}
 

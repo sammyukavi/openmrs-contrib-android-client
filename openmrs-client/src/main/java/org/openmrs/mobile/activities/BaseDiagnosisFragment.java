@@ -429,4 +429,8 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	public void setVisit(Visit visit) {
 		this.visit = visit;
 	}
+
+	public void showTabSpinner(boolean visibility) {
+
+	}
 }

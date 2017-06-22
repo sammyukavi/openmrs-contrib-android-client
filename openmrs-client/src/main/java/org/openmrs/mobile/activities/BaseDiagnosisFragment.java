@@ -309,7 +309,9 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 		visitNote.setW3(OpenMRS.getInstance().getParentLocationUuid());
 		visitNote.setW5(visit.getStartDatetime());
 		visitNote.setW10(ApplicationConstants.EMPTY_STRING);
-		visitNote.setW12(null == clinicalNote ? ApplicationConstants.EMPTY_STRING : clinicalNote);
+		if(StringUtils.notNull(clinicalNote)) {
+			visitNote.setW12(null == clinicalNote ? ApplicationConstants.EMPTY_STRING : clinicalNote);
+		}
 
 		encounterDiagnosises.addAll(primaryDiagnoses);
 		encounterDiagnosises.addAll(secondaryDiagnoses);

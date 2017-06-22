@@ -278,8 +278,8 @@ public class PatientDashboardFragment extends BaseDiagnosisFragment<PatientDashb
 	}
 
 	@Override
-	public void updateClinicVisitNote(Observation observation) {
-		patientVisitsRecyclerAdapter.updateClinicalNoteObs(observation);
+	public void updateClinicVisitNote(Observation observation, String encounterUuid) {
+		patientVisitsRecyclerAdapter.updateClinicalNoteObs(observation, encounterUuid);
 	}
 
 	@Override

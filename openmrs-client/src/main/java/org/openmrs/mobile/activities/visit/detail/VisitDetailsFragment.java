@@ -481,23 +481,20 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 		if (visit.getEncounters().size() != 0) {
 			for (int i = 0; i < visit.getEncounters().size(); i++) {
 				Encounter encounter = visit.getEncounters().get(i);
-				EncounterType encounterType = visit.getEncounters().get(i).getEncounterType();
+				if(encounter.getVoided())
+					continue;
 
-				if (encounterType.getUuid().equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.CLINICAL_NOTE_UUID)) {
+				if(encounter.getEncounterType().getDisplay().equalsIgnoreCase(ApplicationConstants.EncounterTypeDisplays.VISIT_NOTE)){
 					this.encounterUuid = encounter.getUuid();
 					submitVisitNote.setText(getString(R.string.update_visit_note));
-
 					for (int v = 0; v < encounter.getObs().size(); v++) {
-
 						ArrayList locators = StringUtils.splitStrings(encounter.getObs().get(v).getDisplay(), ":");
-
 						if (locators.get(0).toString()
 								.equalsIgnoreCase(ApplicationConstants.ObservationLocators.CLINICAL_NOTE)) {
 							initialClinicNoteHashcode = locators.get(1).toString().hashCode();
 							clinicalNote.setText(locators.get(1).toString());
 						}
 					}
-
 				}
 			}
 		}

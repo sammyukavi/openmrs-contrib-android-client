@@ -141,8 +141,8 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 			pastDiagnosisLayout = (LinearLayout)singleVisitView.findViewById(R.id.pastDiagnosisLayout);
 			diagnosesLayout.setVisibility(View.GONE);
 			pastDiagnosisLayout.setVisibility(View.GONE);
-			TextView visitStartDate = (TextView) singleVisitView.findViewById(R.id.startDate);
-			clinicalNote = (TextInputEditText) singleVisitView.findViewById(R.id.editClinicalNote);
+			TextView visitStartDate = (TextView)singleVisitView.findViewById(R.id.startDate);
+			clinicalNote = (TextInputEditText)singleVisitView.findViewById(R.id.editClinicalNote);
 
 			//Let's set the visit title
 			String startDate = DateUtils.convertTime1(visit.getStartDatetime(), DateUtils.DATE_FORMAT);
@@ -191,25 +191,25 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 			}
 
 			if (visit.getEncounters().size() == 0) {
-
 				presentClinicalNotes(new Encounter(), singleVisitView, isActiveVisit);
 			} else {
 				for (Encounter encounter : visit.getEncounters()) {
-					switch (encounter.getEncounterType().getDisplay()) {
-						case ApplicationConstants.EncounterTypeDisplays.VISIT_NOTE:
+					if (encounter.getEncounterType().getDisplay()
+							.equalsIgnoreCase(ApplicationConstants.EncounterTypeDisplays.VISIT_NOTE)) {
+						if (activeVisit == visit) {
 							baseDiagnosisFragment.setEncounterUuid(encounter.getUuid());
-							baseDiagnosisFragment.setVisit(visit);
 							baseDiagnosisFragment.setClinicalNote(clinicalNote.getText().toString());
-							presentClinicalNotes(encounter, singleVisitView, isActiveVisit);
-							break;
-						default:
-							presentClinicalNotes(new Encounter(), singleVisitView, isActiveVisit);
-							break;
+						}
+						presentClinicalNotes(encounter, singleVisitView, isActiveVisit);
+						break;
+					} else {
+						presentClinicalNotes(new Encounter(), singleVisitView, isActiveVisit);
+						break;
 					}
 				}
 			}
 
-			if(!hasStartedDiagnoses) {
+			if (!hasStartedDiagnoses && isActiveVisit) {
 				baseDiagnosisFragment.initializeListeners();
 				baseDiagnosisFragment.setDiagnoses(activeVisit);
 				hasStartedDiagnoses = true;
@@ -219,8 +219,8 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 		}
 	}
 
-	private void initDiagnosesComponents(View view){
-		if(baseDiagnosisFragment.getSearchDiagnosisView() == null) {
+	private void initDiagnosesComponents(View view) {
+		if (baseDiagnosisFragment.getSearchDiagnosisView() == null) {
 			baseDiagnosisFragment.setSearchDiagnosisView(
 					(AutoCompleteTextView)view.findViewById(R.id.searchDiagnosis));
 			baseDiagnosisFragment.setNoPrimaryDiagnoses(
@@ -240,7 +240,6 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 
 			baseDiagnosisFragment.getPrimaryDiagnosesRecycler().setLayoutManager(primaryDiagnosisLayoutManager);
 			baseDiagnosisFragment.getSecondaryDiagnosesRecycler().setLayoutManager(secondaryDiagnosisLayoutManager);
-
 		}
 	}
 

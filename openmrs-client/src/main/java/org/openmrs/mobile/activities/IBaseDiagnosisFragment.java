@@ -45,4 +45,6 @@ public interface IBaseDiagnosisFragment {
 
 	void setVisit(Visit visit);
 	Visit getVisit();
+
+	IBaseDiagnosisView getBaseDiagnosisView();
 }

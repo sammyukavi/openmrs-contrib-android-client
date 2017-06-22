@@ -291,4 +291,14 @@ public class PatientDashboardFragment extends BaseDiagnosisFragment<PatientDashb
 	public boolean isAutoSaveEnabled() {
 		return true;
 	}
+
+	@Override
+	public IBaseDiagnosisView getBaseDiagnosisView() {
+		return this;
+	}
+
+	@Override
+	public void showTabSpinner(boolean show) {
+		showSavingClinicalNoteProgressBar(show);
+	}
 }

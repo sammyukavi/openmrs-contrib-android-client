@@ -52,6 +52,10 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 		addDiagnosisListeners();
 	}
 
+	protected IBaseDiagnosisFragment getIBaseDiagnosisFragment(){
+		return this;
+	}
+
 	abstract public IBaseDiagnosisView getDiagnosisView();
 
 	private void addDiagnosisListeners() {
@@ -74,7 +78,7 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 					timer.schedule(new TimerTask() {
 						@Override
 						public void run() {
-							diagnosisPresenter.findConcept(searchDiagnosis.getText().toString(), getDiagnosisView());
+							diagnosisPresenter.findConcept(searchDiagnosis.getText().toString(), getIBaseDiagnosisFragment());
 						}
 					}, DELAY);
 				}
@@ -105,7 +109,7 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 						.equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.CLINICAL_NOTE_UUID)) {
 					submitVisitNote.setText(getString(R.string.update_visit_note));
 					for (Observation obs : encounter.getObs()) {
-						diagnosisPresenter.getObservation(obs.getUuid(), getDiagnosisView());
+						diagnosisPresenter.getObservation(obs.getUuid(), getIBaseDiagnosisFragment());
 					}
 				}
 			}
@@ -286,7 +290,7 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	}
 
 	public void saveVisitNote(VisitNote visitNote) {
-		diagnosisPresenter.saveVisitNote(visitNote, getDiagnosisView());
+		diagnosisPresenter.saveVisitNote(visitNote, getIBaseDiagnosisFragment());
 	}
 
 	public void saveVisitNote(String encounterUuid, String clinicalNote, Visit visit) {
@@ -428,9 +432,5 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	@Override
 	public void setVisit(Visit visit) {
 		this.visit = visit;
-	}
-
-	public void showTabSpinner(boolean visibility) {
-
 	}
 }

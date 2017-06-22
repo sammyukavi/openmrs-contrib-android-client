@@ -40,6 +40,7 @@ import com.google.android.flexbox.FlexboxLayout;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.BaseDiagnosisFragment;
+import org.openmrs.mobile.activities.IBaseDiagnosisView;
 import org.openmrs.mobile.activities.auditdata.AuditDataActivity;
 import org.openmrs.mobile.activities.capturevitals.CaptureVitalsActivity;
 import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
@@ -581,5 +582,10 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 	@Override
 	public boolean isAutoSaveEnabled() {
 		return false;
+	}
+
+	@Override
+	public IBaseDiagnosisView getBaseDiagnosisView() {
+		return this;
 	}
 }

@@ -14,6 +14,7 @@
 
 package org.openmrs.mobile.activities.capturevitals;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -30,6 +31,7 @@ import org.joda.time.LocalDateTime;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
 import org.openmrs.mobile.activities.ACBaseFragment;
+import org.openmrs.mobile.activities.visit.VisitActivity;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.Encounter;
@@ -372,6 +374,11 @@ public class CaptureVitalsFragment extends ACBaseFragment<CaptureVitalsContract.
 	@Override
 	public void goBackToVisitPage() {
 		getActivity().finish();
+		Intent intent = new Intent(getContext(), VisitActivity.class);
+		intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
+		intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visitUuid);
+		intent.putExtra(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, visitStopDate);
+		getContext().startActivity(intent);
 	}
 
 	@Override
@@ -398,6 +405,7 @@ public class CaptureVitalsFragment extends ACBaseFragment<CaptureVitalsContract.
 
 	@Override
 	public void hideSoftKeys() {
+		goBackToVisitPage();
 		ACBaseActivity.hideSoftKeyboard(getActivity());
 	}
 

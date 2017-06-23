@@ -200,17 +200,22 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 				presentClinicalNotes(new Encounter(), visit, singleVisitView, isActiveVisit);
 			} else {
 				for (Encounter encounter : visit.getEncounters()) {
-					if (!encounter.getVoided() && encounter.getEncounterType().getDisplay()
+					if (encounter.getEncounterType().getDisplay()
 							.equalsIgnoreCase(ApplicationConstants.EncounterTypeDisplays.VISIT_NOTE)) {
-						if (activeVisit == visit) {
-							baseDiagnosisFragment.setEncounterUuid(encounter.getUuid());
-							baseDiagnosisFragment.setClinicalNote(clinicalNote.getText().toString());
+						if (!encounter.getVoided()) {
+							if (activeVisit == visit) {
+								baseDiagnosisFragment.setEncounterUuid(encounter.getUuid());
+								baseDiagnosisFragment.setClinicalNote(clinicalNote.getText().toString());
+							}
+							presentClinicalNotes(encounter, visit, singleVisitView, isActiveVisit);
+							break;
+						} else {
+
 						}
-						presentClinicalNotes(encounter, visit, singleVisitView, isActiveVisit);
-						break;
+
 					} else {
-						presentClinicalNotes(new Encounter(), visit, singleVisitView, isActiveVisit);
-						break;
+						/*presentClinicalNotes(new Encounter(), visit, singleVisitView, isActiveVisit);
+						break;*/
 					}
 				}
 			}

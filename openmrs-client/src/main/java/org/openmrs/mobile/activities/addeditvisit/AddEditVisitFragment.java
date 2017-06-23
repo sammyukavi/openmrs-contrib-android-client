@@ -286,17 +286,15 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 	public void showVisitDetails(String visitUUID, boolean isNewInstance) {
 		visitSubmitButton.setEnabled(false);
 		getActivity().finish();
-		if (isNewInstance) {
-			Intent intent = new Intent(getContext(), VisitActivity.class);
-			intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
-			if (visitUUID == null) {
-				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visitUuid);
-			} else {
-				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visitUUID);
-				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, visitStopDate);
-			}
-			getContext().startActivity(intent);
+		Intent intent = new Intent(getContext(), VisitActivity.class);
+		intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
+		if (visitUUID == null) {
+			intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visitUuid);
+		} else {
+			intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visitUUID);
+			intent.putExtra(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, visitStopDate);
 		}
+		getContext().startActivity(intent);
 	}
 
 	@Override

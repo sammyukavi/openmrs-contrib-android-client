@@ -317,4 +317,10 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 			return visitPredefinedTask;
 		}
 	}
+
+	@Override
+	public void onResume (){
+		super.onResume();
+		addtask.requestFocus();
+	}
 }

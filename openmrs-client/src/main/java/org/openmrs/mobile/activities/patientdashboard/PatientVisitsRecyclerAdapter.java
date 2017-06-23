@@ -161,7 +161,7 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 				diagnosesLayout.setVisibility(View.VISIBLE);
 				pastDiagnosisLayout.setVisibility(View.GONE);
 				// init diagnoses
-				if(initialDiagnosesView != null){
+				if (initialDiagnosesView != null) {
 					((ViewGroup)initialDiagnosesView.getParent()).removeView(initialDiagnosesView);
 					singleVisitView = initialDiagnosesView;
 				} else {
@@ -265,7 +265,7 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 	}
 
 	public void updateClinicalNoteObs(Observation observation, String encounterUuid) {
-		if(null == baseDiagnosisFragment.getEncounterUuid()){
+		if (null == baseDiagnosisFragment.getEncounterUuid()) {
 			baseDiagnosisFragment.setEncounterUuid(encounterUuid);
 		}
 		this.clinicalNoteObservation = observation;
@@ -330,6 +330,7 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 		Handler handler = new Handler();
 		Runnable inputCompleteChecker = () -> {
 			if (System.currentTimeMillis() > (lastTextEdit + delay - 500)) {
+
 				baseDiagnosisFragment.getBaseDiagnosisView().saveVisitNote(
 						null != encounter ? encounter.getUuid() : ApplicationConstants.EMPTY_STRING,
 						clinicalNote.getText().toString(), visit);
@@ -338,7 +339,8 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 
 		clinicalNote.addTextChangedListener(new TextWatcher() {
 			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			}
 
 			@Override
 			public void onTextChanged(final CharSequence s, int start, int before, int count) {
@@ -368,7 +370,7 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 		}
 	}
 
-	private void setExistingDiagnosesContent(Encounter encounter, View view, boolean isActiveVisit){
+	private void setExistingDiagnosesContent(Encounter encounter, View view, boolean isActiveVisit) {
 		ArrayList clinicalNoteString;
 		String primaryDiagnosisString = "";
 		String secondaryDiagnosisString = "";

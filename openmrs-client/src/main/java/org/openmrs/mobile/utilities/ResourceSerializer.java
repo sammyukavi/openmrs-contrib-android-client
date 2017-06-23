@@ -27,6 +27,7 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.annotations.Expose;
 
+import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Resource;
 
 import java.lang.reflect.Field;
@@ -41,6 +42,7 @@ public class ResourceSerializer implements JsonSerializer<Resource> {
 	@Override
 	public JsonElement serialize(Resource src, Type typeOfSrc, JsonSerializationContext context) {
 		Gson myGson = getGson();
+		Gson obsGson = getObsGson();
 		JsonObject srcJson = new JsonObject();
 		Field[] declaredFields = src.getClass().getDeclaredFields();
 		for (Field field : declaredFields) {
@@ -61,15 +63,24 @@ public class ResourceSerializer implements JsonSerializer<Resource> {
 							if (isResourceCollection(collection)) {
 								JsonArray jsonArray = new JsonArray();
 								for (Object resource : collection) {
-									jsonArray.add(serializeField((Resource)resource, context));
+									if(null == ((Resource)resource).getUuid()) {
+										jsonArray.add(serializeField((Resource)resource, context));
+									} else {
+										if (!(resource instanceof Observation)) {
+											jsonArray.add(serializeField((Resource)resource, context));
+										} else {
+											jsonArray.add(obsGson.toJsonTree(resource));
+										}
+
+									}
 								}
 								srcJson.add(field.getName(), jsonArray);
 							} else {
-								JsonArray jsonArray = new JsonArray();
-								for (Object object : collection) {
-									jsonArray.add(myGson.toJsonTree(object));
-								}
-								srcJson.add(field.getName(), jsonArray);
+							JsonArray jsonArray = new JsonArray();
+							for (Object object : collection) {
+								jsonArray.add(myGson.toJsonTree(object));
+							}
+							srcJson.add(field.getName(), jsonArray);
 							}
 						}
 					} catch (IllegalAccessException e) {
@@ -92,6 +103,15 @@ public class ResourceSerializer implements JsonSerializer<Resource> {
 		GsonBuilder gsonBuilder = new GsonBuilder();
 		return gsonBuilder
 				.excludeFieldsWithoutExposeAnnotation()
+				.create();
+	}
+
+	@NonNull
+	private Gson getObsGson() {
+		GsonBuilder gsonBuilder = new GsonBuilder();
+		return gsonBuilder
+				.excludeFieldsWithoutExposeAnnotation()
+				.setExclusionStrategies(new ObservationExclusionStrategy())
 				.create();
 	}
 

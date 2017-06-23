@@ -51,8 +51,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static android.app.Activity.RESULT_OK;
-
 public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Presenter>
 		implements AddEditVisitContract.View {
 
@@ -286,6 +284,7 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 
 	@Override
 	public void showVisitDetails(String visitUUID, boolean isNewInstance) {
+		visitSubmitButton.setEnabled(false);
 		getActivity().finish();
 		if (isNewInstance) {
 			Intent intent = new Intent(getContext(), VisitActivity.class);

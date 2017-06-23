@@ -408,6 +408,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 
 	@Override
 	public void hideSoftKeys() {
+		goBackToVisitPage();
 		ACBaseActivity.hideSoftKeyboard(getActivity());
 	}
 

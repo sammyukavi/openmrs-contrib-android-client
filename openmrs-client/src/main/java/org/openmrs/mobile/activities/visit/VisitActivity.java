@@ -36,6 +36,7 @@ import org.openmrs.mobile.activities.ACBaseActivity;
 import org.openmrs.mobile.activities.addeditvisit.AddEditVisitActivity;
 import org.openmrs.mobile.activities.auditdata.AuditDataActivity;
 import org.openmrs.mobile.activities.capturevitals.CaptureVitalsActivity;
+import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
 import org.openmrs.mobile.activities.patientheader.PatientHeaderContract;
 import org.openmrs.mobile.activities.patientheader.PatientHeaderFragment;
 import org.openmrs.mobile.activities.patientheader.PatientHeaderPresenter;
@@ -200,17 +201,13 @@ public class VisitActivity extends ACBaseActivity {
 		// Handle item selection
 		switch (item.getItemId()) {
 			case android.R.id.home:
+				finish();
+				Intent intent = new Intent(getApplicationContext(), PatientDashboardActivity.class);
+				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
+				//fix for now
+				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-				//NavUtils.navigateUpFromSameTask(this);
-
-				/*
-				HACK
-				Normally this button recreates the caller activity when you use the commented line above by
-				default so we call a back pressed instead to resume our state
-				*/
-
-				onBackPressed();
-
+				getApplicationContext().startActivity(intent);
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);

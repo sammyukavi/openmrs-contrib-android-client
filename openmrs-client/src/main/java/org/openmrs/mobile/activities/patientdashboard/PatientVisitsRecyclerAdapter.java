@@ -335,9 +335,10 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 		Handler handler = new Handler();
 		Runnable inputCompleteChecker = () -> {
 			if (System.currentTimeMillis() > (lastTextEdit + delay - 500)) {
-
+				String encounterUuid = null != encounter.getUuid() ? encounter.getUuid() : baseDiagnosisFragment.getEncounterUuid();
+				baseDiagnosisFragment.setClinicalNote(clinicalNote.getText().toString());
 				baseDiagnosisFragment.getBaseDiagnosisView().saveVisitNote(
-						null != encounter ? encounter.getUuid() : ApplicationConstants.EMPTY_STRING,
+						null != encounterUuid ? encounterUuid : ApplicationConstants.EMPTY_STRING,
 						clinicalNote.getText().toString(), visit);
 			}
 		};

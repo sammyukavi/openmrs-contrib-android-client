@@ -14,6 +14,7 @@
 
 package org.openmrs.mobile.activities.addeditpatient;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.widget.Toolbar;
@@ -22,6 +23,7 @@ import android.view.MenuItem;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
+import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 
 import java.util.Arrays;
@@ -31,6 +33,7 @@ public class AddEditPatientActivity extends ACBaseActivity {
 
 	public AddEditPatientContract.Presenter mPresenter;
 	private boolean updatingPatient;
+	private String patientUuid = "";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -56,14 +59,13 @@ public class AddEditPatientActivity extends ACBaseActivity {
 		} else {
 			patientBundle = getIntent().getExtras();
 		}
-		String patientID = "";
 		if (patientBundle != null) {
-			patientID = patientBundle.getString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
+			patientUuid = patientBundle.getString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
 		}
 
 		List<String> counties = Arrays.asList(getResources().getStringArray(R.array.countiesArray));
 		// Create the findPatientPresenter
-		mPresenter = new AddEditPatientPresenter(addEditPatientFragment, counties, patientID);
+		mPresenter = new AddEditPatientPresenter(addEditPatientFragment, counties, patientUuid);
 
 	}
 
@@ -99,9 +101,19 @@ public class AddEditPatientActivity extends ACBaseActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		//if the arrow is pressed on the navigation we close the activity
-		if (updatingPatient && item.getItemId() == android.R.id.home) {
-			onBackPressed();
+		// Handle item selection
+		switch (item.getItemId()) {
+			case android.R.id.home:
+				finish();
+				Intent intent = new Intent(getApplicationContext(), PatientDashboardActivity.class);
+				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
+				//fix for now
+				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+				getApplicationContext().startActivity(intent);
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
 		}
-		return super.onOptionsItemSelected(item);
 	}
 }

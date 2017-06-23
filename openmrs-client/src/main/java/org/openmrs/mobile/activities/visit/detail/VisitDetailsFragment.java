@@ -40,6 +40,7 @@ import com.google.android.flexbox.FlexboxLayout;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.BaseDiagnosisFragment;
+import org.openmrs.mobile.activities.IBaseDiagnosisView;
 import org.openmrs.mobile.activities.auditdata.AuditDataActivity;
 import org.openmrs.mobile.activities.capturevitals.CaptureVitalsActivity;
 import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
@@ -395,8 +396,7 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 	public void setVitals(Visit visit) {
 		if (visit.getEncounters().size() > 0) {
 			for (int i = 0; i < visit.getEncounters().size(); i++) {
-				if (visit.getEncounters().get(i).getDisplay().contains(ApplicationConstants.EncounterTypeDisplays.VITALS)
-						&& i == 0) {
+				if (visit.getEncounters().get(i).getDisplay().contains(ApplicationConstants.EncounterTypeDisplays.VITALS)) {
 					if (visit.getEncounters().get(i).getEncounterType().getUuid()
 							.equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.VITALS_UUID)) {
 
@@ -427,6 +427,7 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 							}
 						}
 					}
+					break;
 				}
 			}
 		} else {
@@ -591,5 +592,10 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 	@Override
 	public boolean isAutoSaveEnabled() {
 		return false;
+	}
+
+	@Override
+	public IBaseDiagnosisView getBaseDiagnosisView() {
+		return this;
 	}
 }

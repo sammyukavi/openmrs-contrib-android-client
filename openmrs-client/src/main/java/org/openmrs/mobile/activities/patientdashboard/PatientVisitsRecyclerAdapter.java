@@ -23,16 +23,10 @@ import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.IBaseDiagnosisFragment;
 import org.openmrs.mobile.activities.visit.VisitActivity;
 import org.openmrs.mobile.application.OpenMRS;
-import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.Encounter;
-import org.openmrs.mobile.models.EncounterType;
-import org.openmrs.mobile.models.Form;
-import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
-import org.openmrs.mobile.models.Person;
 import org.openmrs.mobile.models.PersonAttribute;
-import org.openmrs.mobile.models.Provider;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.DateUtils;
@@ -43,11 +37,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
-import static org.openmrs.mobile.utilities.ApplicationConstants.BundleKeys.LOCATION_UUID_BUNDLE;
-import static org.openmrs.mobile.utilities.ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE;
-import static org.openmrs.mobile.utilities.ApplicationConstants.ClinicalFormConcepts.ClinicFormUUID;
-import static org.openmrs.mobile.utilities.ApplicationConstants.EncounterTypeEntity.CLINICAL_NOTE_UUID;
-import static org.openmrs.mobile.utilities.ApplicationConstants.FORM_UUIDS.CLINICAL_FORM_UUID;
 import static org.openmrs.mobile.utilities.ApplicationConstants.ObservationLocators.CLINICAL_NOTE;
 import static org.openmrs.mobile.utilities.ApplicationConstants.ObservationLocators.PRIMARY_DIAGNOSIS;
 import static org.openmrs.mobile.utilities.ApplicationConstants.ObservationLocators.SECONDARY_DIAGNOSIS;
@@ -208,7 +197,7 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 			}
 
 			if (visit.getEncounters().size() == 0) {
-				presentClinicalNotes(new Encounter(), singleVisitView, isActiveVisit);
+				presentClinicalNotes(new Encounter(), visit, singleVisitView, isActiveVisit);
 			} else {
 				for (Encounter encounter : visit.getEncounters()) {
 					if (!encounter.getVoided() && encounter.getEncounterType().getDisplay()
@@ -217,10 +206,10 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 							baseDiagnosisFragment.setEncounterUuid(encounter.getUuid());
 							baseDiagnosisFragment.setClinicalNote(clinicalNote.getText().toString());
 						}
-						presentClinicalNotes(encounter, singleVisitView, isActiveVisit);
+						presentClinicalNotes(encounter, visit, singleVisitView, isActiveVisit);
 						break;
 					} else {
-						presentClinicalNotes(new Encounter(), singleVisitView, isActiveVisit);
+						presentClinicalNotes(new Encounter(), visit, singleVisitView, isActiveVisit);
 						break;
 					}
 				}
@@ -333,7 +322,7 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 
 	}
 
-	private void presentClinicalNotes(Encounter encounter, View view, boolean isActiveVisit) {
+	private void presentClinicalNotes(Encounter encounter, Visit visit, View view, boolean isActiveVisit) {
 		firstTimeEdit = true;
 		TextInputEditText clinicalNote = (TextInputEditText)view.findViewById(R.id.editClinicalNote);
 		setExistingDiagnosesContent(encounter, view, isActiveVisit);
@@ -341,47 +330,10 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 		Handler handler = new Handler();
 		Runnable inputCompleteChecker = () -> {
 			if (System.currentTimeMillis() > (lastTextEdit + delay - 500)) {
-				if (clinicalNoteObservation != null) {
-					clinicalNoteObservation.setValue(clinicalNote.getText().toString());
-					clinicalNoteObservation.setObsDatetime(localDateTime.toString());
-					baseDiagnosisFragment.setClinicalNote(clinicalNote.getText().toString());
-					patientDashboardActivity.mPresenter.saveObservation(clinicalNoteObservation, false);
 
-				} else {
-					//create concept
-					Concept concept = new Concept();
-					concept.setUuid(ClinicFormUUID);
-
-					Person person = new Person();
-					person.setUuid(uuids.get(PATIENT_UUID_BUNDLE));
-
-					Provider provider = new Provider();
-					provider.setUuid(OpenMRS.getInstance().getCurrentLoggedInUserInfo().get(ApplicationConstants.UserKeys
-							.USER_UUID));
-
-					Location location = new Location();
-					location.setUuid(uuids.get(LOCATION_UUID_BUNDLE));
-
-					//create observation
-					Observation observation = new Observation();
-					observation.setConcept(concept);
-					observation.setPerson(person);
-					observation.setObsDatetime(localDateTime.toString());
-					observation.setProvider(provider);
-					observation.setLocation(uuids.get(LOCATION_UUID_BUNDLE));
-					observation.setValue(clinicalNote.getText().toString());
-
-					List<Observation> observationList = new ArrayList<>();
-
-					observationList.add(observation);
-
-					Encounter clinicNoteEncounter = createClinicalNoteEncounter();
-					clinicNoteEncounter.setObs(observationList);
-
-					baseDiagnosisFragment.setClinicalNote(clinicalNote.getText().toString());
-					patientDashboardActivity.mPresenter.saveEncounter(clinicNoteEncounter,
-							null == encounter.getUuid() ? true : false);
-				}
+				baseDiagnosisFragment.getBaseDiagnosisView().saveVisitNote(
+						null != encounter ? encounter.getUuid() : ApplicationConstants.EMPTY_STRING,
+						clinicalNote.getText().toString(), visit);
 			}
 		};
 
@@ -398,14 +350,12 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 
 			@Override
 			public void afterTextChanged(final Editable s) {
-
 				if (s.length() > 0 && !firstTimeEdit) {
 					lastTextEdit = System.currentTimeMillis();
 					handler.postDelayed(inputCompleteChecker, delay);
 				} else {
 					firstTimeEdit = false;
 				}
-
 			}
 		});
 
@@ -451,34 +401,6 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 				}
 			}
 		}
-	}
-
-	private Encounter createClinicalNoteEncounter() {
-		SharedPreferences prefs = OpenMRS.getInstance().getOpenMRSSharedPreferences();
-		prefs.getString(ApplicationConstants.SESSION_TOKEN, ApplicationConstants.EMPTY_STRING);
-
-		//create encountertType
-		EncounterType mEncountertype = new EncounterType();
-		mEncountertype.setUuid(CLINICAL_NOTE_UUID);
-		Patient patient = new Patient();
-		patient.setUuid(uuids.get(PATIENT_UUID_BUNDLE).toString());
-		Form form = new Form();
-		form.setUuid(CLINICAL_FORM_UUID);
-
-		Encounter encounter = new Encounter();
-		if (null != baseDiagnosisFragment.getEncounterUuid()) {
-			encounter.setUuid(baseDiagnosisFragment.getEncounterUuid());
-		}
-
-		encounter.setPatient(patient);
-		encounter.setForm(form);
-		encounter.setLocation(activeVisit.getLocation());
-		encounter.setVisit(new Visit(activeVisit.getUuid()));
-		encounter.setProvider(
-				OpenMRS.getInstance().getCurrentLoggedInUserInfo().get(ApplicationConstants.UserKeys.USER_UUID));
-		encounter.setEncounterType(mEncountertype);
-
-		return encounter;
 	}
 
 	private void setVisitStopDate(Visit visit) {

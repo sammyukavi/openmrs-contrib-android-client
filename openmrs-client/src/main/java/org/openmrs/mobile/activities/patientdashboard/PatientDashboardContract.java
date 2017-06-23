@@ -66,10 +66,6 @@ public interface PatientDashboardContract {
 
 		void setStartIndex(int startIndex);
 
-		void saveEncounter(Encounter encounter, boolean isNew);
-
-		void saveObservation(Observation observation, boolean isNewObservation);
-
 		boolean isLoading();
 
 		void setLoading(boolean loading);

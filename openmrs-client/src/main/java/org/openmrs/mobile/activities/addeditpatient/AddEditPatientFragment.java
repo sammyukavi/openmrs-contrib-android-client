@@ -23,6 +23,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.AppCompatRadioButton;
 import android.support.v7.widget.AppCompatSpinner;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -401,12 +402,16 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 
 		// set existing patient attribute if any
 		if (!patientUuuid.isEmpty()) {
-			LinkedTreeMap<String, String> personAttribute = mPresenter.searchPersonAttributeValueByType
-					(personAttributeType);
-			String conceptUuid = personAttribute.get("uuid");
-			if (null != conceptUuid) {
-				setDefaultDropdownSelection(conceptNameArrayAdapter, conceptUuid, conceptNamesDropdown);
+			try {
+				LinkedTreeMap personAttribute = mPresenter.searchPersonAttributeValueByType(personAttributeType);
+				String conceptUuid = (String)personAttribute.get("uuid");
+				if (null != conceptUuid) {
+					setDefaultDropdownSelection(conceptNameArrayAdapter, conceptUuid, conceptNamesDropdown);
+				}
+			} catch (Exception e) {
+				Log.e("Error", e.getLocalizedMessage());
 			}
+
 		}
 
 		conceptNamesDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

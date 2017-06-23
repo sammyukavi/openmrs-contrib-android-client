@@ -197,27 +197,24 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 			}
 
 			if (visit.getEncounters().size() == 0) {
-				presentClinicalNotes(new Encounter(), visit, singleVisitView, isActiveVisit);
+				showClinicalNote(new Encounter(), visit, singleVisitView, isActiveVisit);
 			} else {
+				Encounter tempEncounter = null;
 				for (Encounter encounter : visit.getEncounters()) {
 					if (encounter.getEncounterType().getDisplay()
 							.equalsIgnoreCase(ApplicationConstants.EncounterTypeDisplays.VISIT_NOTE)) {
 						if (!encounter.getVoided()) {
+							tempEncounter = encounter;
 							if (activeVisit == visit) {
 								baseDiagnosisFragment.setEncounterUuid(encounter.getUuid());
 								baseDiagnosisFragment.setClinicalNote(clinicalNote.getText().toString());
+								break;
 							}
-							presentClinicalNotes(encounter, visit, singleVisitView, isActiveVisit);
-							break;
-						} else {
-
 						}
-
-					} else {
-						/*presentClinicalNotes(new Encounter(), visit, singleVisitView, isActiveVisit);
-						break;*/
 					}
 				}
+				showClinicalNote(tempEncounter != null ? tempEncounter : new Encounter(), visit, singleVisitView,
+						isActiveVisit);
 			}
 
 			if (!hasStartedDiagnoses && isActiveVisit) {
@@ -327,7 +324,7 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 
 	}
 
-	private void presentClinicalNotes(Encounter encounter, Visit visit, View view, boolean isActiveVisit) {
+	private void showClinicalNote(Encounter encounter, Visit visit, View view, boolean isActiveVisit) {
 		firstTimeEdit = true;
 		TextInputEditText clinicalNote = (TextInputEditText)view.findViewById(R.id.editClinicalNote);
 		setExistingDiagnosesContent(encounter, view, isActiveVisit);
@@ -335,7 +332,8 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 		Handler handler = new Handler();
 		Runnable inputCompleteChecker = () -> {
 			if (System.currentTimeMillis() > (lastTextEdit + delay - 500)) {
-				String encounterUuid = null != encounter.getUuid() ? encounter.getUuid() : baseDiagnosisFragment.getEncounterUuid();
+				String encounterUuid =
+						null != encounter.getUuid() ? encounter.getUuid() : baseDiagnosisFragment.getEncounterUuid();
 				baseDiagnosisFragment.setClinicalNote(clinicalNote.getText().toString());
 				baseDiagnosisFragment.getBaseDiagnosisView().saveVisitNote(
 						null != encounterUuid ? encounterUuid : ApplicationConstants.EMPTY_STRING,

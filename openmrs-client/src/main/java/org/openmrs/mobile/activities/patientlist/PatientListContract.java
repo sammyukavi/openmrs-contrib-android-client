@@ -64,5 +64,8 @@ public interface PatientListContract {
 		void setLoading(boolean loading);
 
 		void loadResults(String patientListUuid, boolean loadNextResults);
+
+		void setExistingPatientListUuid(String uuid);
+
 	}
 }

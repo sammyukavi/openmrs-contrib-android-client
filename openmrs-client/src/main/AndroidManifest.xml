@@ -28,7 +28,8 @@
 		<activity
 				android:name=".activities.patientlist.PatientListActivity"
 				android:label="@string/app_name"
-				android:theme="@style/AppTheme">
+				android:theme="@style/AppTheme"
+				android:screenOrientation="portrait">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 
@@ -37,20 +38,29 @@
 		</activity>
 		<activity
 				android:name=".activities.capturevitals.CaptureVitalsActivity"
-				android:parentActivityName=".activities.visit.VisitActivity">
+				android:parentActivityName=".activities.visit.VisitActivity"
+				android:screenOrientation="portrait">
 			<meta-data
 					android:name="android.support.PARENT_ACTIVITY"
 					android:value=".activities.visit.VisitActivity" />
 		</activity>
-		<activity android:name=".activities.addeditpatient.AddEditPatientActivity" />
-		<activity android:name=".activities.findpatientrecord.FindPatientRecordActivity" />
-		<activity android:name=".activities.settings.SettingsActivity" />
-		<activity android:name=".activities.patientdashboard.PatientDashboardActivity" />
-		<activity android:name=".activities.login.LoginActivity" />
-		<activity android:name=".activities.addeditvisit.AddEditVisitActivity" />
-		<activity android:name=".activities.auditdata.AuditDataActivity" />
+		<activity android:name=".activities.addeditpatient.AddEditPatientActivity"
+				android:screenOrientation="portrait"/>
+		<activity android:name=".activities.findpatientrecord.FindPatientRecordActivity"
+				android:screenOrientation="portrait"/>
+		<activity android:name=".activities.settings.SettingsActivity"
+				android:screenOrientation="portrait"/>
+		<activity android:name=".activities.patientdashboard.PatientDashboardActivity"
+				android:screenOrientation="portrait"/>
+		<activity android:name=".activities.login.LoginActivity"
+				android:screenOrientation="portrait"/>
+		<activity android:name=".activities.addeditvisit.AddEditVisitActivity"
+				android:screenOrientation="portrait"/>
+		<activity android:name=".activities.auditdata.AuditDataActivity"
+				android:screenOrientation="portrait"/>
 		<activity
 				android:name=".activities.visit.VisitActivity"
+				android:screenOrientation="portrait"
 				android:parentActivityName=".activities.patientdashboard.PatientDashboardActivity">
 			<meta-data
 					android:name="android.support.PARENT_ACTIVITY"

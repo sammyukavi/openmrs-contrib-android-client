@@ -15,16 +15,24 @@
 package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.Table;
 
-public class User extends BaseOpenmrsMetadata {
+import org.openmrs.mobile.data.db.AppDatabase;
 
+@Table(database = AppDatabase.class)
+public class User extends BaseOpenmrsObject {
 	@Expose
+	@Column
 	private String username;
 
 	@Expose
+	@Column
 	private String systemId;
 
 	@Expose
+	@ForeignKey(stubbedRelationship = true)
 	private Person person;
 
 	public String getUsername() {

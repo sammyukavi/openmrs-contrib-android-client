@@ -11,46 +11,80 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-
 package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.OneToMany;
+import com.raizlabs.android.dbflow.annotation.Table;
+
+import org.openmrs.mobile.data.db.AppDatabase;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
+@Table(database = AppDatabase.class)
 public class Visit extends BaseOpenmrsEntity implements Serializable {
-
 	@SerializedName("visitType")
 	@Expose
+	@ForeignKey
 	private VisitType visitType;
+
 	@SerializedName("location")
 	@Expose
+	@ForeignKey
 	private Location location;
+
 	@SerializedName("startDatetime")
 	@Expose
-	private String startDatetime;
+	@Column
+	private Date startDatetime;
+
 	@SerializedName("stopDatetime")
 	@Expose
-	private String stopDatetime;
+	@Column
+	private Date stopDatetime;
+
 	@SerializedName("encounters")
 	@Expose
 	private List<Encounter> encounters;
+
 	@SerializedName("attributes")
 	@Expose
 	private List<VisitAttribute> attributes;
 
 	@Expose
 	@SerializedName("patient")
+	@ForeignKey(stubbedRelationship = true)
 	private Patient patient;
 
-	public Visit() {
+	public Visit() { }
 
+    public Visit(String visitUuid) {
+		this.uuid = visitUuid;
 	}
 
-	public Visit(String visitUuid) {
-		this.uuid = visitUuid;
+	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "encounters", isVariablePrivate = true)
+	List<Encounter> loadEncounters() {
+		return loadRelatedObject(Encounter.class, encounters,
+				() -> Encounter_Table.visit_uuid.eq(getUuid()));
+	}
+
+	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "attributes", isVariablePrivate = true)
+	List<VisitAttribute> loadAttributes() {
+		return loadRelatedObject(VisitAttribute.class, attributes,
+				() -> VisitAttribute_Table.visit_uuid.eq(getUuid()));
+	}
+
+	@Override
+	public void processRelationships() {
+		super.processRelationships();
+
+		processRelatedObjects(encounters);
+		processRelatedObjects(attributes);
 	}
 
 	public Patient getPatient() {
@@ -77,19 +111,19 @@ public class Visit extends BaseOpenmrsEntity implements Serializable {
 		this.location = location;
 	}
 
-	public String getStartDatetime() {
+	public Date getStartDatetime() {
 		return startDatetime;
 	}
 
-	public void setStartDatetime(String startDatetime) {
+	public void setStartDatetime(Date startDatetime) {
 		this.startDatetime = startDatetime;
 	}
 
-	public String getStopDatetime() {
+	public Date getStopDatetime() {
 		return stopDatetime;
 	}
 
-	public void setStopDatetime(String stopDatetime) {
+	public void setStopDatetime(Date stopDatetime) {
 		this.stopDatetime = stopDatetime;
 	}
 

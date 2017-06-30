@@ -84,29 +84,30 @@ public class PatientDataService extends BaseDataService<Patient, PatientDbServic
 				});
 	}
 
-	public void findByNameAndIdentifier(String query, QueryOptions options, PagingInfo pagingInfo,
+	public void getByIdentifier(String id, QueryOptions options, PagingInfo pagingInfo,
 			GetCallback<List<Patient>> callback) {
 		executeMultipleCallback(callback, options, pagingInfo,
-				() -> null,
-				() -> restService.findByNameAndIdentifier(buildRestRequestPath(), query, query,
+				() -> dbService.getByIdentifier(id, options, pagingInfo),
+				() -> restService.getByIdentifier(buildRestRequestPath(), id,
 						QueryOptions.getRepresentation(options), QueryOptions.getIncludeInactive(options),
 						PagingInfo.getLimit(pagingInfo), PagingInfo.getStartIndex(pagingInfo))
 		);
 	}
 
-	public void findByIdentifier(String identifier, QueryOptions options, PagingInfo pagingInfo,
+	public void getByNameOrIdentifier(String query, QueryOptions options, PagingInfo pagingInfo,
 			GetCallback<List<Patient>> callback) {
 		executeMultipleCallback(callback, options, pagingInfo,
-				() -> null,
-				() -> restService.findByIdentifier(buildRestRequestPath(), identifier,
-						QueryOptions.getRepresentation(options), QueryOptions.getIncludeInactive(options))
+				() -> dbService.getByNameOrIdentifier(query, query, options, pagingInfo),
+				() -> restService.getByNameOrIdentifier(buildRestRequestPath(), query, query,
+						QueryOptions.getRepresentation(options), QueryOptions.getIncludeInactive(options),
+						PagingInfo.getLimit(pagingInfo), PagingInfo.getStartIndex(pagingInfo))
 		);
 	}
 
 	public void getLastViewed(String lastViewed, QueryOptions options, PagingInfo pagingInfo,
 			GetCallback<List<Patient>> callback) {
 		executeMultipleCallback(callback, options, pagingInfo,
-				() -> null,
+				() -> dbService.getLastViewed(options, pagingInfo),
 				() -> restService.getLastViewed(buildRestRequestPath(), lastViewed,
 						QueryOptions.getRepresentation(options), QueryOptions.getIncludeInactive(options),
 						PagingInfo.getLimit(pagingInfo), PagingInfo.getStartIndex(pagingInfo))

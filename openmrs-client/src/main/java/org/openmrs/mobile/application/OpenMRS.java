@@ -20,18 +20,18 @@ import android.os.Build;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 
+import com.raizlabs.android.dbflow.config.DatabaseConfig;
+import com.raizlabs.android.dbflow.config.FlowConfig;
+import com.raizlabs.android.dbflow.config.FlowManager;
+
 import net.sqlcipher.database.SQLiteDatabase;
 
-import org.openmrs.mobile.databases.OpenMRSDBOpenHelper;
 import org.openmrs.mobile.security.SecretKeyGenerator;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-
-//import org.openmrs.mobile.models.DaoMaster;
-//import org.openmrs.mobile.models.DaoSession;
 
 public class OpenMRS extends Application {
 	private static final String OPENMRS_DIR_NAME = "OpenMRS";
@@ -48,9 +48,11 @@ public class OpenMRS extends Application {
 
 	@Override
 	public void onCreate() {
-		initializeSQLCipher();
 		super.onCreate();
+
+		//initializeSQLCipher();
 		instance = this;
+
 		if (mExternalDirectoryPath == null) {
 			//mExternalDirectoryPath = this.getExternalFilesDir(null).toString();
 			String state = Environment.getExternalStorageState();
@@ -60,17 +62,20 @@ public class OpenMRS extends Application {
 				mExternalDirectoryPath = getFilesDir().toString();
 			}
 		}
-		mLogger = new OpenMRSLogger();
-		generateKey();
-		OpenMRSDBOpenHelper.init();
-		initializeDB();
 
+		mLogger = new OpenMRSLogger();
+
+		generateKey();
+		initializeDB();
 	}
 
 	protected void initializeDB() {
-		//DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, ENCRYPTED ? "notes-db-encrypted" : "notes-db");
-		//Database db = ENCRYPTED ? helper.getEncryptedWritableDb("super-secret") : helper.getWritableDb();
-		//DaoSession daoSession = new DaoMaster(db).newSession();
+		/*FlowConfig config = new FlowConfig.Builder(this)
+				.openDatabasesOnInit(true)
+				.build();*/
+
+
+		FlowManager.init(this);
 	}
 
 	public SharedPreferences getOpenMRSSharedPreferences() {
@@ -113,7 +118,12 @@ public class OpenMRS extends Application {
 
 	public String getServerUrl() {
 		SharedPreferences prefs = getOpenMRSSharedPreferences();
-		return prefs.getString(ApplicationConstants.SERVER_URL, ApplicationConstants.DEFAULT_OPEN_MRS_URL);
+		String url = prefs.getString(ApplicationConstants.SERVER_URL, ApplicationConstants.DEFAULT_OPEN_MRS_URL);
+
+		if (!url.endsWith("/")) {
+			url += "/";
+		}
+		return url;
 	}
 
 	public void setServerUrl(String serverUrl) {

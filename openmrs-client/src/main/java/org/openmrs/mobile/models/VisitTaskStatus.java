@@ -11,12 +11,7 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-
 package org.openmrs.mobile.models;
-
-/**
- * Created by dubdabasoduba on 05/05/2017.
- */
 
 public enum VisitTaskStatus {
 	/**
@@ -31,7 +26,7 @@ public enum VisitTaskStatus {
 
 	private int value;
 
-	private VisitTaskStatus(int value) {
+	VisitTaskStatus(int value) {
 		this.value = value;
 	}
 }

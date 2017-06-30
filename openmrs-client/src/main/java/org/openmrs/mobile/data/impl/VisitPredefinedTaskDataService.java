@@ -57,7 +57,7 @@ public class VisitPredefinedTaskDataService
 	protected Call<Results<VisitPredefinedTask>> _restGetAll(String restPath, QueryOptions options, PagingInfo pagingInfo) {
 		return restService.getAll(restPath,
 				QueryOptions.getRepresentation(options), QueryOptions.getIncludeInactive(options),
-				pagingInfo.getLimit(), pagingInfo.getStartIndex());
+				PagingInfo.getLimit(pagingInfo), PagingInfo.getStartIndex(pagingInfo));
 	}
 
 	@Override

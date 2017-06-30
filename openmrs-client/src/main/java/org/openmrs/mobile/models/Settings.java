@@ -4,7 +4,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class Settings extends BaseOpenmrsObject {
-
 	@Expose
 	@SerializedName("results")
 	private Object results;

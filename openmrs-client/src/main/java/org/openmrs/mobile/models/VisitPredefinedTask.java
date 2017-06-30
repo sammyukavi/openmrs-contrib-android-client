@@ -16,19 +16,24 @@ package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.Table;
 
-/**
- * Created by dubdabasoduba on 05/05/2017.
- */
+import org.openmrs.mobile.data.db.AppDatabase;
 
+@Table(database = AppDatabase.class)
 public class VisitPredefinedTask extends BaseOpenmrsMetadata {
-
 	@SerializedName("global")
 	@Expose
+	@Column
 	private Boolean global;
 
 	public Boolean getGlobal() {
 		return global;
+	}
+
+	Boolean isGlobal() {
+		return getGlobal();
 	}
 
 	public void setGlobal(Boolean global) {

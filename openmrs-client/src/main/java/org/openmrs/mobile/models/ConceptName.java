@@ -11,19 +11,26 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-
 package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+
+import org.openmrs.mobile.data.db.AppDatabase;
+import org.openmrs.mobile.utilities.LocaleTypeConverter;
 
 import java.util.Locale;
 
+@Table(database = AppDatabase.class)
 public class ConceptName extends BaseOpenmrsMetadata {
-
 	@Expose
+	@ForeignKey(stubbedRelationship = true)
 	private Concept concept;
 
 	@Expose
+	@Column(typeConverter = LocaleTypeConverter.class)
 	private Locale locale;
 
 	@Override

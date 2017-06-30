@@ -19,11 +19,17 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+
+import org.openmrs.mobile.data.QueryOptions;
+import org.openmrs.mobile.data.db.AppDatabase;
 
 import java.io.Serializable;
 
-public class Answer implements Serializable, Parcelable {
-
+@Table(database = AppDatabase.class)
+public class Answer extends Resource implements Serializable, Parcelable {
 	public static final Creator<Answer> CREATOR = new Creator<Answer>() {
 		@Override
 		public Answer createFromParcel(Parcel source) {
@@ -35,12 +41,19 @@ public class Answer implements Serializable, Parcelable {
 			return new Answer[size];
 		}
 	};
+
 	@SerializedName("concept")
 	@Expose
+	@Column
 	private String concept;
+
 	@SerializedName("label")
 	@Expose
+	@Column
 	private String label;
+
+	@ForeignKey(stubbedRelationship = true)
+	private QuestionOptions questionOptions;
 
 	public Answer() {
 	}
@@ -64,6 +77,14 @@ public class Answer implements Serializable, Parcelable {
 
 	public void setLabel(String label) {
 		this.label = label;
+	}
+
+	public QuestionOptions getQuestionOptions() {
+		return questionOptions;
+	}
+
+	public void setQuestionOptions(QuestionOptions questionOptions) {
+		this.questionOptions = questionOptions;
 	}
 
 	@Override

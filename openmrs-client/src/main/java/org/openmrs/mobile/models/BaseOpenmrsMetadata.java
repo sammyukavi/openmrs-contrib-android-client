@@ -2,6 +2,7 @@ package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
 
 import java.io.Serializable;
 
@@ -9,10 +10,12 @@ public class BaseOpenmrsMetadata extends BaseOpenmrsAuditableObject implements S
 
 	@SerializedName("name")
 	@Expose
+	@Column
 	private String name;
 
 	@SerializedName("description")
 	@Expose
+	@Column
 	private String description;
 
 	public String getName() {

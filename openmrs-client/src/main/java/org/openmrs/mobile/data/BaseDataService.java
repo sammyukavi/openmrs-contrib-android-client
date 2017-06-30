@@ -1,27 +1,35 @@
 package org.openmrs.mobile.data;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.google.common.base.Supplier;
 
+import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.cache.CacheService;
 import org.openmrs.mobile.data.cache.SimpleCacheService;
 import org.openmrs.mobile.data.db.BaseDbService;
 import org.openmrs.mobile.data.rest.RestServiceBuilder;
 import org.openmrs.mobile.models.BaseOpenmrsObject;
+import org.openmrs.mobile.models.Resource;
 import org.openmrs.mobile.models.Results;
+import org.openmrs.mobile.utilities.Consumer;
+import org.openmrs.mobile.utilities.Function;
 import org.openmrs.mobile.utilities.NetworkUtils;
 import org.openmrs.mobile.utilities.StringUtils;
 
 import java.io.IOException;
+import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.app.PendingIntent.getActivity;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends BaseDbService<E>, RS>
@@ -39,6 +47,8 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 	protected RS restService;
 
 	protected CacheService cacheService;
+
+	private Class<E> entityClass;
 
 	protected BaseDataService() {
 		dbService = getDbService();
@@ -221,6 +231,31 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 	}
 
 	/**
+	 * Executes a data operation which returns a single result. The result returned from the REST request will be
+	 * converted by the specified responseConverter function and then processed by the dbOperation.
+	 * @param callback			The operation callback
+	 * @param options			The query options
+	 * @param dbQuery			The database query operation to perform
+	 * @param restQuery			The REST query operation to perform
+	 * @param responseConverter	The response converter function
+	 * @param dbOperation		The database operation to perform when the results are returned from the REST query and
+	 *                             converted by the response converter
+	 * @param <T>				The entity type
+	 * @param <R>				The type of the object returned by the REST query
+	 */
+	protected <T, R> void executeSingleCallback(@NonNull GetCallback<T> callback, @Nullable QueryOptions options,
+			@NonNull Supplier<T> dbQuery, @NonNull Supplier<Call<R>> restQuery, @NonNull Function<R, T> responseConverter,
+			@NonNull Consumer<T> dbOperation) {
+		checkNotNull(callback);
+		checkNotNull(dbQuery);
+		checkNotNull(restQuery);
+		checkNotNull(responseConverter);
+		checkNotNull(dbOperation);
+
+		performCallback(callback, options, dbQuery, restQuery, responseConverter, dbOperation);
+	}
+
+	/**
 	 * Executes a data operation which can return multiple results. Results returned from the REST query will be saved to
 	 * the db.
 	 * @param callback   The operation callback
@@ -291,10 +326,14 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 				T result = dbSupplier.get();
 
 				setCachedResult(options, result);
-				callback.onCompleted(result);
+
+				// Execute callback on the current UI Thread
+				new Handler(Looper.getMainLooper()).post(() -> callback.onCompleted(result));
 			} catch (Exception ex) {
 				// An exception occurred while trying to get the entity from the db
-				callback.onError(ex);
+
+				// Execute callback on the current UI Thread
+				new Handler(Looper.getMainLooper()).post(() -> callback.onError(ex));
 			}
 		}).start();
 	}
@@ -316,6 +355,9 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 					// Save the resulting model to the db
 					try {
 						T result = responseConverter.apply(response.body());
+						if (result instanceof Resource) {
+							((Resource)result).processRelationships();
+						}
 
 						dbOperation.accept(result);
 
@@ -407,16 +449,19 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 		}
 	}
 
-	protected boolean isPagingValid(PagingInfo pagingInfo) {
-		return !(pagingInfo == null || pagingInfo.getPage() == 0);
-	}
+	/**
+	 * Gets a usable instance of the actual class of the generic type E defined by the implementing sub-class.
+	 * @return The class object for the entity.
+	 */
+	@SuppressWarnings("unchecked")
+	protected Class<E> getEntityClass() {
+		if (entityClass == null) {
+			ParameterizedType parameterizedType = (ParameterizedType)getClass().getGenericSuperclass();
 
-	private interface Consumer<T> {
-		void accept(T value);
-	}
+			entityClass = (Class<E>)parameterizedType.getActualTypeArguments()[0];
+		}
 
-	private interface Function<R, T> {
-		T apply(R value);
+		return entityClass;
 	}
 }
 

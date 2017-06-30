@@ -32,6 +32,7 @@ import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.DateUtils;
 import org.openmrs.mobile.utilities.StringUtils;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,6 +46,8 @@ import static org.openmrs.mobile.utilities.ApplicationConstants.entityName.SUBCO
 import static org.openmrs.mobile.utilities.ApplicationConstants.entityName.TELEPHONE;
 
 public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT);
+
 
 	private final int VIEW_TYPE_HEADER = 0;
 	private final int VIEW_TYPE_ITEM = 1;
@@ -144,7 +147,7 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 			secondaryDiagnosis = (TextView)singleVisitView.findViewById(R.id.secondaryDiagnosis);
 
 			//Let's set the visit title
-			String startDate = DateUtils.convertTime1(visit.getStartDatetime(), DateUtils.DATE_FORMAT);
+			String startDate = DATE_FORMAT.format(visit.getStartDatetime());
 
 			if (startDate.equalsIgnoreCase(DateUtils.getDateToday(DateUtils.DATE_FORMAT))) {
 				startDate = context.getString(R.string.today);
@@ -152,8 +155,7 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 				startDate = context.getString(R.string.yesterday);
 			}
 
-			String stopDate = visit.getStopDatetime();
-			if (!StringUtils.notNull(stopDate)) {
+			if (visit.getStopDatetime() != null) {
 				activeVisit = visit;
 				isActiveVisit = true;
 				singleVisitView.findViewById(R.id.active_visit_badge).setVisibility(View.VISIBLE);
@@ -409,7 +411,7 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 
 	private void setVisitStopDate(Visit visit) {
 		SharedPreferences.Editor editor = instance.getOpenMRSSharedPreferences().edit();
-		editor.putString(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, visit.getStopDatetime());
+		editor.putString(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, DATE_FORMAT.format(visit.getStopDatetime()));
 		editor.commit();
 	}
 

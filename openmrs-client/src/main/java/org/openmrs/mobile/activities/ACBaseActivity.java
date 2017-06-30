@@ -45,7 +45,6 @@ import org.openmrs.mobile.activities.patientlist.PatientListActivity;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.application.OpenMRSLogger;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
-import org.openmrs.mobile.databases.OpenMRSDBOpenHelper;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.net.AuthorizationManager;
 import org.openmrs.mobile.utilities.ApplicationConstants;
@@ -113,7 +112,6 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 	public void logout() {
 		mOpenMRS.clearUserPreferencesData();
 		mAuthorizationManager.moveToLoginActivity();
-		OpenMRSDBOpenHelper.getInstance().closeDatabases();
 	}
 
 	private void showLogoutDialog() {
@@ -172,7 +170,6 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 	}
 
 	public void moveUnauthorizedUserToLoginScreen() {
-		OpenMRSDBOpenHelper.getInstance().closeDatabases();
 		mOpenMRS.clearUserPreferencesData();
 		Intent intent = new Intent(this, LoginActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

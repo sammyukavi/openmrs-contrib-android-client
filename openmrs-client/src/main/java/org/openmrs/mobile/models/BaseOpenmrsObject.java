@@ -19,8 +19,4 @@ public class BaseOpenmrsObject extends Resource implements Serializable {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
-
-	public void refreshDaoProperties() {
-		// This base method does nothing but should be overriden by models that have links to other models
-	}
 }

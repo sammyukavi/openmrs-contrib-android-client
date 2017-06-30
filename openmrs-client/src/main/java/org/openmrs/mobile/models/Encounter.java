@@ -12,47 +12,70 @@ package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.ManyToMany;
+import com.raizlabs.android.dbflow.annotation.OneToMany;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 
-import org.openmrs.mobile.utilities.DateUtils;
+import org.openmrs.mobile.data.db.AppDatabase;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+@Table(database = AppDatabase.class)
+@ManyToMany(referencedTable = Provider.class)
 public class Encounter extends BaseOpenmrsAuditableObject implements Serializable {
-
-	private Long id;
-
 	@SerializedName("encounterDatetime")
 	@Expose
-	private String encounterDatetime;
+	@Column
+	private Date encounterDatetime;
+
 	@SerializedName("patient")
 	@Expose
+	@ForeignKey(stubbedRelationship = true)
 	private Patient patient;
+
 	@SerializedName("location")
 	@Expose
-	private Resource location;
+	@ForeignKey(stubbedRelationship = true)
+	private Location location;
+
 	@SerializedName("form")
 	@Expose
+	@ForeignKey(stubbedRelationship = true)
 	private Form form;
+
 	@SerializedName("encounterType")
 	@Expose
+	@ForeignKey(stubbedRelationship = true)
 	private EncounterType encounterType;
+
 	@SerializedName("obs")
 	@Expose
-	private List<Observation> obs = new ArrayList<Observation>();
+	private List<Observation> obs = new ArrayList<>();
+
 	@SerializedName("orders")
 	@Expose
-	private List<Object> orders = new ArrayList<Object>();
+	private List<Object> orders = new ArrayList<>();
+
 	@SerializedName("voided")
 	@Expose
+	@Column
 	private Boolean voided;
+
 	@SerializedName("visit")
 	@Expose
+	@ForeignKey
 	private Visit visit;
+
 	@SerializedName("encounterProviders")
 	@Expose
 	private List<Provider> encounterProviders = new ArrayList<Provider>();
+
 	@SerializedName("provider")
 	@Expose
 	private String provider;
@@ -64,12 +87,19 @@ public class Encounter extends BaseOpenmrsAuditableObject implements Serializabl
 	private Long visitID;
 	private String patientUUID;
 
-	public Long getId() {
-		return id;
+	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "obs", isVariablePrivate = true)
+	List<Observation> loadObservations() {
+		return loadRelatedObject(Observation.class, obs, () -> Observation_Table.encounter_uuid.eq(getUuid()));
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	@Override
+	public void processRelationships() {
+		super.processRelationships();
+
+		if (form != null) {
+			form.processRelationships();
+		}
+		processRelatedObjects(obs);
 	}
 
 	public Long getVisitID() {
@@ -119,14 +149,14 @@ public class Encounter extends BaseOpenmrsAuditableObject implements Serializabl
 	/**
 	 * @return The encounterDatetime
 	 */
-	public Long getEncounterDatetime() {
-		return DateUtils.convertTime(encounterDatetime);
+	public Date getEncounterDatetime() {
+		return encounterDatetime;
 	}
 
 	/**
 	 * @param encounterDatetime The encounterDatetime
 	 */
-	public void setEncounterDatetime(String encounterDatetime) {
+	public void setEncounterDatetime(Date encounterDatetime) {
 		this.encounterDatetime = encounterDatetime;
 	}
 
@@ -147,14 +177,14 @@ public class Encounter extends BaseOpenmrsAuditableObject implements Serializabl
 	/**
 	 * @return The location
 	 */
-	public Resource getLocation() {
+	public Location getLocation() {
 		return location;
 	}
 
 	/**
 	 * @param location The location
 	 */
-	public void setLocation(Resource location) {
+	public void setLocation(Location location) {
 		this.location = location;
 	}
 
@@ -218,6 +248,10 @@ public class Encounter extends BaseOpenmrsAuditableObject implements Serializabl
 		return voided;
 	}
 
+	Boolean isVoided() {
+		return getVoided();
+	}
+
 	/**
 	 * @param voided The voided
 	 */
@@ -243,6 +277,17 @@ public class Encounter extends BaseOpenmrsAuditableObject implements Serializabl
 	 * @return The encounterProviders
 	 */
 	public List<Provider> getEncounterProviders() {
+		if (encounterProviders == null || encounterProviders.isEmpty()) {
+			List<Encounter_Provider> providers = SQLite.select()
+					.from(Encounter_Provider.class)
+					.where(Encounter_Provider_Table.encounter_uuid.eq(getUuid()))
+					.queryList();
+
+			for (Encounter_Provider join : providers) {
+				encounterProviders.add(join.getProvider());
+			}
+		}
+
 		return encounterProviders;
 	}
 
@@ -251,6 +296,20 @@ public class Encounter extends BaseOpenmrsAuditableObject implements Serializabl
 	 */
 	public void setEncounterProviders(List<Provider> encounterProviders) {
 		this.encounterProviders = encounterProviders;
+
+		// Clear out the encounter providers and save them
+		SQLite.delete(Encounter_Provider.class).where(Encounter_Provider_Table.encounter_uuid.eq(getUuid()));
+
+		// Add the providers for the encounter
+		if (encounterProviders != null && !encounterProviders.isEmpty()) {
+			for (Provider provider : encounterProviders) {
+				Encounter_Provider join = new Encounter_Provider();
+				join.setEncounter(this);
+				join.setProvider(provider);
+
+				join.save();
+			}
+		}
 	}
 
 	/**

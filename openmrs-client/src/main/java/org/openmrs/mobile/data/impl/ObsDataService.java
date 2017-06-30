@@ -72,7 +72,7 @@ public class ObsDataService extends BaseDataService<Observation, ObsDbService, O
 	public void getVisitDocumentsObsByPatientAndConceptList(String patientUuid, QueryOptions options,
 			GetCallback<List<Observation>> callback) {
 		executeMultipleCallback(callback, options, null,
-				() -> null,
+				() -> dbService.getVisitDocumentsObsByPatientAndConceptList(patientUuid, options),
 				() -> restService.getVisitDocumentsObsByPatientAndConceptList(
 						buildRestRequestPath(), patientUuid,
 						"7cac8397-53cd-4f00-a6fe-028e8d743f8e,42ed45fd-f3f6-44b6-bfc2-8bde1bb41e00",
@@ -85,28 +85,17 @@ public class ObsDataService extends BaseDataService<Observation, ObsDbService, O
 		checkNotNull(callback);
 
 		executeMultipleCallback(callback, options, pagingInfo,
-				() -> null,
+				() -> dbService.getByEncounter(encounter, options, pagingInfo),
 				() -> restService.getByEncounter(buildRestRequestPath(), encounter.getUuid(),
 						QueryOptions.getRepresentation(options), QueryOptions.getIncludeInactive(options),
-						pagingInfo.getLimit(), pagingInfo.getStartIndex())
+						PagingInfo.getLimit(pagingInfo), PagingInfo.getStartIndex(pagingInfo))
 		);
 	}
 
 	@Override
 	public void purge(@NonNull Observation entity, @NonNull VoidCallback callback) {
-		GetCallback<Observation> callbackf = new GetCallback<Observation>() {
-			@Override
-			public void onCompleted(Observation observation) {
-
-			}
-
-			@Override
-			public void onError(Throwable t) {
-
-			}
-		};
-		executeSingleCallback(callbackf, null,
-				() -> null,
+		executeVoidCallback(entity, callback, null,
+				() -> dbService.delete(entity),
 				() -> restService.purge(getRestPath(), entity.getUuid()));
 	}
 }

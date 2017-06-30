@@ -28,6 +28,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.mockito.Matchers.any;
@@ -86,7 +87,7 @@ public class AddEditVisitPresenterTest extends ACUnitTestBase {
         location.setParentLocation(parentLocation);
 
         visit = new Visit();
-        visit.setStartDatetime("2017-05-01 00:00:00");
+        visit.setStartDatetime(new Date(2017, 5, 1));
         visit.setPatient(patient);
         visit.setVisitType(new VisitType("Inpatient Kijabe", "547874"));
         visit.setLocation(location);

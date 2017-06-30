@@ -64,11 +64,10 @@ public class UserDataService extends BaseDataService<User, UserDbService, UserRe
 			GetCallback<List<User>> callback) {
 
 		executeMultipleCallback(callback, options, pagingInfo,
-				() -> null,
-				() -> restService
-						.getByUsername(buildRestRequestPath(), username, QueryOptions.getRepresentation(options),
-								QueryOptions.getIncludeInactive(options), PagingInfo.getLimit(pagingInfo),
-								PagingInfo.getStartIndex(pagingInfo)));
+				() -> dbService.getByUsername(username, options, pagingInfo),
+				() -> restService.getByUsername(buildRestRequestPath(), username,
+						QueryOptions.getRepresentation(options), QueryOptions.getIncludeInactive(options),
+						PagingInfo.getLimit(pagingInfo), PagingInfo.getStartIndex(pagingInfo)));
 	}
 }
 

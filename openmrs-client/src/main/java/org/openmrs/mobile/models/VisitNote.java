@@ -1,40 +1,57 @@
 package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
+import com.raizlabs.android.dbflow.annotation.Table;
+
+import org.openmrs.mobile.data.db.AppDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Table(database = AppDatabase.class)
 public class VisitNote extends BaseOpenmrsEntity {
-
 	@Expose
 	private String personId;
+
 	@Expose
 	private String htmlFormId;
+
 	@Expose
 	private String createVisit;
+
 	@Expose
 	private String formModifiedTimestamp;
+
 	@Expose
 	private String encounterModifiedTimestamp;
+
 	@Expose
 	private String visitId;
+
 	@Expose
 	private String returnUrl;
+
 	@Expose
 	private String closeAfterSubmission;
+
 	@Expose
 	private List<EncounterDiagnosis> encounterDiagnoses;
+
 	@Expose
 	private String encounterId;
+
 	@Expose
 	private String w1;
+
 	@Expose
 	private String w3;
+
 	@Expose
 	private String w5;
+
 	@Expose
 	private String w10;
+
 	@Expose
 	private String w12;
 

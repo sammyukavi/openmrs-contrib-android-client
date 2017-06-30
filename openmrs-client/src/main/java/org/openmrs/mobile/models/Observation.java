@@ -7,69 +7,97 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-
 package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+
+import org.openmrs.mobile.data.db.AppDatabase;
 
 import java.io.Serializable;
 
+@Table(database = AppDatabase.class)
 public class Observation extends BaseOpenmrsEntity implements Serializable {
-
 	@SerializedName("concept")
 	@Expose
+	@ForeignKey(stubbedRelationship = true)
 	private Concept concept;
+
 	@SerializedName("person")
 	@Expose
+	@ForeignKey(stubbedRelationship = true)
 	private Person person;
+
 	@SerializedName("obsDatetime")
 	@Expose
+	@Column
 	private String obsDatetime;
 
 	@SerializedName("accessionNumber")
 	@Expose
+	@Column
 	private String accessionNumber;
 
 	@SerializedName("obsGroup")
 	@Expose
+	@ForeignKey(stubbedRelationship = true)
 	private Observation obsGroup;
+
 	@SerializedName("valueCodedName")
 	@Expose
+	@Column
 	private String valueCodedName;
+
 	@SerializedName("comment")
 	@Expose
+	@Column
 	private String comment;
+
 	@SerializedName("location")
 	@Expose
+	@Column
 	private String location = null;
+
 	@SerializedName("encounter")
 	@Expose
+	@ForeignKey
 	private Encounter encounter = null;
+
 	@SerializedName("formFieldPath")
 	@Expose
+	@Column
 	private String formFieldPath;
+
 	@SerializedName("formFieldNamespace")
 	@Expose
+	@Column
 	private String formFieldNamespace;
+
 	@SerializedName("resourceVersion")
 	@Expose
+	@Column
 	private String resourceVersion;
 
 	@SerializedName("value")
 	@Expose
 	private Object value;
 
-	private Long id;
-	private Long encounterID;
-	private String displayValue;
+	@SerializedName("voided")
+	@Expose
+	private String voided;
+
+	@Expose
+	@ForeignKey(stubbedRelationship = true)
+	private Provider provider;
 
 	private String diagnosisList;
 	private String diagnosisCertainty;
 	private String diagnosisOrder;
 
 	private String diagnosisNote;
-	private Provider provider;
 
 	/**
 	 * @return The concept
@@ -239,31 +267,24 @@ public class Observation extends BaseOpenmrsEntity implements Serializable {
 		this.resourceVersion = resourceVersion;
 	}
 
-	public Long getId() {
-		return id;
+	public Object getValue() {
+		return value;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setValue(String value) {
+		this.value = value;
 	}
 
-	public Long getEncounterID() {
-		return encounterID;
+	public void setValue(Object value) {
+		this.value = value;
 	}
 
-	public void setEncounterID(Long encounterID) {
-		this.encounterID = encounterID;
+	public void setProvider(Provider provider) {
+		this.provider = provider;
 	}
 
-	public String getDisplayValue() {
-		if (displayValue == null && display != null && display.contains(":")) {
-			setDisplayValue(display.split(":")[1]);
-		}
-		return displayValue;
-	}
-
-	public void setDisplayValue(String displayValue) {
-		this.displayValue = displayValue;
+	public Provider getProvider() {
+		return provider;
 	}
 
 	public String getShortDiagnosisCertainty() {
@@ -277,6 +298,11 @@ public class Observation extends BaseOpenmrsEntity implements Serializable {
 	public void setDiagnosisCertanity(String certanity) {
 		this.diagnosisCertainty = certanity;
 	}
+
+	public void setDiagnosisCertainty(String diagnosisCertainty) {
+		this.diagnosisCertainty = diagnosisCertainty;
+	}
+
 
 	public String getDiagnosisOrder() {
 		return diagnosisOrder;
@@ -302,27 +328,4 @@ public class Observation extends BaseOpenmrsEntity implements Serializable {
 		this.diagnosisNote = diagnosisNote;
 	}
 
-	public Object getValue() {
-		return value;
-	}
-
-	public void setValue(String value) {
-		this.value = value;
-	}
-
-	public void setValue(Object value) {
-		this.value = value;
-	}
-
-	public void setDiagnosisCertainty(String diagnosisCertainty) {
-		this.diagnosisCertainty = diagnosisCertainty;
-	}
-
-	public void setProvider(Provider provider) {
-		this.provider = provider;
-	}
-
-	public Provider getProvider() {
-		return provider;
-	}
 }

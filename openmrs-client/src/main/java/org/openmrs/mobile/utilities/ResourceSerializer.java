@@ -15,8 +15,8 @@
 package org.openmrs.mobile.utilities;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
-import com.activeandroid.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -35,7 +35,6 @@ import java.lang.reflect.Type;
 import java.util.Collection;
 
 public class ResourceSerializer implements JsonSerializer<Resource> {
-
 	public static final String RESOURCE_SERIALIZER = "RESOURCE_SERIALIZER";
 	public static final String EXCEPTION = "exception";
 

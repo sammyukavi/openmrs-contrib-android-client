@@ -9,8 +9,17 @@
  */
 package org.openmrs.mobile.models;
 
+import android.support.annotation.Nullable;
+
+import com.google.common.base.Supplier;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.sql.language.SQLOperator;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
+
+import org.openmrs.mobile.utilities.Consumer;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -31,10 +40,12 @@ public class Resource implements Serializable {
 
 	@SerializedName("uuid")
 	@Expose
+	@PrimaryKey
 	protected String uuid;
 
 	@SerializedName("display")
 	@Expose
+	@Column
 	protected String display;
 
 	@SerializedName("links")
@@ -83,4 +94,32 @@ public class Resource implements Serializable {
 		this.links = links;
 	}
 
+	public void processRelationships() { }
+
+	protected <R extends Resource> void processRelatedObjects(@Nullable List<R> resources) {
+		processRelatedObjects(resources, null);
+	}
+
+	protected <R extends Resource> void processRelatedObjects(@Nullable List<R> resources, @Nullable Consumer<R> process) {
+		if (resources != null && !resources.isEmpty()) {
+			for (R r : resources) {
+				if (process != null) {
+					process.accept(r);
+				}
+
+				r.processRelationships();
+			}
+		}
+	}
+
+	protected <E> List<E> loadRelatedObject(Class<E> cls, List<E> field, Supplier<SQLOperator> op) {
+		if (field == null || field.isEmpty()) {
+			field = SQLite.select()
+					.from(cls)
+					.where(op.get())
+					.queryList();
+		}
+
+		return field;
+	}
 }

@@ -64,7 +64,7 @@ public class ConceptAnswerDataService
 		checkNotNull(callback);
 
 		executeMultipleCallback(callback, options, null,
-				() -> null,
+				() -> dbService.getByConceptUuid(conceptUuid, options),
 				() -> restService.getByConceptUuid(buildRestRequestPath(), conceptUuid));
 	}
 

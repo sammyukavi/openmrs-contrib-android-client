@@ -11,31 +11,47 @@ package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.Table;
 
+import org.openmrs.mobile.data.db.AppDatabase;
 import org.openmrs.mobile.utilities.StringUtils;
 
+@Table(database = AppDatabase.class)
 public class PatientIdentifierType extends BaseOpenmrsMetadata {
-
 	@SerializedName("format")
 	@Expose
+	@Column
 	private String format;
+
 	@SerializedName("required")
 	@Expose
+	@Column
 	private Boolean required = Boolean.FALSE;
+
 	@SerializedName("formatDescription")
 	@Expose
+	@Column
 	private String formatDescription;
+
 	@SerializedName("checkDigit")
 	@Expose
+	@Column
 	private Boolean checkDigit = Boolean.FALSE;
+
 	@SerializedName("validator")
 	@Expose
+	@Column
 	private String validator;
+
 	@SerializedName("locationBehavior")
 	@Expose
+	@Column
 	private LocationBehavior locationBehavior;
+
 	@SerializedName("uniquenessBehavior")
 	@Expose
+	@Column
 	private UniquenessBehavior uniquenessBehavior;
 
 	/**
@@ -57,6 +73,22 @@ public class PatientIdentifierType extends BaseOpenmrsMetadata {
 	 */
 	public Boolean getRequired() {
 		return required;
+	}
+
+	Boolean isRequired() {
+		return getRequired();
+	}
+
+	public Boolean getCheckDigit() {
+		return checkDigit;
+	}
+
+	Boolean isCheckDigit() {
+		return getCheckDigit();
+	}
+
+	public void setCheckDigit(Boolean checkDigit) {
+		this.checkDigit = checkDigit;
 	}
 
 	/**

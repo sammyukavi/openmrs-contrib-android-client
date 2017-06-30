@@ -3,29 +3,44 @@ package org.openmrs.mobile.models;
 import android.graphics.Bitmap;
 
 import com.google.gson.annotations.Expose;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.data.Blob;
+
+import org.openmrs.mobile.data.db.AppDatabase;
+
+import java.nio.ByteBuffer;
 
 import okhttp3.MultipartBody;
-import okhttp3.ResponseBody;
 
+@Table(database = AppDatabase.class)
 public class VisitPhoto extends BaseOpenmrsEntity {
-
 	@Expose
+	@ForeignKey(stubbedRelationship = true)
 	private Visit visit;
 
 	@Expose
+	@ForeignKey(stubbedRelationship = true)
 	private Patient patient;
 
 	@Expose
+	@ForeignKey(stubbedRelationship = true)
 	private Provider provider;
 
 	@Expose
+	@Column
 	private String fileCaption;
 
 	@Expose
+	@Column
 	private String instructions;
 
 	@Expose
 	private MultipartBody.Part requestImage;
+
+	@Column
+	private Blob imageColumn;
 
 	private Bitmap downloadedImage;
 
@@ -85,6 +100,16 @@ public class VisitPhoto extends BaseOpenmrsEntity {
 
 	public void setDownloadedImage(Bitmap downloadedImage) {
 		this.downloadedImage = downloadedImage;
+
+		if (downloadedImage != null) {
+			int bytes = downloadedImage.getByteCount();
+			ByteBuffer buffer = ByteBuffer.allocate(bytes);
+			downloadedImage.copyPixelsToBuffer(buffer);
+
+			this.imageColumn = new Blob(buffer.array());
+		} else {
+			this.imageColumn = null;
+		}
 	}
 
 	public Observation getObservation() {
@@ -93,5 +118,13 @@ public class VisitPhoto extends BaseOpenmrsEntity {
 
 	public void setObservation(Observation observation) {
 		this.observation = observation;
+	}
+
+	public Blob getImageColumn() {
+		return imageColumn;
+	}
+
+	public void setImageColumn(Blob imageColumn) {
+		this.imageColumn = imageColumn;
 	}
 }

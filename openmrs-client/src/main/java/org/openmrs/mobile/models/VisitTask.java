@@ -44,7 +44,8 @@ public class VisitTask extends BaseOpenmrsEntity {
 	@ForeignKey(stubbedRelationship = true)
 	private Patient patient;
 
-    @Expose
+	@SerializedName("closedOn")
+	@Expose
 	private String closedOn;
 
 	@Expose

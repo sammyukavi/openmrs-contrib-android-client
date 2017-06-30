@@ -39,8 +39,6 @@ import java.util.List;
 
 public class PatientDashboardPresenter extends BasePresenter implements PatientDashboardContract.Presenter {
 
-	private EncounterDataService encounterDataService;
-	private ObsDataService observationDataService;
 	private PatientDashboardContract.View patientDashboardView;
 	private PatientDataService patientDataService;
 	private VisitDataService visitDataService;
@@ -60,8 +58,6 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 		this.visitDataService = new VisitDataService();
 		this.providerDataService = new ProviderDataService();
 		this.locationDataService = new LocationDataService();
-		this.encounterDataService = new EncounterDataService();
-		this.observationDataService = new ObsDataService();
 	}
 
 	@Override
@@ -181,60 +177,6 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 			locationDataService.getByUUID(locationUuid, QueryOptions.LOAD_RELATED_OBJECTS, locationDataServiceCallback);
 		}
 
-	}
-
-	@Override
-	public void saveEncounter(Encounter encounter, boolean isNewEncounter) {
-		patientDashboardView.showSavingClinicalNoteProgressBar(true);
-		setLoading(true);
-		DataService.GetCallback<Encounter> serverResponceCallback = new DataService.GetCallback<Encounter>() {
-			@Override
-			public void onCompleted(Encounter result) {
-				patientDashboardView.showSavingClinicalNoteProgressBar(false);
-				patientDashboardView.updateClinicVisitNote(result.getObs().get(0));
-				setLoading(false);
-			}
-
-			@Override
-			public void onError(Throwable t) {
-				patientDashboardView.showSavingClinicalNoteProgressBar(false);
-				setLoading(false);
-				t.printStackTrace();
-			}
-		};
-
-		if (isNewEncounter) {
-			encounterDataService.create(encounter, serverResponceCallback);
-		} else {
-			encounterDataService.update(encounter, serverResponceCallback);
-		}
-	}
-
-	@Override
-	public void saveObservation(Observation observation, boolean isNewObservation) {
-		patientDashboardView.showSavingClinicalNoteProgressBar(true);
-		setLoading(true);
-		DataService.GetCallback<Observation> serverResponceCallback = new DataService.GetCallback<Observation>() {
-			@Override
-			public void onCompleted(Observation result) {
-				patientDashboardView.showSavingClinicalNoteProgressBar(false);
-				patientDashboardView.updateClinicVisitNote(result);
-				setLoading(false);
-			}
-
-			@Override
-			public void onError(Throwable t) {
-				patientDashboardView.showSavingClinicalNoteProgressBar(false);
-				setLoading(false);
-				t.printStackTrace();
-			}
-		};
-
-		if (isNewObservation) {
-			observationDataService.create(observation, serverResponceCallback);
-		} else {
-			observationDataService.update(observation, serverResponceCallback);
-		}
 	}
 
 	public void setPatient(Patient patient) {

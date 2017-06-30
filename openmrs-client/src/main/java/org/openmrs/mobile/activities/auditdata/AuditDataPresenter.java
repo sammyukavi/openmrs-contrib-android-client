@@ -17,22 +17,23 @@ package org.openmrs.mobile.activities.auditdata;
 import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.QueryOptions;
+import org.openmrs.mobile.data.impl.ConceptDataService;
 import org.openmrs.mobile.data.impl.EncounterDataService;
 import org.openmrs.mobile.data.impl.LocationDataService;
 import org.openmrs.mobile.data.impl.PatientDataService;
 import org.openmrs.mobile.data.impl.VisitDataService;
+import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.Encounter;
-import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Visit;
-
-import static org.openmrs.mobile.utilities.ApplicationConstants.EncounterTypeDisplays.AUDITDATA;
+import org.openmrs.mobile.utilities.ApplicationConstants;
 
 public class AuditDataPresenter extends BasePresenter implements AuditDataContract.Presenter {
 
 	private AuditDataContract.View auditDataView;
 	private DataService<Patient> patientDataService;
 	private VisitDataService visitDataService;
+	private ConceptDataService conceptDataService;
 
 	private EncounterDataService encounterDataService;
 	private LocationDataService locationDataService;
@@ -44,10 +45,33 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 		this.visitDataService = new VisitDataService();
 		this.encounterDataService = new EncounterDataService();
 		this.locationDataService = new LocationDataService();
+		this.conceptDataService = new ConceptDataService();
 	}
 
 	@Override
 	public void subscribe() {
+		fetchInpatientTypeServices();
+	}
+
+	@Override
+	public void fetchInpatientTypeServices() {
+		DataService.GetCallback<Concept> conceptGetCallback = new DataService.GetCallback<Concept>() {
+			@Override
+			public void onCompleted(Concept concept) {
+				if (concept != null) {
+					if (!concept.getAnswers().isEmpty()) {
+						auditDataView.setInpatientTypeServices(concept.getAnswers());
+					}
+				}
+			}
+
+			@Override
+			public void onError(Throwable t) {
+				t.printStackTrace();
+			}
+		};
+		conceptDataService.getByUUID(ApplicationConstants.AuditFormConcepts.CONCEPT_INPATIENT_SERVICE_TYPE, QueryOptions
+				.LOAD_RELATED_OBJECTS, conceptGetCallback);
 	}
 
 	@Override
@@ -57,15 +81,13 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 			@Override
 			public void onCompleted(Visit visit) {
 				auditDataView.setVisit(visit);
-				auditDataView.showPageSpinner(false);
-				for (Encounter encounter : visit.getEncounters()) {
-					switch (encounter.getEncounterType().getDisplay()) {
-						case AUDITDATA:
-							auditDataView.updateSubmitButtonText();
-							fetchEncounter(encounter.getUuid());
-							break;
+				for (int i = 0; i < visit.getEncounters().size(); i++) {
+					if (visit.getEncounters().get(i).getEncounterType().getUuid().equalsIgnoreCase(ApplicationConstants
+							.EncounterTypeEntity.AUDIT_DATA_UUID)) {
+						fetchEncounter(visit.getEncounters().get(i).getUuid());
 					}
 				}
+				auditDataView.showPageSpinner(false);
 			}
 
 			@Override
@@ -97,7 +119,7 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 	}
 
 	@Override
-	public void saveEncounter(Encounter encounter, boolean isNewEncounter) {
+	public void saveUpdateEncounter(Encounter encounter, boolean isNewEncounter) {
 		auditDataView.showProgressBar(true);
 		DataService.GetCallback<Encounter> serverResponceCallback = new DataService.GetCallback<Encounter>() {
 			@Override
@@ -105,11 +127,10 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 				auditDataView.showProgressBar(true);
 				if (encounter == null) {
 					auditDataView.showProgressBar(false);
+					auditDataView.hideSoftKeys();
 				} else {
-
-					//auditDataView.hideSoftKeys();
-
-					//((AuditDataActivity)auditDataView.getContext()).finish();
+					auditDataView.hideSoftKeys();
+					((AuditDataActivity)auditDataView.getContext()).finish();
 				}
 			}
 
@@ -125,24 +146,6 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 		} else {
 			encounterDataService.update(encounter, serverResponceCallback);
 		}
-	}
-
-	@Override
-	public void fetchLocation(String locationUuid) {
-		DataService.GetCallback<Location> locationDataServiceCallback = new DataService.GetCallback<Location>() {
-			@Override
-			public void onCompleted(Location location) {
-				//set location in the fragment and start loading other fields
-				auditDataView.setLocation(location);
-			}
-
-			@Override
-			public void onError(Throwable t) {
-				t.printStackTrace();
-			}
-		};
-
-		locationDataService.getByUUID(locationUuid, QueryOptions.LOAD_RELATED_OBJECTS, locationDataServiceCallback);
 	}
 
 }

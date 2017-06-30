@@ -23,6 +23,7 @@ import org.openmrs.mobile.data.impl.PatientListContextDataService;
 import org.openmrs.mobile.data.impl.PatientListDataService;
 import org.openmrs.mobile.models.PatientList;
 import org.openmrs.mobile.models.PatientListContext;
+import org.openmrs.mobile.utilities.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,9 +36,11 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 	private int page = 1;
 	private int totalNumberResults;
 	private boolean loading;
+	private String patientListUuid;
 
 	private PatientListDataService patientListDataService;
 	private PatientListContextDataService patientListContextDataService;
+	private List<PatientList> patientLists;
 
 	public PatientListPresenter(@NonNull PatientListContract.View patientListView) {
 		this(patientListView, null, null);
@@ -65,7 +68,14 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 	@Override
 	public void subscribe() {
 		// get all patient lists
-		getPatientList();
+		if(patientLists == null) {
+			getPatientList();
+		}
+	}
+
+	@Override
+	public void setExistingPatientListUuid(String uuid) {
+		this.patientListUuid = uuid;
 	}
 
 	@Override
@@ -77,9 +87,13 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 					@Override
 					public void onCompleted(List<PatientList> entities) {
 						if (entities != null) {
+							patientLists = entities;
 							patientListView.showPatientListProgressSpinner(false);
 							patientListView.setNoPatientListsVisibility(false);
 							patientListView.updatePatientLists(entities);
+							if(StringUtils.notNull(patientListUuid)){
+								getPatientListData(patientListUuid, getPage());
+							}
 						}
 					}
 
@@ -100,6 +114,7 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 		setLoading(true);
 		setViewBeforeLoadData();
 		setTotalNumberResults(0);
+		setExistingPatientListUuid(patientListUuid);
 		PagingInfo pagingInfo = new PagingInfo(page, limit);
 		patientListContextDataService.getListPatients(patientListUuid, new QueryOptions(false, false), pagingInfo,
 				new DataService.GetCallback<List<PatientListContext>>() {
@@ -169,7 +184,6 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 				tmpPage -= 1;
 			}
 		}
-
 		return tmpPage > totalPages ? -1 : tmpPage;
 	}
 

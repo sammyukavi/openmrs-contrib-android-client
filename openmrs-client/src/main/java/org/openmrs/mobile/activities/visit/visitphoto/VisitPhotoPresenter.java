@@ -139,14 +139,17 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 
 	@Override
 	public void uploadImage() {
+		visitPhotoView.showTabSpinner(true);
 		visitPhotoDataService.uploadPhoto(visitPhoto, new DataService.GetCallback<VisitPhoto>() {
 			@Override
 			public void onCompleted(VisitPhoto entity) {
+				visitPhotoView.showTabSpinner(false);
 				visitPhotoView.refresh();
 			}
 
 			@Override
 			public void onError(Throwable t) {
+				visitPhotoView.showTabSpinner(false);
 				ToastUtil.error(t.getMessage());
 			}
 		});

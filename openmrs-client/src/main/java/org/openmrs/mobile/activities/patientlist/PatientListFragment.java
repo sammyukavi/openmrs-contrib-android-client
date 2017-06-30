@@ -57,7 +57,12 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 
 		@Override
 		public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-			super.onScrollStateChanged(recyclerView, newState);
+			if (!mPresenter.isLoading()) {
+				// you can't scroll up or down. load previous page if any
+				if(!recyclerView.canScrollVertically(1) && !recyclerView.canScrollVertically(-1)) {
+					mPresenter.loadResults(selectedPatientList.getUuid(), false);
+				}
+			}
 		}
 
 		@Override

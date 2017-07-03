@@ -23,6 +23,7 @@ import org.openmrs.mobile.data.impl.PatientListContextDataService;
 import org.openmrs.mobile.data.impl.PatientListDataService;
 import org.openmrs.mobile.models.PatientList;
 import org.openmrs.mobile.models.PatientListContext;
+import org.openmrs.mobile.utilities.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,9 +36,11 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 	private int page = 1;
 	private int totalNumberResults;
 	private boolean loading;
+	private String patientListUuid;
 
 	private PatientListDataService patientListDataService;
 	private PatientListContextDataService patientListContextDataService;
+	private List<PatientList> patientLists;
 
 	public PatientListPresenter(@NonNull PatientListContract.View patientListView) {
 		this(patientListView, null, null);
@@ -65,27 +68,38 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 	@Override
 	public void subscribe() {
 		// get all patient lists
-		getPatientList();
+		if(patientLists == null) {
+			getPatientList();
+		}
+	}
+
+	@Override
+	public void setExistingPatientListUuid(String uuid) {
+		this.patientListUuid = uuid;
 	}
 
 	@Override
 	public void getPatientList() {
-		patientListView.setPatientListScreenVisibility(true);
+		patientListView.showPatientListProgressSpinner(true);
 		setPage(1);
 		patientListDataService.getAll(new QueryOptions(false, false), new PagingInfo(1, 100),
 				new DataService.GetCallback<List<PatientList>>() {
 					@Override
 					public void onCompleted(List<PatientList> entities) {
 						if (entities != null) {
-							patientListView.setPatientListScreenVisibility(false);
+							patientLists = entities;
+							patientListView.showPatientListProgressSpinner(false);
 							patientListView.setNoPatientListsVisibility(false);
 							patientListView.updatePatientLists(entities);
+							if(StringUtils.notNull(patientListUuid)){
+								getPatientListData(patientListUuid, getPage());
+							}
 						}
 					}
 
 					@Override
 					public void onError(Throwable t) {
-						patientListView.setPatientListScreenVisibility(false);
+						patientListView.showPatientListProgressSpinner(false);
 						patientListView.setNoPatientListsVisibility(true);
 					}
 				});
@@ -100,6 +114,7 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 		setLoading(true);
 		setViewBeforeLoadData();
 		setTotalNumberResults(0);
+		setExistingPatientListUuid(patientListUuid);
 		PagingInfo pagingInfo = new PagingInfo(page, limit);
 		patientListContextDataService.getListPatients(patientListUuid, new QueryOptions(false, false), pagingInfo,
 				new DataService.GetCallback<List<PatientListContext>>() {
@@ -115,8 +130,8 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 							setTotalNumberResults(pagingInfo.getTotalRecordCount());
 							if (pagingInfo.getTotalRecordCount() > 0) {
 								patientListView.setNumberOfPatientsView(pagingInfo.getTotalRecordCount());
-								patientListView.updatePagingLabel(page, Math.round(pagingInfo.getTotalRecordCount() /
-										limit));
+								patientListView.updatePagingLabel(page,
+										(limit + pagingInfo.getTotalRecordCount() - 1) / limit);
 							}
 						}
 						setLoading(false);
@@ -159,7 +174,8 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 	private int computePage(boolean next) {
 		int tmpPage = getPage();
 		// check if pagination is required.
-		if (page < Math.round(getTotalNumberResults() / limit)) {
+		int totalPages = (limit + getTotalNumberResults() - 1) / limit;
+		if (page <= totalPages) {
 			if (next) {
 				// set next page
 				tmpPage += 1;
@@ -167,11 +183,8 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 				// set previous page.
 				tmpPage -= 1;
 			}
-		} else {
-			tmpPage = -1;
 		}
-
-		return tmpPage;
+		return tmpPage > totalPages ? -1 : tmpPage;
 	}
 
 	@Override

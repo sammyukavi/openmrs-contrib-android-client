@@ -20,6 +20,8 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -36,6 +38,7 @@ import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.activities.visit.VisitActivity;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.models.Concept;
+import org.openmrs.mobile.models.ConceptAnswer;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.EncounterType;
 import org.openmrs.mobile.models.Form;
@@ -76,7 +79,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 	private Visit visit;
 	//private Patient patient;
 	private View fragmentView;
-	private Location location;
+	private String locationUuid;
 	private EditText cd4, hBa1c;
 	private String encounterUuid = null;
 	private String visitUuid, patientUuid, visitStopDate;
@@ -96,6 +99,8 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 	private LinearLayout auditDataFormScreen;
 	private ScrollView auditScrollView;
 	private Button submitForm;
+	private List<ConceptAnswer> conceptAnswerList;
+	private String inpatientServiceTypeSelectedUuid, displayInpatientServiceType;
 
 	public static AuditDataFragment newInstance() {
 		return new AuditDataFragment();
@@ -120,20 +125,37 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		initCheckboxListeners(auditComplete);
 
 		//We start by fetching by location, required for creating encounters
-		String locationUuid = "";
 		if (!instance.getLocation().equalsIgnoreCase(null)) {
-			locationUuid = instance.getLocation();
+			locationUuid = instance.getParentLocationUuid();
 		}
 
-		mPresenter.fetchLocation(locationUuid);
 		mPresenter.fetchVisit(visitUuid);
 
 		initObservations();
+		addListeners();
 
 		// Font config
 		FontsUtil.setFont((ViewGroup)this.getActivity().findViewById(android.R.id.content));
 
 		return fragmentView;
+	}
+
+	private void addListeners() {
+		inpatientServiceType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				ConceptAnswer conceptAnswer = conceptAnswerList.get(position);
+				inpatientServiceTypeSelectedUuid = conceptAnswer.getUuid();
+				inpatientServiceTypeObservation =
+						setObservationFields(inpatientServiceTypeObservation, CONCEPT_INPATIENT_SERVICE_TYPE,
+								conceptAnswer.getUuid());
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+
+			}
+		});
 	}
 
 	private void initViewFields() {
@@ -189,32 +211,6 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 				icuStayObservation = hduStayObservation = hduComgmtObservation =
 						hivPositiveObservation = auditCompleteObservation = hBa1cObservation = cd4Observation = null;
 
-		ArrayList<InpatientServiceType> inpatientServiceTypes = new ArrayList<>();
-
-		inpatientServiceTypes.add(new InpatientServiceType("None", ""));
-
-		inpatientServiceTypes.add(new InpatientServiceType("General Medicine Service",
-				"161627AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
-		inpatientServiceTypes
-				.add(new InpatientServiceType("Surgery Service", "161623AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
-		inpatientServiceTypes
-				.add(new InpatientServiceType("Orthopedic Department", "160465AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
-		inpatientServiceTypes.add(new InpatientServiceType("Plastic Surgery Department",
-				"160452AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
-		inpatientServiceTypes.add(new InpatientServiceType("Obstetrics and Gynecology Department",
-				"160456AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
-		inpatientServiceTypes.add(new InpatientServiceType("Neurosurgery Department",
-				"160472AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
-		inpatientServiceTypes.add(new InpatientServiceType("Ear Nose and Throat Department",
-				"160455AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
-		inpatientServiceTypes
-				.add(new InpatientServiceType("Urology Department", "160476AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
-
-		InpatientServiceTypesAdapter adapter = new InpatientServiceTypesAdapter(getContext(), R.layout
-				.container_spinner_row, inpatientServiceTypes);
-
-		inpatientServiceType.setAdapter(adapter);
-
 	}
 
 	private void initRadioButtonListeners(RadioButton... params) {
@@ -234,137 +230,107 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 	private void applyEvent(int id) {
 		switch (id) {
 			case R.id.is_death_in_hospital_yes:
-
 				deathInHospitalObservation = setObservationFields(deathInHospitalObservation, CONCEPT_DEATH_IN_HOSPITAL,
 						CONCEPT_ANSWER_YES);
-
 				break;
-			case R.id.is_death_in_hospital_no:
 
+			case R.id.is_death_in_hospital_no:
 				deathInHospitalObservation = setObservationFields(deathInHospitalObservation, CONCEPT_DEATH_IN_HOSPITAL,
 						CONCEPT_ANSWER_NO);
-
 				break;
 
 			case R.id.is_palliative_consult_yes:
-
 				palliativeConsultObservation = setObservationFields(palliativeConsultObservation,
-						CONCEPT_PALLIATIVE_CONSULT,
-						CONCEPT_ANSWER_YES);
+						CONCEPT_PALLIATIVE_CONSULT, CONCEPT_ANSWER_YES);
 
 				break;
 
 			case R.id.is_palliative_consult_no:
-
 				palliativeConsultObservation = setObservationFields(palliativeConsultObservation,
 						CONCEPT_PALLIATIVE_CONSULT,
 						CONCEPT_ANSWER_NO);
-
 				break;
 
 			case R.id.is_palliative_consult_unknown:
-
 				palliativeConsultObservation = setObservationFields(palliativeConsultObservation,
 						CONCEPT_PALLIATIVE_CONSULT,
 						CONCEPT_ANSWER_UNKNOWN);
-
 				break;
 
 			case R.id.is_preop_risk_assessment_only_yes:
-
 				preopRiskAssessmentObservation = setObservationFields(preopRiskAssessmentObservation,
 						CONCEPT_PREOP_RISK_ASSESMENT, CONCEPT_ANSWER_YES);
-
 				break;
 
 			case R.id.is_preop_risk_assessment_only_no:
-
 				preopRiskAssessmentObservation = setObservationFields(preopRiskAssessmentObservation,
 						CONCEPT_PREOP_RISK_ASSESMENT, CONCEPT_ANSWER_NO);
-
 				break;
 
 			case R.id.is_preop_risk_assessment_only_unknown:
-
 				preopRiskAssessmentObservation = setObservationFields(preopRiskAssessmentObservation,
 						CONCEPT_PREOP_RISK_ASSESMENT, CONCEPT_ANSWER_UNKNOWN);
-
 				break;
 
 			case R.id.is_icu_stay_yes:
-
 				icuStayObservation = setObservationFields(icuStayObservation,
 						CONCEPT_ICU_STAY, CONCEPT_ANSWER_YES);
-
 				break;
 
 			case R.id.is_icu_stay_no:
-
 				icuStayObservation = setObservationFields(icuStayObservation,
 						CONCEPT_ICU_STAY, CONCEPT_ANSWER_NO);
-
 				break;
-			case R.id.is_icu_stay_unknown:
 
+			case R.id.is_icu_stay_unknown:
 				icuStayObservation = setObservationFields(icuStayObservation,
 						CONCEPT_ICU_STAY, CONCEPT_ANSWER_UNKNOWN);
-
 				break;
-			case R.id.is_hdu_stay_yes:
 
+			case R.id.is_hdu_stay_yes:
 				hduStayObservation = setObservationFields(hduStayObservation,
 						CONCEPT_HDU_STAY, CONCEPT_ANSWER_YES);
-
 				break;
-			case R.id.is_hdu_stay_no:
 
+			case R.id.is_hdu_stay_no:
 				hduStayObservation = setObservationFields(hduStayObservation,
 						CONCEPT_HDU_STAY, CONCEPT_ANSWER_NO);
-
 				break;
+
 			case R.id.is_hdu_stay_unknown:
-
-				hduStayObservation = setObservationFields(hduStayObservation,
-						CONCEPT_HDU_STAY, CONCEPT_ANSWER_UNKNOWN);
-
+				hduStayObservation = setObservationFields(hduStayObservation, CONCEPT_HDU_STAY, CONCEPT_ANSWER_UNKNOWN);
 				break;
 
 			case R.id.is_hdu_comgmt_yes:
-
 				hduComgmtObservation = setObservationFields(hduComgmtObservation,
 						CONCEPT_HDU_COMGMT, CONCEPT_ANSWER_YES);
-
 				break;
-			case R.id.is_hdu_comgmt_no:
 
+			case R.id.is_hdu_comgmt_no:
 				hduComgmtObservation = setObservationFields(hduComgmtObservation,
 						CONCEPT_HDU_COMGMT, CONCEPT_ANSWER_NO);
 
 				break;
 			case R.id.is_hdu_comgmt_unknown:
-
 				hduComgmtObservation = setObservationFields(hduComgmtObservation,
 						CONCEPT_HDU_COMGMT, CONCEPT_ANSWER_UNKNOWN);
 
 				break;
 
 			case R.id.is_hiv_positive_yes:
-
-				hivPositiveObservation = setObservationFields(hivPositiveObservation,
-						CONCEPT_HIV_POSITIVE, CONCEPT_ANSWER_YES);
-
+				hivPositiveObservation =
+						setObservationFields(hivPositiveObservation, CONCEPT_HIV_POSITIVE,
+								CONCEPT_ANSWER_YES);
 				break;
-			case R.id.is_hiv_positive_no:
 
+			case R.id.is_hiv_positive_no:
 				hivPositiveObservation = setObservationFields(hivPositiveObservation,
 						CONCEPT_HIV_POSITIVE, CONCEPT_ANSWER_NO);
-
 				break;
-			case R.id.is_hiv_positive_unknown:
 
+			case R.id.is_hiv_positive_unknown:
 				hivPositiveObservation = setObservationFields(hivPositiveObservation,
 						CONCEPT_HIV_POSITIVE, CONCEPT_ANSWER_UNKNOWN);
-
 				break;
 
 			default:
@@ -385,32 +351,6 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		if (observation == null) {
 			observation = new Observation();
 		}
-
-		//here we assign all observations current time
-		LocalDateTime localDateTime = new LocalDateTime();
-		String timeString = localDateTime.toString();
-
-		Concept concept = new Concept();
-		concept.setUuid(questionConceptUuid);
-
-		Concept questionAnswer = new Concept();
-		questionAnswer.setUuid(answerConceptUuid);
-		//questionAnswer.
-
-		Person person = new Person();
-		person.setUuid(patientUuid);
-
-		observation.setConcept(concept);
-		observation.setPerson(person);
-		//observation.setValue(questionAnswer);
-		observation.setObsDatetime(timeString);
-
-		return observation;
-	}
-
-	private Observation setObservationFields(String questionConceptUuid, String answerConceptUuid) {
-
-		Observation observation = new Observation();
 
 		//here we assign all observations current time
 		LocalDateTime localDateTime = new LocalDateTime();
@@ -440,10 +380,6 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		this.encounterUuid = encounterUuid;
 	}
 
-	@Override
-	public void setLocation(Location location) {
-		this.location = location;
-	}
 
 	@Override
 	public void goBackToVisitPage() {
@@ -472,7 +408,16 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 
 	@Override
 	public void hideSoftKeys() {
+		goBackToVisitPage();
 		ACBaseActivity.hideSoftKeyboard(getActivity());
+	}
+
+	@Override
+	public void setInpatientTypeServices(List<ConceptAnswer> conceptAnswers) {
+		conceptAnswerList = conceptAnswers;
+		ArrayAdapter<ConceptAnswer> adapter = new ArrayAdapter<>(getContext(), android.R.layout
+				.simple_spinner_dropdown_item, conceptAnswers);
+		inpatientServiceType.setAdapter(adapter);
 	}
 
 	@Override
@@ -488,27 +433,19 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 
 	@Override
 	public void updateFormFields(Encounter encounter) {
-
 		for (Observation observation : encounter.getObs()) {
-
 			String displayValue = observation.getDisplayValue().trim().toLowerCase();
 
 			switch (observation.getConcept().getUuid()) {
-
 				case CONCEPT_DEATH_IN_HOSPITAL:
-
 					if (displayValue.equalsIgnoreCase(ANSWER_YES)) {
-
 						deathInHospitalYes.setChecked(true);
-
 						deathInHospitalObservation =
 								setObservationFields(observation, CONCEPT_DEATH_IN_HOSPITAL,
 										CONCEPT_ANSWER_YES);
 
 					} else if (displayValue.equalsIgnoreCase(ANSWER_NO)) {
-
 						deathInHospitalNo.setChecked(true);
-
 						deathInHospitalObservation =
 								setObservationFields(observation, CONCEPT_DEATH_IN_HOSPITAL,
 										CONCEPT_ANSWER_NO);
@@ -517,30 +454,20 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 					break;
 
 				case CONCEPT_PALLIATIVE_CONSULT:
-
 					if (displayValue.equalsIgnoreCase(ANSWER_YES)) {
-
 						palliativeConsultYes.setChecked(true);
-
-						palliativeConsultObservation = setObservationFields(observation,
-								CONCEPT_PALLIATIVE_CONSULT,
-								CONCEPT_ANSWER_YES);
-
+						palliativeConsultObservation =
+								setObservationFields(observation, CONCEPT_PALLIATIVE_CONSULT,
+										CONCEPT_ANSWER_YES);
 					} else if (displayValue.equalsIgnoreCase(ANSWER_NO)) {
-
 						palliativeConsultNo.setChecked(true);
-
-						palliativeConsultObservation = setObservationFields(observation,
-								CONCEPT_PALLIATIVE_CONSULT,
-								CONCEPT_ANSWER_NO);
-
+						palliativeConsultObservation =
+								setObservationFields(observation, CONCEPT_PALLIATIVE_CONSULT,
+										CONCEPT_ANSWER_NO);
 					} else if (displayValue.equalsIgnoreCase(ANSWER_UNKNOWN)) {
-
 						palliativeConsultUknown.setChecked(true);
-
-						palliativeConsultObservation = setObservationFields(observation,
-								CONCEPT_PALLIATIVE_CONSULT,
-								CONCEPT_ANSWER_UNKNOWN);
+						palliativeConsultObservation =
+								setObservationFields(observation, CONCEPT_PALLIATIVE_CONSULT, CONCEPT_ANSWER_UNKNOWN);
 					}
 
 					break;
@@ -548,25 +475,21 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 				case CONCEPT_PREOP_RISK_ASSESMENT:
 
 					if (displayValue.equalsIgnoreCase(ANSWER_YES)) {
-
 						preopRiskAssessmentYes.setChecked(true);
-
-						preopRiskAssessmentObservation = setObservationFields(observation,
-								CONCEPT_PREOP_RISK_ASSESMENT, CONCEPT_ANSWER_YES);
+						preopRiskAssessmentObservation =
+								setObservationFields(observation, CONCEPT_PREOP_RISK_ASSESMENT,
+										CONCEPT_ANSWER_YES);
 
 					} else if (displayValue.equalsIgnoreCase(ANSWER_NO)) {
-
 						preopRiskAssessmentNo.setChecked(true);
-
-						preopRiskAssessmentObservation = setObservationFields(observation,
-								CONCEPT_PREOP_RISK_ASSESMENT, CONCEPT_ANSWER_NO);
+						preopRiskAssessmentObservation =
+								setObservationFields(observation, CONCEPT_PREOP_RISK_ASSESMENT,
+										CONCEPT_ANSWER_NO);
 
 					} else if (displayValue.equalsIgnoreCase(ANSWER_UNKNOWN)) {
-
 						preopRiskAssessmentUknown.setChecked(true);
-
-						preopRiskAssessmentObservation = setObservationFields(observation,
-								CONCEPT_PREOP_RISK_ASSESMENT, CONCEPT_ANSWER_UNKNOWN);
+						preopRiskAssessmentObservation =
+								setObservationFields(observation, CONCEPT_PREOP_RISK_ASSESMENT, CONCEPT_ANSWER_UNKNOWN);
 
 					}
 
@@ -575,25 +498,18 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 				case CONCEPT_ICU_STAY:
 
 					if (displayValue.equalsIgnoreCase(ANSWER_YES)) {
-
 						icuStayYes.setChecked(true);
-
-						icuStayObservation = setObservationFields(observation,
-								CONCEPT_ICU_STAY, CONCEPT_ANSWER_YES);
+						icuStayObservation = setObservationFields(observation, CONCEPT_ICU_STAY,
+								CONCEPT_ANSWER_YES);
 
 					} else if (displayValue.equalsIgnoreCase(ANSWER_NO)) {
-
-						icuStayObservation = setObservationFields(observation,
-								CONCEPT_ICU_STAY, CONCEPT_ANSWER_NO);
-
+						icuStayObservation = setObservationFields(observation, CONCEPT_ICU_STAY,
+								CONCEPT_ANSWER_NO);
 						icuStayNo.setChecked(true);
 
 					} else if (displayValue.equalsIgnoreCase(ANSWER_UNKNOWN)) {
-
 						icuStayUnknown.setChecked(true);
-
-						icuStayObservation = setObservationFields(observation,
-								CONCEPT_ICU_STAY, CONCEPT_ANSWER_UNKNOWN);
+						icuStayObservation = setObservationFields(observation, CONCEPT_ICU_STAY, CONCEPT_ANSWER_UNKNOWN);
 					}
 
 					break;
@@ -601,25 +517,18 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 				case CONCEPT_HDU_STAY:
 
 					if (displayValue.equalsIgnoreCase(ANSWER_YES)) {
-
 						hduStayYes.setChecked(true);
-
-						hduStayObservation = setObservationFields(observation,
-								CONCEPT_HDU_STAY, CONCEPT_ANSWER_YES);
+						hduStayObservation = setObservationFields(observation, CONCEPT_HDU_STAY,
+								CONCEPT_ANSWER_YES);
 
 					} else if (displayValue.equalsIgnoreCase(ANSWER_NO)) {
-
 						hduStayNo.setChecked(true);
-
-						hduStayObservation = setObservationFields(observation,
-								CONCEPT_HDU_STAY, CONCEPT_ANSWER_NO);
+						hduStayObservation = setObservationFields(observation, CONCEPT_HDU_STAY,
+								CONCEPT_ANSWER_NO);
 
 					} else if (displayValue.equalsIgnoreCase(ANSWER_UNKNOWN)) {
-
 						hduStayUnknown.setChecked(true);
-
-						hduStayObservation = setObservationFields(observation,
-								CONCEPT_HDU_STAY, CONCEPT_ANSWER_UNKNOWN);
+						hduStayObservation = setObservationFields(observation, CONCEPT_HDU_STAY, CONCEPT_ANSWER_UNKNOWN);
 
 					}
 
@@ -627,22 +536,17 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 				case CONCEPT_HDU_COMGMT:
 
 					if (displayValue.equalsIgnoreCase(ANSWER_YES)) {
-
 						hduComgmtYes.setChecked(true);
-
-						hduComgmtObservation = setObservationFields(observation,
-								CONCEPT_HDU_COMGMT, CONCEPT_ANSWER_YES);
+						hduComgmtObservation = setObservationFields(observation, CONCEPT_HDU_COMGMT,
+								CONCEPT_ANSWER_YES);
 
 					} else if (displayValue.equalsIgnoreCase(ANSWER_NO)) {
-
 						hduComgmtNo.setChecked(true);
-
-						hduComgmtObservation = setObservationFields(observation,
-								CONCEPT_HDU_COMGMT, CONCEPT_ANSWER_NO);
+						hduComgmtObservation = setObservationFields(observation, CONCEPT_HDU_COMGMT,
+								CONCEPT_ANSWER_NO);
 
 					} else if (displayValue.equalsIgnoreCase(ANSWER_UNKNOWN)) {
 						hduComgmtUnknown.setChecked(true);
-
 						hduComgmtObservation = setObservationFields(observation,
 								CONCEPT_HDU_COMGMT, CONCEPT_ANSWER_UNKNOWN);
 					}
@@ -651,57 +555,58 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 				case CONCEPT_HIV_POSITIVE:
 
 					if (displayValue.equalsIgnoreCase(ANSWER_YES)) {
-
 						hivPositiveYes.setChecked(true);
-
-						hivPositiveObservation = setObservationFields(observation,
-								CONCEPT_HIV_POSITIVE, CONCEPT_ANSWER_YES);
+						hivPositiveObservation = setObservationFields(observation, CONCEPT_HIV_POSITIVE,
+								CONCEPT_ANSWER_YES);
 
 					} else if (displayValue.equalsIgnoreCase(ANSWER_NO)) {
-
 						hivPositiveNo.setChecked(true);
-
-						hivPositiveObservation = setObservationFields(observation,
-								CONCEPT_HIV_POSITIVE, CONCEPT_ANSWER_NO);
+						hivPositiveObservation = setObservationFields(observation, CONCEPT_HIV_POSITIVE,
+								CONCEPT_ANSWER_NO);
 
 					} else if (displayValue.equalsIgnoreCase(ANSWER_UNKNOWN)) {
-
 						hivPositiveUnknown.setChecked(true);
-
-						hivPositiveObservation = setObservationFields(observation,
-								CONCEPT_HIV_POSITIVE, CONCEPT_ANSWER_UNKNOWN);
+						hivPositiveObservation =
+								setObservationFields(observation, CONCEPT_HIV_POSITIVE, CONCEPT_ANSWER_UNKNOWN);
 
 					}
-
 					break;
+
 				case CONCEPT_CD4_COUNT:
-
-					cd4Observation = observation;
-
+					cd4Observation = setObservationFields(observation, CONCEPT_CD4_COUNT, displayValue);
 					cd4.setText(displayValue);
-
 					break;
+
 				case CONCEPT_HBA1C:
-
-					hBa1cObservation = observation;
-
+					hBa1cObservation = setObservationFields(observation, CONCEPT_HBA1C, displayValue);
 					hBa1c.setText(displayValue);
-
 					break;
+
 				case CONCEPT_INPATIENT_SERVICE_TYPE:
-
-					inpatientServiceTypeObservation = observation;
-
+					if (!conceptAnswerList.isEmpty()) {
+						for (int i = 0; i < conceptAnswerList.size(); i++) {
+							if (conceptAnswerList.get(i).getDisplay().equalsIgnoreCase(displayValue)) {
+								inpatientServiceType.setSelection(i);
+								inpatientServiceTypeSelectedUuid = conceptAnswerList.get(i).getUuid();
+							}
+						}
+					}
+					inpatientServiceTypeObservation = setObservationFields(observation, CONCEPT_INPATIENT_SERVICE_TYPE,
+							inpatientServiceTypeSelectedUuid);
 					break;
+
 				case CONCEPT_AUDIT_COMPLETE:
-
-					auditCompleteObservation = observation;
-
 					if (displayValue.equalsIgnoreCase(ANSWER_YES)) {
 						auditComplete.setChecked(true);
+						auditCompleteObservation = setObservationFields(observation, CONCEPT_AUDIT_COMPLETE,
+								CONCEPT_ANSWER_YES);
+					} else {
+						auditComplete.setChecked(false);
+						auditCompleteObservation =
+								setObservationFields(observation, CONCEPT_AUDIT_COMPLETE, CONCEPT_ANSWER_NO);
 					}
-
 					break;
+
 				default:
 					break;
 
@@ -711,6 +616,10 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 	}
 
 	private void performDataSend() {
+		//create location instance
+		Location location = new Location();
+		location.setUuid(locationUuid);
+
 		//create form instance
 		Form auditDataForm = new Form();
 		auditDataForm.setUuid(AUDIT_DATA_FORM_UUID);
@@ -756,16 +665,18 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		}
 
 		if (cd4.getText().length() > 0) {
-			cd4Observation = setObservationFields(CONCEPT_CD4_COUNT, cd4.getText().toString());
+			cd4Observation = setObservationFields(cd4Observation, CONCEPT_CD4_COUNT, cd4.getText().toString());
 			observations.add(cd4Observation);
 		}
 
 		if (hBa1c.getText().length() > 0) {
-			hBa1cObservation = setObservationFields(CONCEPT_HBA1C, hBa1c.getText().toString());
+			hBa1cObservation = setObservationFields(hBa1cObservation, CONCEPT_HBA1C, hBa1c.getText().toString());
 			observations.add(hBa1cObservation);
 		}
 
 		if (inpatientServiceTypeObservation != null) {
+			inpatientServiceTypeObservation = setObservationFields(inpatientServiceTypeObservation,
+					CONCEPT_INPATIENT_SERVICE_TYPE, inpatientServiceTypeSelectedUuid);
 			observations.add(inpatientServiceTypeObservation);
 		}
 
@@ -778,11 +689,8 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		}
 
 		observations.add(auditCompleteObservation);
-
 		boolean isNewEncounter = false;
-
 		Encounter encounter = new Encounter();
-
 		if (encounterUuid == null) {
 			isNewEncounter = true;
 		} else {
@@ -798,7 +706,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		encounter.setEncounterType(auditFormEncounterType);
 		encounter.setEncounterDatetime(visit.getStartDatetime());
 
-		mPresenter.saveEncounter(encounter, isNewEncounter);
+		mPresenter.saveUpdateEncounter(encounter, isNewEncounter);
 	}
 
 }

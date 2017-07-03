@@ -26,9 +26,11 @@ public abstract class ApplicationConstants {
 	public static final String VISIT_TYPE_UUID = "visit_type_uuid";
 	public static final String LAST_SESSION_TOKEN = "last_session_id";
 	public static final String LAST_LOGIN_SERVER_URL = "last_login_server_url";
-	public static final String DEFAULT_OPEN_MRS_URL = "http://192.168.137.231:8080/openmrs/";
-	//public static final String DEFAULT_OPEN_MRS_URL = "http://sandbox.openhmisafrica.org/openmrs/";
+	//public static final String DEFAULT_OPEN_MRS_URL = "http://192.168.2.34:9996/openmrs/";
+	public static final String DEFAULT_OPEN_MRS_URL = "http://sandbox.openhmisafrica.org/openmrs/";
 	public static final String THUMBNAIL_VIEW = "complexdata.view.thumbnail";
+	public static final String CIVIL_STATUS = "Civil Status";
+	public static final String KIN_RELATIONSHIP = "Kin Relationship";
 
 	public abstract static class OpenMRSSharedPreferenceNames {
 		public static final String SHARED_PREFERENCES_NAME = "shared_preferences";
@@ -187,6 +189,7 @@ public abstract class ApplicationConstants {
 		public static final String AUDIT_DATA_FORM_UUID = "667dc18e-740f-44ce-ae0a-5ba6b33308b0";
 		public static final String VITALS_FORM_UUID = "a000cb34-9ec1-4344-a1c8-f692232f6edd";
 		public static final String CLINICAL_FORM_UUID = "6d071264-3932-41fe-95f2-1dbbf2e4cd31";
+		public static final String VISIT_NOTE_HTML_FORM_ID = "17";
 	}
 
 	public abstract static class AuditFormAnswers {

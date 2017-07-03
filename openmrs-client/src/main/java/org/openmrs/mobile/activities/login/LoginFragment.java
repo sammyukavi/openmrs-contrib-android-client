@@ -14,6 +14,7 @@
 
 package org.openmrs.mobile.activities.login;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -24,11 +25,13 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -68,7 +71,7 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 	private Spinner mDropdownLocation;
 	private SparseArray<Bitmap> mBitmapCache;
 	private LoginValidatorWatcher mLoginValidatorWatcher;
-	private ImageView mChangeUrlIcon;
+	private TextView mChangeUrlIcon;
 	private TextInputLayout mLoginUrlTextLayout;
 	private View mViewsContainer;
 
@@ -100,8 +103,8 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 		mUsername.setText(OpenMRS.getInstance().getUsername());
 		mPassword = (TextInputEditText)mRootView.findViewById(R.id.loginPasswordField);
 		mLoginButton = (Button)mRootView.findViewById(R.id.loginButton);
-		mLoadingProgressBar = (ProgressBar)mRootView.findViewById(R.id.loadingProgressBar);
-		mChangeUrlIcon = (ImageView)mRootView.findViewById(R.id.changeUrlIcon);
+		mLoadingProgressBar = (ProgressBar)mRootView.findViewById(R.id.locationLoadingProgressBar);
+		mChangeUrlIcon = (TextView)mRootView.findViewById(R.id.changeUrlIcon);
 		mLoginUrlTextLayout = (TextInputLayout)mRootView.findViewById(R.id.loginUrlTextLayout);
 		mUrl.setText(mLoginUrl);
 	}
@@ -187,6 +190,17 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 	}
 
 	@Override
+	public void hideSoftKeys() {
+		View view = this.getActivity().getCurrentFocus();
+		if (view == null) {
+			view = new View(this.getActivity());
+		}
+		InputMethodManager inputMethodManager =
+				(InputMethodManager)this.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+		inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+	}
+
+	@Override
 	public void showWarningDialog() {
 		CustomDialogBundle bundle = new CustomDialogBundle();
 		bundle.setTitleViewMessage(getString(R.string.warning_dialog_title));
@@ -199,13 +213,9 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 
 	@Override
 	public void userAuthenticated() {
-
 		mPresenter.saveLocationsInPreferences(mLocationsList, mDropdownLocation.getSelectedItemPosition());
-
 		Intent intent = new Intent(mOpenMRS.getApplicationContext(), PatientListActivity.class);
-
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
 		mOpenMRS.getApplicationContext().startActivity(intent);
 
 	}
@@ -254,13 +264,9 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 
 	@Override
 	public void updateLoginFormLocations(List<Location> locationsList, String serverURL) {
-
 		mLoginUrl = serverURL;
-
 		mUrl.setText(serverURL);
-
 		List<HashMap<String, String>> items = getLocationStringList(locationsList);
-
 		updateLocationsSpinner(items, serverURL);
 
 	}
@@ -268,7 +274,6 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 	private void updateLocationsSpinner(List<HashMap<String, String>> locations, String serverURL) {
 		mLocationsList = locations;
 		setProgressBarVisibility(true);
-		setViewsContainerVisibility(false);
 		mLoginUrl = serverURL;
 		mUrl.setText(serverURL);
 		int selectedLocation = 0;
@@ -286,7 +291,6 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 		mDropdownLocation.setAdapter(adapter);
 		mDropdownLocation.setSelection(selectedLocation);
 		setProgressBarVisibility(false);
-		setViewsContainerVisibility(true);
 
 	}
 
@@ -308,10 +312,6 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 		mLoadingProgressBar.setVisibility(visible ? View.VISIBLE : View.GONE);
 	}
 
-	@Override
-	public void setViewsContainerVisibility(boolean visible) {
-		mViewsContainer.setVisibility(visible ? View.VISIBLE : View.GONE);
-	}
 
 	private List<HashMap<String, String>> getLocationStringList(List<Location> locationList) {
 		List<HashMap<String, String>> locations = new ArrayList<>();

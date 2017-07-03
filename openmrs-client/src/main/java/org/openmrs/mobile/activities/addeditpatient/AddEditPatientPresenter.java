@@ -286,7 +286,15 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		conceptDataService.getByUUID(uuid, QueryOptions.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Concept>() {
 			@Override
 			public void onCompleted(Concept concept) {
-				patientRegistrationView.updateConceptAnswerView(dropdown, concept.getAnswers());
+				if (concept != null) {
+					if (concept.getDisplay().equalsIgnoreCase(ApplicationConstants.CIVIL_STATUS)) {
+						dropdown.setPrompt(ApplicationConstants.CIVIL_STATUS);
+					} else {
+						dropdown.setPrompt(ApplicationConstants.KIN_RELATIONSHIP);
+					}
+					patientRegistrationView.updateConceptAnswerView(dropdown, concept.getAnswers());
+				}
+
 			}
 
 			@Override

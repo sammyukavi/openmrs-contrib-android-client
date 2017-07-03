@@ -40,7 +40,7 @@ public interface PatientListContract {
 
 		boolean isActive();
 
-		void setPatientListScreenVisibility(boolean visible);
+		void showPatientListProgressSpinner(boolean visible);
 
 		void updatePagingLabel(int currentPage, int totalNumberOfPages);
 	}
@@ -64,5 +64,8 @@ public interface PatientListContract {
 		void setLoading(boolean loading);
 
 		void loadResults(String patientListUuid, boolean loadNextResults);
+
+		void setExistingPatientListUuid(String uuid);
+
 	}
 }

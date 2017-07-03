@@ -62,20 +62,15 @@ public class CaptureVitalsPresenter extends BasePresenter implements CaptureVita
 
 	@Override
 	public void attemptSave(Encounter encounter) {
-
 		captureVitalsView.showProgressBar(true);
-
 		DataService.GetCallback<Encounter> serverResponceCallback = new DataService.GetCallback<Encounter>() {
 			@Override
 			public void onCompleted(Encounter encounter) {
 				if (encounter == null) {
 					captureVitalsView.showProgressBar(false);
 				} else {
-
 					captureVitalsView.hideSoftKeys();
-
 					captureVitalsView.disableButton();
-
 					((CaptureVitalsActivity)captureVitalsView.getContext()).finish();
 				}
 			}

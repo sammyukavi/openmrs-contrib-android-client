@@ -16,6 +16,7 @@ package org.openmrs.mobile.activities.login;
 
 import com.google.gson.Gson;
 
+import org.openmrs.mobile.activities.ACBaseActivity;
 import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.DataService;
@@ -74,6 +75,7 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 
 	@Override
 	public void login(String username, String password, String url, String oldUrl) {
+		loginView.hideSoftKeys();
 		if ((!mOpenMRS.getUsername().equals(ApplicationConstants.EMPTY_STRING) &&
 				!mOpenMRS.getUsername().equals(username)) ||
 				((!mOpenMRS.getServerUrl().equals(ApplicationConstants.EMPTY_STRING) &&
@@ -88,20 +90,13 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 	@Override
 	public void authenticateUser(final String username, final String password, final String url,
 			final boolean wipeDatabase) {
-
 		loginView.setProgressBarVisibility(true);
-
-		loginView.setViewsContainerVisibility(false);
-
 		RestServiceBuilder.setloginUrl(url);
 
 		if (NetworkUtils.isOnline()) {
-
 			mWipeRequired = wipeDatabase;
-
 			DataService.GetCallback<List<User>> loginUsersFoundCallback =
 					new DataService.GetCallback<List<User>>() {
-
 						@Override
 						public void onCompleted(List<User> users) {
 							boolean matchFound = false;
@@ -126,19 +121,13 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 					};
 
 			PagingInfo pagingInfo = new PagingInfo(startIndex, limit);
-
 			DataService.GetCallback<Session> loginUserCallback = new DataService.GetCallback<Session>() {
 				@Override
 				public void onCompleted(Session session) {
-
 					if (session != null && session.isAuthenticated()) {
-
 						if (wipeDatabase) {
-
 							mOpenMRS.deleteDatabase(OpenMRSSQLiteOpenHelper.DATABASE_NAME);
-
 							setData(session.getSessionId(), url, username, password);
-
 							mWipeRequired = false;
 						}
 
@@ -151,79 +140,50 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 						setLogin(true, url);
 
 						RestServiceBuilder.applyDefaultBaseUrl();
-
 						//Instantiate the user service  here to use our new session
 						userService = new UserDataService();
-
 						userService.getByUsername(username, QueryOptions.LOAD_RELATED_OBJECTS, pagingInfo,
 								loginUsersFoundCallback);
-
 						loginView.userAuthenticated();
-
 						loginView.finishLoginActivity();
 
 					} else {
 						loginView.showMessage(INVALID_USERNAME_PASSWORD);
 					}
-
 					loginView.setProgressBarVisibility(false);
-
-					loginView.setViewsContainerVisibility(true);
 
 				}
 
 				@Override
 				public void onError(Throwable t) {
-
 					t.printStackTrace();
-
 					loginView.setProgressBarVisibility(false);
-
-					loginView.setViewsContainerVisibility(true);
-
 					loginView.showMessage(SERVER_ERROR);
 				}
 			};
 
 			loginDataService.getSession(url, username, password, loginUserCallback);
-
 		} else
 
 		{
 			if (mOpenMRS.isUserLoggedOnline() && url.equals(mOpenMRS.getLastLoginServerUrl())) {
-
 				loginView.setProgressBarVisibility(false);
-
-				loginView.setViewsContainerVisibility(true);
-
 				if (mOpenMRS.getUsername().equals(username) && mOpenMRS.getPassword().equals(password)) {
-
 					mOpenMRS.setSessionToken(mOpenMRS.getLastSessionToken());
-
 					loginView.showMessage(OFFLINE_LOGIN);
-
 					loginView.userAuthenticated();
-
 					loginView.finishLoginActivity();
 
 				} else {
 					loginView.showMessage(AUTH_FAILED);
 				}
 			} else if (NetworkUtils.hasNetwork()) {
-
 				loginView.showMessage(OFFLINE_LOGIN_UNSUPPORTED);
-
 				loginView.setProgressBarVisibility(false);
-
-				loginView.setViewsContainerVisibility(true);
 
 			} else {
-
 				loginView.showMessage(NO_INTERNET);
-
 				loginView.setProgressBarVisibility(false);
-
-				loginView.setViewsContainerVisibility(true);
 
 			}
 		}
@@ -250,79 +210,52 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 
 	@Override
 	public void saveLocationsInPreferences(List<HashMap<String, String>> locationList, int selectedItemPosition) {
-
 		mOpenMRS.setLocation(locationList.get(selectedItemPosition).get("uuid"));
-
 		mOpenMRS.setParentLocationUuid(locationList.get(selectedItemPosition).get("parentlocationuuid"));
-
 		mOpenMRS.saveLocations(new Gson().toJson(locationList));
 
 	}
 
 	@Override
 	public void loadLocations(String url) {
-
 		loginView.setProgressBarVisibility(true);
-
-		loginView.setViewsContainerVisibility(false);
-
 		RestServiceBuilder.setBaseUrl(url);
-
 		DataService.GetCallback<List<Location>> locationDataServiceCallback = new DataService.GetCallback<List<Location>>
 				() {
 			@Override
 			public void onCompleted(List<Location> locations) {
-
 				mOpenMRS.setServerUrl(url);
-
 				loginView.updateLoginFormLocations(locations, url);
 
 			}
 
 			@Override
 			public void onError(Throwable t) {
-
 				loginView.setProgressBarVisibility(false);
-
-				loginView.setViewsContainerVisibility(true);
-
-				t.printStackTrace();
-
+				//t.printStackTrace();
 				loginView.showMessage(INVALID_URL);
 
 			}
 		};
 
 		try {
-
 			locationDataService.getAll(url, locationDataServiceCallback);
-
 		} catch (IllegalArgumentException ex) {
-
 			loginView.setProgressBarVisibility(false);
-
-			loginView.setViewsContainerVisibility(true);
-
 			loginView.showMessage(INVALID_URL);
 		}
 
 	}
 
 	private void setData(String sessionToken, String url, String username, String password) {
-
 		mOpenMRS.setSessionToken(sessionToken);
-
 		mOpenMRS.setServerUrl(url);
-
 		mOpenMRS.setUsername(username);
-
 		mOpenMRS.setPassword(password);
 	}
 
 	private void setLogin(boolean isLogin, String serverUrl) {
-
 		mOpenMRS.setUserLoggedOnline(isLogin);
-
 		mOpenMRS.setLastLoginServerUrl(serverUrl);
 
 	}

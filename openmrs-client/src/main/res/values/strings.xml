@@ -171,7 +171,7 @@
 	<string name="nav_find_patient">Find Patient Record</string>
 	<string name="nav_register_patient">Register Patient</string>
 	<string name="nav_open_visit_tasks">Open Visit Tasks</string>
-	<string name="nav_closed_visit_tasks_period">Closed Tasks (%1$s)</string>
+	<string name="nav_closed_visit_tasks_period">Date Closed: %1$s</string>
 	<string name="nav_settings">Settings</string>
 	<string name="nav_visit_details">Visit Details</string>
 	
@@ -319,7 +319,7 @@
 	<string name="no_vitals">No vitals recorded for this visit</string>
 	<string name="no_visit_tasks">No tasks for this visit</string>
 	<string name="add_diagnosis">Enter Diagnosis</string>
-	<string name="visit_image_description">Description: %1$s \r\n Uploaded: %2$s \r\n Uploaded By: %3$s</string>
+	<string name="visit_image_description">Description: %1$s \r\n Uploaded: %2$s \r\n Patient: %3$s</string>
 	<string name="add_patient">Add Patient</string>
 	<string name="telephone">Telephone:</string>
 	<string name="no_primary_diagnosis">No Primary Diagnosis</string>
@@ -364,4 +364,7 @@
 	<string name="visit_note_changes_pending_message">You have unsaved changes on the visit note. Leaving this
 		screen while discard your changes</string>
 	<string name="no_clinical_note">No Clinical Note</string>
+	<string name="civil_status">Civil Status</string>
+	<string name="kin_relationship">Kin Relationship</string>
+	<string name="change_server_url">Change Server URL</string>
 </resources>

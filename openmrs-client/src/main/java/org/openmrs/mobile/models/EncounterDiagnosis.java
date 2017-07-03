@@ -1,16 +1,27 @@
 package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.Table;
 
+import org.openmrs.mobile.data.db.AppDatabase;
+
+@Table(database = AppDatabase.class)
 public class EncounterDiagnosis extends BaseOpenmrsObject {
+	@Expose
+	@Column
+	private String certainty;
 
 	@Expose
-	private String certainty;
-	@Expose
+	@Column
 	private String order;
+
 	@Expose
+	@Column
 	private String diagnosis;
+
 	@Expose
+	@Column
 	private String existingObs;
 
 	public String getCertainty() {

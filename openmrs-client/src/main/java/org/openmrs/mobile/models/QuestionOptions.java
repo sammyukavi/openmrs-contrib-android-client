@@ -12,39 +12,61 @@ package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.OneToMany;
+import com.raizlabs.android.dbflow.annotation.Table;
+
+import org.openmrs.mobile.data.db.AppDatabase;
 
 import java.io.Serializable;
 import java.util.List;
 
-public class QuestionOptions implements Serializable {
-
+@Table(database = AppDatabase.class)
+public class QuestionOptions extends Resource implements Serializable {
 	@SerializedName("rendering")
 	@Expose
+	@Column
 	private String rendering;
 
 	@SerializedName("concept")
 	@Expose
+	@Column
 	private String concept;
 
 	// For numeric values
 	@SerializedName("max")
 	@Expose
+	@Column
 	private String max;
 
 	// For numeric values
 	@SerializedName("min")
 	@Expose
+	@Column
 	private String min;
 
 	// For numeric values
 	@SerializedName("allowDecimal")
 	@Expose
+	@Column
 	private boolean allowDecimal;
 
 	// For select radio boxes
 	@SerializedName("answers")
 	@Expose
 	private List<Answer> answers;
+
+	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "answers", isVariablePrivate = true)
+	List<Answer> loadAnswers() {
+		return loadRelatedObject(Answer.class, answers, () -> Answer_Table.questionOptions_uuid.eq(getUuid()));
+	}
+
+	@Override
+	public void processRelationships() {
+		super.processRelationships();
+
+		processRelatedObjects(answers, (a) -> a.setQuestionOptions(this));
+	}
 
 	/**
 	 * @return The rendering
@@ -105,5 +127,4 @@ public class QuestionOptions implements Serializable {
 	public void setAnswers(List<Answer> answers) {
 		this.answers = answers;
 	}
-
 }

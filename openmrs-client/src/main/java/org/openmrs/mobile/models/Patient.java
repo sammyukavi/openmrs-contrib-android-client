@@ -11,7 +11,12 @@ package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.OneToMany;
+import com.raizlabs.android.dbflow.annotation.Table;
 
+import org.openmrs.mobile.data.db.AppDatabase;
 import org.openmrs.mobile.utilities.StringUtils;
 
 import java.io.Serializable;
@@ -20,12 +25,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Table(database = AppDatabase.class)
 public class Patient extends BaseOpenmrsAuditableObject implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String encounters = "";
-
-	private String personUuid;
 
 	@SerializedName("identifiers")
 	@Expose
@@ -33,15 +37,34 @@ public class Patient extends BaseOpenmrsAuditableObject implements Serializable 
 
 	@SerializedName("person")
 	@Expose
+	@ForeignKey
 	private Person person;
 
 	@SerializedName("voided")
 	@Expose
+	@Column
 	private Boolean voided;
 
 	@SerializedName("resourceVersion")
 	@Expose
+	@Column
 	private String resourceVersion;
+
+	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "identifiers", isVariablePrivate = true)
+	List<PatientIdentifier> loadIdentifiers() {
+		return loadRelatedObject(PatientIdentifier.class, identifiers,
+				() -> PatientIdentifier_Table.patient_uuid.eq(getUuid()));
+	}
+
+	@Override
+	public void processRelationships() {
+		super.processRelationships();
+
+		if (person != null) {
+			person.processRelationships();
+		}
+		processRelatedObjects(identifiers, (i) -> i.setPatient(this));
+	}
 
 	/**
 	 * @return The identifiers
@@ -84,6 +107,10 @@ public class Patient extends BaseOpenmrsAuditableObject implements Serializable 
 	 */
 	public Boolean getVoided() {
 		return voided;
+	}
+
+	Boolean isVoided() {
+		return getVoided();
 	}
 
 	/**

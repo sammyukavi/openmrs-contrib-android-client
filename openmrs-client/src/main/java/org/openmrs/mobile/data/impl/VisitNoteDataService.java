@@ -71,7 +71,7 @@ public class VisitNoteDataService extends BaseDataService<VisitNote, VisitNoteDb
 
 	public void save(VisitNote visitNote,  @NonNull GetCallback<VisitNote> callback){
 		executeSingleCallback(callback, null,
-				() -> null,
+				() -> dbService.save(visitNote),
 				() -> {
 					Gson gson = new GsonBuilder().setExclusionStrategies(new CustomExclusionStrategy()).create();
 					Map<String, String> params = new HashMap<>();

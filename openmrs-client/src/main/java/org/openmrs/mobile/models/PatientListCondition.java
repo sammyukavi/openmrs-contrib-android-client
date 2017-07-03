@@ -15,28 +15,38 @@ package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+
+import org.openmrs.mobile.data.db.AppDatabase;
 
 /**
  * Model class that represents a {@link PatientList} condition.
  */
+@Table(database = AppDatabase.class)
 public class PatientListCondition extends Resource {
-
 	@SerializedName("patientList")
 	@Expose
+	@ForeignKey(stubbedRelationship = true)
 	private PatientList patientList;
 
 	@SerializedName("field")
 	@Expose
+	@Column
 	private String field;
 
 	@SerializedName("value")
 	@Expose
+	@Column
 	private String value;
 
 	@Expose
+	@Column
 	private String operator;
 
 	@Expose
+	@Column
 	private Integer conditionOrder;
 
 	public PatientList getPatientList() {

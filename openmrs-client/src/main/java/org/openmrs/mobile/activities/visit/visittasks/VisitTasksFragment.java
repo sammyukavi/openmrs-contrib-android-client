@@ -269,7 +269,7 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 	public void setVisit(Visit visit) {
 		this.visit = visit;
 		if (visit != null) {
-			if (!visit.getStopDatetime().equalsIgnoreCase(null)) {
+			if (visit.getStopDatetime() != null) {
 				addTaskLayout.setVisibility(View.GONE);
 			}
 		}

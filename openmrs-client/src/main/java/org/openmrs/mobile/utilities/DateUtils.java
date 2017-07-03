@@ -14,6 +14,8 @@
 
 package org.openmrs.mobile.utilities;
 
+import android.support.annotation.NonNull;
+
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -28,6 +30,8 @@ import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public final class DateUtils {
 	public static final String DEFAULT_DATE_FORMAT = "dd/MM/yyyy";
 	public static final String DATE_WITH_TIME_FORMAT = "dd/MM/yyyy HH:mm";
@@ -37,7 +41,7 @@ public final class DateUtils {
 	public static final String TIME_FORMAT = "HH:mm";
 	public static final String DATE_FORMAT = "dd-MMM-yyyy";
 	public static final Long ZERO = 0L;
-	private static final String OPEN_MRS_RESPONSE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+	public static final String OPEN_MRS_RESPONSE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
 
 	private DateUtils() {
 
@@ -213,7 +217,7 @@ public final class DateUtils {
 		return relative;
 	}
 
-	private static String calculateTimeDifference(String dateStart, String dateStop, boolean minimum) {
+	public static String calculateTimeDifference(String dateStart, String dateStop, boolean minimum) {
 
 		Date startDate = null;
 		Date endDate = null;
@@ -225,6 +229,39 @@ public final class DateUtils {
 		} catch (ParseException ex) {
 			ex.printStackTrace();
 		}
+
+		return calculateTimeDifference(startDate, endDate, minimum);
+	}
+
+	public static String calculateTimeDifference(String startDate, String stopDate) {
+		return calculateTimeDifference(startDate, stopDate, true);
+	}
+
+	public static String calculateTimeDifference(String startDate, boolean minimum) {
+		return calculateTimeDifference(startDate, new SimpleDateFormat(OPEN_MRS_RESPONSE_FORMAT).format(new Date()),
+				minimum) + " ago";
+	}
+
+	public static String calculateTimeDifference(String startDate) {
+		return calculateTimeDifference(startDate, new SimpleDateFormat(OPEN_MRS_RESPONSE_FORMAT).format(new Date()),
+				true) + " ago";
+	}
+
+	public static String calculateTimeDifference(Date startDate) {
+		return calculateTimeDifference(startDate, new Date(), true) + " ago";
+	}
+
+	public static String calculateTimeDifference(Date startDate, boolean minimum) {
+		return calculateTimeDifference(startDate, new Date(), minimum) + " ago";
+	}
+
+	public static String calculateTimeDifference(Date startDate, Date endDate) {
+		return calculateTimeDifference(startDate, endDate, true);
+	}
+
+	public static String calculateTimeDifference(@NonNull Date startDate, @NonNull Date endDate, boolean minimum) {
+		checkNotNull(startDate);
+		checkNotNull(endDate);
 
 		long durationInSeconds = TimeUnit.MILLISECONDS.toSeconds(endDate.getTime() - startDate.getTime());
 
@@ -285,20 +322,6 @@ public final class DateUtils {
 		}
 
 		return relative;
-	}
-
-	public static String calculateTimeDifference(String startDate, String stopDate) {
-		return calculateTimeDifference(startDate, stopDate, true);
-	}
-
-	public static String calculateTimeDifference(String startDate, boolean minimum) {
-		return calculateTimeDifference(startDate, new SimpleDateFormat(OPEN_MRS_RESPONSE_FORMAT).format(new Date()),
-				minimum) + " ago";
-	}
-
-	public static String calculateTimeDifference(String startDate) {
-		return calculateTimeDifference(startDate, new SimpleDateFormat(OPEN_MRS_RESPONSE_FORMAT).format(new Date()),
-				true) + " ago";
 	}
 
 	private static String getDuration(long secs, long mins, long hrs, long days, long weeks, long months, long years,

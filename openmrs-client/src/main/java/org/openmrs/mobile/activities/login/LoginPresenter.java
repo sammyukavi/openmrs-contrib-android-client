@@ -11,7 +11,6 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-
 package org.openmrs.mobile.activities.login;
 
 import com.google.gson.Gson;
@@ -22,11 +21,11 @@ import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
+import org.openmrs.mobile.data.db.AppDatabase;
 import org.openmrs.mobile.data.impl.LocationDataService;
 import org.openmrs.mobile.data.impl.LoginDataService;
 import org.openmrs.mobile.data.impl.UserDataService;
 import org.openmrs.mobile.data.rest.RestServiceBuilder;
-import org.openmrs.mobile.databases.OpenMRSSQLiteOpenHelper;
 import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Session;
 import org.openmrs.mobile.models.User;
@@ -126,7 +125,7 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 				public void onCompleted(Session session) {
 					if (session != null && session.isAuthenticated()) {
 						if (wipeDatabase) {
-							mOpenMRS.deleteDatabase(OpenMRSSQLiteOpenHelper.DATABASE_NAME);
+							mOpenMRS.deleteDatabase(AppDatabase.NAME);
 							setData(session.getSessionId(), url, username, password);
 							mWipeRequired = false;
 						}
@@ -138,7 +137,6 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 						}
 
 						setLogin(true, url);
-
 						RestServiceBuilder.applyDefaultBaseUrl();
 						//Instantiate the user service  here to use our new session
 						userService = new UserDataService();
@@ -163,9 +161,7 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 			};
 
 			loginDataService.getSession(url, username, password, loginUserCallback);
-		} else
-
-		{
+		} else {
 			if (mOpenMRS.isUserLoggedOnline() && url.equals(mOpenMRS.getLastLoginServerUrl())) {
 				loginView.setProgressBarVisibility(false);
 				if (mOpenMRS.getUsername().equals(username) && mOpenMRS.getPassword().equals(password)) {
@@ -173,7 +169,6 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 					loginView.showMessage(OFFLINE_LOGIN);
 					loginView.userAuthenticated();
 					loginView.finishLoginActivity();
-
 				} else {
 					loginView.showMessage(AUTH_FAILED);
 				}
@@ -187,7 +182,6 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 
 			}
 		}
-
 	}
 
 	private void fetchFullUserInformation(String uuid) {
@@ -205,6 +199,7 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 				loginView.showMessage(SERVER_ERROR);
 			}
 		};
+
 		userService.getByUUID(uuid, new QueryOptions(true, true), fetchUserCallback);
 	}
 
@@ -226,7 +221,6 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 			public void onCompleted(List<Location> locations) {
 				mOpenMRS.setServerUrl(url);
 				loginView.updateLoginFormLocations(locations, url);
-
 			}
 
 			@Override
@@ -234,7 +228,6 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 				loginView.setProgressBarVisibility(false);
 				//t.printStackTrace();
 				loginView.showMessage(INVALID_URL);
-
 			}
 		};
 
@@ -244,7 +237,6 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 			loginView.setProgressBarVisibility(false);
 			loginView.showMessage(INVALID_URL);
 		}
-
 	}
 
 	private void setData(String sessionToken, String url, String username, String password) {
@@ -257,6 +249,5 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 	private void setLogin(boolean isLogin, String serverUrl) {
 		mOpenMRS.setUserLoggedOnline(isLogin);
 		mOpenMRS.setLastLoginServerUrl(serverUrl);
-
 	}
 }

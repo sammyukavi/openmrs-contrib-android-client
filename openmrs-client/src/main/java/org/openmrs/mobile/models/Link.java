@@ -10,21 +10,17 @@
 
 package org.openmrs.mobile.models;
 
-import com.activeandroid.annotation.Column;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-//@Table(name = "link")
 public class Link implements Serializable {
 
-	@Column
 	@SerializedName("rel")
 	@Expose
 	private String rel;
 
-	@Column
 	@SerializedName("uri")
 	@Expose
 	private String uri;

@@ -82,21 +82,10 @@ public class VisitTaskDataService
 		return null;
 	}
 
-	public void getByName(String status, String query, String patient_uuid, String visit_uuid,
-			QueryOptions options, PagingInfo pagingInfo, GetCallback<List<VisitTask>> callback) {
-		executeMultipleCallback(callback, options, pagingInfo,
-				() -> null,
-				() -> restService.getByName(buildRestRequestPath(), status, query, patient_uuid, visit_uuid,
-						QueryOptions.getRepresentation(options), QueryOptions.getIncludeInactive(options),
-						PagingInfo.getLimit(pagingInfo), PagingInfo.getStartIndex(pagingInfo))
-
-		);
-	}
-
 	public void getAll(String status, String patient_uuid, String visit_uuid,
 			QueryOptions options, PagingInfo pagingInfo, GetCallback<List<VisitTask>> callback) {
 		executeMultipleCallback(callback, options, pagingInfo,
-				() -> null,
+				() -> dbService.getAll(status, patient_uuid, visit_uuid, options, pagingInfo),
 				() -> restService.getAll(buildRestRequestPath(), status, patient_uuid, visit_uuid,
 						QueryOptions.getRepresentation(options), QueryOptions.getIncludeInactive(options),
 						PagingInfo.getLimit(pagingInfo), PagingInfo.getStartIndex(pagingInfo))

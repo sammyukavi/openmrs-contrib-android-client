@@ -11,7 +11,6 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-
 package org.openmrs.mobile.activities.visit.detail;
 
 import android.content.Intent;
@@ -59,11 +58,17 @@ import org.openmrs.mobile.utilities.StringUtils;
 import org.openmrs.mobile.utilities.ToastUtil;
 import org.openmrs.mobile.utilities.ViewUtils;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.VisitDetailsMainPresenter>
 		implements VisitContract.VisitDetailsView {
+
+		private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT);
+
+
+
 
 	private TextView visitStartDate;
 	private TextView activeVisitBadge;
@@ -279,23 +284,18 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 	}
 
 	public void setVisitDates(Visit visit) {
-		if (StringUtils.notNull(visit.getStopDatetime())) {
+		if (visit.getStopDatetime() != null) {
 			activeVisitBadge.setVisibility(View.GONE);
-			visitStartDate.setText(DateUtils
-					.convertTime1(visit.getStartDatetime(), DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT));
-			visitEndDate
-					.setText(getContext().getResources().getString(R.string.date_closed) + ": " + DateUtils
-							.convertTime1(visit.getStopDatetime(), DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT));
+			visitStartDate.setText(DATE_FORMAT.format(visit.getStartDatetime()));
+			visitEndDate.setText(getContext().getResources().getString(R.string.date_closed) + ": " + DATE_FORMAT.format(visit.getStopDatetime()));
 			startDuration.setText(DateUtils.calculateTimeDifference(visit.getStartDatetime()));
-			visitDuration.setText(getContext().getString(R.string.visit_duration, DateUtils.calculateTimeDifference(visit
-					.getStartDatetime(), visit.getStopDatetime())));
-
+			visitDuration.setText(getContext().getString(R.string.visit_duration,
+					DateUtils.calculateTimeDifference(visit.getStartDatetime(), visit.getStopDatetime())));
 		} else {
 			activeVisitBadge.setVisibility(View.VISIBLE);
 			visitEndDate.setVisibility(View.GONE);
 			visitDuration.setVisibility(View.GONE);
-			visitStartDate.setText(
-					DateUtils.convertTime1(visit.getStartDatetime(), DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT));
+			visitStartDate.setText(DATE_FORMAT.format(visit.getStartDatetime()));
 			startDuration.setText(DateUtils.calculateTimeDifference(visit.getStartDatetime()));
 		}
 	}
@@ -402,9 +402,7 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 
 						if (visit.getEncounters().get(i).getObs().size() != 0) {
 							visitVitalsAuditInfo.setVisibility(View.VISIBLE);
-							visitVitalsDate
-									.setText(DateUtils.convertTime(visit.getEncounters().get(i).getEncounterDatetime(),
-											DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT));
+							visitVitalsDate.setText(DATE_FORMAT.format(visit.getEncounters().get(i).getEncounterDatetime()));
 
 							for (int v = 0; v < visit.getEncounters().get(i).getEncounterProviders().size(); v++) {
 								if (v == 0) {
@@ -447,9 +445,9 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 
 					if (visit.getEncounters().get(i).getObs().size() != 0) {
 						auditDataMetadata.setVisibility(View.VISIBLE);
-						auditDataMetadataDate
-								.setText(DateUtils.convertTime(visit.getEncounters().get(i).getEncounterDatetime(),
-										DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT));
+						auditDataMetadataDate.setText(
+								DATE_FORMAT.format(visit.getEncounters().get(i).getEncounterDatetime()))
+						;
 
 						for (int v = 0; v < visit.getEncounters().get(i).getEncounterProviders().size(); v++) {
 							if (v == 0) {

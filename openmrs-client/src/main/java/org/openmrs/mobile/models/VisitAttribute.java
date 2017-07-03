@@ -2,10 +2,17 @@ package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.Table;
 
+import org.openmrs.mobile.data.db.AppDatabase;
+
+@Table(database = AppDatabase.class)
 public class VisitAttribute extends BaseOpenmrsEntity {
 	@SerializedName("visit")
 	@Expose
+	@ForeignKey
 	private Visit visit;
 
 	@SerializedName("value")
@@ -14,10 +21,12 @@ public class VisitAttribute extends BaseOpenmrsEntity {
 
 	@SerializedName("valueReference")
 	@Expose
+	@Column
 	private String valueReference;
 
 	@SerializedName("attributeType")
 	@Expose
+	@ForeignKey
 	private VisitAttributeType attributeType;
 
 	public Visit getVisit() {

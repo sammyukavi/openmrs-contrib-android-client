@@ -12,18 +12,31 @@ package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.Table;
 
+import org.openmrs.mobile.data.db.AppDatabase;
+
+@Table(database = AppDatabase.class)
 public class PersonName extends BaseOpenmrsEntity {
-
 	@SerializedName("givenName")
 	@Expose
+	@Column
 	private String givenName;
+
 	@SerializedName("middleName")
 	@Expose
+	@Column
 	private String middleName;
+
 	@SerializedName("familyName")
 	@Expose
+	@Column
 	private String familyName;
+
+	@ForeignKey
+	private Person person;
 
 	/**
 	 * @return The givenName
@@ -68,9 +81,18 @@ public class PersonName extends BaseOpenmrsEntity {
 	}
 
 	public String getNameString() {
-		if (middleName == null || middleName.equals("null"))
+		if (middleName == null || middleName.equals("null")) {
 			return givenName + " " + familyName;
-		else
+		} else {
 			return givenName + " " + middleName + " " + familyName;
+		}
+	}
+
+	public Person getPerson() {
+		return person;
+	}
+
+	public void setPerson(Person person) {
+		this.person = person;
 	}
 }

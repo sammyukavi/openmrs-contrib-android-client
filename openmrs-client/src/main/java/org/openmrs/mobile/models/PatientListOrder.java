@@ -15,22 +15,30 @@ package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+
+import org.openmrs.mobile.data.db.AppDatabase;
 
 /**
  * Model class that represents the ordering of {@link PatientList}s.
  */
+@Table(database = AppDatabase.class)
 public class PatientListOrder extends Resource {
-
 	@SerializedName("identifiers")
 	@Expose
+	@ForeignKey(stubbedRelationship = true)
 	private PatientList patientList;
 
 	@SerializedName("field")
 	@Expose
+	@Column
 	private String field;
 
 	@SerializedName("sortOrder")
 	@Expose
+	@Column
 	private String sortOrder;
 
 	public PatientList getPatientList() {

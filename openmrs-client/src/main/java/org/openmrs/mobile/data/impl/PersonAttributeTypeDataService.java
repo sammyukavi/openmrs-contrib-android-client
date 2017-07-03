@@ -50,13 +50,6 @@ public class PersonAttributeTypeDataService
 		return "personattributetype";
 	}
 
-	public Call<Results<PersonAttributeType>> getByName(String restPath, String name, QueryOptions options,
-			PagingInfo pagingInfo) {
-		return restService.getByName(restPath, name,
-				QueryOptions.getRepresentation(options), QueryOptions.getIncludeInactive(options),
-				PagingInfo.getLimit(pagingInfo), PagingInfo.getStartIndex(pagingInfo));
-	}
-
 	@Override
 	protected Call<PersonAttributeType> _restGetByUuid(String restPath, String uuid, QueryOptions options) {
 		return restService.getByUuid(restPath, uuid, QueryOptions.getRepresentation(options));

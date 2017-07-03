@@ -40,6 +40,7 @@ import org.openmrs.mobile.utilities.StringUtils;
 import org.openmrs.mobile.utilities.ToastUtil;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class AddEditVisitPresenter extends BasePresenter implements AddEditVisitContract.Presenter {
@@ -303,7 +304,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 		if (visit.getUuid() == null) {
 			return;
 		} else {
-			visit.setStopDatetime(DateUtils.convertTime(System.currentTimeMillis(), DateUtils.OPEN_MRS_REQUEST_FORMAT));
+			visit.setStopDatetime(new Date());
 			visitDataService.update(visit, new DataService.GetCallback<Visit>() {
 				@Override
 				public void onCompleted(Visit entity) {

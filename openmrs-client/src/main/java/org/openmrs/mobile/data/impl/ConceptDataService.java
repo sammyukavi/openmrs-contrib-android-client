@@ -84,7 +84,7 @@ public class ConceptDataService extends BaseDataService<Concept, ConceptDbServic
 		checkNotNull(callback);
 
 		executeMultipleCallback(callback, options, null,
-				() -> null,
+				() -> dbService.getByName(conceptName, options),
 				() -> restService
 						.getByConceptName(buildRestRequestPath(), conceptName, QueryOptions.getRepresentation(options)));
 	}

@@ -2,6 +2,8 @@ package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -10,19 +12,27 @@ public class BaseOpenmrsEntity extends BaseOpenmrsAuditableObject implements Ser
 	private static final long serialVersionUID = 1;
 
 	@Expose
+	@Column
 	private Boolean voided = Boolean.FALSE;
 
 	@Expose
+	@Column
 	private Date dateVoided;
 
 	@Expose
+	@ForeignKey(stubbedRelationship = true)
 	private User voidedBy;
 
 	@Expose
+	@Column
 	private String voidReason;
 
 	public Boolean getVoided() {
 		return getActive();
+	}
+
+	Boolean isVoided() {
+		return getVoided();
 	}
 
 	public void setVoided(Boolean voided) {

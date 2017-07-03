@@ -2,31 +2,41 @@ package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.Table;
 
+import org.openmrs.mobile.data.db.AppDatabase;
+
+@Table(database = AppDatabase.class)
 public class VisitAttributeType extends BaseOpenmrsMetadata {
-
 	@Expose
 	@SerializedName("minOccurs")
+	@Column
 	private Integer minOccurs = 0;
 
 	@Expose
 	@SerializedName("maxOccurs")
+	@Column
 	private Integer maxOccurs = null;
 
 	@Expose
 	@SerializedName("datatypeClassname")
+	@Column
 	private String datatypeClassname;
 
 	@Expose
 	@SerializedName("datatypeConfig")
+	@Column
 	private String datatypeConfig;
 
 	@Expose
 	@SerializedName("preferredHandlerClassname")
+	@Column
 	private String preferredHandlerClassname;
 
 	@Expose
 	@SerializedName("handlerConfig")
+	@Column
 	private String handlerConfig;
 
 	public Integer getMinOccurs() {

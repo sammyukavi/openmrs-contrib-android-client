@@ -12,18 +12,31 @@ package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.Table;
 
+import org.openmrs.mobile.data.db.AppDatabase;
+
+@Table(database = AppDatabase.class)
 public class PatientIdentifier extends BaseOpenmrsEntity {
-
 	@SerializedName("identifierType")
 	@Expose
+	@ForeignKey
 	private PatientIdentifierType identifierType;
+
 	@SerializedName("identifier")
 	@Expose
+	@Column
 	private String identifier;
+
 	@SerializedName("location")
 	@Expose
+	@ForeignKey(stubbedRelationship = true)
 	private Location location;
+
+	@ForeignKey
+	private Patient patient;
 
 	/**
 	 * @return The identifierType
@@ -67,4 +80,11 @@ public class PatientIdentifier extends BaseOpenmrsEntity {
 		this.location = location;
 	}
 
+	public Patient getPatient() {
+		return patient;
+	}
+
+	public void setPatient(Patient patient) {
+		this.patient = patient;
+	}
 }

@@ -12,16 +12,42 @@ package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.Table;
 
-public class PersonAttribute extends BaseOpenmrsEntity {
+import org.openmrs.mobile.data.db.AppDatabase;
 
+import java.io.Serializable;
+
+@Table(database = AppDatabase.class)
+public class PersonAttribute extends BaseOpenmrsObject implements Serializable {
 	@SerializedName("attributeType")
 	@Expose
+	@ForeignKey
 	private PersonAttributeType attributeType;
 
 	@SerializedName("value")
 	@Expose
 	private Object value;
+
+	@Column
+	private String stringValue;
+
+	@ForeignKey(stubbedRelationship = true)
+	private Concept conceptValue;
+
+	@ForeignKey
+	private Person person;
+
+	@Override
+	public void processRelationships() {
+		super.processRelationships();
+
+		if (conceptValue != null) {
+			conceptValue.processRelationships();
+		}
+	}
 
 	public PersonAttributeType getAttributeType() {
 		return attributeType;
@@ -43,7 +69,41 @@ public class PersonAttribute extends BaseOpenmrsEntity {
 	 */
 	public void setValue(Object value) {
 		this.value = value;
+
+		if (value == null) {
+			setConceptValue(null);
+			setStringValue(null);
+		} else if (value instanceof Concept) {
+			setConceptValue((Concept)value);
+			setStringValue(null);
+		} else {
+			setConceptValue(null);
+			setStringValue(value.toString());
+		}
 	}
 
+	public String getStringValue() {
+		return stringValue;
+	}
+
+	public void setStringValue(String stringValue) {
+		this.stringValue = stringValue;
+	}
+
+	public Concept getConceptValue() {
+		return conceptValue;
+	}
+
+	public void setConceptValue(Concept conceptValue) {
+		this.conceptValue = conceptValue;
+	}
+
+	public Person getPerson() {
+		return person;
+	}
+
+	public void setPerson(Person person) {
+		this.person = person;
+	}
 }
 

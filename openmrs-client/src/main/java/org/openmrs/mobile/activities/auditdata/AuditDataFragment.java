@@ -43,6 +43,7 @@ import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.EncounterType;
 import org.openmrs.mobile.models.Form;
 import org.openmrs.mobile.models.Location;
+import org.openmrs.mobile.models.ObsValue;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Person;
 import org.openmrs.mobile.models.Provider;
@@ -434,7 +435,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 	@Override
 	public void updateFormFields(Encounter encounter) {
 		for (Observation observation : encounter.getObs()) {
-			String displayValue = observation.getDisplayValue().trim().toLowerCase();
+			String displayValue = observation.getDisplay().trim().toLowerCase();
 
 			switch (observation.getConcept().getUuid()) {
 				case CONCEPT_DEATH_IN_HOSPITAL:
@@ -515,7 +516,6 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 					break;
 
 				case CONCEPT_HDU_STAY:
-
 					if (displayValue.equalsIgnoreCase(ANSWER_YES)) {
 						hduStayYes.setChecked(true);
 						hduStayObservation = setObservationFields(observation, CONCEPT_HDU_STAY,
@@ -556,6 +556,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 
 					if (displayValue.equalsIgnoreCase(ANSWER_YES)) {
 						hivPositiveYes.setChecked(true);
+
 						hivPositiveObservation = setObservationFields(observation, CONCEPT_HIV_POSITIVE,
 								CONCEPT_ANSWER_YES);
 

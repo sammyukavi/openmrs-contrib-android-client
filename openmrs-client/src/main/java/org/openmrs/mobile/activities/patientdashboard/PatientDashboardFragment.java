@@ -201,7 +201,7 @@ public class PatientDashboardFragment extends BaseDiagnosisFragment<PatientDashb
 	public void patientVisits(List<Visit> visits) {
 		//hasActiveVisit = false;
 		for (Visit visit : visits) {
-			if (!StringUtils.notNull(visit.getStopDatetime())) {
+			if (visit.getStopDatetime() == null) {
 				//hasActiveVisit = true;
 				startVisitButton.setVisibility(View.GONE);
 				setVisitUuid(visit);

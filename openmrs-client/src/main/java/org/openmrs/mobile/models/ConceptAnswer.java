@@ -16,21 +16,24 @@ package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.Table;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.openmrs.mobile.data.db.AppDatabase;
 
+@Table(database = AppDatabase.class)
 public class ConceptAnswer extends BaseOpenmrsObject {
-
 	/**
 	 * The question concept that this object is answering
 	 */
 	@SerializedName("concept")
 	@Expose
+	@ForeignKey
 	private Concept concept;
 
 	@SerializedName("answerConcept")
 	@Expose
+	@ForeignKey
 	private Concept answerConcept;
 
 	public Concept getConcept() {

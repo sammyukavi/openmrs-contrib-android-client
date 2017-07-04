@@ -297,8 +297,8 @@
 						<android.support.design.widget.TextInputEditText
 								android:id="@+id/clinicalNotes"
 								android:inputType="textMultiLine"
+								android:minLines="6"
 								android:gravity="top|start"
-								android:lines="6"
 								android:layout_width="match_parent"
 								android:layout_height="wrap_content"
 								android:layout_marginLeft="5dp"

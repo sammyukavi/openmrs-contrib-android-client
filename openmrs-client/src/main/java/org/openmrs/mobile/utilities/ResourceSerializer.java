@@ -33,6 +33,7 @@ import org.openmrs.mobile.models.Resource;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.Collection;
+import java.util.Date;
 
 public class ResourceSerializer implements JsonSerializer<Resource> {
 	public static final String RESOURCE_SERIALIZER = "RESOURCE_SERIALIZER";
@@ -83,6 +84,15 @@ public class ResourceSerializer implements JsonSerializer<Resource> {
 							}
 						}
 					} catch (IllegalAccessException e) {
+						Log.e(RESOURCE_SERIALIZER, EXCEPTION, e);
+					}
+				} else if (Date.class.isAssignableFrom(field.getType())) {
+					try {
+						if (field.get(src) != null) {
+							srcJson.add(field.getName(),
+									context.serialize(DateUtils.convertTime(((Date) field.get(src)).getTime(), DateUtils.OPEN_MRS_REQUEST_FORMAT)));
+						}
+					} catch(IllegalAccessException e){
 						Log.e(RESOURCE_SERIALIZER, EXCEPTION, e);
 					}
 				} else {

@@ -65,10 +65,7 @@ import java.util.List;
 public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.VisitDetailsMainPresenter>
 		implements VisitContract.VisitDetailsView {
 
-		private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT);
-
-
-
+	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT);
 
 	private TextView visitStartDate;
 	private TextView activeVisitBadge;
@@ -287,7 +284,8 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 		if (visit.getStopDatetime() != null) {
 			activeVisitBadge.setVisibility(View.GONE);
 			visitStartDate.setText(DATE_FORMAT.format(visit.getStartDatetime()));
-			visitEndDate.setText(getContext().getResources().getString(R.string.date_closed) + ": " + DATE_FORMAT.format(visit.getStopDatetime()));
+			visitEndDate.setText(getContext().getResources().getString(R.string.date_closed) + ": " + DATE_FORMAT
+					.format(visit.getStopDatetime()));
 			startDuration.setText(DateUtils.calculateTimeDifference(visit.getStartDatetime()));
 			visitDuration.setText(getContext().getString(R.string.visit_duration,
 					DateUtils.calculateTimeDifference(visit.getStartDatetime(), visit.getStopDatetime())));
@@ -402,7 +400,8 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 
 						if (visit.getEncounters().get(i).getObs().size() != 0) {
 							visitVitalsAuditInfo.setVisibility(View.VISIBLE);
-							visitVitalsDate.setText(DATE_FORMAT.format(visit.getEncounters().get(i).getEncounterDatetime()));
+							visitVitalsDate.setText(DATE_FORMAT.format(visit.getEncounters().get(i).getEncounterDatetime
+									()));
 
 							for (int v = 0; v < visit.getEncounters().get(i).getEncounterProviders().size(); v++) {
 								if (v == 0) {
@@ -484,8 +483,8 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 					if (visit.getEncounters().get(i).getObs().size() != 0) {
 						visitNoteAuditInfo.setVisibility(View.VISIBLE);
 						visitNoteDate
-								.setText(DateUtils.convertTime(visit.getEncounters().get(i).getEncounterDatetime(),
-										DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT));
+								.setText(DateUtils.convertTime(visit.getEncounters().get(i).getEncounterDatetime()
+										.getTime(), DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT));
 
 						for (int v = 0; v < visit.getEncounters().get(i).getEncounterProviders().size(); v++) {
 							if (v == 0) {

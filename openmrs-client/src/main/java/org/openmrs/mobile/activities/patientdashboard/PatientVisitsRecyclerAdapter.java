@@ -48,7 +48,6 @@ import static org.openmrs.mobile.utilities.ApplicationConstants.entityName.TELEP
 public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT);
 
-
 	private final int VIEW_TYPE_HEADER = 0;
 	private final int VIEW_TYPE_ITEM = 1;
 	private HashMap<String, String> uuids;
@@ -155,7 +154,7 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 				startDate = context.getString(R.string.yesterday);
 			}
 
-			if (visit.getStopDatetime() != null) {
+			if (visit.getStopDatetime() == null) {
 				activeVisit = visit;
 				isActiveVisit = true;
 				singleVisitView.findViewById(R.id.active_visit_badge).setVisibility(View.VISIBLE);
@@ -172,13 +171,7 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 					hasStartedDiagnoses = false;
 					initialDiagnosesView = singleVisitView;
 				}
-			}
-
-			visitStartDate.setText(startDate);
-			((TextView)singleVisitView.findViewById(R.id.visitTimeago))
-					.setText(DateUtils.calculateTimeDifference(visit.getStartDatetime(), true));
-
-			if (!isActiveVisit) {
+			} else {
 				TextView visitDuration = (TextView)singleVisitView.findViewById(R.id.visitDuration);
 				visitDuration.setText(context.getString(R.string.visit_duration,
 						DateUtils.calculateTimeDifference(visit.getStartDatetime(), visit.getStopDatetime())));
@@ -187,10 +180,16 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 				diagnosesLayout.setVisibility(View.GONE);
 			}
 
+			visitStartDate.setText(startDate);
+			((TextView)singleVisitView.findViewById(R.id.visitTimeago))
+					.setText(DateUtils.calculateTimeDifference(visit.getStartDatetime(), true));
+
 			//Adding the link to the visit details page
 			LinearLayout showVisitDetails = (LinearLayout)singleVisitView.findViewById(R.id.loadVisitDetails);
 
 			if (isActiveVisit) {
+				singleVisitTitle.setClickable(true);
+				singleVisitTitle.setOnClickListener(v -> loadVisitDetails(visit));
 				showVisitDetails.setVisibility(View.VISIBLE);
 				showVisitDetails.setOnClickListener(v -> loadVisitDetails(visit));
 			} else {
@@ -223,11 +222,6 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 				baseDiagnosisFragment.initializeListeners();
 				baseDiagnosisFragment.setDiagnoses(activeVisit);
 				hasStartedDiagnoses = true;
-			}
-
-			if (isActiveVisit) {
-				singleVisitTitle.setClickable(true);
-				singleVisitTitle.setOnClickListener(v -> loadVisitDetails(visit));
 			}
 
 			viewHolder.patientVisitDetailsContainer.addView(singleVisitView);
@@ -411,7 +405,8 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 
 	private void setVisitStopDate(Visit visit) {
 		SharedPreferences.Editor editor = instance.getOpenMRSSharedPreferences().edit();
-		editor.putString(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, DATE_FORMAT.format(visit.getStopDatetime()));
+		editor.putString(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE,
+				visit.getStopDatetime() == null ? null : DATE_FORMAT.format(visit.getStopDatetime()));
 		editor.commit();
 	}
 

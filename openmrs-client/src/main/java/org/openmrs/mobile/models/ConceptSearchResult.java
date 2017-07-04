@@ -2,18 +2,26 @@ package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.Table;
 
+import org.openmrs.mobile.data.db.AppDatabase;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 
+@Table(database = AppDatabase.class)
 public class ConceptSearchResult extends BaseOpenmrsObject {
 	@SerializedName("concept")
 	@Expose
+	@ForeignKey(stubbedRelationship = true)
 	private Concept concept;
 	@SerializedName("conceptName")
 	@Expose
+	@ForeignKey(stubbedRelationship = true)
 	private ConceptName conceptName;
 	@SerializedName("value")
 	@Expose
+	@Column
 	private String value;
 
 	public Concept getConcept() {

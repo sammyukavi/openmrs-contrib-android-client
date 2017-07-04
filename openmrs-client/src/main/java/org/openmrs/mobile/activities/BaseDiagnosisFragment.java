@@ -319,7 +319,7 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 		visitNote.setEncounterId(encounterUuid == null ? ApplicationConstants.EMPTY_STRING : encounterUuid);
 		visitNote.setW1(OpenMRS.getInstance().getCurrentUserUuid());
 		visitNote.setW3(OpenMRS.getInstance().getParentLocationUuid());
-		visitNote.setW5(visit.getStartDatetime());
+		visitNote.setW5(String.valueOf(visit.getStartDatetime()));
 		visitNote.setW10(ApplicationConstants.EMPTY_STRING);
 		visitNote.setW12(null == clinicalNote ? ApplicationConstants.EMPTY_STRING : clinicalNote);
 

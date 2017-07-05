@@ -175,13 +175,6 @@ public class VisitActivity extends ACBaseActivity {
 		attachPresenterToFragment(fragment);
 	}
 
-	/*@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		//outState.putString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
-		//outState.putString(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visitUuid);
-	}*/
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
@@ -193,6 +186,7 @@ public class VisitActivity extends ACBaseActivity {
 		if (drawer.isDrawerOpen(GravityCompat.START)) {
 			drawer.closeDrawer(GravityCompat.START);
 		}
+		goToDashboard();
 		super.onBackPressed();
 	}
 
@@ -201,13 +195,7 @@ public class VisitActivity extends ACBaseActivity {
 		// Handle item selection
 		switch (item.getItemId()) {
 			case android.R.id.home:
-				finish();
-				Intent intent = new Intent(getApplicationContext(), PatientDashboardActivity.class);
-				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
-				//fix for now
-				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-				getApplicationContext().startActivity(intent);
+				goToDashboard();
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -284,5 +272,14 @@ public class VisitActivity extends ACBaseActivity {
 		//VisitDetailsFragment.refreshVitalsDetails();
 
 		super.onRestart();
+	}
+
+	private void goToDashboard() {
+		finish();
+		Intent intent = new Intent(getApplicationContext(), PatientDashboardActivity.class);
+		intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
+		//fix for now
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		getApplicationContext().startActivity(intent);
 	}
 }

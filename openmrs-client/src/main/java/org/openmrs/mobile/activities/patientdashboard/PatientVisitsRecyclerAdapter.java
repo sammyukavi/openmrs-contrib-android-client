@@ -72,7 +72,7 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 	private TextInputEditText clinicalNote;
 	private TextView clinicalNoteText;
 	private TextView primaryDiagnosis;
-	private TextView secondaryDiagnosis;
+	private TextView secondaryDiagnosis, noPatientVisits;
 	private View initialDiagnosesView;
 
 	public PatientVisitsRecyclerAdapter(RecyclerView visitsRecyclerView, List<Visit> visits,
@@ -116,7 +116,7 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 			return new RecyclerViewHeader(personAddressView);
 		} else if (viewType == VIEW_TYPE_ITEM) {
 			View patientVisitView =
-					LayoutInflater.from(parent.getContext()).inflate(R.layout.container_visits_observations, parent,
+					LayoutInflater.from(parent.getContext()).inflate(R.layout.patient_visits_container, parent,
 							false);
 			return new PatientVisitViewHolder(patientVisitView);
 		}
@@ -133,7 +133,7 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 			PatientVisitViewHolder viewHolder = (PatientVisitViewHolder)holder;
 			viewHolder.setIsRecyclable(false);
 			Visit visit = getItem(position);//Subtract one to get the first index taken by the header
-			View singleVisitView = layoutInflater.inflate(R.layout.container_single_visit_observation, null);
+			View singleVisitView = layoutInflater.inflate(R.layout.single_patient_visit_container, null);
 			diagnosesLayout = (LinearLayout)singleVisitView.findViewById(R.id.diagnosesLayout);
 			pastDiagnosisLayout = (LinearLayout)singleVisitView.findViewById(R.id.pastDiagnosisLayout);
 			singleVisitTitle = (RelativeLayout)singleVisitView.findViewById(R.id.singleVisitTitle);

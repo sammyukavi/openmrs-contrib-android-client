@@ -129,110 +129,102 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 			RecyclerViewHeader recyclerViewHeader = (RecyclerViewHeader)holder;
 			updateContactInformation(recyclerViewHeader);
 		} else if (holder instanceof PatientVisitViewHolder) {
-			if (visits == null) {
-				PatientVisitViewHolder viewHolder = (PatientVisitViewHolder)holder;
-				viewHolder.setIsRecyclable(false);
-				View noVisitView = layoutInflater.inflate(R.layout.no_patient_visit_container, null);
-				noPatientVisits = (TextView)noVisitView.findViewById(R.id.noPatientVisits);
-				viewHolder.patientVisitDetailsContainer.addView(noVisitView);
-			} else {
-				boolean isActiveVisit = false;
-				PatientVisitViewHolder viewHolder = (PatientVisitViewHolder)holder;
-				viewHolder.setIsRecyclable(false);
-				Visit visit = getItem(position);//Subtract one to get the first index taken by the header
-				View singleVisitView = layoutInflater.inflate(R.layout.single_patient_visit_container, null);
-				diagnosesLayout = (LinearLayout)singleVisitView.findViewById(R.id.diagnosesLayout);
-				pastDiagnosisLayout = (LinearLayout)singleVisitView.findViewById(R.id.pastDiagnosisLayout);
-				singleVisitTitle = (RelativeLayout)singleVisitView.findViewById(R.id.singleVisitTitle);
-				diagnosesLayout.setVisibility(View.GONE);
+			boolean isActiveVisit = false;
+			PatientVisitViewHolder viewHolder = (PatientVisitViewHolder)holder;
+			viewHolder.setIsRecyclable(false);
+			Visit visit = getItem(position);//Subtract one to get the first index taken by the header
+			View singleVisitView = layoutInflater.inflate(R.layout.single_patient_visit_container, null);
+			diagnosesLayout = (LinearLayout)singleVisitView.findViewById(R.id.diagnosesLayout);
+			pastDiagnosisLayout = (LinearLayout)singleVisitView.findViewById(R.id.pastDiagnosisLayout);
+			singleVisitTitle = (RelativeLayout)singleVisitView.findViewById(R.id.singleVisitTitle);
+			diagnosesLayout.setVisibility(View.GONE);
+			pastDiagnosisLayout.setVisibility(View.GONE);
+			TextView visitStartDate = (TextView)singleVisitView.findViewById(R.id.startDate);
+			clinicalNote = (TextInputEditText)singleVisitView.findViewById(R.id.editClinicalNote);
+			clinicalNoteText = (TextView)singleVisitView.findViewById(R.id.clinicalNoteText);
+			primaryDiagnosis = (TextView)singleVisitView.findViewById(R.id.primaryDiagnosis);
+			secondaryDiagnosis = (TextView)singleVisitView.findViewById(R.id.secondaryDiagnosis);
+
+			//Let's set the visit title
+			String startDate = DATE_FORMAT.format(visit.getStartDatetime());
+
+			if (startDate.equalsIgnoreCase(DateUtils.getDateToday(DateUtils.DATE_FORMAT))) {
+				startDate = context.getString(R.string.today);
+			} else if (startDate.equalsIgnoreCase(DateUtils.getDateYesterday(DateUtils.DATE_FORMAT))) {
+				startDate = context.getString(R.string.yesterday);
+			}
+
+			if (visit.getStopDatetime() == null) {
+				activeVisit = visit;
+				isActiveVisit = true;
+				singleVisitView.findViewById(R.id.active_visit_badge).setVisibility(View.VISIBLE);
+				activeVisitView = singleVisitView;
+				diagnosesLayout.setVisibility(View.VISIBLE);
 				pastDiagnosisLayout.setVisibility(View.GONE);
-				TextView visitStartDate = (TextView)singleVisitView.findViewById(R.id.startDate);
-				clinicalNote = (TextInputEditText)singleVisitView.findViewById(R.id.editClinicalNote);
-				clinicalNoteText = (TextView)singleVisitView.findViewById(R.id.clinicalNoteText);
-				primaryDiagnosis = (TextView)singleVisitView.findViewById(R.id.primaryDiagnosis);
-				secondaryDiagnosis = (TextView)singleVisitView.findViewById(R.id.secondaryDiagnosis);
-
-				//Let's set the visit title
-				String startDate = DATE_FORMAT.format(visit.getStartDatetime());
-
-				if (startDate.equalsIgnoreCase(DateUtils.getDateToday(DateUtils.DATE_FORMAT))) {
-					startDate = context.getString(R.string.today);
-				} else if (startDate.equalsIgnoreCase(DateUtils.getDateYesterday(DateUtils.DATE_FORMAT))) {
-					startDate = context.getString(R.string.yesterday);
-				}
-
-				if (visit.getStopDatetime() == null) {
-					activeVisit = visit;
-					isActiveVisit = true;
-					singleVisitView.findViewById(R.id.active_visit_badge).setVisibility(View.VISIBLE);
-					activeVisitView = singleVisitView;
-					diagnosesLayout.setVisibility(View.VISIBLE);
-					pastDiagnosisLayout.setVisibility(View.GONE);
-					// init diagnoses
-					if (initialDiagnosesView != null) {
-						((ViewGroup)initialDiagnosesView.getParent()).removeView(initialDiagnosesView);
-						singleVisitView = initialDiagnosesView;
-					} else {
-						initDiagnosesComponents(singleVisitView);
-						baseDiagnosisFragment.setVisit(visit);
-						hasStartedDiagnoses = false;
-						initialDiagnosesView = singleVisitView;
-					}
+				// init diagnoses
+				if (initialDiagnosesView != null) {
+					((ViewGroup)initialDiagnosesView.getParent()).removeView(initialDiagnosesView);
+					singleVisitView = initialDiagnosesView;
 				} else {
-					TextView visitDuration = (TextView)singleVisitView.findViewById(R.id.visitDuration);
-					visitDuration.setText(context.getString(R.string.visit_duration,
-							DateUtils.calculateTimeDifference(visit.getStartDatetime(), visit.getStopDatetime())));
-					visitDuration.setVisibility(View.VISIBLE);
-					pastDiagnosisLayout.setVisibility(View.VISIBLE);
-					diagnosesLayout.setVisibility(View.GONE);
+					initDiagnosesComponents(singleVisitView);
+					baseDiagnosisFragment.setVisit(visit);
+					hasStartedDiagnoses = false;
+					initialDiagnosesView = singleVisitView;
 				}
+			} else {
+				TextView visitDuration = (TextView)singleVisitView.findViewById(R.id.visitDuration);
+				visitDuration.setText(context.getString(R.string.visit_duration,
+						DateUtils.calculateTimeDifference(visit.getStartDatetime(), visit.getStopDatetime())));
+				visitDuration.setVisibility(View.VISIBLE);
+				pastDiagnosisLayout.setVisibility(View.VISIBLE);
+				diagnosesLayout.setVisibility(View.GONE);
+			}
 
-				visitStartDate.setText(startDate);
-				((TextView)singleVisitView.findViewById(R.id.visitTimeago))
-						.setText(DateUtils.calculateTimeDifference(visit.getStartDatetime(), true));
+			visitStartDate.setText(startDate);
+			((TextView)singleVisitView.findViewById(R.id.visitTimeago))
+					.setText(DateUtils.calculateTimeDifference(visit.getStartDatetime(), true));
 
-				//Adding the link to the visit details page
-				LinearLayout showVisitDetails = (LinearLayout)singleVisitView.findViewById(R.id.loadVisitDetails);
+			//Adding the link to the visit details page
+			LinearLayout showVisitDetails = (LinearLayout)singleVisitView.findViewById(R.id.loadVisitDetails);
 
-				if (isActiveVisit) {
-					singleVisitTitle.setClickable(true);
-					singleVisitTitle.setOnClickListener(v -> loadVisitDetails(visit));
-					showVisitDetails.setVisibility(View.VISIBLE);
-					showVisitDetails.setOnClickListener(v -> loadVisitDetails(visit));
-				} else {
-					showVisitDetails.setVisibility(View.GONE);
-					singleVisitView.setOnClickListener(v -> loadVisitDetails(visit));
-				}
+			if (isActiveVisit) {
+				singleVisitTitle.setClickable(true);
+				singleVisitTitle.setOnClickListener(v -> loadVisitDetails(visit));
+				showVisitDetails.setVisibility(View.VISIBLE);
+				showVisitDetails.setOnClickListener(v -> loadVisitDetails(visit));
+			} else {
+				showVisitDetails.setVisibility(View.GONE);
+				singleVisitView.setOnClickListener(v -> loadVisitDetails(visit));
+			}
 
-				if (visit.getEncounters().size() == 0) {
-					showClinicalNote(new Encounter(), visit, singleVisitView, isActiveVisit);
-				} else {
-					Encounter tempEncounter = null;
-					for (Encounter encounter : visit.getEncounters()) {
-						if (encounter.getEncounterType().getDisplay()
-								.equalsIgnoreCase(ApplicationConstants.EncounterTypeDisplays.VISIT_NOTE)) {
-							if (!encounter.getVoided()) {
-								tempEncounter = encounter;
-								if (activeVisit == visit) {
-									baseDiagnosisFragment.setEncounterUuid(encounter.getUuid());
-									baseDiagnosisFragment.setClinicalNote(clinicalNote.getText().toString());
-									break;
-								}
+			if (visit.getEncounters().size() == 0) {
+				showClinicalNote(new Encounter(), visit, singleVisitView, isActiveVisit);
+			} else {
+				Encounter tempEncounter = null;
+				for (Encounter encounter : visit.getEncounters()) {
+					if (encounter.getEncounterType().getDisplay()
+							.equalsIgnoreCase(ApplicationConstants.EncounterTypeDisplays.VISIT_NOTE)) {
+						if (!encounter.getVoided()) {
+							tempEncounter = encounter;
+							if (activeVisit == visit) {
+								baseDiagnosisFragment.setEncounterUuid(encounter.getUuid());
+								baseDiagnosisFragment.setClinicalNote(clinicalNote.getText().toString());
+								break;
 							}
 						}
 					}
-					showClinicalNote(tempEncounter != null ? tempEncounter : new Encounter(), visit, singleVisitView,
-							isActiveVisit);
 				}
-
-				if (!hasStartedDiagnoses && isActiveVisit) {
-					baseDiagnosisFragment.initializeListeners();
-					baseDiagnosisFragment.setDiagnoses(activeVisit);
-					hasStartedDiagnoses = true;
-				}
-
-				viewHolder.patientVisitDetailsContainer.addView(singleVisitView);
+				showClinicalNote(tempEncounter != null ? tempEncounter : new Encounter(), visit, singleVisitView,
+						isActiveVisit);
 			}
+
+			if (!hasStartedDiagnoses && isActiveVisit) {
+				baseDiagnosisFragment.initializeListeners();
+				baseDiagnosisFragment.setDiagnoses(activeVisit);
+				hasStartedDiagnoses = true;
+			}
+
+			viewHolder.patientVisitDetailsContainer.addView(singleVisitView);
 		}
 	}
 

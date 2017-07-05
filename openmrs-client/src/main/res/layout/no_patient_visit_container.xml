@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_width="match_parent"
+		android:orientation="vertical"
+		android:layout_height="match_parent">
+	
+	<TextView
+			android:id="@+id/noPatientVisits"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_marginBottom="5dp"
+			android:layout_marginTop="5dp"
+			android:gravity="center"
+			android:text="@string/no_visits_recorded_for_this_patient"
+			android:textColor="@color/openmrs_color_grey" />
+	
+</RelativeLayout>

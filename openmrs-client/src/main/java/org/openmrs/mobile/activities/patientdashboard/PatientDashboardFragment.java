@@ -39,7 +39,6 @@ import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Visit;
-import org.openmrs.mobile.models.VisitNote;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.FontsUtil;
 import org.openmrs.mobile.utilities.StringUtils;
@@ -209,16 +208,14 @@ public class PatientDashboardFragment extends BaseDiagnosisFragment<PatientDashb
 			}
 		}
 
-		if (!visits.isEmpty()) {
-			HashMap<String, String> uuidsHashmap = new HashMap<>();
-			uuidsHashmap.put(PATIENT_UUID_BUNDLE, patient == null ? "" : patient.getUuid());
-			uuidsHashmap.put(LOCATION_UUID_BUNDLE, location == null ? "" : location.getUuid());
+		HashMap<String, String> uuidsHashmap = new HashMap<>();
+		uuidsHashmap.put(PATIENT_UUID_BUNDLE, patient == null ? "" : patient.getUuid());
+		uuidsHashmap.put(LOCATION_UUID_BUNDLE, location == null ? "" : location.getUuid());
 
-			patientVisitsRecyclerAdapter =
-					new PatientVisitsRecyclerAdapter(patientVisitsRecyclerView, visits, getActivity(), this);
-			patientVisitsRecyclerAdapter.setUuids(uuidsHashmap);
-			patientVisitsRecyclerView.setAdapter(patientVisitsRecyclerAdapter);
-		}
+		patientVisitsRecyclerAdapter =
+				new PatientVisitsRecyclerAdapter(patientVisitsRecyclerView, visits, getActivity(), this);
+		patientVisitsRecyclerAdapter.setUuids(uuidsHashmap);
+		patientVisitsRecyclerView.setAdapter(patientVisitsRecyclerAdapter);
 	}
 
 	@Override

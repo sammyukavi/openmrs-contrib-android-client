@@ -20,7 +20,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
@@ -49,7 +48,7 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 	private RecyclerView patientListModelRecyclerView;
 	private LinearLayoutManager layoutManager;
 	private LinearLayout patientListScreen, patientListRecyclerView;
-	private RelativeLayout patientListProgressBar, patientListLoadingProgressBar, numberOfPatientsLayout;
+	private RelativeLayout patientListProgressBar, patientListLoadingProgressBar, numberOfPatientsLayout, selectPatientList;
 
 	private PatientList selectedPatientList;
 
@@ -59,7 +58,7 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 		public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
 			if (!mPresenter.isLoading()) {
 				// you can't scroll up or down. load previous page if any
-				if(!recyclerView.canScrollVertically(1) && !recyclerView.canScrollVertically(-1)) {
+				if (!recyclerView.canScrollVertically(1) && !recyclerView.canScrollVertically(-1)) {
 					mPresenter.loadResults(selectedPatientList.getUuid(), false);
 				}
 			}
@@ -105,6 +104,7 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 		patientListScreen = (LinearLayout)root.findViewById(R.id.patientListScreen);
 		patientListRecyclerView = (LinearLayout)root.findViewById(R.id.patientListRecyclerView);
 		numberOfPatientsLayout = (RelativeLayout)root.findViewById(R.id.numberOfPatientsLayout);
+		selectPatientList = (RelativeLayout)root.findViewById(R.id.selectPatientList);
 
 		layoutManager = new LinearLayoutManager(this.getActivity());
 		patientListModelRecyclerView = (RecyclerView)root.findViewById(R.id.patientListModelRecyclerView);
@@ -158,10 +158,12 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				setSelectedPatientList(patientLists.get(position));
 				if (selectedPatientList.getUuid() == null) {
+					showNoPatientListSelected(true);
 					setNumberOfPatientsView(0);
 					List<PatientListContext> patientListContextList = new ArrayList<>();
 					updatePatientListData(patientListContextList);
 				} else {
+					showNoPatientListSelected(false);
 					mPresenter.getPatientListData(selectedPatientList.getUuid(), 1);
 				}
 			}
@@ -201,5 +203,9 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 	public void updatePagingLabel(int currentPage, int totalNumberOfPages) {
 		pagingLabel
 				.setText(getString(R.string.paging_label, String.valueOf(currentPage), String.valueOf(totalNumberOfPages)));
+	}
+
+	public void showNoPatientListSelected(boolean visibility) {
+		selectPatientList.setVisibility(visibility ? View.VISIBLE : View.GONE);
 	}
 }

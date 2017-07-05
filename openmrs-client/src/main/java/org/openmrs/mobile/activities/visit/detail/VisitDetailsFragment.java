@@ -77,25 +77,18 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 			auditDataMetadataDate;
 	private Visit visit;
 	private TableLayout visitVitalsTableLayout, auditInfoTableLayout;
-	private TextInputEditText clinicalNote;
 	private LinearLayoutManager primaryDiagnosisLayoutManager, secondaryDiagnosisLayoutManager;
 	private ImageButton addAuditData, addVisitVitals;
 	private String patientUuid;
 	private String visitUuid;
-	private String providerUuid, visitStopDate, encounterUuid;
+	private String providerUuid, visitStopDate;
 	private Intent intent;
 	private FlexboxLayout visitAttributesLayout;
 	private RelativeLayout visitNoteAuditInfo, visitVitalsAuditInfo, auditDataMetadata, visitDetailsProgressBar;
-	private View visitDetailsView;
 	private ScrollView visitDetailsScrollView;
-	private Boolean changesMade;
 
 	public static VisitDetailsFragment newInstance() {
 		return new VisitDetailsFragment();
-	}
-
-	public void refreshVitalsDetails() {
-		((VisitDetailsPresenter)mPresenter).getVisit();
 	}
 
 	@Override
@@ -121,8 +114,6 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 		((VisitDetailsPresenter)mPresenter).getVisitUUID();
 		((VisitDetailsPresenter)mPresenter).getProviderUUID();
 		//buildMarginLayout();
-		changesMade = false;
-		visitNoteWatcher();
 		initializeListeners();
 		return root;
 	}
@@ -141,11 +132,9 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 		noSecondaryDiagnoses = (TextView)v.findViewById(R.id.noSecondaryDiagnosis);
 		primaryDiagnosesRecycler = (RecyclerView)v.findViewById(R.id.primaryDiagnosisRecyclerView);
 		secondaryDiagnosesRecycler = (RecyclerView)v.findViewById(R.id.secondaryDiagnosisRecyclerView);
-		submitVisitNote = (AppCompatButton)v.findViewById(R.id.submitVisitNote);
+		clinicalNoteView = (TextInputEditText)v.findViewById(R.id.clinicalNotes);
 
-		clinicalNote = (TextInputEditText)v.findViewById(R.id.clinicalNotes);
 		noAuditData = (TextView)v.findViewById(R.id.noAuditInfo);
-
 		activeVisitBadge = (TextView)v.findViewById(R.id.activeVisitBadge);
 		visitEndDate = (TextView)v.findViewById(R.id.visitEndDate);
 		visitDuration = (TextView)v.findViewById(R.id.visitDuration);
@@ -165,40 +154,12 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 		visitVitalsAuditInfo = (RelativeLayout)v.findViewById(R.id.visitVitalsAuditInfo);
 		auditDataMetadata = (RelativeLayout)v.findViewById(R.id.auditDataMetadata);
 
-		visitDetailsView = v.findViewById(R.id.visitDetailsView);
-
 		visitDetailsProgressBar = (RelativeLayout)v.findViewById(R.id.visitDetailsTabProgressBar);
 		visitDetailsScrollView = (ScrollView)v.findViewById(R.id.visitDetailsTab);
-
-	}
-
-	private void visitNoteWatcher() {
-		clinicalNote.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-			}
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {
-				subsequentClinicalNoteHashcode = s.toString().hashCode();
-				if (subsequentClinicalNoteHashcode != initialClinicNoteHashcode) {
-					changesMade = true;
-					submitVisitNote.setEnabled(true);
-				} else {
-					submitVisitNote.setEnabled(false);
-				}
-			}
-		});
 	}
 
 	@Override
-	public void showToast(String message, ToastUtil.ToastType toastType) {
-
-	}
+	public void showToast(String message, ToastUtil.ToastType toastType) {}
 
 	@Override
 	public void setVisit(Visit visit) {
@@ -238,8 +199,6 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 	}
 
 	private void addListeners() {
-		submitVisitNote.setEnabled(false);
-
 		addAuditData.setOnClickListener(
 				v -> {
 					intent = new Intent(getContext(), AuditDataActivity.class);
@@ -260,10 +219,6 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 				intent.putExtra(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, visitStopDate);
 				startActivity(intent);
 			}
-		});
-
-		submitVisitNote.setOnClickListener(v -> {
-			saveVisitNote(encounterUuid, ViewUtils.getInput(clinicalNote), visit);
 		});
 
 		auditDataCompleteness.setOnClickListener(new View.OnClickListener() {
@@ -478,9 +433,8 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 
 				if (encounter.getEncounterType().getDisplay()
 						.equalsIgnoreCase(ApplicationConstants.EncounterTypeDisplays.VISIT_NOTE)) {
-					this.encounterUuid = encounter.getUuid();
-
 					if (visit.getEncounters().get(i).getObs().size() != 0) {
+						setEncounterUuid(encounter.getUuid());
 						visitNoteAuditInfo.setVisibility(View.VISIBLE);
 						visitNoteDate
 								.setText(DateUtils.convertTime(visit.getEncounters().get(i).getEncounterDatetime()
@@ -496,13 +450,12 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 						}
 					}
 
-					submitVisitNote.setText(getString(R.string.update_visit_note));
 					for (int v = 0; v < encounter.getObs().size(); v++) {
 						ArrayList locators = StringUtils.splitStrings(encounter.getObs().get(v).getDisplay(), ":");
 						if (locators.get(0).toString()
 								.equalsIgnoreCase(ApplicationConstants.ObservationLocators.CLINICAL_NOTE)) {
 							initialClinicNoteHashcode = locators.get(1).toString().hashCode();
-							clinicalNote.setText(locators.get(1).toString());
+							clinicalNoteView.setText(locators.get(1).toString());
 						}
 					}
 				}
@@ -584,11 +537,6 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 		bundle.setRightButtonText(getString(R.string.dialog_button_confirm));
 		((VisitActivity)this.getActivity())
 				.createAndShowDialog(bundle, ApplicationConstants.DialogTAG.PENDING_VISIT_NOTE_CHANGES_TAG);
-	}
-
-	@Override
-	public boolean isAutoSaveEnabled() {
-		return false;
 	}
 
 	@Override

@@ -288,11 +288,6 @@ public class PatientDashboardFragment extends BaseDiagnosisFragment<PatientDashb
 	}
 
 	@Override
-	public boolean isAutoSaveEnabled() {
-		return true;
-	}
-
-	@Override
 	public IBaseDiagnosisView getBaseDiagnosisView() {
 		return this;
 	}

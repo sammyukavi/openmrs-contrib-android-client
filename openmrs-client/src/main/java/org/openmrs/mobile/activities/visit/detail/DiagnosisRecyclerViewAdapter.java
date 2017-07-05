@@ -33,7 +33,7 @@ public class DiagnosisRecyclerViewAdapter extends RecyclerView.Adapter<Diagnosis
 		this.diagnoses = diagnoses;
 		this.encounterUuid = encounterUuid;
 		this.clinicalNote = clinicalNote;
-		this.visit =  visit;
+		this.visit = visit;
 		this.visitDetailsView = visitDetailsView;
 	}
 
@@ -83,9 +83,7 @@ public class DiagnosisRecyclerViewAdapter extends RecyclerView.Adapter<Diagnosis
 					visitDetailsView.setSecondaryDiagnosis(encounterDiagnosis);
 				}
 
-				if(visitDetailsView.isAutoSaveEnabled()) {
-					visitDetailsView.saveVisitNote(encounterUuid, clinicalNote, visit);
-				}
+				visitDetailsView.saveVisitNote(encounterUuid, clinicalNote, visit);
 			}
 		});
 
@@ -100,9 +98,7 @@ public class DiagnosisRecyclerViewAdapter extends RecyclerView.Adapter<Diagnosis
 					visitDetailsView.setDiagnosisCertainty(encounterDiagnosis);
 				}
 
-				if(visitDetailsView.isAutoSaveEnabled()) {
-					visitDetailsView.saveVisitNote(encounterUuid, clinicalNote, visit);
-				}
+				visitDetailsView.saveVisitNote(encounterUuid, clinicalNote, visit);
 			}
 		});
 
@@ -112,9 +108,7 @@ public class DiagnosisRecyclerViewAdapter extends RecyclerView.Adapter<Diagnosis
 			public boolean onLongClick(View v) {
 				visitDetailsView.removeDiagnosis(encounterDiagnosis, diagnosisOrder);
 
-				if(visitDetailsView.isAutoSaveEnabled()) {
-					visitDetailsView.saveVisitNote(encounterUuid, clinicalNote, visit);
-				}
+				visitDetailsView.saveVisitNote(encounterUuid, clinicalNote, visit);
 
 				return true;
 			}

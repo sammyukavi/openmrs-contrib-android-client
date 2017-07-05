@@ -3,12 +3,12 @@
 		android:layout_width="match_parent"
 		android:orientation="vertical"
 		android:layout_height="wrap_content">
-
+	
 	<RelativeLayout
 			android:id="@+id/singleVisitTitle"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content">
-
+		
 		<TextView
 				android:id="@+id/active_visit_badge"
 				android:visibility="gone"
@@ -28,7 +28,7 @@
 				android:ellipsize="end"
 				android:text="@string/active_visit_label"
 				android:textColor="@color/color_white" />
-
+		
 		<TextView
 				android:layout_toRightOf="@+id/active_visit_badge"
 				android:layout_toEndOf="@+id/active_visit_badge"
@@ -40,7 +40,7 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:id="@+id/startDate" />
-
+		
 		<TextView
 				android:layout_toRightOf="@+id/startDate"
 				android:layout_toEndOf="@+id/startDate"
@@ -52,7 +52,7 @@
 				android:textColor="@color/openmrs_color_grey"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content" />
-
+		
 		<TextView
 				android:visibility="gone"
 				android:layout_toRightOf="@+id/visitTimeago"
@@ -66,7 +66,7 @@
 				android:textColor="@color/openmrs_color_grey"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content" />
-
+		
 		<LinearLayout
 				android:visibility="gone"
 				android:orientation="vertical"
@@ -79,7 +79,7 @@
 				android:id="@+id/savingProgressBarView"
 				android:layout_width="20dp"
 				android:layout_height="20dp">
-
+			
 			<ProgressBar
 					android:layout_gravity="end"
 					android:padding="0dp"
@@ -87,16 +87,16 @@
 					android:layout_width="wrap_content"
 					android:layout_height="match_parent" />
 		</LinearLayout>
-
-
+	
+	
 	</RelativeLayout>
-
+	
 	<LinearLayout
 			android:orientation="vertical"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content">
-
-
+		
+		
 		<TextView
 				android:visibility="gone"
 				android:layout_width="wrap_content"
@@ -106,33 +106,33 @@
 				android:layout_marginStart="10dp"
 				android:textStyle="bold"
 				android:text="@string/visit_note" />
-
+		
 		<View
 				android:layout_width="match_parent"
 				android:layout_height="1dp"
 				android:layout_marginTop="10dp"
 				android:layout_marginBottom="10dp"
 				android:background="@android:color/darker_gray" />
-
+		
 		<LinearLayout
 				android:visibility="gone"
 				android:id="@+id/editClinicNoteContainer"
 				android:orientation="horizontal"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent">
-
+			
 			<android.support.design.widget.TextInputLayout
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:gravity="top"
 					android:layout_gravity="top">
-
+				
 				<android.support.design.widget.TextInputEditText
 						android:layout_marginTop="10dp"
 						android:layout_marginBottom="10dp"
 						android:inputType="textMultiLine"
+						android:minLines="6"
 						android:gravity="top|start"
-						android:lines="4"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:layout_marginLeft="5dp"
@@ -144,9 +144,9 @@
 						android:scrollbars="vertical"
 						android:id="@+id/editClinicalNote" />
 			</android.support.design.widget.TextInputLayout>
-
+		
 		</LinearLayout>
-
+		
 		<LinearLayout
 				android:id="@+id/clinicNoteTextContainer"
 				android:visibility="gone"
@@ -155,7 +155,7 @@
 				android:orientation="vertical"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent">
-
+			
 			<TextView
 					android:id="@+id/clinicalNoteTitle"
 					android:layout_marginTop="0dp"
@@ -163,7 +163,7 @@
 					android:layout_height="wrap_content"
 					android:textStyle="bold"
 					android:text="@string/clinical_notes_label" />
-
+			
 			<TextView
 					android:gravity="top"
 					android:layout_gravity="top"
@@ -175,9 +175,9 @@
 					android:layout_marginRight="5dp"
 					android:textColor="@color/openmrs_color_grey"
 					android:id="@+id/clinicalNoteText" />
-
+		
 		</LinearLayout>
-
+		
 		<LinearLayout
 				android:id="@+id/diagnosesLayout"
 				android:layout_marginTop="0dp"
@@ -185,12 +185,12 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:orientation="vertical">
-
+			
 			<LinearLayout
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:orientation="vertical">
-
+				
 				<android.support.design.widget.TextInputLayout
 						android:layout_marginTop="0dp"
 						android:layout_width="match_parent"
@@ -200,7 +200,7 @@
 						android:layout_marginStart="5dp"
 						android:layout_marginRight="5dp"
 						android:layout_marginEnd="5dp">
-
+					
 					<AutoCompleteTextView
 							android:layout_marginTop="0dp"
 							android:layout_marginBottom="5dp"
@@ -214,16 +214,16 @@
 							android:textSize="15sp"
 							android:layout_marginEnd="5dp"
 							android:hint="@string/add_diagnosis" />
-
+				
 				</android.support.design.widget.TextInputLayout>
-
+				
 				<LinearLayout
 						android:orientation="vertical"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:layout_marginStart="10dp"
 						android:layout_marginLeft="10dp">
-
+					
 					<TextView
 							android:layout_width="match_parent"
 							android:layout_height="wrap_content"
@@ -234,7 +234,7 @@
 							android:layout_marginRight="10dp"
 							android:textStyle="bold"
 							android:text="@string/primary_diagnosis_label" />
-
+					
 					<TextView
 							android:id="@+id/noPrimaryDiagnosis"
 							android:layout_width="match_parent"
@@ -248,7 +248,7 @@
 							android:textSize="13sp"
 							android:textColor="@color/openmrs_color_grey"
 							android:text="@string/no_primary_diagnosis" />
-
+					
 					<android.support.v7.widget.RecyclerView
 							android:id="@+id/primaryDiagnosisRecyclerView"
 							android:layout_width="match_parent"
@@ -261,7 +261,7 @@
 							android:layout_marginEnd="10dp"
 							android:layout_gravity="start|bottom" />
 				</LinearLayout>
-
+				
 				<LinearLayout
 						android:orientation="vertical"
 						android:layout_width="match_parent"
@@ -269,7 +269,7 @@
 						android:layout_marginTop="10dp"
 						android:layout_marginStart="10dp"
 						android:layout_marginLeft="10dp">
-
+					
 					<TextView
 							android:layout_width="match_parent"
 							android:layout_height="wrap_content"
@@ -280,7 +280,7 @@
 							android:layout_marginRight="10dp"
 							android:textStyle="bold"
 							android:text="@string/secondary_diagnosis_label" />
-
+					
 					<TextView
 							android:id="@+id/noSecondaryDiagnosis"
 							android:layout_width="match_parent"
@@ -294,7 +294,7 @@
 							android:textSize="13sp"
 							android:textColor="@color/openmrs_color_grey"
 							android:text="@string/no_secondary_diagnosis" />
-
+					
 					<android.support.v7.widget.RecyclerView
 							android:id="@+id/secondaryDiagnosisRecyclerView"
 							android:layout_width="match_parent"
@@ -306,17 +306,17 @@
 							android:layout_marginRight="10dp"
 							android:layout_marginEnd="10dp"
 							android:layout_gravity="start|bottom" />
-
+				
 				</LinearLayout>
-
+			
 			</LinearLayout>
-
+			
 			<LinearLayout
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:layout_marginTop="10dp"
 					android:orientation="vertical">
-
+				
 				<android.support.v7.widget.AppCompatButton
 						android:id="@+id/submitVisitNote"
 						android:layout_width="match_parent"
@@ -328,15 +328,16 @@
 						android:textColor="@color/white"
 						android:text="@string/save_visit_note"
 						style="@style/Widget.AppCompat.Button.Borderless" />
-
+			
 			</LinearLayout>
 		</LinearLayout>
-
+		
 		<LinearLayout
 				android:id="@+id/pastDiagnosisLayout"
 				android:orientation="vertical"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content">
+			
 			<LinearLayout
 					android:id="@+id/primaryDiagnosisHolder"
 					android:layout_width="match_parent"
@@ -344,14 +345,14 @@
 					android:layout_marginTop="5dp"
 					android:layout_marginBottom="5dp"
 					android:layout_height="wrap_content">
-
+				
 				<TextView
 						android:layout_marginTop="5dp"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:textStyle="bold"
 						android:text="@string/primary_diagnosis_label" />
-
+				
 				<TextView
 						android:id="@+id/primaryDiagnosis"
 						android:layout_width="match_parent"
@@ -363,9 +364,9 @@
 						android:gravity="fill_horizontal"
 						android:textColor="@color/openmrs_color_grey"
 						android:text="@string/no_primary_diagnosis" />
-
+			
 			</LinearLayout>
-
+			
 			<LinearLayout
 					android:id="@+id/secondaryDiagnosisHolder"
 					android:layout_width="match_parent"
@@ -373,13 +374,13 @@
 					android:layout_height="wrap_content"
 					android:layout_marginTop="5dp"
 					android:layout_marginBottom="5dp">
-
+				
 				<TextView
 						android:textStyle="bold"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
 						android:text="@string/secondary_diagnosis_label" />
-
+				
 				<TextView
 						android:id="@+id/secondaryDiagnosis"
 						android:layout_width="match_parent"
@@ -392,12 +393,12 @@
 						android:textColor="@color/openmrs_color_grey"
 						android:text="@string/no_secondary_diagnosis" />
 			</LinearLayout>
-
+		
 		</LinearLayout>
-
-
+	
+	
 	</LinearLayout>
-
+	
 	<LinearLayout
 			android:id="@+id/loadVisitDetails"
 			android:padding="0dp"
@@ -406,7 +407,7 @@
 			android:layout_height="wrap_content"
 			android:gravity="end"
 			android:orientation="horizontal">
-
+		
 		<ImageView
 				android:contentDescription="@string/app_name"
 				android:src="@drawable/ic_chevron_right_black"
@@ -415,6 +416,6 @@
 				android:gravity="end"
 				android:layout_width="25dp"
 				android:layout_height="25dp" />
-
+	
 	</LinearLayout>
 </LinearLayout>

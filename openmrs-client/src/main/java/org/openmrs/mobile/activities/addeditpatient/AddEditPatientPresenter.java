@@ -14,289 +14,430 @@
 
 package org.openmrs.mobile.activities.addeditpatient;
 
+import android.util.Log;
+import android.widget.Spinner;
+
 import org.openmrs.mobile.activities.BasePresenter;
-import org.openmrs.mobile.api.RestApi;
-import org.openmrs.mobile.api.RestServiceBuilder;
-import org.openmrs.mobile.api.retrofit.PatientApi;
-import org.openmrs.mobile.dao.PatientDAO;
-import org.openmrs.mobile.listeners.retrofit.DefaultResponseCallbackListener;
-import org.openmrs.mobile.models.Module;
+import org.openmrs.mobile.application.OpenMRS;
+import org.openmrs.mobile.data.DataService;
+import org.openmrs.mobile.data.PagingInfo;
+import org.openmrs.mobile.data.QueryOptions;
+import org.openmrs.mobile.data.impl.ConceptAnswerDataService;
+import org.openmrs.mobile.data.impl.ConceptDataService;
+import org.openmrs.mobile.data.impl.LocationDataService;
+import org.openmrs.mobile.data.impl.PatientDataService;
+import org.openmrs.mobile.data.impl.PatientIdentifierTypeDataService;
+import org.openmrs.mobile.data.impl.PersonAttributeTypeDataService;
+import org.openmrs.mobile.models.Concept;
+import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Patient;
-import org.openmrs.mobile.models.Results;
+import org.openmrs.mobile.models.PatientIdentifierType;
+import org.openmrs.mobile.models.PersonAttribute;
+import org.openmrs.mobile.models.PersonAttributeType;
 import org.openmrs.mobile.utilities.ApplicationConstants;
-import org.openmrs.mobile.utilities.ModuleUtils;
-import org.openmrs.mobile.utilities.NetworkUtils;
-import org.openmrs.mobile.utilities.PatientComparator;
 import org.openmrs.mobile.utilities.StringUtils;
 import org.openmrs.mobile.utilities.ToastUtil;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class AddEditPatientPresenter extends BasePresenter implements AddEditPatientContract.Presenter {
 
-    private final AddEditPatientContract.View mPatientInfoView;
+	private final AddEditPatientContract.View patientRegistrationView;
 
-    private PatientApi patientApi;
-    private RestApi restApi;
-    private Patient mPatient;
-    private String patientToUpdateId;
-    private List<String> mCountries;
-    private boolean registeringPatient = false;
+	private PatientDataService patientDataService;
+	private ConceptDataService conceptDataService;
+	private PersonAttributeTypeDataService personAttributeTypeDataService;
+	private PatientIdentifierTypeDataService patientIdentifierTypeDataService;
+	private ConceptAnswerDataService conceptAnswerDataService;
+	private LocationDataService locationDataService;
+	private Patient patient;
+	private String patientToUpdateUuid;
+	private List<String> mCounties;
+	private boolean registeringPatient = false;
+	private OpenMRS instance = OpenMRS.getInstance();
+	private String locationUuid;
+	private String conceptUuid;
 
-    public AddEditPatientPresenter(AddEditPatientContract.View mPatientInfoView,
-                                   List<String> countries,
-                                   String patientToUpdateId) {
-        this.mPatientInfoView = mPatientInfoView;
-        this.mPatientInfoView.setPresenter(this);
-        this.mCountries = countries;
-        this.patientToUpdateId = patientToUpdateId;
-        this.patientApi = new PatientApi();
-        this.restApi = RestServiceBuilder.createService(RestApi.class);
-    }
+	private int page = 0;
+	private int limit = 10;
 
-    public AddEditPatientPresenter(AddEditPatientContract.View mPatientInfoView, PatientApi patientApi,
-                                   Patient mPatient, String patientToUpdateId,
-                                   List<String> mCountries, RestApi restApi) {
-        this.mPatientInfoView = mPatientInfoView;
-        this.patientApi = patientApi;
-        this.mPatient = mPatient;
-        this.patientToUpdateId = patientToUpdateId;
-        this.mCountries = mCountries;
-        this.restApi = restApi;
-        this.mPatientInfoView.setPresenter(this);
-    }
+	public AddEditPatientPresenter(AddEditPatientContract.View patientRegistrationView,
+			List<String> countries,
+			String patientToUpdateUuid) {
+		this.patientRegistrationView = patientRegistrationView;
+		this.patientRegistrationView.setPresenter(this);
+		this.mCounties = countries;
+		this.patientToUpdateUuid = patientToUpdateUuid;
+		this.patientDataService = new PatientDataService();
+		this.conceptDataService = new ConceptDataService();
+		this.patientIdentifierTypeDataService = new PatientIdentifierTypeDataService();
+		this.personAttributeTypeDataService = new PersonAttributeTypeDataService();
+		this.conceptAnswerDataService = new ConceptAnswerDataService();
+		this.locationDataService = new LocationDataService();
+	}
 
-    @Override
-    public void subscribe(){
-        // This method is intentionally empty
-    }
+	public AddEditPatientPresenter(AddEditPatientContract.View patientRegistrationView, Patient mPatient,
+			String patientToUpdateId, List<String> mCounties) {
+		this.patientRegistrationView = patientRegistrationView;
+		this.patientDataService = new PatientDataService();
+		this.conceptDataService = new ConceptDataService();
+		this.patient = mPatient;
+		this.patientToUpdateUuid = patientToUpdateId;
+		this.mCounties = mCounties;
+		this.patientRegistrationView.setPresenter(this);
+		this.patientIdentifierTypeDataService = new PatientIdentifierTypeDataService();
+		this.personAttributeTypeDataService = new PersonAttributeTypeDataService();
+		this.conceptAnswerDataService = new ConceptAnswerDataService();
+		this.locationDataService = new LocationDataService();
+	}
 
-    @Override
-    public Patient getPatientToUpdate() {
-        Patient patientToUpdate = new PatientDAO().findPatientByID(patientToUpdateId);
-        return patientToUpdate;
-    }
+	private boolean validate(Patient patient) {
 
-    @Override
-    public void confirmRegister(Patient patient) {
-        if(!registeringPatient && validate(patient)) {
-            mPatientInfoView.setProgressBarVisibility(true);
-            mPatientInfoView.hideSoftKeys();
-            registeringPatient = true;
-            findSimilarPatients(patient);
-        }
-        else {
-            mPatientInfoView.scrollToTop();
-        }
-    }
+		boolean familyNameError = false;
+		boolean lastNameError = false;
+		boolean dateOfBirthError = false;
+		boolean genderError = false;
+		boolean countyError = false;
+		boolean patientFileNumberError = false;
+		boolean civilStatusError = false;
+		boolean occupationError = false;
+		boolean subCountyError = false;
+		boolean nationalityError = false;
+		boolean patientIdNoError = false;
+		boolean clinicError = false;
+		boolean wardError = false;
+		boolean phonenumberError = false;
+		boolean kinNameError = false;
+		boolean kinRelationshipError = false;
+		boolean kinPhonenumberError = false;
+		boolean kinResidenceError = false;
 
-    @Override
-    public void confirmUpdate(Patient patient) {
-        if (!registeringPatient && validate(patient)) {
-            mPatientInfoView.setProgressBarVisibility(true);
-            mPatientInfoView.hideSoftKeys();
-            registeringPatient = true;
-            updatePatient(patient);
-        } else {
-            mPatientInfoView.scrollToTop();
-        }
-    }
+		patientRegistrationView
+				.setErrorsVisibility(familyNameError, lastNameError, dateOfBirthError, countyError, genderError,
+						patientFileNumberError, civilStatusError, occupationError, subCountyError, nationalityError,
+						patientIdNoError, clinicError, wardError, phonenumberError, kinNameError, kinRelationshipError,
+						kinPhonenumberError, kinResidenceError);
 
-    @Override
-    public void finishPatientInfoActivity() {
-        mPatientInfoView.finishPatientInfoActivity();
-    }
+		// Validate names
+		if (StringUtils.isBlank(patient.getPerson().getName().getGivenName())) {
+			familyNameError = true;
+		}
+		if (StringUtils.isBlank(patient.getPerson().getName().getFamilyName())) {
+			lastNameError = true;
+		}
 
-    private boolean validate(Patient patient) {
+		// Validate date of birth
+		if (StringUtils.isBlank(patient.getPerson().getBirthdate())) {
+			dateOfBirthError = true;
+		}
 
-        boolean familyNameError = false;
-        boolean lastNameError = false;
-        boolean dateOfBirthError = false;
-        boolean genderError = false;
-        boolean addressError = false;
-        boolean countryError = false;
+		// Validate gender
+		if (StringUtils.isBlank(patient.getPerson().getGender())) {
+			genderError = true;
+		}
 
-        mPatientInfoView.setErrorsVisibility(familyNameError, lastNameError, dateOfBirthError, genderError, addressError, countryError);
+		//Validate File Number
+		if (StringUtils.isBlank(patient.getIdentifier().getIdentifier())) {
+			patientFileNumberError = true;
+		}
 
-        // Validate names
-        if(StringUtils.isBlank(patient.getPerson().getName().getGivenName())) {
-            familyNameError=true;
-        }
-        if(StringUtils.isBlank(patient.getPerson().getName().getFamilyName())) {
-            lastNameError=true;
-        }
+		boolean result =
+				!familyNameError && !lastNameError && !dateOfBirthError && !countyError && !genderError
+						&& !patientFileNumberError && !civilStatusError && !occupationError && !subCountyError &&
+						!nationalityError && !patientIdNoError && !clinicError && !wardError && !phonenumberError
+						&& !kinNameError && !kinRelationshipError && !kinPhonenumberError && !kinResidenceError;
+		if (result) {
+			this.patient = patient;
+			return true;
+		} else {
+			patientRegistrationView
+					.setErrorsVisibility(familyNameError, lastNameError, dateOfBirthError, countyError, genderError,
+							patientFileNumberError, civilStatusError, occupationError, subCountyError, nationalityError,
+							patientIdNoError, clinicError, wardError, phonenumberError, kinNameError, kinRelationshipError,
+							kinPhonenumberError, kinResidenceError);
+			return false;
+		}
+	}
 
-        // Validate date of birth
-        if(StringUtils.isBlank(patient.getPerson().getBirthdate())) {
-            dateOfBirthError = true;
-        }
+	@Override
+	public void subscribe() {
+		if (!patientToUpdateUuid.isEmpty()) {
+			getPatientToUpdate(patientToUpdateUuid);
+		} else {
+			getPersonAttributeTypes();
+		}
+	}
 
-        // Validate address
-        if(StringUtils.isBlank(patient.getPerson().getAddress().getAddress1())
-                && StringUtils.isBlank(patient.getPerson().getAddress().getAddress2())
-                && StringUtils.isBlank(patient.getPerson().getAddress().getCityVillage())
-                && StringUtils.isBlank(patient.getPerson().getAddress().getStateProvince())
-                && StringUtils.isBlank(patient.getPerson().getAddress().getCountry())
-                && StringUtils.isBlank(patient.getPerson().getAddress().getPostalCode())) {
-            addressError=true;
-        }
+	@Override
+	public void getPatientToUpdate(String patientToUpdateUuid) {
+		patientRegistrationView.showPageSpinner(true);
+		DataService.GetCallback<Patient> singleCallback = new DataService.GetCallback<Patient>() {
+			@Override
+			public void onCompleted(Patient entity) {
+				patientRegistrationView.showPageSpinner(false);
+				if (entity != null) {
+					patientRegistrationView.fillFields(entity);
+					setPatient(entity);
+					getPersonAttributeTypes();
+				} else {
+					patientRegistrationView.showToast(ApplicationConstants.entityName.PATIENTS + ApplicationConstants
+							.toastMessages.fetchWarningMessage, ToastUtil.ToastType.WARNING);
+				}
+			}
 
-        if (!StringUtils.isBlank(patient.getPerson().getAddress().getCountry()) && !mCountries.contains(patient.getPerson().getAddress().getCountry())) {
-            countryError = true;
-        }
+			@Override
+			public void onError(Throwable t) {
+				patientRegistrationView.showPageSpinner(false);
+				Log.e("User Error", "Error", t.fillInStackTrace());
+				patientRegistrationView.showToast(ApplicationConstants.entityName.PATIENTS + ApplicationConstants
+						.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
+			}
+		};
+		//Just check if the identifier are the same. If not it saves the patient.
+		patientDataService.getByUUID(patientToUpdateUuid, new QueryOptions(false, true), singleCallback);
+	}
 
-        // Validate gender
-        if (StringUtils.isBlank(patient.getPerson().getGender())) {
-            genderError=true;
-        }
+	@Override
+	public void confirmPatient(Patient patient) {
+		if (!registeringPatient && validate(patient)) {
+			patientRegistrationView.hideSoftKeys();
+			registeringPatient = true;
+			if (patient.getUuid() == null || patient.getUuid().equalsIgnoreCase("")) {
+				findSimilarPatients(patient);
+			} else {
+				addEditPatient(patient);
+			}
+		} else {
+			patientRegistrationView.showPageSpinner(false);
+			patientRegistrationView.scrollToTop();
+		}
+	}
 
-        boolean result = !familyNameError && !lastNameError && !dateOfBirthError && !addressError && !countryError && !genderError;
-        if (result) {
-            mPatient = patient;
-            return true;
-        }
-        else {
-            mPatientInfoView.setErrorsVisibility(familyNameError, lastNameError, dateOfBirthError, addressError, countryError, genderError);
-            return false;
-        }
-    }
+	@Override
+	public void finishAddPatientActivity() {
+		patientRegistrationView.finishAddPatientActivity();
+	}
 
-    @Override
-    public void registerPatient() {
-        patientApi.registerPatient(mPatient, new DefaultResponseCallbackListener() {
-            @Override
-            public void onResponse() {
-                mPatientInfoView.startPatientDashbordActivity(mPatient);
-                mPatientInfoView.finishPatientInfoActivity();
-            }
+	@Override
+	public void addEditPatient(Patient patient) {
+		patientRegistrationView.showPageSpinner(true);
+		setRegistering(true);
+		DataService.GetCallback<Patient> getSingleCallback = new DataService.GetCallback<Patient>() {
+			@Override
+			public void onCompleted(Patient entity) {
+				setRegistering(false);
+				if (entity != null) {
+					patientRegistrationView.finishAddPatientActivity();
+					patientRegistrationView.startPatientDashboardActivity(entity);
+				} else {
+					patientRegistrationView
+							.showToast(ApplicationConstants.entityName.PATIENTS + ApplicationConstants.toastMessages
+									.addWarningMessage, ToastUtil.ToastType.WARNING);
+				}
+			}
 
-            @Override
-            public void onErrorResponse(String errorMessage) {
-                registeringPatient = false;
-                mPatientInfoView.setProgressBarVisibility(false);
-            }
-        });
-    }
+			@Override
+			public void onError(Throwable t) {
+				setRegistering(false);
+				patientRegistrationView.showPageSpinner(false);
+				patientRegistrationView
+						.showToast(ApplicationConstants.entityName.PATIENTS + ApplicationConstants.toastMessages
+								.addErrorMessage, ToastUtil.ToastType.ERROR);
+			}
+		};
+		if (patient.getUuid() == null || patient.getUuid().equalsIgnoreCase("")) {
+			patientDataService.create(patient, getSingleCallback);
+		} else {
+			patientDataService.update(patient, getSingleCallback);
+		}
 
-    @Override
-    public void updatePatient(Patient patient) {
-        patientApi.updatePatient(patient, new DefaultResponseCallbackListener() {
-            @Override
-            public void onResponse() {
-                mPatientInfoView.finishPatientInfoActivity();
-            }
+	}
 
-            @Override
-            public void onErrorResponse(String errorMessage) {
-                registeringPatient = false;
-                mPatientInfoView.setProgressBarVisibility(false);
-            }
-        });
-    }
+	public void findSimilarPatients(Patient patient) {
+		PagingInfo pagingInfo = new PagingInfo(page, limit);
+		DataService.GetCallback<List<Patient>> callback = new DataService.GetCallback<List<Patient>>() {
+			@Override
+			public void onCompleted(List<Patient> patients) {
+				patientRegistrationView.showPageSpinner(false);
+				if (patients.isEmpty()) {
+					addEditPatient(patient);
+				} else {
+					patientRegistrationView.showSimilarPatientDialog(patients, patient);
+				}
+			}
 
-    public void findSimilarPatients(final Patient patient){
-        if (NetworkUtils.isOnline()) {
-            Call<Results<Module>> moduleCall = restApi.getModules(ApplicationConstants.API.FULL);
-            moduleCall.enqueue(new Callback<Results<Module>>() {
-                @Override
-                public void onResponse(Call<Results<Module>> call, Response<Results<Module>> response) {
-                    if(response.isSuccessful()){
-                        if(ModuleUtils.isRegistrationCore1_7orAbove(response.body().getResults())){
-                            fetchSimilarPatientsFromServer(patient);
-                        } else {
-                            fetchSimilarPatientAndCalculateLocally(patient);
-                        }
-                    } else {
-                        fetchSimilarPatientAndCalculateLocally(patient);
-                    }
-                }
+			@Override
+			public void onError(Throwable t) {
+				patientRegistrationView.showPageSpinner(false);
+				Log.e("User Error", "Error", t.fillInStackTrace());
+				patientRegistrationView.showToast(ApplicationConstants.entityName.PATIENTS + ApplicationConstants
+						.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
+			}
+		};
+		//Just check if the identifier are the same. If not it saves the patient.
+				patientDataService.getByIdentifier(patient.getIdentifier().getIdentifier(),
+						QueryOptions.LOAD_RELATED_OBJECTS, pagingInfo, callback);
+	}
 
-                @Override
-                public void onFailure(Call<Results<Module>> call, Throwable t) {
-                    registeringPatient = false;
-                    mPatientInfoView.setProgressBarVisibility(false);
-                    ToastUtil.error(t.getMessage());
-                }
-            });
-        } else {
-           /* List<Patient> similarPatient = new PatientComparator().findSimilarPatient(new PatientDAO().getAllPatients().toBlocking().first(), patient);
-            if(!similarPatient.isEmpty()){
-                mPatientInfoView.showSimilarPatientDialog(similarPatient, patient);
-            } else {
-                registerPatient();
-            }*/
-        }
-    }
+	@Override
+	public void getConceptAnswer(String uuid, Spinner dropdown) {
+		conceptDataService.getByUUID(uuid, QueryOptions.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Concept>() {
+			@Override
+			public void onCompleted(Concept concept) {
+				if (concept != null) {
+					if (concept.getDisplay().equalsIgnoreCase(ApplicationConstants.CIVIL_STATUS)) {
+						dropdown.setPrompt(ApplicationConstants.CIVIL_STATUS);
+					} else {
+						dropdown.setPrompt(ApplicationConstants.KIN_RELATIONSHIP);
+					}
+					patientRegistrationView.updateConceptAnswerView(dropdown, concept.getAnswers());
+				}
 
-    private void fetchSimilarPatientAndCalculateLocally(final Patient patient) {
-        Call<Results<Patient>> call = restApi.getPatients(patient.getPerson().getName().getGivenName(), ApplicationConstants.API.FULL);
-        call.enqueue(new Callback<Results<Patient>>() {
-            @Override
-            public void onResponse(Call<Results<Patient>> call, Response<Results<Patient>> response) {
-                registeringPatient = false;
-                if(response.isSuccessful()){
-                    List<Patient> patientList = response.body().getResults();
-                    if(!patientList.isEmpty()){
-                        List<Patient> similarPatient = new PatientComparator().findSimilarPatient(patientList, patient);
-                        if (!similarPatient.isEmpty()) {
-                            mPatientInfoView.showSimilarPatientDialog(similarPatient, patient);
-                            mPatientInfoView.showUpgradeRegistrationModuleInfo();
-                        } else {
-                            registerPatient();
-                        }
-                    } else {
-                        registerPatient();
-                    }
-                } else {
-                    mPatientInfoView.setProgressBarVisibility(false);
-                    ToastUtil.error(response.message());
-                }
-            }
+			}
 
-            @Override
-            public void onFailure(Call<Results<Patient>> call, Throwable t) {
-                registeringPatient = false;
-                mPatientInfoView.setProgressBarVisibility(false);
-                ToastUtil.error(t.getMessage());
-            }
-        });
-    }
+			@Override
+			public void onError(Throwable t) {
+				ToastUtil.error(t.getMessage());
+			}
+		});
+	}
 
-    private void fetchSimilarPatientsFromServer(final Patient patient) {
-        Call<Results<Patient>> call = restApi.getSimilarPatients(patient.toMap());
-        call.enqueue(new Callback<Results<Patient>>() {
-            @Override
-            public void onResponse(Call<Results<Patient>> call, Response<Results<Patient>> response) {
-                registeringPatient = false;
-                if(response.isSuccessful()){
-                    List<Patient> similarPatients = response.body().getResults();
-                    if(!similarPatients.isEmpty()){
-                        mPatientInfoView.showSimilarPatientDialog(similarPatients, patient);
-                    } else {
-                        registerPatient();
-                    }
-                } else {
-                    mPatientInfoView.setProgressBarVisibility(false);
-                    ToastUtil.error(response.message());
-                }
-            }
+	public void getPatientIdentifierTypes() {
+		DataService.GetCallback<List<PatientIdentifierType>> callback =
+				new DataService.GetCallback<List<PatientIdentifierType>>() {
+					@Override
+					public void onCompleted(List<PatientIdentifierType> entities) {
+						if (!entities.isEmpty()) {
+							for (int i = 0; i < entities.size(); i++) {
+								if (entities.get(i).getRequired()) {
+									patientRegistrationView.setPatientIdentifierType(entities.get(i));
+								}
+							}
+						}
+					}
 
-            @Override
-            public void onFailure(Call<Results<Patient>> call, Throwable t) {
-                registeringPatient = false;
-                mPatientInfoView.setProgressBarVisibility(false);
-                ToastUtil.error(t.getMessage());
-            }
-        });
-    }
+					@Override
+					public void onError(Throwable t) {
+						Log.e("Identifier Type Error", "Error", t.fillInStackTrace());
+						patientRegistrationView
+								.showToast(ApplicationConstants.entityName.IDENTIFIER_TPYES
+										+ ApplicationConstants.toastMessages
+										.fetchErrorMessage, ToastUtil.ToastType.ERROR);
+					}
+				};
+		patientIdentifierTypeDataService
+				.getAll(new QueryOptions(ApplicationConstants.CacheKays.PERSON_IDENTIFIER_TYPE, false), null,
+						callback);
+	}
 
-    @Override
-    public boolean isRegisteringPatient() {
-        return registeringPatient;
-    }
+	@Override
+	public List<PersonAttributeType> getPersonAttributeTypes() {
+		patientRegistrationView.showPageSpinner(true);
+		final List<PersonAttributeType> personAttributeTypes = new ArrayList<>();
+		personAttributeTypeDataService
+				.getAll(new QueryOptions(ApplicationConstants.CacheKays.PERSON_ATTRIBUTE_TYPE, true), null, new DataService
+						.GetCallback<List<PersonAttributeType>>() {
+					@Override
+					public void onCompleted(List<PersonAttributeType> entities) {
+
+						if (!entities.isEmpty()) {
+							for (int q = 0; q < createUnwantedPersonAttributes().size(); q++) {
+								String unwantedUuid = createUnwantedPersonAttributes().get(q);
+
+								for (int i = 0; i < entities.size(); i++) {
+									String uuid = entities.get(i).getUuid();
+									if (uuid.equalsIgnoreCase(unwantedUuid)) {
+										entities.remove(i);
+									}
+								}
+							}
+							personAttributeTypes.addAll(entities);
+							patientRegistrationView.loadPersonAttributeTypes(personAttributeTypes);
+							patientRegistrationView.showPageSpinner(false);
+						} else {
+							patientRegistrationView.showPageSpinner(true);
+							patientRegistrationView
+									.showToast(ApplicationConstants.entityName.ATTRIBUTE_TPYES + ApplicationConstants
+											.toastMessages.fetchWarningMessage, ToastUtil.ToastType.WARNING);
+						}
+					}
+
+					@Override
+					public void onError(Throwable t) {
+						ToastUtil.error(t.getMessage());
+					}
+				});
+		return personAttributeTypes;
+	}
+
+	@Override
+	public void getLoginLocation() {
+		if (!instance.getLocation().equalsIgnoreCase(null)) {
+			locationUuid = instance.getLocation();
+		}
+		DataService.GetCallback<Location> getSingleCallback =
+				new DataService.GetCallback<Location>() {
+					@Override
+					public void onCompleted(Location entity) {
+						if (entity != null) {
+							patientRegistrationView.setLoginLocation(entity);
+						}
+					}
+
+					@Override
+					public void onError(Throwable t) {
+						patientRegistrationView
+								.showToast(ApplicationConstants.entityName.LOCATION + ApplicationConstants
+										.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
+					}
+				};
+		locationDataService.getByUUID(locationUuid, QueryOptions.LOAD_RELATED_OBJECTS, getSingleCallback);
+	}
+
+	@Override
+	public <T> T searchPersonAttributeValueByType(PersonAttributeType personAttributeType) {
+		if (null != getPatient() && null != getPatient().getPerson().getAttributes()) {
+			for (PersonAttribute personAttribute : getPatient().getPerson().getAttributes()) {
+				if (personAttribute.getAttributeType().getUuid().equalsIgnoreCase(personAttributeType.getUuid())) {
+					return (T)personAttribute.getValue();
+				}
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public Patient getPatient() {
+		return patient;
+	}
+
+	@Override
+	public void setPatient(Patient patient) {
+		this.patient = patient;
+	}
+
+	@Override
+	public boolean isRegisteringPatient() {
+		return registeringPatient;
+	}
+
+	@Override
+	public void setRegistering(boolean registering) {
+		this.registeringPatient = registering;
+	}
+
+	private ArrayList<String> createUnwantedPersonAttributes() {
+		ArrayList<String> unwantedPersonAttributes = new ArrayList<>();
+		unwantedPersonAttributes.add(ApplicationConstants.unwantedPersonAttributes.TEST_PATIENT_UUID);
+		unwantedPersonAttributes.add(ApplicationConstants.unwantedPersonAttributes.UNKNOWN_PATIENT_UUID);
+		unwantedPersonAttributes.add(ApplicationConstants.unwantedPersonAttributes.RACE_UUID);
+		unwantedPersonAttributes.add(ApplicationConstants.unwantedPersonAttributes.HEALTH_CENTER_UUID);
+		unwantedPersonAttributes.add(ApplicationConstants.unwantedPersonAttributes.HEALTH_DISTRICT_UUID);
+		unwantedPersonAttributes.add(ApplicationConstants.unwantedPersonAttributes.MOTHER_NAME_UUID);
+		unwantedPersonAttributes.add(ApplicationConstants.unwantedPersonAttributes.BIRTH_PLACE_UUID);
+
+		return unwantedPersonAttributes;
+	}
 
 }

@@ -1,27 +1,65 @@
 package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
-
-import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.ToOne;
-import org.greenrobot.greendao.annotation.Transient;
+import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
 
 import java.io.Serializable;
+import java.util.Date;
 
-@Entity
 public class BaseOpenmrsEntity extends BaseOpenmrsAuditableObject implements Serializable {
-    private static final long serialVersionUID = 1;
+	private static final long serialVersionUID = 1;
 
-    //@ToOne(joinProperty = "patientId")
-    @Transient
-    @Expose
-    private Patient patient;
+	@Expose
+	@Column
+	private Boolean voided = Boolean.FALSE;
 
-    public Patient getPatient() {
-        return patient;
-    }
+	@Expose
+	@Column
+	private Date dateVoided;
 
-    public void setPatient(Patient patient) {
-        this.patient = patient;
-    }
+	@Expose
+	@ForeignKey(stubbedRelationship = true)
+	private User voidedBy;
+
+	@Expose
+	@Column
+	private String voidReason;
+
+	public Boolean getVoided() {
+		return getActive();
+	}
+
+	Boolean isVoided() {
+		return getVoided();
+	}
+
+	public void setVoided(Boolean voided) {
+		setActive(voided);
+	}
+
+	public Date getDateVoided() {
+		return dateVoided;
+	}
+
+	public void setDateVoided(Date dateVoided) {
+		this.dateVoided = dateVoided;
+	}
+
+	public User getVoidedBy() {
+		return voidedBy;
+	}
+
+	public void setVoidedBy(User voidedBy) {
+		this.voidedBy = voidedBy;
+	}
+
+	public String getVoidReason() {
+		return voidReason;
+	}
+
+	public void setVoidReason(String voidReason) {
+		this.voidReason = voidReason;
+	}
 }

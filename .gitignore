@@ -43,5 +43,7 @@ modules/odk.collect/android/*
 *.project
 *.classpath
 .settings/
-
-/openmrs-client/src/main/java/org/openmrs/mobile/ConsoleLogger.java
+/.java-version
+/gradle.properties
+/openmrs-client/src/main/java/org/openmrs/mobile/activities/auditdata/send-update.json
+/openmrs-client/src/main/java/org/openmrs/mobile/activities/auditdata/create.json

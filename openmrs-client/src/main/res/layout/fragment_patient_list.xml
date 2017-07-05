@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ The contents of this file are subject to the OpenMRS Public License
+  ~ Version 2.0 (the "License"); you may not use this file except in
+  ~ compliance with the License. You may obtain a copy of the License at
+  ~ http://license.openmrs.org
+  ~
+  ~ Software distributed under the License is distributed on an "AS IS"
+  ~ basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+  ~ License for the specific language governing rights and limitations
+  ~ under the License.
+  ~
+  ~ Copyright (C) OpenHMIS.  All Rights Reserved.
+  -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:focusable="true"
+		android:focusableInTouchMode="true"
+		android:orientation="vertical">
+	
+	
+	<RelativeLayout
+			android:id="@+id/patientListScreenProgressBar"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical"
+			android:visibility="gone">
+		
+		<ProgressBar
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"
+				android:layout_centerInParent="true"
+				android:layout_gravity="center" />
+	
+	</RelativeLayout>
+	
+	<LinearLayout
+			android:id="@+id/patientListScreen"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical">
+		
+		<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginRight="5dp"
+				android:layout_marginStart="5dp"
+				android:layout_marginLeft="5dp"
+				android:layout_marginEnd="5dp"
+				android:background="@drawable/card"
+				android:orientation="vertical">
+			
+			<Spinner
+					android:id="@+id/patientListDropdown"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginTop="5dp"
+					android:layout_marginLeft="5dp"
+					android:focusable="true"
+					android:textSize="18sp" />
+		</LinearLayout>
+		
+		<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="vertical">
+			
+			
+			<TextView
+					android:id="@+id/noPatientLists"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:layout_marginBottom="5dp"
+					android:layout_marginTop="5dp"
+					android:gravity="center"
+					android:text="@string/no_patient_list"
+					android:textColor="@color/openmrs_color_grey"
+					android:visibility="gone" />
+			
+			<TextView
+					android:id="@+id/emptyPatientList"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:layout_marginBottom="5dp"
+					android:layout_marginTop="5dp"
+					android:gravity="center"
+					android:text="@string/no_patients_found"
+					android:textColor="@color/openmrs_color_grey"
+					android:visibility="gone" />
+			
+		</LinearLayout>
+		
+		<RelativeLayout
+				android:id="@+id/numberOfPatientsLayout"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginRight="5dp"
+				android:layout_marginStart="5dp"
+				android:layout_marginLeft="5dp"
+				android:layout_marginEnd="5dp"
+				android:layout_gravity="center"
+				android:background="@drawable/card"
+				android:orientation="vertical"
+				android:visibility="gone">
+			
+			<TextView
+					android:id="@+id/numberOfPatients"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginBottom="5dp"
+					android:layout_marginTop="5dp"
+					android:gravity="start"
+					android:layout_marginLeft="5dp"
+					android:layout_marginStart="5dp"
+					android:layout_marginEnd="5dp"
+					android:layout_marginRight="5dp"
+					android:textColor="@color/light_teal" />
+			
+			<TextView
+					android:id="@+id/pagingLabel"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginBottom="5dp"
+					android:layout_marginTop="5dp"
+					android:gravity="end"
+					android:layout_marginLeft="5dp"
+					android:layout_marginStart="5dp"
+					android:layout_marginEnd="5dp"
+					android:layout_marginRight="5dp"
+					android:textColor="@color/light_teal" />
+		</RelativeLayout>
+		
+		<LinearLayout
+				android:id="@+id/patientListRecyclerView"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginRight="10dp"
+				android:layout_marginStart="10dp"
+				android:layout_marginLeft="10dp"
+				android:layout_marginEnd="10dp"
+				android:orientation="vertical"
+				android:visibility="gone">
+			
+			<android.support.v7.widget.RecyclerView
+					android:id="@+id/patientListModelRecyclerView"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:layout_gravity="left|bottom" />
+		</LinearLayout>
+		
+		<RelativeLayout
+				android:id="@+id/patientListLoadingProgressBar"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="vertical"
+				android:visibility="gone">
+			
+			<ProgressBar
+					android:layout_width="wrap_content"
+					android:layout_height="match_parent"
+					android:layout_centerInParent="true"
+					android:layout_gravity="center" />
+		
+		</RelativeLayout>
+	
+	</LinearLayout>
+</LinearLayout>

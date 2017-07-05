@@ -7,48 +7,126 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-
 package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.OneToMany;
+import com.raizlabs.android.dbflow.annotation.Table;
 
-public class Concept extends Resource{
+import org.openmrs.mobile.data.db.AppDatabase;
 
-    @SerializedName("datatype")
-    @Expose
-    private Datatype datatype;
+import java.util.List;
 
-    @SerializedName("name")
-    @Expose
-    private String name;
+@Table(database = AppDatabase.class)
+public class Concept extends BaseOpenmrsObject {
+	@SerializedName("datatype")
+	@Expose
+	@ForeignKey
+	private Datatype datatype;
 
-    @SerializedName("conceptClass")
-    @Expose
-    private ConceptClass conceptClass;
+	@SerializedName("description")
+	@Expose
+	@Column
+	private String description;
 
-    public Datatype getDatatype() {
-        return datatype;
-    }
+	@SerializedName("conceptClass")
+	@Expose
+	@ForeignKey
+	private ConceptClass conceptClass;
 
-    public void setDatatype(Datatype datatype) {
-        this.datatype = datatype;
-    }
+	@SerializedName("answers")
+	@Expose
+	private List<ConceptAnswer> answers;
 
-    public String getName() {
-        return name;
-    }
+	@SerializedName("names")
+	@Expose
+	private List<ConceptName> names;
+	@SerializedName("preferredName")
+	@Expose
+	private String preferredName;
+	@SerializedName("conceptMappings")
+	@Expose
+	private List<ConceptMap> conceptMappings;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "answers", isVariablePrivate = true)
+	List<ConceptAnswer> loadAnswers() {
+		return loadRelatedObject(ConceptAnswer.class, answers, () -> ConceptAnswer_Table.concept_uuid.eq(getUuid()));
+	}
 
-    public ConceptClass getConceptClass() {
-        return conceptClass;
-    }
+	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "names", isVariablePrivate = true)
+	List<ConceptName> loadNames() {
+		return loadRelatedObject(ConceptName.class, names, () -> ConceptName_Table.concept_uuid.eq(getUuid()));
+	}
 
-    public void setConceptClass(ConceptClass conceptClass) {
-        this.conceptClass = conceptClass;
-    }
+	@Override
+	public void processRelationships() {
+		super.processRelationships();
 
+		processRelatedObjects(answers, (a) -> a.setConcept(this));
+		processRelatedObjects(names, (n) -> n.setConcept(this));
+	}
+
+	public Datatype getDatatype() {
+		return datatype;
+	}
+
+	public void setDatatype(Datatype datatype) {
+		this.datatype = datatype;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public ConceptClass getConceptClass() {
+		return conceptClass;
+	}
+
+	public void setConceptClass(ConceptClass conceptClass) {
+		this.conceptClass = conceptClass;
+	}
+
+	public List<ConceptAnswer> getAnswers() {
+		return answers;
+	}
+
+	public void setAnswers(List<ConceptAnswer> answers) {
+		this.answers = answers;
+	}
+
+	public List<ConceptName> getNames() {
+		return names;
+	}
+
+	public void setNames(List<ConceptName> names) {
+		this.names = names;
+	}
+
+	public String getPreferredName() {
+		return preferredName;
+	}
+
+	public void setPreferredName(String preferredName) {
+		this.preferredName = preferredName;
+	}
+
+	public List<ConceptMap> getConceptMappings() {
+		return conceptMappings;
+	}
+
+	public void setConceptMappings(List<ConceptMap> conceptMappings) {
+		this.conceptMappings = conceptMappings;
+	}
+
+	@Override
+	public String toString() {
+		return getDisplay();
+	}
 }

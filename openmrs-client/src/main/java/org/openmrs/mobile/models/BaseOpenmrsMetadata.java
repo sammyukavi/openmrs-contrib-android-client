@@ -2,31 +2,35 @@ package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
 
 import java.io.Serializable;
 
-public class BaseOpenmrsMetadata extends BaseOpenmrsAuditableObject implements Serializable{
-    @SerializedName("name")
-    @Expose
-    private String name;
+public class BaseOpenmrsMetadata extends BaseOpenmrsAuditableObject implements Serializable {
 
-    @SerializedName("description")
-    @Expose
-    private String description;
+	@SerializedName("name")
+	@Expose
+	@Column
+	private String name;
 
-    public String getName() {
-        return name;
-    }
+	@SerializedName("description")
+	@Expose
+	@Column
+	private String description;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
 }

@@ -11,68 +11,67 @@ import java.util.List;
 
 public class SelectOneField implements Serializable, Parcelable {
 
-    private String concept = null;
-    private Answer chosenAnswer = null;
-    private List<Answer> answerList;
+	public static final Creator<SelectOneField> CREATOR = new Creator<SelectOneField>() {
+		@Override
+		public SelectOneField createFromParcel(Parcel source) {
+			return new SelectOneField(source);
+		}
 
-    public SelectOneField(List<Answer> answerList, String concept) {
-        this.answerList = answerList;
-        this.concept = concept;
-    }
+		@Override
+		public SelectOneField[] newArray(int size) {
+			return new SelectOneField[size];
+		}
+	};
+	private String concept = null;
+	private Answer chosenAnswer = null;
+	private List<Answer> answerList;
 
-    public void setAnswer(int answerPosition) {
-        if (answerPosition < answerList.size()) {
-            chosenAnswer = answerList.get(answerPosition);
-        }
-        if (answerPosition == -1) {
-            chosenAnswer = null;
-        }
-    }
+	public SelectOneField(List<Answer> answerList, String concept) {
+		this.answerList = answerList;
+		this.concept = concept;
+	}
 
-    public void setChosenAnswer(Answer chosenAnswer) {
-        this.chosenAnswer = chosenAnswer;
-    }
+	protected SelectOneField(Parcel in) {
+		this.concept = in.readString();
+		this.chosenAnswer = (Answer)in.readSerializable();
+		this.answerList = new ArrayList<Answer>();
+		in.readList(this.answerList, Answer.class.getClassLoader());
+	}
 
-    public Answer getChosenAnswer() {
-        return chosenAnswer;
-    }
+	public void setAnswer(int answerPosition) {
+		if (answerPosition < answerList.size()) {
+			chosenAnswer = answerList.get(answerPosition);
+		}
+		if (answerPosition == -1) {
+			chosenAnswer = null;
+		}
+	}
 
-    public String getConcept() {
-        return concept;
-    }
+	public Answer getChosenAnswer() {
+		return chosenAnswer;
+	}
 
-    public int getChosenAnswerPosition() {
-        return answerList.indexOf(chosenAnswer);
-    }
+	public void setChosenAnswer(Answer chosenAnswer) {
+		this.chosenAnswer = chosenAnswer;
+	}
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
+	public String getConcept() {
+		return concept;
+	}
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.concept);
-        dest.writeSerializable(this.chosenAnswer);
-        dest.writeList(this.answerList);
-    }
+	public int getChosenAnswerPosition() {
+		return answerList.indexOf(chosenAnswer);
+	}
 
-    protected SelectOneField(Parcel in) {
-        this.concept = in.readString();
-        this.chosenAnswer = (Answer) in.readSerializable();
-        this.answerList = new ArrayList<Answer>();
-        in.readList(this.answerList, Answer.class.getClassLoader());
-    }
+	@Override
+	public int describeContents() {
+		return 0;
+	}
 
-    public static final Creator<SelectOneField> CREATOR = new Creator<SelectOneField>() {
-        @Override
-        public SelectOneField createFromParcel(Parcel source) {
-            return new SelectOneField(source);
-        }
-
-        @Override
-        public SelectOneField[] newArray(int size) {
-            return new SelectOneField[size];
-        }
-    };
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeString(this.concept);
+		dest.writeSerializable(this.chosenAnswer);
+		dest.writeList(this.answerList);
+	}
 }

@@ -10,15 +10,27 @@
 
 package org.openmrs.mobile.models;
 
-public class VisitType extends Resource {
+import com.raizlabs.android.dbflow.annotation.Table;
 
-    public VisitType(String display) {
-        this.display = display;
-    }
+import org.openmrs.mobile.data.db.AppDatabase;
 
-    public VisitType(String display, String uuid) {
-        this.uuid = uuid;
-        this.display = display;
-    }
+@Table(database = AppDatabase.class)
+public class VisitType extends BaseOpenmrsMetadata {
+	public VisitType() {
 
+	}
+
+	public VisitType(String display) {
+		this.display = display;
+	}
+
+	public VisitType(String display, String uuid) {
+		this.uuid = uuid;
+		this.display = display;
+	}
+
+	@Override
+	public String toString() {
+		return getName();
+	}
 }

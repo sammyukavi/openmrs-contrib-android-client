@@ -14,64 +14,43 @@
 
 package org.openmrs.mobile.activities.login;
 
-import android.support.annotation.NonNull;
-
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
 import org.openmrs.mobile.models.Location;
-import org.openmrs.mobile.utilities.ToastUtil;
 
+import java.util.HashMap;
 import java.util.List;
 
 public interface LoginContract {
 
-    interface View extends BaseView<Presenter> {
+	interface View extends BaseView<Presenter> {
 
-        void hideSoftKeys();
+		void hideSoftKeys();
 
-        void setPresenter(@NonNull Presenter presenter);
+		void showWarningDialog();
 
-        void showWarningDialog();
+		void userAuthenticated();
 
-        void showLoadingAnimation();
+		void finishLoginActivity();
 
-        void hideLoadingAnimation();
+		void setProgressBarVisibility(boolean visible);
 
-        void showLocationLoadingAnimation();
+		void updateLoginFormLocations(List<Location> locations, String url);
 
-        void hideUrlLoadingAnimation();
+		void showMessage(String message);
 
-        void finishLoginActivity();
+		void showMessage(int errorCode);
+	}
 
-        void showInvalidURLSnackbar(String message);
+	interface Presenter extends BasePresenterContract {
 
-        void showInvalidLoginOrPasswordSnackbar();
+		void login(String username, String password, String url, String oldUrl);
 
-        void setLocationErrorOccurred(boolean errorOccurred);
+		void loadLocations(String url);
 
-        void showToast(String message, ToastUtil.ToastType toastType);
+		void authenticateUser(final String username, final String password, final String url, boolean wipeDatabase);
 
-        void showToast(int textId, ToastUtil.ToastType toastType);
+		void saveLocationsInPreferences(List<HashMap<String, String>> locationList, int selectedItemPosition);
+	}
 
-        void initLoginForm(List<Location> locationList, String url);
-
-        void userAuthenticated();
-
-        void startFormListService();
-
-    }
-
-    interface Presenter extends BasePresenterContract {
-
-        void authenticateUser(final String username, final String password, final String url);
-
-        void authenticateUser(final String username, final String password, final String url, boolean wipeDatabase);
-
-        void login(String username, String password, String url, String oldUrl);
-
-        void saveLocationsToDatabase(List<Location> locationList, String selectedLocation);
-
-        void loadLocations(String url);
-
-    }
 }

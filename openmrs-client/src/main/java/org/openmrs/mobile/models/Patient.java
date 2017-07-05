@@ -7,12 +7,16 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-
 package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.OneToMany;
+import com.raizlabs.android.dbflow.annotation.Table;
 
+import org.openmrs.mobile.data.db.AppDatabase;
 import org.openmrs.mobile.utilities.StringUtils;
 
 import java.io.Serializable;
@@ -21,156 +25,151 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Patient extends BaseOpenmrsAuditableObject implements Serializable{
+@Table(database = AppDatabase.class)
+public class Patient extends BaseOpenmrsAuditableObject implements Serializable {
+	private static final long serialVersionUID = 1L;
 
-    private Long id;
-    private String encounters = "";
+	private String encounters = "";
 
-    @SerializedName("identifiers")
-    @Expose
-    private List<PatientIdentifier> identifiers = new ArrayList<PatientIdentifier>();
+	@SerializedName("identifiers")
+	@Expose
+	private List<PatientIdentifier> identifiers = new ArrayList<PatientIdentifier>();
 
-    @SerializedName("person")
-    @Expose
-    private Person person;
+	@SerializedName("person")
+	@Expose
+	@ForeignKey
+	private Person person;
 
-    @SerializedName("voided")
-    @Expose
-    private Boolean voided;
+	@SerializedName("voided")
+	@Expose
+	@Column
+	private Boolean voided;
 
-    @SerializedName("resourceVersion")
-    @Expose
-    private String resourceVersion;
+	@SerializedName("resourceVersion")
+	@Expose
+	@Column
+	private String resourceVersion;
 
-    public Long getId() {
-        return id;
-    }
+	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "identifiers", isVariablePrivate = true)
+	List<PatientIdentifier> loadIdentifiers() {
+		return loadRelatedObject(PatientIdentifier.class, identifiers,
+				() -> PatientIdentifier_Table.patient_uuid.eq(getUuid()));
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	@Override
+	public void processRelationships() {
+		super.processRelationships();
 
-    /**
-     * 
-     * @return
-     *     The identifiers
-     */
-    public List<PatientIdentifier> getIdentifiers() {
-        return identifiers;
-    }
+		if (person != null) {
+			person.processRelationships();
+		}
+		processRelatedObjects(identifiers, (i) -> i.setPatient(this));
+	}
 
-    /**
-     * 
-     * @param identifiers
-     *     The identifiers
-     */
-    public void setIdentifiers(List<PatientIdentifier> identifiers) {
-        this.identifiers = identifiers;
-    }
+	/**
+	 * @return The identifiers
+	 */
+	public List<PatientIdentifier> getIdentifiers() {
+		return identifiers;
+	}
 
-    public PatientIdentifier getIdentifier() {
-        if (!identifiers.isEmpty()) {
-            return identifiers.get(0);
-        } else {
-            return null;
-        }
-    }
+	/**
+	 * @param identifiers The identifiers
+	 */
+	public void setIdentifiers(List<PatientIdentifier> identifiers) {
+		this.identifiers = identifiers;
+	}
 
-    /**
-     * 
-     * @return
-     *     The person
-     */
-    public Person getPerson() {
-        return person;
-    }
+	public PatientIdentifier getIdentifier() {
+		if (!identifiers.isEmpty()) {
+			return identifiers.get(0);
+		} else {
+			return null;
+		}
+	}
 
-    /**
-     * 
-     * @param person
-     *     The person
-     */
-    public void setPerson(Person person) {
-        this.person = person;
-    }
+	/**
+	 * @return The person
+	 */
+	public Person getPerson() {
+		return person;
+	}
 
-    /**
-     * 
-     * @return
-     *     The voided
-     */
-    public Boolean getVoided() {
-        return voided;
-    }
+	/**
+	 * @param person The person
+	 */
+	public void setPerson(Person person) {
+		this.person = person;
+	}
 
-    /**
-     * 
-     * @param voided
-     *     The voided
-     */
-    public void setVoided(Boolean voided) {
-        this.voided = voided;
-    }
+	/**
+	 * @return The voided
+	 */
+	public Boolean getVoided() {
+		return voided;
+	}
 
-    /**
-     * 
-     * @return
-     *     The resourceVersion
-     */
-    public String getResourceVersion() {
-        return resourceVersion;
-    }
+	Boolean isVoided() {
+		return getVoided();
+	}
 
-    /**
-     * 
-     * @param resourceVersion
-     *     The resourceVersion
-     */
-    public void setResourceVersion(String resourceVersion) {
-        this.resourceVersion = resourceVersion;
-    }
+	/**
+	 * @param voided The voided
+	 */
+	public void setVoided(Boolean voided) {
+		this.voided = voided;
+	}
 
-    public boolean isSynced()
-    {
-        return !StringUtils.isBlank(getUuid());
-        //Keeping it this way until the synced flag can be made to work
-    }
+	/**
+	 * @return The resourceVersion
+	 */
+	public String getResourceVersion() {
+		return resourceVersion;
+	}
 
-    public String getEncounters() {
-        return encounters;
-    }
+	/**
+	 * @param resourceVersion The resourceVersion
+	 */
+	public void setResourceVersion(String resourceVersion) {
+		this.resourceVersion = resourceVersion;
+	}
 
-    public void setEncounters(String encounters) {
-         this.encounters=encounters;
-    }
+	public boolean isSynced() {
+		return !StringUtils.isBlank(getUuid());
+		//Keeping it this way until the synced flag can be made to work
+	}
 
+	public String getEncounters() {
+		return encounters;
+	}
 
-    public void addEncounters(Long encid)
-    {
-        this.encounters += encid+",";
-    }
+	public void setEncounters(String encounters) {
+		this.encounters = encounters;
+	}
 
-    public Map<String, String> toMap(){
-        Map<String, String> map = new HashMap<>();
-        puToMapIfNotNull(map, "givenname", person.getName().getGivenName());
-        puToMapIfNotNull(map, "middlename",person.getName().getMiddleName());
-        puToMapIfNotNull(map, "familyname", person.getName().getFamilyName());
-        puToMapIfNotNull(map, "gender", person.getGender());
-        puToMapIfNotNull(map, "birthdate", person.getBirthdate());
-        puToMapIfNotNull(map, "address1", person.getAddress().getAddress1());
-        puToMapIfNotNull(map, "address2", person.getAddress().getAddress2());
-        puToMapIfNotNull(map, "city", person.getAddress().getCityVillage());
-        puToMapIfNotNull(map, "state", person.getAddress().getStateProvince());
-        puToMapIfNotNull(map, "postalcode", person.getAddress().getPostalCode());
-        puToMapIfNotNull(map, "country", person.getAddress().getCountry());
-        return map;
-    }
+	public void addEncounters(Long encid) {
+		this.encounters += encid + ",";
+	}
 
-    private void puToMapIfNotNull(Map<String, String> map, String key, String value) {
-        if(StringUtils.notNull(value)){
-            map.put(key, value);
-        }
-    }
+	public Map<String, String> toMap() {
+		Map<String, String> map = new HashMap<>();
+		puToMapIfNotNull(map, "givenname", person.getName().getGivenName());
+		puToMapIfNotNull(map, "middlename", person.getName().getMiddleName());
+		puToMapIfNotNull(map, "familyname", person.getName().getFamilyName());
+		puToMapIfNotNull(map, "gender", person.getGender());
+		puToMapIfNotNull(map, "birthdate", person.getBirthdate());
+		puToMapIfNotNull(map, "address1", person.getAddress().getAddress1());
+		puToMapIfNotNull(map, "address2", person.getAddress().getAddress2());
+		puToMapIfNotNull(map, "city", person.getAddress().getCityVillage());
+		puToMapIfNotNull(map, "state", person.getAddress().getStateProvince());
+		puToMapIfNotNull(map, "postalcode", person.getAddress().getPostalCode());
+		puToMapIfNotNull(map, "country", person.getAddress().getCountry());
+		return map;
+	}
 
-
+	private void puToMapIfNotNull(Map<String, String> map, String key, String value) {
+		if (StringUtils.notNull(value)) {
+			map.put(key, value);
+		}
+	}
 }

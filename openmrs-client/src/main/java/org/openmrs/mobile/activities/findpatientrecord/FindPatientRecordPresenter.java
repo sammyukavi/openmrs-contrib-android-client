@@ -14,21 +14,128 @@
 
 package org.openmrs.mobile.activities.findpatientrecord;
 
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+
 import org.openmrs.mobile.activities.BasePresenter;
-import org.openmrs.mobile.application.OpenMRS;
+import org.openmrs.mobile.data.DataService;
+import org.openmrs.mobile.data.PagingInfo;
+import org.openmrs.mobile.data.QueryOptions;
+import org.openmrs.mobile.data.impl.PatientDataService;
+import org.openmrs.mobile.models.Patient;
+import org.openmrs.mobile.utilities.ApplicationConstants;
+
+import java.util.List;
 
 public class FindPatientRecordPresenter extends BasePresenter implements FindPatientRecordContract.Presenter {
 
+	@NonNull
+	private FindPatientRecordContract.View findPatientView;
+	private int page = 0;
+	private int limit = 10;
+	private PatientDataService patientDataService;
+	private boolean loading;
 
-    private FindPatientRecordContract.View findPatientView;
+	public FindPatientRecordPresenter(@NonNull FindPatientRecordContract.View view, String lastQuery) {
+		this.findPatientView = view;
+		this.findPatientView.setPresenter(this);
+		this.patientDataService = new PatientDataService();
+	}
 
-    public FindPatientRecordPresenter(FindPatientRecordContract.View view, OpenMRS openMRS) {
-        this.findPatientView = view;
-        this.findPatientView.setPresenter(this);
-    }
+	public FindPatientRecordPresenter(@NonNull FindPatientRecordContract.View view) {
+		this.findPatientView = view;
+		this.findPatientView.setPresenter(this);
+		this.patientDataService = new PatientDataService();
+	}
 
-    @Override
-    public void subscribe() {
+	@Override
+	public void subscribe() {
+	}
 
-    }
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+
+	}
+
+	public void findPatient(String query) {
+		findPatientView.setProgressBarVisibility(true);
+		PagingInfo pagingInfo = new PagingInfo(page, 100);
+		DataService.GetCallback<List<Patient>> getMultipleCallback = new DataService.GetCallback<List<Patient>>() {
+			@Override
+			public void onCompleted(List<Patient> patients) {
+				findPatientView.setProgressBarVisibility(false);
+				if (patients.isEmpty()) {
+					findPatientView.setNumberOfPatientsView(0);
+					findPatientView.setNoPatientsVisibility(true);
+				} else {
+					findPatientView.setNoPatientsVisibility(false);
+					findPatientView.setNumberOfPatientsView(patients.size());
+					findPatientView.fetchPatients(patients);
+				}
+			}
+
+			@Override
+			public void onError(Throwable t) {
+				findPatientView.setProgressBarVisibility(false);
+			}
+		};
+		patientDataService.getByNameOrIdentifier(query, QueryOptions.LOAD_RELATED_OBJECTS, pagingInfo,
+				getMultipleCallback);
+	}
+
+	public void getLastViewed() {
+		findPatientView.setProgressBarVisibility(true);
+		setLoading(true);
+		PagingInfo pagingInfo = new PagingInfo(page, limit);
+		patientDataService.getLastViewed(ApplicationConstants.EMPTY_STRING, QueryOptions.LOAD_RELATED_OBJECTS, pagingInfo,
+				new DataService.GetCallback<List<Patient>>() {
+					@Override
+					public void onCompleted(List<Patient> patients) {
+						findPatientView.setProgressBarVisibility(false);
+
+						if (!patients.isEmpty()) {
+							findPatientView.setNumberOfPatientsView(0);
+							findPatientView.fetchPatients(patients);
+						} else {
+							findPatientView.setNumberOfPatientsView(patients.size());
+						}
+						setLoading(false);
+					}
+
+					@Override
+					public void onError(Throwable t) {
+						setLoading(false);
+						findPatientView.setProgressBarVisibility(false);
+					}
+				});
+	}
+
+	@Override
+	public boolean isLoading() {
+		return loading;
+	}
+
+	@Override
+	public void setLoading(boolean loading) {
+		this.loading = loading;
+	}
+
+	@Override
+	public void loadResults(boolean loadNextResults) {
+		getLastViewed();
+	}
+
+	@Override
+	public void refresh() {
+	}
+
+	@Override
+	public int getPage() {
+		return page;
+	}
+
+	@Override
+	public void setPage(int page) {
+
+	}
 }

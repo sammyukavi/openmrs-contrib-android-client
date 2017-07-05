@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ The contents of this file are subject to the OpenMRS Public License
+  ~ Version 2.0 (the "License"); you may not use this file except in
+  ~ compliance with the License. You may obtain a copy of the License at
+  ~ http://license.openmrs.org
+  ~
+  ~ Software distributed under the License is distributed on an "AS IS"
+  ~ basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+  ~ License for the specific language governing rights and limitations
+  ~ under the License.
+  ~
+  ~ Copyright (C) OpenHMIS.  All Rights Reserved.
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content">
+	
+	<android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+			xmlns:android="http://schemas.android.com/apk/res/android"
+			android:id="@+id/addEditVisitCard"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_margin="5dp"
+			card_view:cardBackgroundColor="@color/white"
+			card_view:cardCornerRadius="4dp">
+		
+		<LinearLayout
+				android:layout_margin="5dp"
+				android:orientation="vertical"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content">
+			
+			<LinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:layout_marginStart="10dp"
+					android:layout_marginLeft="10dp"
+					android:layout_marginRight="10dp"
+					android:layout_marginEnd="10dp"
+					android:orientation="horizontal">
+				
+				<TextView
+						android:id="@+id/headerContent"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:textSize="18sp"
+						android:layout_marginBottom="5dp"
+						android:gravity="start" />
+			
+			</LinearLayout>
+			
+			<View
+					android:layout_width="match_parent"
+					android:layout_height="1dp"
+					android:background="@android:color/darker_gray" />
+			
+			<LinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:layout_marginStart="10dp"
+					android:layout_marginLeft="10dp"
+					android:layout_marginRight="10dp"
+					android:layout_marginEnd="10dp"
+					android:orientation="horizontal">
+				
+				<TextView
+						android:id="@+id/bodyContent"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:layout_marginTop="5dp"
+						android:textStyle="italic"
+						android:gravity="start" />
+			
+			</LinearLayout>
+		</LinearLayout>
+	</android.support.v7.widget.CardView>
+</LinearLayout>

@@ -12,106 +12,119 @@ package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.OneToMany;
+import com.raizlabs.android.dbflow.annotation.Table;
+
+import org.openmrs.mobile.data.db.AppDatabase;
 
 import java.io.Serializable;
 import java.util.List;
 
-public class QuestionOptions implements Serializable {
+@Table(database = AppDatabase.class)
+public class QuestionOptions extends Resource implements Serializable {
+	@SerializedName("rendering")
+	@Expose
+	@Column
+	private String rendering;
 
-    @SerializedName("rendering")
-    @Expose
-    private String rendering;
+	@SerializedName("concept")
+	@Expose
+	@Column
+	private String concept;
 
-    @SerializedName("concept")
-    @Expose
-    private String concept;
+	// For numeric values
+	@SerializedName("max")
+	@Expose
+	@Column
+	private String max;
 
-    // For numeric values
-    @SerializedName("max")
-    @Expose
-    private String max;
+	// For numeric values
+	@SerializedName("min")
+	@Expose
+	@Column
+	private String min;
 
-    // For numeric values
-    @SerializedName("min")
-    @Expose
-    private String min;
+	// For numeric values
+	@SerializedName("allowDecimal")
+	@Expose
+	@Column
+	private boolean allowDecimal;
 
-    // For numeric values
-    @SerializedName("allowDecimal")
-    @Expose
-    private boolean allowDecimal;
+	// For select radio boxes
+	@SerializedName("answers")
+	@Expose
+	private List<Answer> answers;
 
-    // For select radio boxes
-    @SerializedName("answers")
-    @Expose
-    private List<Answer> answers;
+	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "answers", isVariablePrivate = true)
+	List<Answer> loadAnswers() {
+		return loadRelatedObject(Answer.class, answers, () -> Answer_Table.questionOptions_uuid.eq(getUuid()));
+	}
 
-    /**
-     * 
-     * @return
-     *     The rendering
-     */
-    public String getRendering() {
-        return rendering;
-    }
+	@Override
+	public void processRelationships() {
+		super.processRelationships();
 
-    /**
-     * 
-     * @param rendering
-     *     The rendering
-     */
-    public void setRendering(String rendering) {
-        this.rendering = rendering;
-    }
+		processRelatedObjects(answers, (a) -> a.setQuestionOptions(this));
+	}
 
-    /**
-     * 
-     * @return
-     *     The concept
-     */
-    public String getConcept() {
-        return concept;
-    }
+	/**
+	 * @return The rendering
+	 */
+	public String getRendering() {
+		return rendering;
+	}
 
-    /**
-     * 
-     * @param concept
-     *     The concept
-     */
-    public void setConcept(String concept) {
-        this.concept = concept;
-    }
+	/**
+	 * @param rendering The rendering
+	 */
+	public void setRendering(String rendering) {
+		this.rendering = rendering;
+	}
 
-    public String getMax() {
-        return max;
-    }
+	/**
+	 * @return The concept
+	 */
+	public String getConcept() {
+		return concept;
+	}
 
-    public void setMax(String max) {
-        this.max = max;
-    }
+	/**
+	 * @param concept The concept
+	 */
+	public void setConcept(String concept) {
+		this.concept = concept;
+	}
 
-    public String getMin() {
-        return min;
-    }
+	public String getMax() {
+		return max;
+	}
 
-    public void setMin(String min) {
-        this.min = min;
-    }
+	public void setMax(String max) {
+		this.max = max;
+	}
 
-    public boolean isAllowDecimal() {
-        return allowDecimal;
-    }
+	public String getMin() {
+		return min;
+	}
 
-    public void setAllowDecimal(boolean allowDecimal) {
-        this.allowDecimal = allowDecimal;
-    }
+	public void setMin(String min) {
+		this.min = min;
+	}
 
-    public List<Answer> getAnswers() {
-        return answers;
-    }
+	public boolean isAllowDecimal() {
+		return allowDecimal;
+	}
 
-    public void setAnswers(List<Answer> answers) {
-        this.answers = answers;
-    }
+	public void setAllowDecimal(boolean allowDecimal) {
+		this.allowDecimal = allowDecimal;
+	}
 
+	public List<Answer> getAnswers() {
+		return answers;
+	}
+
+	public void setAnswers(List<Answer> answers) {
+		this.answers = answers;
+	}
 }

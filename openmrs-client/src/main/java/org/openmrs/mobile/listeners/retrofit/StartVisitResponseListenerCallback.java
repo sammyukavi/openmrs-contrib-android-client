@@ -14,8 +14,8 @@
 
 package org.openmrs.mobile.listeners.retrofit;
 
-public interface StartVisitResponseListenerCallback extends DefaultResponseCallbackListener{
+public interface StartVisitResponseListenerCallback extends DefaultResponseCallbackListener {
 
-    void onStartVisitResponse(long id);
+	void onStartVisitResponse(long id);
 
 }

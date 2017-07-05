@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ The contents of this file are subject to the OpenMRS Public License
+  ~ Version 2.0 (the "License"); you may not use this file except in
+  ~ compliance with the License. You may obtain a copy of the License at
+  ~ http://license.openmrs.org
+  ~
+  ~ Software distributed under the License is distributed on an "AS IS"
+  ~ basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+  ~ License for the specific language governing rights and limitations
+  ~ under the License.
+  ~
+  ~ Copyright (C) OpenHMIS.  All Rights Reserved.
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+	
+	<ScrollView
+			android:layout_width="fill_parent"
+			android:layout_height="match_parent">
+
+		<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+				android:orientation="horizontal">
+
+			<LinearLayout
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:orientation="vertical">
+
+				<ImageView
+						android:id="@+id/visitPhoto"
+						android:layout_marginLeft="5dp"
+						android:layout_marginRight="5dp"
+						android:layout_marginTop="5dp"
+						android:clickable="true"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content" />
+
+				<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_marginRight="5dp"
+						android:layout_marginLeft="5dp"
+						android:visibility="gone"
+						android:layout_marginBottom="5dp" />
+
+			</LinearLayout>
+
+
+		</LinearLayout>
+	</ScrollView>
+</LinearLayout>

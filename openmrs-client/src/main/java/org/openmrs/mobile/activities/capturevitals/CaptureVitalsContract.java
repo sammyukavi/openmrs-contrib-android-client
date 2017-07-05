@@ -14,15 +14,41 @@
 
 package org.openmrs.mobile.activities.capturevitals;
 
+import android.content.Context;
+
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
+import org.openmrs.mobile.models.Encounter;
+import org.openmrs.mobile.models.Location;
 
 public interface CaptureVitalsContract {
 
-    interface View extends BaseView<Presenter> {
-    }
+	interface View extends BaseView<Presenter> {
 
-    interface Presenter extends BasePresenterContract {
-    }
+		void showErrorView(android.view.View... view);
+
+		void hideErrorView(android.view.View... view);
+
+		void setLocation(Location location);
+
+		Context getContext();
+
+		void disableButton();
+
+		void goBackToVisitPage();
+
+		void showProgressBar(Boolean visibility);
+
+		void showPageSpinner(boolean visibility);
+
+		void hideSoftKeys();
+	}
+
+	interface Presenter extends BasePresenterContract {
+
+		void fetchLocation(String locationUuid);
+
+		void attemptSave(Encounter encounter);
+	}
 
 }

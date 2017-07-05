@@ -12,99 +12,128 @@ package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.OneToMany;
+import com.raizlabs.android.dbflow.annotation.Table;
+
+import org.openmrs.mobile.data.db.AppDatabase;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Question implements Serializable {
+@Table(database = AppDatabase.class)
+public class Question extends Resource implements Serializable {
+	@SerializedName("type")
+	@Expose
+	@Column
+	private String type;
 
-    @SerializedName("type")
-    @Expose
-    private String type;
+	@SerializedName("label")
+	@Expose
+	@Column
+	private String label;
 
-    @SerializedName("label")
-    @Expose
-    private String label;
+	@SerializedName("questionOptions")
+	@Expose
+	@ForeignKey
+	private QuestionOptions questionOptions;
 
-    @SerializedName("questionOptions")
-    @Expose
-    private QuestionOptions questionOptions;
+	@ForeignKey(stubbedRelationship = true)
+	private Question parentQuestion;
 
-    @SerializedName("questions")
-    @Expose
-    private List<Question> questions = new ArrayList<Question>();
+	@ForeignKey(stubbedRelationship = true)
+	private Section section;
 
-    /**
-     * 
-     * @return
-     *     The type
-     */
-    public String getType() {
-        return type;
-    }
+	@SerializedName("questions")
+	@Expose
+	private List<Question> questions = new ArrayList<Question>();
 
-    /**
-     * 
-     * @param type
-     *     The type
-     */
-    public void setType(String type) {
-        this.type = type;
-    }
+	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "questions", isVariablePrivate = true)
+	List<Question> loadQuestions() {
+		return loadRelatedObject(Question.class, questions, () -> Question_Table.parentQuestion_uuid.eq(getUuid()));
+	}
 
-    /**
-     * 
-     * @return
-     *     The label
-     */
-    public String getLabel() {
-        return label;
-    }
+	@Override
+	public void processRelationships() {
+		super.processRelationships();
 
-    /**
-     * 
-     * @param label
-     *     The label
-     */
-    public void setLabel(String label) {
-        this.label = label;
-    }
+		if (questionOptions != null) {
+			questionOptions.processRelationships();
+		}
+		processRelatedObjects(questions, (q) -> q.setParentQuestion(this));
+	}
 
-    /**
-     * 
-     * @return
-     *     The questionOptions
-     */
-    public QuestionOptions getQuestionOptions() {
-        return questionOptions;
-    }
+	/**
+	 * @return The type
+	 */
+	public String getType() {
+		return type;
+	}
 
-    /**
-     * 
-     * @param questionOptions
-     *     The questionOptions
-     */
-    public void setQuestionOptions(QuestionOptions questionOptions) {
-        this.questionOptions = questionOptions;
-    }
+	/**
+	 * @param type The type
+	 */
+	public void setType(String type) {
+		this.type = type;
+	}
 
-    /**
-     * 
-     * @return
-     *     The questions
-     */
-    public List<Question> getQuestions() {
-        return questions;
-    }
+	/**
+	 * @return The label
+	 */
+	public String getLabel() {
+		return label;
+	}
 
-    /**
-     * 
-     * @param questions
-     *     The questions
-     */
-    public void setQuestions(List<Question> questions) {
-        this.questions = questions;
-    }
+	/**
+	 * @param label The label
+	 */
+	public void setLabel(String label) {
+		this.label = label;
+	}
 
+	/**
+	 * @return The questionOptions
+	 */
+	public QuestionOptions getQuestionOptions() {
+		return questionOptions;
+	}
+
+	/**
+	 * @param questionOptions The questionOptions
+	 */
+	public void setQuestionOptions(QuestionOptions questionOptions) {
+		this.questionOptions = questionOptions;
+	}
+
+	public Question getParentQuestion() {
+		return parentQuestion;
+	}
+
+	public void setParentQuestion(Question parentQuestion) {
+		this.parentQuestion = parentQuestion;
+	}
+
+	public Section getSection() {
+		return section;
+	}
+
+	public void setSection(Section section) {
+		this.section = section;
+	}
+
+	/**
+	 * @return The questions
+	 */
+	public List<Question> getQuestions() {
+		return questions;
+	}
+
+	/**
+	 * @param questions The questions
+	 */
+	public void setQuestions(List<Question> questions) {
+		this.questions = questions;
+	}
 }

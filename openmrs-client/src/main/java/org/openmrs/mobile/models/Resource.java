@@ -7,100 +7,119 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-
 package org.openmrs.mobile.models;
 
+import android.support.annotation.Nullable;
+
+import com.google.common.base.Supplier;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.sql.language.SQLOperator;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 
-import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Transient;
+import org.openmrs.mobile.utilities.Consumer;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import org.greenrobot.greendao.annotation.Generated;
 
 public class Resource implements Serializable {
-    private static final long serialVersionUID = 1;
+	private static final long serialVersionUID = 1;
 
-    @SerializedName("uuid")
-    @Expose
-    protected String uuid;
+	private Long id;
 
-    @Transient
-    @SerializedName("display")
-    @Expose
-    protected String display;
+	public Long getId() {
+		return id;
+	}
 
-    @Transient
-    @SerializedName("links")
-    @Expose
-    protected List<Link> links = new ArrayList<Link>();
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    @Generated(hash = 561006165)
-    public Resource(String uuid) {
-        this.uuid = uuid;
-    }
+	@SerializedName("uuid")
+	@Expose
+	@PrimaryKey
+	protected String uuid;
 
-    @Generated(hash = 632359988)
-    public Resource() {
-    }
+	@SerializedName("display")
+	@Expose
+	@Column
+	protected String display;
 
-    /**
-     *
-     * @return
-     *     The uuid
-     */
-    public String getUuid() {
-        return uuid;
-    }
+	@SerializedName("links")
+	@Expose
+	protected List<Link> links = new ArrayList<Link>();
 
-    /**
-     *
-     * @param uuid
-     *     The uuid
-     */
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
+	/**
+	 * @return The uuid
+	 */
+	public String getUuid() {
+		return uuid;
+	}
 
-    /**
-     *
-     * @return
-     *     The display
-     */
-    public String getDisplay() {
-        return display;
-    }
+	/**
+	 * @param uuid The uuid
+	 */
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
 
-    /**
-     *
-     * @param display
-     *     The display
-     */
-    public void setDisplay(String display) {
-        this.display = display;
-    }
+	/**
+	 * @return The display
+	 */
+	public String getDisplay() {
+		return display;
+	}
 
-    /**
-     *
-     * @return
-     *     The links
-     */
-    public List<Link> getLinks() {
-        return links;
-    }
+	/**
+	 * @param display The display
+	 */
+	public void setDisplay(String display) {
+		this.display = display;
+	}
 
-    /**
-     *
-     * @param links
-     *     The links
-     */
-    public void setLinks(List<Link> links) {
-        this.links = links;
-    }
+	/**
+	 * @return The links
+	 */
+	public List<Link> getLinks() {
+		return links;
+	}
 
+	/**
+	 * @param links The links
+	 */
+	public void setLinks(List<Link> links) {
+		this.links = links;
+	}
 
+	public void processRelationships() { }
 
+	protected <R extends Resource> void processRelatedObjects(@Nullable List<R> resources) {
+		processRelatedObjects(resources, null);
+	}
+
+	protected <R extends Resource> void processRelatedObjects(@Nullable List<R> resources, @Nullable Consumer<R> process) {
+		if (resources != null && !resources.isEmpty()) {
+			for (R r : resources) {
+				if (process != null) {
+					process.accept(r);
+				}
+
+				r.processRelationships();
+			}
+		}
+	}
+
+	protected <E> List<E> loadRelatedObject(Class<E> cls, List<E> field, Supplier<SQLOperator> op) {
+		if (field == null || field.isEmpty()) {
+			field = SQLite.select()
+					.from(cls)
+					.where(op.get())
+					.queryList();
+		}
+
+		return field;
+	}
 }

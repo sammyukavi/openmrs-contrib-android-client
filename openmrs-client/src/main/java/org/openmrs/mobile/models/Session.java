@@ -16,46 +16,53 @@ package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Table;
 
-public class Session {
+import org.openmrs.mobile.data.db.AppDatabase;
 
-    @SerializedName("sessionId")
-    @Expose
-    private String sessionId;
-    @SerializedName("authenticated")
-    @Expose
-    private boolean authenticated;
-    @SerializedName("user")
-    @Expose
-    private User user;
+@Table(database = AppDatabase.class)
+public class Session extends BaseOpenmrsMetadata {
+	@SerializedName("sessionId")
+	@Expose
+	private String sessionId;
 
-    public Session(String sessionId, boolean authenticated, User user) {
-        this.sessionId = sessionId;
-        this.authenticated = authenticated;
-        this.user = user;
-    }
+	@SerializedName("authenticated")
+	@Expose
+	private boolean authenticated;
 
-    public String getSessionId() {
-        return sessionId;
-    }
+	@SerializedName("user")
+	@Expose
+	private User user;
 
-    public void setSessionId(String sessionId) {
-        this.sessionId = sessionId;
-    }
+	public Session(){}
 
-    public boolean isAuthenticated() {
-        return authenticated;
-    }
+	public Session(String sessionId, boolean authenticated, User user) {
+		this.sessionId = sessionId;
+		this.authenticated = authenticated;
+		this.user = user;
+	}
 
-    public void setAuthenticated(boolean authenticated) {
-        this.authenticated = authenticated;
-    }
+	public String getSessionId() {
+		return sessionId;
+	}
 
-    public User getUser() {
-        return user;
-    }
+	public void setSessionId(String sessionId) {
+		this.sessionId = sessionId;
+	}
 
-    public void setUser(User user) {
-        this.user = user;
-    }
+	public boolean isAuthenticated() {
+		return authenticated;
+	}
+
+	public void setAuthenticated(boolean authenticated) {
+		this.authenticated = authenticated;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
 }

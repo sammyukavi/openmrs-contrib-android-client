@@ -7,172 +7,212 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-
 package org.openmrs.mobile.models;
 
 import android.graphics.Bitmap;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.OneToMany;
+import com.raizlabs.android.dbflow.annotation.Table;
+
+import org.openmrs.mobile.data.db.AppDatabase;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+@Table(database = AppDatabase.class)
 public class Person extends BaseOpenmrsEntity implements Serializable {
+	@SerializedName("gender")
+	@Expose
+	@Column
+	private String gender;
 
-    @SerializedName("names")
-    @Expose
-    private List<PersonName> names = new ArrayList<PersonName>();
-    @SerializedName("gender")
-    @Expose
-    private String gender;
-    @SerializedName("birthdate")
-    @Expose
-    private String birthdate;
-    @SerializedName("birthdateEstimated")
-    @Expose
-    private boolean birthdateEstimated;
-    @SerializedName("addresses")
-    @Expose
-    private List<PersonAddress> addresses = new ArrayList<PersonAddress>();
-    @SerializedName("attributes")
-    @Expose
-    private List<PersonAttribute> attributes = new ArrayList<PersonAttribute>();
+	@SerializedName("birthdate")
+	@Expose
+	@Column
+	private String birthdate;
 
-    private Bitmap photo;
+	@SerializedName("birthdateEstimated")
+	@Expose
+	@Column
+	private boolean birthdateEstimated;
 
-    /**
-     * 
-     * @return
-     *     The names
-     */
-    public List<PersonName> getNames() {
-        return names;
-    }
+	private Bitmap photo;
 
-    public PersonName getName() {
-        if (!names.isEmpty()) {
-            return names.get(0);
-        } else {
-            return null;
-        }
-    }
+	@SerializedName("deathDate")
+	@Expose
+	@Column
+	private String deathDate;
 
-    /**
-     * 
-     * @param names
-     *     The names
-     */
-    public void setNames(List<PersonName> names) {
-        this.names = names;
-    }
+	@SerializedName("age")
+	@Expose
+	@Column
+	private Integer age;
 
-    /**
-     * 
-     * @return
-     *     The gender
-     */
-    public String getGender() {
-        return gender;
-    }
+	@SerializedName("names")
+	@Expose
+	private List<PersonName> names = new ArrayList<PersonName>();
 
-    /**
-     * 
-     * @param gender
-     *     The gender
-     */
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
+	@SerializedName("addresses")
+	@Expose
+	private List<PersonAddress> addresses = new ArrayList<PersonAddress>();
 
-    /**
-     * 
-     * @return
-     *     The birthdate
-     */
-    public String getBirthdate() {
-        return birthdate;
-    }
+	@SerializedName("attributes")
+	@Expose
+	private List<PersonAttribute> attributes = new ArrayList<PersonAttribute>();
 
-    /**
-     * 
-     * @param birthdate
-     *     The birthdate
-     */
-    public void setBirthdate(String birthdate) {
-        this.birthdate = birthdate;
-    }
+	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "names", isVariablePrivate = true)
+	List<PersonName> loadNames() {
+		return loadRelatedObject(PersonName.class, names, () -> PersonName_Table.person_uuid.eq(getUuid()));
+	}
 
-    /**
-     *
-     * @return
-     *     The birthdateEstimated
-     */
-    public boolean getBirthdateEstimated() {
-        return birthdateEstimated;
-    }
+	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "addresses", isVariablePrivate = true)
+	List<PersonAddress> loadAddresses() {
+		return loadRelatedObject(PersonAddress.class, addresses, () -> PersonAddress_Table.person_uuid.eq(getUuid()));
+	}
 
-    /**
-     *
-     * @param birthdateEstimated
-     *     The birthdate
-     */
-    public void setBirthdateEstimated(boolean birthdateEstimated) {
-        this.birthdateEstimated = birthdateEstimated;
-    }
+	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "attributes", isVariablePrivate = true)
+	List<PersonAttribute> loadAttributes() {
+		return loadRelatedObject(PersonAttribute.class, attributes, () -> PersonAttribute_Table.person_uuid.eq(getUuid()));
+	}
 
+	@Override
+	public void processRelationships() {
+		super.processRelationships();
 
-    /**
-     * 
-     * @return
-     *     The addresses
-     */
-    public List<PersonAddress> getAddresses() {
-        return addresses;
-    }
+		processRelatedObjects(names, (n) -> n.setPerson(this));
+		processRelatedObjects(addresses, (a) -> a.setPerson(this));
+		processRelatedObjects(attributes, (a) -> a.setPerson(this));
+	}
 
-    public PersonAddress getAddress() {
-        if (!addresses.isEmpty()) {
-            return addresses.get(0);
-        } else {
-            return null;
-        }
-    }
+	/**
+	 * @return The names
+	 */
+	public List<PersonName> getNames() {
+		return names;
+	}
 
-    /**
-     * 
-     * @param addresses
-     *     The addresses
-     */
-    public void setAddresses(List<PersonAddress> addresses) {
-        this.addresses = addresses;
-    }
+	/**
+	 * @param names The names
+	 */
+	public void setNames(List<PersonName> names) {
+		this.names = names;
+	}
 
-    /**
-     * 
-     * @return
-     *     The attributes
-     */
-    public List<PersonAttribute> getAttributes() {
-        return attributes;
-    }
+	public PersonName getName() {
+		if (!names.isEmpty()) {
+			return names.get(0);
+		} else {
+			return null;
+		}
+	}
 
-    /**
-     *
-     * @param attributes
-     *     The attributes
-     */
-    public void setAttributes(List<PersonAttribute> attributes) {
-        this.attributes = attributes;
-    }
+	/**
+	 * @return The gender
+	 */
+	public String getGender() {
+		return gender;
+	}
 
+	/**
+	 * @param gender The gender
+	 */
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
 
-    public Bitmap getPhoto() {
-        return photo;
-    }
+	/**
+	 * @return The birthdate
+	 */
+	public String getBirthdate() {
+		return birthdate;
+	}
 
-    public void setPhoto(Bitmap patientPhoto) {
-        this.photo = patientPhoto;
-    }
+	/**
+	 * @param birthdate The birthdate
+	 */
+	public void setBirthdate(String birthdate) {
+		this.birthdate = birthdate;
+	}
+
+	/**
+	 * @return The birthdateEstimated
+	 */
+	public boolean getBirthdateEstimated() {
+		return birthdateEstimated;
+	}
+
+	boolean isBirthdateEstimated() {
+		return birthdateEstimated;
+	}
+
+	/**
+	 * @param birthdateEstimated The birthdate
+	 */
+	public void setBirthdateEstimated(boolean birthdateEstimated) {
+		this.birthdateEstimated = birthdateEstimated;
+	}
+
+	/**
+	 * @return The addresses
+	 */
+	public List<PersonAddress> getAddresses() {
+		return addresses;
+	}
+
+	/**
+	 * @param addresses The addresses
+	 */
+	public void setAddresses(List<PersonAddress> addresses) {
+		this.addresses = addresses;
+	}
+
+	public PersonAddress getAddress() {
+		if (!addresses.isEmpty()) {
+			return addresses.get(0);
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * @return The attributes
+	 */
+	public List<PersonAttribute> getAttributes() {
+		return attributes;
+	}
+
+	/**
+	 * @param attributes The attributes
+	 */
+	public void setAttributes(List<PersonAttribute> attributes) {
+		this.attributes = attributes;
+	}
+
+	public Bitmap getPhoto() {
+		return photo;
+	}
+
+	public void setPhoto(Bitmap patientPhoto) {
+		this.photo = patientPhoto;
+	}
+
+	public String getDeathDate() {
+		return deathDate;
+	}
+
+	public void setDeathDate(String deathDate) {
+		this.deathDate = deathDate;
+	}
+
+	public Integer getAge() {
+		return age;
+	}
+
+	public void setAge(Integer age) {
+		this.age = age;
+	}
 }

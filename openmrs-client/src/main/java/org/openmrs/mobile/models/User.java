@@ -15,39 +15,47 @@
 package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.Table;
 
-public class User extends Resource{
+import org.openmrs.mobile.data.db.AppDatabase;
 
-    @Expose
-    private String username;
+@Table(database = AppDatabase.class)
+public class User extends BaseOpenmrsObject {
+	@Expose
+	@Column
+	private String username;
 
-    @Expose
-    private String systemId;
+	@Expose
+	@Column
+	private String systemId;
 
-    @Expose
-    private Person person;
+	@Expose
+	@ForeignKey(stubbedRelationship = true)
+	private Person person;
 
-    public String getUsername() {
-        return username;
-    }
+	public String getUsername() {
+		return username;
+	}
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+	public void setUsername(String username) {
+		this.username = username;
+	}
 
-    public String getSystemId() {
-        return systemId;
-    }
+	public String getSystemId() {
+		return systemId;
+	}
 
-    public void setSystemId(String systemId) {
-        this.systemId = systemId;
-    }
+	public void setSystemId(String systemId) {
+		this.systemId = systemId;
+	}
 
-    public Person getPerson() {
-        return person;
-    }
+	public Person getPerson() {
+		return person;
+	}
 
-    public void setPerson(Person person) {
-        this.person = person;
-    }
+	public void setPerson(Person person) {
+		this.person = person;
+	}
 }

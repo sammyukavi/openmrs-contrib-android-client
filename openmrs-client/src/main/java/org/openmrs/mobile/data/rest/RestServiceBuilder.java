@@ -13,9 +13,7 @@ import org.openmrs.mobile.models.Resource;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.ObservationDeserializer;
 import org.openmrs.mobile.utilities.ResourceSerializer;
-import org.openmrs.mobile.utilities.StringUtils;
 
-import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -25,41 +23,42 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class RestServiceBuilder {
-    private static Retrofit.Builder builder;
-    private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-    protected static final OpenMRS app = OpenMRS.getInstance();
+	protected static final OpenMRS app = OpenMRS.getInstance();
+	private static final String REST_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
 
-    static {
-        builder = new Retrofit.Builder()
-                .baseUrl(ApplicationConstants.DEFAULT_OPEN_MRS_URL)
-                .addConverterFactory(buildGsonConverter())
-                .client((httpClient).build());
-    }
+	private static Retrofit.Builder builder;
+	private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+	private static String API_BASE_URL = OpenMRS.getInstance().getServerUrl();
 
-    private static GsonConverterFactory buildGsonConverter() {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        Gson myGson = gsonBuilder
-                .excludeFieldsWithoutExposeAnnotation()
-                .registerTypeHierarchyAdapter(Resource.class, new ResourceSerializer())
-                .registerTypeHierarchyAdapter(Observation.class, new ObservationDeserializer())
-                .create();
+	static {
+		applyDefaultBaseUrl();
+	}
 
-        return GsonConverterFactory.create(myGson);
-    }
+	private static GsonConverterFactory buildGsonConverter() {
+		GsonBuilder gsonBuilder = new GsonBuilder();
+		Gson myGson = gsonBuilder
+				.excludeFieldsWithoutExposeAnnotation()
+				.setDateFormat(REST_DATE_FORMAT)
+				.registerTypeHierarchyAdapter(Resource.class, new ResourceSerializer())
+				.registerTypeHierarchyAdapter(Observation.class, new ObservationDeserializer())
+				.create();
 
-    public static <S> S createService(@NonNull Class<S> serviceClass, @Nullable String host,
-                                      @NonNull String username, @NonNull String password){
-        checkNotNull(serviceClass);
-        checkNotNull(username);
-        checkNotNull(password);
+		return GsonConverterFactory.create(myGson);
+	}
 
-        String credentials = username + ":" + password;
-        final String basic = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
-        httpClient.addInterceptor(chain -> {
-            Request original = chain.request();
+	public static <S> S createService(@NonNull Class<S> serviceClass, @Nullable String host,
+			@NonNull String username, @NonNull String password) {
+		checkNotNull(serviceClass);
+		checkNotNull(username);
+		checkNotNull(password);
+
+		String credentials = username + ":" + password;
+		final String basic = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+		httpClient.addInterceptor(chain -> {
+			Request original = chain.request();
 
             /* Inject the host
-            if (StringUtils.notEmpty(host)) {
+			if (StringUtils.notEmpty(host)) {
                 HttpUrl newUrl = original.url().newBuilder()
                         .host(host)
                         .build();
@@ -69,27 +68,53 @@ public class RestServiceBuilder {
             }
             //*/
 
-            // Inject the credentials into the request
-            Request.Builder requestBuilder = original.newBuilder()
-                    .header("Authorization", basic)
-                    .header("Accept", "application/json")
-                    .method(original.method(), original.body());
+			// Inject the credentials into the request
+			Request.Builder requestBuilder = original.newBuilder()
+					.header("Authorization", basic)
+					.header("Accept", "application/json")
+					.method(original.method(), original.body());
 
-            Request request = requestBuilder.build();
-            return chain.proceed(request);
-        });
+			Request request = requestBuilder.build();
+			return chain.proceed(request);
+		});
 
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-        httpClient.addInterceptor(logging);
+		HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+		logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+		httpClient.addInterceptor(logging);
 
-        OkHttpClient client = httpClient.build();
-        Retrofit retrofit = builder.client(client).build();
+		OkHttpClient client = httpClient.build();
 
-        return retrofit.create(serviceClass);
-    }
+		Retrofit retrofit = builder.client(client).build();
 
-    public static <S> S createService(Class<S> serviceClass) {
-        return createService(serviceClass, app.getServerUrl(), app.getUsername(), app.getPassword());
-    }
+		return retrofit.create(serviceClass);
+	}
+
+	public static <S> S createService(Class<S> serviceClass) {
+		return createService(serviceClass, app.getServerUrl(), app.getUsername(), app.getPassword());
+	}
+
+	public static void applyDefaultBaseUrl() {
+
+		API_BASE_URL = OpenMRS.getInstance().getServerUrl();
+
+		builder = new Retrofit.Builder()
+				.baseUrl(API_BASE_URL)
+				.addConverterFactory(buildGsonConverter());
+	}
+
+	public static void setBaseUrl(String url) {
+
+		API_BASE_URL = url;
+
+		builder = new Retrofit.Builder()
+				.baseUrl(API_BASE_URL)
+				.addConverterFactory(buildGsonConverter());
+	}
+
+	public static void setloginUrl(String url) {
+		API_BASE_URL = url + ApplicationConstants.API.REST_ENDPOINT_V1;
+		builder = new Retrofit.Builder()
+				.baseUrl(API_BASE_URL)
+				.addConverterFactory(buildGsonConverter());
+	}
 }

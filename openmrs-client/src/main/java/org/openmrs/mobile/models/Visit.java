@@ -11,97 +11,136 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-
 package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.OneToMany;
+import com.raizlabs.android.dbflow.annotation.Table;
 
-import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Id;
-import org.greenrobot.greendao.annotation.Transient;
+import org.openmrs.mobile.data.db.AppDatabase;
 
+import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
-import org.greenrobot.greendao.annotation.Generated;
 
-@Entity
-public class Visit extends BaseOpenmrsEntity {
-    @Id
-    private Long id;
+@Table(database = AppDatabase.class)
+public class Visit extends BaseOpenmrsEntity implements Serializable {
+	@SerializedName("visitType")
+	@Expose
+	@ForeignKey
+	private VisitType visitType;
 
-    @Transient
-    @Expose
-    private VisitType visitType;
+	@SerializedName("location")
+	@Expose
+	@ForeignKey
+	private Location location;
 
-    @Transient
-    @Expose
-    private Location location;
+	@SerializedName("startDatetime")
+	@Expose
+	@Column
+	private Date startDatetime;
 
-    @Expose
-    private String startDatetime;
+	@SerializedName("stopDatetime")
+	@Expose
+	@Column
+	private Date stopDatetime;
 
-    @Expose
-    private String stopDatetime;
+	@SerializedName("encounters")
+	@Expose
+	private List<Encounter> encounters;
 
-    @Transient
-    @Expose
-    private List<Encounter> encounters;
+	@SerializedName("attributes")
+	@Expose
+	private List<VisitAttribute> attributes;
 
-    @Generated(hash = 284896357)
-    public Visit(Long id, String startDatetime, String stopDatetime) {
-        this.id = id;
-        this.startDatetime = startDatetime;
-        this.stopDatetime = stopDatetime;
-    }
+	@Expose
+	@SerializedName("patient")
+	@ForeignKey(stubbedRelationship = true)
+	private Patient patient;
 
-    @Generated(hash = 808752442)
-    public Visit() {
-    }
+	public Visit() { }
 
-    public Long getId() {
-        return id;
-    }
+    public Visit(String visitUuid) {
+		this.uuid = visitUuid;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "encounters", isVariablePrivate = true)
+	List<Encounter> loadEncounters() {
+		return loadRelatedObject(Encounter.class, encounters,
+				() -> Encounter_Table.visit_uuid.eq(getUuid()));
+	}
 
-    public VisitType getVisitType() {
-        return visitType;
-    }
+	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "attributes", isVariablePrivate = true)
+	List<VisitAttribute> loadAttributes() {
+		return loadRelatedObject(VisitAttribute.class, attributes,
+				() -> VisitAttribute_Table.visit_uuid.eq(getUuid()));
+	}
 
-    public void setVisitType(VisitType visitType) {
-        this.visitType = visitType;
-    }
+	@Override
+	public void processRelationships() {
+		super.processRelationships();
 
-    public Location getLocation() {
-        return location;
-    }
+		processRelatedObjects(encounters);
+		processRelatedObjects(attributes);
+	}
 
-    public void setLocation(Location location) {
-        this.location = location;
-    }
+	public Patient getPatient() {
+		return patient;
+	}
 
-    public String getStartDatetime() {
-        return startDatetime;
-    }
+	public void setPatient(Patient patient) {
+		this.patient = patient;
+	}
 
-    public void setStartDatetime(String startDatetime) {
-        this.startDatetime = startDatetime;
-    }
+	public VisitType getVisitType() {
+		return visitType;
+	}
 
-    public String getStopDatetime() {
-        return stopDatetime;
-    }
+	public void setVisitType(VisitType visitType) {
+		this.visitType = visitType;
+	}
 
-    public void setStopDatetime(String stopDatetime) {
-        this.stopDatetime = stopDatetime;
-    }
+	public Location getLocation() {
+		return location;
+	}
 
-    public List<Encounter> getEncounters() {
-        return encounters;
-    }
+	public void setLocation(Location location) {
+		this.location = location;
+	}
 
-    public void setEncounters(List<Encounter> encounters) {
-        this.encounters = encounters;
-    }
+	public Date getStartDatetime() {
+		return startDatetime;
+	}
+
+	public void setStartDatetime(Date startDatetime) {
+		this.startDatetime = startDatetime;
+	}
+
+	public Date getStopDatetime() {
+		return stopDatetime;
+	}
+
+	public void setStopDatetime(Date stopDatetime) {
+		this.stopDatetime = stopDatetime;
+	}
+
+	public List<Encounter> getEncounters() {
+		return encounters;
+	}
+
+	public void setEncounters(List<Encounter> encounters) {
+		this.encounters = encounters;
+	}
+
+	public List<VisitAttribute> getAttributes() {
+		return attributes;
+	}
+
+	public void setAttributes(List<VisitAttribute> attributes) {
+		this.attributes = attributes;
+	}
+
 }

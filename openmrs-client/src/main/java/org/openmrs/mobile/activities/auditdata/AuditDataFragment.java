@@ -43,13 +43,13 @@ import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.EncounterType;
 import org.openmrs.mobile.models.Form;
 import org.openmrs.mobile.models.Location;
-import org.openmrs.mobile.models.ObsValue;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Person;
 import org.openmrs.mobile.models.Provider;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.FontsUtil;
+import org.openmrs.mobile.utilities.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -381,7 +381,6 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		this.encounterUuid = encounterUuid;
 	}
 
-
 	@Override
 	public void goBackToVisitPage() {
 		Intent intent = new Intent(getContext(), VisitActivity.class);
@@ -435,7 +434,8 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 	@Override
 	public void updateFormFields(Encounter encounter) {
 		for (Observation observation : encounter.getObs()) {
-			String displayValue = observation.getDisplay().trim().toLowerCase();
+			ArrayList displayString = StringUtils.splitStrings(observation.getDisplay().toLowerCase(), ":");
+			String displayValue = displayString.get(1).toString().trim();
 
 			switch (observation.getConcept().getUuid()) {
 				case CONCEPT_DEATH_IN_HOSPITAL:

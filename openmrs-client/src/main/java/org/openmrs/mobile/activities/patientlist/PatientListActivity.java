@@ -15,6 +15,7 @@ package org.openmrs.mobile.activities.patientlist;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.GravityCompat;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
@@ -46,6 +47,15 @@ public class PatientListActivity extends ACBaseActivity {
 
 		if (mAuthorizationManager.isUserLoggedIn()) {
 			patientListPresenter = new PatientListPresenter(patientListFragment);
+		}
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (drawer.isDrawerOpen(GravityCompat.START)) {
+			drawer.closeDrawer(GravityCompat.START);
+		} else {
+			super.onBackPressed();
 		}
 	}
 }

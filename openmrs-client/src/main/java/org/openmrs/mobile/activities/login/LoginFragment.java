@@ -266,7 +266,10 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 	public void updateLoginFormLocations(List<Location> locationsList, String serverURL) {
 		mLoginUrl = serverURL;
 		mUrl.setText(serverURL);
-		List<HashMap<String, String>> items = getLocationStringList(locationsList);
+		List<HashMap<String, String>> items = null;
+		if (locationsList != null) {
+			items = getLocationStringList(locationsList);
+		}
 		updateLocationsSpinner(items, serverURL);
 
 	}
@@ -277,8 +280,12 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 		mLoginUrl = serverURL;
 		mUrl.setText(serverURL);
 		int selectedLocation = 0;
-		String[] spinnerArray = new String[locations.size()];
-		for (int i = 0; i < locations.size(); i++) {
+		int locationsSize = 0;
+		if (locations != null) {
+			locationsSize = locations.size();
+		}
+		String[] spinnerArray = new String[locationsSize];
+		for (int i = 0; i < locationsSize; i++) {
 			spinnerArray[i] = locations.get(i).get("display");
 			if (locations.get(i).get("uuid").contains(OpenMRS.getInstance().getLocation())) {
 				selectedLocation = i;
@@ -311,7 +318,6 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 		}
 		mLoadingProgressBar.setVisibility(visible ? View.VISIBLE : View.GONE);
 	}
-
 
 	private List<HashMap<String, String>> getLocationStringList(List<Location> locationList) {
 		List<HashMap<String, String>> locations = new ArrayList<>();

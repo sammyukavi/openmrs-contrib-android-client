@@ -15,7 +15,6 @@ package org.openmrs.mobile.activities.login;
 
 import com.google.gson.Gson;
 
-import org.openmrs.mobile.activities.ACBaseActivity;
 import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.DataService;
@@ -225,7 +224,9 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 
 			@Override
 			public void onError(Throwable t) {
+				List<Location> locationList = null;
 				loginView.setProgressBarVisibility(false);
+				loginView.updateLoginFormLocations(locationList, url);
 				//t.printStackTrace();
 				loginView.showMessage(INVALID_URL);
 			}

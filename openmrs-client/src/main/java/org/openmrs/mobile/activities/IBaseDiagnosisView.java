@@ -10,8 +10,6 @@ import java.util.List;
 
 public interface IBaseDiagnosisView {
 
-	boolean isAutoSaveEnabled();
-
 	void showTabSpinner(boolean show);
 
 	void saveVisitNote(String encounterUuid, String clinicalNote, Visit visit);

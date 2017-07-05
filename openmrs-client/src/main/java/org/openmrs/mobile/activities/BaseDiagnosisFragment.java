@@ -1,6 +1,7 @@
 package org.openmrs.mobile.activities;
 
-import android.support.v7.widget.AppCompatButton;
+import android.os.Handler;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -10,7 +11,6 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 
-import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.visit.detail.DiagnosisRecyclerViewAdapter;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.models.ConceptSearchResult;
@@ -36,21 +36,24 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	protected List<EncounterDiagnosis> primaryDiagnoses = new ArrayList<>(), secondaryDiagnoses = new ArrayList<>();
 	protected AutoCompleteTextView searchDiagnosis;
 	protected RecyclerView primaryDiagnosesRecycler, secondaryDiagnosesRecycler;
-	protected AppCompatButton submitVisitNote;
 	protected TextView noPrimaryDiagnoses, noSecondaryDiagnoses;
 	protected int initialPrimaryDiagnosesListHashcode, initialSecondaryDiagnosesListHashcode,
 			subsequentPrimaryDiagnosesListHashcode, subsequentSecondaryDiagnosesListHashcode,
 			initialClinicNoteHashcode, subsequentClinicalNoteHashcode;
+	protected TextInputEditText clinicalNoteView;
 	protected BaseDiagnosisPresenter diagnosisPresenter = new BaseDiagnosisPresenter();
 	private Timer timer;
-	private String encounterUuid, clinicalNote;
+	private String encounterUuid;
 	private Visit visit;
+	private boolean firstTimeEdit;
+	private long delay = 3000, lastTextEdit = 0;
 
 	@Override
 	public void initializeListeners() {
 		primaryDiagnoses.clear();
 		secondaryDiagnoses.clear();
 		addDiagnosisListeners();
+		addClinicalNoteListener();
 	}
 
 	protected IBaseDiagnosisFragment getIBaseDiagnosisFragment() {
@@ -96,20 +99,55 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 					createEncounterDiagnosis(null, ViewUtils.getInput(searchDiagnosis),
 							conceptSearchResult.getValue());
 
-					if (getDiagnosisView().isAutoSaveEnabled()) {
-						getDiagnosisView().saveVisitNote(encounterUuid, clinicalNote, visit);
-					}
+						getDiagnosisView().saveVisitNote(encounterUuid, clinicalNoteView.getText().toString(), visit);
+				}
+			}
+		});
+	}
+
+	private void addClinicalNoteListener() {
+		firstTimeEdit = true;
+
+		Handler handler = new Handler();
+		Runnable inputCompleteChecker = () -> {
+			if (System.currentTimeMillis() > (lastTextEdit + delay - 500)) {
+				saveVisitNote(null != getEncounterUuid() ? getEncounterUuid() : ApplicationConstants.EMPTY_STRING,
+						clinicalNoteView.getText().toString(), visit);
+			}
+		};
+
+		clinicalNoteView.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			}
+
+			@Override
+			public void onTextChanged(final CharSequence s, int start, int before, int count) {
+				//Remove this to run only once
+				handler.removeCallbacks(inputCompleteChecker);
+			}
+
+			@Override
+			public void afterTextChanged(final Editable s) {
+				if (s.length() > 0 && !firstTimeEdit) {
+					lastTextEdit = System.currentTimeMillis();
+					handler.postDelayed(inputCompleteChecker, delay);
+				} else {
+					firstTimeEdit = false;
 				}
 			}
 		});
 	}
 
 	public void setDiagnoses(Visit visit) {
+		if(this.visit == null){
+			this.visit = visit;
+		}
+
 		if (visit.getEncounters().size() != 0) {
 			for (Encounter encounter : visit.getEncounters()) {
 				if (encounter.getEncounterType().getUuid()
 						.equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.CLINICAL_NOTE_UUID)) {
-					submitVisitNote.setText(getString(R.string.update_visit_note));
 					if (encounter.getObs().size() == 0) {
 						showNoDiagnoses();
 					} else {
@@ -279,20 +317,13 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 			noSecondaryDiagnoses.setVisibility(View.GONE);
 		}
 
-		if (initialPrimaryDiagnosesListHashcode != subsequentPrimaryDiagnosesListHashcode
-				|| initialSecondaryDiagnosesListHashcode != subsequentSecondaryDiagnosesListHashcode) {
-			submitVisitNote.setEnabled(true);
-		} else {
-			submitVisitNote.setEnabled(false);
-		}
-
 		primaryDiagnosesRecycler.setAdapter(
 				new DiagnosisRecyclerViewAdapter(getActivity(), primaryDiagnoses, getEncounterUuid(),
-						getClinicalNote(), getVisit(), getDiagnosisView()));
+						getClinicalNoteView().getText().toString(), visit, getDiagnosisView()));
 
 		secondaryDiagnosesRecycler.setAdapter(
 				new DiagnosisRecyclerViewAdapter(getActivity(), secondaryDiagnoses, getEncounterUuid(),
-						getClinicalNote(), getVisit(), getDiagnosisView()));
+						getClinicalNoteView().getText().toString(), visit, getDiagnosisView()));
 
 		// clear auto-complete input field
 		searchDiagnosis.setText(ApplicationConstants.EMPTY_STRING);
@@ -307,7 +338,7 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	}
 
 	protected VisitNote createVisitNote(String encounterUuid, String clinicalNote, Visit visit) {
-		List<EncounterDiagnosis> encounterDiagnosises = new ArrayList<>();
+		List<EncounterDiagnosis> encounterDiagnoses = new ArrayList<>();
 		VisitNote visitNote = new VisitNote();
 		visitNote.setPersonId(visit.getPatient().getUuid());
 		visitNote.setHtmlFormId("17");
@@ -324,10 +355,10 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 		visitNote.setW10(ApplicationConstants.EMPTY_STRING);
 		visitNote.setW12(null == clinicalNote ? ApplicationConstants.EMPTY_STRING : clinicalNote);
 
-		encounterDiagnosises.addAll(primaryDiagnoses);
-		encounterDiagnosises.addAll(secondaryDiagnoses);
+		encounterDiagnoses.addAll(primaryDiagnoses);
+		encounterDiagnoses.addAll(secondaryDiagnoses);
 
-		visitNote.setEncounterDiagnoses(encounterDiagnosises);
+		visitNote.setEncounterDiagnoses(encounterDiagnoses);
 
 		return visitNote;
 	}
@@ -361,6 +392,16 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	@Override
 	public void setSearchDiagnosisView(AutoCompleteTextView searchDiagnosis) {
 		this.searchDiagnosis = searchDiagnosis;
+	}
+
+	@Override
+	public TextInputEditText getClinicalNoteView() {
+		return clinicalNoteView;
+	}
+
+	@Override
+	public void setClinicalNoteView(TextInputEditText clinicalNoteView) {
+		this.clinicalNoteView = clinicalNoteView;
 	}
 
 	@Override
@@ -404,16 +445,6 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	}
 
 	@Override
-	public AppCompatButton getSubmitVisitNote() {
-		return submitVisitNote;
-	}
-
-	@Override
-	public void setSubmitVisitNote(AppCompatButton view) {
-		this.submitVisitNote = view;
-	}
-
-	@Override
 	public String getEncounterUuid() {
 		return encounterUuid;
 	}
@@ -421,16 +452,6 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	@Override
 	public void setEncounterUuid(String encounterUuid) {
 		this.encounterUuid = encounterUuid;
-	}
-
-	@Override
-	public String getClinicalNote() {
-		return clinicalNote;
-	}
-
-	@Override
-	public void setClinicalNote(String clinicalNote) {
-		this.clinicalNote = clinicalNote;
 	}
 
 	@Override

@@ -390,10 +390,10 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 				secondaryDiagnosis.setText(secondaryDiagnosisString);
 			} else if (observationDisplay.contains(CLINICAL_NOTE)) {
 				clinicalNoteString = StringUtils.splitStrings(observationDisplay, ":");
-				baseDiagnosisFragment.setClinicalNote(clinicalNote.getText().toString());
 				if (isActiveVisit) {
 					clinicalNoteObservation = observation;
 					clinicalNote.setText(clinicalNoteString.get(1).toString());
+					baseDiagnosisFragment.setClinicalNote(clinicalNote.getText().toString());
 					view.findViewById(R.id.clinicalNoteTitle).setVisibility(View.VISIBLE);
 				} else {
 					view.findViewById(R.id.clinicalNoteTitle).setVisibility(View.VISIBLE);

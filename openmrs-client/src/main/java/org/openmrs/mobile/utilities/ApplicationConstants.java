@@ -108,6 +108,7 @@ public abstract class ApplicationConstants {
 		public static final String VITALS_UUID = "67a71486-1a54-468f-ac3e-7091a9a79584";
 		public static final String CLINICAL_NOTE_UUID = "d7151f82-c1f3-4152-a605-2f9ea7414a79";
 		public static final String AUDIT_DATA_UUID = "7dc1632c-f947-474f-b92c-7add68019aec";
+		public static final String VISIT_NOTE_FORM_ID = "17";
 	}
 
 	public abstract static class ObservationLocators {
@@ -125,6 +126,8 @@ public abstract class ApplicationConstants {
 		public static final String SECONDARY_ORDER = "SECONDARY";
 		public static final String CONFIRMED = "CONFIRMED";
 		public static final String PRESUMED = "PRESUMED";
+		public static final String NON_CODED = "Non-Coded:";
+		public static final String CONCEPT_UUID = "ConceptUuid:";
 	}
 
 	public abstract static class BundleKeys {

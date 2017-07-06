@@ -14,7 +14,7 @@ public interface IBaseDiagnosisView {
 
 	void saveVisitNote(String encounterUuid, String clinicalNote, Visit visit);
 
-	void createEncounterDiagnosis(Observation observation, String diagnosis, String conceptNameId);
+	void createEncounterDiagnosis(Observation observation, String diagnosis, String conceptNameId, boolean loadRecyclerView);
 
 	void setPrimaryDiagnosis(EncounterDiagnosis primaryDiagnosis);
 
@@ -24,5 +24,5 @@ public interface IBaseDiagnosisView {
 
 	void removeDiagnosis(EncounterDiagnosis removeDiagnosis, String order);
 
-	void setDiagnoses(List<ConceptSearchResult> concepts);
+	void setSearchDiagnoses(List<ConceptSearchResult> concepts);
 }

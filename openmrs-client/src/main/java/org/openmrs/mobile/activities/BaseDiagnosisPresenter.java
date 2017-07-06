@@ -8,9 +8,11 @@ import org.openmrs.mobile.data.impl.ConceptSearchDataService;
 import org.openmrs.mobile.data.impl.ObsDataService;
 import org.openmrs.mobile.data.impl.VisitNoteDataService;
 import org.openmrs.mobile.models.ConceptSearchResult;
+import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.VisitNote;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BaseDiagnosisPresenter {
@@ -18,6 +20,7 @@ public class BaseDiagnosisPresenter {
 	private ConceptSearchDataService conceptSearchDataService;
 	private ObsDataService obsDataService;
 	private VisitNoteDataService visitNoteDataService;
+	private List<String> obsUuids = new ArrayList<>();
 
 	public BaseDiagnosisPresenter() {
 		this.conceptSearchDataService = new ConceptSearchDataService();
@@ -25,7 +28,7 @@ public class BaseDiagnosisPresenter {
 		this.visitNoteDataService = new VisitNoteDataService();
 	}
 
-	public void findConcept(String searchQuery,  IBaseDiagnosisFragment base) {
+	public void findConcept(String searchQuery, IBaseDiagnosisFragment base) {
 		conceptSearchDataService.search(searchQuery, new DataService.GetCallback<List<ConceptSearchResult>>() {
 			@Override
 			public void onCompleted(List<ConceptSearchResult> entities) {
@@ -35,7 +38,7 @@ public class BaseDiagnosisPresenter {
 					nonCodedDiagnosis.setValue("Non-Coded:" + searchQuery);
 					entities.add(nonCodedDiagnosis);
 				}
-				base.getBaseDiagnosisView().setDiagnoses(entities);
+				base.getBaseDiagnosisView().setSearchDiagnoses(entities);
 			}
 
 			@Override
@@ -45,33 +48,39 @@ public class BaseDiagnosisPresenter {
 		});
 	}
 
-	public void getObservation(String uuid, IBaseDiagnosisFragment base) {
-		obsDataService.getByUUID(uuid, QueryOptions.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Observation>() {
-			@Override
-			public void onCompleted(Observation entity) {
-				base.getBaseDiagnosisView().createEncounterDiagnosis(entity, entity.getDisplay(), entity.getValueCodedName());
-			}
+	public void loadObs(Encounter encounter, IBaseDiagnosisFragment base) {
+		obsUuids.clear();
+		for (Observation obs : encounter.getObs()) {
+			getObservation(obs, encounter, base);
+		}
+	}
 
-			@Override
-			public void onError(Throwable t) {
-				base.getBaseDiagnosisView().showTabSpinner(false);
-			}
-		});
+	private void getObservation(Observation obs, Encounter encounter, IBaseDiagnosisFragment base) {
+		obsDataService
+				.getByUUID(obs.getUuid(), QueryOptions.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Observation>() {
+					@Override
+					public void onCompleted(Observation entity) {
+						obsUuids.add(entity.getUuid());
+						base.getBaseDiagnosisView().createEncounterDiagnosis(entity, entity.getDisplay(),
+								entity.getValueCodedName(), obsUuids.size() == encounter.getObs().size());
+					}
+
+					@Override
+					public void onError(Throwable t) {
+						base.getBaseDiagnosisView().showTabSpinner(false);
+					}
+				});
 	}
 
 	public void saveVisitNote(VisitNote visitNote, IBaseDiagnosisFragment base) {
-		base.getBaseDiagnosisView().showTabSpinner(true);
 		visitNoteDataService.save(visitNote, new DataService.GetCallback<VisitNote>() {
 			@Override
 			public void onCompleted(VisitNote visitNote) {
-				base.getBaseDiagnosisView().showTabSpinner(false);
 				base.setEncounterUuid(visitNote.getEncounterId());
 			}
 
 			@Override
-			public void onError(Throwable t) {
-				System.out.println("FAILED:::" + t.getMessage());
-			}
+			public void onError(Throwable t) {}
 		});
 	}
 }

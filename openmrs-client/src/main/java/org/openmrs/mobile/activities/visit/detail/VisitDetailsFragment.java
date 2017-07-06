@@ -156,6 +156,8 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 
 		visitDetailsProgressBar = (RelativeLayout)v.findViewById(R.id.visitDetailsTabProgressBar);
 		visitDetailsScrollView = (ScrollView)v.findViewById(R.id.visitDetailsTab);
+		setLoadingProgressBar((RelativeLayout)v.findViewById(R.id.loadingDiagnoses));
+		setDiagnosesContent((LinearLayout) v.findViewById(R.id.diagnosesContent));
 	}
 
 	@Override

@@ -78,7 +78,6 @@ public interface VisitContract {
 
 		void showTabSpinner(boolean visibility);
 
-		void createEncounterDiagnosis(Observation observation, String diagnosis, String conceptNameId);
 	}
 
 	interface VisitPhotoView extends ViewVisitDetailsMain {

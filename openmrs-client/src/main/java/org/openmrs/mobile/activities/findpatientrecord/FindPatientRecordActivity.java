@@ -66,13 +66,6 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 			addFragmentToActivity(getSupportFragmentManager(), findPatientRecordFragment, R.id.findPatientContentFrame);
 		}
 
-		if (savedInstanceState != null) {
-			query = savedInstanceState.getString(ApplicationConstants.BundleKeys.PATIENT_QUERY_BUNDLE, "");
-			findPatientPresenter = new FindPatientRecordPresenter(findPatientRecordFragment, query);
-		} else {
-			findPatientPresenter = new FindPatientRecordPresenter(findPatientRecordFragment);
-		}
-
 		//Add menu autocolse
 		FloatingActionMenu findPatientMenu = (FloatingActionMenu)findViewById(R.id.findPatientMenu);
 		findPatientMenu.setClosedOnTouchOutside(true);

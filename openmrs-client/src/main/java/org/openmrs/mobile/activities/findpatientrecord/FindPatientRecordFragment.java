@@ -154,5 +154,4 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 		Intent intent = new Intent(openMRS.getApplicationContext(), AddEditPatientActivity.class);
 		openMRS.getApplicationContext().startActivity(intent);
 	}
-
 }

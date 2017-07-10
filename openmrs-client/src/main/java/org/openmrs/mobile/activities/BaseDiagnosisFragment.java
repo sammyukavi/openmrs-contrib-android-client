@@ -7,7 +7,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 
@@ -20,6 +19,7 @@ import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitNote;
 import org.openmrs.mobile.utilities.ApplicationConstants;
+import org.openmrs.mobile.utilities.CustomDiagnosesDropdownAdapter;
 import org.openmrs.mobile.utilities.DateUtils;
 import org.openmrs.mobile.utilities.StringUtils;
 import org.openmrs.mobile.utilities.ViewUtils;
@@ -99,7 +99,7 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 					createEncounterDiagnosis(null, ViewUtils.getInput(searchDiagnosis),
 							conceptSearchResult.getValue());
 
-						getDiagnosisView().saveVisitNote(encounterUuid, clinicalNoteView.getText().toString(), visit);
+					getDiagnosisView().saveVisitNote(encounterUuid, clinicalNoteView.getText().toString(), visit);
 				}
 			}
 		});
@@ -140,7 +140,7 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	}
 
 	public void setDiagnoses(Visit visit) {
-		if(this.visit == null){
+		if (this.visit == null) {
 			this.visit = visit;
 		}
 
@@ -169,8 +169,7 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	}
 
 	public void setDiagnoses(List<ConceptSearchResult> diagnoses) {
-		ArrayAdapter<ConceptSearchResult> adapter =
-				new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, diagnoses);
+		CustomDiagnosesDropdownAdapter adapter = new CustomDiagnosesDropdownAdapter(getContext(), android.R.layout.simple_spinner_dropdown_item, diagnoses);
 		filterOutExistingDiagnoses(diagnoses);
 		searchDiagnosis.setAdapter(adapter);
 		searchDiagnosis.showDropDown();

@@ -44,10 +44,11 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 
 	private View mRootView;
 	private RecyclerView findPatientRecyclerView;
-	private TextView noPatientFound, numberOfFetchedPatients, searchForPatient, patientSearchTitle, noPatientFoundTitle;
+	private TextView noPatientFound, numberOfFetchedPatients, searchForPatient, patientSearchTitle, noPatientFoundTitle,
+			searchQuery;
 	private LinearLayoutManager layoutManager;
-	private RelativeLayout findPatientProgressBar;
-	private LinearLayout findPatientLayout, noPatientsFoundLayout, foundPatientsLayout, patientListLayout;
+	private RelativeLayout findPatientProgressBar, foundPatientsLayout;
+	private LinearLayout findPatientLayout, noPatientsFoundLayout, patientListLayout;
 	private OpenMRS openMRS = OpenMRS.getInstance();
 	private AuthorizationManager authorizationManager;
 
@@ -85,8 +86,9 @@ public class FindPatientRecordFragment extends ACBaseFragment<FindPatientRecordC
 
 		findPatientProgressBar = (RelativeLayout)v.findViewById(R.id.findPatientLoadingProgressBar);
 		numberOfFetchedPatients = (TextView)v.findViewById(R.id.numberOfFetchedPatients);
+		searchQuery = (TextView)v.findViewById(R.id.searchQuery);
 		noPatientsFoundLayout = (LinearLayout)v.findViewById(R.id.noPatientsFoundLayout);
-		foundPatientsLayout = (LinearLayout)v.findViewById(R.id.resultsLayout);
+		foundPatientsLayout = (RelativeLayout)v.findViewById(R.id.resultsLayout);
 		patientListLayout = (LinearLayout)v.findViewById(R.id.patientsCardViewLayout);
 	}
 

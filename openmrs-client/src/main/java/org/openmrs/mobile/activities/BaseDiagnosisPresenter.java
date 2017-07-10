@@ -3,6 +3,7 @@ package org.openmrs.mobile.activities;
 import android.util.Log;
 
 import org.openmrs.mobile.data.DataService;
+import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.impl.ConceptSearchDataService;
 import org.openmrs.mobile.data.impl.ObsDataService;
@@ -18,6 +19,8 @@ public class BaseDiagnosisPresenter {
 	private ConceptSearchDataService conceptSearchDataService;
 	private ObsDataService obsDataService;
 	private VisitNoteDataService visitNoteDataService;
+	private int page = 0;
+	private int limit = 20;
 
 	public BaseDiagnosisPresenter() {
 		this.conceptSearchDataService = new ConceptSearchDataService();
@@ -25,8 +28,9 @@ public class BaseDiagnosisPresenter {
 		this.visitNoteDataService = new VisitNoteDataService();
 	}
 
-	public void findConcept(String searchQuery,  IBaseDiagnosisFragment base) {
-		conceptSearchDataService.search(searchQuery, new DataService.GetCallback<List<ConceptSearchResult>>() {
+	public void findConcept(String searchQuery, IBaseDiagnosisFragment base) {
+		PagingInfo pagingInfo = new PagingInfo(page, limit);
+		conceptSearchDataService.search(searchQuery, pagingInfo, new DataService.GetCallback<List<ConceptSearchResult>>() {
 			@Override
 			public void onCompleted(List<ConceptSearchResult> entities) {
 				if (entities.isEmpty()) {
@@ -49,7 +53,8 @@ public class BaseDiagnosisPresenter {
 		obsDataService.getByUUID(uuid, QueryOptions.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Observation>() {
 			@Override
 			public void onCompleted(Observation entity) {
-				base.getBaseDiagnosisView().createEncounterDiagnosis(entity, entity.getDisplay(), entity.getValueCodedName());
+				base.getBaseDiagnosisView()
+						.createEncounterDiagnosis(entity, entity.getDisplay(), entity.getValueCodedName());
 			}
 
 			@Override

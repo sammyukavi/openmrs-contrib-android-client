@@ -7,7 +7,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -22,6 +21,7 @@ import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitNote;
 import org.openmrs.mobile.utilities.ApplicationConstants;
+import org.openmrs.mobile.utilities.CustomDiagnosesDropdownAdapter;
 import org.openmrs.mobile.utilities.DateUtils;
 import org.openmrs.mobile.utilities.StringUtils;
 import org.openmrs.mobile.utilities.ViewUtils;
@@ -171,8 +171,8 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	}
 
 	public void setSearchDiagnoses(List<ConceptSearchResult> diagnoses) {
-		ArrayAdapter<ConceptSearchResult> adapter =
-				new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, diagnoses);
+		CustomDiagnosesDropdownAdapter adapter =
+				new CustomDiagnosesDropdownAdapter(getContext(), android.R.layout.simple_spinner_dropdown_item, diagnoses);
 		filterOutExistingDiagnoses(diagnoses);
 		searchDiagnosis.setAdapter(adapter);
 		searchDiagnosis.showDropDown();

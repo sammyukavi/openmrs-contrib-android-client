@@ -1,5 +1,7 @@
 package org.openmrs.mobile.data.impl;
 
+import android.support.annotation.NonNull;
+
 import org.openmrs.mobile.data.BaseDataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
@@ -61,9 +63,11 @@ public class ConceptSearchDataService extends BaseDataService<ConceptSearchResul
 		return null;
 	}
 
-	public void search(String term, GetCallback<List<ConceptSearchResult>> callback){
-		executeMultipleCallback(callback, null, null,
+	public void search(@NonNull String term, @NonNull PagingInfo pagingInfo,
+			GetCallback<List<ConceptSearchResult>> callback) {
+		executeMultipleCallback(callback, null, pagingInfo,
 				() -> null,
-				() -> restService.search(buildRestRequestPath(), term));
+				() -> restService.search(buildRestRequestPath(), term, PagingInfo.getStartIndex(pagingInfo),
+						PagingInfo.getLimit(pagingInfo)));
 	}
 }

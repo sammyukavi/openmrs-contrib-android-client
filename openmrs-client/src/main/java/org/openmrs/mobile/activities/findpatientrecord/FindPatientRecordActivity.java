@@ -112,6 +112,13 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 		super.onCreateOptionsMenu(menu);
 		getMenuInflater().inflate(R.menu.menu_find_patient_record, menu);
 		MenuItem mFindPatientMenuItem = menu.findItem(R.id.action_search);
+
+		if (OpenMRS.getInstance().isRunningHoneycombVersionOrHigher()) {
+			searchPatientsView = (EditText) mFindPatientMenuItem.getActionView().findViewById(R.id.searchPatient);
+		} else {
+			searchPatientsView = (EditText) MenuItemCompat.getActionView(mFindPatientMenuItem);
+		}
+
 		if(StringUtils.notEmpty(query)) {
 			mFindPatientMenuItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM |
 					MenuItem.SHOW_AS_ACTION_WITH_TEXT);
@@ -119,12 +126,6 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 			setTitle(R.string.nav_find_patient);
 			mFindPatientMenuItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM |
 					MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
-		}
-
-		if (OpenMRS.getInstance().isRunningHoneycombVersionOrHigher()) {
-			searchPatientsView = (EditText) mFindPatientMenuItem.getActionView().findViewById(R.id.searchPatient);
-		} else {
-			searchPatientsView = (EditText) MenuItemCompat.getActionView(mFindPatientMenuItem);
 		}
 
 		searchPatientsView.setText(query);
@@ -156,6 +157,10 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 							});
 						}
 					}, DELAY);
+				} else {
+					setSearchQuery(query);
+					findPatientRecordFragment.setNumberOfPatientsView(0);
+					findPatientRecordFragment.setNoPatientsVisibility(true);
 				}
 			}
 		});

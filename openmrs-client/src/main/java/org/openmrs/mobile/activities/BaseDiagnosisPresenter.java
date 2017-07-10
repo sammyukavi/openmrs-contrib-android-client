@@ -3,6 +3,7 @@ package org.openmrs.mobile.activities;
 import android.util.Log;
 
 import org.openmrs.mobile.data.DataService;
+import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.impl.ConceptSearchDataService;
 import org.openmrs.mobile.data.impl.ObsDataService;
@@ -20,6 +21,8 @@ public class BaseDiagnosisPresenter {
 	private ConceptSearchDataService conceptSearchDataService;
 	private ObsDataService obsDataService;
 	private VisitNoteDataService visitNoteDataService;
+	private int page = 0;
+	private int limit = 20;
 	private List<String> obsUuids = new ArrayList<>();
 
 	public BaseDiagnosisPresenter() {
@@ -29,7 +32,9 @@ public class BaseDiagnosisPresenter {
 	}
 
 	public void findConcept(String searchQuery, IBaseDiagnosisFragment base) {
-		conceptSearchDataService.search(searchQuery, new DataService.GetCallback<List<ConceptSearchResult>>() {
+		PagingInfo pagingInfo = new PagingInfo(page, limit);
+		conceptSearchDataService.search(searchQuery, pagingInfo, new DataService.GetCallback<List<ConceptSearchResult>>() {
+
 			@Override
 			public void onCompleted(List<ConceptSearchResult> entities) {
 				if (entities.isEmpty()) {
@@ -80,7 +85,8 @@ public class BaseDiagnosisPresenter {
 			}
 
 			@Override
-			public void onError(Throwable t) {}
+			public void onError(Throwable t) {
+			}
 		});
 	}
 }

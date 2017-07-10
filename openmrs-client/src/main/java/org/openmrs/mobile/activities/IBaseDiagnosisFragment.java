@@ -4,6 +4,8 @@ import android.support.design.widget.TextInputEditText;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.openmrs.mobile.models.Visit;
@@ -34,6 +36,12 @@ public interface IBaseDiagnosisFragment {
 
 	void setSecondaryDiagnosesRecycler(RecyclerView view);
 	RecyclerView getSecondaryDiagnosesRecycler();
+
+	void setLoadingProgressBar(RelativeLayout view);
+	RelativeLayout getLoadingProgressBar();
+
+	void setDiagnosesContent(LinearLayout view);
+	LinearLayout getDiagnosesContent();
 
 	void setEncounterUuid(String encounterUuid);
 	String getEncounterUuid();

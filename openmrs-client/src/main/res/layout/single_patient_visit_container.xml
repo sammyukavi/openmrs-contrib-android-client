@@ -3,7 +3,8 @@
 		android:layout_width="match_parent"
 		android:orientation="vertical"
 		android:layout_height="wrap_content">
-	
+
+
 	<RelativeLayout
 			android:id="@+id/singleVisitTitle"
 			android:layout_width="match_parent"
@@ -216,98 +217,123 @@
 							android:hint="@string/add_diagnosis" />
 				
 				</android.support.design.widget.TextInputLayout>
-				
+
+				<RelativeLayout
+						android:id="@+id/loadingDiagnoses"
+						android:layout_width="match_parent"
+						android:layout_height="match_parent"
+						android:orientation="vertical"
+						android:visibility="gone">
+
+					<ProgressBar
+							android:layout_width="wrap_content"
+							android:layout_height="match_parent"
+							android:layout_centerInParent="true"
+							android:layout_gravity="center" />
+
+				</RelativeLayout>
+
 				<LinearLayout
+						android:id="@+id/diagnosesContent"
 						android:orientation="vertical"
 						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:layout_marginStart="10dp"
-						android:layout_marginLeft="10dp">
-					
-					<TextView
+						android:layout_height="wrap_content">
+
+					<LinearLayout
+							android:orientation="vertical"
+							android:layout_width="match_parent"
+							android:layout_height="wrap_content"
+							android:layout_marginStart="10dp"
+							android:layout_marginLeft="10dp">
+
+						<TextView
+								android:layout_width="match_parent"
+								android:layout_height="wrap_content"
+								android:layout_marginTop="10dp"
+								android:layout_marginBottom="5dp"
+								android:layout_marginStart="10dp"
+								android:layout_marginLeft="10dp"
+								android:layout_marginRight="10dp"
+								android:textStyle="bold"
+								android:text="@string/primary_diagnosis_label" />
+
+						<TextView
+								android:id="@+id/noPrimaryDiagnosis"
+								android:layout_width="match_parent"
+								android:layout_height="wrap_content"
+								android:layout_marginTop="10dp"
+								android:layout_marginBottom="5dp"
+								android:layout_marginStart="15dp"
+								android:layout_marginLeft="15dp"
+								android:layout_marginRight="10dp"
+								android:visibility="gone"
+								android:textSize="13sp"
+								android:textColor="@color/openmrs_color_grey"
+								android:text="@string/no_primary_diagnosis" />
+
+						<android.support.v7.widget.RecyclerView
+								android:id="@+id/primaryDiagnosisRecyclerView"
+								android:layout_width="match_parent"
+								android:layout_height="wrap_content"
+								android:layout_marginTop="5dp"
+								android:layout_marginLeft="10dp"
+								android:layout_marginStart="10dp"
+								android:layout_marginBottom="5dp"
+								android:layout_marginRight="10dp"
+								android:layout_marginEnd="10dp"
+								android:layout_gravity="start|bottom" />
+					</LinearLayout>
+
+					<LinearLayout
+							android:orientation="vertical"
 							android:layout_width="match_parent"
 							android:layout_height="wrap_content"
 							android:layout_marginTop="10dp"
-							android:layout_marginBottom="5dp"
 							android:layout_marginStart="10dp"
-							android:layout_marginLeft="10dp"
-							android:layout_marginRight="10dp"
-							android:textStyle="bold"
-							android:text="@string/primary_diagnosis_label" />
-					
-					<TextView
-							android:id="@+id/noPrimaryDiagnosis"
-							android:layout_width="match_parent"
-							android:layout_height="wrap_content"
-							android:layout_marginTop="10dp"
-							android:layout_marginBottom="5dp"
-							android:layout_marginStart="15dp"
-							android:layout_marginLeft="15dp"
-							android:layout_marginRight="10dp"
-							android:visibility="gone"
-							android:textSize="13sp"
-							android:textColor="@color/openmrs_color_grey"
-							android:text="@string/no_primary_diagnosis" />
-					
-					<android.support.v7.widget.RecyclerView
-							android:id="@+id/primaryDiagnosisRecyclerView"
-							android:layout_width="match_parent"
-							android:layout_height="wrap_content"
-							android:layout_marginTop="5dp"
-							android:layout_marginLeft="10dp"
-							android:layout_marginStart="10dp"
-							android:layout_marginBottom="5dp"
-							android:layout_marginRight="10dp"
-							android:layout_marginEnd="10dp"
-							android:layout_gravity="start|bottom" />
+							android:layout_marginLeft="10dp">
+
+						<TextView
+								android:layout_width="match_parent"
+								android:layout_height="wrap_content"
+								android:layout_marginTop="10dp"
+								android:layout_marginBottom="5dp"
+								android:layout_marginStart="10dp"
+								android:layout_marginLeft="10dp"
+								android:layout_marginRight="10dp"
+								android:textStyle="bold"
+								android:text="@string/secondary_diagnosis_label" />
+
+						<TextView
+								android:id="@+id/noSecondaryDiagnosis"
+								android:layout_width="match_parent"
+								android:layout_height="wrap_content"
+								android:layout_marginTop="10dp"
+								android:layout_marginBottom="5dp"
+								android:layout_marginStart="15dp"
+								android:layout_marginLeft="15dp"
+								android:layout_marginRight="10dp"
+								android:visibility="gone"
+								android:textSize="13sp"
+								android:textColor="@color/openmrs_color_grey"
+								android:text="@string/no_secondary_diagnosis" />
+
+						<android.support.v7.widget.RecyclerView
+								android:id="@+id/secondaryDiagnosisRecyclerView"
+								android:layout_width="match_parent"
+								android:layout_height="wrap_content"
+								android:layout_marginTop="5dp"
+								android:layout_marginLeft="10dp"
+								android:layout_marginStart="10dp"
+								android:layout_marginBottom="5dp"
+								android:layout_marginRight="10dp"
+								android:layout_marginEnd="10dp"
+								android:layout_gravity="start|bottom" />
+
+					</LinearLayout>
+
 				</LinearLayout>
-				
-				<LinearLayout
-						android:orientation="vertical"
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:layout_marginTop="10dp"
-						android:layout_marginStart="10dp"
-						android:layout_marginLeft="10dp">
-					
-					<TextView
-							android:layout_width="match_parent"
-							android:layout_height="wrap_content"
-							android:layout_marginTop="10dp"
-							android:layout_marginBottom="5dp"
-							android:layout_marginStart="10dp"
-							android:layout_marginLeft="10dp"
-							android:layout_marginRight="10dp"
-							android:textStyle="bold"
-							android:text="@string/secondary_diagnosis_label" />
-					
-					<TextView
-							android:id="@+id/noSecondaryDiagnosis"
-							android:layout_width="match_parent"
-							android:layout_height="wrap_content"
-							android:layout_marginTop="10dp"
-							android:layout_marginBottom="5dp"
-							android:layout_marginStart="15dp"
-							android:layout_marginLeft="15dp"
-							android:layout_marginRight="10dp"
-							android:visibility="gone"
-							android:textSize="13sp"
-							android:textColor="@color/openmrs_color_grey"
-							android:text="@string/no_secondary_diagnosis" />
-					
-					<android.support.v7.widget.RecyclerView
-							android:id="@+id/secondaryDiagnosisRecyclerView"
-							android:layout_width="match_parent"
-							android:layout_height="wrap_content"
-							android:layout_marginTop="5dp"
-							android:layout_marginLeft="10dp"
-							android:layout_marginStart="10dp"
-							android:layout_marginBottom="5dp"
-							android:layout_marginRight="10dp"
-							android:layout_marginEnd="10dp"
-							android:layout_gravity="start|bottom" />
-				
-				</LinearLayout>
+
+
 			
 			</LinearLayout>
 			

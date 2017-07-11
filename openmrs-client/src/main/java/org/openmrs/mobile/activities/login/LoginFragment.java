@@ -217,6 +217,7 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 		Intent intent = new Intent(mOpenMRS.getApplicationContext(), PatientListActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		mOpenMRS.getApplicationContext().startActivity(intent);
+		getActivity().finish();
 
 	}
 

@@ -85,6 +85,8 @@ public interface VisitContract {
 
 		void downloadImage(String obsUuid, DataService.GetCallback<Bitmap> callback);
 
+		void deleteImage(VisitPhoto visitPhoto);
+
 		void refresh();
 
 		void showNoVisitPhoto();
@@ -125,6 +127,8 @@ public interface VisitContract {
 		void uploadImage();
 
 		VisitPhoto getVisitPhoto();
+
+		void deleteImage(VisitPhoto visitPhoto);
 	}
 
 	interface VisitDetailsPresenter extends VisitDetailsMainPresenter {

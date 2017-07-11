@@ -13,19 +13,18 @@
  */
 package org.openmrs.mobile.activities.visit.detail;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
-import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -56,7 +55,6 @@ import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.DateUtils;
 import org.openmrs.mobile.utilities.StringUtils;
 import org.openmrs.mobile.utilities.ToastUtil;
-import org.openmrs.mobile.utilities.ViewUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -157,11 +155,12 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 		visitDetailsProgressBar = (RelativeLayout)v.findViewById(R.id.visitDetailsTabProgressBar);
 		visitDetailsScrollView = (ScrollView)v.findViewById(R.id.visitDetailsTab);
 		setLoadingProgressBar((RelativeLayout)v.findViewById(R.id.loadingDiagnoses));
-		setDiagnosesContent((LinearLayout) v.findViewById(R.id.diagnosesContent));
+		setDiagnosesContent((LinearLayout)v.findViewById(R.id.diagnosesContent));
 	}
 
 	@Override
-	public void showToast(String message, ToastUtil.ToastType toastType) {}
+	public void showToast(String message, ToastUtil.ToastType toastType) {
+	}
 
 	@Override
 	public void setVisit(Visit visit) {
@@ -544,5 +543,23 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 	@Override
 	public IBaseDiagnosisView getBaseDiagnosisView() {
 		return this;
+	}
+
+	@Override
+	public void setUserVisibleHint(boolean isVisibleToUser) {
+		super.setUserVisibleHint(isVisibleToUser);
+		// Make sure that we are currently visible
+		if (this.isVisible()) {
+			// If we are becoming invisible, then...
+			if (!isVisibleToUser) {
+				try {
+					InputMethodManager inputMethodManager =
+							(InputMethodManager)this.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+					inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+				} catch (Exception e) {
+
+				}
+			}
+		}
 	}
 }

@@ -15,10 +15,13 @@
 package org.openmrs.mobile.activities.login;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
+
+import java.util.Timer;
 
 public class LoginActivity extends ACBaseActivity {
 

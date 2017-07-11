@@ -96,6 +96,6 @@ public class ObsDataService extends BaseDataService<Observation, ObsDbService, O
 	public void purge(@NonNull Observation entity, @NonNull VoidCallback callback) {
 		executeVoidCallback(entity, callback, null,
 				() -> dbService.delete(entity),
-				() -> restService.purge(getRestPath(), entity.getUuid()));
+				() -> restService.purge(buildRestRequestPath(), entity.getUuid()));
 	}
 }

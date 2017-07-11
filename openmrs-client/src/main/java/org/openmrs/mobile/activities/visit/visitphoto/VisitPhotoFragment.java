@@ -300,6 +300,11 @@ public class VisitPhotoFragment extends VisitFragment implements VisitContract.V
 	}
 
 	@Override
+	public void deleteImage(VisitPhoto visitPhoto) {
+		((VisitPhotoPresenter)mPresenter).deleteImage(visitPhoto);
+	}
+
+	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == IMAGE_REQUEST) {
 			if (resultCode == Activity.RESULT_OK) {

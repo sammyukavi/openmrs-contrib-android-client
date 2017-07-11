@@ -49,6 +49,9 @@ import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.net.AuthorizationManager;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public abstract class ACBaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -62,6 +65,7 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 	private MenuItem mSyncbutton;
 	private Toolbar toolbar;
 	private OpenMRS instance = OpenMRS.getInstance();
+	private Timer timer;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +82,10 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 	protected void onResume() {
 		super.onResume();
 		supportInvalidateOptionsMenu();
+		if (timer != null) {
+			timer.cancel();
+			timer = null;
+		}
 		if (!(this instanceof LoginActivity) && !mAuthorizationManager.isUserLoggedIn()) {
 			mAuthorizationManager.moveToLoginActivity();
 		}
@@ -86,6 +94,11 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 	@Override
 	protected void onPause() {
 		super.onPause();
+		if ((!(this instanceof LoginActivity))) {
+			timer = new Timer();
+			LogOutTimerTask logoutTimeTask = new LogOutTimerTask();
+			timer.schedule(logoutTimeTask, 60000); //auto logout in 5 minutes
+		}
 	}
 
 	@Override
@@ -112,6 +125,7 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 	public void logout() {
 		mOpenMRS.clearUserPreferencesData();
 		mAuthorizationManager.moveToLoginActivity();
+		finish();
 	}
 
 	private void showLogoutDialog() {
@@ -241,22 +255,14 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 		drawer.closeDrawer(GravityCompat.START);
 		switch (selectedId) {
 			case R.id.navItemFindPatientRecord:
-
 				Intent intent = new Intent(mOpenMRS.getApplicationContext(), FindPatientRecordActivity.class);
-
 				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
 				startActivity(intent);
-
 				break;
 			case R.id.navItemPatientLists:
-
 				intent = new Intent(mOpenMRS.getApplicationContext(), PatientListActivity.class);
-
 				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
 				startActivity(intent);
-
 				break;
 			case R.id.navLogout:
 				showLogoutDialog();
@@ -267,38 +273,28 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 	}
 
 	public void createSnackbar(String message) {
-
 		int colorWhite = ContextCompat.getColor(getApplicationContext(), R.color.color_white);
-
 		// create instance
 		Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_INDEFINITE);
-
 		// set action button color
 		snackbar.setActionTextColor(colorWhite);
-
 		// get snackbar view
 		View snackbarView = snackbar.getView();
-
 		// change snackbar text color
 		int snackbarTextId = android.support.design.R.id.snackbar_text;
 		TextView textView = (TextView)snackbarView.findViewById(snackbarTextId);
 		textView.setTextColor(colorWhite);
-
 		// change snackbar background
 		//snackbarView.setBackgroundColor(Color.MAGENTA);
-
 		//change button text
 		snackbar.setActionTextColor(Color.YELLOW);
-
 		snackbar.setAction(R.string.label_dismiss, new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				snackbar.dismiss();
 			}
 		});
-
 		snackbar.show();
-
 	}
 
 	public void createToast(String message) {
@@ -314,6 +310,15 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 		if (windowToken != null) {
 			inputMethodManager.hideSoftInputFromWindow(
 					windowToken.getWindowToken(), 0);
+		}
+	}
+
+	private class LogOutTimerTask extends TimerTask {
+		@Override
+		public void run() {
+			logout();
+			timer.cancel();
+			timer = null;
 		}
 	}
 }

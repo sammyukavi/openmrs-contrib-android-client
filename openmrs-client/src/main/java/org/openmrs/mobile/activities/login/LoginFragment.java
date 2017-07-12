@@ -270,8 +270,10 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 		List<HashMap<String, String>> items = null;
 		if (locationsList != null) {
 			items = getLocationStringList(locationsList);
+			updateLocationsSpinner(items, serverURL);
+		} else {
+
 		}
-		updateLocationsSpinner(items, serverURL);
 
 	}
 

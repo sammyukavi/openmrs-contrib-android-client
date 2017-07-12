@@ -301,7 +301,7 @@
 	<string name="is_icu_stay">ICU stay during admission?</string>
 	<string name="is_hdu_stay">HDU stay during admission?</string>
 	<string name="is_hdu_comgmt">HDU Co-Management only?</string>
-	<string name="is_hiv_positive">HIV+:</string>
+	<string name="is_hiv_positive">HIV Status:</string>
 	<string name="cd4">CD4:</string>
 	<string name="hba1c">HbA1c:</string>
 	<string name="unknown">Unknown</string>
@@ -382,4 +382,6 @@
 	<string name="not_applicable">N/A</string>
 	<string name="planned">Planned</string>
 	<string name="unplanned">Unplanned</string>
+	<string name="hiv_positive">Positive</string>
+	<string name="hiv_negative">Negative</string>
 </resources>

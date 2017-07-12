@@ -393,10 +393,10 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 	public void setAuditData(Visit visit) {
 		if (visit.getEncounters().size() > 0) {
 			for (int i = 0; i < visit.getEncounters().size(); i++) {
-				if (visit.getEncounters().get(i).getEncounterType().getUuid()
+				if ((visit.getEncounters().get(i).getEncounterType().getUuid()
 						.equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.AUDIT_DATA_UUID) || visit.getEncounters()
 						.get(i).getEncounterType().getDisplay().equalsIgnoreCase(ApplicationConstants
-								.EncounterTypeDisplays.AUDITDATA)) {
+								.EncounterTypeDisplays.AUDITDATA)&& !visit.getEncounters().get(i).getVoided())) {
 
 					if (visit.getEncounters().get(i).getObs().size() != 0) {
 						auditDataMetadata.setVisibility(View.VISIBLE);
@@ -419,7 +419,6 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 						auditInfoTableLayout.removeAllViews();
 						loadObservationFields(visit.getEncounters().get(i).getObs(), EncounterTypeData.AUDIT_DATA);
 					}
-					break;
 				}
 			}
 		}

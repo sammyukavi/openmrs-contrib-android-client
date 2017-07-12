@@ -199,9 +199,11 @@ public abstract class ApplicationConstants {
 		public static final String ANSWER_YES = "yes";
 		public static final String ANSWER_NO = "no";
 		public static final String ANSWER_UNKNOWN = "unknown";
-		public static final String NA = "Not applicable";
-		public static final String PLANNED = "Planned (scheduled in clinic)";
-		public static final String UNPLANNED = "Unplanned (not scheduled in clinic)";
+		public static final String ANSWER_NA = "Not applicable";
+		public static final String ANSWER_PLANNED = "Planned (scheduled in clinic)";
+		public static final String ANSWER_UNPLANNED = "Unplanned (not scheduled in clinic)";
+		public static final String ANSWER_NEGATIVE = "NEGATIVE";
+		public static final String ANSWER_POSITIVE = "POSITIVE";
 	}
 
 	public abstract static class AuditFormConcepts {
@@ -211,13 +213,15 @@ public abstract class ApplicationConstants {
 		public static final String CONCEPT_ANSWER_PLANNED = "1d8dc2abe-d5a5-44b1-9dc6-809a993a8dbc";
 		public static final String CONCEPT_ANSWER_UNPLANNED = "1680114c-72b9-44d7-a292-f2c981322587";
 		public static final String CONCEPT_ANSWER_NA = "1175AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+		public static final String CONCEPT_ANSWER_NEGATIVE = "664AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+		public static final String CONCEPT_ANSWER_POSITIVE = "703AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 		public static final String CONCEPT_DEATH_IN_HOSPITAL = "ec559b53-8cc9-4b54-a34e-95a605919365";
 		public static final String CONCEPT_PALLIATIVE_CONSULT = "a9ae21a2-2631-49d6-928c-d23001812729";
 		public static final String CONCEPT_PREOP_RISK_ASSESMENT = "eadfe47c-7988-42ea-97d0-e21ce71db7e0";
 		public static final String CONCEPT_ICU_STAY = "9446f7aa-7a1c-4246-a0a5-1ebc3560a0e0";
 		public static final String CONCEPT_HDU_STAY = "46d4283e-3275-4c6e-9d52-cfd858889f4b";
 		public static final String CONCEPT_HDU_COMGMT = "dd61d87f-3398-46c2-8108-00db2e49bab6";
-		public static final String CONCEPT_HIV_POSITIVE = "1169AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+		public static final String CONCEPT_HIV_STATUS = "1169AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 		public static final String CONCEPT_CD4_COUNT = "5497AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 		public static final String CONCEPT_HBA1C = "159644AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 		public static final String CONCEPT_INPATIENT_SERVICE_TYPE = "161630AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";

@@ -338,7 +338,7 @@
 						<RadioButton
 								android:layout_height="wrap_content"
 								android:layout_width="wrap_content"
-								android:text="@string/yes"
+								android:text="@string/hiv_positive"
 								android:id="@+id/is_hiv_positive_yes"
 								android:layout_gravity="start"
 								android:checked="false" />
@@ -346,7 +346,7 @@
 						<RadioButton
 								android:layout_height="wrap_content"
 								android:layout_width="wrap_content"
-								android:text="@string/no"
+								android:text="@string/hiv_negative"
 								android:id="@+id/is_hiv_positive_no"
 								android:layout_gravity="start"
 								android:checked="false" />
@@ -742,7 +742,7 @@
 									android:layout_width="match_parent"
 									android:layout_height="wrap_content"
 									android:hint="@string/first_heart_rate"
-									android:inputType="numberDecimal" />
+									android:inputType="number" />
 						</android.support.design.widget.TextInputLayout>
 						
 						<android.support.design.widget.TextInputLayout
@@ -759,7 +759,7 @@
 									android:layout_width="match_parent"
 									android:layout_height="wrap_content"
 									android:hint="@string/first_gcs_score"
-									android:inputType="numberDecimal" />
+									android:inputType="number" />
 						</android.support.design.widget.TextInputLayout>
 					</LinearLayout>
 					

@@ -294,7 +294,7 @@
 	<string name="yes">Yes</string>
 	<string name="no">No</string>
 	<string name="audit_complete">Audit data complete</string>
-	<string name="inpatient_service_type_prompt">Type of inpatient service</string>
+	<string name="inpatient_service_type_prompt">Select one Primary service</string>
 	<string name="is_death_in_hospital">Death in hospital:</string>
 	<string name="is_palliative_consult">Palliative consult</string>
 	<string name="is_preop_risk_assessment_only">Pre-Op risk assessment only?</string>

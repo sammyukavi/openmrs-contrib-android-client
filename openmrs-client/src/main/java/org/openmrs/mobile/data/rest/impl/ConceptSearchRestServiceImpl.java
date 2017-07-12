@@ -1,5 +1,6 @@
 package org.openmrs.mobile.data.rest.impl;
 
+import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.rest.BaseRestService;
 import org.openmrs.mobile.data.rest.retrofit.ConceptSearchRestService;
 import org.openmrs.mobile.models.ConceptSearchResult;
@@ -24,7 +25,8 @@ public class ConceptSearchRestServiceImpl extends BaseRestService<ConceptSearchR
 		return "diagnoses";
 	}
 
-	public Call<Results<ConceptSearchResult>> search(String term) {
-		return restService.search(buildRestRequestPath(), term);
+	public Call<Results<ConceptSearchResult>> search(String term, PagingInfo pagingInfo) {
+		return restService.search(buildRestRequestPath(), term, PagingInfo.getLimit(pagingInfo),
+				PagingInfo.getStartIndex(pagingInfo));
 	}
 }

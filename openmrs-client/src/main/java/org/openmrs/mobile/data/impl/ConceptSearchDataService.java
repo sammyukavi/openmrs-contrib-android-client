@@ -18,10 +18,10 @@ import retrofit2.Call;
 
 public class ConceptSearchDataService extends BaseDataService<ConceptSearchResult, ConceptSearchDbService,
 		ConceptSearchRestServiceImpl> {
-			GetCallback<List<ConceptSearchResult>> callback) {
+	public void search(@NonNull String term, @NonNull PagingInfo pagingInfo,
+				GetCallback<List<ConceptSearchResult>> callback) {
 		executeMultipleCallback(callback, null, pagingInfo,
 				() -> null,
-				() -> restService.search(buildRestRequestPath(), term, PagingInfo.getStartIndex(pagingInfo),
-						PagingInfo.getLimit(pagingInfo)));
+				() -> restService.search(term, pagingInfo));
 	}
 }

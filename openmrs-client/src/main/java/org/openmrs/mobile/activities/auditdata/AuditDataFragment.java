@@ -57,20 +57,31 @@ import java.util.List;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormAnswers.ANSWER_NO;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormAnswers.ANSWER_UNKNOWN;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormAnswers.ANSWER_YES;
+import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_ANSWER_NA;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_ANSWER_NO;
+import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_ANSWER_PLANNED;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_ANSWER_UNKNOWN;
+import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_ANSWER_UNPLANNED;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_ANSWER_YES;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_AUDIT_COMPLETE;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_CD4_COUNT;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_DEATH_IN_HOSPITAL;
+import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_FIRST_HEART_RATE_ICU;
+import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_FIRST_MAP_ICU;
+import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_FIRST_SBP_ICU;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_HBA1C;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_HDU_COMGMT;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_HDU_STAY;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_HIV_POSITIVE;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_ICU_STAY;
+import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_INFECTION_CONFIRMED_SUSPECTED;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_INPATIENT_SERVICE_TYPE;
+import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_MECHANICAL_VENTILATIN;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_PALLIATIVE_CONSULT;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_PREOP_RISK_ASSESMENT;
+import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_RECIEVED_VAOSPRESSORS;
+import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_SEDETION_PRIOR_FIRST_GCS_SCORE_ICU;
+import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_SURGERY_HOSPITAL_STAY;
 import static org.openmrs.mobile.utilities.ApplicationConstants.EncounterTypeEntity.AUDIT_DATA_UUID;
 import static org.openmrs.mobile.utilities.ApplicationConstants.FORM_UUIDS.AUDIT_DATA_FORM_UUID;
 
@@ -81,23 +92,29 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 	//private Patient patient;
 	private View fragmentView;
 	private String locationUuid;
-	private EditText cd4, hBa1c;
+	private EditText cd4, hBa1c, firstIcuHeartRate, firstGcsScore;
 	private String encounterUuid = null;
 	private String visitUuid, patientUuid, visitStopDate;
 	private OpenMRS instance = OpenMRS.getInstance();
 
 	private Observation deathInHospitalObservation, palliativeConsultObservation, preopRiskAssessmentObservation,
 			icuStayObservation, hduStayObservation, hduComgmtObservation, hivPositiveObservation, cd4Observation,
-			hBa1cObservation, inpatientServiceTypeObservation, auditCompleteObservation;
+			hBa1cObservation, inpatientServiceTypeObservation, auditCompleteObservation, mechanicalVentilationObservation,
+			vaospressorsObservation, confirmedInfectionObservation, firstSbpObservation, firstMapObservation,
+			priorSedetionObservation, surgeryObservation, firstIcuHeartRateObservation, firstGcsScoreObservation;
 	private RadioButton deathInHospitalYes, deathInHospitalNo, palliativeConsultYes, palliativeConsultNo,
 			palliativeConsultUknown, preopRiskAssessmentYes, preopRiskAssessmentNo, preopRiskAssessmentUknown, icuStayYes,
 			icuStayNo, icuStayUnknown, hduStayYes, hduStayNo, hduStayUnknown, hduComgmtYes, hduComgmtNo, hduComgmtUnknown,
-			hivPositiveYes, hivPositiveNo, hivPositiveUnknown;
+			hivPositiveYes, hivPositiveNo, hivPositiveUnknown, mechanical_ventilation_yes, mechanical_ventilation_no,
+			mechanical_ventilation_unknown, vaospressors_yes, vaospressors_no, vaospressors_unknown,
+			confirmed_infection_yes, confirmed_infection_no, confirmed_infection_unknown, first_sbp_yes, first_sbp_no,
+			first_sbp_unknown, any_prior_sedetion_yes, any_prior_sedetion_no, any_prior_sedetion_unknown, surgery_na,
+			surgery_planned, surgery_unplanned, first_map_yes, first_map_no, first_map_unknown;
 	private CheckBox auditComplete;
 
 	private Spinner inpatientServiceType;
 	private RelativeLayout progressBar, auditDataFormProgressBar;
-	private LinearLayout auditDataFormScreen;
+	private LinearLayout auditDataFormScreen, extraFormAdditions;
 	private ScrollView auditScrollView;
 	private Button submitForm;
 	private List<ConceptAnswer> conceptAnswerList;
@@ -121,7 +138,12 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		initRadioButtonListeners(deathInHospitalYes, deathInHospitalNo, palliativeConsultYes, palliativeConsultNo,
 				palliativeConsultUknown, preopRiskAssessmentYes, preopRiskAssessmentNo, preopRiskAssessmentUknown,
 				icuStayYes, icuStayNo, icuStayUnknown, hduStayYes, hduStayNo, hduStayUnknown, hduComgmtYes, hduComgmtNo,
-				hduComgmtUnknown, hivPositiveYes, hivPositiveNo, hivPositiveUnknown);
+				hduComgmtUnknown, hivPositiveYes, hivPositiveNo, hivPositiveUnknown, mechanical_ventilation_yes,
+				mechanical_ventilation_no, mechanical_ventilation_unknown, vaospressors_yes, vaospressors_no,
+				vaospressors_unknown, confirmed_infection_yes, confirmed_infection_no, confirmed_infection_unknown,
+				first_sbp_yes, first_sbp_no, first_sbp_unknown, any_prior_sedetion_yes, any_prior_sedetion_no,
+				any_prior_sedetion_unknown, surgery_na, surgery_planned, surgery_unplanned, first_map_yes, first_map_no,
+				first_map_unknown);
 
 		initCheckboxListeners(auditComplete);
 
@@ -163,40 +185,54 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 
 		deathInHospitalYes = (RadioButton)fragmentView.findViewById(R.id.is_death_in_hospital_yes);
 		deathInHospitalNo = (RadioButton)fragmentView.findViewById(R.id.is_death_in_hospital_no);
-
 		palliativeConsultYes = (RadioButton)fragmentView.findViewById(R.id.is_palliative_consult_yes);
 		palliativeConsultNo = (RadioButton)fragmentView.findViewById(R.id.is_palliative_consult_no);
 		palliativeConsultUknown = (RadioButton)fragmentView.findViewById(R.id.is_palliative_consult_unknown);
-
 		preopRiskAssessmentYes = (RadioButton)fragmentView.findViewById(R.id.is_preop_risk_assessment_only_yes);
 		preopRiskAssessmentNo = (RadioButton)fragmentView.findViewById(R.id.is_preop_risk_assessment_only_no);
 		preopRiskAssessmentUknown = (RadioButton)fragmentView.findViewById(R.id.is_preop_risk_assessment_only_unknown);
-
 		icuStayYes = (RadioButton)fragmentView.findViewById(R.id.is_icu_stay_yes);
 		icuStayNo = (RadioButton)fragmentView.findViewById(R.id.is_icu_stay_no);
 		icuStayUnknown = (RadioButton)fragmentView.findViewById(R.id.is_icu_stay_unknown);
-
 		hduStayYes = (RadioButton)fragmentView.findViewById(R.id.is_hdu_stay_yes);
 		hduStayNo = (RadioButton)fragmentView.findViewById(R.id.is_hdu_stay_no);
 		hduStayUnknown = (RadioButton)fragmentView.findViewById(R.id.is_hdu_stay_unknown);
-
 		hduComgmtYes = (RadioButton)fragmentView.findViewById(R.id.is_hdu_comgmt_yes);
 		hduComgmtNo = (RadioButton)fragmentView.findViewById(R.id.is_hdu_comgmt_no);
 		hduComgmtUnknown = (RadioButton)fragmentView.findViewById(R.id.is_hdu_comgmt_unknown);
-
 		hivPositiveYes = (RadioButton)fragmentView.findViewById(R.id.is_hiv_positive_yes);
 		hivPositiveNo = (RadioButton)fragmentView.findViewById(R.id.is_hiv_positive_no);
 		hivPositiveUnknown = (RadioButton)fragmentView.findViewById(R.id.is_hiv_positive_unknown);
-
 		auditComplete = (CheckBox)fragmentView.findViewById(R.id.audit_complete);
-
 		cd4 = (EditText)fragmentView.findViewById(R.id.cd4);
-
 		hBa1c = (EditText)fragmentView.findViewById(R.id.hba1c);
-
 		inpatientServiceType = (Spinner)fragmentView.findViewById(R.id.inpatient_service_type);
-
 		submitForm = (Button)fragmentView.findViewById(R.id.submitConfirm);
+		extraFormAdditions = (LinearLayout)fragmentView.findViewById(R.id.extraFormAdditions);
+		firstIcuHeartRate = (EditText)fragmentView.findViewById(R.id.firstIcuHeartRate);
+		firstGcsScore = (EditText)fragmentView.findViewById(R.id.firstGcsScore);
+		mechanical_ventilation_yes = (RadioButton)fragmentView.findViewById(R.id.mechanical_ventilation_yes);
+		mechanical_ventilation_no = (RadioButton)fragmentView.findViewById(R.id.mechanical_ventilation_no);
+		mechanical_ventilation_unknown = (RadioButton)fragmentView.findViewById(R.id.mechanical_ventilation_unknown);
+		vaospressors_yes = (RadioButton)fragmentView.findViewById(R.id.vaospressors_yes);
+		vaospressors_no = (RadioButton)fragmentView.findViewById(R.id.vaospressors_no);
+		vaospressors_unknown = (RadioButton)fragmentView.findViewById(R.id.vaospressors_unknown);
+		confirmed_infection_yes = (RadioButton)fragmentView.findViewById(R.id.confirmed_infection_yes);
+		confirmed_infection_no = (RadioButton)fragmentView.findViewById(R.id.confirmed_infection_no);
+		confirmed_infection_unknown = (RadioButton)fragmentView.findViewById(R.id.confirmed_infection_unknown);
+		first_sbp_yes = (RadioButton)fragmentView.findViewById(R.id.first_sbp_yes);
+		first_sbp_no = (RadioButton)fragmentView.findViewById(R.id.first_sbp_no);
+		first_sbp_unknown = (RadioButton)fragmentView.findViewById(R.id.first_sbp_unknown);
+		any_prior_sedetion_yes = (RadioButton)fragmentView.findViewById(R.id.any_prior_sedetion_yes);
+		any_prior_sedetion_no = (RadioButton)fragmentView.findViewById(R.id.any_prior_sedetion_no);
+		any_prior_sedetion_unknown = (RadioButton)fragmentView.findViewById(R.id.any_prior_sedetion_unknown);
+		surgery_na = (RadioButton)fragmentView.findViewById(R.id.surgery_na);
+		surgery_planned = (RadioButton)fragmentView.findViewById(R.id.surgery_planned);
+		surgery_unplanned = (RadioButton)fragmentView.findViewById(R.id.surgery_unplanned);
+		first_map_yes = (RadioButton)fragmentView.findViewById(R.id.first_map_yes);
+		first_map_no = (RadioButton)fragmentView.findViewById(R.id.first_map_no);
+		first_map_unknown = (RadioButton)fragmentView.findViewById(R.id.first_map_unknown);
+
 		submitForm.setOnClickListener(v -> {
 			performDataSend();
 		});
@@ -276,16 +312,21 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 			case R.id.is_icu_stay_yes:
 				icuStayObservation = setObservationFields(icuStayObservation,
 						CONCEPT_ICU_STAY, CONCEPT_ANSWER_YES);
+				extraFormAdditions.setVisibility(View.VISIBLE);
+				extraFormAdditions.animate().alpha(1.0f).setDuration(2000);
 				break;
 
 			case R.id.is_icu_stay_no:
 				icuStayObservation = setObservationFields(icuStayObservation,
 						CONCEPT_ICU_STAY, CONCEPT_ANSWER_NO);
+				extraFormAdditions.setVisibility(View.GONE);
+				extraFormAdditions.animate().alpha(0.0f).setDuration(2000);
 				break;
 
 			case R.id.is_icu_stay_unknown:
 				icuStayObservation = setObservationFields(icuStayObservation,
 						CONCEPT_ICU_STAY, CONCEPT_ANSWER_UNKNOWN);
+				extraFormAdditions.setVisibility(View.GONE);
 				break;
 
 			case R.id.is_hdu_stay_yes:
@@ -332,6 +373,126 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 			case R.id.is_hiv_positive_unknown:
 				hivPositiveObservation = setObservationFields(hivPositiveObservation,
 						CONCEPT_HIV_POSITIVE, CONCEPT_ANSWER_UNKNOWN);
+				break;
+
+			case R.id.mechanical_ventilation_yes:
+				mechanicalVentilationObservation =
+						setObservationFields(mechanicalVentilationObservation, CONCEPT_MECHANICAL_VENTILATIN,
+								CONCEPT_ANSWER_YES);
+				break;
+
+			case R.id.mechanical_ventilation_no:
+				mechanicalVentilationObservation =
+						setObservationFields(mechanicalVentilationObservation, CONCEPT_MECHANICAL_VENTILATIN,
+								CONCEPT_ANSWER_NO);
+				break;
+
+			case R.id.mechanical_ventilation_unknown:
+				mechanicalVentilationObservation =
+						setObservationFields(mechanicalVentilationObservation, CONCEPT_MECHANICAL_VENTILATIN,
+								CONCEPT_ANSWER_UNKNOWN);
+				break;
+
+			case R.id.confirmed_infection_yes:
+				confirmedInfectionObservation =
+						setObservationFields(confirmedInfectionObservation, CONCEPT_INFECTION_CONFIRMED_SUSPECTED,
+								CONCEPT_ANSWER_YES);
+				break;
+
+			case R.id.confirmed_infection_no:
+				confirmedInfectionObservation =
+						setObservationFields(confirmedInfectionObservation, CONCEPT_INFECTION_CONFIRMED_SUSPECTED,
+								CONCEPT_ANSWER_NO);
+				break;
+
+			case R.id.confirmed_infection_unknown:
+				confirmedInfectionObservation =
+						setObservationFields(confirmedInfectionObservation, CONCEPT_INFECTION_CONFIRMED_SUSPECTED,
+								CONCEPT_ANSWER_UNKNOWN);
+				break;
+
+			case R.id.vaospressors_yes:
+				vaospressorsObservation =
+						setObservationFields(vaospressorsObservation, CONCEPT_RECIEVED_VAOSPRESSORS,
+								CONCEPT_ANSWER_YES);
+				break;
+
+			case R.id.vaospressors_no:
+				vaospressorsObservation =
+						setObservationFields(vaospressorsObservation, CONCEPT_RECIEVED_VAOSPRESSORS,
+								CONCEPT_ANSWER_NO);
+				break;
+
+			case R.id.vaospressors_unknown:
+				vaospressorsObservation =
+						setObservationFields(vaospressorsObservation, CONCEPT_RECIEVED_VAOSPRESSORS,
+								CONCEPT_ANSWER_UNKNOWN);
+				break;
+
+			case R.id.first_sbp_yes:
+				firstSbpObservation =
+						setObservationFields(firstSbpObservation, CONCEPT_FIRST_SBP_ICU,
+								CONCEPT_ANSWER_YES);
+				break;
+
+			case R.id.first_sbp_no:
+				firstSbpObservation =
+						setObservationFields(firstSbpObservation, CONCEPT_FIRST_SBP_ICU, CONCEPT_ANSWER_NO);
+				break;
+
+			case R.id.first_sbp_unknown:
+				firstSbpObservation =
+						setObservationFields(firstSbpObservation, CONCEPT_FIRST_SBP_ICU, CONCEPT_ANSWER_UNKNOWN);
+				break;
+
+			case R.id.any_prior_sedetion_yes:
+				priorSedetionObservation =
+						setObservationFields(priorSedetionObservation, CONCEPT_SEDETION_PRIOR_FIRST_GCS_SCORE_ICU,
+								CONCEPT_ANSWER_YES);
+				break;
+
+			case R.id.any_prior_sedetion_no:
+				priorSedetionObservation =
+						setObservationFields(priorSedetionObservation, CONCEPT_SEDETION_PRIOR_FIRST_GCS_SCORE_ICU,
+								CONCEPT_ANSWER_NO);
+				break;
+
+			case R.id.any_prior_sedetion_unknown:
+				priorSedetionObservation =
+						setObservationFields(priorSedetionObservation, CONCEPT_SEDETION_PRIOR_FIRST_GCS_SCORE_ICU,
+								CONCEPT_ANSWER_UNKNOWN);
+				break;
+
+			case R.id.surgery_na:
+				surgeryObservation =
+						setObservationFields(surgeryObservation, CONCEPT_SURGERY_HOSPITAL_STAY,
+								CONCEPT_ANSWER_NA);
+				break;
+
+			case R.id.surgery_planned:
+				surgeryObservation =
+						setObservationFields(surgeryObservation, CONCEPT_SURGERY_HOSPITAL_STAY, CONCEPT_ANSWER_PLANNED);
+				break;
+
+			case R.id.surgery_unplanned:
+				surgeryObservation =
+						setObservationFields(surgeryObservation, CONCEPT_SURGERY_HOSPITAL_STAY, CONCEPT_ANSWER_UNPLANNED);
+				break;
+
+			case R.id.first_map_yes:
+				firstMapObservation =
+						setObservationFields(firstMapObservation, CONCEPT_FIRST_MAP_ICU,
+								CONCEPT_ANSWER_YES);
+				break;
+
+			case R.id.first_map_no:
+				firstMapObservation =
+						setObservationFields(firstMapObservation, CONCEPT_FIRST_MAP_ICU, CONCEPT_ANSWER_NO);
+				break;
+
+			case R.id.first_map_unknown:
+				firstMapObservation =
+						setObservationFields(firstMapObservation, CONCEPT_FIRST_MAP_ICU, CONCEPT_ANSWER_UNKNOWN);
 				break;
 
 			default:
@@ -663,6 +824,44 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 
 		if (hivPositiveObservation != null) {
 			observations.add(hivPositiveObservation);
+		}
+
+		if (mechanicalVentilationObservation != null) {
+			observations.add(mechanicalVentilationObservation);
+		}
+
+		if (vaospressorsObservation != null) {
+			observations.add(vaospressorsObservation);
+		}
+
+		if (surgeryObservation != null) {
+			observations.add(surgeryObservation);
+		}
+		if (confirmedInfectionObservation != null) {
+			observations.add(confirmedInfectionObservation);
+		}
+
+		if (firstSbpObservation != null) {
+			observations.add(firstSbpObservation);
+		}
+
+		if (firstMapObservation != null) {
+			observations.add(firstMapObservation);
+		}
+		if (priorSedetionObservation != null) {
+			observations.add(priorSedetionObservation);
+		}
+
+		if (firstIcuHeartRate.getText().length() >= 0 && firstIcuHeartRate.getText().length() <= 240) {
+			firstIcuHeartRateObservation = setObservationFields(firstIcuHeartRateObservation, CONCEPT_FIRST_HEART_RATE_ICU,
+					firstIcuHeartRate.getText().toString());
+			observations.add(firstIcuHeartRateObservation);
+		}
+
+		if (firstGcsScore.getText().length() >= 1 && firstGcsScore.getText().length() <= 15) {
+			firstGcsScoreObservation = setObservationFields(firstGcsScoreObservation, CONCEPT_FIRST_HEART_RATE_ICU,
+					firstGcsScore.getText().toString());
+			observations.add(firstGcsScoreObservation);
 		}
 
 		if (cd4.getText().length() > 0) {

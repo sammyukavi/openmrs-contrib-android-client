@@ -2,6 +2,7 @@
 <LinearLayout xmlns:card_view="http://schemas.android.com/apk/res-auto"
 		xmlns:android="http://schemas.android.com/apk/res/android"
 		android:orientation="vertical"
+		android:animateLayoutChanges="true"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent">
 	
@@ -75,6 +76,19 @@
 						android:paddingEnd="20dp"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content">
+					
+					<android.support.v7.widget.AppCompatSpinner
+							android:id="@+id/inpatient_service_type"
+							android:prompt="@string/inpatient_service_type_prompt"
+							android:layout_width="match_parent"
+							android:layout_height="wrap_content"
+							android:layout_marginBottom="8dp"
+							android:layout_marginLeft="10dp"
+							android:layout_marginEnd="10dp"
+							android:layout_marginRight="10dp"
+							android:layout_marginStart="10dp"
+							android:spinnerMode="dialog"
+							style="@style/Widget.AppCompat.Spinner.Underlined" />
 					
 					<TextView
 							android:text="@string/is_death_in_hospital"
@@ -206,51 +220,6 @@
 								android:layout_gravity="start"
 								android:checked="false" />
 					
-					</RadioGroup>
-					
-					<TextView
-							android:text="@string/is_icu_stay"
-							android:layout_width="match_parent"
-							android:layout_height="wrap_content"
-							android:layout_marginLeft="10dp"
-							android:layout_marginEnd="10dp"
-							android:layout_marginRight="10dp"
-							android:layout_marginStart="10dp"
-							android:layout_marginBottom="5dp" />
-					
-					<RadioGroup
-							android:layout_width="match_parent"
-							android:orientation="horizontal"
-							android:layout_height="wrap_content"
-							android:layout_marginBottom="18dp"
-							android:layout_marginLeft="10dp"
-							android:layout_marginEnd="10dp"
-							android:layout_marginRight="10dp"
-							android:layout_marginStart="10dp">
-						
-						<RadioButton
-								android:layout_height="wrap_content"
-								android:layout_width="wrap_content"
-								android:text="@string/yes"
-								android:id="@+id/is_icu_stay_yes"
-								android:layout_gravity="start"
-								android:checked="false" />
-						
-						<RadioButton
-								android:layout_height="wrap_content"
-								android:layout_width="wrap_content"
-								android:text="@string/no"
-								android:id="@+id/is_icu_stay_no"
-								android:layout_gravity="start"
-								android:checked="false" />
-						
-						<RadioButton
-								android:layout_height="wrap_content"
-								android:layout_width="wrap_content"
-								android:text="@string/unknown"
-								android:id="@+id/is_icu_stay_unknown"
-								android:layout_gravity="start"
-								android:checked="false" />
 					</RadioGroup>
 					
 					<TextView
@@ -392,6 +361,407 @@
 					
 					</RadioGroup>
 					
+					<TextView
+							android:text="@string/is_icu_stay"
+							android:layout_width="match_parent"
+							android:layout_height="wrap_content"
+							android:layout_marginLeft="10dp"
+							android:layout_marginEnd="10dp"
+							android:layout_marginRight="10dp"
+							android:layout_marginStart="10dp"
+							android:layout_marginBottom="5dp" />
+					
+					<RadioGroup
+							android:layout_width="match_parent"
+							android:orientation="horizontal"
+							android:layout_height="wrap_content"
+							android:layout_marginBottom="18dp"
+							android:layout_marginLeft="10dp"
+							android:layout_marginEnd="10dp"
+							android:layout_marginRight="10dp"
+							android:layout_marginStart="10dp">
+						
+						<RadioButton
+								android:layout_height="wrap_content"
+								android:layout_width="wrap_content"
+								android:text="@string/yes"
+								android:id="@+id/is_icu_stay_yes"
+								android:layout_gravity="start"
+								android:checked="false" />
+						
+						<RadioButton
+								android:layout_height="wrap_content"
+								android:layout_width="wrap_content"
+								android:text="@string/no"
+								android:id="@+id/is_icu_stay_no"
+								android:layout_gravity="start"
+								android:checked="false" />
+						
+						<RadioButton
+								android:layout_height="wrap_content"
+								android:layout_width="wrap_content"
+								android:text="@string/unknown"
+								android:id="@+id/is_icu_stay_unknown"
+								android:layout_gravity="start"
+								android:checked="false" />
+					</RadioGroup>
+					
+					<LinearLayout
+							android:id="@+id/extraFormAdditions"
+							android:orientation="vertical"
+							android:layout_width="match_parent"
+							android:layout_height="wrap_content"
+							android:visibility="gone">
+						
+						<TextView
+								android:text="@string/mechanical_ventilation"
+								android:layout_width="match_parent"
+								android:layout_height="wrap_content"
+								android:layout_marginLeft="10dp"
+								android:layout_marginEnd="10dp"
+								android:layout_marginRight="10dp"
+								android:layout_marginStart="10dp"
+								android:layout_marginBottom="5dp" />
+						
+						<RadioGroup
+								android:layout_width="match_parent"
+								android:orientation="horizontal"
+								android:layout_height="wrap_content"
+								android:layout_marginBottom="18dp"
+								android:layout_marginLeft="10dp"
+								android:layout_marginEnd="10dp"
+								android:layout_marginRight="10dp"
+								android:layout_marginStart="10dp">
+							
+							<RadioButton
+									android:layout_height="wrap_content"
+									android:layout_width="wrap_content"
+									android:text="@string/yes"
+									android:id="@+id/mechanical_ventilation_yes"
+									android:layout_gravity="start"
+									android:checked="false" />
+							
+							<RadioButton
+									android:layout_height="wrap_content"
+									android:layout_width="wrap_content"
+									android:text="@string/no"
+									android:id="@+id/mechanical_ventilation_no"
+									android:layout_gravity="start"
+									android:checked="false" />
+							
+							<RadioButton
+									android:layout_height="wrap_content"
+									android:layout_width="wrap_content"
+									android:text="@string/unknown"
+									android:id="@+id/mechanical_ventilation_unknown"
+									android:layout_gravity="start"
+									android:checked="false" />
+						</RadioGroup>
+						
+						<TextView
+								android:text="@string/vaospressors_during_hospital_stay"
+								android:layout_width="match_parent"
+								android:layout_height="wrap_content"
+								android:layout_marginLeft="10dp"
+								android:layout_marginEnd="10dp"
+								android:layout_marginRight="10dp"
+								android:layout_marginStart="10dp"
+								android:layout_marginBottom="5dp" />
+						
+						<RadioGroup
+								android:layout_width="match_parent"
+								android:orientation="horizontal"
+								android:layout_height="wrap_content"
+								android:layout_marginBottom="18dp"
+								android:layout_marginLeft="10dp"
+								android:layout_marginEnd="10dp"
+								android:layout_marginRight="10dp"
+								android:layout_marginStart="10dp">
+							
+							<RadioButton
+									android:layout_height="wrap_content"
+									android:layout_width="wrap_content"
+									android:text="@string/yes"
+									android:id="@+id/vaospressors_yes"
+									android:layout_gravity="start"
+									android:checked="false" />
+							
+							<RadioButton
+									android:layout_height="wrap_content"
+									android:layout_width="wrap_content"
+									android:text="@string/no"
+									android:id="@+id/vaospressors_no"
+									android:layout_gravity="start"
+									android:checked="false" />
+							
+							<RadioButton
+									android:layout_height="wrap_content"
+									android:layout_width="wrap_content"
+									android:text="@string/unknown"
+									android:id="@+id/vaospressors_unknown"
+									android:layout_gravity="start"
+									android:checked="false" />
+						</RadioGroup>
+						
+						<TextView
+								android:text="@string/confirmed_infection"
+								android:layout_width="match_parent"
+								android:layout_height="wrap_content"
+								android:layout_marginLeft="10dp"
+								android:layout_marginEnd="10dp"
+								android:layout_marginRight="10dp"
+								android:layout_marginStart="10dp"
+								android:layout_marginBottom="5dp" />
+						
+						<RadioGroup
+								android:layout_width="match_parent"
+								android:orientation="horizontal"
+								android:layout_height="wrap_content"
+								android:layout_marginBottom="18dp"
+								android:layout_marginLeft="10dp"
+								android:layout_marginEnd="10dp"
+								android:layout_marginRight="10dp"
+								android:layout_marginStart="10dp">
+							
+							<RadioButton
+									android:layout_height="wrap_content"
+									android:layout_width="wrap_content"
+									android:text="@string/yes"
+									android:id="@+id/confirmed_infection_yes"
+									android:layout_gravity="start"
+									android:checked="false" />
+							
+							<RadioButton
+									android:layout_height="wrap_content"
+									android:layout_width="wrap_content"
+									android:text="@string/no"
+									android:id="@+id/confirmed_infection_no"
+									android:layout_gravity="start"
+									android:checked="false" />
+							
+							<RadioButton
+									android:layout_height="wrap_content"
+									android:layout_width="wrap_content"
+									android:text="@string/unknown"
+									android:id="@+id/confirmed_infection_unknown"
+									android:layout_gravity="start"
+									android:checked="false" />
+						</RadioGroup>
+						
+						<TextView
+								android:text="@string/first_sbp"
+								android:layout_width="match_parent"
+								android:layout_height="wrap_content"
+								android:layout_marginLeft="10dp"
+								android:layout_marginEnd="10dp"
+								android:layout_marginRight="10dp"
+								android:layout_marginStart="10dp"
+								android:layout_marginBottom="5dp" />
+						
+						<RadioGroup
+								android:layout_width="match_parent"
+								android:orientation="horizontal"
+								android:layout_height="wrap_content"
+								android:layout_marginBottom="18dp"
+								android:layout_marginLeft="10dp"
+								android:layout_marginEnd="10dp"
+								android:layout_marginRight="10dp"
+								android:layout_marginStart="10dp">
+							
+							<RadioButton
+									android:layout_height="wrap_content"
+									android:layout_width="wrap_content"
+									android:text="@string/yes"
+									android:id="@+id/first_sbp_yes"
+									android:layout_gravity="start"
+									android:checked="false" />
+							
+							<RadioButton
+									android:layout_height="wrap_content"
+									android:layout_width="wrap_content"
+									android:text="@string/no"
+									android:id="@+id/first_sbp_no"
+									android:layout_gravity="start"
+									android:checked="false" />
+							
+							<RadioButton
+									android:layout_height="wrap_content"
+									android:layout_width="wrap_content"
+									android:text="@string/unknown"
+									android:id="@+id/first_sbp_unknown"
+									android:layout_gravity="start"
+									android:checked="false" />
+						</RadioGroup>
+						
+						<TextView
+								android:text="@string/first_map"
+								android:layout_width="match_parent"
+								android:layout_height="wrap_content"
+								android:layout_marginLeft="10dp"
+								android:layout_marginEnd="10dp"
+								android:layout_marginRight="10dp"
+								android:layout_marginStart="10dp"
+								android:layout_marginBottom="5dp" />
+						
+						<RadioGroup
+								android:layout_width="match_parent"
+								android:orientation="horizontal"
+								android:layout_height="wrap_content"
+								android:layout_marginBottom="18dp"
+								android:layout_marginLeft="10dp"
+								android:layout_marginEnd="10dp"
+								android:layout_marginRight="10dp"
+								android:layout_marginStart="10dp">
+							
+							<RadioButton
+									android:layout_height="wrap_content"
+									android:layout_width="wrap_content"
+									android:text="@string/yes"
+									android:id="@+id/first_map_yes"
+									android:layout_gravity="start"
+									android:checked="false" />
+							
+							<RadioButton
+									android:layout_height="wrap_content"
+									android:layout_width="wrap_content"
+									android:text="@string/no"
+									android:id="@+id/first_map_no"
+									android:layout_gravity="start"
+									android:checked="false" />
+							
+							<RadioButton
+									android:layout_height="wrap_content"
+									android:layout_width="wrap_content"
+									android:text="@string/unknown"
+									android:id="@+id/first_map_unknown"
+									android:layout_gravity="start"
+									android:checked="false" />
+						</RadioGroup>
+						
+						<TextView
+								android:text="@string/any_prior_sedetion"
+								android:layout_width="match_parent"
+								android:layout_height="wrap_content"
+								android:layout_marginLeft="10dp"
+								android:layout_marginEnd="10dp"
+								android:layout_marginRight="10dp"
+								android:layout_marginStart="10dp"
+								android:layout_marginBottom="5dp" />
+						
+						<RadioGroup
+								android:layout_width="match_parent"
+								android:orientation="horizontal"
+								android:layout_height="wrap_content"
+								android:layout_marginBottom="18dp"
+								android:layout_marginLeft="10dp"
+								android:layout_marginEnd="10dp"
+								android:layout_marginRight="10dp"
+								android:layout_marginStart="10dp">
+							
+							<RadioButton
+									android:layout_height="wrap_content"
+									android:layout_width="wrap_content"
+									android:text="@string/yes"
+									android:id="@+id/any_prior_sedetion_yes"
+									android:layout_gravity="start"
+									android:checked="false" />
+							
+							<RadioButton
+									android:layout_height="wrap_content"
+									android:layout_width="wrap_content"
+									android:text="@string/no"
+									android:id="@+id/any_prior_sedetion_no"
+									android:layout_gravity="start"
+									android:checked="false" />
+							
+							<RadioButton
+									android:layout_height="wrap_content"
+									android:layout_width="wrap_content"
+									android:text="@string/unknown"
+									android:id="@+id/any_prior_sedetion_unknown"
+									android:layout_gravity="start"
+									android:checked="false" />
+						</RadioGroup>
+						
+						<TextView
+								android:text="@string/surgery_during_hospital_stay"
+								android:layout_width="match_parent"
+								android:layout_height="wrap_content"
+								android:layout_marginLeft="10dp"
+								android:layout_marginEnd="10dp"
+								android:layout_marginRight="10dp"
+								android:layout_marginStart="10dp"
+								android:layout_marginBottom="5dp" />
+						
+						<RadioGroup
+								android:layout_width="match_parent"
+								android:orientation="horizontal"
+								android:layout_height="wrap_content"
+								android:layout_marginBottom="18dp"
+								android:layout_marginLeft="10dp"
+								android:layout_marginEnd="10dp"
+								android:layout_marginRight="10dp"
+								android:layout_marginStart="10dp">
+							
+							<RadioButton
+									android:layout_height="wrap_content"
+									android:layout_width="wrap_content"
+									android:text="@string/not_applicable"
+									android:id="@+id/surgery_na"
+									android:layout_gravity="start"
+									android:checked="false" />
+							
+							<RadioButton
+									android:layout_height="wrap_content"
+									android:layout_width="wrap_content"
+									android:text="@string/planned"
+									android:id="@+id/surgery_planned"
+									android:layout_gravity="start"
+									android:checked="false" />
+							
+							<RadioButton
+									android:layout_height="wrap_content"
+									android:layout_width="wrap_content"
+									android:text="@string/unplanned"
+									android:id="@+id/surgery_unplanned"
+									android:layout_gravity="start"
+									android:checked="false" />
+						</RadioGroup>
+						
+						<android.support.design.widget.TextInputLayout
+								android:layout_width="match_parent"
+								android:layout_height="wrap_content"
+								android:layout_marginLeft="10dp"
+								android:layout_marginEnd="10dp"
+								android:layout_marginRight="10dp"
+								android:layout_marginStart="10dp"
+								android:layout_marginBottom="10dp">
+							
+							<EditText
+									android:id="@+id/firstIcuHeartRate"
+									android:layout_width="match_parent"
+									android:layout_height="wrap_content"
+									android:hint="@string/first_heart_rate"
+									android:inputType="numberDecimal" />
+						</android.support.design.widget.TextInputLayout>
+						
+						<android.support.design.widget.TextInputLayout
+								android:layout_width="match_parent"
+								android:layout_height="wrap_content"
+								android:layout_marginLeft="10dp"
+								android:layout_marginEnd="10dp"
+								android:layout_marginRight="10dp"
+								android:layout_marginStart="10dp"
+								android:layout_marginBottom="10dp">
+							
+							<EditText
+									android:id="@+id/firstGcsScore"
+									android:layout_width="match_parent"
+									android:layout_height="wrap_content"
+									android:hint="@string/first_gcs_score"
+									android:inputType="numberDecimal" />
+						</android.support.design.widget.TextInputLayout>
+					</LinearLayout>
 					
 					<android.support.design.widget.TextInputLayout
 							android:layout_width="match_parent"
@@ -424,21 +794,8 @@
 								android:layout_width="match_parent"
 								android:layout_height="wrap_content"
 								android:hint="@string/hba1c"
-								android:inputType="numberDecimal"/>
+								android:inputType="numberDecimal" />
 					</android.support.design.widget.TextInputLayout>
-					
-					<android.support.v7.widget.AppCompatSpinner
-							android:id="@+id/inpatient_service_type"
-							android:prompt="@string/inpatient_service_type_prompt"
-							android:layout_width="match_parent"
-							android:layout_height="wrap_content"
-							android:layout_marginBottom="8dp"
-							android:layout_marginLeft="10dp"
-							android:layout_marginEnd="10dp"
-							android:layout_marginRight="10dp"
-							android:layout_marginStart="10dp"
-							android:spinnerMode="dialog"
-							style="@style/Widget.AppCompat.Spinner.Underlined" />
 					
 					<CheckBox
 							android:layout_marginTop="18dp"

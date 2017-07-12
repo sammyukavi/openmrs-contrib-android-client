@@ -199,12 +199,18 @@ public abstract class ApplicationConstants {
 		public static final String ANSWER_YES = "yes";
 		public static final String ANSWER_NO = "no";
 		public static final String ANSWER_UNKNOWN = "unknown";
+		public static final String NA = "Not applicable";
+		public static final String PLANNED = "Planned (scheduled in clinic)";
+		public static final String UNPLANNED = "Unplanned (not scheduled in clinic)";
 	}
 
 	public abstract static class AuditFormConcepts {
 		public static final String CONCEPT_ANSWER_YES = "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 		public static final String CONCEPT_ANSWER_NO = "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 		public static final String CONCEPT_ANSWER_UNKNOWN = "1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+		public static final String CONCEPT_ANSWER_PLANNED = "1d8dc2abe-d5a5-44b1-9dc6-809a993a8dbc";
+		public static final String CONCEPT_ANSWER_UNPLANNED = "1680114c-72b9-44d7-a292-f2c981322587";
+		public static final String CONCEPT_ANSWER_NA = "1175AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 		public static final String CONCEPT_DEATH_IN_HOSPITAL = "ec559b53-8cc9-4b54-a34e-95a605919365";
 		public static final String CONCEPT_PALLIATIVE_CONSULT = "a9ae21a2-2631-49d6-928c-d23001812729";
 		public static final String CONCEPT_PREOP_RISK_ASSESMENT = "eadfe47c-7988-42ea-97d0-e21ce71db7e0";
@@ -216,6 +222,15 @@ public abstract class ApplicationConstants {
 		public static final String CONCEPT_HBA1C = "159644AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 		public static final String CONCEPT_INPATIENT_SERVICE_TYPE = "161630AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 		public static final String CONCEPT_AUDIT_COMPLETE = "98f0f043-bdb1-40c6-8c81-6a094056e981";
+		public static final String CONCEPT_MECHANICAL_VENTILATIN = "99f47aa5-827c-4472-9884-fbbc094f70bd";
+		public static final String CONCEPT_RECIEVED_VAOSPRESSORS = "611cfa95-0685-4c76-bf9c-981647a085e6";
+		public static final String CONCEPT_SURGERY_HOSPITAL_STAY = "8b1d25f9-2f2e-4dfa-a5a1-87e2f7a3bb52";
+		public static final String CONCEPT_INFECTION_CONFIRMED_SUSPECTED = "8284a6a3-0445-4a23-96cd-8c6767397051";
+		public static final String CONCEPT_FIRST_SBP_ICU = "8f7ad9c2-aca6-458e-9362-963b4d391a7c";
+		public static final String CONCEPT_FIRST_MAP_ICU = "0b19946c-63a6-41e8-b3af-a87fc6addab4";
+		public static final String CONCEPT_FIRST_HEART_RATE_ICU = "9360b4f4-4456-4bc2-97fd-68e661a19d78";
+		public static final String CONCEPT_FIRST_GCS_SCORE_ICU = "99659fa6-fe39-41d7-ac6b-f183d9231310";
+		public static final String CONCEPT_SEDETION_PRIOR_FIRST_GCS_SCORE_ICU = "7cccf308-edca-4c3e-afde-e7a3f1155ec6";
 
 	}
 

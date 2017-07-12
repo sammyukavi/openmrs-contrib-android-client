@@ -278,7 +278,7 @@
 	<string name="no_patient_list">No patient lists found!</string>
 	<string name="number_of_patients">%1$s patients found</string>
 	<string name="paging_label">%1$s of %2$s</string>
-	<string name="search_for_patients">Please type the first 3 characters of the patient name on the search bar for you to
+	<string name="search_for_patients">Please subscriptionType the first 3 characters of the patient name on the search bar for you to
 		visitPhotoView meaningful results</string>
 	<string name="patient_metadata_label">Patient Contact Information</string>
 	<string name="visit_tasks_dialog_message">add a visit task</string>

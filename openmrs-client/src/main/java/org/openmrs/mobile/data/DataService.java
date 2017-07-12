@@ -29,16 +29,6 @@ public interface DataService<E extends BaseOpenmrsObject> {
 			@NonNull GetCallback<List<E>> callback);
 
 	/**
-	 * Performs a template-based search. Doesn't actually work at this point, unless you search
-	 * for something which should return no results.
-	 * @param template   The entity template to create the search values from
-	 * @param pagingInfo The paging information or null to exclude paging
-	 * @param callback
-	 */
-	void search(@NonNull E template, @Nullable QueryOptions options, @Nullable PagingInfo pagingInfo,
-			@NonNull GetCallback<List<E>> callback);
-
-	/**
 	 * Saves a newly created entity.
 	 * @param entity   The new entity to save
 	 * @param callback

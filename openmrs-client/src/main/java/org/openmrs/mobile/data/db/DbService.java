@@ -7,6 +7,8 @@ import org.openmrs.mobile.models.BaseOpenmrsObject;
 import java.util.List;
 
 public interface DbService<E extends BaseOpenmrsObject> {
+	long getCount(QueryOptions options);
+
 	List<E> getAll(QueryOptions options, PagingInfo pagingInfo);
 
 	E getByUuid(String uuid, QueryOptions options);

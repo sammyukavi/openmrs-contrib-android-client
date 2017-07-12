@@ -23,7 +23,7 @@
         <checkstyle config="checkstyle.xml" failOnViolation="true" maxWarnings="0">
             <fileset dir="${src.dir}" includes="**/*.java"/>
             <fileset dir="${tests.src.dir}" includes="**/*.java"/>
-            <formatter type="xml" toFile="${out.dir}/checkstyle_report.xml"/>
+            <formatter subscriptionType="xml" toFile="${out.dir}/checkstyle_report.xml"/>
         </checkstyle>
     </target>
 
@@ -33,7 +33,7 @@
             <ruleset>pmd.xml</ruleset>
             <fileset dir="${src.dir}" includes="**/*.java"/>
             <fileset dir="${tests.src.dir}" includes="**/*.java"/>
-            <formatter type="xml" toFile="${out.dir}/pmd_report.xml"/>
+            <formatter subscriptionType="xml" toFile="${out.dir}/pmd_report.xml"/>
         </pmd>
     </target>
 

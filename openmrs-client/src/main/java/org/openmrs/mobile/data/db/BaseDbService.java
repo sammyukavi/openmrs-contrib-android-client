@@ -19,6 +19,7 @@ import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.raizlabs.android.dbflow.sql.language.Method.count;
 
 public abstract class BaseDbService<E extends BaseOpenmrsObject> implements DbService<E> {
 	private Class<E> entityClass;
@@ -34,6 +35,13 @@ public abstract class BaseDbService<E extends BaseOpenmrsObject> implements DbSe
 	protected void preDelete(E entity) { }
 
 	protected void postDelete(E entity) { }
+
+	@Override
+	public long getCount(QueryOptions options) {
+		return SQLite.select(count(getEntityTable().getProperty("uuid")))
+				.from(getEntityClass())
+				.count();
+	}
 
 	@Override
 	public List<E> getAll(@Nullable QueryOptions options, @Nullable PagingInfo pagingInfo) {

@@ -5,7 +5,7 @@
 # KEYSTORE_ALIAS_NAME - the alias name in release.keystore
 # KEYSTORE_ALIAS_PASS - the password name for the alias
 # KEYSTORE_GPG_PASSPHRASE - the password for decrypting release.keystore.gpg
-# GITHUB_API_KEY - Your github api key with public repo access
+# GITHUB_API_KEY - Your github api subscriptionKey with public repo access
 # PUBLISHER_ACCOUNT_ID - Email ID for Developer Console
 
 

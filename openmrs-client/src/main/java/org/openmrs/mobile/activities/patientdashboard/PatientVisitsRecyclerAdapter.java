@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.support.design.widget.TextInputEditText;
-import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -48,7 +47,6 @@ import static org.openmrs.mobile.utilities.ApplicationConstants.entityName.TELEP
 public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT);
 
-
 	private final int VIEW_TYPE_HEADER = 0;
 	private final int VIEW_TYPE_ITEM = 1;
 	private HashMap<String, String> uuids;
@@ -56,31 +54,24 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 	private List<Visit> visits;
 	private LayoutInflater layoutInflater;
 	private OpenMRS instance = OpenMRS.getInstance();
-	private long delay = 3000; //seconds after user stops typing
-	private long lastTextEdit = 0;
-	private LocalDateTime localDateTime;
 	private PatientDashboardActivity patientDashboardActivity;
 	private Visit activeVisit;
 	private View activeVisitView;
-	private Observation clinicalNoteObservation;
-	private boolean firstTimeEdit;
 	private IBaseDiagnosisFragment baseDiagnosisFragment;
 	private boolean hasStartedDiagnoses;
 
 	private LinearLayoutManager primaryDiagnosisLayoutManager, secondaryDiagnosisLayoutManager;
-	private LinearLayout diagnosesLayout, pastDiagnosisLayout, loadVisitDetails;
+	private LinearLayout diagnosesLayout, pastDiagnosisLayout;
 	private RelativeLayout singleVisitTitle;
-	private TextInputEditText clinicalNote;
 	private TextView clinicalNoteText;
 	private TextView primaryDiagnosis;
-	private TextView secondaryDiagnosis;
+	private TextView secondaryDiagnosis, noPatientVisits;
 	private View initialDiagnosesView;
 
 	public PatientVisitsRecyclerAdapter(RecyclerView visitsRecyclerView, List<Visit> visits,
 			Context context, IBaseDiagnosisFragment baseDiagnosisFragment) {
 		this.visits = visits;
 		this.context = context;
-		this.localDateTime = new LocalDateTime();
 		this.layoutInflater = LayoutInflater.from(context);
 		this.patientDashboardActivity = (PatientDashboardActivity)context;
 		LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
@@ -117,7 +108,7 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 			return new RecyclerViewHeader(personAddressView);
 		} else if (viewType == VIEW_TYPE_ITEM) {
 			View patientVisitView =
-					LayoutInflater.from(parent.getContext()).inflate(R.layout.container_visits_observations, parent,
+					LayoutInflater.from(parent.getContext()).inflate(R.layout.patient_visits_container, parent,
 							false);
 			return new PatientVisitViewHolder(patientVisitView);
 		}
@@ -134,14 +125,13 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 			PatientVisitViewHolder viewHolder = (PatientVisitViewHolder)holder;
 			viewHolder.setIsRecyclable(false);
 			Visit visit = getItem(position);//Subtract one to get the first index taken by the header
-			View singleVisitView = layoutInflater.inflate(R.layout.container_single_visit_observation, null);
+			View singleVisitView = layoutInflater.inflate(R.layout.single_patient_visit_container, null);
 			diagnosesLayout = (LinearLayout)singleVisitView.findViewById(R.id.diagnosesLayout);
 			pastDiagnosisLayout = (LinearLayout)singleVisitView.findViewById(R.id.pastDiagnosisLayout);
 			singleVisitTitle = (RelativeLayout)singleVisitView.findViewById(R.id.singleVisitTitle);
 			diagnosesLayout.setVisibility(View.GONE);
 			pastDiagnosisLayout.setVisibility(View.GONE);
 			TextView visitStartDate = (TextView)singleVisitView.findViewById(R.id.startDate);
-			clinicalNote = (TextInputEditText)singleVisitView.findViewById(R.id.editClinicalNote);
 			clinicalNoteText = (TextView)singleVisitView.findViewById(R.id.clinicalNoteText);
 			primaryDiagnosis = (TextView)singleVisitView.findViewById(R.id.primaryDiagnosis);
 			secondaryDiagnosis = (TextView)singleVisitView.findViewById(R.id.secondaryDiagnosis);
@@ -155,7 +145,7 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 				startDate = context.getString(R.string.yesterday);
 			}
 
-			if (visit.getStopDatetime() != null) {
+			if (visit.getStopDatetime() == null) {
 				activeVisit = visit;
 				isActiveVisit = true;
 				singleVisitView.findViewById(R.id.active_visit_badge).setVisibility(View.VISIBLE);
@@ -172,13 +162,7 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 					hasStartedDiagnoses = false;
 					initialDiagnosesView = singleVisitView;
 				}
-			}
-
-			visitStartDate.setText(startDate);
-			((TextView)singleVisitView.findViewById(R.id.visitTimeago))
-					.setText(DateUtils.calculateTimeDifference(visit.getStartDatetime(), true));
-
-			if (!isActiveVisit) {
+			} else {
 				TextView visitDuration = (TextView)singleVisitView.findViewById(R.id.visitDuration);
 				visitDuration.setText(context.getString(R.string.visit_duration,
 						DateUtils.calculateTimeDifference(visit.getStartDatetime(), visit.getStopDatetime())));
@@ -187,10 +171,16 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 				diagnosesLayout.setVisibility(View.GONE);
 			}
 
+			visitStartDate.setText(startDate);
+			((TextView)singleVisitView.findViewById(R.id.visitTimeago))
+					.setText(DateUtils.calculateTimeDifference(visit.getStartDatetime(), true));
+
 			//Adding the link to the visit details page
 			LinearLayout showVisitDetails = (LinearLayout)singleVisitView.findViewById(R.id.loadVisitDetails);
 
 			if (isActiveVisit) {
+				singleVisitTitle.setClickable(true);
+				singleVisitTitle.setOnClickListener(v -> loadVisitDetails(visit));
 				showVisitDetails.setVisibility(View.VISIBLE);
 				showVisitDetails.setOnClickListener(v -> loadVisitDetails(visit));
 			} else {
@@ -199,7 +189,7 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 			}
 
 			if (visit.getEncounters().size() == 0) {
-				showClinicalNote(new Encounter(), visit, singleVisitView, isActiveVisit);
+				showClinicalNote(new Encounter(), singleVisitView, isActiveVisit);
 			} else {
 				Encounter tempEncounter = null;
 				for (Encounter encounter : visit.getEncounters()) {
@@ -209,13 +199,12 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 							tempEncounter = encounter;
 							if (activeVisit == visit) {
 								baseDiagnosisFragment.setEncounterUuid(encounter.getUuid());
-								baseDiagnosisFragment.setClinicalNote(clinicalNote.getText().toString());
 								break;
 							}
 						}
 					}
 				}
-				showClinicalNote(tempEncounter != null ? tempEncounter : new Encounter(), visit, singleVisitView,
+				showClinicalNote(tempEncounter != null ? tempEncounter : new Encounter(), singleVisitView,
 						isActiveVisit);
 			}
 
@@ -223,11 +212,6 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 				baseDiagnosisFragment.initializeListeners();
 				baseDiagnosisFragment.setDiagnoses(activeVisit);
 				hasStartedDiagnoses = true;
-			}
-
-			if (isActiveVisit) {
-				singleVisitTitle.setClickable(true);
-				singleVisitTitle.setOnClickListener(v -> loadVisitDetails(visit));
 			}
 
 			viewHolder.patientVisitDetailsContainer.addView(singleVisitView);
@@ -246,9 +230,10 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 					(RecyclerView)view.findViewById(R.id.primaryDiagnosisRecyclerView));
 			baseDiagnosisFragment.setSecondaryDiagnosesRecycler(
 					(RecyclerView)view.findViewById(R.id.secondaryDiagnosisRecyclerView));
-			baseDiagnosisFragment.setSubmitVisitNote(
-					(AppCompatButton)view.findViewById(R.id.submitVisitNote));
-			baseDiagnosisFragment.getSubmitVisitNote().setVisibility(View.GONE);
+			baseDiagnosisFragment.setClinicalNoteView(
+					(TextInputEditText)view.findViewById(R.id.editClinicalNote));
+			baseDiagnosisFragment.setLoadingProgressBar((RelativeLayout)view.findViewById(R.id.loadingDiagnoses));
+			baseDiagnosisFragment.setDiagnosesContent((LinearLayout) view.findViewById(R.id.diagnosesContent));
 
 			primaryDiagnosisLayoutManager = new LinearLayoutManager(context);
 			secondaryDiagnosisLayoutManager = new LinearLayoutManager(context);
@@ -272,7 +257,6 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 		if (null == baseDiagnosisFragment.getEncounterUuid()) {
 			baseDiagnosisFragment.setEncounterUuid(encounterUuid);
 		}
-		this.clinicalNoteObservation = observation;
 	}
 
 	private void loadVisitDetails(Visit visit) {
@@ -326,44 +310,8 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 
 	}
 
-	private void showClinicalNote(Encounter encounter, Visit visit, View view, boolean isActiveVisit) {
-		firstTimeEdit = true;
-		TextInputEditText clinicalNote = (TextInputEditText)view.findViewById(R.id.editClinicalNote);
+	private void showClinicalNote(Encounter encounter, View view, boolean isActiveVisit) {
 		setExistingDiagnosesContent(encounter, view, isActiveVisit);
-
-		Handler handler = new Handler();
-		Runnable inputCompleteChecker = () -> {
-			if (System.currentTimeMillis() > (lastTextEdit + delay - 500)) {
-				String encounterUuid =
-						null != encounter.getUuid() ? encounter.getUuid() : baseDiagnosisFragment.getEncounterUuid();
-				baseDiagnosisFragment.setClinicalNote(clinicalNote.getText().toString());
-				baseDiagnosisFragment.getBaseDiagnosisView().saveVisitNote(
-						null != encounterUuid ? encounterUuid : ApplicationConstants.EMPTY_STRING,
-						clinicalNote.getText().toString(), visit);
-			}
-		};
-
-		clinicalNote.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-			}
-
-			@Override
-			public void onTextChanged(final CharSequence s, int start, int before, int count) {
-				//Remove this to run only once
-				handler.removeCallbacks(inputCompleteChecker);
-			}
-
-			@Override
-			public void afterTextChanged(final Editable s) {
-				if (s.length() > 0 && !firstTimeEdit) {
-					lastTextEdit = System.currentTimeMillis();
-					handler.postDelayed(inputCompleteChecker, delay);
-				} else {
-					firstTimeEdit = false;
-				}
-			}
-		});
 
 		if (isActiveVisit) {
 			view.findViewById(R.id.editClinicNoteContainer).setVisibility(View.VISIBLE);
@@ -396,10 +344,8 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 				secondaryDiagnosis.setText(secondaryDiagnosisString);
 			} else if (observationDisplay.contains(CLINICAL_NOTE)) {
 				clinicalNoteString = StringUtils.splitStrings(observationDisplay, ":");
-				baseDiagnosisFragment.setClinicalNote(clinicalNote.getText().toString());
 				if (isActiveVisit) {
-					clinicalNoteObservation = observation;
-					clinicalNote.setText(clinicalNoteString.get(1).toString());
+					baseDiagnosisFragment.getClinicalNoteView().setText(clinicalNoteString.get(1).toString());
 					view.findViewById(R.id.clinicalNoteTitle).setVisibility(View.VISIBLE);
 				} else {
 					view.findViewById(R.id.clinicalNoteTitle).setVisibility(View.VISIBLE);
@@ -411,7 +357,8 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 
 	private void setVisitStopDate(Visit visit) {
 		SharedPreferences.Editor editor = instance.getOpenMRSSharedPreferences().edit();
-		editor.putString(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, DATE_FORMAT.format(visit.getStopDatetime()));
+		editor.putString(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE,
+				visit.getStopDatetime() == null ? null : DATE_FORMAT.format(visit.getStopDatetime()));
 		editor.commit();
 	}
 

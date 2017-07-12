@@ -367,4 +367,7 @@
 	<string name="civil_status">Civil Status</string>
 	<string name="kin_relationship">Kin Relationship</string>
 	<string name="change_server_url">Change Server URL</string>
+	<string name="no_patient_list_selected">No Patient List selected</string>
+	<string name="no_visits_recorded_for_this_patient">No visits recorded for this patient</string>
+	<string name="search_query_label">for search query: %1$s</string>
 </resources>

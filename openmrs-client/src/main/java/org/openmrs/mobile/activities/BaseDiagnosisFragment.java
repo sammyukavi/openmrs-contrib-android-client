@@ -1,16 +1,17 @@
 package org.openmrs.mobile.activities;
 
-import android.support.v7.widget.AppCompatButton;
+import android.os.Handler;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.visit.detail.DiagnosisRecyclerViewAdapter;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.models.ConceptSearchResult;
@@ -20,6 +21,8 @@ import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitNote;
 import org.openmrs.mobile.utilities.ApplicationConstants;
+import org.openmrs.mobile.utilities.CustomDiagnosesDropdownAdapter;
+import org.openmrs.mobile.utilities.DateUtils;
 import org.openmrs.mobile.utilities.StringUtils;
 import org.openmrs.mobile.utilities.ViewUtils;
 
@@ -35,21 +38,24 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	protected List<EncounterDiagnosis> primaryDiagnoses = new ArrayList<>(), secondaryDiagnoses = new ArrayList<>();
 	protected AutoCompleteTextView searchDiagnosis;
 	protected RecyclerView primaryDiagnosesRecycler, secondaryDiagnosesRecycler;
-	protected AppCompatButton submitVisitNote;
 	protected TextView noPrimaryDiagnoses, noSecondaryDiagnoses;
-	protected int initialPrimaryDiagnosesListHashcode, initialSecondaryDiagnosesListHashcode,
-			subsequentPrimaryDiagnosesListHashcode, subsequentSecondaryDiagnosesListHashcode,
-			initialClinicNoteHashcode, subsequentClinicalNoteHashcode;
+	protected RelativeLayout loadingProgressBar;
+	protected LinearLayout diagnosesContent;
+	protected int initialPrimaryDiagnosesListHashcode, initialSecondaryDiagnosesListHashcode, initialClinicNoteHashcode;
+	protected TextInputEditText clinicalNoteView;
 	protected BaseDiagnosisPresenter diagnosisPresenter = new BaseDiagnosisPresenter();
 	private Timer timer;
-	private String encounterUuid, clinicalNote;
+	private String encounterUuid;
 	private Visit visit;
+	private boolean firstTimeEdit;
+	private long delay = 3000, lastTextEdit = 0;
 
 	@Override
 	public void initializeListeners() {
 		primaryDiagnoses.clear();
 		secondaryDiagnoses.clear();
 		addDiagnosisListeners();
+		addClinicalNoteListener();
 	}
 
 	protected IBaseDiagnosisFragment getIBaseDiagnosisFragment() {
@@ -92,29 +98,64 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 				if (ViewUtils.getInput(searchDiagnosis) != null) {
 					ConceptSearchResult conceptSearchResult =
 							(ConceptSearchResult)searchDiagnosis.getAdapter().getItem(position);
-					createEncounterDiagnosis(null, ViewUtils.getInput(searchDiagnosis),
-							conceptSearchResult.getValue());
+					createEncounterDiagnosis(null, ViewUtils.getInput(searchDiagnosis), conceptSearchResult.getValue(),
+							true);
 
-					if (getDiagnosisView().isAutoSaveEnabled()) {
-						getDiagnosisView().saveVisitNote(encounterUuid, clinicalNote, visit);
-					}
+					getDiagnosisView().saveVisitNote(encounterUuid, clinicalNoteView.getText().toString(), visit);
+				}
+			}
+		});
+	}
+
+	private void addClinicalNoteListener() {
+		firstTimeEdit = true;
+
+		Handler handler = new Handler();
+		Runnable inputCompleteChecker = () -> {
+			if (System.currentTimeMillis() > (lastTextEdit + delay - 500)) {
+				saveVisitNote(null != getEncounterUuid() ? getEncounterUuid() : ApplicationConstants.EMPTY_STRING,
+						clinicalNoteView.getText().toString(), visit);
+			}
+		};
+
+		clinicalNoteView.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			}
+
+			@Override
+			public void onTextChanged(final CharSequence s, int start, int before, int count) {
+				//Remove this to run only once
+				handler.removeCallbacks(inputCompleteChecker);
+			}
+
+			@Override
+			public void afterTextChanged(final Editable s) {
+				if (s.length() > 0 && !firstTimeEdit) {
+					lastTextEdit = System.currentTimeMillis();
+					handler.postDelayed(inputCompleteChecker, delay);
+				} else {
+					firstTimeEdit = false;
 				}
 			}
 		});
 	}
 
 	public void setDiagnoses(Visit visit) {
+		loadingProgressBar.setVisibility(View.VISIBLE);
+		diagnosesContent.setVisibility(View.GONE);
+		if (this.visit == null) {
+			this.visit = visit;
+		}
+
 		if (visit.getEncounters().size() != 0) {
 			for (Encounter encounter : visit.getEncounters()) {
 				if (encounter.getEncounterType().getUuid()
 						.equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.CLINICAL_NOTE_UUID)) {
-					submitVisitNote.setText(getString(R.string.update_visit_note));
 					if (encounter.getObs().size() == 0) {
 						showNoDiagnoses();
 					} else {
-						for (Observation obs : encounter.getObs()) {
-							diagnosisPresenter.getObservation(obs.getUuid(), getIBaseDiagnosisFragment());
-						}
+						diagnosisPresenter.loadObs(encounter, getIBaseDiagnosisFragment());
 					}
 					break;
 				} else {
@@ -129,9 +170,9 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 		initialSecondaryDiagnosesListHashcode = secondaryDiagnoses.hashCode();
 	}
 
-	public void setDiagnoses(List<ConceptSearchResult> diagnoses) {
-		ArrayAdapter<ConceptSearchResult> adapter =
-				new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, diagnoses);
+	public void setSearchDiagnoses(List<ConceptSearchResult> diagnoses) {
+		CustomDiagnosesDropdownAdapter adapter =
+				new CustomDiagnosesDropdownAdapter(getContext(), android.R.layout.simple_spinner_dropdown_item, diagnoses);
 		filterOutExistingDiagnoses(diagnoses);
 		searchDiagnosis.setAdapter(adapter);
 		searchDiagnosis.showDropDown();
@@ -163,17 +204,20 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 		}
 	}
 
-	public void createEncounterDiagnosis(Observation observation, String diagnosis, String conceptNameId) {
+	public void createEncounterDiagnosis(Observation observation, String diagnosis, String conceptNameId,
+			boolean loadRecyclerView) {
 		EncounterDiagnosis encounterDiagnosis = new EncounterDiagnosis();
 		if (observation != null) {
 			if (observation.getDisplay().startsWith(ApplicationConstants.ObservationLocators.DIAGNOSES)) {
 				encounterDiagnosis.setCertainty(checkObsCertainty(observation.getDisplay()));
 				encounterDiagnosis.setDisplay(observation.getDiagnosisList());
 				if (StringUtils.notEmpty(conceptNameId)) {
-					encounterDiagnosis.setDiagnosis("ConceptUuid:" + conceptNameId);
+					encounterDiagnosis.setDiagnosis(ApplicationConstants.DiagnosisStrings.CONCEPT_UUID + conceptNameId);
 				} else {
-					encounterDiagnosis.setDiagnosis("Non-Coded:" + observation.getDiagnosisList());
-					encounterDiagnosis.setDisplay("Non-Coded:" + observation.getDiagnosisList());
+					encounterDiagnosis.setDiagnosis(ApplicationConstants.DiagnosisStrings.NON_CODED +
+							observation.getDiagnosisList());
+					encounterDiagnosis.setDisplay(ApplicationConstants.DiagnosisStrings.NON_CODED +
+							observation.getDiagnosisList());
 				}
 
 				if (diagnosis.contains(ApplicationConstants.ObservationLocators.PRIMARY_DIAGNOSIS)) {
@@ -201,8 +245,9 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 			}
 		}
 
-		setRecyclerViews();
-
+		if (loadRecyclerView) {
+			setRecyclerViews();
+		}
 	}
 
 	public void setPrimaryDiagnosis(EncounterDiagnosis primaryDiagnosis) {
@@ -278,23 +323,18 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 			noSecondaryDiagnoses.setVisibility(View.GONE);
 		}
 
-		if (initialPrimaryDiagnosesListHashcode != subsequentPrimaryDiagnosesListHashcode
-				|| initialSecondaryDiagnosesListHashcode != subsequentSecondaryDiagnosesListHashcode) {
-			submitVisitNote.setEnabled(true);
-		} else {
-			submitVisitNote.setEnabled(false);
-		}
-
 		primaryDiagnosesRecycler.setAdapter(
 				new DiagnosisRecyclerViewAdapter(getActivity(), primaryDiagnoses, getEncounterUuid(),
-						getClinicalNote(), getVisit(), getDiagnosisView()));
+						getClinicalNoteView().getText().toString(), visit, getDiagnosisView()));
 
 		secondaryDiagnosesRecycler.setAdapter(
 				new DiagnosisRecyclerViewAdapter(getActivity(), secondaryDiagnoses, getEncounterUuid(),
-						getClinicalNote(), getVisit(), getDiagnosisView()));
+						getClinicalNoteView().getText().toString(), visit, getDiagnosisView()));
 
 		// clear auto-complete input field
 		searchDiagnosis.setText(ApplicationConstants.EMPTY_STRING);
+		loadingProgressBar.setVisibility(View.GONE);
+		diagnosesContent.setVisibility(View.VISIBLE);
 	}
 
 	public void saveVisitNote(VisitNote visitNote) {
@@ -306,10 +346,10 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	}
 
 	protected VisitNote createVisitNote(String encounterUuid, String clinicalNote, Visit visit) {
-		List<EncounterDiagnosis> encounterDiagnosises = new ArrayList<>();
+		List<EncounterDiagnosis> encounterDiagnoses = new ArrayList<>();
 		VisitNote visitNote = new VisitNote();
 		visitNote.setPersonId(visit.getPatient().getUuid());
-		visitNote.setHtmlFormId("17");
+		visitNote.setHtmlFormId(ApplicationConstants.EncounterTypeEntity.VISIT_NOTE_FORM_ID);
 		visitNote.setCreateVisit("false");
 		visitNote.setFormModifiedTimestamp(String.valueOf(System.currentTimeMillis()));
 		visitNote.setEncounterModifiedTimestamp("0");
@@ -319,14 +359,14 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 		visitNote.setEncounterId(encounterUuid == null ? ApplicationConstants.EMPTY_STRING : encounterUuid);
 		visitNote.setW1(OpenMRS.getInstance().getCurrentUserUuid());
 		visitNote.setW3(OpenMRS.getInstance().getParentLocationUuid());
-		visitNote.setW5(visit.getStartDatetime());
+		visitNote.setW5(DateUtils.convertTime(visit.getStartDatetime().getTime(), DateUtils.OPEN_MRS_REQUEST_FORMAT));
 		visitNote.setW10(ApplicationConstants.EMPTY_STRING);
 		visitNote.setW12(null == clinicalNote ? ApplicationConstants.EMPTY_STRING : clinicalNote);
 
-		encounterDiagnosises.addAll(primaryDiagnoses);
-		encounterDiagnosises.addAll(secondaryDiagnoses);
+		encounterDiagnoses.addAll(primaryDiagnoses);
+		encounterDiagnoses.addAll(secondaryDiagnoses);
 
-		visitNote.setEncounterDiagnoses(encounterDiagnosises);
+		visitNote.setEncounterDiagnoses(encounterDiagnoses);
 
 		return visitNote;
 	}
@@ -336,6 +376,8 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 		noSecondaryDiagnoses.setVisibility(View.VISIBLE);
 		primaryDiagnosesRecycler.setVisibility(View.GONE);
 		secondaryDiagnosesRecycler.setVisibility(View.GONE);
+		loadingProgressBar.setVisibility(View.GONE);
+		diagnosesContent.setVisibility(View.VISIBLE);
 	}
 
 	private String checkObsCertainty(String obsDisplay) {
@@ -360,6 +402,16 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	@Override
 	public void setSearchDiagnosisView(AutoCompleteTextView searchDiagnosis) {
 		this.searchDiagnosis = searchDiagnosis;
+	}
+
+	@Override
+	public TextInputEditText getClinicalNoteView() {
+		return clinicalNoteView;
+	}
+
+	@Override
+	public void setClinicalNoteView(TextInputEditText clinicalNoteView) {
+		this.clinicalNoteView = clinicalNoteView;
 	}
 
 	@Override
@@ -403,13 +455,22 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	}
 
 	@Override
-	public AppCompatButton getSubmitVisitNote() {
-		return submitVisitNote;
+	public RelativeLayout getLoadingProgressBar() {
+		return loadingProgressBar;
 	}
 
 	@Override
-	public void setSubmitVisitNote(AppCompatButton view) {
-		this.submitVisitNote = view;
+	public void setLoadingProgressBar(RelativeLayout view) {
+		this.loadingProgressBar = view;
+	}
+
+	@Override
+	public LinearLayout getDiagnosesContent() {
+		return diagnosesContent;
+	}
+
+	public void setDiagnosesContent(LinearLayout diagnosesContent) {
+		this.diagnosesContent = diagnosesContent;
 	}
 
 	@Override
@@ -420,16 +481,6 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	@Override
 	public void setEncounterUuid(String encounterUuid) {
 		this.encounterUuid = encounterUuid;
-	}
-
-	@Override
-	public String getClinicalNote() {
-		return clinicalNote;
-	}
-
-	@Override
-	public void setClinicalNote(String clinicalNote) {
-		this.clinicalNote = clinicalNote;
 	}
 
 	@Override

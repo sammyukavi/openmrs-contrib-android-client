@@ -16,6 +16,7 @@ package org.openmrs.mobile.activities.visit.visitphoto;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -39,6 +40,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -300,6 +302,11 @@ public class VisitPhotoFragment extends VisitFragment implements VisitContract.V
 	}
 
 	@Override
+	public void deleteImage(VisitPhoto visitPhoto) {
+		((VisitPhotoPresenter)mPresenter).deleteImage(visitPhoto);
+	}
+
+	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == IMAGE_REQUEST) {
 			if (resultCode == Activity.RESULT_OK) {
@@ -310,6 +317,24 @@ public class VisitPhotoFragment extends VisitFragment implements VisitContract.V
 				visitImageView.invalidate();
 			} else {
 				output = null;
+			}
+		}
+	}
+
+	@Override
+	public void setUserVisibleHint(boolean isVisibleToUser) {
+		super.setUserVisibleHint(isVisibleToUser);
+		// Make sure that we are currently visible
+		if (this.isVisible()) {
+			// If we are becoming invisible, then...
+			if (!isVisibleToUser) {
+				try {
+					InputMethodManager inputMethodManager =
+							(InputMethodManager)this.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+					inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+				} catch (Exception e) {
+
+				}
 			}
 		}
 	}

@@ -109,6 +109,15 @@ public class VisitPhotoRecyclerViewAdapter
 				}
 			}
 		});
+
+		holder.image.setLongClickable(true);
+		holder.image.setOnLongClickListener(new View.OnLongClickListener() {
+			@Override
+			public boolean onLongClick(View v) {
+				view.deleteImage(visitPhoto);
+				return true;
+			}
+		});
 	}
 
 	@Override

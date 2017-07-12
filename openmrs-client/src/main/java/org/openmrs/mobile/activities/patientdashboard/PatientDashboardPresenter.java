@@ -19,15 +19,11 @@ import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
-import org.openmrs.mobile.data.impl.EncounterDataService;
 import org.openmrs.mobile.data.impl.LocationDataService;
-import org.openmrs.mobile.data.impl.ObsDataService;
 import org.openmrs.mobile.data.impl.PatientDataService;
 import org.openmrs.mobile.data.impl.ProviderDataService;
 import org.openmrs.mobile.data.impl.VisitDataService;
-import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Location;
-import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Provider;
 import org.openmrs.mobile.models.Visit;
@@ -102,9 +98,8 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 				patientDashboardView.patientContacts(patient);
 				patientDashboardView.patientVisits(visits);
 
-				if (visits.isEmpty()) {
-					patientDashboardView.showNoVisits(true);
-				} else {
+				if (!visits.isEmpty()) {
+					///patientDashboardView.showNoVisits(true);
 					setTotalNumberResults(pagingInfo.getTotalRecordCount());
 				}
 				patientDashboardView.showPageSpinner(false);

@@ -224,7 +224,9 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 
 			@Override
 			public void onError(Throwable t) {
+				List<Location> locationList = null;
 				loginView.setProgressBarVisibility(false);
+				loginView.updateLoginFormLocations(locationList, url);
 				//t.printStackTrace();
 				loginView.showMessage(INVALID_URL);
 			}

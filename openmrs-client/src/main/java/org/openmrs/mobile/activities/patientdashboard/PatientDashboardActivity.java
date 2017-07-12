@@ -15,6 +15,7 @@
 package org.openmrs.mobile.activities.patientdashboard;
 
 import android.os.Bundle;
+import android.support.v4.view.GravityCompat;
 import android.view.Menu;
 
 import org.openmrs.mobile.R;
@@ -78,7 +79,11 @@ public class PatientDashboardActivity extends ACBaseActivity {
 	@Override
 	public void onBackPressed() {
 		if (!mPresenter.isLoading()) {
-			super.onBackPressed();
+			if (drawer.isDrawerOpen(GravityCompat.START)) {
+				drawer.closeDrawer(GravityCompat.START);
+			} else {
+				super.onBackPressed();
+			}
 		} else {
 			createToast(getString(R.string.pending_save));
 		}

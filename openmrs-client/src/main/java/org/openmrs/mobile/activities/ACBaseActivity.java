@@ -97,7 +97,7 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 		if ((!(this instanceof LoginActivity))) {
 			timer = new Timer();
 			LogOutTimerTask logoutTimeTask = new LogOutTimerTask();
-			timer.schedule(logoutTimeTask, 60000); //auto logout in 5 minutes
+			timer.schedule(logoutTimeTask, 600000); //auto logout in 5 minutes
 		}
 	}
 

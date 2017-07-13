@@ -96,7 +96,7 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 	}
 
 	@Override
-	public void downloadImage(String obsUuid, DataService.GetCallback<Bitmap> callback) {
+	public void downloadImage(String obsUuid, DataService.GetCallback<byte[]> callback) {
 		visitPhotoView.showTabSpinner(true);
 		visitPhotoDataService.downloadPhoto(obsUuid, ApplicationConstants.THUMBNAIL_VIEW,
 				new DataService.GetCallback<VisitPhoto>() {
@@ -122,6 +122,10 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 	}
 
 	private void initVisitPhoto() {
+		if(visitPhoto != null){
+			return;
+		}
+
 		visitPhoto = new VisitPhoto();
 		Visit visit = new Visit();
 		visit.setUuid(visitUuid);

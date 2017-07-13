@@ -1,7 +1,5 @@
 package org.openmrs.mobile.models;
 
-import android.graphics.Bitmap;
-
 import com.google.gson.annotations.Expose;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
@@ -9,8 +7,6 @@ import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.data.Blob;
 
 import org.openmrs.mobile.data.db.AppDatabase;
-
-import java.nio.ByteBuffer;
 
 import okhttp3.MultipartBody;
 
@@ -42,7 +38,7 @@ public class VisitPhoto extends BaseOpenmrsEntity {
 	@Column
 	private Blob imageColumn;
 
-	private Bitmap downloadedImage;
+	private byte[] downloadedImage;
 
 	private Observation observation;
 
@@ -94,19 +90,14 @@ public class VisitPhoto extends BaseOpenmrsEntity {
 		this.instructions = instructions;
 	}
 
-	public Bitmap getDownloadedImage() {
+	public byte[] getDownloadedImage() {
 		return downloadedImage;
 	}
 
-	public void setDownloadedImage(Bitmap downloadedImage) {
+	public void setDownloadedImage(byte[] downloadedImage) {
 		this.downloadedImage = downloadedImage;
-
 		if (downloadedImage != null) {
-			int bytes = downloadedImage.getByteCount();
-			ByteBuffer buffer = ByteBuffer.allocate(bytes);
-			downloadedImage.copyPixelsToBuffer(buffer);
-
-			this.imageColumn = new Blob(buffer.array());
+			this.imageColumn = new Blob(downloadedImage);
 		} else {
 			this.imageColumn = null;
 		}

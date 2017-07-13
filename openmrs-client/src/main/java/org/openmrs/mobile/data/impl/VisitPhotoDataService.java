@@ -1,6 +1,5 @@
 package org.openmrs.mobile.data.impl;
 
-import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 
 import org.openmrs.mobile.data.BaseDataService;
@@ -12,14 +11,13 @@ import org.openmrs.mobile.data.rest.VisitPhotoRestService;
 import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.models.VisitPhoto;
 import org.openmrs.mobile.utilities.ApplicationConstants;
-import org.openmrs.mobile.utilities.ToastUtil;
+
+import java.io.IOException;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class VisitPhotoDataService
 		extends BaseDataService<VisitPhoto, VisitPhotoDbService, VisitPhotoRestService>
@@ -66,10 +64,13 @@ public class VisitPhotoDataService
 				() -> dbService.getByUuid(obsUuid, null),
 				() -> restService.downloadVisitPhoto(buildRestRequestPath(), obsUuid, view),
 				(ResponseBody body) -> {
-					VisitPhoto photo = new VisitPhoto();
-					photo.setDownloadedImage(BitmapFactory.decodeStream(body.byteStream()));
-
-					return photo;
+					try {
+						VisitPhoto photo = new VisitPhoto();
+						photo.setDownloadedImage(body.bytes());
+						return photo;
+					} catch (IOException ex) {
+						return null;
+					}
 				},
 				(e) -> dbService.save(e)
 		);

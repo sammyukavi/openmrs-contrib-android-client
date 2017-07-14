@@ -51,8 +51,7 @@ public class VisitPhotoDataService
 					RequestBody visit = RequestBody.create(MediaType.parse("text/plain"), visitPhoto.getVisit().getUuid());
 					RequestBody provider =
 							RequestBody.create(MediaType.parse("text/plain"), visitPhoto.getProvider().getUuid());
-					RequestBody fileCaption = RequestBody.create(MediaType.parse("text/plain"), visitPhoto.getFileCaption
-							());
+					RequestBody fileCaption = RequestBody.create(MediaType.parse("text/plain"), visitPhoto.getFileCaption());
 
 					return restService.uploadVisitPhoto(buildRestRequestPath(), patient, visit,
 							provider, fileCaption, visitPhoto.getRequestImage());
@@ -63,7 +62,7 @@ public class VisitPhotoDataService
 		executeSingleCallback(callback, null,
 				() -> dbService.getByUuid(obsUuid, null),
 				() -> restService.downloadVisitPhoto(buildRestRequestPath(), obsUuid, view),
-				(ResponseBody body) -> {
+				body -> {
 					try {
 						VisitPhoto photo = new VisitPhoto();
 						photo.setDownloadedImage(body.bytes());
@@ -71,8 +70,7 @@ public class VisitPhotoDataService
 					} catch (IOException ex) {
 						return null;
 					}
-				},
-				(e) -> dbService.save(e)
+				}, (e) -> dbService.save(e)
 		);
 	}
 

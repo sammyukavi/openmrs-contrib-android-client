@@ -13,10 +13,10 @@
  */
 package org.openmrs.mobile.activities.addeditvisit;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -33,6 +34,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import org.joda.time.DateTime;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
@@ -43,10 +45,12 @@ import org.openmrs.mobile.models.VisitAttribute;
 import org.openmrs.mobile.models.VisitAttributeType;
 import org.openmrs.mobile.models.VisitType;
 import org.openmrs.mobile.utilities.ApplicationConstants;
+import org.openmrs.mobile.utilities.DateUtils;
 import org.openmrs.mobile.utilities.StringUtils;
 import org.openmrs.mobile.utilities.ViewUtils;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,7 +67,7 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 	private Map<String, VisitAttribute> visitAttributeMap = new HashMap<>();
 	private Map<View, VisitAttributeType> viewVisitAttributeTypeMap = new HashMap<>();
 	private String patientUuid, visitUuid, providerUuid, visitStopDate;
-	private CardView addEditVisitCard;
+	private EditText visitStartDate;
 
 	public static AddEditVisitFragment newInstance() {
 		return new AddEditVisitFragment();
@@ -73,11 +77,11 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View root = inflater.inflate(R.layout.fragment_add_edit_visit, container, false);
+		visitStartDate = (EditText)root.findViewById(R.id.visitStartDate);
 		visitTableLayout = (TableLayout)root.findViewById(R.id.visitTableLayout);
 		progressBar = (RelativeLayout)root.findViewById(R.id.visitLoadingProgressBar);
 		addEditVisitProgressBar = (RelativeLayout)root.findViewById(R.id.addEditVisitProgressBar);
 		addEditVisitScreen = (LinearLayout)root.findViewById(R.id.addEditVisitScreen);
-		addEditVisitCard = (CardView)root.findViewById(R.id.addEditVisitCard);
 		visitTypeDropdown = (Spinner)root.findViewById(R.id.visit_type);
 		visitSubmitButton = (Button)root.findViewById(R.id.visitSubmitButton);
 
@@ -93,13 +97,41 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 	}
 
 	private void addListeners() {
-		visitSubmitButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (!mPresenter.isProcessing()) {
-					buildVisitAttributeValues();
-				}
+		visitSubmitButton.setOnClickListener(v -> {
+			if (!mPresenter.isProcessing()) {
+				buildVisitAttributeValues();
 			}
+		});
+
+		visitStartDate.setOnClickListener(v -> {
+			int cYear;
+			int cMonth;
+			int cDay;
+
+			DateTime dateTime = DateUtils.convertTimeString(
+					DateUtils.convertTime(mPresenter.getVisit().getStartDatetime().getTime(),
+							DateUtils.OPEN_MRS_REQUEST_FORMAT));
+
+			if (dateTime == null) {
+				Calendar currentDate = Calendar.getInstance();
+				cYear = currentDate.get(Calendar.YEAR);
+				cMonth = currentDate.get(Calendar.MONTH);
+				cDay = currentDate.get(Calendar.DAY_OF_MONTH);
+			} else {
+				cYear = dateTime.getYear();
+				cMonth = dateTime.getMonthOfYear() - 1;
+				cDay = dateTime.getDayOfMonth();
+			}
+
+			DatePickerDialog mDatePicker = new DatePickerDialog(AddEditVisitFragment.this.getActivity(),
+					(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) -> {
+						mPresenter.getVisit()
+								.setStartDatetime(DateUtils.constructDate(selectedyear, selectedmonth, selectedday));
+						visitStartDate.setText(DateUtils.convertTime(mPresenter.getVisit().getStartDatetime().getTime(),
+								DateUtils.OPEN_MRS_REQUEST_PATIENT_FORMAT));
+					}, cYear, cMonth, cDay);
+			mDatePicker.getDatePicker().setMaxDate(System.currentTimeMillis());
+			mDatePicker.show();
 		});
 	}
 
@@ -112,6 +144,16 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 			visitSubmitButton.setText(R.string.update_visit);
 			toolbar.setTitle(getString(R.string.label_edit_visit));
 		}
+
+		if (null != mPresenter.getVisit().getStartDatetime()) {
+			visitStartDate.setText(
+					DateUtils.convertTime(mPresenter.getVisit().getStartDatetime().getTime(),
+							DateUtils.OPEN_MRS_REQUEST_PATIENT_FORMAT));
+		} else {
+			visitStartDate.setText(
+					DateUtils.getDateToday(DateUtils.OPEN_MRS_REQUEST_PATIENT_FORMAT));
+		}
+
 		setSpinnerVisibility(false);
 	}
 

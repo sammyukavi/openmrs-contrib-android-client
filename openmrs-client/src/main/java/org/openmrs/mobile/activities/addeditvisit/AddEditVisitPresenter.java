@@ -153,6 +153,10 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 							addEditVisitView.initView(true);
 						}
 
+						if(null == visit.getStartDatetime()){
+							visit.setStartDatetime(new Date());
+						}
+
 						loadVisitTypes();
 						loadVisitAttributeTypes();
 					}
@@ -282,6 +286,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 		Visit updatedVisit = new Visit();
 		updatedVisit.setAttributes(attributes);
 		updatedVisit.setVisitType(visit.getVisitType());
+		updatedVisit.setStartDatetime(visit.getStartDatetime());
 
 		setProcessing(true);
 		visitDataService.updateVisit(visit.getUuid(), updatedVisit, new DataService.GetCallback<Visit>() {
@@ -304,7 +309,10 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 		if (visit.getUuid() == null) {
 			return;
 		} else {
-			visit.setStopDatetime(new Date());
+			if(null == visit.getStopDatetime()) {
+				visit.setStopDatetime(new Date());
+			}
+			
 			visitDataService.update(visit, new DataService.GetCallback<Visit>() {
 				@Override
 				public void onCompleted(Visit entity) {

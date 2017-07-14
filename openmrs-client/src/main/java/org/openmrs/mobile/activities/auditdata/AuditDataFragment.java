@@ -1023,8 +1023,8 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		}
 
 		if (firstIcuHeartRate.getText().length() > 0) {
-			if (Integer.valueOf(firstIcuHeartRate.getText().toString()) >= 0
-					&& Integer.valueOf(firstIcuHeartRate.getText().toString()) <= 240) {
+			if (Float.valueOf(firstIcuHeartRate.getText().toString()) >= 0
+					&& Float.valueOf(firstIcuHeartRate.getText().toString()) <= 240) {
 				firstIcuHeartRateObservation =
 						setObservationFields(firstIcuHeartRateObservation, CONCEPT_FIRST_HEART_RATE_ICU,
 								firstIcuHeartRate.getText().toString());
@@ -1033,8 +1033,8 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		}
 
 		if (firstGcsScore.getText().length() > 0) {
-			if (Integer.valueOf(firstGcsScore.getText().toString()) >= 1
-					&& Integer.valueOf(firstGcsScore.getText().toString()) <= 15) {
+			if (Float.valueOf(firstGcsScore.getText().toString()) >= 1
+					&& Float.valueOf(firstGcsScore.getText().toString()) <= 15) {
 				firstGcsScoreObservation = setObservationFields(firstGcsScoreObservation, CONCEPT_FIRST_GCS_SCORE_ICU,
 						firstGcsScore.getText().toString());
 				observations.add(firstGcsScoreObservation);

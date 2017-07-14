@@ -12,6 +12,7 @@ import org.openmrs.mobile.data.rest.VisitRestService;
 import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
+import org.openmrs.mobile.utilities.DateUtils;
 
 import retrofit2.Call;
 
@@ -93,6 +94,8 @@ public class VisitDataService extends BaseEntityDataService<Visit, VisitDbServic
 		executeSingleCallback(callback, null,
 				() -> dbService.save(updatedVisit),
 				() -> restService.updateVisit(ApplicationConstants.API.REST_ENDPOINT_V2 + "/custom/visitedit",
-						visitUuid, updatedVisit.getVisitType().getUuid(), updatedVisit.getAttributes()));
+						visitUuid, updatedVisit.getVisitType().getUuid(),
+						DateUtils.convertTime(updatedVisit.getStartDatetime().getTime(), DateUtils.OPEN_MRS_REQUEST_PATIENT_FORMAT),
+						updatedVisit.getAttributes()));
 	}
 }

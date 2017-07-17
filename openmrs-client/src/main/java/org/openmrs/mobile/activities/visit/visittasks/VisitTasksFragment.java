@@ -202,11 +202,6 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 	}
 
 	public void addTaskOnFocusListener() {
-		ArrayAdapter adapter =
-				new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line,
-						removeUsedPredefinedTasks(predefinedTasks, visitTasksLists));
-		addtask.setAdapter(adapter);
-
 		addtask.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
@@ -246,6 +241,10 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 	@Override
 	public void setPredefinedTasks(List<VisitPredefinedTask> predefinedTasks) {
 		this.predefinedTasks = predefinedTasks;
+		ArrayAdapter adapter =
+				new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line,
+						removeUsedPredefinedTasks(predefinedTasks, visitTasksLists));
+		addtask.setAdapter(adapter);
 	}
 
 	@Override

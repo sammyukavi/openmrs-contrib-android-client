@@ -49,9 +49,6 @@ import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.net.AuthorizationManager;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public abstract class ACBaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -65,7 +62,6 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 	private MenuItem mSyncbutton;
 	private Toolbar toolbar;
 	private OpenMRS instance = OpenMRS.getInstance();
-	private Timer timer;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -82,10 +78,6 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 	protected void onResume() {
 		super.onResume();
 		supportInvalidateOptionsMenu();
-		if (timer != null) {
-			timer.cancel();
-			timer = null;
-		}
 		if (!(this instanceof LoginActivity) && !mAuthorizationManager.isUserLoggedIn()) {
 			mAuthorizationManager.moveToLoginActivity();
 		}
@@ -94,11 +86,6 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 	@Override
 	protected void onPause() {
 		super.onPause();
-		if ((!(this instanceof LoginActivity))) {
-			timer = new Timer();
-			LogOutTimerTask logoutTimeTask = new LogOutTimerTask();
-			timer.schedule(logoutTimeTask, 60000); //auto logout in 5 minutes
-		}
 	}
 
 	@Override
@@ -135,16 +122,6 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 		bundle.setRightButtonAction(CustomFragmentDialog.OnClickAction.LOGOUT);
 		bundle.setRightButtonText(getString(R.string.logout_dialog_button));
 		createAndShowDialog(bundle, ApplicationConstants.DialogTAG.LOGOUT_DIALOG_TAG);
-	}
-
-	public void showEndVisitDialog(Visit visit) {
-		CustomDialogBundle bundle = new CustomDialogBundle();
-		bundle.setTitleViewMessage(getString(R.string.end_visit_dialog_title));
-		bundle.setTextViewMessage(getString(R.string.end_visit_dialog_message));
-		bundle.setVisit(visit);
-		bundle.setRightButtonAction(CustomFragmentDialog.OnClickAction.END_VISIT);
-		bundle.setRightButtonText(getString(R.string.dialog_button_confirm));
-		createAndShowDialog(bundle, ApplicationConstants.DialogTAG.END_VISIT_DIALOG_TAG);
 	}
 
 	public void showStartVisitImpossibleDialog(CharSequence title) {
@@ -310,15 +287,6 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 		if (windowToken != null) {
 			inputMethodManager.hideSoftInputFromWindow(
 					windowToken.getWindowToken(), 0);
-		}
-	}
-
-	private class LogOutTimerTask extends TimerTask {
-		@Override
-		public void run() {
-			logout();
-			timer.cancel();
-			timer = null;
 		}
 	}
 }

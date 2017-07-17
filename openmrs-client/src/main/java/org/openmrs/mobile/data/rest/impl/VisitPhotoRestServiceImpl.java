@@ -32,11 +32,10 @@ public class VisitPhotoRestServiceImpl extends BaseRestService<VisitPhoto, Visit
 		RequestBody visit = RequestBody.create(MediaType.parse("text/plain"), visitPhoto.getVisit().getUuid());
 		RequestBody provider =
 				RequestBody.create(MediaType.parse("text/plain"), visitPhoto.getProvider().getUuid());
-		RequestBody fileCaption = RequestBody.create(MediaType.parse("text/plain"), visitPhoto.getFileCaption
-				());
+		RequestBody fileCaption = RequestBody.create(MediaType.parse("text/plain"), visitPhoto.getFileCaption());
 
-		return restService.uploadVisitPhoto(buildRestRequestPath(), patient, visit, provider, fileCaption,
-				visitPhoto.getRequestImage());
+		return restService.uploadVisitPhoto(buildRestRequestPath(), patient, visit,
+				provider, fileCaption, visitPhoto.getRequestImage());
 	}
 
 	public Call<ResponseBody> downloadPhoto(String obsUuid, String view) {

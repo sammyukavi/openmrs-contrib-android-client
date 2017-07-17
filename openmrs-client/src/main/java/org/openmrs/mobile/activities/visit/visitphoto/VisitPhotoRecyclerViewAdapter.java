@@ -17,6 +17,7 @@ package org.openmrs.mobile.activities.visit.visitphoto;
 import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,11 +65,11 @@ public class VisitPhotoRecyclerViewAdapter
 			return;
 		}
 
-		view.downloadImage(visitPhoto.getObservation().getUuid(), new DataService.GetCallback<Bitmap>() {
+		view.downloadImage(visitPhoto.getObservation().getUuid(), new DataService.GetCallback<byte[]>() {
 			@Override
-			public void onCompleted(Bitmap entity) {
+			public void onCompleted(byte[] entity) {
 				visitPhoto.setDownloadedImage(entity);
-				holder.image.setImageBitmap(entity);
+				holder.image.setImageBitmap(BitmapFactory.decodeByteArray(entity, 0, entity.length));
 				holder.image.invalidate();
 				map.put(holder.image, visitPhoto);
 			}
@@ -93,7 +94,9 @@ public class VisitPhotoRecyclerViewAdapter
 
 					ImageView expandImage = new ImageView(context);
 					expandImage.setLayoutParams(layoutParams);
-					expandImage.setImageBitmap(visitPhoto.getDownloadedImage());
+					expandImage.setImageBitmap(
+							BitmapFactory.decodeByteArray(
+									visitPhoto.getDownloadedImage(), 0, visitPhoto.getDownloadedImage().length));
 
 					TextView descriptionView = new TextView(context);
 					descriptionView.setText(view.formatVisitImageDescription(visitPhoto.getFileCaption(),

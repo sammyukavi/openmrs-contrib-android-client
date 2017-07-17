@@ -41,8 +41,9 @@ public interface VisitRestService {
 
 	@POST(RestConstants.REST_PATH)
 	Call<Visit> updateVisit(@Path(value = "restPath", encoded = true) String restPath,
-			@Query("visit") String visitUuid, @Query("visitType") String visitTypeUuid,
-			@Body List<VisitAttribute> visit);
+			@Query("visit") String visit, @Query("visitType") String visitTypeUuid,
+			@Query("startTime") String startTime,
+			@Body List<VisitAttribute> visitAttributes);
 
 	@DELETE(RestConstants.PURGE)
 	Call<Visit> purge(@Path(value = "restPath", encoded = true) String restPath,

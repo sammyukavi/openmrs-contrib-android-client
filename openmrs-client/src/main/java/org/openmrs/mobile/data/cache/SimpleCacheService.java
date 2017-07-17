@@ -2,6 +2,9 @@ package org.openmrs.mobile.data.cache;
 
 import android.util.LruCache;
 
+import javax.inject.Singleton;
+
+@Singleton
 public class SimpleCacheService implements CacheService {
 	private static final int CACHE_SIZE = 1024*10; // 10 MB
 

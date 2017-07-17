@@ -139,6 +139,10 @@ dependencies {
 	compile "com.github.Raizlabs.DBFlow:dbflow-core:${dbflow_version}"
 	compile "com.github.Raizlabs.DBFlow:dbflow:${dbflow_version}"
 
+	compile 'com.google.dagger:dagger-android:2.11'
+	compile 'com.google.dagger:dagger-android-support:2.11'
+	annotationProcessor 'com.google.dagger:dagger-android-processor:2.11'
+
 	// sql-cipher database encryption (optional)
     //compile "com.github.Raizlabs.DBFlow:dbflow-sqlcipher:${dbflow_version}"
     //compile "net.zetetic:android-database-sqlcipher:${sqlcipher_version}@aar"

@@ -99,15 +99,16 @@
 								android:layout_marginBottom="5dp">
 
 							<TextView
+									android:id="@+id/visitDateLabel"
 									android:layout_column="0"
 									android:layout_marginRight="@dimen/table_columns_margin"
 									android:gravity="left"
-									android:text="Start Date:"
+									android:text="@string/start_visit_date"
 									android:textColor="@color/dark_grey"
 									android:textSize="18sp" />
 
 							<android.support.design.widget.TextInputEditText
-									android:id="@+id/visitStartDate"
+									android:id="@+id/visitDateInput"
 									android:layout_width="match_parent"
 									android:layout_height="wrap_content"
 									android:layout_marginLeft="20dp"
@@ -122,6 +123,7 @@
 						</TableRow>
 
 						<TableRow
+								android:id="@+id/visitTypeRow"
 								android:layout_width="match_parent"
 								android:layout_height="wrap_content"
 								android:layout_marginBottom="5dp">

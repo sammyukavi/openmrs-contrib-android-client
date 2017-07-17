@@ -41,7 +41,8 @@ public interface VisitRestService {
 
 	@POST(RestConstants.REST_PATH)
 	Call<Visit> updateVisit(@Path(value = "restPath", encoded = true) String restPath,
-			@Query("visit") String visit, @Query("visitType") String visitTypeUuid,
+			@Query("visit") String visit,
+			@Query("visitType") String visitTypeUuid,
 			@Query("startTime") String startTime,
 			@Body List<VisitAttribute> visitAttributes);
 

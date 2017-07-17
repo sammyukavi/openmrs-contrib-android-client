@@ -7,7 +7,7 @@ import org.openmrs.mobile.data.rest.BaseRestService;
 import org.openmrs.mobile.data.rest.retrofit.VisitNoteRestService;
 import org.openmrs.mobile.models.VisitNote;
 import org.openmrs.mobile.utilities.ApplicationConstants;
-import org.openmrs.mobile.utilities.CustomExclusionStrategy;
+import org.openmrs.mobile.utilities.strategy.CustomExclusionStrategy;
 
 import java.util.HashMap;
 import java.util.Map;

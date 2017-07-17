@@ -5,6 +5,7 @@ import org.openmrs.mobile.data.rest.BaseEntityRestService;
 import org.openmrs.mobile.data.rest.retrofit.VisitRestService;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
+import org.openmrs.mobile.utilities.DateUtils;
 
 import javax.inject.Inject;
 
@@ -30,6 +31,8 @@ public class VisitRestServiceImpl extends BaseEntityRestService<Visit, VisitRest
 
 	public Call<Visit> updateVisit(String visitUuid, Visit updatedVisit) {
 		return restService.updateVisit(ApplicationConstants.API.REST_ENDPOINT_V2 + "/custom/visitedit",
-				visitUuid, updatedVisit.getVisitType().getUuid(), updatedVisit.getAttributes());
+				visitUuid, updatedVisit.getVisitType().getUuid(),
+				DateUtils.convertTime(updatedVisit.getStartDatetime().getTime(), DateUtils.OPEN_MRS_REQUEST_PATIENT_FORMAT),
+				updatedVisit.getAttributes());
 	}
 }

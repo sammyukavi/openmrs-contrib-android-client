@@ -13,4 +13,12 @@ public class RecordInfo extends BaseOpenmrsObject {
 	@Column
 	@Expose
 	Date dateChanged;
+
+	public Date getDateChanged() {
+		return dateChanged;
+	}
+
+	public void setDateChanged(Date dateChanged) {
+		this.dateChanged = dateChanged;
+	}
 }

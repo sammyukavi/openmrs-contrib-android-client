@@ -7,7 +7,12 @@ import org.openmrs.mobile.data.db.BaseDbService;
 import org.openmrs.mobile.models.SyncLog;
 import org.openmrs.mobile.models.SyncLog_Table;
 
+import javax.inject.Inject;
+
 public class SyncLogDbService extends BaseDbService<SyncLog> {
+	@Inject
+	public SyncLogDbService() { }
+
 	@Override
 	protected ModelAdapter<SyncLog> getEntityTable() {
 		return (SyncLog_Table)FlowManager.getInstanceAdapter(SyncLog.class);

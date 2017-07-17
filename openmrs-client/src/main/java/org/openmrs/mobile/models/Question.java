@@ -25,7 +25,7 @@ import java.util.List;
 
 @Table(database = AppDatabase.class)
 public class Question extends Resource implements Serializable {
-	@SerializedName("subscriptionType")
+	@SerializedName("type")
 	@Expose
 	@Column
 	private String type;
@@ -66,14 +66,14 @@ public class Question extends Resource implements Serializable {
 	}
 
 	/**
-	 * @return The subscriptionType
+	 * @return The subscriptionClass
 	 */
 	public String getType() {
 		return type;
 	}
 
 	/**
-	 * @param type The subscriptionType
+	 * @param type The subscriptionClass
 	 */
 	public void setType(String type) {
 		this.type = type;

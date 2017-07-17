@@ -1,83 +1,226 @@
 package org.openmrs.mobile.data.sync;
 
+import com.raizlabs.android.dbflow.config.FlowManager;
+import com.raizlabs.android.dbflow.sql.language.Join;
+import com.raizlabs.android.dbflow.sql.language.NameAlias;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
+import com.raizlabs.android.dbflow.sql.language.property.Property;
+import com.raizlabs.android.dbflow.structure.ModelAdapter;
+
 import org.openmrs.mobile.data.db.DbService;
-import org.openmrs.mobile.models.BaseOpenmrsObject;
+import org.openmrs.mobile.data.rest.RestService;
+import org.openmrs.mobile.models.BaseOpenmrsAuditableObject;
 import org.openmrs.mobile.models.PullSubscription;
 import org.openmrs.mobile.models.RecordInfo;
+import org.openmrs.mobile.models.RecordInfo_Table;
+import org.openmrs.mobile.models.Results;
 
+import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public abstract class AdaptiveSubscriptionProvider<E extends BaseOpenmrsObject> extends BaseSubscriptionProvider {
+import javax.inject.Inject;
+
+import retrofit2.Call;
+import retrofit2.Response;
+
+public abstract class AdaptiveSubscriptionProvider<E extends BaseOpenmrsAuditableObject> extends BaseSubscriptionProvider {
+	@Inject
 	protected DbService<E> dbService;
 
-	protected abstract List<E> getRestAll();
+	@Inject
+	protected DbService<RecordInfo> recordInfoDbService;
 
-	protected abstract List<RecordInfo> getRestRecordInfo();
+	@Inject
+	protected RestService<E> restService;
 
-	protected abstract E getRestObject(String uuid);
+	private Class<E> entityClass;
 
 	@Override
 	public void pull(PullSubscription subscription) {
-		long recordCount = dbService.getCount(null);
+		long recordCount = getRecordCountDb();
 
 		if (recordCount == 0) {
 			// If table is empty then do a table pull
-			pullTable(subscription.getLastSync(), false);
+			pullTable(subscription);
 		} else {
-			pullIncremental(subscription.getLastSync());
+			pullIncremental(subscription);
 		}
 	}
 
-	protected void pullTable(Date since, boolean processDeletions) {
+	protected void pullTable(PullSubscription subscription) {
 		// Get all records via rest
-		List<E> table = getRestAll();
+		List<E> table = getAllRest();
 
-		if (processDeletions) {
-			// Delete local records that are not found
+		// Filter the list for records updated since the last sync
+		List<E> updated = new ArrayList<>();
+		if (subscription.getLastSync() != null) {
+			table.stream().filter(
+					record -> record.getDateChanged().compareTo(subscription.getLastSync()) > 0
+			).forEach(updated::add);
+		} else {
+			updated = table;
 		}
 
-		// Update local records
-		// Create new local records
+		// Update/Create local records
+		dbService.saveAll(updated);
 	}
 
-	protected void pullIncremental(Date since) {
+	protected void pullIncremental(PullSubscription subscription) {
 		// Get the record info (UUID, DateUpdated) for each record via REST
-		List<RecordInfo> recordInfo = getRestRecordInfo();
+		List<RecordInfo> tableInfo = getRecordInfoRest();
 
-		// Insert record info into temp table
+		List<String> updates;
+		List<String> inserts;
 
-		// Delete local records that are not in record info
+		try {
+			// Insert record info into temp table
+			recordInfoDbService.saveAll(tableInfo);
 
-		// Calculate local records to update
-		// Calculate new local records to create
+			// Delete local records that are not in record info
+			deleteIncremental();
+
+			// Calculate local records to update and create
+			updates = calculateIncrementalUpdates(subscription.getLastSync());
+			inserts = calculateIncrementalInserts();
+		} finally {
+			// Ensure that the record info table is cleared
+			recordInfoDbService.deleteAll();
+		}
 
 		// If update+new count is greater than max incremental update then do table pull
-
-		// Else pull each record via rest and save to the local db
+		if (subscription.getMaximumIncrementalCount() != null &&
+				(updates.size() + inserts.size()) > subscription.getMaximumIncrementalCount()) {
+			pullTable(subscription);
+		} else {
+			// Else pull each record via rest and save to the local db
+			processIncremental(updates);
+			processIncremental(inserts);
+		}
 	}
 
-	protected void processDeletions(List<E> table) {
+	protected List<String> calculateIncrementalUpdates(Date since) {
+		Property entityUuidProperty = getModelTable(getEntityClass()).getProperty("uuid");
 
+		return SQLite.select(entityUuidProperty)
+				.from(getEntityClass())
+				.innerJoin(RecordInfo.class)
+				.on(entityUuidProperty.withTable().eq(RecordInfo_Table.uuid.withTable()))
+				.where(RecordInfo_Table.dateChanged.greaterThan(since))
+				.queryCustomList(String.class);
 	}
 
-	protected void processUpdates(List<E> table) {
+	protected List<String> calculateIncrementalInserts() {
+		Property entityUuidProperty = getModelTable(getEntityClass()).getProperty("uuid");
 
+		return SQLite.select(RecordInfo_Table.uuid)
+				.from(RecordInfo.class)
+				.leftOuterJoin(getEntityClass())
+				.on(RecordInfo_Table.uuid.withTable().eq(entityUuidProperty.withTable()))
+				.where(entityUuidProperty.withTable().isNull())
+				.queryCustomList(String.class);
 	}
 
-	protected void processNew(List<E> table) {
-
+	protected void deleteIncremental() {
+		SQLite.delete(getEntityClass()).as("E")
+				.join(RecordInfo.class, Join.JoinType.LEFT_OUTER).as("R")
+				.on(
+						getModelTable(getEntityClass()).getProperty("uuid").withTable(NameAlias.of("E"))
+								.eq(RecordInfo_Table.uuid.withTable(NameAlias.of("R"))))
+				.where(RecordInfo_Table.uuid.withTable(NameAlias.of("R")).isNull())
+				.execute();
 	}
 
-	protected void processDeletions() {
+	protected void processIncremental(List<String> records) {
+		List<E> entities = new ArrayList<>(records.size());
 
+		// Get all required entities via rest
+		for (String uuid : records) {
+			entities.add(getByUuidRest(uuid));
+		}
+
+		// Save the entities to the db
+		dbService.saveAll(entities);
 	}
 
-	protected List<String> calculateUpdates() {
-		return null;
+	protected long getRecordCountDb() {
+		return dbService.getCount(null);
 	}
 
-	protected List<String> calculateNew() {
-		return null;
+	protected List<E> getAllRest() {
+		return getCallListValue(restService.getAll(null, null));
+	}
+
+	protected E getByUuidRest(String uuid) {
+		return getCallValue(restService.getByUuid(uuid, null));
+	}
+
+	protected List<RecordInfo> getRecordInfoRest() {
+		return getCallListValue(restService.getRecordInfo());
+	}
+
+	protected <T> List<T> getCallListValue(Call<Results<T>> call) {
+		if (call == null) {
+			return null;
+		}
+
+		Response<Results<T>> response;
+		try {
+			response = call.execute();
+		} catch (Exception ex) {
+			response = null;
+		}
+
+		List<T> result = null;
+		if (response != null) {
+			Results<T> temp = response.body();
+
+			if (temp != null) {
+				result = temp.getResults();
+			}
+		}
+
+		return result;
+	}
+
+	protected <T> T getCallValue(Call<T> call) {
+		if (call == null) {
+			return null;
+		}
+
+		Response<T> response;
+		try {
+			response = call.execute();
+		} catch (Exception ex) {
+			response = null;
+		}
+
+		T result = null;
+		if (response != null) {
+			result = response.body();
+		}
+
+		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	protected <T> ModelAdapter<T> getModelTable(Class<T> cls) {
+		return (ModelAdapter<T>)FlowManager.getInstanceAdapter(cls);
+	}
+
+	/**
+	 * Gets a usable instance of the actual class of the generic type E defined by the implementing sub-class.
+	 * @return The class object for the entity.
+	 */
+	@SuppressWarnings("unchecked")
+	protected Class<E> getEntityClass() {
+		if (entityClass == null) {
+			ParameterizedType parameterizedType = (ParameterizedType)getClass().getGenericSuperclass();
+
+			entityClass = (Class<E>)parameterizedType.getActualTypeArguments()[0];
+		}
+
+		return entityClass;
 	}
 }

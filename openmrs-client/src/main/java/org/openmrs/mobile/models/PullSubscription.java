@@ -10,7 +10,7 @@ import java.util.Date;
 @Table(database = AppDatabase.class)
 public class PullSubscription extends BaseOpenmrsObject {
 	@Column
-	String subscriptionType;
+	String subscriptionClass;
 
 	@Column
 	String subscriptionKey;
@@ -27,12 +27,12 @@ public class PullSubscription extends BaseOpenmrsObject {
 	@Column
 	Boolean forceSyncAfterPush;
 
-	public String getSubscriptionType() {
-		return subscriptionType;
+	public String getSubscriptionClass() {
+		return subscriptionClass;
 	}
 
-	public void setSubscriptionType(String subscriptionType) {
-		this.subscriptionType = subscriptionType;
+	public void setSubscriptionClass(String subscriptionClass) {
+		this.subscriptionClass = subscriptionClass;
 	}
 
 	public String getSubscriptionKey() {

@@ -6,8 +6,8 @@ import android.support.annotation.Nullable;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.rest.retrofit.RestServiceBuilder;
-import org.openmrs.mobile.models.BaseOpenmrsEntity;
 import org.openmrs.mobile.models.BaseOpenmrsObject;
+import org.openmrs.mobile.models.RecordInfo;
 import org.openmrs.mobile.models.Results;
 
 import java.lang.reflect.Method;
@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public abstract class BaseRestService<E extends BaseOpenmrsObject, RS> implements RestService<E> {
 	public static final String GET_BY_UUID_METHOD_NAME = "getByUuid";
 	public static final String GET_ALL_METHOD_NAME = "getLoginLocations";
+	public static final String GET_RECORD_INFO_METHOD_NAME = "getRecordInfo";
 	public static final String CREATE_METHOD_NAME = "create";
 	public static final String UPDATE_METHOD_NAME = "update";
 	public static final String PURGE_METHOD_NAME = "purge";
@@ -39,9 +40,14 @@ public abstract class BaseRestService<E extends BaseOpenmrsObject, RS> implement
 	private Method getByUuidMethod;
 
 	/**
-	 * The getLoginLocations method in the restService class
+	 * The getAll method in the restService class
 	 */
 	private Method getAllMethod;
+
+	/**
+	 * The getRecordInfo in the restService class
+	 */
+	private Method getRecordInfoMethod;
 
 	/**
 	 * The create method in the restService class
@@ -119,6 +125,28 @@ public abstract class BaseRestService<E extends BaseOpenmrsObject, RS> implement
 
 			if (result != null) {
 				call = (Call<Results<E>>)result;
+			}
+		} catch (Exception nex) {
+			call = null;
+		}
+
+		return call;
+	}
+
+	@Override
+	public Call<Results<RecordInfo>> getRecordInfo() {
+		if (getRecordInfoMethod == null) {
+			return null;
+		}
+
+		Call<Results<RecordInfo>> call = null;
+
+		try {
+			Object result = getRecordInfoMethod.invoke(restService, buildRestRequestPath(),
+					RestConstants.Representations.RECORD_INFO);
+
+			if (result != null) {
+				call = (Call<Results<RecordInfo>>)result;
 			}
 		} catch (Exception nex) {
 			call = null;
@@ -223,6 +251,13 @@ public abstract class BaseRestService<E extends BaseOpenmrsObject, RS> implement
 		if (getAllMethod == null) {
 			try {
 				getAllMethod = restClass.getMethod(GET_ALL_METHOD_NAME);
+			} catch (Exception ignored) {
+			}
+		}
+
+		if (getRecordInfoMethod == null) {
+			try {
+				getRecordInfoMethod = restClass.getMethod(GET_RECORD_INFO_METHOD_NAME);
 			} catch (Exception ignored) {
 			}
 		}

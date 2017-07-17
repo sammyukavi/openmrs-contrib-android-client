@@ -151,7 +151,7 @@ public class PatientIdentifierType extends BaseOpenmrsMetadata {
 	}
 
 	/**
-	 * @return Whether this identifier subscriptionType has a validator.
+	 * @return Whether this identifier type has a validator.
 	 */
 	public boolean hasValidator() {
 		return StringUtils.notEmpty(validator);
@@ -173,17 +173,17 @@ public class PatientIdentifierType extends BaseOpenmrsMetadata {
 
 	public enum LocationBehavior {
 		/**
-		 * Indicates that location is required for the current identifier subscriptionType
+		 * Indicates that location is required for the current identifier type
 		 */
 		REQUIRED,
 		/**
-		 * Indicates that location is not used for the current identifier subscriptionType
+		 * Indicates that location is not used for the current identifier type
 		 */
 		NOT_USED
 	}
 
 	/**
-	 * Enumeration for the way to handle uniqueness among identifiers for a given identifier subscriptionType
+	 * Enumeration for the way to handle uniqueness among identifiers for a given identifier type
 	 */
 	public enum UniquenessBehavior {
 

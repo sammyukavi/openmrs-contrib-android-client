@@ -26,15 +26,23 @@ public abstract class BaseDbService<E extends BaseOpenmrsObject> implements DbSe
 
 	protected abstract ModelAdapter<E> getEntityTable();
 
-	protected void postLoad(E entity) {	}
+	protected void postLoad(@NonNull E entity) { }
 
-	protected void preSave(E entity) { }
+	protected void preSave(@NonNull E entity) { }
 
-	protected void postSave(E entity) { }
+	protected void postSave(@NonNull E entity) { }
 
-	protected void preDelete(E entity) { }
+	protected void preDelete(@NonNull E entity) { }
 
-	protected void postDelete(E entity) { }
+	protected void preDelete(@NonNull String uuid) { }
+
+	protected void postDelete(@NonNull E entity) { }
+
+	protected void postDelete(@NonNull String uuid) { }
+
+	protected void preDeleteAll() { }
+
+	protected void postDeleteAll() { }
 
 	@Override
 	public long getCount(QueryOptions options) {
@@ -111,7 +119,9 @@ public abstract class BaseDbService<E extends BaseOpenmrsObject> implements DbSe
 
 		preDelete(entity);
 
-		delete(entity.getUuid());
+		SQLite.delete(getEntityClass())
+				.where(getEntityTable().getProperty("uuid").eq(entity.getUuid()))
+				.execute();
 
 		postDelete(entity);
 	}
@@ -120,8 +130,23 @@ public abstract class BaseDbService<E extends BaseOpenmrsObject> implements DbSe
 	public void delete(@NonNull String uuid) {
 		checkNotNull(uuid);
 
+		preDelete(uuid);
+
 		SQLite.delete(getEntityClass())
-				.where(getEntityTable().getProperty("uuid").eq(uuid));
+				.where(getEntityTable().getProperty("uuid").eq(uuid))
+				.execute();
+
+		postDelete(uuid);
+	}
+
+	@Override
+	public void deleteAll() {
+		preDeleteAll();
+
+		SQLite.delete(getEntityClass())
+				.execute();
+
+		postDeleteAll();
 	}
 
 	protected List<E> executeQuery(@Nullable QueryOptions options, @Nullable PagingInfo pagingInfo,

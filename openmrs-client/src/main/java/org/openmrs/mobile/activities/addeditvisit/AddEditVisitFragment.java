@@ -41,6 +41,7 @@ import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
 import org.openmrs.mobile.activities.visit.VisitActivity;
 import org.openmrs.mobile.models.BaseOpenmrsObject;
 import org.openmrs.mobile.models.ConceptAnswer;
+import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitAttribute;
 import org.openmrs.mobile.models.VisitAttributeType;
 import org.openmrs.mobile.models.VisitType;
@@ -67,7 +68,9 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 	private Map<String, VisitAttribute> visitAttributeMap = new HashMap<>();
 	private Map<View, VisitAttributeType> viewVisitAttributeTypeMap = new HashMap<>();
 	private String patientUuid, visitUuid, providerUuid, visitStopDate;
-	private EditText visitStartDate;
+	private EditText visitDateInput;
+	private TextView visitDateLabel;
+	private TableRow visitTypeRow;
 
 	public static AddEditVisitFragment newInstance() {
 		return new AddEditVisitFragment();
@@ -77,13 +80,15 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View root = inflater.inflate(R.layout.fragment_add_edit_visit, container, false);
-		visitStartDate = (EditText)root.findViewById(R.id.visitStartDate);
 		visitTableLayout = (TableLayout)root.findViewById(R.id.visitTableLayout);
 		progressBar = (RelativeLayout)root.findViewById(R.id.visitLoadingProgressBar);
 		addEditVisitProgressBar = (RelativeLayout)root.findViewById(R.id.addEditVisitProgressBar);
 		addEditVisitScreen = (LinearLayout)root.findViewById(R.id.addEditVisitScreen);
 		visitTypeDropdown = (Spinner)root.findViewById(R.id.visit_type);
 		visitSubmitButton = (Button)root.findViewById(R.id.visitSubmitButton);
+		visitDateLabel = (TextView)root.findViewById(R.id.visitDateLabel);
+		visitDateInput = (EditText)root.findViewById(R.id.visitDateInput);
+		visitTypeRow = (TableRow)root.findViewById(R.id.visitTypeRow);
 
 		this.patientUuid = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE);
 		this.visitUuid = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE);
@@ -103,14 +108,18 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 			}
 		});
 
-		visitStartDate.setOnClickListener(v -> {
+		visitDateInput.setOnClickListener(v -> {
 			int cYear;
 			int cMonth;
 			int cDay;
 
-			DateTime dateTime = DateUtils.convertTimeString(
-					DateUtils.convertTime(mPresenter.getVisit().getStartDatetime().getTime(),
-							DateUtils.OPEN_MRS_REQUEST_FORMAT));
+			DateTime dateTime = null;
+
+			if (!mPresenter.getEndVisitTag()) {
+				dateTime = DateUtils.convertTimeString(
+						DateUtils.convertTime(mPresenter.getVisit().getStartDatetime().getTime(),
+								DateUtils.OPEN_MRS_REQUEST_FORMAT));
+			}
 
 			if (dateTime == null) {
 				Calendar currentDate = Calendar.getInstance();
@@ -125,10 +134,17 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 
 			DatePickerDialog mDatePicker = new DatePickerDialog(AddEditVisitFragment.this.getActivity(),
 					(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) -> {
-						mPresenter.getVisit()
-								.setStartDatetime(DateUtils.constructDate(selectedyear, selectedmonth, selectedday));
-						visitStartDate.setText(DateUtils.convertTime(mPresenter.getVisit().getStartDatetime().getTime(),
-								DateUtils.OPEN_MRS_REQUEST_PATIENT_FORMAT));
+						if (!mPresenter.getEndVisitTag()) {
+							mPresenter.getVisit()
+									.setStartDatetime(DateUtils.constructDate(selectedyear, selectedmonth, selectedday));
+							visitDateInput.setText(DateUtils.convertTime(mPresenter.getVisit().getStartDatetime().getTime(),
+									DateUtils.OPEN_MRS_REQUEST_PATIENT_FORMAT));
+						} else {
+							mPresenter.getVisit()
+									.setStopDatetime(DateUtils.constructDate(selectedyear, selectedmonth, selectedday));
+							visitDateInput.setText(DateUtils.convertTime(mPresenter.getVisit().getStopDatetime().getTime(),
+									DateUtils.OPEN_MRS_REQUEST_PATIENT_FORMAT));
+						}
 					}, cYear, cMonth, cDay);
 			mDatePicker.getDatePicker().setMaxDate(System.currentTimeMillis());
 			mDatePicker.show();
@@ -145,16 +161,34 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 			toolbar.setTitle(getString(R.string.label_edit_visit));
 		}
 
-		if (null != mPresenter.getVisit().getStartDatetime()) {
-			visitStartDate.setText(
+		if (null != mPresenter.getVisit().getStartDatetime() && !mPresenter.getEndVisitTag()) {
+			visitDateInput.setText(
 					DateUtils.convertTime(mPresenter.getVisit().getStartDatetime().getTime(),
 							DateUtils.OPEN_MRS_REQUEST_PATIENT_FORMAT));
 		} else {
-			visitStartDate.setText(
+			visitDateInput.setText(
 					DateUtils.getDateToday(DateUtils.OPEN_MRS_REQUEST_PATIENT_FORMAT));
 		}
 
 		setSpinnerVisibility(false);
+	}
+
+	@Override
+	public void loadEndVisitView() {
+		showPageSpinner(false);
+		visitSubmitButton.setText(R.string.label_end_visit);
+		visitDateLabel.setText(R.string.end_visit_date);
+		visitTypeRow.setVisibility(View.GONE);
+
+		visitSubmitButton.setOnClickListener(v -> {
+			if (!mPresenter.isProcessing()) {
+				Visit visit = new Visit();
+				visit.setUuid(mPresenter.getVisit().getUuid());
+				visit.setStopDatetime(mPresenter.getVisit().getStopDatetime());
+				mPresenter.endVisit(visit);
+			}
+		});
+
 	}
 
 	private void buildVisitAttributeValues() {

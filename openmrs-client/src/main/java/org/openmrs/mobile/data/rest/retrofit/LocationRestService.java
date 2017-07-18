@@ -25,7 +25,8 @@ public interface LocationRestService {
 	@GET(RestConstants.GET_BY_UUID)
 	Call<Location> getByUuid(@Path(value = "restPath", encoded = true) String restPath,
 			@Path("uuid") String uuid,
-			@Query("v") String representation);
+			@Query("v") String representation,
+			@Query("includeAll") Boolean includeAll);
 
 	@GET(RestConstants.LOCATION_PATH)
 	Call<Results<Location>> getLoginLocations(@Path(value = "restPath", encoded = true) String restPath);

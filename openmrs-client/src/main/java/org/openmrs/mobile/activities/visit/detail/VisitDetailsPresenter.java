@@ -23,11 +23,8 @@ import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.impl.ConceptAnswerDataService;
 import org.openmrs.mobile.data.impl.ConceptDataService;
-import org.openmrs.mobile.data.impl.ConceptSearchDataService;
-import org.openmrs.mobile.data.impl.ObsDataService;
 import org.openmrs.mobile.data.impl.VisitAttributeTypeDataService;
 import org.openmrs.mobile.data.impl.VisitDataService;
-import org.openmrs.mobile.data.impl.VisitNoteDataService;
 import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.ConceptAnswer;
 import org.openmrs.mobile.models.Visit;
@@ -49,6 +46,8 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 
 	public VisitDetailsPresenter(String patientUuid, String visitUuid, String providerUuid,
 			String visitStopDate, VisitContract.VisitDetailsView visitDetailsView) {
+		super();
+
 		this.visitDetailsView = visitDetailsView;
 		this.visitDetailsView.setPresenter(this);
 		this.visitUUID = visitUuid;
@@ -93,7 +92,7 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 										.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 					}
 				};
-		visitDataService.getByUUID(visitUUID, QueryOptions.LOAD_RELATED_OBJECTS, getSingleCallback);
+		visitDataService.getByUuid(visitUUID, QueryOptions.LOAD_RELATED_OBJECTS, getSingleCallback);
 	}
 
 	@Override

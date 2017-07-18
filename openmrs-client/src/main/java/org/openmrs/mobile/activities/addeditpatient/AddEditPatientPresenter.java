@@ -22,7 +22,6 @@ import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
-import org.openmrs.mobile.data.impl.ConceptAnswerDataService;
 import org.openmrs.mobile.data.impl.ConceptDataService;
 import org.openmrs.mobile.data.impl.LocationDataService;
 import org.openmrs.mobile.data.impl.PatientDataService;
@@ -188,7 +187,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 			}
 		};
 		//Just check if the identifier are the same. If not it saves the patient.
-		patientDataService.getByUUID(patientToUpdateUuid, new QueryOptions(false, true), singleCallback);
+		patientDataService.getByUuid(patientToUpdateUuid, new QueryOptions(false, true), singleCallback);
 	}
 
 	@Override
@@ -275,7 +274,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 
 	@Override
 	public void getConceptAnswer(String uuid, Spinner dropdown) {
-		conceptDataService.getByUUID(uuid, QueryOptions.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Concept>() {
+		conceptDataService.getByUuid(uuid, QueryOptions.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Concept>() {
 			@Override
 			public void onCompleted(Concept concept) {
 				if (concept != null) {
@@ -385,7 +384,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 										.toastMessages.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 					}
 				};
-		locationDataService.getByUUID(locationUuid, QueryOptions.LOAD_RELATED_OBJECTS, getSingleCallback);
+		locationDataService.getByUuid(locationUuid, QueryOptions.LOAD_RELATED_OBJECTS, getSingleCallback);
 	}
 
 	@Override

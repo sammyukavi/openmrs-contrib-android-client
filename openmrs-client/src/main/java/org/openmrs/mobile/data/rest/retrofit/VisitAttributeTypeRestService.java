@@ -14,10 +14,6 @@ import retrofit2.http.Query;
 public interface VisitAttributeTypeRestService {
 	@GET(RestConstants.GET_ALL)
 	Call<Results<VisitAttributeType>> getAll(@Path(value = "restPath", encoded = true) String restPath,
-			@Query("v") String representation);
-
-	@GET(RestConstants.GET_ALL)
-	Call<Results<VisitAttributeType>> getAll(@Path(value = "restPath", encoded = true) String restPath,
 			@Query("v") String representation,
 			@Query("includeAll") Boolean includeAll,
 			@Query("limit") Integer limit,
@@ -26,7 +22,8 @@ public interface VisitAttributeTypeRestService {
 	@GET(RestConstants.GET_BY_UUID)
 	Call<VisitAttributeType> getByUuid(@Path(value = "restPath", encoded = true) String restPath,
 			@Path("uuid") String uuid,
-			@Query("v") String representation);
+			@Query("v") String representation,
+			@Query("includeAll") Boolean includeAll);
 
 	@POST(RestConstants.CREATE)
 	Call<VisitAttributeType> create(@Path(value = "restPath", encoded = true) String restPath, VisitAttributeType entity);

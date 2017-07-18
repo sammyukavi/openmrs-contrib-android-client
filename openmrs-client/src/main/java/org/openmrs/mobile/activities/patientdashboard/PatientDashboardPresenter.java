@@ -50,10 +50,11 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	public PatientDashboardPresenter(PatientDashboardContract.View view) {
 		this.patientDashboardView = view;
 		this.patientDashboardView.setPresenter(this);
-		this.patientDataService = new PatientDataService();
-		this.visitDataService = new VisitDataService();
-		this.providerDataService = new ProviderDataService();
-		this.locationDataService = new LocationDataService();
+
+		this.patientDataService = dataAccess().patient();
+		this.visitDataService = dataAccess().visit();
+		this.providerDataService = dataAccess().provider();
+		this.locationDataService = dataAccess().location();
 	}
 
 	@Override

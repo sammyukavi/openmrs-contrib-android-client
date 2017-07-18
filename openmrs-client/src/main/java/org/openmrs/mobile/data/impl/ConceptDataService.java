@@ -29,11 +29,16 @@ import org.openmrs.mobile.utilities.ApplicationConstants;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import retrofit2.Call;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class ConceptDataService extends BaseDataService<Concept, ConceptDbService, ConceptRestServiceImpl> {
+	@Inject
+	public ConceptDataService() { }
+
 	public void getByConceptName(@NonNull String conceptName, @Nullable QueryOptions options,
 			@NonNull GetCallback<List<Concept>> callback) {
 		checkNotNull(conceptName);

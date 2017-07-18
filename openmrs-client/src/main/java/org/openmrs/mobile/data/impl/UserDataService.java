@@ -9,7 +9,12 @@ import org.openmrs.mobile.models.User;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class UserDataService extends BaseDataService<User, UserDbService, UserRestServiceImpl> {
+	@Inject
+	public UserDataService() { }
+
 	public void getByUsername(String username, QueryOptions options, PagingInfo pagingInfo,
 			GetCallback<List<User>> callback) {
 		executeMultipleCallback(callback, options, pagingInfo,

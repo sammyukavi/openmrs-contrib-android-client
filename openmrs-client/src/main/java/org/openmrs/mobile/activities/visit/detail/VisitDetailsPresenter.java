@@ -43,9 +43,6 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 	private VisitAttributeTypeDataService visitAttributeTypeDataService;
 	private VisitDataService visitDataService;
 	private ConceptDataService conceptDataService;
-	private ConceptSearchDataService conceptSearchDataService;
-	private ObsDataService obsDataService;
-	private VisitNoteDataService visitNoteDataService;
 	private String patientUUID, visitUUID, providerUuid, visitStopDate;
 
 	private ConceptAnswerDataService conceptAnswerDataService;
@@ -54,17 +51,15 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 			String visitStopDate, VisitContract.VisitDetailsView visitDetailsView) {
 		this.visitDetailsView = visitDetailsView;
 		this.visitDetailsView.setPresenter(this);
-		this.visitDataService = new VisitDataService();
-		this.conceptDataService = new ConceptDataService();
-		this.obsDataService = new ObsDataService();
-		this.conceptAnswerDataService = new ConceptAnswerDataService();
-		this.visitAttributeTypeDataService = new VisitAttributeTypeDataService();
-		this.visitNoteDataService = new VisitNoteDataService();
 		this.visitUUID = visitUuid;
 		this.providerUuid = providerUuid;
 		this.patientUUID = patientUuid;
 		this.visitStopDate = visitStopDate;
-		this.conceptSearchDataService = new ConceptSearchDataService();
+
+		this.visitDataService = dataAccess().visit();
+		this.conceptDataService = dataAccess().concept();
+		this.conceptAnswerDataService = dataAccess().conceptAnswer();
+		this.visitAttributeTypeDataService = dataAccess().visitAttributeType();
 	}
 
 	@Override

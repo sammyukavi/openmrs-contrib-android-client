@@ -23,9 +23,13 @@ import org.openmrs.mobile.models.VisitTask;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class VisitTaskDataService
 		extends BaseEntityDataService<VisitTask, VisitTaskDbService, VisitTaskRestServiceImpl>
 		implements EntityDataService<VisitTask> {
+	@Inject
+	public VisitTaskDataService() { }
 
 	public void getAll(String status, String patient_uuid, String visit_uuid,
 			QueryOptions options, PagingInfo pagingInfo, GetCallback<List<VisitTask>> callback) {

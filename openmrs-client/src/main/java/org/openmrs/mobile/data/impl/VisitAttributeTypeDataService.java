@@ -6,8 +6,11 @@ import org.openmrs.mobile.data.db.impl.VisitAttributeTypeDbServie;
 import org.openmrs.mobile.data.rest.impl.VisitAttributeTypeRestServiceImpl;
 import org.openmrs.mobile.models.VisitAttributeType;
 
+import javax.inject.Inject;
+
 public class VisitAttributeTypeDataService
 		extends BaseDataService<VisitAttributeType, VisitAttributeTypeDbServie, VisitAttributeTypeRestServiceImpl>
 		implements DataService<VisitAttributeType> {
-
+	@Inject
+	public VisitAttributeTypeDataService() { }
 }

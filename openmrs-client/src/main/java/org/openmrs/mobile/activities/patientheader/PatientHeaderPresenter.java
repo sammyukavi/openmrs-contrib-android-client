@@ -16,7 +16,8 @@ public class PatientHeaderPresenter extends BasePresenter implements PatientHead
 		this.patientHeaderView = view;
 		this.patientHeaderView.setPresenter(this);
 		this.patientUuid = patientUuid;
-		this.patientDataService = new PatientDataService();
+
+		this.patientDataService = dataAccess().patient();
 	}
 
 	@Override

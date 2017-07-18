@@ -66,7 +66,7 @@ public class AddEditVisitPresenterTest extends ACUnitTestBase {
 
     @Before
     public void setUp(){
-        presenter = new AddEditVisitPresenter(view, patientUuid, false, visitDataService,
+	presenter = new AddEditVisitPresenter(view, patientUuid, false, visitDataService,
                 patientDataService, visitTypeDataService, visitAttributeTypeDataService, conceptAnswerDataService, locationDataService);
 
         patient = new Patient();

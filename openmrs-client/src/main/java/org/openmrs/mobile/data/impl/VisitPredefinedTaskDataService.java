@@ -19,8 +19,12 @@ import org.openmrs.mobile.data.db.impl.VisitPredefinedTaskDbService;
 import org.openmrs.mobile.data.rest.impl.VisitPredefinedTaskRestServiceImpl;
 import org.openmrs.mobile.models.VisitPredefinedTask;
 
+import javax.inject.Inject;
+
 public class VisitPredefinedTaskDataService
 		extends BaseMetadataDataService<VisitPredefinedTask, VisitPredefinedTaskDbService,
 		VisitPredefinedTaskRestServiceImpl>
 		implements MetadataDataService<VisitPredefinedTask> {
+	@Inject
+	public VisitPredefinedTaskDataService() { }
 }

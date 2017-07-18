@@ -123,6 +123,8 @@
 	<string name="add_a_note">Add a note</string>
 	<string name="label_more">More</string>
 	<string name="label_patient_id">Patient ID</string>
+	<string name="start_visit_date">Start Visit Date</string>
+	<string name="end_visit_date">End Visit Date</string>
 	<!-- Capture Vitals activity -->
 	<string name="action_delete_patient">Delete Patient</string>
 	<string name="action_register_patient">Register Patient</string>

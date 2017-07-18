@@ -30,11 +30,8 @@ import org.openmrs.mobile.data.impl.VisitDataService;
 import org.openmrs.mobile.data.impl.VisitNoteDataService;
 import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.ConceptAnswer;
-import org.openmrs.mobile.models.ConceptSearchResult;
-import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitAttributeType;
-import org.openmrs.mobile.models.VisitNote;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.ToastUtil;
 
@@ -120,7 +117,7 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 				Log.e("error", t.getLocalizedMessage());
 			}
 		};
-		conceptDataService.getByName(name, QueryOptions.LOAD_RELATED_OBJECTS, getCallback);
+		conceptDataService.getByConceptName(name, QueryOptions.LOAD_RELATED_OBJECTS, getCallback);
 
 	}
 

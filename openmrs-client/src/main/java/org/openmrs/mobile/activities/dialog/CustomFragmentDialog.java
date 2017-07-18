@@ -46,7 +46,6 @@ import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
 import org.openmrs.mobile.activities.addeditpatient.AddEditPatientActivity;
 import org.openmrs.mobile.activities.addeditpatient.SimilarPatientsRecyclerViewAdapter;
-import org.openmrs.mobile.activities.addeditvisit.AddEditVisitActivity;
 import org.openmrs.mobile.activities.login.LoginActivity;
 import org.openmrs.mobile.activities.login.LoginFragment;
 import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
@@ -374,10 +373,6 @@ public class CustomFragmentDialog extends DialogFragment {
 
 	private View.OnClickListener onClickActionSolver(final OnClickAction action) {
 
-		//LoginActivity activity = (LoginActivity)getActivity();
-		//activity.onFinishEditDialog(mEditText.getText().toString());
-		//this.dismiss();
-
 		return new View.OnClickListener() {
 			//CHECKSTYLE:OFF
 			@Override
@@ -406,10 +401,6 @@ public class CustomFragmentDialog extends DialogFragment {
 						break;
 					case UNAUTHORIZED:
 						((ACBaseActivity)getActivity()).moveUnauthorizedUserToLoginScreen();
-						dismiss();
-						break;
-					case END_VISIT:
-						((AddEditVisitActivity)getActivity()).addEditVisitPresenter.endVisit(visit);
 						dismiss();
 						break;
 					case START_VISIT:

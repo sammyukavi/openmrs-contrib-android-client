@@ -29,6 +29,7 @@ import com.google.gson.annotations.Expose;
 
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Resource;
+import org.openmrs.mobile.utilities.strategy.ObservationExclusionStrategy;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
@@ -63,7 +64,7 @@ public class ResourceSerializer implements JsonSerializer<Resource> {
 							if (isResourceCollection(collection)) {
 								JsonArray jsonArray = new JsonArray();
 								for (Object resource : collection) {
-									if(null == ((Resource)resource).getUuid()) {
+									if (null == ((Resource)resource).getUuid()) {
 										jsonArray.add(serializeField((Resource)resource, context));
 									} else {
 										if (!(resource instanceof Observation)) {
@@ -76,11 +77,11 @@ public class ResourceSerializer implements JsonSerializer<Resource> {
 								}
 								srcJson.add(field.getName(), jsonArray);
 							} else {
-							JsonArray jsonArray = new JsonArray();
-							for (Object object : collection) {
-								jsonArray.add(myGson.toJsonTree(object));
-							}
-							srcJson.add(field.getName(), jsonArray);
+								JsonArray jsonArray = new JsonArray();
+								for (Object object : collection) {
+									jsonArray.add(myGson.toJsonTree(object));
+								}
+								srcJson.add(field.getName(), jsonArray);
 							}
 						}
 					} catch (IllegalAccessException e) {
@@ -90,9 +91,10 @@ public class ResourceSerializer implements JsonSerializer<Resource> {
 					try {
 						if (field.get(src) != null) {
 							srcJson.add(field.getName(),
-									context.serialize(DateUtils.convertTime(((Date) field.get(src)).getTime(), DateUtils.OPEN_MRS_REQUEST_FORMAT)));
+									context.serialize(DateUtils.convertTime(((Date)field.get(src)).getTime(),
+											DateUtils.OPEN_MRS_REQUEST_FORMAT)));
 						}
-					} catch(IllegalAccessException e){
+					} catch (IllegalAccessException e) {
 						Log.e(RESOURCE_SERIALIZER, EXCEPTION, e);
 					}
 				} else {

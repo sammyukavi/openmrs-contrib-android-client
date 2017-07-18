@@ -46,6 +46,7 @@ public interface AddEditVisitContract {
 
 		void showPageSpinner(boolean visibility);
 
+		void loadEndVisitView();
 	}
 
 	interface Presenter extends BasePresenterContract {
@@ -69,6 +70,8 @@ public interface AddEditVisitContract {
 		void setProcessing(boolean processing);
 
 		void endVisit(Visit visit);
+
+		boolean getEndVisitTag();
 	}
 }
 

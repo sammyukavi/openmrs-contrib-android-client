@@ -37,7 +37,6 @@ import java.util.List;
 import java.util.Map;
 
 import static org.openmrs.mobile.utilities.ApplicationConstants.ErrorCodes.AUTH_FAILED;
-import static org.openmrs.mobile.utilities.ApplicationConstants.ErrorCodes.INVALID_URL;
 import static org.openmrs.mobile.utilities.ApplicationConstants.ErrorCodes.INVALID_USERNAME_PASSWORD;
 import static org.openmrs.mobile.utilities.ApplicationConstants.ErrorCodes.NO_INTERNET;
 import static org.openmrs.mobile.utilities.ApplicationConstants.ErrorCodes.OFFLINE_LOGIN;
@@ -202,7 +201,7 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 			}
 		};
 
-		userService.getByUUID(uuid, new QueryOptions(true, true), fetchUserCallback);
+		userService.getByUuid(uuid, new QueryOptions(true, true), fetchUserCallback);
 	}
 
 	@Override

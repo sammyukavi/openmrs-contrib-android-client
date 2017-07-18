@@ -2,6 +2,7 @@ package org.openmrs.mobile.data.rest;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
@@ -91,6 +92,9 @@ public abstract class BaseRestService<E extends BaseOpenmrsObject, RS> implement
 		checkNotNull(uuid);
 
 		if (getByUuidMethod == null) {
+			Log.w("Rest Service", "Attempt to call 'getByUuid' REST method but REST service method could not be found for "
+					+ "entity '" + entityClass.getName() + "'");
+
 			return null;
 		}
 
@@ -104,6 +108,8 @@ public abstract class BaseRestService<E extends BaseOpenmrsObject, RS> implement
 				call = (Call<E>)result;
 			}
 		} catch (Exception nex) {
+			Log.e("Rest Service", "Exception executing REST getByUuid method", nex);
+
 			call = null;
 		}
 
@@ -114,6 +120,9 @@ public abstract class BaseRestService<E extends BaseOpenmrsObject, RS> implement
 	@SuppressWarnings("unchecked")
 	public Call<Results<E>> getAll(@Nullable QueryOptions options, @Nullable PagingInfo pagingInfo) {
 		if (getAllMethod == null) {
+			Log.w("Rest Service", "Attempt to call 'getAll' REST method but REST service method could not be found for "
+					+ "entity '" + entityClass.getName() + "'");
+
 			return null;
 		}
 
@@ -128,6 +137,8 @@ public abstract class BaseRestService<E extends BaseOpenmrsObject, RS> implement
 				call = (Call<Results<E>>)result;
 			}
 		} catch (Exception nex) {
+			Log.e("Rest Service", "Exception executing REST getAll method", nex);
+
 			call = null;
 		}
 
@@ -137,6 +148,9 @@ public abstract class BaseRestService<E extends BaseOpenmrsObject, RS> implement
 	@Override
 	public Call<Results<RecordInfo>> getRecordInfo() {
 		if (getRecordInfoMethod == null) {
+			Log.w("Rest Service", "Attempt to call 'getRecordInfo' REST method but REST service method could not be found for "
+					+ "entity '" + entityClass.getName() + "'");
+
 			return null;
 		}
 
@@ -150,6 +164,8 @@ public abstract class BaseRestService<E extends BaseOpenmrsObject, RS> implement
 				call = (Call<Results<RecordInfo>>)result;
 			}
 		} catch (Exception nex) {
+			Log.e("Rest Service", "Exception executing REST getRecordInfo method", nex);
+
 			call = null;
 		}
 
@@ -162,6 +178,9 @@ public abstract class BaseRestService<E extends BaseOpenmrsObject, RS> implement
 		checkNotNull(entity);
 
 		if (createMethod == null) {
+			Log.w("Rest Service", "Attempt to call create REST method but REST service method could not be found for "
+					+ "entity '" + entityClass.getName() + "'");
+
 			return null;
 		}
 
@@ -174,6 +193,8 @@ public abstract class BaseRestService<E extends BaseOpenmrsObject, RS> implement
 				call = (Call<E>)result;
 			}
 		} catch (Exception nex) {
+			Log.e("Rest Service", "Exception executing REST create method", nex);
+
 			call = null;
 		}
 
@@ -186,6 +207,9 @@ public abstract class BaseRestService<E extends BaseOpenmrsObject, RS> implement
 		checkNotNull(entity);
 
 		if (updateMethod == null) {
+			Log.w("Rest Service", "Attempt to call 'update' REST method but REST service method could not be found for "
+					+ "entity '" + entityClass.getName() + "'");
+
 			return null;
 		}
 
@@ -198,6 +222,8 @@ public abstract class BaseRestService<E extends BaseOpenmrsObject, RS> implement
 				call = (Call<E>)result;
 			}
 		} catch (Exception nex) {
+			Log.e("Rest Service", "Exception executing REST update method", nex);
+
 			call = null;
 		}
 
@@ -210,6 +236,9 @@ public abstract class BaseRestService<E extends BaseOpenmrsObject, RS> implement
 		checkNotNull(uuid);
 
 		if (purgeMethod == null) {
+			Log.w("Rest Service", "Attempt to call 'purge' REST method but REST service method could not be found for "
+					+ "entity '" + entityClass.getName() + "'");
+
 			return null;
 		}
 
@@ -222,6 +251,8 @@ public abstract class BaseRestService<E extends BaseOpenmrsObject, RS> implement
 				call = (Call<E>)result;
 			}
 		} catch (Exception nex) {
+			Log.e("Rest Service", "Exception executing REST purge method", nex);
+
 			call = null;
 		}
 

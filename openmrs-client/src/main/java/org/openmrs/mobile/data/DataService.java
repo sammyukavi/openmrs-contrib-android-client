@@ -17,7 +17,7 @@ public interface DataService<E extends BaseOpenmrsObject> {
 	 * @param uuid     The entity UUID
 	 * @param callback
 	 */
-	void getByUUID(@NonNull String uuid, @Nullable QueryOptions options, @NonNull GetCallback<E> callback);
+	void getByUuid(@NonNull String uuid, @Nullable QueryOptions options, @NonNull GetCallback<E> callback);
 
 	/**
 	 * Gets all entities.

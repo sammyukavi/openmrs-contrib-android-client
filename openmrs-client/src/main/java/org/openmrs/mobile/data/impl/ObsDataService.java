@@ -8,7 +8,12 @@ import org.openmrs.mobile.models.Observation;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class ObsDataService extends BaseDataService<Observation, ObsDbService, ObsRestServiceImpl> {
+	@Inject
+	public ObsDataService() { }
+
 	public void getVisitDocumentsObsByPatientAndConceptList(String patientUuid, QueryOptions options,
 			GetCallback<List<Observation>> callback) {
 		executeMultipleCallback(callback, options, null,

@@ -10,10 +10,15 @@ import org.openmrs.mobile.data.db.impl.VisitDbService;
 import org.openmrs.mobile.data.rest.impl.VisitRestServiceImpl;
 import org.openmrs.mobile.models.Visit;
 
+import javax.inject.Inject;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class VisitDataService extends BaseEntityDataService<Visit, VisitDbService, VisitRestServiceImpl>
 		implements EntityDataService<Visit> {
+	@Inject
+	public VisitDataService() { }
+
 	public void endVisit(@NonNull String uuid, @NonNull Visit visit, @Nullable QueryOptions options,
 			@NonNull GetCallback<Visit> callback) {
 		checkNotNull(uuid);

@@ -19,7 +19,11 @@ import org.openmrs.mobile.data.db.impl.PersonAttributeTypeDbService;
 import org.openmrs.mobile.data.rest.impl.PersonAttributeTypeRestServiceImpl;
 import org.openmrs.mobile.models.PersonAttributeType;
 
+import javax.inject.Inject;
+
 public class PersonAttributeTypeDataService
 		extends BaseDataService<PersonAttributeType, PersonAttributeTypeDbService, PersonAttributeTypeRestServiceImpl>
 		implements DataService<PersonAttributeType> {
+	@Inject
+	public PersonAttributeTypeDataService() { }
 }

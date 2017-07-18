@@ -53,14 +53,9 @@ public abstract class BaseEntityRestService<E extends BaseOpenmrsEntity, RS> ext
 	}
 
 	private void initializeRestMethods() {
-		Class<?> restClass = restService.getClass();
+		Method[] methods = restService.getClass().getMethods();
 
-		if (getByPatientMethod == null) {
-			try {
-				getByPatientMethod = restClass.getMethod(GET_BY_PATIENT_METHOD_NAME);
-			} catch (Exception ignored) {
-			}
-		}
+		getByPatientMethod = findMethod(methods, GET_BY_PATIENT_METHOD_NAME);
 	}
 }
 

@@ -141,7 +141,7 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 						setLogin(true, url);
 						RestServiceBuilder.applyDefaultBaseUrl();
 						//Instantiate the user service  here to use our new session
-						userService = new UserDataService();
+						//userService = new UserDataService();
 						userService.getByUsername(username, QueryOptions.LOAD_RELATED_OBJECTS, pagingInfo,
 								loginUsersFoundCallback);
 						loginView.userAuthenticated();

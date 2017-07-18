@@ -53,13 +53,8 @@ public abstract class BaseMetadataRestService<E extends BaseOpenmrsMetadata, RS>
 	}
 
 	private void initializeRestMethods() {
-		Class<?> restClass = restService.getClass();
+		Method[] methods = restService.getClass().getMethods();
 
-		if (getByNameFragmentMethod == null) {
-			try {
-				getByNameFragmentMethod = restClass.getMethod(GET_BY_NAME_FRAGMENT_METHOD_NAME);
-			} catch (Exception ignored) {
-			}
-		}
+		getByNameFragmentMethod = findMethod(methods, GET_BY_NAME_FRAGMENT_METHOD_NAME);
 	}
 }

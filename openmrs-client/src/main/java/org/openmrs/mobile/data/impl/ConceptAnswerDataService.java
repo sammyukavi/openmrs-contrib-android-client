@@ -24,10 +24,15 @@ import org.openmrs.mobile.models.ConceptAnswer;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class ConceptAnswerDataService
 		extends BaseDataService<ConceptAnswer, ConceptAnswerDbService, ConceptAnswerRestServiceImpl> {
+	@Inject
+	public ConceptAnswerDataService() { }
+
 	public void getByConceptUuid(@NonNull String conceptUuid, @Nullable QueryOptions options,
 			@NonNull GetCallback<List<ConceptAnswer>> callback) {
 		checkNotNull(conceptUuid);

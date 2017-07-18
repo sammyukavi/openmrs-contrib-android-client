@@ -31,8 +31,9 @@ public class CaptureVitalsPresenter extends BasePresenter implements CaptureVita
 	public CaptureVitalsPresenter(CaptureVitalsContract.View view) {
 		this.captureVitalsView = view;
 		this.captureVitalsView.setPresenter(this);
-		this.encounterDataService = new EncounterDataService();
-		this.locationDataService = new LocationDataService();
+
+		this.encounterDataService = dataAccess().encounter();
+		this.locationDataService = dataAccess().location();
 	}
 
 	@Override

@@ -31,21 +31,18 @@ import org.openmrs.mobile.utilities.ApplicationConstants;
 public class AuditDataPresenter extends BasePresenter implements AuditDataContract.Presenter {
 
 	private AuditDataContract.View auditDataView;
-	private DataService<Patient> patientDataService;
 	private VisitDataService visitDataService;
 	private ConceptDataService conceptDataService;
 
 	private EncounterDataService encounterDataService;
-	private LocationDataService locationDataService;
 
 	public AuditDataPresenter(AuditDataContract.View view) {
 		this.auditDataView = view;
 		this.auditDataView.setPresenter(this);
-		this.patientDataService = new PatientDataService();
-		this.visitDataService = new VisitDataService();
-		this.encounterDataService = new EncounterDataService();
-		this.locationDataService = new LocationDataService();
-		this.conceptDataService = new ConceptDataService();
+
+		this.visitDataService = dataAccess().visit();
+		this.encounterDataService = dataAccess().encounter();
+		this.conceptDataService = dataAccess().concept();
 	}
 
 	@Override

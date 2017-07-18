@@ -9,7 +9,12 @@ import org.openmrs.mobile.models.Patient;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class PatientDataService extends BaseDataService<Patient, PatientDbService, PatientRestServiceImpl> {
+	@Inject
+	public PatientDataService() { }
+
 	public void getByName(String name, QueryOptions options, PagingInfo pagingInfo, GetCallback<List<Patient>> callback) {
 		executeMultipleCallback(callback, options, pagingInfo,
 				() -> dbService.getByName(name, options, pagingInfo),

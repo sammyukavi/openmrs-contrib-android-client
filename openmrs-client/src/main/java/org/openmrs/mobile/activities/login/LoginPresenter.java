@@ -22,9 +22,9 @@ import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.db.AppDatabase;
 import org.openmrs.mobile.data.impl.LocationDataService;
-import org.openmrs.mobile.data.impl.LoginDataService;
+import org.openmrs.mobile.data.impl.SessionDataService;
 import org.openmrs.mobile.data.impl.UserDataService;
-import org.openmrs.mobile.data.rest.RestServiceBuilder;
+import org.openmrs.mobile.data.rest.retrofit.RestServiceBuilder;
 import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Session;
 import org.openmrs.mobile.models.User;
@@ -51,7 +51,7 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 	private OpenMRS mOpenMRS;
 	private boolean mWipeRequired;
 	private AuthorizationManager authorizationManager;
-	private LoginDataService loginDataService;
+	private SessionDataService loginDataService;
 	private LocationDataService locationDataService;
 	private UserDataService userService;
 	private int startIndex = 0;//Old API, works with indexes not pages
@@ -62,7 +62,7 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 		this.loginView.setPresenter(this);
 		this.mOpenMRS = mOpenMRS;
 		this.authorizationManager = new AuthorizationManager();
-		this.loginDataService = new LoginDataService();
+		this.loginDataService = new SessionDataService();
 		this.locationDataService = new LocationDataService();
 	}
 
@@ -224,19 +224,15 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 
 			@Override
 			public void onError(Throwable t) {
-				List<Location> locationList = null;
-				loginView.setProgressBarVisibility(false);
-				loginView.updateLoginFormLocations(locationList, url);
-				//t.printStackTrace();
-				loginView.showMessage(INVALID_URL);
+				loginView.showMessage(SERVER_ERROR);
 			}
 		};
 
 		try {
-			locationDataService.getAll(url, locationDataServiceCallback);
+			locationDataService.getLoginLocations(url, locationDataServiceCallback);
 		} catch (IllegalArgumentException ex) {
 			loginView.setProgressBarVisibility(false);
-			loginView.showMessage(INVALID_URL);
+			loginView.showMessage(SERVER_ERROR);
 		}
 	}
 

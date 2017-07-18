@@ -21,7 +21,8 @@ import org.openmrs.mobile.data.BaseDataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.db.impl.ConceptDbService;
-import org.openmrs.mobile.data.rest.ConceptRestService;
+import org.openmrs.mobile.data.rest.impl.ConceptRestServiceImpl;
+import org.openmrs.mobile.data.rest.retrofit.ConceptRestService;
 import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.utilities.ApplicationConstants;
@@ -32,61 +33,15 @@ import retrofit2.Call;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class ConceptDataService extends BaseDataService<Concept, ConceptDbService, ConceptRestService> {
-	@Override
-	protected Class<ConceptRestService> getRestServiceClass() {
-		return ConceptRestService.class;
-	}
-
-	@Override
-	protected ConceptDbService getDbService() {
-		return new ConceptDbService();
-	}
-
-	@Override
-	protected String getRestPath() {
-		return ApplicationConstants.API.REST_ENDPOINT_V1;
-	}
-
-	@Override
-	protected String getEntityName() {
-		return "concept";
-	}
-
-	@Override
-	protected Call<Concept> _restGetByUuid(String restPath, String uuid, QueryOptions options) {
-		return restService.getByUuid(restPath, uuid, QueryOptions.getRepresentation(options));
-	}
-
-	@Override
-	protected Call<Results<Concept>> _restGetAll(String restPath, QueryOptions options, PagingInfo pagingInfo) {
-		return null;
-	}
-
-	@Override
-	protected Call<Concept> _restCreate(String restPath, Concept entity) {
-		return null;
-	}
-
-	@Override
-	protected Call<Concept> _restUpdate(String restPath, Concept entity) {
-		return null;
-	}
-
-	@Override
-	protected Call<Concept> _restPurge(String restPath, String uuid) {
-		return null;
-	}
-
-	public void getByName(@NonNull String conceptName, @Nullable QueryOptions options,
+public class ConceptDataService extends BaseDataService<Concept, ConceptDbService, ConceptRestServiceImpl> {
+	public void getByConceptName(@NonNull String conceptName, @Nullable QueryOptions options,
 			@NonNull GetCallback<List<Concept>> callback) {
 		checkNotNull(conceptName);
 		checkNotNull(callback);
 
 		executeMultipleCallback(callback, options, null,
 				() -> dbService.getByName(conceptName, options),
-				() -> restService
-						.getByConceptName(buildRestRequestPath(), conceptName, QueryOptions.getRepresentation(options)));
+				() -> restService.getByConceptName(conceptName, options));
 	}
 
 	public void findConcept(@NonNull String searchQuery, @Nullable QueryOptions options, @NonNull PagingInfo pagingInfo,
@@ -97,8 +52,6 @@ public class ConceptDataService extends BaseDataService<Concept, ConceptDbServic
 
 		executeMultipleCallback(callback, options, pagingInfo,
 				() -> null,
-				() -> restService.findConcept(ApplicationConstants.API.REST_ENDPOINT_V2 + "/custom/diagnoses", searchQuery,
-						QueryOptions.getRepresentation(options)
-						, PagingInfo.getStartIndex(pagingInfo), PagingInfo.getLimit(pagingInfo)));
+				() -> restService.findConcept(searchQuery, options, pagingInfo));
 	}
 }

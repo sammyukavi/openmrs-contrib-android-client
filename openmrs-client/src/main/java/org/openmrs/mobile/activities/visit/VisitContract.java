@@ -78,13 +78,14 @@ public interface VisitContract {
 
 		void showTabSpinner(boolean visibility);
 
-		void createEncounterDiagnosis(Observation observation, String diagnosis, String conceptNameId);
 	}
 
 	interface VisitPhotoView extends ViewVisitDetailsMain {
 		void updateVisitImageMetadata(List<VisitPhoto> visitPhotos);
 
-		void downloadImage(String obsUuid, DataService.GetCallback<Bitmap> callback);
+		void downloadImage(String obsUuid, DataService.GetCallback<byte[]> callback);
+
+		void deleteImage(VisitPhoto visitPhoto);
 
 		void refresh();
 
@@ -117,7 +118,7 @@ public interface VisitContract {
 	}
 
 	interface VisitPhotoPresenter extends VisitDetailsMainPresenter {
-		void downloadImage(String obsUuid, DataService.GetCallback<Bitmap> callback);
+		void downloadImage(String obsUuid, DataService.GetCallback<byte[]> callback);
 
 		boolean isLoading();
 
@@ -126,6 +127,8 @@ public interface VisitContract {
 		void uploadImage();
 
 		VisitPhoto getVisitPhoto();
+
+		void deleteImage(VisitPhoto visitPhoto);
 	}
 
 	interface VisitDetailsPresenter extends VisitDetailsMainPresenter {

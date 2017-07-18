@@ -96,7 +96,7 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 	}
 
 	@Override
-	public void downloadImage(String obsUuid, DataService.GetCallback<Bitmap> callback) {
+	public void downloadImage(String obsUuid, DataService.GetCallback<byte[]> callback) {
 		visitPhotoView.showTabSpinner(true);
 		visitPhotoDataService.downloadPhoto(obsUuid, ApplicationConstants.THUMBNAIL_VIEW,
 				new DataService.GetCallback<VisitPhoto>() {
@@ -122,6 +122,10 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 	}
 
 	private void initVisitPhoto() {
+		if(visitPhoto != null){
+			return;
+		}
+
 		visitPhoto = new VisitPhoto();
 		Visit visit = new Visit();
 		visit.setUuid(visitUuid);
@@ -171,7 +175,24 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 	}
 
 	@Override
-	public void unsubscribe() {
+	public void unsubscribe() {}
 
+	@Override
+	public void deleteImage(VisitPhoto visitPhoto) {
+		visitPhotoView.showTabSpinner(true);
+		Observation obs = visitPhoto.getObservation();
+		obs.setVoided(true);
+		obsDataService.purge(obs, new DataService.VoidCallback() {
+			@Override
+			public void onCompleted() {
+				visitPhotoView.showTabSpinner(false);
+				visitPhotoView.refresh();
+			}
+
+			@Override
+			public void onError(Throwable t) {
+				visitPhotoView.showTabSpinner(false);
+			}
+		});
 	}
 }

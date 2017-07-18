@@ -112,6 +112,7 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 	public void logout() {
 		mOpenMRS.clearUserPreferencesData();
 		mAuthorizationManager.moveToLoginActivity();
+		finish();
 	}
 
 	private void showLogoutDialog() {
@@ -121,16 +122,6 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 		bundle.setRightButtonAction(CustomFragmentDialog.OnClickAction.LOGOUT);
 		bundle.setRightButtonText(getString(R.string.logout_dialog_button));
 		createAndShowDialog(bundle, ApplicationConstants.DialogTAG.LOGOUT_DIALOG_TAG);
-	}
-
-	public void showEndVisitDialog(Visit visit) {
-		CustomDialogBundle bundle = new CustomDialogBundle();
-		bundle.setTitleViewMessage(getString(R.string.end_visit_dialog_title));
-		bundle.setTextViewMessage(getString(R.string.end_visit_dialog_message));
-		bundle.setVisit(visit);
-		bundle.setRightButtonAction(CustomFragmentDialog.OnClickAction.END_VISIT);
-		bundle.setRightButtonText(getString(R.string.dialog_button_confirm));
-		createAndShowDialog(bundle, ApplicationConstants.DialogTAG.END_VISIT_DIALOG_TAG);
 	}
 
 	public void showStartVisitImpossibleDialog(CharSequence title) {
@@ -241,22 +232,14 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 		drawer.closeDrawer(GravityCompat.START);
 		switch (selectedId) {
 			case R.id.navItemFindPatientRecord:
-
 				Intent intent = new Intent(mOpenMRS.getApplicationContext(), FindPatientRecordActivity.class);
-
 				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
 				startActivity(intent);
-
 				break;
 			case R.id.navItemPatientLists:
-
 				intent = new Intent(mOpenMRS.getApplicationContext(), PatientListActivity.class);
-
 				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
 				startActivity(intent);
-
 				break;
 			case R.id.navLogout:
 				showLogoutDialog();
@@ -267,38 +250,28 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 	}
 
 	public void createSnackbar(String message) {
-
 		int colorWhite = ContextCompat.getColor(getApplicationContext(), R.color.color_white);
-
 		// create instance
 		Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_INDEFINITE);
-
 		// set action button color
 		snackbar.setActionTextColor(colorWhite);
-
 		// get snackbar view
 		View snackbarView = snackbar.getView();
-
 		// change snackbar text color
 		int snackbarTextId = android.support.design.R.id.snackbar_text;
 		TextView textView = (TextView)snackbarView.findViewById(snackbarTextId);
 		textView.setTextColor(colorWhite);
-
 		// change snackbar background
 		//snackbarView.setBackgroundColor(Color.MAGENTA);
-
 		//change button text
 		snackbar.setActionTextColor(Color.YELLOW);
-
 		snackbar.setAction(R.string.label_dismiss, new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				snackbar.dismiss();
 			}
 		});
-
 		snackbar.show();
-
 	}
 
 	public void createToast(String message) {

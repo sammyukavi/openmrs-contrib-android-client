@@ -16,6 +16,7 @@ package org.openmrs.mobile.activities.visit.visitphoto;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -39,6 +40,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -74,12 +76,11 @@ import permissions.dispatcher.RuntimePermissions;
 @RuntimePermissions
 public class VisitPhotoFragment extends VisitFragment implements VisitContract.VisitPhotoView {
 
+	//Upload Visit photo
+	private final static int IMAGE_REQUEST = 1;
 	private LinearLayoutManager layoutManager;
 	private RecyclerView recyclerView;
 	private VisitPhotoRecyclerViewAdapter adapter;
-
-	//Upload Visit photo
-	private final static int IMAGE_REQUEST = 1;
 	private ImageView visitImageView;
 	private FloatingActionButton capturePhoto;
 	private Bitmap visitPhoto = null;
@@ -93,6 +94,12 @@ public class VisitPhotoFragment extends VisitFragment implements VisitContract.V
 
 	public static VisitPhotoFragment newInstance() {
 		return new VisitPhotoFragment();
+	}
+
+	public static Bitmap rotateImage(Bitmap source, float angle) {
+		Matrix matrix = new Matrix();
+		matrix.postRotate(angle);
+		return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
 	}
 
 	@Override
@@ -135,7 +142,7 @@ public class VisitPhotoFragment extends VisitFragment implements VisitContract.V
 	}
 
 	@Override
-	public void downloadImage(String obsUuid, DataService.GetCallback<Bitmap> callback) {
+	public void downloadImage(String obsUuid, DataService.GetCallback<byte[]> callback) {
 		((VisitPhotoPresenter)mPresenter).downloadImage(obsUuid, callback);
 	}
 
@@ -245,12 +252,6 @@ public class VisitPhotoFragment extends VisitFragment implements VisitContract.V
 		}
 	}
 
-	public static Bitmap rotateImage(Bitmap source, float angle) {
-		Matrix matrix = new Matrix();
-		matrix.postRotate(angle);
-		return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
-	}
-
 	@Override
 	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -258,45 +259,40 @@ public class VisitPhotoFragment extends VisitFragment implements VisitContract.V
 	}
 
 	private void addListeners() {
-		capturePhoto.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				VisitPhotoFragmentPermissionsDispatcher.capturePhotoWithCheck(VisitPhotoFragment.this);
+		capturePhoto.setOnClickListener(view -> {
+			VisitPhotoFragmentPermissionsDispatcher.capturePhotoWithCheck(VisitPhotoFragment.this);
+		});
 
+		visitImageView.setOnClickListener(view -> {
+			if (output != null) {
+				Intent i = new Intent(Intent.ACTION_VIEW);
+				i.setDataAndType(Uri.fromFile(output), "image/jpeg");
+				startActivity(i);
 			}
 		});
 
-		visitImageView.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				if (output != null) {
-					Intent i = new Intent(Intent.ACTION_VIEW);
-					i.setDataAndType(Uri.fromFile(output), "image/jpeg");
-					startActivity(i);
-				}
+		uploadVisitPhotoButton.setOnClickListener(v -> {
+			if (visitPhoto != null) {
+				ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+				visitPhoto.compress(Bitmap.CompressFormat.JPEG, 0, byteArrayOutputStream);
+
+				MultipartBody.Part uploadFile = MultipartBody.Part.createFormData("file",
+						output.getName(), RequestBody.create(MediaType.parse("image/jpeg"), output));
+
+				((VisitPhotoPresenter)mPresenter).getVisitPhoto().setRequestImage(uploadFile);
+				((VisitPhotoPresenter)mPresenter).getVisitPhoto().setFileCaption(
+						StringUtils.notEmpty(
+								ViewUtils.getInput(fileCaption)) ?
+								ViewUtils.getInput(fileCaption) :
+								getString(R.string.default_file_caption_message));
+				((VisitPhotoPresenter)mPresenter).uploadImage();
 			}
 		});
+	}
 
-		uploadVisitPhotoButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (visitPhoto != null) {
-					ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-					visitPhoto.compress(Bitmap.CompressFormat.JPEG, 0, byteArrayOutputStream);
-
-					MultipartBody.Part uploadFile = MultipartBody.Part.createFormData("file",
-							output.getName(), RequestBody.create(MediaType.parse("image/jpeg"), output));
-
-					((VisitPhotoPresenter)mPresenter).getVisitPhoto().setRequestImage(uploadFile);
-					((VisitPhotoPresenter)mPresenter).getVisitPhoto().setFileCaption(
-							StringUtils.notEmpty(
-									ViewUtils.getInput(fileCaption)) ?
-									ViewUtils.getInput(fileCaption) :
-									getString(R.string.default_file_caption_message));
-					((VisitPhotoPresenter)mPresenter).uploadImage();
-				}
-			}
-		});
+	@Override
+	public void deleteImage(VisitPhoto visitPhoto) {
+		((VisitPhotoPresenter)mPresenter).deleteImage(visitPhoto);
 	}
 
 	@Override
@@ -310,6 +306,24 @@ public class VisitPhotoFragment extends VisitFragment implements VisitContract.V
 				visitImageView.invalidate();
 			} else {
 				output = null;
+			}
+		}
+	}
+
+	@Override
+	public void setUserVisibleHint(boolean isVisibleToUser) {
+		super.setUserVisibleHint(isVisibleToUser);
+		// Make sure that we are currently visible
+		if (this.isVisible()) {
+			// If we are becoming invisible, then...
+			if (!isVisibleToUser) {
+				try {
+					InputMethodManager inputMethodManager =
+							(InputMethodManager)this.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+					inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+				} catch (Exception e) {
+
+				}
 			}
 		}
 	}

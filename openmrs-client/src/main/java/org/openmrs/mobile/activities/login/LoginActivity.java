@@ -49,5 +49,4 @@ public class LoginActivity extends ACBaseActivity {
 		super.onCreateOptionsMenu(menu);
 		return true;
 	}
-
 }

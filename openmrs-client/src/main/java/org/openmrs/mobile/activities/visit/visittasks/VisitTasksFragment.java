@@ -14,6 +14,7 @@
 
 package org.openmrs.mobile.activities.visit.visittasks;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -200,11 +202,6 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 	}
 
 	public void addTaskOnFocusListener() {
-		ArrayAdapter adapter =
-				new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line,
-						removeUsedPredefinedTasks(predefinedTasks, visitTasksLists));
-		addtask.setAdapter(adapter);
-
 		addtask.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
@@ -244,6 +241,10 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 	@Override
 	public void setPredefinedTasks(List<VisitPredefinedTask> predefinedTasks) {
 		this.predefinedTasks = predefinedTasks;
+		ArrayAdapter adapter =
+				new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line,
+						removeUsedPredefinedTasks(predefinedTasks, visitTasksLists));
+		addtask.setAdapter(adapter);
 	}
 
 	@Override
@@ -319,8 +320,26 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 	}
 
 	@Override
-	public void onResume (){
+	public void onResume() {
 		super.onResume();
 		addtask.requestFocus();
+	}
+
+	@Override
+	public void setUserVisibleHint(boolean isVisibleToUser) {
+		super.setUserVisibleHint(isVisibleToUser);
+		// Make sure that we are currently visible
+		if (this.isVisible()) {
+			// If we are becoming invisible, then...
+			if (!isVisibleToUser) {
+				try {
+					InputMethodManager inputMethodManager =
+							(InputMethodManager)this.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+					inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+				} catch (Exception e) {
+
+				}
+			}
+		}
 	}
 }

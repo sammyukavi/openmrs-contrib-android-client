@@ -217,6 +217,7 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 		Intent intent = new Intent(mOpenMRS.getApplicationContext(), PatientListActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		mOpenMRS.getApplicationContext().startActivity(intent);
+		getActivity().finish();
 
 	}
 
@@ -269,8 +270,10 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 		List<HashMap<String, String>> items = null;
 		if (locationsList != null) {
 			items = getLocationStringList(locationsList);
+			updateLocationsSpinner(items, serverURL);
+		} else {
+
 		}
-		updateLocationsSpinner(items, serverURL);
 
 	}
 

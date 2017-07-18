@@ -35,7 +35,6 @@ import org.openmrs.mobile.models.VisitAttribute;
 import org.openmrs.mobile.models.VisitAttributeType;
 import org.openmrs.mobile.models.VisitType;
 import org.openmrs.mobile.utilities.ApplicationConstants;
-import org.openmrs.mobile.utilities.DateUtils;
 import org.openmrs.mobile.utilities.StringUtils;
 import org.openmrs.mobile.utilities.ToastUtil;
 
@@ -55,21 +54,23 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	private VisitDataService visitDataService;
 	private PatientDataService patientDataService;
 	private LocationDataService locationDataService;
-	private boolean processing;
+	private boolean processing, endVisitTag;
 	private String patientUuid;
 	private Location location;
 
-	public AddEditVisitPresenter(@NonNull AddEditVisitContract.View addEditVisitView, String patientUuid) {
-		this(addEditVisitView, patientUuid, null, null, null, null, null, null);
+	public AddEditVisitPresenter(@NonNull AddEditVisitContract.View addEditVisitView, String patientUuid,
+			boolean endVisit) {
+		this(addEditVisitView, patientUuid, endVisit, null, null, null, null, null, null);
 	}
 
 	public AddEditVisitPresenter(@NonNull AddEditVisitContract.View addEditVisitView, String patientUuid,
-			VisitDataService visitDataService, PatientDataService patientDataService,
+			boolean endVisit, VisitDataService visitDataService, PatientDataService patientDataService,
 			VisitTypeDataService visitTypeDataService, VisitAttributeTypeDataService visitAttributeTypeDataService,
 			ConceptAnswerDataService conceptAnswerDataService, LocationDataService locationDataService) {
 		this.addEditVisitView = addEditVisitView;
 		this.addEditVisitView.setPresenter(this);
 		this.patientUuid = patientUuid;
+		this.endVisitTag = endVisit;
 
 		if (visitDataService == null) {
 			this.visitDataService = new VisitDataService();
@@ -153,8 +154,16 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 							addEditVisitView.initView(true);
 						}
 
-						loadVisitTypes();
-						loadVisitAttributeTypes();
+						if(null == visit.getStartDatetime()){
+							visit.setStartDatetime(new Date());
+						}
+
+						if(endVisitTag){
+							addEditVisitView.loadEndVisitView();
+						} else {
+							loadVisitTypes();
+							loadVisitAttributeTypes();
+						}
 					}
 
 					@Override
@@ -282,6 +291,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 		Visit updatedVisit = new Visit();
 		updatedVisit.setAttributes(attributes);
 		updatedVisit.setVisitType(visit.getVisitType());
+		updatedVisit.setStartDatetime(visit.getStartDatetime());
 
 		setProcessing(true);
 		visitDataService.updateVisit(visit.getUuid(), updatedVisit, new DataService.GetCallback<Visit>() {
@@ -304,7 +314,12 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 		if (visit.getUuid() == null) {
 			return;
 		} else {
-			visit.setStopDatetime(new Date());
+			if(null == visit.getStopDatetime()) {
+				visit.setStopDatetime(new Date());
+			}
+
+			visit.setPatient(null);
+
 			visitDataService.update(visit, new DataService.GetCallback<Visit>() {
 				@Override
 				public void onCompleted(Visit entity) {
@@ -328,6 +343,11 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	@Override
 	public void setProcessing(boolean processing) {
 		this.processing = processing;
+	}
+
+	@Override
+	public boolean getEndVisitTag() {
+		return endVisitTag;
 	}
 
 	@Override

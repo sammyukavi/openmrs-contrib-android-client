@@ -110,7 +110,7 @@ public class LoginValidatorWatcher implements TextWatcher, AdapterView.OnItemSel
 
 	private boolean validateNotEmpty(Spinner spinner) {
 		return spinner.getSelectedItemPosition() >= 0 && spinner.getItemIdAtPosition(spinner.getSelectedItemPosition())
-				>= 1;
+				>= 0;
 	}
 
 	public boolean isLocationErrorOccurred() {

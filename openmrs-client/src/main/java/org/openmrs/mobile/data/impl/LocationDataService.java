@@ -13,9 +13,14 @@ import org.openmrs.mobile.utilities.ApplicationConstants;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import retrofit2.Call;
 
 public class LocationDataService extends BaseMetadataDataService<Location, LocationDbService, LocationRestServiceImpl> {
+	@Inject
+	public LocationDataService() { }
+
 	public void getLoginLocations(String url, GetCallback<List<Location>> callback) {
 		executeMultipleCallback(callback, null, null,
 				() -> dbService.getAll(null, null),

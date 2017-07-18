@@ -10,11 +10,16 @@ import org.openmrs.mobile.models.VisitPhoto;
 
 import java.io.IOException;
 
+import javax.inject.Inject;
+
 import okhttp3.ResponseBody;
 
 public class VisitPhotoDataService
 		extends BaseDataService<VisitPhoto, VisitPhotoDbService, VisitPhotoRestServiceImpl>
 		implements DataService<VisitPhoto> {
+	@Inject
+	public VisitPhotoDataService() { }
+
 	public void uploadPhoto(VisitPhoto visitPhoto, @NonNull GetCallback<VisitPhoto> callback) {
 		executeSingleCallback(callback, null,
 				() -> dbService.save(visitPhoto),

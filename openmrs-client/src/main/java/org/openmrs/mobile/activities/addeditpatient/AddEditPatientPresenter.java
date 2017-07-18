@@ -49,7 +49,6 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 	private ConceptDataService conceptDataService;
 	private PersonAttributeTypeDataService personAttributeTypeDataService;
 	private PatientIdentifierTypeDataService patientIdentifierTypeDataService;
-	private ConceptAnswerDataService conceptAnswerDataService;
 	private LocationDataService locationDataService;
 	private Patient patient;
 	private String patientToUpdateUuid;
@@ -62,34 +61,28 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 	private int page = 0;
 	private int limit = 10;
 
-	public AddEditPatientPresenter(AddEditPatientContract.View patientRegistrationView,
-			List<String> countries,
+	public AddEditPatientPresenter(AddEditPatientContract.View patientRegistrationView, List<String> counties,
 			String patientToUpdateUuid) {
-		this.patientRegistrationView = patientRegistrationView;
-		this.patientRegistrationView.setPresenter(this);
-		this.mCounties = countries;
-		this.patientToUpdateUuid = patientToUpdateUuid;
-		this.patientDataService = new PatientDataService();
-		this.conceptDataService = new ConceptDataService();
-		this.patientIdentifierTypeDataService = new PatientIdentifierTypeDataService();
-		this.personAttributeTypeDataService = new PersonAttributeTypeDataService();
-		this.conceptAnswerDataService = new ConceptAnswerDataService();
-		this.locationDataService = new LocationDataService();
+		this(patientRegistrationView, counties, patientToUpdateUuid, null);
 	}
 
-	public AddEditPatientPresenter(AddEditPatientContract.View patientRegistrationView, Patient mPatient,
-			String patientToUpdateId, List<String> mCounties) {
+	public AddEditPatientPresenter(AddEditPatientContract.View patientRegistrationView, List<String> counties,
+			String patientToUpdateUuid, Patient patient) {
+		super();
+
+		this.patientDataService = dataAccess().patient();
+		this.conceptDataService = dataAccess().concept();
+		this.patientIdentifierTypeDataService = dataAccess().patientIdentifierType();
+		this.personAttributeTypeDataService = dataAccess().personAttributeType();
+		this.locationDataService = dataAccess().location();
+
 		this.patientRegistrationView = patientRegistrationView;
-		this.patientDataService = new PatientDataService();
-		this.conceptDataService = new ConceptDataService();
-		this.patient = mPatient;
-		this.patientToUpdateUuid = patientToUpdateId;
-		this.mCounties = mCounties;
 		this.patientRegistrationView.setPresenter(this);
-		this.patientIdentifierTypeDataService = new PatientIdentifierTypeDataService();
-		this.personAttributeTypeDataService = new PersonAttributeTypeDataService();
-		this.conceptAnswerDataService = new ConceptAnswerDataService();
-		this.locationDataService = new LocationDataService();
+		this.mCounties = counties;
+		this.patient = patient;
+		this.patientToUpdateUuid = patientToUpdateUuid;
+		this.mCounties = counties;
+
 	}
 
 	private boolean validate(Patient patient) {

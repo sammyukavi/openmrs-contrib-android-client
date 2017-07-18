@@ -54,6 +54,7 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 	private SessionDataService loginDataService;
 	private LocationDataService locationDataService;
 	private UserDataService userService;
+
 	private int startIndex = 0;//Old API, works with indexes not pages
 	private int limit = 100;
 
@@ -62,8 +63,10 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 		this.loginView.setPresenter(this);
 		this.mOpenMRS = mOpenMRS;
 		this.authorizationManager = new AuthorizationManager();
-		this.loginDataService = new SessionDataService();
-		this.locationDataService = new LocationDataService();
+
+		this.locationDataService = dataAccess().location();
+		this.loginDataService = dataAccess().session();
+		this.userService = dataAccess().user();
 	}
 
 	@Override

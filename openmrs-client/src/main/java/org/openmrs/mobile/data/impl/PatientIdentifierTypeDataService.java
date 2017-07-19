@@ -19,8 +19,11 @@ import org.openmrs.mobile.data.db.impl.PatientIdentifierTypeDbService;
 import org.openmrs.mobile.data.rest.impl.PatientIdentifierTypeRestServiceImpl;
 import org.openmrs.mobile.models.PatientIdentifierType;
 
+import javax.inject.Inject;
+
 public class PatientIdentifierTypeDataService extends
 		BaseMetadataDataService<PatientIdentifierType, PatientIdentifierTypeDbService, PatientIdentifierTypeRestServiceImpl>
 		implements MetadataDataService<PatientIdentifierType> {
-
+	@Inject
+	public PatientIdentifierTypeDataService() { }
 }

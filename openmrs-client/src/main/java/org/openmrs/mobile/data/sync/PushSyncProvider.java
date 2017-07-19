@@ -8,7 +8,7 @@ import javax.inject.Inject;
 
 public class PushSyncProvider implements SyncProvider {
 	@Inject
-	private DbService<Patient> patientDbService;
+	DbService<Patient> patientDbService;
 
 	@Inject
 	public PushSyncProvider() { }

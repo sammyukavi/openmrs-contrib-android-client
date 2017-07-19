@@ -19,13 +19,14 @@ public class SyncService {
 	private static final Object SYNC_LOCK = new Object();
 
 	@Inject
-	private SyncProvider syncProvider;
+	SyncProvider syncProvider;
 
 	@Inject
-	private DbService<SyncLog> syncLogDbService;
+	DbService<SyncLog> syncLogDbService;
 
 	@Inject
-	private DbService<PullSubscription> subscriptionDbService;
+	DbService<PullSubscription> subscriptionDbService;
+
 	private Map<String, SubscriptionProvider> subscriptionProviders = new HashMap<String, SubscriptionProvider>();
 
 	public void sync() {

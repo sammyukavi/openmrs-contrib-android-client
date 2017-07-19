@@ -2,6 +2,7 @@ package org.openmrs.mobile.data.rest;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
@@ -12,6 +13,7 @@ import org.openmrs.mobile.models.Results;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
+import java.util.Objects;
 
 import retrofit2.Call;
 
@@ -19,7 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public abstract class BaseRestService<E extends BaseOpenmrsObject, RS> implements RestService<E> {
 	public static final String GET_BY_UUID_METHOD_NAME = "getByUuid";
-	public static final String GET_ALL_METHOD_NAME = "getLoginLocations";
+	public static final String GET_ALL_METHOD_NAME = "getAll";
 	public static final String GET_RECORD_INFO_METHOD_NAME = "getRecordInfo";
 	public static final String CREATE_METHOD_NAME = "create";
 	public static final String UPDATE_METHOD_NAME = "update";
@@ -90,6 +92,9 @@ public abstract class BaseRestService<E extends BaseOpenmrsObject, RS> implement
 		checkNotNull(uuid);
 
 		if (getByUuidMethod == null) {
+			Log.w("Rest Service", "Attempt to call 'getByUuid' REST method but REST service method could not be found for "
+					+ "entity '" + entityClass.getName() + "'");
+
 			return null;
 		}
 
@@ -103,6 +108,8 @@ public abstract class BaseRestService<E extends BaseOpenmrsObject, RS> implement
 				call = (Call<E>)result;
 			}
 		} catch (Exception nex) {
+			Log.e("Rest Service", "Exception executing REST getByUuid method", nex);
+
 			call = null;
 		}
 
@@ -113,6 +120,9 @@ public abstract class BaseRestService<E extends BaseOpenmrsObject, RS> implement
 	@SuppressWarnings("unchecked")
 	public Call<Results<E>> getAll(@Nullable QueryOptions options, @Nullable PagingInfo pagingInfo) {
 		if (getAllMethod == null) {
+			Log.w("Rest Service", "Attempt to call 'getAll' REST method but REST service method could not be found for "
+					+ "entity '" + entityClass.getName() + "'");
+
 			return null;
 		}
 
@@ -127,6 +137,8 @@ public abstract class BaseRestService<E extends BaseOpenmrsObject, RS> implement
 				call = (Call<Results<E>>)result;
 			}
 		} catch (Exception nex) {
+			Log.e("Rest Service", "Exception executing REST getAll method", nex);
+
 			call = null;
 		}
 
@@ -136,6 +148,9 @@ public abstract class BaseRestService<E extends BaseOpenmrsObject, RS> implement
 	@Override
 	public Call<Results<RecordInfo>> getRecordInfo() {
 		if (getRecordInfoMethod == null) {
+			Log.w("Rest Service", "Attempt to call 'getRecordInfo' REST method but REST service method could not be found for "
+					+ "entity '" + entityClass.getName() + "'");
+
 			return null;
 		}
 
@@ -149,6 +164,8 @@ public abstract class BaseRestService<E extends BaseOpenmrsObject, RS> implement
 				call = (Call<Results<RecordInfo>>)result;
 			}
 		} catch (Exception nex) {
+			Log.e("Rest Service", "Exception executing REST getRecordInfo method", nex);
+
 			call = null;
 		}
 
@@ -161,6 +178,9 @@ public abstract class BaseRestService<E extends BaseOpenmrsObject, RS> implement
 		checkNotNull(entity);
 
 		if (createMethod == null) {
+			Log.w("Rest Service", "Attempt to call create REST method but REST service method could not be found for "
+					+ "entity '" + entityClass.getName() + "'");
+
 			return null;
 		}
 
@@ -173,6 +193,8 @@ public abstract class BaseRestService<E extends BaseOpenmrsObject, RS> implement
 				call = (Call<E>)result;
 			}
 		} catch (Exception nex) {
+			Log.e("Rest Service", "Exception executing REST create method", nex);
+
 			call = null;
 		}
 
@@ -185,6 +207,9 @@ public abstract class BaseRestService<E extends BaseOpenmrsObject, RS> implement
 		checkNotNull(entity);
 
 		if (updateMethod == null) {
+			Log.w("Rest Service", "Attempt to call 'update' REST method but REST service method could not be found for "
+					+ "entity '" + entityClass.getName() + "'");
+
 			return null;
 		}
 
@@ -197,6 +222,8 @@ public abstract class BaseRestService<E extends BaseOpenmrsObject, RS> implement
 				call = (Call<E>)result;
 			}
 		} catch (Exception nex) {
+			Log.e("Rest Service", "Exception executing REST update method", nex);
+
 			call = null;
 		}
 
@@ -209,6 +236,9 @@ public abstract class BaseRestService<E extends BaseOpenmrsObject, RS> implement
 		checkNotNull(uuid);
 
 		if (purgeMethod == null) {
+			Log.w("Rest Service", "Attempt to call 'purge' REST method but REST service method could not be found for "
+					+ "entity '" + entityClass.getName() + "'");
+
 			return null;
 		}
 
@@ -221,6 +251,8 @@ public abstract class BaseRestService<E extends BaseOpenmrsObject, RS> implement
 				call = (Call<E>)result;
 			}
 		} catch (Exception nex) {
+			Log.e("Rest Service", "Exception executing REST purge method", nex);
+
 			call = null;
 		}
 
@@ -239,49 +271,24 @@ public abstract class BaseRestService<E extends BaseOpenmrsObject, RS> implement
 	 * Loads the rest methods from the retrofit entity interface
 	 */
 	private void initializeRestMethods() {
-		Class<?> restClass = restService.getClass();
+		Method[] methods = restService.getClass().getMethods();
 
-		if (getByUuidMethod == null) {
-			try {
-				getByUuidMethod = restClass.getMethod(GET_BY_UUID_METHOD_NAME);
-			} catch (Exception ignored) {
+		getByUuidMethod = findMethod(methods, GET_BY_UUID_METHOD_NAME);
+		getAllMethod = findMethod(methods, GET_ALL_METHOD_NAME);
+		getRecordInfoMethod = findMethod(methods, GET_RECORD_INFO_METHOD_NAME);
+		createMethod = findMethod(methods, CREATE_METHOD_NAME);
+		updateMethod = findMethod(methods, UPDATE_METHOD_NAME);
+		purgeMethod = findMethod(methods, PURGE_METHOD_NAME);
+	}
+
+	protected Method findMethod(Method[] methods, String name) {
+		for (Method method : methods) {
+			if (method.getName().equals(name)) {
+				return method;
 			}
 		}
 
-		if (getAllMethod == null) {
-			try {
-				getAllMethod = restClass.getMethod(GET_ALL_METHOD_NAME);
-			} catch (Exception ignored) {
-			}
-		}
-
-		if (getRecordInfoMethod == null) {
-			try {
-				getRecordInfoMethod = restClass.getMethod(GET_RECORD_INFO_METHOD_NAME);
-			} catch (Exception ignored) {
-			}
-		}
-
-		if (createMethod == null) {
-			try {
-				createMethod = restClass.getMethod(CREATE_METHOD_NAME);
-			} catch (Exception ignored) {
-			}
-		}
-
-		if (updateMethod == null) {
-			try {
-				updateMethod = restClass.getMethod(UPDATE_METHOD_NAME);
-			} catch (Exception ignored) {
-			}
-		}
-
-		if (purgeMethod == null) {
-			try {
-				purgeMethod = restClass.getMethod(PURGE_METHOD_NAME);
-			} catch (Exception ignored) {
-			}
-		}
+		return null;
 	}
 
 	/**

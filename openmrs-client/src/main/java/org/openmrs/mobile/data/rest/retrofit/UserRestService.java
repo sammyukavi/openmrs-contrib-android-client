@@ -14,7 +14,8 @@ public interface UserRestService {
 	@GET(RestConstants.GET_BY_UUID)
 	Call<User> getByUuid(@Path(value = "restPath", encoded = true) String restPath,
 			@Path("uuid") String uuid,
-			@Query("v") String representation);
+			@Query("v") String representation,
+			@Query("includeAll") Boolean includeAll);
 
 	@GET(RestConstants.REST_PATH)
 	Call<Results<User>> getUserInfo(@Path(value = "restPath", encoded = true) String restPath,

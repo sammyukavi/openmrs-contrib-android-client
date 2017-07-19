@@ -14,10 +14,15 @@ import org.openmrs.mobile.utilities.ApplicationConstants;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import retrofit2.Call;
 
 public class ConceptSearchDataService extends BaseDataService<ConceptSearchResult, ConceptSearchDbService,
 		ConceptSearchRestServiceImpl> {
+	@Inject
+	public ConceptSearchDataService() { }
+
 	public void search(@NonNull String term, @NonNull PagingInfo pagingInfo,
 				GetCallback<List<ConceptSearchResult>> callback) {
 		executeMultipleCallback(callback, null, pagingInfo,

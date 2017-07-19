@@ -157,7 +157,7 @@ public abstract class AdaptiveSubscriptionProvider<E extends BaseOpenmrsAuditabl
 	}
 
 	protected List<RecordInfo> getRecordInfoRest() {
-		return getCallListValue(restService.getRecordInfo());
+		return getCallListValue(restService.getRecordInfo(null));
 	}
 
 	protected <T> List<T> getCallListValue(Call<Results<T>> call) {

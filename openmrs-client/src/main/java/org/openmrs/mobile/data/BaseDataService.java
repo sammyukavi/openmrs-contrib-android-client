@@ -56,7 +56,7 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 	private Class<E> entityClass;
 
 	@Override
-	public void getByUUID(@NonNull String uuid, @Nullable QueryOptions options, @NonNull GetCallback<E> callback) {
+	public void getByUuid(@NonNull String uuid, @Nullable QueryOptions options, @NonNull GetCallback<E> callback) {
 		checkNotNull(uuid);
 		checkNotNull(callback);
 

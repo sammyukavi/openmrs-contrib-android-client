@@ -58,7 +58,7 @@ public class CaptureVitalsPresenter extends BasePresenter implements CaptureVita
 			}
 		};
 
-		locationDataService.getByUUID(locationUuid, QueryOptions.LOAD_RELATED_OBJECTS, locationDataServiceCallback);
+		locationDataService.getByUuid(locationUuid, QueryOptions.LOAD_RELATED_OBJECTS, locationDataServiceCallback);
 	}
 
 	@Override

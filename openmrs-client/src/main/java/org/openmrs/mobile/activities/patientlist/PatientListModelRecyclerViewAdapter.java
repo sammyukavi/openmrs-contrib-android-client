@@ -40,10 +40,8 @@ public class PatientListModelRecyclerViewAdapter
 	private PatientListContract.View view;
 	private List<PatientListContext> items;
 
-	public PatientListModelRecyclerViewAdapter(Activity context,
-			List<PatientListContext> patientListModels, PatientListContract.View view) {
+	public PatientListModelRecyclerViewAdapter(Activity context, PatientListContract.View view) {
 		this.context = context;
-		this.items = patientListModels;
 		this.view = view;
 	}
 
@@ -73,6 +71,20 @@ public class PatientListModelRecyclerViewAdapter
 	@Override
 	public int getItemCount() {
 		return items.size();
+	}
+
+	public List<PatientListContext> getItems(){
+		return items;
+	}
+
+	public void setItems(List<PatientListContext> items){
+		if(this.items != null){
+			this.items.addAll(items);
+		} else {
+			this.items = items;
+		}
+
+		notifyDataSetChanged();
 	}
 
 	class PatientListModelViewHolder extends RecyclerView.ViewHolder {

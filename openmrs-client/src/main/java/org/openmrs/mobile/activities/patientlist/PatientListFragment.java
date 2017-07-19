@@ -52,6 +52,10 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 
 	private PatientList selectedPatientList;
 
+	private PatientListModelRecyclerViewAdapter adapter = new PatientListModelRecyclerViewAdapter(this.getActivity(), this);
+
+	private int currentPage = 0;
+
 	private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
 
 		@Override
@@ -59,7 +63,7 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 			if (!mPresenter.isLoading()) {
 				// you can't scroll up or down. load previous page if any
 				if (!recyclerView.canScrollVertically(1) && !recyclerView.canScrollVertically(-1)) {
-					mPresenter.loadResults(selectedPatientList.getUuid(), false);
+					loadPreviousPage();
 				}
 			}
 		}
@@ -73,12 +77,26 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 				}
 
 				if (!recyclerView.canScrollVertically(-1) && dy < 0) {
-					// load previous page
-					mPresenter.loadResults(selectedPatientList.getUuid(), false);
+					loadPreviousPage();
 				}
 			}
 		}
 	};
+
+	private void loadPreviousPage(){
+		// load previous page
+		if(currentPage <= 0) {
+			currentPage = mPresenter.getPage();
+		}
+
+		int previousPage = currentPage - 1;
+		if(previousPage <= 0)
+			previousPage = 1;
+		int startIndexPreviousPage = ((previousPage - 1) * mPresenter.getLimit()) + 1;
+		patientListModelRecyclerView.scrollToPosition(startIndexPreviousPage);
+		updatePagingLabel(previousPage);
+		currentPage--;
+	}
 
 	public static PatientListFragment newInstance() {
 		return new PatientListFragment();
@@ -108,13 +126,22 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 
 		layoutManager = new LinearLayoutManager(this.getActivity());
 		patientListModelRecyclerView = (RecyclerView)root.findViewById(R.id.patientListModelRecyclerView);
-		patientListModelRecyclerView.setLayoutManager(layoutManager);
-		patientListModelRecyclerView.setNestedScrollingEnabled(false);
+
 
 		// Font config
 		FontsUtil.setFont((ViewGroup)this.getActivity().findViewById(android.R.id.content));
 
 		return root;
+	}
+
+	@Override
+	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		patientListModelRecyclerView.setAdapter(adapter);
+		patientListModelRecyclerView.addOnScrollListener(recyclerViewOnScrollListener);
+
+		patientListModelRecyclerView.setLayoutManager(layoutManager);
+		patientListModelRecyclerView.setNestedScrollingEnabled(false);
 	}
 
 	@Override
@@ -181,11 +208,7 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 
 	@Override
 	public void updatePatientListData(List<PatientListContext> patientListData) {
-		PatientListModelRecyclerViewAdapter adapter =
-				new PatientListModelRecyclerViewAdapter(this.getActivity(), patientListData, this);
-		patientListModelRecyclerView.setAdapter(adapter);
-
-		patientListModelRecyclerView.addOnScrollListener(recyclerViewOnScrollListener);
+		adapter.setItems(patientListData);
 	}
 
 	@Override
@@ -203,6 +226,10 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 	public void updatePagingLabel(int currentPage, int totalNumberOfPages) {
 		pagingLabel
 				.setText(getString(R.string.paging_label, String.valueOf(currentPage), String.valueOf(totalNumberOfPages)));
+	}
+
+	private void updatePagingLabel(int currentPage){
+		updatePagingLabel(currentPage, mPresenter.getTotalNumberPages());
 	}
 
 	public void showNoPatientListSelected(boolean visibility) {

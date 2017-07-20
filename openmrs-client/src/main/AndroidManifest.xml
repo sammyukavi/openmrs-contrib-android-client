@@ -12,6 +12,7 @@
 	<!-- Needed for syncing -->
 	<uses-permission android:name="android.permission.READ_SYNC_SETTINGS"/>
 	<uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
+	<uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />>
 
 	<uses-feature
 			android:name="android.hardware.camera"
@@ -76,8 +77,7 @@
 			android:exported="false"
 			android:syncable="true"/>
 
-		<service
-			android:name="org.openmrs.mobile.net.impl.AuthenticatorService">
+		<service android:name="org.openmrs.mobile.net.impl.AuthenticatorService">
 			<intent-filter>
 				<action android:name="android.accounts.AccountAuthenticator"/>
 			</intent-filter>
@@ -86,7 +86,7 @@
 				android:resource="@xml/authenticator" />
 		</service>
 		<service
-			android:name="org.openmrs.mobile.data.sync.SyncService"
+			android:name="org.openmrs.mobile.data.sync.AndroidSyncService"
 			android:exported="true"
 			android:process=":sync">
 			<intent-filter>

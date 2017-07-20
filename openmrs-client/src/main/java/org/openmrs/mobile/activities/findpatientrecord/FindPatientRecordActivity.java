@@ -43,7 +43,7 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 
 	public FindPatientRecordContract.Presenter findPatientPresenter;
 	FindPatientRecordFragment findPatientRecordFragment;
-	private String query= "";
+	private String query = "";
 	private OpenMRS instance = OpenMRS.getInstance();
 
 	private EditText searchPatientsView;
@@ -112,12 +112,12 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 		MenuItem mFindPatientMenuItem = menu.findItem(R.id.action_search);
 
 		if (OpenMRS.getInstance().isRunningHoneycombVersionOrHigher()) {
-			searchPatientsView = (EditText) mFindPatientMenuItem.getActionView().findViewById(R.id.searchPatient);
+			searchPatientsView = (EditText)mFindPatientMenuItem.getActionView().findViewById(R.id.searchPatient);
 		} else {
-			searchPatientsView = (EditText) MenuItemCompat.getActionView(mFindPatientMenuItem);
+			searchPatientsView = (EditText)MenuItemCompat.getActionView(mFindPatientMenuItem);
 		}
 
-		if(StringUtils.notEmpty(query)) {
+		if (StringUtils.notEmpty(query)) {
 			mFindPatientMenuItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM |
 					MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 		} else {
@@ -129,7 +129,8 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 		searchPatientsView.setText(query);
 		searchPatientsView.addTextChangedListener(new TextWatcher() {
 			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			}
 
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -172,7 +173,7 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 		editor.commit();
 	}
 
-	private String getSearchQuery(){
+	private String getSearchQuery() {
 		return instance.getOpenMRSSharedPreferences().getString(
 				ApplicationConstants.BundleKeys.PATIENT_QUERY_BUNDLE,
 				ApplicationConstants.EMPTY_STRING);
@@ -182,8 +183,6 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 	public void onBackPressed() {
 		if (drawer.isDrawerOpen(GravityCompat.START)) {
 			drawer.closeDrawer(GravityCompat.START);
-		} else {
-			super.onBackPressed();
 		}
 	}
 }

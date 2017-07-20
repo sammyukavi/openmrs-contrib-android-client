@@ -20,5 +20,6 @@ public interface VisitTypeRestService {
 	@GET(RestConstants.GET_BY_UUID)
 	Call<VisitType> getByUuid(@Path(value = "restPath", encoded = true) String restPath,
 			@Path("uuid") String uuid,
-			@Query("v") String representation);
+			@Query("v") String representation,
+			@Query("includeAll") Boolean includeAll);
 }

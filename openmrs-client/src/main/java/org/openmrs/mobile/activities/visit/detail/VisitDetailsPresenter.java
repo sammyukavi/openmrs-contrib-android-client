@@ -23,11 +23,8 @@ import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.impl.ConceptAnswerDataService;
 import org.openmrs.mobile.data.impl.ConceptDataService;
-import org.openmrs.mobile.data.impl.ConceptSearchDataService;
-import org.openmrs.mobile.data.impl.ObsDataService;
 import org.openmrs.mobile.data.impl.VisitAttributeTypeDataService;
 import org.openmrs.mobile.data.impl.VisitDataService;
-import org.openmrs.mobile.data.impl.VisitNoteDataService;
 import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.ConceptAnswer;
 import org.openmrs.mobile.models.Visit;
@@ -43,28 +40,25 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 	private VisitAttributeTypeDataService visitAttributeTypeDataService;
 	private VisitDataService visitDataService;
 	private ConceptDataService conceptDataService;
-	private ConceptSearchDataService conceptSearchDataService;
-	private ObsDataService obsDataService;
-	private VisitNoteDataService visitNoteDataService;
 	private String patientUUID, visitUUID, providerUuid, visitStopDate;
 
 	private ConceptAnswerDataService conceptAnswerDataService;
 
 	public VisitDetailsPresenter(String patientUuid, String visitUuid, String providerUuid,
 			String visitStopDate, VisitContract.VisitDetailsView visitDetailsView) {
+		super();
+
 		this.visitDetailsView = visitDetailsView;
 		this.visitDetailsView.setPresenter(this);
-		this.visitDataService = new VisitDataService();
-		this.conceptDataService = new ConceptDataService();
-		this.obsDataService = new ObsDataService();
-		this.conceptAnswerDataService = new ConceptAnswerDataService();
-		this.visitAttributeTypeDataService = new VisitAttributeTypeDataService();
-		this.visitNoteDataService = new VisitNoteDataService();
 		this.visitUUID = visitUuid;
 		this.providerUuid = providerUuid;
 		this.patientUUID = patientUuid;
 		this.visitStopDate = visitStopDate;
-		this.conceptSearchDataService = new ConceptSearchDataService();
+
+		this.visitDataService = dataAccess().visit();
+		this.conceptDataService = dataAccess().concept();
+		this.conceptAnswerDataService = dataAccess().conceptAnswer();
+		this.visitAttributeTypeDataService = dataAccess().visitAttributeType();
 	}
 
 	@Override
@@ -98,7 +92,7 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 										.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 					}
 				};
-		visitDataService.getByUUID(visitUUID, QueryOptions.LOAD_RELATED_OBJECTS, getSingleCallback);
+		visitDataService.getByUuid(visitUUID, QueryOptions.LOAD_RELATED_OBJECTS, getSingleCallback);
 	}
 
 	@Override

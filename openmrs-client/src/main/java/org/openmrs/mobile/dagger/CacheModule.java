@@ -1,18 +1,15 @@
-package org.openmrs.mobile.data;
+package org.openmrs.mobile.dagger;
 
 import org.openmrs.mobile.data.cache.CacheService;
 import org.openmrs.mobile.data.cache.SimpleCacheService;
-
-import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
 
 @Module
-class DataModule {
+public class CacheModule {
 	@Provides
-	@Singleton
 	static CacheService provideCacheService() {
-		return SimpleCacheService.getInstance();
+		return new SimpleCacheService();
 	}
 }

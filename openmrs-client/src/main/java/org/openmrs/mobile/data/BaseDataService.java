@@ -9,10 +9,8 @@ import android.util.Log;
 import com.google.common.base.Supplier;
 
 import org.openmrs.mobile.data.cache.CacheService;
-import org.openmrs.mobile.data.cache.SimpleCacheService;
 import org.openmrs.mobile.data.db.BaseDbService;
 import org.openmrs.mobile.data.rest.BaseRestService;
-import org.openmrs.mobile.data.rest.retrofit.RestServiceBuilder;
 import org.openmrs.mobile.models.BaseOpenmrsObject;
 import org.openmrs.mobile.models.Resource;
 import org.openmrs.mobile.models.Results;
@@ -27,15 +25,12 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import dagger.Component;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.app.PendingIntent.getActivity;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-@Component(modules = DataModule.class)
 public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends BaseDbService<E>,
 			RS extends BaseRestService<E, ?>> implements DataService<E> {
 	public static final String TAG = "BaseDataService";
@@ -61,7 +56,7 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 	private Class<E> entityClass;
 
 	@Override
-	public void getByUUID(@NonNull String uuid, @Nullable QueryOptions options, @NonNull GetCallback<E> callback) {
+	public void getByUuid(@NonNull String uuid, @Nullable QueryOptions options, @NonNull GetCallback<E> callback) {
 		checkNotNull(uuid);
 		checkNotNull(callback);
 

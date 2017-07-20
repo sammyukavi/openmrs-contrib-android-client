@@ -23,9 +23,14 @@ import org.openmrs.mobile.models.PatientListContext;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class PatientListContextDataService
 		extends BaseDataService<PatientListContext, PatientListContextDbService, PatientListContextRestServiceImpl>
 		implements DataService<PatientListContext> {
+	@Inject
+	public PatientListContextDataService() { }
+
 	public void getListPatients(String patientListUuid, QueryOptions options, PagingInfo pagingInfo,
 			GetCallback<List<PatientListContext>> callback) {
 		executeMultipleCallback(callback, options, pagingInfo,

@@ -27,7 +27,8 @@ public interface ConceptRestService {
 	@GET(RestConstants.GET_BY_UUID)
 	Call<Concept> getByUuid(@Path(value = "restPath", encoded = true) String restPath,
 			@Path("uuid") String uuid,
-			@Query("v") String representation);
+			@Query("v") String representation,
+			@Query("includeAll") Boolean includeAll);
 
 	@GET(RestConstants.REST_PATH)
 	Call<Results<Concept>> getByConceptName(@Path(value = "restPath", encoded = true) String restPath,
@@ -38,6 +39,6 @@ public interface ConceptRestService {
 	Call<Results<Concept>> findConcept(@Path(value = "restPath", encoded = true) String restPath,
 			@Query("term") String name,
 			@Query("v") String representation,
-			@Query("startIndex") Integer startIndex,
-			@Query("limit") Integer limit);
+			@Query("limit") Integer limit,
+			@Query("startIndex") Integer startIndex);
 }

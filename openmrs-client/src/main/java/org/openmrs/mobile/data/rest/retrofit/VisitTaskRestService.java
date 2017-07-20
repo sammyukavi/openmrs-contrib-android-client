@@ -30,14 +30,17 @@ public interface VisitTaskRestService {
 	@GET(RestConstants.GET_BY_UUID)
 	Call<VisitTask> getByUuid(@Path(value = "restPath", encoded = true) String restPath,
 			@Path("uuid") String uuid,
-			@Query("v") String representation);
+			@Query("v") String representation,
+			@Query("includeAll") Boolean includeAll);
 
 	@POST(RestConstants.CREATE)
-	Call<VisitTask> create(@Path(value = "restPath", encoded = true) String restPath, @Body VisitTask entity);
+	Call<VisitTask> create(@Path(value = "restPath", encoded = true) String restPath,
+			@Body VisitTask entity);
 
 	@POST(RestConstants.UPDATE)
 	Call<VisitTask> update(@Path(value = "restPath", encoded = true) String restPath,
-			@Path("uuid") String uuid, @Body VisitTask entity);
+			@Path("uuid") String uuid,
+			@Body VisitTask entity);
 
 	@DELETE(RestConstants.PURGE)
 	Call<VisitTask> purge(@Path(value = "restPath", encoded = true) String restPath,

@@ -201,6 +201,6 @@ public class VisitTasksPresenter extends VisitPresenterImpl implements VisitCont
 										.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 					}
 				};
-		visitDataService.getByUUID(visitUUID, QueryOptions.LOAD_RELATED_OBJECTS, getSingleCallback);
+		visitDataService.getByUuid(visitUUID, QueryOptions.LOAD_RELATED_OBJECTS, getSingleCallback);
 	}
 }

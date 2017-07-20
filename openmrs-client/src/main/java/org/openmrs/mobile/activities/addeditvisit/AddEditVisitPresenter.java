@@ -76,7 +76,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 		this.visit = new Visit();
 
 		if (visitDataService == null) {
-			this.visitTypeDataService = dataAccess().visitType();
+			this.visitDataService = dataAccess().visit();
 		} else {
 			this.visitDataService = visitDataService;
 		}
@@ -122,7 +122,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 		addEditVisitView.showPageSpinner(true);
 		if (StringUtils.notEmpty(patientUuid)) {
 			patientDataService
-					.getByUUID(patientUuid, QueryOptions.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Patient>() {
+					.getByUuid(patientUuid, QueryOptions.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Patient>() {
 						@Override
 						public void onCompleted(Patient entity) {
 							loadVisit(entity);
@@ -218,7 +218,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	 * TODO: Move to Base class
 	 */
 	public void getLocation() {
-		locationDataService.getByUUID(OpenMRS.getInstance().getLocation(), QueryOptions.LOAD_RELATED_OBJECTS,
+		locationDataService.getByUuid(OpenMRS.getInstance().getLocation(), QueryOptions.LOAD_RELATED_OBJECTS,
 				new DataService.GetCallback<Location>() {
 					@Override
 					public void onCompleted(Location entity) {

@@ -66,7 +66,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	@Override
 	public void fetchPatientData(String uuid) {
 		patientDashboardView.showPageSpinner(true);
-		patientDataService.getByUUID(uuid, QueryOptions.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Patient>() {
+		patientDataService.getByUuid(uuid, QueryOptions.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Patient>() {
 			@Override
 			public void onCompleted(Patient patient) {
 				setPatient(patient);
@@ -170,7 +170,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 				}
 			};
 
-			locationDataService.getByUUID(locationUuid, QueryOptions.LOAD_RELATED_OBJECTS, locationDataServiceCallback);
+			locationDataService.getByUuid(locationUuid, QueryOptions.LOAD_RELATED_OBJECTS, locationDataServiceCallback);
 		}
 
 	}

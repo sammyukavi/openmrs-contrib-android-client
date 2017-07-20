@@ -52,7 +52,7 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 
 	private PatientList selectedPatientList;
 
-	private PatientListModelRecyclerViewAdapter adapter = new PatientListModelRecyclerViewAdapter(this.getActivity(), this);
+	private PatientListModelRecyclerViewAdapter adapter;
 
 	private int currentPage = 0;
 
@@ -79,27 +79,33 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 				if (!recyclerView.canScrollVertically(-1) && dy < 0) {
 					loadPreviousPage();
 				}
+
+				currentPage = calculateCurrentPageOnScroll(layoutManager.findLastVisibleItemPosition());
+				updatePagingLabel(currentPage);
 			}
 		}
 	};
 
-	private void loadPreviousPage(){
+	public static PatientListFragment newInstance() {
+		return new PatientListFragment();
+	}
+
+	private int calculateCurrentPageOnScroll(int currentPosition) {
+		return (currentPosition / mPresenter.getLimit()) + 1;
+	}
+
+	private void loadPreviousPage() {
 		// load previous page
-		if(currentPage <= 0) {
+		if (currentPage <= 0) {
 			currentPage = mPresenter.getPage();
 		}
 
 		int previousPage = currentPage - 1;
-		if(previousPage <= 0)
+		if (previousPage <= 0)
 			previousPage = 1;
 		int startIndexPreviousPage = ((previousPage - 1) * mPresenter.getLimit()) + 1;
 		patientListModelRecyclerView.scrollToPosition(startIndexPreviousPage);
 		updatePagingLabel(previousPage);
-		currentPage--;
-	}
-
-	public static PatientListFragment newInstance() {
-		return new PatientListFragment();
 	}
 
 	@Override
@@ -127,7 +133,6 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 		layoutManager = new LinearLayoutManager(this.getActivity());
 		patientListModelRecyclerView = (RecyclerView)root.findViewById(R.id.patientListModelRecyclerView);
 
-
 		// Font config
 		FontsUtil.setFont((ViewGroup)this.getActivity().findViewById(android.R.id.content));
 
@@ -137,6 +142,7 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+		adapter = new PatientListModelRecyclerViewAdapter(this.getActivity(), this);
 		patientListModelRecyclerView.setAdapter(adapter);
 		patientListModelRecyclerView.addOnScrollListener(recyclerViewOnScrollListener);
 
@@ -177,13 +183,15 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 		patientList.setName(getString(R.string.select_patient_list));
 
 		patientLists.add(0, patientList);
-		ArrayAdapter<PatientList> adapter = new ArrayAdapter<PatientList>(getContext(),
+		ArrayAdapter<PatientList> patientListArrayAdapter = new ArrayAdapter<PatientList>(getContext(),
 				android.R.layout.simple_spinner_dropdown_item, patientLists);
-		patientListDropdown.setAdapter(adapter);
+		patientListDropdown.setAdapter(patientListArrayAdapter);
 		patientListDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				setSelectedPatientList(patientLists.get(position));
+				currentPage = 1;
+				adapter.clearItems();
 				if (selectedPatientList.getUuid() == null) {
 					showNoPatientListSelected(true);
 					setNumberOfPatientsView(0);
@@ -228,7 +236,7 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 				.setText(getString(R.string.paging_label, String.valueOf(currentPage), String.valueOf(totalNumberOfPages)));
 	}
 
-	private void updatePagingLabel(int currentPage){
+	private void updatePagingLabel(int currentPage) {
 		updatePagingLabel(currentPage, mPresenter.getTotalNumberPages());
 	}
 

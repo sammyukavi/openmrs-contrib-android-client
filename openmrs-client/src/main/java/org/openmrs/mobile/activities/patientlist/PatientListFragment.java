@@ -103,9 +103,8 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 		int previousPage = currentPage - 1;
 		if (previousPage <= 0)
 			previousPage = 1;
-		int startIndexPreviousPage = ((previousPage - 1) * mPresenter.getLimit()) + 1;
-		patientListModelRecyclerView.scrollToPosition(startIndexPreviousPage);
-		updatePagingLabel(previousPage);
+
+		patientListModelRecyclerView.scrollToPosition(((previousPage - 1) * mPresenter.getLimit()) + 1);
 	}
 
 	@Override

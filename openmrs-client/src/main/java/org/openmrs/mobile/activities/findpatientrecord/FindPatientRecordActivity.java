@@ -41,15 +41,13 @@ import java.util.TimerTask;
 
 public class FindPatientRecordActivity extends ACBaseActivity {
 
+	private final long DELAY = 1000;
 	public FindPatientRecordContract.Presenter findPatientPresenter;
 	FindPatientRecordFragment findPatientRecordFragment;
 	private String query = "";
 	private OpenMRS instance = OpenMRS.getInstance();
-
 	private EditText searchPatientsView;
-
 	private Timer timer;
-	private final long DELAY = 1000;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -167,16 +165,16 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 		return true;
 	}
 
-	private void setSearchQuery(String query) {
-		SharedPreferences.Editor editor = instance.getOpenMRSSharedPreferences().edit();
-		editor.putString(ApplicationConstants.BundleKeys.PATIENT_QUERY_BUNDLE, query);
-		editor.commit();
-	}
-
 	private String getSearchQuery() {
 		return instance.getOpenMRSSharedPreferences().getString(
 				ApplicationConstants.BundleKeys.PATIENT_QUERY_BUNDLE,
 				ApplicationConstants.EMPTY_STRING);
+	}
+
+	private void setSearchQuery(String query) {
+		SharedPreferences.Editor editor = instance.getOpenMRSSharedPreferences().edit();
+		editor.putString(ApplicationConstants.BundleKeys.PATIENT_QUERY_BUNDLE, query);
+		editor.commit();
 	}
 
 	@Override

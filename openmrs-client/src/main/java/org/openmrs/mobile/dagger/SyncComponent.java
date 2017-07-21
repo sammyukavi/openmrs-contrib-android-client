@@ -1,6 +1,6 @@
 package org.openmrs.mobile.dagger;
 
-import org.openmrs.mobile.data.sync.SyncAdapter;
+import org.openmrs.mobile.sync.SyncAdapter;
 import org.openmrs.mobile.data.sync.SyncService;
 
 import javax.inject.Singleton;

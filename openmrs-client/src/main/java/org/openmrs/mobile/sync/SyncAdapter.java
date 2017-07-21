@@ -1,4 +1,4 @@
-package org.openmrs.mobile.data.sync;
+package org.openmrs.mobile.sync;
 
 import android.accounts.Account;
 import android.content.AbstractThreadedSyncAdapter;
@@ -13,6 +13,7 @@ import org.joda.time.DateTime;
 import org.joda.time.Period;
 import org.openmrs.mobile.dagger.DaggerSyncComponent;
 import org.openmrs.mobile.data.db.DbService;
+import org.openmrs.mobile.data.sync.SyncService;
 import org.openmrs.mobile.models.PullSubscription;
 import org.openmrs.mobile.models.SyncLog;
 
@@ -27,7 +28,8 @@ import dagger.android.DaggerService;
 
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
-    @Inject SyncService mSyncService;
+    @Inject
+    SyncService mSyncService;
     /**
      * Set up the sync adapter
      */

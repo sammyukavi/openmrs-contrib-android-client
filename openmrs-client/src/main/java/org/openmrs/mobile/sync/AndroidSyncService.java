@@ -1,4 +1,4 @@
-package org.openmrs.mobile.data.sync;
+package org.openmrs.mobile.sync;
 
 import android.app.Service;
 import android.content.Intent;

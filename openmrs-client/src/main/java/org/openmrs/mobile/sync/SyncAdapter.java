@@ -3,28 +3,15 @@ package org.openmrs.mobile.sync;
 import android.accounts.Account;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SyncResult;
 import android.os.Bundle;
 import android.util.Log;
 
-import org.joda.time.DateTime;
-import org.joda.time.Period;
 import org.openmrs.mobile.dagger.DaggerSyncComponent;
-import org.openmrs.mobile.data.db.DbService;
 import org.openmrs.mobile.data.sync.SyncService;
-import org.openmrs.mobile.models.PullSubscription;
-import org.openmrs.mobile.models.SyncLog;
-
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
-
-import dagger.android.DaggerService;
 
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
 

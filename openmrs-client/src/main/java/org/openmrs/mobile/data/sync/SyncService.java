@@ -7,6 +7,7 @@ import android.util.Log;
 
 import org.joda.time.DateTime;
 import org.joda.time.Period;
+import org.openmrs.mobile.dagger.DaggerSyncComponent;
 import org.openmrs.mobile.data.db.DbService;
 import org.openmrs.mobile.models.PullSubscription;
 import org.openmrs.mobile.models.SyncLog;
@@ -31,6 +32,10 @@ public class SyncService {
 	DbService<PullSubscription> subscriptionDbService;
 
 	private Map<String, SubscriptionProvider> subscriptionProviders = new HashMap<String, SubscriptionProvider>();
+
+	public SyncService() {
+		DaggerSyncComponent.create().inject(this);
+	}
 
 	public void sync() {
 		// Synchronize access so that only one thread is synchronizing at a time

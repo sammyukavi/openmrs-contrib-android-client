@@ -42,6 +42,8 @@ public class OpenMRS extends Application {
 	private static boolean ENCRYPTED = true;
 	private OpenMRSLogger mLogger;
 
+	private Boolean isDataSyncInitialized = false;
+
 	public static OpenMRS getInstance() {
 		return instance;
 	}
@@ -340,5 +342,13 @@ public class OpenMRS extends Application {
 		editor.remove(ApplicationConstants.LOGIN_LOCATIONS);
 		clearCurrentLoggedInUserInfo();
 		editor.commit();
+	}
+
+	public Boolean getIsDataSyncInitialized() {
+		return isDataSyncInitialized;
+	}
+
+	public void setIsDataSyncInitialized(Boolean isDataSyncInitialized) {
+		this.isDataSyncInitialized = isDataSyncInitialized;
 	}
 }

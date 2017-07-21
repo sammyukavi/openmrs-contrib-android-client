@@ -17,12 +17,14 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -45,7 +47,6 @@ import org.openmrs.mobile.activities.patientlist.PatientListActivity;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.application.OpenMRSLogger;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
-import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.net.AuthorizationManager;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 
@@ -62,6 +63,7 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 	private MenuItem mSyncbutton;
 	private Toolbar toolbar;
 	private OpenMRS instance = OpenMRS.getInstance();
+	public static final long DISCONNECT_TIMEOUT = 60000; // 1 min = 1 * 60 * 1000 ms
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -81,11 +83,18 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 		if (!(this instanceof LoginActivity) && !mAuthorizationManager.isUserLoggedIn()) {
 			mAuthorizationManager.moveToLoginActivity();
 		}
+
+		if (!(this instanceof LoginActivity)) {
+			resetDisconnectTimer();
+		} else {
+			stopDisconnectTimer();
+		}
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
+		stopDisconnectTimer();
 	}
 
 	@Override
@@ -288,5 +297,33 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 			inputMethodManager.hideSoftInputFromWindow(
 					windowToken.getWindowToken(), 0);
 		}
+	}
+
+	@Override
+	public void onUserInteraction() {
+		resetDisconnectTimer();
+	}
+
+	private Handler disconnectHandler = new Handler() {
+		public void handleMessage(NotificationCompat.MessagingStyle.Message msg) {
+		}
+	};
+
+	private Runnable disconnectCallback = new Runnable() {
+		@Override
+		public void run() {
+			// Perform any required operation on disconnect
+			logout();
+			finish();
+		}
+	};
+
+	public void resetDisconnectTimer() {
+		disconnectHandler.removeCallbacks(disconnectCallback);
+		disconnectHandler.postDelayed(disconnectCallback, DISCONNECT_TIMEOUT);
+	}
+
+	public void stopDisconnectTimer() {
+		disconnectHandler.removeCallbacks(disconnectCallback);
 	}
 }

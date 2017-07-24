@@ -54,23 +54,23 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	private VisitDataService visitDataService;
 	private PatientDataService patientDataService;
 	private LocationDataService locationDataService;
-	private boolean processing, endVisitTag;
+	private boolean processing, isEndVisit;
 	private String patientUuid;
 	private Location location;
 
 	public AddEditVisitPresenter(@NonNull AddEditVisitContract.View addEditVisitView, String patientUuid,
-			boolean endVisit) {
-		this(addEditVisitView, patientUuid, endVisit, null, null, null, null, null, null);
+			boolean isEndVisit) {
+		this(addEditVisitView, patientUuid, isEndVisit, null, null, null, null, null, null);
 	}
 
 	public AddEditVisitPresenter(@NonNull AddEditVisitContract.View addEditVisitView, String patientUuid,
-			boolean endVisit, VisitDataService visitDataService, PatientDataService patientDataService,
+			boolean isEndVisit, VisitDataService visitDataService, PatientDataService patientDataService,
 			VisitTypeDataService visitTypeDataService, VisitAttributeTypeDataService visitAttributeTypeDataService,
 			ConceptAnswerDataService conceptAnswerDataService, LocationDataService locationDataService) {
 		this.addEditVisitView = addEditVisitView;
 		this.addEditVisitView.setPresenter(this);
 		this.patientUuid = patientUuid;
-		this.endVisitTag = endVisit;
+		this.isEndVisit = isEndVisit;
 
 		if (visitDataService == null) {
 			this.visitDataService = new VisitDataService();
@@ -158,7 +158,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 							visit.setStartDatetime(new Date());
 						}
 
-						if(endVisitTag){
+						if(isEndVisit){
 							addEditVisitView.loadEndVisitView();
 						} else {
 							loadVisitTypes();
@@ -346,8 +346,8 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	}
 
 	@Override
-	public boolean getEndVisitTag() {
-		return endVisitTag;
+	public boolean isEndVisit() {
+		return isEndVisit;
 	}
 
 	@Override

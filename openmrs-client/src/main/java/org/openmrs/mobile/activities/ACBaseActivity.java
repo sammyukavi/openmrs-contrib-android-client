@@ -319,7 +319,7 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 	};
 
 	public void resetDisconnectTimer() {
-		disconnectHandler.removeCallbacks(disconnectCallback);
+		stopDisconnectTimer();
 		disconnectHandler.postDelayed(disconnectCallback, DISCONNECT_TIMEOUT);
 	}
 

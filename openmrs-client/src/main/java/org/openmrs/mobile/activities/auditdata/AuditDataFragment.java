@@ -338,40 +338,40 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 			case R.id.is_icu_stay_yes:
 				icuStayObservation = setObservationFields(icuStayObservation,
 						CONCEPT_ICU_STAY, CONCEPT_ANSWER_YES);
-				setExtraICUFieldsVisibility(true);
+				showAnimateView(true, extraFormAdditions);
 				break;
 
 			case R.id.is_icu_stay_no:
 				icuStayObservation = setObservationFields(icuStayObservation,
 						CONCEPT_ICU_STAY, CONCEPT_ANSWER_NO);
-				setExtraICUFieldsVisibility(false);
+				showAnimateView(false, extraFormAdditions);
 				voidExtraICUObservations();
 				break;
 
 			case R.id.is_icu_stay_unknown:
 				icuStayObservation = setObservationFields(icuStayObservation,
 						CONCEPT_ICU_STAY, CONCEPT_ANSWER_UNKNOWN);
-				setExtraICUFieldsVisibility(true);
+				showAnimateView(false, extraFormAdditions);
 				voidExtraICUObservations();
 				break;
 
 			case R.id.is_hdu_stay_yes:
 				hduStayObservation = setObservationFields(hduStayObservation,
 						CONCEPT_HDU_STAY, CONCEPT_ANSWER_YES);
-				setHDUCommitVisibility(true);
+				showAnimateView(true, hduCoManage);
 				break;
 
 			case R.id.is_hdu_stay_no:
 				hduStayObservation = setObservationFields(hduStayObservation,
 						CONCEPT_HDU_STAY, CONCEPT_ANSWER_NO);
-				setHDUCommitVisibility(false);
-				voidHDUCommitObservation();
+				showAnimateView(false, hduCoManage);
+				setObservationVoided(hduComgmtObservation);
 				break;
 
 			case R.id.is_hdu_stay_unknown:
 				hduStayObservation = setObservationFields(hduStayObservation, CONCEPT_HDU_STAY, CONCEPT_ANSWER_UNKNOWN);
-				setHDUCommitVisibility(false);
-				voidHDUCommitObservation();
+				showAnimateView(false, hduCoManage);
+				setObservationVoided(hduComgmtObservation);
 				break;
 
 			case R.id.is_hdu_comgmt_yes:
@@ -394,21 +394,21 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 				hivPositiveObservation =
 						setObservationFields(hivPositiveObservation, CONCEPT_HIV_STATUS,
 								CONCEPT_ANSWER_POSITIVE);
-				setCD4Visibility(true);
+				showAnimateView(true, cd4);
 				break;
 
 			case R.id.is_hiv_positive_no:
 				hivPositiveObservation = setObservationFields(hivPositiveObservation,
 						CONCEPT_HIV_STATUS, CONCEPT_ANSWER_NEGATIVE);
-				setCD4Visibility(false);
-				voidCD4Observation();
+				showAnimateView(false, cd4);
+				setObservationVoided(cd4Observation);
 				break;
 
 			case R.id.is_hiv_positive_unknown:
 				hivPositiveObservation = setObservationFields(hivPositiveObservation,
 						CONCEPT_HIV_STATUS, CONCEPT_ANSWER_UNKNOWN);
-				setCD4Visibility(false);
-				voidCD4Observation();
+				showAnimateView(false, cd4);
+				setObservationVoided(cd4Observation);
 				break;
 
 			case R.id.mechanical_ventilation_yes:
@@ -552,21 +552,21 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 				firstMapObservation =
 						setObservationFields(patientDiabeticObservation, CONCEPT_PATIENT_DIABETIC,
 								CONCEPT_ANSWER_YES);
-				setHba1cVisibility(true);
+				showAnimateView(true, hBa1c);
 				break;
 
 			case R.id.patient_diabetic_no:
 				firstMapObservation =
 						setObservationFields(patientDiabeticObservation, CONCEPT_PATIENT_DIABETIC, CONCEPT_ANSWER_NO);
-				setHba1cVisibility(false);
-				voidHbA1CObservation();
+				showAnimateView(false, hBa1c);
+				setObservationVoided(hBa1cObservation);
 				break;
 
 			case R.id.patient_diabetic_unknown:
 				firstMapObservation =
 						setObservationFields(patientDiabeticObservation, CONCEPT_PATIENT_DIABETIC, CONCEPT_ANSWER_UNKNOWN);
-				setHba1cVisibility(false);
-				voidHbA1CObservation();
+				showAnimateView(false, hBa1c);
+				setObservationVoided(hBa1cObservation);
 				break;
 			default:
 				break;
@@ -736,18 +736,18 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 						icuStayYes.setChecked(true);
 						icuStayObservation = setObservationFields(observation, CONCEPT_ICU_STAY,
 								CONCEPT_ANSWER_YES);
-						setExtraICUFieldsVisibility(true);
+						showAnimateView(true, extraFormAdditions);
 
 					} else if (displayValue.equalsIgnoreCase(ANSWER_NO)) {
 						icuStayObservation = setObservationFields(observation, CONCEPT_ICU_STAY,
 								CONCEPT_ANSWER_NO);
 						icuStayNo.setChecked(true);
-						setExtraICUFieldsVisibility(false);
+						showAnimateView(false, extraFormAdditions);
 
 					} else if (displayValue.equalsIgnoreCase(ANSWER_UNKNOWN)) {
 						icuStayUnknown.setChecked(true);
 						icuStayObservation = setObservationFields(observation, CONCEPT_ICU_STAY, CONCEPT_ANSWER_UNKNOWN);
-						setExtraICUFieldsVisibility(false);
+						showAnimateView(false, extraFormAdditions);
 					}
 
 					break;
@@ -757,18 +757,18 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 						hduStayYes.setChecked(true);
 						hduStayObservation = setObservationFields(observation, CONCEPT_HDU_STAY,
 								CONCEPT_ANSWER_YES);
-						setHDUCommitVisibility(true);
+						showAnimateView(true, hduCoManage);
 
 					} else if (displayValue.equalsIgnoreCase(ANSWER_NO)) {
 						hduStayNo.setChecked(true);
 						hduStayObservation = setObservationFields(observation, CONCEPT_HDU_STAY,
 								CONCEPT_ANSWER_NO);
-						setHDUCommitVisibility(false);
+						showAnimateView(false, hduCoManage);
 
 					} else if (displayValue.equalsIgnoreCase(ANSWER_UNKNOWN)) {
 						hduStayUnknown.setChecked(true);
 						hduStayObservation = setObservationFields(observation, CONCEPT_HDU_STAY, CONCEPT_ANSWER_UNKNOWN);
-						setHDUCommitVisibility(false);
+						showAnimateView(false, hduCoManage);
 
 					}
 
@@ -798,19 +798,18 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 						hivPositiveYes.setChecked(true);
 						hivPositiveObservation = setObservationFields(observation, CONCEPT_HIV_STATUS,
 								CONCEPT_ANSWER_POSITIVE);
-						setCD4Visibility(true);
+						showAnimateView(true, cd4);
 
 					} else if (displayValue.equalsIgnoreCase(ANSWER_NEGATIVE)) {
 						hivPositiveNo.setChecked(true);
 						hivPositiveObservation = setObservationFields(observation, CONCEPT_HIV_STATUS,
 								CONCEPT_ANSWER_NEGATIVE);
-						setCD4Visibility(false);
-
+						showAnimateView(false, cd4);
 					} else if (displayValue.equalsIgnoreCase(ANSWER_UNKNOWN)) {
 						hivPositiveUnknown.setChecked(true);
 						hivPositiveObservation =
 								setObservationFields(observation, CONCEPT_HIV_STATUS, CONCEPT_ANSWER_UNKNOWN);
-						setCD4Visibility(false);
+						showAnimateView(false, cd4);
 
 					}
 					break;
@@ -1028,21 +1027,21 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 						patientDiabeticObservation =
 								setObservationFields(observation, CONCEPT_PATIENT_DIABETIC,
 										CONCEPT_ANSWER_YES);
-						setHba1cVisibility(true);
+						showAnimateView(true, hBa1c);
 
 					} else if (displayValue.equalsIgnoreCase(ANSWER_NO)) {
 						patient_diabetic_yes.setChecked(true);
 						patientDiabeticObservation =
 								setObservationFields(observation, CONCEPT_PATIENT_DIABETIC,
 										CONCEPT_ANSWER_NO);
-						setHba1cVisibility(false);
+						showAnimateView(false, hBa1c);
 
 					} else if (displayValue.equalsIgnoreCase(ANSWER_UNKNOWN)) {
 						patient_diabetic_yes.setChecked(true);
 						patientDiabeticObservation =
 								setObservationFields(observation, CONCEPT_PATIENT_DIABETIC,
 										CONCEPT_ANSWER_UNKNOWN);
-						setHba1cVisibility(false);
+						showAnimateView(false, hBa1c);
 
 					}
 
@@ -1196,90 +1195,30 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 	}
 
 	public void voidExtraICUObservations() {
-		if (mechanicalVentilationObservation != null) {
-			mechanicalVentilationObservation.setVoided(true);
-		}
-		if (vaospressorsObservation != null) {
-			vaospressorsObservation.setVoided(true);
-		}
-		if (surgeryObservation != null) {
-			surgeryObservation.setVoided(true);
-		}
-		if (confirmedInfectionObservation != null) {
-			confirmedInfectionObservation.setVoided(true);
-		}
-		if (firstSbpObservation != null) {
-			firstSbpObservation.setVoided(true);
-		}
-		if (firstMapObservation != null) {
-			firstMapObservation.setVoided(true);
-		}
-		if (firstIcuHeartRateObservation != null) {
-			firstIcuHeartRateObservation.setVoided(true);
-		}
-		if (firstGcsScoreObservation != null) {
-			firstGcsScoreObservation.setVoided(true);
-		}
-		if (priorSedetionObservation != null) {
-			priorSedetionObservation.setVoided(true);
+		setObservationVoided(mechanicalVentilationObservation);
+		setObservationVoided(vaospressorsObservation);
+		setObservationVoided(surgeryObservation);
+		setObservationVoided(confirmedInfectionObservation);
+		setObservationVoided(firstSbpObservation);
+		setObservationVoided(firstMapObservation);
+		setObservationVoided(firstIcuHeartRateObservation);
+		setObservationVoided(firstGcsScoreObservation);
+		setObservationVoided(priorSedetionObservation);
+	}
+
+	private void setObservationVoided(Observation observation) {
+		if (observation != null) {
+			observation.setVoided(true);
 		}
 	}
 
-	public void voidCD4Observation() {
-		if (cd4Observation != null) {
-			cd4Observation.setVoided(true);
-		}
-	}
-
-	public void voidHbA1CObservation() {
-		if (hBa1cObservation != null) {
-			hBa1cObservation.setVoided(true);
-		}
-	}
-
-	public void voidHDUCommitObservation() {
-		if (hduComgmtObservation != null) {
-			hduComgmtObservation.setVoided(true);
-		}
-	}
-
-	private void setHba1cVisibility(boolean visibility) {
+	private void showAnimateView(boolean visibility, View view) {
 		if (visibility) {
-			hBa1c.setVisibility(View.VISIBLE);
-			hBa1c.animate().alpha(1.0f).setDuration(2000);
+			view.setVisibility(View.VISIBLE);
+			view.animate().alpha(1.0f).setDuration(2000);
 		} else {
-			hBa1c.setVisibility(View.GONE);
-			hBa1c.animate().alpha(0.0f).setDuration(2000);
-		}
-	}
-
-	private void setCD4Visibility(boolean visibility) {
-		if (visibility) {
-			cd4.setVisibility(View.VISIBLE);
-			cd4.animate().alpha(1.0f).setDuration(2000);
-		} else {
-			cd4.setVisibility(View.GONE);
-			cd4.animate().alpha(0.0f).setDuration(2000);
-		}
-	}
-
-	private void setExtraICUFieldsVisibility(boolean visibility) {
-		if (visibility) {
-			extraFormAdditions.setVisibility(View.VISIBLE);
-			extraFormAdditions.animate().alpha(1.0f).setDuration(2000);
-		} else {
-			extraFormAdditions.setVisibility(View.GONE);
-			extraFormAdditions.animate().alpha(0.0f).setDuration(2000);
-		}
-	}
-
-	private void setHDUCommitVisibility(boolean visibility) {
-		if (visibility) {
-			hduCoManage.setVisibility(View.VISIBLE);
-			hduCoManage.animate().alpha(1.0f).setDuration(2000);
-		} else {
-			hduCoManage.setVisibility(View.GONE);
-			hduCoManage.animate().alpha(0.0f).setDuration(2000);
+			view.setVisibility(View.GONE);
+			view.animate().alpha(0.0f).setDuration(2000);
 		}
 	}
 

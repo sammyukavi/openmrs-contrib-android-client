@@ -43,7 +43,7 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 
 	private final long DELAY = 1000;
 	public FindPatientRecordContract.Presenter findPatientPresenter;
-	FindPatientRecordFragment findPatientRecordFragment;
+	private FindPatientRecordFragment findPatientRecordFragment;
 	private String query = "";
 	private OpenMRS instance = OpenMRS.getInstance();
 	private EditText searchPatientsView;

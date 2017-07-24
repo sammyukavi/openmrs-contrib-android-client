@@ -71,12 +71,18 @@ public class PatientListModelRecyclerViewAdapter
 		return items.size();
 	}
 
+	public void addItems(List<PatientListContext> items) {
+		this.items.addAll(items);
+
+		notifyDataSetChanged();
+	}
+
+	public List<PatientListContext> getItems() {
+		return items;
+	}
+
 	public void setItems(List<PatientListContext> items) {
-		if (this.items != null) {
-			this.items.addAll(items);
-		} else {
-			this.items = items;
-		}
+		this.items = items;
 
 		notifyDataSetChanged();
 	}

@@ -67,11 +67,10 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 		}
 	}
 
-
 	@Override
 	public void subscribe() {
 		// get all patient lists
-		if(patientLists == null) {
+		if (patientLists == null) {
 			getPatientList();
 		}
 	}
@@ -94,7 +93,7 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 							patientListView.showPatientListProgressSpinner(false);
 							patientListView.setNoPatientListsVisibility(false);
 							patientListView.updatePatientLists(entities);
-							if(StringUtils.notNull(patientListUuid)){
+							if (StringUtils.notNull(patientListUuid)) {
 								getPatientListData(patientListUuid, getPage());
 							}
 						}
@@ -133,7 +132,7 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 							setTotalNumberResults(pagingInfo.getTotalRecordCount());
 							if (pagingInfo.getTotalRecordCount() > 0) {
 								patientListView.setNumberOfPatientsView(pagingInfo.getTotalRecordCount());
-								totalNumberPages = (limit + pagingInfo.getTotalRecordCount() - 1) / limit;
+								totalNumberPages = pagingInfo.getTotalPages();
 								patientListView.updatePagingLabel(page, totalNumberPages);
 							}
 						}

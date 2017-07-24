@@ -76,6 +76,10 @@ public class PagingInfo {
 		return totalRecordCount;
 	}
 
+	public Integer getTotalPages(){
+		return (pageSize + getTotalRecordCount() - 1) / pageSize;
+	}
+
 	public void setTotalRecordCount(Integer totalRecordCount) {
 		this.totalRecordCount = totalRecordCount;
 

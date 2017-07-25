@@ -1,5 +1,7 @@
-package org.openmrs.mobile.dagger;
+package org.openmrs.mobile.data.dagger;
 
+import org.mockito.Mockito;
+import org.openmrs.mobile.dagger.SyncModule;
 import org.openmrs.mobile.data.db.DbService;
 import org.openmrs.mobile.data.db.impl.PatientDbService;
 import org.openmrs.mobile.data.db.impl.PullSubscriptionDbService;
@@ -10,44 +12,31 @@ import org.openmrs.mobile.data.sync.SyncService;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.PullSubscription;
 import org.openmrs.mobile.models.SyncLog;
+import org.powermock.api.mockito.PowerMockito;
 
-import java.io.SyncFailedException;
-
-import javax.inject.Singleton;
-
-import dagger.Module;
-import dagger.Provides;
-
-@Module
-public class SyncModule {
-
-	@Provides
-	@Singleton
+public class TestSyncModule extends SyncModule {
+	@Override
 	public SyncService providesSyncService() {
-		return new SyncService();
+		return PowerMockito.mock(SyncService.class);
 	}
 
-	@Provides
-	@Singleton
+	@Override
 	public DbService<SyncLog> providesSyncLogDbService() {
-		return new SyncLogDbService();
+		return PowerMockito.mock(SyncLogDbService.class);
 	}
 
-	@Provides
-	@Singleton
+	@Override
 	public DbService<PullSubscription> providesPullSubscriptionDbService() {
-		return new PullSubscriptionDbService();
+		return PowerMockito.mock(PullSubscriptionDbService.class);
 	}
 
-	@Provides
-	@Singleton
+	@Override
 	public SyncProvider providesSyncProvider() {
-		return new PushSyncProvider();
+		return PowerMockito.mock(PushSyncProvider.class);
 	}
 
-	@Provides
-	@Singleton
+	@Override
 	public DbService<Patient> providesPatientDbService() {
-		return new PatientDbService();
+		return PowerMockito.mock(PatientDbService.class);
 	}
 }

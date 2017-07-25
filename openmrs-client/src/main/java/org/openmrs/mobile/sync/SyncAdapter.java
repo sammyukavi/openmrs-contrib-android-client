@@ -35,5 +35,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                               ContentProviderClient provider, SyncResult syncResult) {
 	    // Do syncing here
 	    Log.i("SyncAdapter", "perform sync");
+	    mSyncService.sync();
     }
 }

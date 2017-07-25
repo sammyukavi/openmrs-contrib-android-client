@@ -20,7 +20,6 @@ import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
@@ -29,13 +28,10 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 
-import com.raizlabs.android.dbflow.config.DatabaseConfig;
-import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
-import org.openmrs.mobile.receivers.*;
 import org.openmrs.mobile.receivers.ConnectivityReceiver;
 import org.openmrs.mobile.security.SecretKeyGenerator;
 import org.openmrs.mobile.utilities.ApplicationConstants;
@@ -65,6 +61,10 @@ public class OpenMRS extends Application {
 	public static final long SYNC_INTERVAL_IN_MINUTES = 1L;
 	public static final long SYNC_INTERVAL = SYNC_INTERVAL_IN_MINUTES * SECONDS_PER_MINUTE;
 	private Account mAccount;
+
+	// Connectivity constants
+	private Boolean hasWifiSignalBeenLost = false;
+	private Boolean hasDataSignalBeenLost = false;
 
 	public static OpenMRS getInstance() {
 		return instance;
@@ -411,9 +411,5 @@ public class OpenMRS extends Application {
 		editor.remove(ApplicationConstants.LOGIN_LOCATIONS);
 		clearCurrentLoggedInUserInfo();
 		editor.commit();
-	}
-
-	public void requestDataSync() {
-		ContentResolver.requestSync(mAccount, AUTHORITY, Bundle.EMPTY);
 	}
 }

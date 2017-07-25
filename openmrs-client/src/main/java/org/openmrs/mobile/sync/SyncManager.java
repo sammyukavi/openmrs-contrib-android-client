@@ -25,12 +25,12 @@ public class SyncManager {
 	public static final long SECONDS_PER_MINUTE = 60L;
 	public static final long SYNC_INTERVAL_IN_MINUTES = 1L;
 	public static final long SYNC_INTERVAL = SYNC_INTERVAL_IN_MINUTES * SECONDS_PER_MINUTE;
-	private Account mAccount;
 
 	// Connectivity constants
 	private Boolean hasWifiSignalBeenLost = false;
 	private Boolean hasDataSignalBeenLost = false;
 
+	private Account mAccount;
 	private OpenMRS mOpenMRS;
 
 	@Inject

@@ -6,12 +6,8 @@ import android.content.ContentProviderClient;
 import android.content.Context;
 import android.content.SyncResult;
 import android.os.Bundle;
-import android.util.Log;
 
-import org.openmrs.mobile.dagger.DaggerSyncComponent;
 import org.openmrs.mobile.data.sync.SyncService;
-
-import javax.inject.Inject;
 
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
 

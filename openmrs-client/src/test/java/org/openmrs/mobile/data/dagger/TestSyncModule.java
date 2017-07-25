@@ -1,7 +1,6 @@
 package org.openmrs.mobile.data.dagger;
 
 import android.content.Context;
-import org.mockito.Mockito;
 import org.openmrs.mobile.dagger.SyncModule;
 import org.openmrs.mobile.data.db.DbService;
 import org.openmrs.mobile.data.db.impl.PatientDbService;

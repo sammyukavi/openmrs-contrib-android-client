@@ -5,8 +5,6 @@ import javax.inject.Inject;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import android.util.Log;
-import dagger.multibindings.ElementsIntoSet;
 import org.openmrs.mobile.dagger.DaggerSyncComponent;
 import org.openmrs.mobile.dagger.SyncModule;
 

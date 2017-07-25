@@ -12,8 +12,6 @@ import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.PullSubscription;
 import org.openmrs.mobile.models.SyncLog;
 
-import java.io.SyncFailedException;
-
 import javax.inject.Singleton;
 
 import dagger.Module;

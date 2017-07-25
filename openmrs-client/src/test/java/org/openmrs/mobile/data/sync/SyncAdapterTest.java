@@ -10,7 +10,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
@@ -20,8 +19,6 @@ import org.openmrs.mobile.data.dagger.DaggerTestSyncComponent;
 import org.openmrs.mobile.data.dagger.TestSyncComponent;
 import org.openmrs.mobile.data.dagger.TestSyncModule;
 import org.openmrs.mobile.sync.SyncAdapter;
-import org.powermock.api.mockito.PowerMockito;
-import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 

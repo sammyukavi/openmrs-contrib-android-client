@@ -412,4 +412,8 @@ public class OpenMRS extends Application {
 		clearCurrentLoggedInUserInfo();
 		editor.commit();
 	}
+
+	public void requestDataSync() {
+		ContentResolver.requestSync(mAccount, AUTHORITY, Bundle.EMPTY);
+	}
 }

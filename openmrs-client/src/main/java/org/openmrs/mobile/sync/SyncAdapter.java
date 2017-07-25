@@ -15,26 +15,22 @@ import javax.inject.Inject;
 
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
-    @Inject
-    SyncService mSyncService;
-    /**
-     * Set up the sync adapter
-     */
-    public SyncAdapter(Context context, boolean autoInitialize) {
+	// Injected via constructor injection
+    private SyncService mSyncService;
+
+    public SyncAdapter(Context context, boolean autoInitialize, SyncService syncService) {
         super(context, autoInitialize);
-	    DaggerSyncComponent.create().inject(this);
+	    this.mSyncService = syncService;
     }
 
-    public SyncAdapter(Context context, boolean autoInitialize, boolean allowParallelSync) {
+    public SyncAdapter(Context context, boolean autoInitialize, boolean allowParallelSync, SyncService syncService) {
         super(context, autoInitialize, allowParallelSync);
-	    DaggerSyncComponent.create().inject(this);
+	    this.mSyncService = syncService;
     }
 
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority,
                               ContentProviderClient provider, SyncResult syncResult) {
-	    // Do syncing here
-	    Log.i("SyncAdapter", "perform sync");
 	    mSyncService.sync();
     }
 }

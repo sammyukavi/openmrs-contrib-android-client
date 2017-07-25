@@ -42,19 +42,20 @@ public class SyncAdapterTest {
 	@Mock
 	ContentProviderClient contentProviderClient;
 
+	@Mock
+	SyncResult syncResult;
+
 	@Before
 	public void setUp() {
-		TestSyncComponent syncComponent = DaggerTestSyncComponent.builder().syncModule(new TestSyncModule()).build();
+		TestSyncComponent syncComponent = DaggerTestSyncComponent.builder().syncModule(new TestSyncModule(mContext)).build();
 		syncComponent.inject(this);
 	}
 
 	@Test
 	public void sync_callToPerformSyncCallsSyncServiceToSync() {
 		Account account = new Account("test", "test");
-		SyncAdapter syncAdapter = new SyncAdapter(mContext, true);
-		DaggerTestSyncComponent.create().inject(syncAdapter);
-		syncAdapter.onPerformSync(account, Bundle.EMPTY, "test", contentProviderClient,
-				new SyncResult());
+		SyncAdapter syncAdapter = new SyncAdapter(mContext, true, mSyncService);
+		syncAdapter.onPerformSync(account, Bundle.EMPTY, "test", contentProviderClient, syncResult);
 
 		Mockito.verify(mSyncService, Mockito.times(1)).sync();
 	}

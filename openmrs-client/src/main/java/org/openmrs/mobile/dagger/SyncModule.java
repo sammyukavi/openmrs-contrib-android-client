@@ -1,5 +1,6 @@
 package org.openmrs.mobile.dagger;
 
+import android.content.Context;
 import org.openmrs.mobile.data.db.DbService;
 import org.openmrs.mobile.data.db.impl.PatientDbService;
 import org.openmrs.mobile.data.db.impl.PullSubscriptionDbService;
@@ -17,14 +18,26 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import org.openmrs.mobile.sync.SyncAdapter;
 
 @Module
 public class SyncModule {
+	protected Context mContext;
+
+	public SyncModule(Context context) {
+		this.mContext = context;
+	}
+
+	@Provides
+	@Singleton
+	public SyncAdapter providesSyncAdapter() {
+		return new SyncAdapter(mContext, true, providesSyncService());
+	}
 
 	@Provides
 	@Singleton
 	public SyncService providesSyncService() {
-		return new SyncService();
+		return new SyncService(providesSyncProvider(), providesSyncLogDbService(), providesPullSubscriptionDbService());
 	}
 
 	@Provides
@@ -42,7 +55,7 @@ public class SyncModule {
 	@Provides
 	@Singleton
 	public SyncProvider providesSyncProvider() {
-		return new PushSyncProvider();
+		return new PushSyncProvider(providesPatientDbService());
 	}
 
 	@Provides

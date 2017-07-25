@@ -1,13 +1,9 @@
 package org.openmrs.mobile.data.sync;
 
-import android.app.Service;
-import android.content.Intent;
-import android.os.IBinder;
 import android.util.Log;
 
 import org.joda.time.DateTime;
 import org.joda.time.Period;
-import org.openmrs.mobile.dagger.DaggerSyncComponent;
 import org.openmrs.mobile.data.db.DbService;
 import org.openmrs.mobile.models.PullSubscription;
 import org.openmrs.mobile.models.SyncLog;
@@ -22,20 +18,19 @@ import javax.inject.Inject;
 public class SyncService {
 	private static final Object SYNC_LOCK = new Object();
 
-	@Inject
-	SyncProvider syncProvider;
+	private SyncProvider mSyncProvider;
+	private DbService<SyncLog> mSyncLogDbService;
+	private DbService<PullSubscription> mSubscriptionDbService;
 
 	@Inject
-	DbService<SyncLog> syncLogDbService;
-
-	@Inject
-	DbService<PullSubscription> subscriptionDbService;
+	public SyncService(SyncProvider syncProvider, DbService<SyncLog> syncLogDbService,
+			DbService<PullSubscription> subscriptionDbService) {
+		this.mSyncProvider = syncProvider;
+		this.mSyncLogDbService = syncLogDbService;
+		this.mSubscriptionDbService = subscriptionDbService;
+	}
 
 	private Map<String, SubscriptionProvider> subscriptionProviders = new HashMap<String, SubscriptionProvider>();
-
-	public SyncService() {
-		DaggerSyncComponent.create().inject(this);
-	}
 
 	public void sync() {
 		// Synchronize access so that only one thread is synchronizing at a time
@@ -49,12 +44,12 @@ public class SyncService {
 	}
 
 	protected void push() {
-		List<SyncLog> records = syncLogDbService.getAll(null, null);
+		List<SyncLog> records = mSyncLogDbService.getAll(null, null);
 
 		for (SyncLog record : records) {
-			syncProvider.sync(record);
+			mSyncProvider.sync(record);
 
-			syncLogDbService.delete(record);
+			mSyncLogDbService.delete(record);
 		}
 	}
 
@@ -64,7 +59,7 @@ public class SyncService {
 	 */
 	protected void pull() {
 		// Get subscriptions
-		List<PullSubscription> subscriptions = subscriptionDbService.getAll(null, null);
+		List<PullSubscription> subscriptions = mSubscriptionDbService.getAll(null, null);
 		for (PullSubscription sub : subscriptions) {
 			// Check if subscription should be processed, given the minimum interval
 			Integer seconds = null;

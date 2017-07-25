@@ -8,12 +8,12 @@ import org.openmrs.mobile.models.SyncLog;
 import javax.inject.Inject;
 
 public class PushSyncProvider implements SyncProvider {
-	@Inject
-	DbService<Patient> patientDbService;
+
+	private DbService<Patient> mPatientDbService;
 
 	@Inject
-	public PushSyncProvider() {
-		DaggerSyncComponent.create().inject(this);
+	public PushSyncProvider(DbService<Patient> patientDbService) {
+		this.mPatientDbService = patientDbService;
 	}
 
 	@Override

@@ -74,8 +74,8 @@ public class AddEditVisitActivity extends ACBaseActivity {
 					addFragmentToActivity(getSupportFragmentManager(), addEditVisitFragment, R.id.addeditVisitContentFrame);
 				}
 
-				addEditVisitPresenter = new AddEditVisitPresenter(addEditVisitFragment, patientUuid,
-						extras.getBoolean(ApplicationConstants.BundleKeys.END_VISIT_TAG, false));
+				addEditVisitPresenter = new AddEditVisitPresenter(addEditVisitFragment, patientUuid, visitUuid,
+						extras.getBoolean(ApplicationConstants.BundleKeys.IS_END_VISIT, false));
 
 				// patient header
 				PatientHeaderFragment headerFragment = (PatientHeaderFragment)getSupportFragmentManager()

@@ -14,6 +14,8 @@ import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.DateUtils;
 
+import java.util.Date;
+
 import retrofit2.Call;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -91,11 +93,18 @@ public class VisitDataService extends BaseEntityDataService<Visit, VisitDbServic
 	}
 
 	public void updateVisit(String visitUuid, Visit updatedVisit, GetCallback<Visit> callback) {
+		final String stopDateTime;
+		if(null != updatedVisit.getStopDatetime()){
+			stopDateTime = DateUtils.convertTime(
+					updatedVisit.getStopDatetime().getTime(), DateUtils.OPEN_MRS_REQUEST_PATIENT_FORMAT);
+		} else
+			stopDateTime = "";
+
 		executeSingleCallback(callback, null,
 				() -> dbService.save(updatedVisit),
 				() -> restService.updateVisit(ApplicationConstants.API.REST_ENDPOINT_V2 + "/custom/visitedit",
 						visitUuid, updatedVisit.getVisitType().getUuid(),
 						DateUtils.convertTime(updatedVisit.getStartDatetime().getTime(), DateUtils.OPEN_MRS_REQUEST_PATIENT_FORMAT),
-						updatedVisit.getAttributes()));
+						stopDateTime, updatedVisit.getAttributes()));
 	}
 }

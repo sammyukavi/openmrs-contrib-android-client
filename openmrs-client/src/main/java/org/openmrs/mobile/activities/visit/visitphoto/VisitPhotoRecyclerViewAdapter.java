@@ -16,7 +16,6 @@ package org.openmrs.mobile.activities.visit.visitphoto;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -45,11 +44,14 @@ public class VisitPhotoRecyclerViewAdapter
 	private List<VisitPhoto> visitPhotos;
 	private Map<ImageView, VisitPhoto> map = new HashMap<>();
 
-	public VisitPhotoRecyclerViewAdapter(Activity context,
-			List<VisitPhoto> visitPhotos, VisitContract.VisitPhotoView view) {
+	public VisitPhotoRecyclerViewAdapter(Activity context, VisitContract.VisitPhotoView view) {
 		this.context = context;
-		this.visitPhotos = visitPhotos;
 		this.view = view;
+	}
+
+	public void setVisitPhotos(List<VisitPhoto> visitPhotos) {
+		this.visitPhotos = visitPhotos;
+		notifyDataSetChanged();
 	}
 
 	@Override

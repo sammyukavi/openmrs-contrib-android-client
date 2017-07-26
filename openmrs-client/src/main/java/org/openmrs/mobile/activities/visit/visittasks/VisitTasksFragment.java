@@ -295,7 +295,7 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 
 	public List<VisitPredefinedTask> removeUsedPredefinedTasks(List<VisitPredefinedTask> visitPredefinedTask,
 			List<VisitTask> visitTask) {
-		if (visitPredefinedTask.size() != 0) {
+		if (visitPredefinedTask != null && visitTask != null) {
 			String visitTasksName, predefinedTaskName;
 			VisitTaskStatus visitTaskStatus;
 

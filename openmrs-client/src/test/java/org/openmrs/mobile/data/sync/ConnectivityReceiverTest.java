@@ -36,21 +36,21 @@ public class ConnectivityReceiverTest {
 	@Mock
 	NetworkInfo networkInfo;
 
-	private ConnectivityReceiver mConnectivityReceiver;
+	private ConnectivityReceiver connectivityReceiver;
 
 	@Before
 	public void setUp() {
 		Mockito.when(openMRS.getApplicationContext()).thenReturn(openMRS);
 		Mockito.when(openMRS.getSystemService(Context.CONNECTIVITY_SERVICE)).thenReturn(connectivityManager);
 
-		mConnectivityReceiver = new ConnectivityReceiver();
+		connectivityReceiver = new ConnectivityReceiver();
 	}
 
 	@Test
 	public void connectivityReceiver_whenReceiveBroadcastWithoutActiveNetworkSyncIsNotCalled() {
 		Mockito.when(connectivityManager.getActiveNetworkInfo()).thenReturn(null);
 
-		mConnectivityReceiver.onReceive(openMRS, intent);
+		connectivityReceiver.onReceive(openMRS, intent);
 
 		Mockito.verify(openMRS, Mockito.times(0)).requestDataSync();
 	}
@@ -60,7 +60,7 @@ public class ConnectivityReceiverTest {
 		Mockito.when(connectivityManager.getActiveNetworkInfo()).thenReturn(networkInfo);
 		Mockito.when(networkInfo.isConnectedOrConnecting()).thenReturn(false);
 
-		mConnectivityReceiver.onReceive(openMRS, intent);
+		connectivityReceiver.onReceive(openMRS, intent);
 
 		Mockito.verify(openMRS, Mockito.times(0)).requestDataSync();
 	}

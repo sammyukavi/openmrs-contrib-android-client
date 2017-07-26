@@ -12,21 +12,21 @@ import org.openmrs.mobile.data.sync.SyncService;
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
 	// Injected via constructor injection
-    private SyncService mSyncService;
+    private SyncService syncService;
 
     public SyncAdapter(Context context, boolean autoInitialize, SyncService syncService) {
         super(context, autoInitialize);
-	    this.mSyncService = syncService;
+	    this.syncService = syncService;
     }
 
     public SyncAdapter(Context context, boolean autoInitialize, boolean allowParallelSync, SyncService syncService) {
         super(context, autoInitialize, allowParallelSync);
-	    this.mSyncService = syncService;
+	    this.syncService = syncService;
     }
 
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority,
                               ContentProviderClient provider, SyncResult syncResult) {
-	    mSyncService.sync();
+	    syncService.sync();
     }
 }

@@ -20,16 +20,16 @@ import org.openmrs.mobile.sync.SyncAdapter;
 
 @Module
 public class SyncModule {
-	protected Context mContext;
+	protected Context context;
 
 	public SyncModule(Context context) {
-		this.mContext = context;
+		this.context = context;
 	}
 
 	@Provides
 	@Singleton
 	public SyncAdapter providesSyncAdapter() {
-		return new SyncAdapter(mContext, true, providesSyncService());
+		return new SyncAdapter(context, true, providesSyncService());
 	}
 
 	@Provides

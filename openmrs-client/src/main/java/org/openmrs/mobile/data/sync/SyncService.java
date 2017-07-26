@@ -18,16 +18,16 @@ import javax.inject.Inject;
 public class SyncService {
 	private static final Object SYNC_LOCK = new Object();
 
-	private SyncProvider mSyncProvider;
-	private DbService<SyncLog> mSyncLogDbService;
-	private DbService<PullSubscription> mSubscriptionDbService;
+	private SyncProvider syncProvider;
+	private DbService<SyncLog> syncLogDbService;
+	private DbService<PullSubscription> subscriptionDbService;
 
 	@Inject
 	public SyncService(SyncProvider syncProvider, DbService<SyncLog> syncLogDbService,
 			DbService<PullSubscription> subscriptionDbService) {
-		this.mSyncProvider = syncProvider;
-		this.mSyncLogDbService = syncLogDbService;
-		this.mSubscriptionDbService = subscriptionDbService;
+		this.syncProvider = syncProvider;
+		this.syncLogDbService = syncLogDbService;
+		this.subscriptionDbService = subscriptionDbService;
 	}
 
 	private Map<String, SubscriptionProvider> subscriptionProviders = new HashMap<String, SubscriptionProvider>();
@@ -44,12 +44,12 @@ public class SyncService {
 	}
 
 	protected void push() {
-		List<SyncLog> records = mSyncLogDbService.getAll(null, null);
+		List<SyncLog> records = syncLogDbService.getAll(null, null);
 
 		for (SyncLog record : records) {
-			mSyncProvider.sync(record);
+			syncProvider.sync(record);
 
-			mSyncLogDbService.delete(record);
+			syncLogDbService.delete(record);
 		}
 	}
 
@@ -59,7 +59,7 @@ public class SyncService {
 	 */
 	protected void pull() {
 		// Get subscriptions
-		List<PullSubscription> subscriptions = mSubscriptionDbService.getAll(null, null);
+		List<PullSubscription> subscriptions = subscriptionDbService.getAll(null, null);
 		for (PullSubscription sub : subscriptions) {
 			// Check if subscription should be processed, given the minimum interval
 			Integer seconds = null;

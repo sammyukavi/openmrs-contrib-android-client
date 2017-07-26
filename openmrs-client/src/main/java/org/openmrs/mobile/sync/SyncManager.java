@@ -26,33 +26,29 @@ public class SyncManager {
 	public static final long SYNC_INTERVAL_IN_MINUTES = 60L;
 	public static final long SYNC_INTERVAL_IN_SECONDS = SYNC_INTERVAL_IN_MINUTES * SECONDS_PER_MINUTE;
 
-	// Connectivity constants
-	private Boolean hasWifiSignalBeenLost = false;
-	private Boolean hasDataSignalBeenLost = false;
-
-	private Account mAccount;
-	private static OpenMRS mOpenMRS;
-	private ReceiverComponent mReceiverComponent;
+	private Account account;
+	private static OpenMRS openMRS;
+	private ReceiverComponent receiverComponent;
 
 	@Inject
 	public SyncManager(OpenMRS openMRS, ReceiverComponent receiverComponent) {
-		this.mOpenMRS = openMRS;
-		this.mReceiverComponent = receiverComponent;
+		this.openMRS = openMRS;
+		this.receiverComponent = receiverComponent;
 	}
 
 	public void registerReceivers() {
 		// Register connectivity receiver
-		BroadcastReceiver connectivityReceiver = mReceiverComponent.connectivityReceiver();
+		BroadcastReceiver connectivityReceiver = receiverComponent.connectivityReceiver();
 		IntentFilter connectivityFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-		mOpenMRS.registerReceiver(connectivityReceiver, connectivityFilter);
+		openMRS.registerReceiver(connectivityReceiver, connectivityFilter);
 	}
 
 	public void initializeDataSync() {
 		// Create the dummy account
-		mAccount = createSyncAccount(mOpenMRS);
+		account = createSyncAccount(openMRS);
 		// Turn on periodic syncing
-		ContentResolver.setSyncAutomatically(mAccount, SYNC_ADAPTER_AUTHORITY, true);
-		ContentResolver.addPeriodicSync(mAccount, SYNC_ADAPTER_AUTHORITY, Bundle.EMPTY, SYNC_INTERVAL_IN_SECONDS);
+		ContentResolver.setSyncAutomatically(account, SYNC_ADAPTER_AUTHORITY, true);
+		ContentResolver.addPeriodicSync(account, SYNC_ADAPTER_AUTHORITY, Bundle.EMPTY, SYNC_INTERVAL_IN_SECONDS);
 	}
 
 	/**
@@ -61,13 +57,13 @@ public class SyncManager {
 	 * @param context The application context
 	 */
 	private Account createSyncAccount(Context context) {
-		if (mAccount != null) {
-			return mAccount;
+		if (account != null) {
+			return account;
 		}
 		// Create the account type and default account
 		Account newAccount = new Account(SYNC_ADAPTER_ACCOUNT, SYNC_ADAPTER_ACCOUNT_TYPE);
 		// Get an instance of the Android account manager
-		AccountManager accountManager = (AccountManager) mOpenMRS.getSystemService(mOpenMRS.ACCOUNT_SERVICE);
+		AccountManager accountManager = (AccountManager) openMRS.getSystemService(openMRS.ACCOUNT_SERVICE);
 
 		// Below needed for syncing, but is for dummy account
 		if (accountManager.addAccountExplicitly(newAccount, null, null)) {
@@ -89,6 +85,6 @@ public class SyncManager {
 	}
 
 	public void requestSync() {
-		ContentResolver.requestSync(mAccount, SYNC_ADAPTER_AUTHORITY, Bundle.EMPTY);
+		ContentResolver.requestSync(account, SYNC_ADAPTER_AUTHORITY, Bundle.EMPTY);
 	}
 }

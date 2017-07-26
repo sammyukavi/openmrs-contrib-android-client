@@ -215,7 +215,7 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 
 	@Override
 	public void updatePatientListData(List<PatientListContext> patientListData) {
-		if (null == adapter.getItems()) {
+		if (adapter.getItems() == null) {
 			adapter.setItems(patientListData);
 		} else {
 			adapter.addItems(patientListData);

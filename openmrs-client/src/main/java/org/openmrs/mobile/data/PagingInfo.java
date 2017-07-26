@@ -76,15 +76,15 @@ public class PagingInfo {
 		return totalRecordCount;
 	}
 
-	public Integer getTotalPages(){
-		return (pageSize + getTotalRecordCount() - 1) / pageSize;
-	}
-
 	public void setTotalRecordCount(Integer totalRecordCount) {
 		this.totalRecordCount = totalRecordCount;
 
 		// If the total records is set to anything other than null, than don't reload the count
 		this.loadRecordCount = totalRecordCount == null;
+	}
+
+	public Integer getTotalPages() {
+		return (pageSize + getTotalRecordCount() - 1) / pageSize;
 	}
 
 	public boolean shouldLoadRecordCount() {

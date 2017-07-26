@@ -76,7 +76,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 		this.visit = new Visit();
 
 		if (visitDataService == null) {
-			this.visitTypeDataService = dataAccess().visitType();
+			this.visitDataService = dataAccess().visit();
 		} else {
 			this.visitDataService = visitDataService;
 		}

@@ -83,6 +83,10 @@ public class PagingInfo {
 		this.loadRecordCount = totalRecordCount == null;
 	}
 
+	public Integer getTotalPages() {
+		return (pageSize + getTotalRecordCount() - 1) / pageSize;
+	}
+
 	public boolean shouldLoadRecordCount() {
 		return loadRecordCount;
 	}

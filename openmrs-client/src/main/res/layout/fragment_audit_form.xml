@@ -128,54 +128,6 @@
 					
 					</RadioGroup>
 					
-					
-					<TextView
-							android:text="@string/is_palliative_consult"
-							android:layout_width="match_parent"
-							android:layout_height="wrap_content"
-							android:layout_marginLeft="10dp"
-							android:layout_marginEnd="10dp"
-							android:layout_marginRight="10dp"
-							android:layout_marginStart="10dp"
-							android:layout_marginBottom="5dp" />
-					
-					<RadioGroup
-							android:layout_width="match_parent"
-							android:orientation="horizontal"
-							android:layout_height="wrap_content"
-							android:layout_marginBottom="18dp"
-							android:layout_marginLeft="10dp"
-							android:layout_marginEnd="10dp"
-							android:layout_marginRight="10dp"
-							android:layout_marginStart="10dp">
-						
-						<RadioButton
-								android:layout_height="wrap_content"
-								android:layout_width="wrap_content"
-								android:text="@string/yes"
-								android:id="@+id/is_palliative_consult_yes"
-								android:layout_gravity="start"
-								android:checked="false" />
-						
-						<RadioButton
-								android:layout_height="wrap_content"
-								android:layout_width="wrap_content"
-								android:text="@string/no"
-								android:id="@+id/is_palliative_consult_no"
-								android:layout_gravity="start"
-								android:checked="false" />
-						
-						<RadioButton
-								android:layout_height="wrap_content"
-								android:layout_width="wrap_content"
-								android:text="@string/unknown"
-								android:id="@+id/is_palliative_consult_unknown"
-								android:layout_gravity="start"
-								android:checked="false" />
-					
-					</RadioGroup>
-					
-					
 					<TextView
 							android:text="@string/is_preop_risk_assessment_only"
 							android:layout_width="match_parent"
@@ -223,7 +175,7 @@
 					</RadioGroup>
 					
 					<TextView
-							android:text="@string/is_hdu_stay"
+							android:text="@string/is_palliative_consult"
 							android:layout_width="match_parent"
 							android:layout_height="wrap_content"
 							android:layout_marginLeft="10dp"
@@ -246,7 +198,7 @@
 								android:layout_height="wrap_content"
 								android:layout_width="wrap_content"
 								android:text="@string/yes"
-								android:id="@+id/is_hdu_stay_yes"
+								android:id="@+id/is_palliative_consult_yes"
 								android:layout_gravity="start"
 								android:checked="false" />
 						
@@ -254,7 +206,7 @@
 								android:layout_height="wrap_content"
 								android:layout_width="wrap_content"
 								android:text="@string/no"
-								android:id="@+id/is_hdu_stay_no"
+								android:id="@+id/is_palliative_consult_no"
 								android:layout_gravity="start"
 								android:checked="false" />
 						
@@ -262,57 +214,12 @@
 								android:layout_height="wrap_content"
 								android:layout_width="wrap_content"
 								android:text="@string/unknown"
-								android:id="@+id/is_hdu_stay_unknown"
+								android:id="@+id/is_palliative_consult_unknown"
 								android:layout_gravity="start"
 								android:checked="false" />
 					
 					</RadioGroup>
 					
-					<TextView
-							android:text="@string/is_hdu_comgmt"
-							android:layout_width="match_parent"
-							android:layout_height="wrap_content"
-							android:layout_marginLeft="10dp"
-							android:layout_marginEnd="10dp"
-							android:layout_marginRight="10dp"
-							android:layout_marginStart="10dp"
-							android:layout_marginBottom="5dp" />
-					
-					<RadioGroup
-							android:layout_width="match_parent"
-							android:orientation="horizontal"
-							android:layout_height="wrap_content"
-							android:layout_marginBottom="18dp"
-							android:layout_marginLeft="10dp"
-							android:layout_marginEnd="10dp"
-							android:layout_marginRight="10dp"
-							android:layout_marginStart="10dp">
-						
-						<RadioButton
-								android:layout_height="wrap_content"
-								android:layout_width="wrap_content"
-								android:text="@string/yes"
-								android:id="@+id/is_hdu_comgmt_yes"
-								android:layout_gravity="start"
-								android:checked="false" />
-						
-						<RadioButton
-								android:layout_height="wrap_content"
-								android:layout_width="wrap_content"
-								android:text="@string/no"
-								android:id="@+id/is_hdu_comgmt_no"
-								android:layout_gravity="start"
-								android:checked="false" />
-						
-						<RadioButton
-								android:layout_height="wrap_content"
-								android:layout_width="wrap_content"
-								android:text="@string/unknown"
-								android:id="@+id/is_hdu_comgmt_unknown"
-								android:layout_gravity="start"
-								android:checked="false" />
-					
-					</RadioGroup>
 					
 					<TextView
 							android:text="@string/is_hiv_positive"
@@ -375,8 +282,56 @@
 								android:layout_width="match_parent"
 								android:layout_height="wrap_content"
 								android:hint="@string/cd4"
-								android:inputType="number" />
+								android:inputType="number"
+								android:visibility="gone" />
 					</android.support.design.widget.TextInputLayout>
+					
+					
+					<TextView
+							android:text="@string/patient_diabetic"
+							android:layout_width="match_parent"
+							android:layout_height="wrap_content"
+							android:layout_marginLeft="10dp"
+							android:layout_marginEnd="10dp"
+							android:layout_marginRight="10dp"
+							android:layout_marginStart="10dp"
+							android:layout_marginBottom="5dp" />
+					
+					<RadioGroup
+							android:layout_width="match_parent"
+							android:orientation="horizontal"
+							android:layout_height="wrap_content"
+							android:layout_marginBottom="18dp"
+							android:layout_marginLeft="10dp"
+							android:layout_marginEnd="10dp"
+							android:layout_marginRight="10dp"
+							android:layout_marginStart="10dp">
+						
+						<RadioButton
+								android:layout_height="wrap_content"
+								android:layout_width="wrap_content"
+								android:text="@string/yes"
+								android:id="@+id/patient_diabetic_yes"
+								android:layout_gravity="start"
+								android:checked="false" />
+						
+						<RadioButton
+								android:layout_height="wrap_content"
+								android:layout_width="wrap_content"
+								android:text="@string/no"
+								android:id="@+id/patient_diabetic_no"
+								android:layout_gravity="start"
+								android:checked="false" />
+						
+						<RadioButton
+								android:layout_height="wrap_content"
+								android:layout_width="wrap_content"
+								android:text="@string/unknown"
+								android:id="@+id/patient_diabetic_unknown"
+								android:layout_gravity="start"
+								android:checked="false" />
+					
+					</RadioGroup>
 					
 					<android.support.design.widget.TextInputLayout
 							android:layout_width="match_parent"
@@ -392,8 +347,156 @@
 								android:layout_width="match_parent"
 								android:layout_height="wrap_content"
 								android:hint="@string/hba1c"
-								android:inputType="numberDecimal" />
+								android:inputType="numberDecimal"
+								android:visibility="gone" />
 					</android.support.design.widget.TextInputLayout>
+					
+					<TextView
+							android:text="@string/ward_stay_admission"
+							android:layout_width="match_parent"
+							android:layout_height="wrap_content"
+							android:layout_marginLeft="10dp"
+							android:layout_marginEnd="10dp"
+							android:layout_marginRight="10dp"
+							android:layout_marginStart="10dp"
+							android:layout_marginBottom="5dp" />
+					
+					<RadioGroup
+							android:layout_width="match_parent"
+							android:orientation="horizontal"
+							android:layout_height="wrap_content"
+							android:layout_marginBottom="18dp"
+							android:layout_marginLeft="10dp"
+							android:layout_marginEnd="10dp"
+							android:layout_marginRight="10dp"
+							android:layout_marginStart="10dp">
+						
+						<RadioButton
+								android:layout_height="wrap_content"
+								android:layout_width="wrap_content"
+								android:text="@string/yes"
+								android:id="@+id/ward_stay_admission_yes"
+								android:layout_gravity="start"
+								android:checked="false" />
+						
+						<RadioButton
+								android:layout_height="wrap_content"
+								android:layout_width="wrap_content"
+								android:text="@string/no"
+								android:id="@+id/ward_stay_admission_no"
+								android:layout_gravity="start"
+								android:checked="false" />
+						
+						<RadioButton
+								android:layout_height="wrap_content"
+								android:layout_width="wrap_content"
+								android:text="@string/unknown"
+								android:id="@+id/ward_stay_admission_unknown"
+								android:layout_gravity="start"
+								android:checked="false" />
+					
+					</RadioGroup>
+					
+					<TextView
+							android:text="@string/is_hdu_stay"
+							android:layout_width="match_parent"
+							android:layout_height="wrap_content"
+							android:layout_marginLeft="10dp"
+							android:layout_marginEnd="10dp"
+							android:layout_marginRight="10dp"
+							android:layout_marginStart="10dp"
+							android:layout_marginBottom="5dp" />
+					
+					<RadioGroup
+							android:layout_width="match_parent"
+							android:orientation="horizontal"
+							android:layout_height="wrap_content"
+							android:layout_marginBottom="18dp"
+							android:layout_marginLeft="10dp"
+							android:layout_marginEnd="10dp"
+							android:layout_marginRight="10dp"
+							android:layout_marginStart="10dp">
+						
+						<RadioButton
+								android:layout_height="wrap_content"
+								android:layout_width="wrap_content"
+								android:text="@string/yes"
+								android:id="@+id/is_hdu_stay_yes"
+								android:layout_gravity="start"
+								android:checked="false" />
+						
+						<RadioButton
+								android:layout_height="wrap_content"
+								android:layout_width="wrap_content"
+								android:text="@string/no"
+								android:id="@+id/is_hdu_stay_no"
+								android:layout_gravity="start"
+								android:checked="false" />
+						
+						<RadioButton
+								android:layout_height="wrap_content"
+								android:layout_width="wrap_content"
+								android:text="@string/unknown"
+								android:id="@+id/is_hdu_stay_unknown"
+								android:layout_gravity="start"
+								android:checked="false" />
+					
+					</RadioGroup>
+					
+					<LinearLayout
+							android:id="@+id/hduCoManage"
+							android:orientation="vertical"
+							android:layout_width="match_parent"
+							android:layout_height="wrap_content"
+							android:visibility="gone">
+						
+						<TextView
+								android:text="@string/is_hdu_comgmt"
+								android:layout_width="match_parent"
+								android:layout_height="wrap_content"
+								android:layout_marginLeft="10dp"
+								android:layout_marginEnd="10dp"
+								android:layout_marginRight="10dp"
+								android:layout_marginStart="10dp"
+								android:layout_marginBottom="5dp" />
+						
+						<RadioGroup
+								android:layout_width="match_parent"
+								android:orientation="horizontal"
+								android:layout_height="wrap_content"
+								android:layout_marginBottom="18dp"
+								android:layout_marginLeft="10dp"
+								android:layout_marginEnd="10dp"
+								android:layout_marginRight="10dp"
+								android:layout_marginStart="10dp">
+							
+							<RadioButton
+									android:layout_height="wrap_content"
+									android:layout_width="wrap_content"
+									android:text="@string/yes"
+									android:id="@+id/is_hdu_comgmt_yes"
+									android:layout_gravity="start"
+									android:checked="false" />
+							
+							<RadioButton
+									android:layout_height="wrap_content"
+									android:layout_width="wrap_content"
+									android:text="@string/no"
+									android:id="@+id/is_hdu_comgmt_no"
+									android:layout_gravity="start"
+									android:checked="false" />
+							
+							<RadioButton
+									android:layout_height="wrap_content"
+									android:layout_width="wrap_content"
+									android:text="@string/unknown"
+									android:id="@+id/is_hdu_comgmt_unknown"
+									android:layout_gravity="start"
+									android:checked="false" />
+						
+						</RadioGroup>
+					
+					</LinearLayout>
 					
 					<TextView
 							android:text="@string/is_icu_stay"

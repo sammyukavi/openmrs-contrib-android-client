@@ -34,7 +34,7 @@ import java.util.TimerTask;
 public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 		extends ACBaseFragment<T> implements IBaseDiagnosisFragment {
 
-	private static long DELAY = 1000;
+	private static long SEARCH_DIAGNOSES_DELAY = 1000, SAVE_CLINICAL_NOTE_DELAY = 2500;
 	protected List<EncounterDiagnosis> primaryDiagnoses = new ArrayList<>(), secondaryDiagnoses = new ArrayList<>();
 	protected AutoCompleteTextView searchDiagnosis;
 	protected RecyclerView primaryDiagnosesRecycler, secondaryDiagnosesRecycler;
@@ -48,7 +48,7 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	private String encounterUuid;
 	private Visit visit;
 	private boolean firstTimeEdit;
-	private long delay = 3000, lastTextEdit = 0;
+	private long lastTextEdit = 0;
 
 	@Override
 	public void initializeListeners() {
@@ -72,6 +72,7 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				loadingProgressBar.setVisibility(View.VISIBLE);
 				if (timer != null) {
 					timer.cancel();
 				}
@@ -87,7 +88,7 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 							diagnosisPresenter
 									.findConcept(searchDiagnosis.getText().toString(), getIBaseDiagnosisFragment());
 						}
-					}, DELAY);
+					}, SEARCH_DIAGNOSES_DELAY);
 				}
 			}
 		});
@@ -112,7 +113,7 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 
 		Handler handler = new Handler();
 		Runnable inputCompleteChecker = () -> {
-			if (System.currentTimeMillis() > (lastTextEdit + delay - 500)) {
+			if (System.currentTimeMillis() > (lastTextEdit + SAVE_CLINICAL_NOTE_DELAY)) {
 				saveVisitNote(null != getEncounterUuid() ? getEncounterUuid() : ApplicationConstants.EMPTY_STRING,
 						clinicalNoteView.getText().toString(), visit);
 			}
@@ -133,7 +134,7 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 			public void afterTextChanged(final Editable s) {
 				if (s.length() > 0 && !firstTimeEdit) {
 					lastTextEdit = System.currentTimeMillis();
-					handler.postDelayed(inputCompleteChecker, delay);
+					handler.postDelayed(inputCompleteChecker, SAVE_CLINICAL_NOTE_DELAY);
 				} else {
 					firstTimeEdit = false;
 				}

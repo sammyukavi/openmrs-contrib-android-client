@@ -31,6 +31,7 @@ import org.openmrs.mobile.dagger.DaggerApplicationComponent;
 import org.openmrs.mobile.security.SecretKeyGenerator;
 import org.openmrs.mobile.sync.SyncManager;
 import org.openmrs.mobile.utilities.ApplicationConstants;
+import org.openmrs.mobile.utilities.NetworkUtils;
 
 import java.io.File;
 import java.util.HashMap;
@@ -51,6 +52,9 @@ public class OpenMRS extends Application {
 
 	@Inject
 	SyncManager syncManager;
+
+	@Inject
+	NetworkUtils networkUtils;
 
 	@Override
 	public void onCreate() {
@@ -75,7 +79,6 @@ public class OpenMRS extends Application {
 
 		generateKey();
 		initializeDB();
-		syncManager.registerReceivers();
 		syncManager.initializeDataSync();
 	}
 
@@ -354,5 +357,9 @@ public class OpenMRS extends Application {
 
 	public void requestDataSync() {
 		syncManager.requestSync();
+	}
+
+	public NetworkUtils getNetworkUtils() {
+		return networkUtils;
 	}
 }

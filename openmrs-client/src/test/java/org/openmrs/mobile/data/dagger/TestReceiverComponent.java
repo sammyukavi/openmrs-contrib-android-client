@@ -4,10 +4,10 @@ import javax.inject.Singleton;
 
 import dagger.Component;
 import org.openmrs.mobile.dagger.ReceiverComponent;
-import org.openmrs.mobile.receivers.ConnectivityReceiver;
+import org.openmrs.mobile.receivers.SyncReceiver;
 
 @Singleton
 @Component(modules = TestReceiverModule.class)
 public interface TestReceiverComponent extends ReceiverComponent {
-	ConnectivityReceiver connectivityReceiver();
+	SyncReceiver syncReceiver();
 }

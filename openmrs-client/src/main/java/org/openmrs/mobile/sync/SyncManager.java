@@ -4,9 +4,11 @@ import javax.inject.Inject;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
-import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
@@ -16,15 +18,17 @@ import org.openmrs.mobile.dagger.ReceiverComponent;
 public class SyncManager {
 	// Sync constants
 	// The authority for the sync adapter's content provider
-	public static final String SYNC_ADAPTER_AUTHORITY = "org.openmrs.mobile.provider";
+	private final String SYNC_ADAPTER_AUTHORITY = "org.openmrs.mobile.provider";
 	// An account type, in the form of a domain name
-	public static final String SYNC_ADAPTER_ACCOUNT_TYPE = "org.openmrs.mobile.datasync";
+	private final String SYNC_ADAPTER_ACCOUNT_TYPE = "org.openmrs.mobile.datasync";
 	// The account name (this isn't used by the app, but is needed for syncing)
-	public static final String SYNC_ADAPTER_ACCOUNT = "syncAdapterAccount";
+	private final String SYNC_ADAPTER_ACCOUNT = "syncAdapterAccount";
 	// Sync interval constants
-	public static final long SECONDS_PER_MINUTE = 60L;
-	public static final long SYNC_INTERVAL_IN_MINUTES = 60L;
-	public static final long SYNC_INTERVAL_IN_SECONDS = SYNC_INTERVAL_IN_MINUTES * SECONDS_PER_MINUTE;
+	private final long MILLISECONDS_PER_MINUTE = 60000L;
+	private final long SYNC_INTERVAL_IN_MINUTES = 5L;
+	private final long SYNC_INTERVAL_IN_MILLISECONDS = SYNC_INTERVAL_IN_MINUTES * MILLISECONDS_PER_MINUTE;
+
+	private static final String ALARM_SYNC_INTENT = "alarmSyncIntent";
 
 	private Account account;
 	private static OpenMRS openMRS;
@@ -36,27 +40,21 @@ public class SyncManager {
 		this.receiverComponent = receiverComponent;
 	}
 
-	public void registerReceivers() {
+	private void registerReceivers() {
 		// Register connectivity receiver
-		BroadcastReceiver connectivityReceiver = receiverComponent.connectivityReceiver();
-		IntentFilter connectivityFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-		openMRS.registerReceiver(connectivityReceiver, connectivityFilter);
+		BroadcastReceiver syncReceiver = receiverComponent.syncReceiver();
+		IntentFilter syncFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+		syncFilter.addAction(ALARM_SYNC_INTENT);
+		openMRS.registerReceiver(syncReceiver, syncFilter);
 	}
 
 	public void initializeDataSync() {
-		// Create the dummy account
-		account = createSyncAccount(openMRS);
-		// Turn on periodic syncing
-		ContentResolver.setSyncAutomatically(account, SYNC_ADAPTER_AUTHORITY, true);
-		ContentResolver.addPeriodicSync(account, SYNC_ADAPTER_AUTHORITY, Bundle.EMPTY, SYNC_INTERVAL_IN_SECONDS);
+		createAlarmForSyncing();
+		account = createSyncAccount();
+		registerReceivers();
 	}
 
-	/**
-	 * Create a new dummy account for the sync adapter
-	 *
-	 * @param context The application context
-	 */
-	private Account createSyncAccount(Context context) {
+	private Account createSyncAccount() {
 		if (account != null) {
 			return account;
 		}
@@ -82,6 +80,17 @@ public class SyncManager {
 			// Intentionally left blank
 		}
 		return newAccount;
+	}
+
+	private void createAlarmForSyncing() {
+		Intent startIntent = new Intent(ALARM_SYNC_INTENT);
+		int dummyRequestCode = 0;
+		int dummyFlag = 0;
+		PendingIntent appIntent = PendingIntent.getBroadcast(openMRS, dummyRequestCode, startIntent, dummyFlag);
+		AlarmManager alarmManager = (AlarmManager) openMRS.getSystemService(openMRS.ALARM_SERVICE);
+		int initialIntervalInMillis = 0;
+		alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, initialIntervalInMillis,
+				SYNC_INTERVAL_IN_MILLISECONDS, appIntent);
 	}
 
 	public void requestSync() {

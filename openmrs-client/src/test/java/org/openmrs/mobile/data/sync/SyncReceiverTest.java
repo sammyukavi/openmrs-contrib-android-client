@@ -14,13 +14,13 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.openmrs.mobile.BuildConfig;
 import org.openmrs.mobile.application.OpenMRS;
-import org.openmrs.mobile.receivers.ConnectivityReceiver;
+import org.openmrs.mobile.receivers.SyncReceiver;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class)
-public class ConnectivityReceiverTest {
+public class SyncReceiverTest {
 	@Rule
 	public MockitoRule mockitoRule = MockitoJUnit.rule();
 
@@ -36,21 +36,21 @@ public class ConnectivityReceiverTest {
 	@Mock
 	NetworkInfo networkInfo;
 
-	private ConnectivityReceiver connectivityReceiver;
+	private SyncReceiver syncReceiver;
 
 	@Before
 	public void setUp() {
 		Mockito.when(openMRS.getApplicationContext()).thenReturn(openMRS);
 		Mockito.when(openMRS.getSystemService(Context.CONNECTIVITY_SERVICE)).thenReturn(connectivityManager);
 
-		connectivityReceiver = new ConnectivityReceiver();
+		syncReceiver = new SyncReceiver();
 	}
 
 	@Test
 	public void connectivityReceiver_whenReceiveBroadcastWithoutActiveNetworkSyncIsNotCalled() {
 		Mockito.when(connectivityManager.getActiveNetworkInfo()).thenReturn(null);
 
-		connectivityReceiver.onReceive(openMRS, intent);
+		syncReceiver.onReceive(openMRS, intent);
 
 		Mockito.verify(openMRS, Mockito.times(0)).requestDataSync();
 	}
@@ -60,8 +60,18 @@ public class ConnectivityReceiverTest {
 		Mockito.when(connectivityManager.getActiveNetworkInfo()).thenReturn(networkInfo);
 		Mockito.when(networkInfo.isConnectedOrConnecting()).thenReturn(false);
 
-		connectivityReceiver.onReceive(openMRS, intent);
+		syncReceiver.onReceive(openMRS, intent);
 
 		Mockito.verify(openMRS, Mockito.times(0)).requestDataSync();
+	}
+
+	@Test
+	public void connectivityReceiver_whenReceiveBroadcastAndServerAvailableSyncIsCalled() {
+		Mockito.when(connectivityManager.getActiveNetworkInfo()).thenReturn(networkInfo);
+		Mockito.when(networkInfo.isConnectedOrConnecting()).thenReturn(true);
+
+		syncReceiver.onReceive(openMRS, intent);
+
+		Mockito.verify(openMRS, Mockito.times(1)).requestDataSync();
 	}
 }

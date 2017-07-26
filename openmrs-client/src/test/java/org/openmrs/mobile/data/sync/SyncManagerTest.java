@@ -2,81 +2,83 @@ package org.openmrs.mobile.data.sync;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.content.ContentResolver;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 import org.openmrs.mobile.BuildConfig;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.dagger.DaggerTestReceiverComponent;
 import org.openmrs.mobile.data.dagger.TestReceiverComponent;
-import org.openmrs.mobile.receivers.ConnectivityReceiver;
+import org.openmrs.mobile.receivers.SyncReceiver;
 import org.openmrs.mobile.sync.SyncManager;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.openmrs.mobile.utilities.NetworkUtils;
+import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-@PrepareForTest(ContentResolver.class)
-@RunWith(PowerMockRunner.class)
+@RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class)
 public class SyncManagerTest {
+	@Rule
+	public MockitoRule mockitoRule = MockitoJUnit.rule();
+
 	@Mock
 	AccountManager accountManager;
 
 	@Mock
 	OpenMRS openMRS;
 
-	private SyncManager mSyncManager;
-	private TestReceiverComponent mTestReceiverComponent;
+	@Mock
+	NetworkUtils networkUtils;
+
+	@Mock
+	AlarmManager alarmManager;
+
+	private SyncManager syncManager;
+	private TestReceiverComponent testReceiverComponent;
 
 	@Before
 	public void setUp() {
-		PowerMockito.mockStatic(ContentResolver.class);
-
 		Mockito.when(accountManager.addAccountExplicitly(Mockito.any(Account.class), Mockito.anyString(),
 				Mockito.any(Bundle.class))).thenReturn(true);
 		Mockito.when(openMRS.getSystemService(openMRS.ACCOUNT_SERVICE)).thenReturn(accountManager);
+		Mockito.when(openMRS.getSystemService(openMRS.ALARM_SERVICE)).thenReturn(alarmManager);
 
-		mTestReceiverComponent = DaggerTestReceiverComponent.create();
-		mSyncManager = new SyncManager(openMRS, mTestReceiverComponent);
+		testReceiverComponent = DaggerTestReceiverComponent.create();
+		syncManager = new SyncManager(openMRS, testReceiverComponent);
 	}
 
 	@Test
 	public void syncManager_syncInitializationCreatesSyncAccount() {
-		mSyncManager.initializeDataSync();
+		syncManager.initializeDataSync();
 
 		Mockito.verify(accountManager, Mockito.times(1)).addAccountExplicitly(Mockito.any(Account.class),
 				Mockito.anyString(), Mockito.any(Bundle.class));
 	}
 
 	@Test
-	public void syncManager_syncInitializationRegistersPeriodicSync() {
-		mSyncManager.initializeDataSync();
+	public void syncManager_syncInitializationCreatesRepeatingAlarmForSync() {
+		syncManager.initializeDataSync();
 
-		PowerMockito.verifyStatic(Mockito.times(1));
-		ContentResolver.addPeriodicSync(Mockito.any(Account.class), Mockito.anyString(), Mockito.eq(Bundle.EMPTY), Mockito.anyLong());
+		Mockito.verify(alarmManager, Mockito.times(1)).setInexactRepeating(Mockito.anyInt(), Mockito.anyLong(),
+				Mockito.anyLong(), Mockito.any(PendingIntent.class));
 	}
 
 	@Test
-	public void syncManager_registeringReceiversRegistersConnectivityReceiver() {
-		ConnectivityReceiver connectivityReceiver = mTestReceiverComponent.connectivityReceiver();
+	public void syncManager_registeringReceiversRegistersSyncReceiver() {
+		SyncReceiver syncReceiver = testReceiverComponent.syncReceiver();
 
-		mSyncManager.registerReceivers();
+		syncManager.initializeDataSync();
 
-		Mockito.verify(openMRS, Mockito.times(1)).registerReceiver(Mockito.eq(connectivityReceiver),
+		Mockito.verify(openMRS, Mockito.times(1)).registerReceiver(Mockito.eq(syncReceiver),
 				Mockito.any(IntentFilter.class));
-	}
-
-	@Test
-	public void syncManager_requestingSyncTriggersSyncRequestImmediately() {
-		mSyncManager.requestSync();
-
-		PowerMockito.verifyStatic(Mockito.times(1));
-		ContentResolver.requestSync(Mockito.any(Account.class), Mockito.anyString(), Mockito.eq(Bundle.EMPTY));
 	}
 }

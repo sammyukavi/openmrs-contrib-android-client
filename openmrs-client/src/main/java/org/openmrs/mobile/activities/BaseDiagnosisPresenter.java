@@ -7,10 +7,10 @@ import org.openmrs.mobile.dagger.DataAccess;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
-import org.openmrs.mobile.data.impl.ConceptSearchDataService;
+import org.openmrs.mobile.data.impl.DiagnosisSearchDataService;
 import org.openmrs.mobile.data.impl.ObsDataService;
 import org.openmrs.mobile.data.impl.VisitNoteDataService;
-import org.openmrs.mobile.models.ConceptSearchResult;
+import org.openmrs.mobile.models.DiagnosisSearchResult;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.VisitNote;
@@ -20,7 +20,7 @@ import java.util.List;
 
 public class BaseDiagnosisPresenter {
 
-	private ConceptSearchDataService conceptSearchDataService;
+	private DiagnosisSearchDataService diagnosisSearchDataService;
 	private ObsDataService obsDataService;
 	private VisitNoteDataService visitNoteDataService;
 	private int page = 0;
@@ -31,19 +31,19 @@ public class BaseDiagnosisPresenter {
 	public BaseDiagnosisPresenter() {
 		dataAccess = DaggerDataAccess.create();
 
-		this.conceptSearchDataService = dataAccess.conceptSearch();
+		this.diagnosisSearchDataService = dataAccess.diagnosisSearch();
 		this.obsDataService = dataAccess.obs();
 		this.visitNoteDataService = dataAccess.visitNote();
 	}
 
 	public void findConcept(String searchQuery, IBaseDiagnosisFragment base) {
 		PagingInfo pagingInfo = new PagingInfo(page, limit);
-		conceptSearchDataService.search(searchQuery, pagingInfo, new DataService.GetCallback<List<ConceptSearchResult>>() {
+		diagnosisSearchDataService.search(searchQuery, pagingInfo, new DataService.GetCallback<List<DiagnosisSearchResult>>() {
 
 			@Override
-			public void onCompleted(List<ConceptSearchResult> entities) {
+			public void onCompleted(List<DiagnosisSearchResult> entities) {
 				if (entities.isEmpty()) {
-					ConceptSearchResult nonCodedDiagnosis = new ConceptSearchResult();
+					DiagnosisSearchResult nonCodedDiagnosis = new DiagnosisSearchResult();
 					nonCodedDiagnosis.setDisplay(searchQuery);
 					nonCodedDiagnosis.setValue("Non-Coded:" + searchQuery);
 					entities.add(nonCodedDiagnosis);

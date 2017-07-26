@@ -2,26 +2,20 @@ package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.raizlabs.android.dbflow.annotation.Column;
-import com.raizlabs.android.dbflow.annotation.ForeignKey;
-import com.raizlabs.android.dbflow.annotation.Table;
 
-import org.openmrs.mobile.data.db.AppDatabase;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 
-@Table(database = AppDatabase.class)
-public class ConceptSearchResult extends BaseOpenmrsObject {
+public class DiagnosisSearchResult extends BaseOpenmrsAuditableObject {
 	@SerializedName("concept")
 	@Expose
-	@ForeignKey(stubbedRelationship = true)
 	private Concept concept;
+
 	@SerializedName("conceptName")
 	@Expose
-	@ForeignKey(stubbedRelationship = true)
 	private ConceptName conceptName;
+
 	@SerializedName("value")
 	@Expose
-	@Column
 	private String value;
 
 	public Concept getConcept() {
@@ -52,10 +46,10 @@ public class ConceptSearchResult extends BaseOpenmrsObject {
 	public String toString() {
 		if (concept != null) {
 			String conceptCode = ApplicationConstants.EMPTY_STRING;
-			for (ConceptMap conceptMap : concept.getConceptMappings()) {
-				if (conceptMap.getConceptReferenceTerm().getConceptSource().getName().equalsIgnoreCase(
-						ApplicationConstants.ConceptSource.ICD_10_WHO)) {
-					conceptCode = conceptMap.getConceptReferenceTerm().getCode();
+			for (ConceptMapping mapping : concept.getMappings()) {
+				if (mapping.getConceptReferenceTerm().getDisplay()
+						.startsWith(ApplicationConstants.ConceptSource.ICD_10_WHO)) {
+					conceptCode = mapping.getConceptReferenceTerm().getCode();
 				}
 			}
 

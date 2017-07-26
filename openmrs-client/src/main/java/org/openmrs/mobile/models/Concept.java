@@ -44,12 +44,14 @@ public class Concept extends BaseOpenmrsAuditableObject {
 	@SerializedName("names")
 	@Expose
 	private List<ConceptName> names;
-	@SerializedName("preferredName")
+
+	@SerializedName("mappings")
 	@Expose
-	private String preferredName;
-	@SerializedName("conceptMappings")
+	private List<ConceptMapping> mappings;
+
+	@SerializedName("name")
 	@Expose
-	private List<ConceptMap> conceptMappings;
+	private String name;
 
 	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "answers", isVariablePrivate = true)
 	List<ConceptAnswer> loadAnswers() {
@@ -61,12 +63,18 @@ public class Concept extends BaseOpenmrsAuditableObject {
 		return loadRelatedObject(ConceptName.class, names, () -> ConceptName_Table.concept_uuid.eq(getUuid()));
 	}
 
+	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "mappings", isVariablePrivate = true)
+	List<ConceptMapping> loadMappings() {
+		return loadRelatedObject(ConceptMapping.class, mappings, () -> ConceptMapping_Table.concept_uuid.eq(getUuid()));
+	}
+
 	@Override
 	public void processRelationships() {
 		super.processRelationships();
 
 		processRelatedObjects(answers, (a) -> a.setConcept(this));
 		processRelatedObjects(names, (n) -> n.setConcept(this));
+		processRelatedObjects(mappings, (m) -> m.setConcept(this));
 	}
 
 	public Datatype getDatatype() {
@@ -109,20 +117,20 @@ public class Concept extends BaseOpenmrsAuditableObject {
 		this.names = names;
 	}
 
-	public String getPreferredName() {
-		return preferredName;
+	public List<ConceptMapping> getMappings() {
+		return mappings;
 	}
 
-	public void setPreferredName(String preferredName) {
-		this.preferredName = preferredName;
+	public void setMappings(List<ConceptMapping> mappings) {
+		this.mappings = mappings;
 	}
 
-	public List<ConceptMap> getConceptMappings() {
-		return conceptMappings;
+	public String getName() {
+		return name;
 	}
 
-	public void setConceptMappings(List<ConceptMap> conceptMappings) {
-		this.conceptMappings = conceptMappings;
+	public void setName(String preferredName) {
+		this.name = preferredName;
 	}
 
 	@Override

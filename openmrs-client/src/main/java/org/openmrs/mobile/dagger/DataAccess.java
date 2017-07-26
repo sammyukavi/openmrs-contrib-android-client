@@ -2,7 +2,7 @@ package org.openmrs.mobile.dagger;
 
 import org.openmrs.mobile.data.impl.ConceptAnswerDataService;
 import org.openmrs.mobile.data.impl.ConceptDataService;
-import org.openmrs.mobile.data.impl.ConceptSearchDataService;
+import org.openmrs.mobile.data.impl.DiagnosisSearchDataService;
 import org.openmrs.mobile.data.impl.EncounterDataService;
 import org.openmrs.mobile.data.impl.LocationDataService;
 import org.openmrs.mobile.data.impl.ObsDataService;
@@ -33,7 +33,7 @@ public interface DataAccess {
 
 	ConceptDataService concept();
 
-	ConceptSearchDataService conceptSearch();
+	DiagnosisSearchDataService diagnosisSearch();
 
 	EncounterDataService encounter();
 

@@ -23,10 +23,4 @@ public class DiagnosisSearchDataService extends BaseDataService<DiagnosisSearchR
 				() -> null,
 				() -> restService.search(term, pagingInfo));
 	}
-
-	public void getSetConcepts(@NonNull String setUuid, GetCallback<List<DiagnosisSearchResult>> callback) {
-		executeMultipleCallback(callback, null, null,
-				() -> null,
-				() -> restService.getSetConcepts(setUuid));
-	}
 }

@@ -67,7 +67,7 @@ public abstract class AdaptiveSubscriptionProvider<E extends BaseOpenmrsAuditabl
 		}
 
 		// Update/Create local records
-		dbService.saveAll(updated);
+		saveAllDb(updated);
 	}
 
 	protected void pullIncremental(PullSubscription subscription) {
@@ -144,7 +144,7 @@ public abstract class AdaptiveSubscriptionProvider<E extends BaseOpenmrsAuditabl
 		}
 
 		// Save the entities to the db
-		dbService.saveAll(entities);
+		saveAllDb(entities);
 	}
 
 	protected long getRecordCountDb() {
@@ -153,6 +153,10 @@ public abstract class AdaptiveSubscriptionProvider<E extends BaseOpenmrsAuditabl
 
 	protected List<E> getAllRest() {
 		return getCallListValue(restService.getAll(null, null));
+	}
+
+	protected void saveAllDb(List<E> entities) {
+		dbService.saveAll(entities);
 	}
 
 	protected E getByUuidRest(String uuid) {

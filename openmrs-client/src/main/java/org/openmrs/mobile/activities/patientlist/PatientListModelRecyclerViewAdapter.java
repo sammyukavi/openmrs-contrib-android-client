@@ -40,10 +40,8 @@ public class PatientListModelRecyclerViewAdapter
 	private PatientListContract.View view;
 	private List<PatientListContext> items;
 
-	public PatientListModelRecyclerViewAdapter(Activity context,
-			List<PatientListContext> patientListModels, PatientListContract.View view) {
+	public PatientListModelRecyclerViewAdapter(Activity context, PatientListContract.View view) {
 		this.context = context;
-		this.items = patientListModels;
 		this.view = view;
 	}
 
@@ -59,20 +57,40 @@ public class PatientListModelRecyclerViewAdapter
 
 		holder.headerContent.setText(StringUtils.stripHtmlTags(patientListContext.getHeaderContent()));
 		holder.bodyContent.setText(StringUtils.stripHtmlTags(patientListContext.getBodyContent()));
-		holder.rowLayout.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(context, PatientDashboardActivity.class);
-				intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE,
-						patientListContext.getPatient().getUuid());
-				context.startActivity(intent);
-			}
+		holder.rowLayout.setOnClickListener(v -> {
+			Intent intent = new Intent(context, PatientDashboardActivity.class);
+			intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE,
+					patientListContext.getPatient().getUuid());
+			context.startActivity(intent);
+
 		});
 	}
 
 	@Override
 	public int getItemCount() {
 		return items.size();
+	}
+
+	public void addItems(List<PatientListContext> items) {
+		this.items.addAll(items);
+
+		notifyDataSetChanged();
+	}
+
+	public List<PatientListContext> getItems() {
+		return items;
+	}
+
+	public void setItems(List<PatientListContext> items) {
+		this.items = items;
+
+		notifyDataSetChanged();
+	}
+
+	public void clearItems() {
+		if (this.items != null) {
+			this.items.clear();
+		}
 	}
 
 	class PatientListModelViewHolder extends RecyclerView.ViewHolder {

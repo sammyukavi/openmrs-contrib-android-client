@@ -34,7 +34,7 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 	private PatientListContract.View patientListView;
 	private int limit = 10;
 	private int page = 1;
-	private int totalNumberResults;
+	private int totalNumberResults, totalNumberPages;
 	private boolean loading;
 	private String patientListUuid;
 
@@ -67,11 +67,10 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 		}
 	}
 
-
 	@Override
 	public void subscribe() {
 		// get all patient lists
-		if(patientLists == null) {
+		if (patientLists == null) {
 			getPatientList();
 		}
 	}
@@ -94,7 +93,7 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 							patientListView.showPatientListProgressSpinner(false);
 							patientListView.setNoPatientListsVisibility(false);
 							patientListView.updatePatientLists(entities);
-							if(StringUtils.notNull(patientListUuid)){
+							if (StringUtils.notNull(patientListUuid)) {
 								getPatientListData(patientListUuid, getPage());
 							}
 						}
@@ -133,8 +132,8 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 							setTotalNumberResults(pagingInfo.getTotalRecordCount());
 							if (pagingInfo.getTotalRecordCount() > 0) {
 								patientListView.setNumberOfPatientsView(pagingInfo.getTotalRecordCount());
-								patientListView.updatePagingLabel(page,
-										(limit + pagingInfo.getTotalRecordCount() - 1) / limit);
+								totalNumberPages = pagingInfo.getTotalPages();
+								patientListView.updatePagingLabel(page, totalNumberPages);
 							}
 						}
 						setLoading(false);
@@ -165,8 +164,9 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 		this.page = page;
 	}
 
-	private int getTotalNumberResults() {
-		return totalNumberResults;
+	@Override
+	public int getTotalNumberPages() {
+		return totalNumberPages;
 	}
 
 	@Override
@@ -177,7 +177,7 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 	private int computePage(boolean next) {
 		int tmpPage = getPage();
 		// check if pagination is required.
-		int totalPages = (limit + getTotalNumberResults() - 1) / limit;
+		int totalPages = (limit + totalNumberResults - 1) / limit;
 		if (page <= totalPages) {
 			if (next) {
 				// set next page
@@ -212,5 +212,10 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 	private void setViewAfterLoadData(boolean visible) {
 		patientListView.setSpinnerVisibility(false);
 		patientListView.setEmptyPatientListVisibility(visible);
+	}
+
+	@Override
+	public int getLimit() {
+		return limit;
 	}
 }

@@ -55,9 +55,13 @@ public interface PatientListContract {
 
 		void setTotalNumberResults(int totalNumberResults);
 
+		int getTotalNumberPages();
+
 		int getPage();
 
 		void setPage(int page);
+
+		int getLimit();
 
 		boolean isLoading();
 

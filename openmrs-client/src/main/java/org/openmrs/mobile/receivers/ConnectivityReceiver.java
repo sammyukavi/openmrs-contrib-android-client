@@ -1,5 +1,7 @@
 package org.openmrs.mobile.receivers;
 
+import javax.inject.Inject;
+
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -11,6 +13,9 @@ import org.openmrs.mobile.application.OpenMRS;
 
 public class ConnectivityReceiver extends BroadcastReceiver {
 	private static final String TAG = "OpenMRSBroadcastReceiver";
+
+	@Inject
+	public ConnectivityReceiver() {}
 
 	@Override
 	public void onReceive(Context context, Intent intent) {

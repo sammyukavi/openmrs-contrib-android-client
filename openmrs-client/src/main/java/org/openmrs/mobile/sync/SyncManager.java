@@ -11,6 +11,7 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import org.openmrs.mobile.application.OpenMRS;
+import org.openmrs.mobile.dagger.ReceiverComponent;
 import org.openmrs.mobile.receivers.ConnectivityReceiver;
 
 public class SyncManager {
@@ -23,24 +24,26 @@ public class SyncManager {
 	public static final String ACCOUNT = "defaultAccount";
 	// Sync interval constants
 	public static final long SECONDS_PER_MINUTE = 60L;
-	public static final long SYNC_INTERVAL_IN_MINUTES = 1L;
-	public static final long SYNC_INTERVAL = SYNC_INTERVAL_IN_MINUTES * SECONDS_PER_MINUTE;
+	public static final long SYNC_INTERVAL_IN_MINUTES = 60L;
+	public static final long SYNC_INTERVAL_IN_SECONDS = SYNC_INTERVAL_IN_MINUTES * SECONDS_PER_MINUTE;
 
 	// Connectivity constants
 	private Boolean hasWifiSignalBeenLost = false;
 	private Boolean hasDataSignalBeenLost = false;
 
 	private Account mAccount;
-	private OpenMRS mOpenMRS;
+	private static OpenMRS mOpenMRS;
+	private ReceiverComponent mReceiverComponent;
 
 	@Inject
-	public SyncManager(OpenMRS openMRS) {
+	public SyncManager(OpenMRS openMRS, ReceiverComponent receiverComponent) {
 		this.mOpenMRS = openMRS;
+		this.mReceiverComponent = receiverComponent;
 	}
 
 	public void registerReceivers() {
 		// Register connectivity receiver
-		BroadcastReceiver connectivityReceiver = new ConnectivityReceiver();
+		BroadcastReceiver connectivityReceiver = mReceiverComponent.connectivityReceiver();
 		IntentFilter connectivityFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
 		mOpenMRS.registerReceiver(connectivityReceiver, connectivityFilter);
 	}
@@ -50,7 +53,7 @@ public class SyncManager {
 		mAccount = createSyncAccount(mOpenMRS);
 		// Turn on periodic syncing
 		ContentResolver.setSyncAutomatically(mAccount, AUTHORITY, true);
-		ContentResolver.addPeriodicSync(mAccount, AUTHORITY, Bundle.EMPTY, 3600);
+		ContentResolver.addPeriodicSync(mAccount, AUTHORITY, Bundle.EMPTY, SYNC_INTERVAL_IN_SECONDS);
 	}
 
 	/**
@@ -59,6 +62,9 @@ public class SyncManager {
 	 * @param context The application context
 	 */
 	private Account createSyncAccount(Context context) {
+		if (mAccount != null) {
+			return mAccount;
+		}
 		// Create the account type and default account
 		Account newAccount = new Account(ACCOUNT, ACCOUNT_TYPE);
 		// Get an instance of the Android account manager

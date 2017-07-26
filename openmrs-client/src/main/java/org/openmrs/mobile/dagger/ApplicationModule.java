@@ -18,6 +18,6 @@ public class ApplicationModule {
 	@Provides
 	@Singleton
 	public SyncManager provideSyncManager() {
-		return new SyncManager(openMRS);
+		return new SyncManager(openMRS, DaggerReceiverComponent.create());
 	}
 }

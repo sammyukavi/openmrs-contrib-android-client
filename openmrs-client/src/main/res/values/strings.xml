@@ -386,4 +386,6 @@
 	<string name="unplanned">Unplanned</string>
 	<string name="hiv_positive">Positive</string>
 	<string name="hiv_negative">Negative</string>
+	<string name="patient_diabetic">Patient diabetic?</string>
+	<string name="ward_stay_admission">Ward stay during admission</string>
 </resources>

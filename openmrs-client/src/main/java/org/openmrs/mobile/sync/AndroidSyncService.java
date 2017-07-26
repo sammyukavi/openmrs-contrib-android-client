@@ -9,8 +9,6 @@ import org.openmrs.mobile.dagger.DaggerSyncComponent;
 import org.openmrs.mobile.dagger.SyncModule;
 
 public class AndroidSyncService extends Service {
-	private static final Object SYNC_LOCK = new Object();
-
 	@Inject
 	SyncAdapter syncAdapter;
 
@@ -21,9 +19,7 @@ public class AndroidSyncService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		synchronized (SYNC_LOCK) {
-			DaggerSyncComponent.builder().syncModule(new SyncModule(this)).build().inject(this);
-		}
+		DaggerSyncComponent.builder().syncModule(new SyncModule(this)).build().inject(this);
 	}
 
 	@Override

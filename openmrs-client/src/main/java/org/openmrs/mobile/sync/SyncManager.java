@@ -12,16 +12,15 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.dagger.ReceiverComponent;
-import org.openmrs.mobile.receivers.ConnectivityReceiver;
 
 public class SyncManager {
 	// Sync constants
 	// The authority for the sync adapter's content provider
-	public static final String AUTHORITY = "org.openmrs.mobile.provider";
+	public static final String SYNC_ADAPTER_AUTHORITY = "org.openmrs.mobile.provider";
 	// An account type, in the form of a domain name
-	public static final String ACCOUNT_TYPE = "org.openmrs.mobile.datasync";
+	public static final String SYNC_ADAPTER_ACCOUNT_TYPE = "org.openmrs.mobile.datasync";
 	// The account name (this isn't used by the app, but is needed for syncing)
-	public static final String ACCOUNT = "defaultAccount";
+	public static final String SYNC_ADAPTER_ACCOUNT = "syncAdapterAccount";
 	// Sync interval constants
 	public static final long SECONDS_PER_MINUTE = 60L;
 	public static final long SYNC_INTERVAL_IN_MINUTES = 60L;
@@ -52,8 +51,8 @@ public class SyncManager {
 		// Create the dummy account
 		mAccount = createSyncAccount(mOpenMRS);
 		// Turn on periodic syncing
-		ContentResolver.setSyncAutomatically(mAccount, AUTHORITY, true);
-		ContentResolver.addPeriodicSync(mAccount, AUTHORITY, Bundle.EMPTY, SYNC_INTERVAL_IN_SECONDS);
+		ContentResolver.setSyncAutomatically(mAccount, SYNC_ADAPTER_AUTHORITY, true);
+		ContentResolver.addPeriodicSync(mAccount, SYNC_ADAPTER_AUTHORITY, Bundle.EMPTY, SYNC_INTERVAL_IN_SECONDS);
 	}
 
 	/**
@@ -66,7 +65,7 @@ public class SyncManager {
 			return mAccount;
 		}
 		// Create the account type and default account
-		Account newAccount = new Account(ACCOUNT, ACCOUNT_TYPE);
+		Account newAccount = new Account(SYNC_ADAPTER_ACCOUNT, SYNC_ADAPTER_ACCOUNT_TYPE);
 		// Get an instance of the Android account manager
 		AccountManager accountManager = (AccountManager) mOpenMRS.getSystemService(mOpenMRS.ACCOUNT_SERVICE);
 
@@ -75,7 +74,7 @@ public class SyncManager {
             /*
              * If you don't set android:syncable="true" in
              * in your <provider> element in the manifest,
-             * then call context.setIsSyncable(account, AUTHORITY, 1)
+             * then call context.setIsSyncable(account, SYNC_ADAPTER_AUTHORITY, 1)
              * here.
              */
 			// Intentionally left blank
@@ -90,6 +89,6 @@ public class SyncManager {
 	}
 
 	public void requestSync() {
-		ContentResolver.requestSync(mAccount, AUTHORITY, Bundle.EMPTY);
+		ContentResolver.requestSync(mAccount, SYNC_ADAPTER_AUTHORITY, Bundle.EMPTY);
 	}
 }

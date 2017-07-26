@@ -297,25 +297,25 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 			List<VisitTask> visitTasks) {
 		if (visitPredefinedTasks == null || visitTasks == null) {
 			return visitPredefinedTasks;
-		} else {
-			String visitTasksName, predefinedTaskName;
-			VisitTaskStatus visitTaskStatus;
+		}
+		
+		String visitTasksName, predefinedTaskName;
+		VisitTaskStatus visitTaskStatus;
 
-			for (int q = 0; q < visitTasks.size(); q++) {
-				visitTasksName = visitTasks.get(q).getName();
-				visitTaskStatus = visitTasks.get(q).getStatus();
+		for (int q = 0; q < visitTasks.size(); q++) {
+			visitTasksName = visitTasks.get(q).getName();
+			visitTaskStatus = visitTasks.get(q).getStatus();
 
-				for (int i = 0; i < visitPredefinedTasks.size(); i++) {
-					predefinedTaskName = predefinedTasks.get(i).getName();
+			for (int i = 0; i < visitPredefinedTasks.size(); i++) {
+				predefinedTaskName = predefinedTasks.get(i).getName();
 
-					if ((predefinedTaskName.equalsIgnoreCase(visitTasksName)) && (visitTaskStatus
-							.equals(VisitTaskStatus.OPEN))) {
-						visitPredefinedTasks.remove(i);
-					}
+				if ((predefinedTaskName.equalsIgnoreCase(visitTasksName)) && (visitTaskStatus
+						.equals(VisitTaskStatus.OPEN))) {
+					visitPredefinedTasks.remove(i);
 				}
 			}
-			return visitPredefinedTasks;
 		}
+		return visitPredefinedTasks;
 	}
 
 	@Override

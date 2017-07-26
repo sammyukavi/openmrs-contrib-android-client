@@ -84,10 +84,10 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 			mAuthorizationManager.moveToLoginActivity();
 		}
 
-		if (!(this instanceof LoginActivity)) {
-			resetDisconnectTimer();
-		} else {
+		if (this instanceof LoginActivity) {
 			stopDisconnectTimer();
+		} else {
+			resetDisconnectTimer();
 		}
 	}
 

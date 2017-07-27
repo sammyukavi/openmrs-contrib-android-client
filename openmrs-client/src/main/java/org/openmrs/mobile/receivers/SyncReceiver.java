@@ -22,9 +22,6 @@ public class SyncReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		if (isInitialStickyBroadcast()) {
-//			return;
-		}
 		OpenMRS openMRS = (OpenMRS) context.getApplicationContext();
 		if (openMRS.getNetworkUtils().hasNetwork()) {
 			openMRS.requestDataSync();

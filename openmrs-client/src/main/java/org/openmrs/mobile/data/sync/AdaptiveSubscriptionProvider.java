@@ -98,8 +98,13 @@ public abstract class AdaptiveSubscriptionProvider<E extends BaseOpenmrsAuditabl
 			pullTable(subscription);
 		} else {
 			// Else pull each record via rest and save to the local db
-			processIncremental(updates);
-			processIncremental(inserts);
+			if (updates != null && updates.size() > 0) {
+				processIncremental(updates);
+			}
+
+			if (inserts != null && inserts.size() > 0) {
+				processIncremental(inserts);
+			}
 		}
 	}
 

@@ -44,10 +44,13 @@ public interface ConceptRestService {
 
 	@GET(RestConstants.REST_PATH)
 	Call<Results<Concept>> getSetConcepts(@Path(value = "restPath", encoded = true) String restPath,
-			@Query("set") String setUuid);
+			@Query("set") String setUuid,
+			@Query("includeSetConcepts") Boolean includeSetConcepts,
+			@Query("v") String representation);
 
 	@GET(RestConstants.REST_PATH)
 	Call<Results<RecordInfo>> getSetConceptRecordInfo(@Path(value = "restPath", encoded = true) String restPath,
 			@Query("set") String setUuid,
+			@Query("includeSetConcepts") Boolean includeSetConcepts,
 			@Query("v") String representation);
 }

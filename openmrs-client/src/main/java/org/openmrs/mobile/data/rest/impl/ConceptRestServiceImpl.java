@@ -19,7 +19,7 @@ import retrofit2.Call;
 
 public class ConceptRestServiceImpl extends BaseRestService<Concept, ConceptRestService> {
 	public static final String FIND_CONCEPT_PATH = ApplicationConstants.API.REST_ENDPOINT_V2 + "/custom/diagnoses";
-	public static final String CONCEPT_SET_PATH = ApplicationConstants.API.REST_ENDPOINT_V2 + "/custom/conceptset";
+	public static final String CONCEPT_SET_PATH = ApplicationConstants.API.REST_ENDPOINT_V1 + "/concept";
 
 	@Inject
 	public ConceptRestServiceImpl() { }
@@ -44,11 +44,12 @@ public class ConceptRestServiceImpl extends BaseRestService<Concept, ConceptRest
 				PagingInfo.getStartIndex(pagingInfo), PagingInfo.getLimit(pagingInfo));
 	}
 
-	public Call<Results<Concept>> getSetConcepts(String setUuid) {
-		return restService.getSetConcepts(CONCEPT_SET_PATH, setUuid);
+	public Call<Results<Concept>> getSetConcepts(String setUuid, QueryOptions options) {
+		return restService.getSetConcepts(CONCEPT_SET_PATH, setUuid, false, QueryOptions.getRepresentation(options));
 	}
 
 	public Call<Results<RecordInfo>> getSetConceptRecordInfo(String setUuid) {
-		return restService.getSetConceptRecordInfo(CONCEPT_SET_PATH, setUuid, RestConstants.Representations.RECORD_INFO);
+		return restService.getSetConceptRecordInfo(CONCEPT_SET_PATH, setUuid, false,
+				RestConstants.Representations.RECORD_INFO);
 	}
 }

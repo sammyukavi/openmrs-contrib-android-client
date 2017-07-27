@@ -52,6 +52,10 @@ public class ConceptSetDbService extends BaseDbService<ConceptSet> implements Db
 		// First save the set
 		super.save(set);
 
+		// Clear all current join table records
+		ConceptSet_Concept_Table table = getConceptJoinTable();
+		SQLite.delete(ConceptSet_Concept.class).execute();
+
 		// Next, create all the join table records
 		List<ConceptSet_Concept> records = new ArrayList<>(setMembers.size());
 		for (Concept concept : setMembers) {
@@ -63,7 +67,6 @@ public class ConceptSetDbService extends BaseDbService<ConceptSet> implements Db
 		}
 
 		// Now save the set member concepts
-		ConceptSet_Concept_Table table = getConceptJoinTable();
 		table.saveAll(records);
 	}
 }

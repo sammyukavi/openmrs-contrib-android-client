@@ -1,7 +1,9 @@
 package org.openmrs.mobile.data.sync.impl;
 
+import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.db.impl.ConceptDbService;
 import org.openmrs.mobile.data.db.impl.ConceptSetDbService;
+import org.openmrs.mobile.data.rest.RestConstants;
 import org.openmrs.mobile.data.rest.impl.ConceptRestServiceImpl;
 import org.openmrs.mobile.data.sync.AdaptiveSubscriptionProvider;
 import org.openmrs.mobile.models.Concept;
@@ -60,7 +62,10 @@ public class DiagnosisConceptSubscriptionProvider extends AdaptiveSubscriptionPr
 
 	@Override
 	protected List<Concept> getAllRest() {
-		return getCallListValue(restService.getSetConcepts(ApplicationConstants.ConceptSets.ICPC_DIAGNOSES));
+		QueryOptions options = new QueryOptions();
+		options.setCustomRepresentation(RestConstants.Representations.DIAGNOSIS_CONCEPT);
+
+		return getCallListValue(restService.getSetConcepts(ApplicationConstants.ConceptSets.ICPC_DIAGNOSES, options));
 	}
 
 	@Override

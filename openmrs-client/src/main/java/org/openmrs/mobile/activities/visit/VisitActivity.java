@@ -118,6 +118,8 @@ public class VisitActivity extends ACBaseActivity {
 			editVisitButton.setVisibility(View.GONE);
 			endVisitButton.setVisibility(View.GONE);
 		}
+		// andr-115 hidden for R1, so remove this line when ready to add capture vitals back into app
+		captureVitalsButton.setVisibility(View.GONE);
 
 		initializeListeners(endVisitButton, editVisitButton, captureVitalsButton, auditData);
 	}

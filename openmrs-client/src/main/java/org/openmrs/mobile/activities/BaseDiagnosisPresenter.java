@@ -1,6 +1,7 @@
 package org.openmrs.mobile.activities;
 
 import android.util.Log;
+import android.view.View;
 
 import org.openmrs.mobile.dagger.DaggerDataAccess;
 import org.openmrs.mobile.dagger.DataAccess;
@@ -50,10 +51,12 @@ public class BaseDiagnosisPresenter {
 					entities.add(nonCodedDiagnosis);
 				}
 				base.getBaseDiagnosisView().setSearchDiagnoses(entities);
+				base.getLoadingProgressBar().setVisibility(View.GONE);
 			}
 
 			@Override
 			public void onError(Throwable t) {
+				base.getLoadingProgressBar().setVisibility(View.GONE);
 				Log.e("error", t.getLocalizedMessage());
 			}
 		});

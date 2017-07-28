@@ -130,15 +130,19 @@ public class VisitPhotoFragment extends VisitFragment implements VisitContract.V
 	}
 
 	@Override
+	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+
+		adapter = new VisitPhotoRecyclerViewAdapter(this.getActivity(), this);
+		recyclerView.setAdapter(adapter);
+	}
+
+	@Override
 	public void updateVisitImageMetadata(List<VisitPhoto> visitPhotos) {
-		if (adapter == null) {
-			adapter = new VisitPhotoRecyclerViewAdapter(this.getActivity(), visitPhotos, this);
-		}
+		adapter.setVisitPhotos(visitPhotos);
 
 		RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), visitPhotos.size());
 		recyclerView.setLayoutManager(layoutManager);
-
-		recyclerView.setAdapter(adapter);
 	}
 
 	@Override

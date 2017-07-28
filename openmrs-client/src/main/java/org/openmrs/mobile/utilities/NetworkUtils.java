@@ -14,6 +14,8 @@
 
 package org.openmrs.mobile.utilities;
 
+import javax.inject.Inject;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
@@ -27,16 +29,19 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public final class NetworkUtils {
+public class NetworkUtils {
 
-	public static boolean hasNetwork() {
+	@Inject
+	public NetworkUtils() {}
+
+	public boolean hasNetwork() {
 		ConnectivityManager connectivityManager
 				= (ConnectivityManager)OpenMRS.getInstance().getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 		return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
 	}
 
-	public static boolean isOnline() {
+	public boolean isOnline() {
 
 		final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(OpenMRS.getInstance());
 		boolean toggle = prefs.getBoolean("sync", true);
@@ -60,7 +65,7 @@ public final class NetworkUtils {
 
 	}
 
-	public static boolean checkIfServerOnline() {
+	public boolean checkIfServerOnline() {
 		if (hasNetwork()) {
 			try {
 				HttpURLConnection urlc = (HttpURLConnection)(new URL(OpenMRS.getInstance().getServerUrl()).openConnection

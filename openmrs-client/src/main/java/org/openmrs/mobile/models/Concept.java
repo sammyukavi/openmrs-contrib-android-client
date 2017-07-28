@@ -50,6 +50,9 @@ public class Concept extends BaseOpenmrsAuditableObject {
 	@SerializedName("conceptMappings")
 	@Expose
 	private List<ConceptMap> conceptMappings;
+	@SerializedName("value")
+	@Expose
+	private String value;
 
 	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "answers", isVariablePrivate = true)
 	List<ConceptAnswer> loadAnswers() {
@@ -123,6 +126,14 @@ public class Concept extends BaseOpenmrsAuditableObject {
 
 	public void setConceptMappings(List<ConceptMap> conceptMappings) {
 		this.conceptMappings = conceptMappings;
+	}
+
+	public String getValue() {
+		return value;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
 	}
 
 	@Override

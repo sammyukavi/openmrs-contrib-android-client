@@ -57,6 +57,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	private boolean processing, endVisitTag;
 	private String patientUuid;
 	private Location location;
+	private Patient patient;
 
 	public AddEditVisitPresenter(@NonNull AddEditVisitContract.View addEditVisitView, String patientUuid, boolean endVisit) {
 		this(addEditVisitView, patientUuid, endVisit, null, null, null, null, null, null);
@@ -119,13 +120,18 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	}
 
 	private void loadPatient() {
+		if(patient != null){
+			return;
+		}
+
 		addEditVisitView.showPageSpinner(true);
 		if (StringUtils.notEmpty(patientUuid)) {
 			patientDataService
 					.getByUuid(patientUuid, QueryOptions.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Patient>() {
 						@Override
 						public void onCompleted(Patient entity) {
-							loadVisit(entity);
+							patient = entity;
+							loadVisit();
 						}
 
 						@Override
@@ -137,7 +143,11 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 		}
 	}
 
-	private void loadVisit(Patient patient) {
+	private void loadVisit() {
+		if(visit != null){
+			return;
+		}
+
 		visitDataService.getByPatient(patient, new QueryOptions(false, true), new PagingInfo(0, 10),
 				new DataService.GetCallback<List<Visit>>() {
 					@Override

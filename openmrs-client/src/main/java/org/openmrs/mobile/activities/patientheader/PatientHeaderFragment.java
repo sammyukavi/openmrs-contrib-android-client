@@ -57,7 +57,6 @@ public class PatientHeaderFragment extends ACBaseFragment<PatientHeaderContract.
 		fileNumber.setText(patient.getIdentifier().getIdentifier());
 		DateTime date = DateUtils.convertTimeString(patient.getPerson().getBirthdate());
 		patientAge.setText(DateUtils.calculateAge(patient.getPerson().getBirthdate()));
-		;
 		patientDob.setText(
 				DateUtils.convertTime1(patient.getPerson().getBirthdate(), DateUtils.DATE_FORMAT));
 	}

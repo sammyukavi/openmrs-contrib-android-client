@@ -149,6 +149,9 @@ dependencies {
 	)
 
 	testCompile "org.robolectric:robolectric:3.3.2"
+
+	androidTestApt 'com.google.dagger:dagger-compiler:2.11'
+	testApt 'com.google.dagger:dagger-compiler:2.11'
 }
 
 play {

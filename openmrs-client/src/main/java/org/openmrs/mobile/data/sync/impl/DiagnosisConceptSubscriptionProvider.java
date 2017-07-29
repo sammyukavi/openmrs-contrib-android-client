@@ -8,7 +8,6 @@ import org.openmrs.mobile.data.rest.impl.ConceptRestServiceImpl;
 import org.openmrs.mobile.data.sync.AdaptiveSubscriptionProvider;
 import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.ConceptSet;
-import org.openmrs.mobile.models.DiagnosisSearchResult;
 import org.openmrs.mobile.models.PullSubscription;
 import org.openmrs.mobile.models.RecordInfo;
 import org.openmrs.mobile.utilities.ApplicationConstants;

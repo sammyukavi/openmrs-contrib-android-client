@@ -1,6 +1,7 @@
 package org.openmrs.mobile.data.sync;
 
 import com.raizlabs.android.dbflow.config.FlowManager;
+import com.raizlabs.android.dbflow.sql.language.From;
 import com.raizlabs.android.dbflow.sql.language.Join;
 import com.raizlabs.android.dbflow.sql.language.NameAlias;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
@@ -8,6 +9,7 @@ import com.raizlabs.android.dbflow.sql.language.property.Property;
 import com.raizlabs.android.dbflow.structure.ModelAdapter;
 
 import org.openmrs.mobile.data.db.DbService;
+import org.openmrs.mobile.data.db.Repository;
 import org.openmrs.mobile.data.rest.RestService;
 import org.openmrs.mobile.models.BaseOpenmrsAuditableObject;
 import org.openmrs.mobile.models.PullSubscription;
@@ -36,6 +38,9 @@ public abstract class AdaptiveSubscriptionProvider<E extends BaseOpenmrsAuditabl
 	@Inject
 	protected RS restService;
 
+	@Inject
+	protected Repository repository;
+
 	private Class<E> entityClass;
 
 	@Override
@@ -53,6 +58,9 @@ public abstract class AdaptiveSubscriptionProvider<E extends BaseOpenmrsAuditabl
 	protected void pullTable(PullSubscription subscription) {
 		// Get all records via rest
 		List<E> table = getAllRest();
+		if (table == null || table.size() == 0) {
+			return;
+		}
 
 		// Filter the list for records updated since the last sync
 		List<E> updated = new ArrayList<>();
@@ -73,6 +81,9 @@ public abstract class AdaptiveSubscriptionProvider<E extends BaseOpenmrsAuditabl
 	protected void pullIncremental(PullSubscription subscription) {
 		// Get the record info (UUID, DateUpdated) for each record via REST
 		List<RecordInfo> tableInfo = getRecordInfoRest();
+		if (tableInfo == null || tableInfo.size() == 0) {
+			return;
+		}
 
 		List<String> updates;
 		List<String> inserts;
@@ -111,33 +122,36 @@ public abstract class AdaptiveSubscriptionProvider<E extends BaseOpenmrsAuditabl
 	protected List<String> calculateIncrementalUpdates(Date since) {
 		Property entityUuidProperty = getModelTable(getEntityClass()).getProperty("uuid");
 
-		return SQLite.select(entityUuidProperty)
+		From<E> from = SQLite.select(entityUuidProperty)
 				.from(getEntityClass())
 				.innerJoin(RecordInfo.class)
-				.on(entityUuidProperty.withTable().eq(RecordInfo_Table.uuid.withTable()))
-				.where(RecordInfo_Table.dateChanged.greaterThan(since))
-				.queryCustomList(String.class);
+				.on(entityUuidProperty.withTable().eq(RecordInfo_Table.uuid.withTable()));
+		from.where(RecordInfo_Table.dateChanged.greaterThan(since));
+
+		return repository.queryCustom(String.class, from);
 	}
 
 	protected List<String> calculateIncrementalInserts() {
 		Property entityUuidProperty = getModelTable(getEntityClass()).getProperty("uuid");
 
-		return SQLite.select(RecordInfo_Table.uuid)
+		From<RecordInfo> from = SQLite.select(RecordInfo_Table.uuid)
 				.from(RecordInfo.class)
 				.leftOuterJoin(getEntityClass())
-				.on(RecordInfo_Table.uuid.withTable().eq(entityUuidProperty.withTable()))
-				.where(entityUuidProperty.withTable().isNull())
-				.queryCustomList(String.class);
+				.on(RecordInfo_Table.uuid.withTable().eq(entityUuidProperty.withTable()));
+		from.where(entityUuidProperty.withTable().isNull());
+
+		return repository.queryCustom(String.class, from);
 	}
 
 	protected void deleteIncremental() {
-		SQLite.delete(getEntityClass()).as("E")
+		From<E> from = SQLite.delete(getEntityClass()).as("E")
 				.join(RecordInfo.class, Join.JoinType.LEFT_OUTER).as("R")
 				.on(
 						getModelTable(getEntityClass()).getProperty("uuid").withTable(NameAlias.of("E"))
-								.eq(RecordInfo_Table.uuid.withTable(NameAlias.of("R"))))
-				.where(RecordInfo_Table.uuid.withTable(NameAlias.of("R")).isNull())
-				.execute();
+								.eq(RecordInfo_Table.uuid.withTable(NameAlias.of("R"))));
+		from.where(RecordInfo_Table.uuid.withTable(NameAlias.of("R")).isNull());
+
+		repository.deleteAll(from);
 	}
 
 	protected void processIncremental(List<String> records) {
@@ -170,50 +184,6 @@ public abstract class AdaptiveSubscriptionProvider<E extends BaseOpenmrsAuditabl
 
 	protected List<RecordInfo> getRecordInfoRest() {
 		return getCallListValue(restService.getRecordInfo(null));
-	}
-
-	protected <T> List<T> getCallListValue(Call<Results<T>> call) {
-		if (call == null) {
-			return null;
-		}
-
-		Response<Results<T>> response;
-		try {
-			response = call.execute();
-		} catch (Exception ex) {
-			response = null;
-		}
-
-		List<T> result = null;
-		if (response != null) {
-			Results<T> temp = response.body();
-
-			if (temp != null) {
-				result = temp.getResults();
-			}
-		}
-
-		return result;
-	}
-
-	protected <T> T getCallValue(Call<T> call) {
-		if (call == null) {
-			return null;
-		}
-
-		Response<T> response;
-		try {
-			response = call.execute();
-		} catch (Exception ex) {
-			response = null;
-		}
-
-		T result = null;
-		if (response != null) {
-			result = response.body();
-		}
-
-		return result;
 	}
 
 	@SuppressWarnings("unchecked")

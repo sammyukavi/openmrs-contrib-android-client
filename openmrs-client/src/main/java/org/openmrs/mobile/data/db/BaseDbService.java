@@ -18,11 +18,16 @@ import org.openmrs.mobile.utilities.Consumer;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.raizlabs.android.dbflow.sql.language.Method.count;
 
 public abstract class BaseDbService<E extends BaseOpenmrsObject> implements DbService<E> {
 	private Class<E> entityClass;
+
+	@Inject
+	protected Repository repository;
 
 	protected abstract ModelAdapter<E> getEntityTable();
 
@@ -51,9 +56,7 @@ public abstract class BaseDbService<E extends BaseOpenmrsObject> implements DbSe
 			return 0;
 		}
 
-		return SQLite.select(count(tbl.getProperty("uuid")))
-				.from(getEntityClass())
-				.count();
+		return repository.count(tbl);
 	}
 
 	@Override
@@ -69,10 +72,7 @@ public abstract class BaseDbService<E extends BaseOpenmrsObject> implements DbSe
 			return null;
 		}
 
-		E result = SQLite.select()
-				.from(getEntityClass())
-				.where(tbl.getProperty("uuid").eq(uuid))
-				.querySingle();
+		E result = repository.querySingle(tbl, tbl.getProperty("uuid").eq(uuid));
 
 		if (result != null) {
 			postLoad(result);
@@ -95,12 +95,7 @@ public abstract class BaseDbService<E extends BaseOpenmrsObject> implements DbSe
 			}
 		}
 
-		FlowManager.getDatabase(AppDatabase.class).executeTransaction(
-			FastStoreModelTransaction
-				.saveBuilder(tbl)
-				.addAll(entities)
-				.build()
-		);
+		repository.saveAll(tbl, entities);
 
 		for (E entity : entities) {
 			if (entity != null) {
@@ -121,7 +116,7 @@ public abstract class BaseDbService<E extends BaseOpenmrsObject> implements DbSe
 
 		preSave(entity);
 
-		if (tbl.save(entity)) {
+		if (repository.save(tbl, entity)) {
 			postSave(entity);
 
 			return entity;
@@ -140,11 +135,9 @@ public abstract class BaseDbService<E extends BaseOpenmrsObject> implements DbSe
 
 		preDelete(entity);
 
-		SQLite.delete(getEntityClass())
-				.where(tbl.getProperty("uuid").eq(entity.getUuid()))
-				.execute();
-
-		postDelete(entity);
+		if (repository.delete(tbl, entity)) {
+			postDelete(entity);
+		}
 	}
 
 	@Override
@@ -157,9 +150,7 @@ public abstract class BaseDbService<E extends BaseOpenmrsObject> implements DbSe
 
 		preDelete(uuid);
 
-		SQLite.delete(getEntityClass())
-				.where(tbl.getProperty("uuid").eq(uuid))
-				.execute();
+		repository.deleteAll(tbl, tbl.getProperty("uuid").eq(uuid));
 
 		postDelete(uuid);
 	}
@@ -173,8 +164,7 @@ public abstract class BaseDbService<E extends BaseOpenmrsObject> implements DbSe
 
 		preDeleteAll();
 
-		SQLite.delete(getEntityClass())
-				.execute();
+		repository.deleteAll(tbl);
 
 		postDeleteAll();
 	}
@@ -213,7 +203,7 @@ public abstract class BaseDbService<E extends BaseOpenmrsObject> implements DbSe
 					where.accept(pagingTotalQuery);
 				}
 
-				pagingInfo.setTotalRecordCount((int)pagingTotalQuery.count());
+				pagingInfo.setTotalRecordCount((int)repository.count(pagingTotalQuery));
 			}
 
 			// Set up paging logic
@@ -227,7 +217,7 @@ public abstract class BaseDbService<E extends BaseOpenmrsObject> implements DbSe
 		}
 
 		// Return the results
-		List<M> results = from.queryList();
+		List<M> results = repository.query(from);
 
 		// Ensure entity class is loaded
 		getEntityClass();

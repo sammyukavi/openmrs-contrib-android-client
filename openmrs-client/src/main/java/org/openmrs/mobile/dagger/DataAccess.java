@@ -1,6 +1,5 @@
 package org.openmrs.mobile.dagger;
 
-import org.openmrs.mobile.data.db.impl.ConceptSetDbService;
 import org.openmrs.mobile.data.impl.ConceptAnswerDataService;
 import org.openmrs.mobile.data.impl.ConceptDataService;
 import org.openmrs.mobile.data.impl.DiagnosisSearchDataService;
@@ -28,7 +27,7 @@ import javax.inject.Singleton;
 import dagger.Component;
 
 @Singleton
-@Component(modules = CacheModule.class)
+@Component(modules = { CacheModule.class, DbModule.class })
 public interface DataAccess {
 	ConceptAnswerDataService conceptAnswer();
 

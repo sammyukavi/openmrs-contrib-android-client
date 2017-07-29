@@ -39,10 +39,8 @@ public class ConceptSetDbService extends BaseDbService<ConceptSet> implements Db
 		checkNotNull(setUuid);
 
 		ConceptSet_Concept_Table table = getConceptJoinTable();
-		return SQLite.select(count(table.getProperty("concept")))
-				.from(ConceptSet_Concept.class)
-				.where(ConceptSet_Concept_Table.conceptSet_uuid.eq(setUuid))
-				.count();
+
+		return repository.count(table, ConceptSet_Concept_Table.conceptSet_uuid.eq(setUuid));
 	}
 
 	public void save(@NonNull ConceptSet set, @NonNull List<Concept> setMembers) {
@@ -54,7 +52,7 @@ public class ConceptSetDbService extends BaseDbService<ConceptSet> implements Db
 
 		// Clear all current join table records
 		ConceptSet_Concept_Table table = getConceptJoinTable();
-		SQLite.delete(ConceptSet_Concept.class).execute();
+		repository.deleteAll(table);
 
 		// Next, create all the join table records
 		List<ConceptSet_Concept> records = new ArrayList<>(setMembers.size());
@@ -67,6 +65,6 @@ public class ConceptSetDbService extends BaseDbService<ConceptSet> implements Db
 		}
 
 		// Now save the set member concepts
-		table.saveAll(records);
+		repository.saveAll(table, records);
 	}
 }

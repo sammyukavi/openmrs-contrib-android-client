@@ -3,15 +3,16 @@ package org.openmrs.mobile.data.db.impl;
 import android.support.annotation.NonNull;
 
 import com.raizlabs.android.dbflow.config.FlowManager;
-import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.ModelAdapter;
 
+import org.openmrs.mobile.application.OpenMRS;
+import org.openmrs.mobile.data.DataUtil;
 import org.openmrs.mobile.data.db.BaseDbService;
 import org.openmrs.mobile.data.db.DbService;
 import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.ConceptSet;
-import org.openmrs.mobile.models.ConceptSet_Concept;
-import org.openmrs.mobile.models.ConceptSet_Concept_Table;
+import org.openmrs.mobile.models.ConceptSetMember;
+import org.openmrs.mobile.models.ConceptSetMember_Table;
 import org.openmrs.mobile.models.ConceptSet_Table;
 
 import java.util.ArrayList;
@@ -20,7 +21,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.raizlabs.android.dbflow.sql.language.Method.count;
 
 public class ConceptSetDbService extends BaseDbService<ConceptSet> implements DbService<ConceptSet> {
 	@Inject
@@ -31,40 +31,45 @@ public class ConceptSetDbService extends BaseDbService<ConceptSet> implements Db
 		return (ConceptSet_Table)FlowManager.getInstanceAdapter(ConceptSet.class);
 	}
 
-	protected ConceptSet_Concept_Table getConceptJoinTable() {
-		return (ConceptSet_Concept_Table)FlowManager.getInstanceAdapter(ConceptSet_Concept.class);
+	protected ConceptSetMember_Table getConceptJoinTable() {
+		return (ConceptSetMember_Table)FlowManager.getInstanceAdapter(ConceptSetMember.class);
 	}
 
 	public long getSetMemberCount(String setUuid) {
 		checkNotNull(setUuid);
 
-		ConceptSet_Concept_Table table = getConceptJoinTable();
+		ConceptSetMember_Table table = getConceptJoinTable();
 
-		return repository.count(table, ConceptSet_Concept_Table.conceptSet_uuid.eq(setUuid));
+		return repository.count(table, ConceptSetMember_Table.conceptSet_uuid.eq(setUuid));
 	}
 
 	public void save(@NonNull ConceptSet set, @NonNull List<Concept> setMembers) {
 		checkNotNull(set);
 		checkNotNull(setMembers);
 
+		DataUtil dataUtil = OpenMRS.getInstance().getDataUtil();
+
 		// First save the set
 		super.save(set);
 
-		// Clear all current join table records
-		ConceptSet_Concept_Table table = getConceptJoinTable();
-		repository.deleteAll(table);
-
 		// Next, create all the join table records
-		List<ConceptSet_Concept> records = new ArrayList<>(setMembers.size());
+		List<ConceptSetMember> records = new ArrayList<>(setMembers.size());
 		for (Concept concept : setMembers) {
-			ConceptSet_Concept record = new ConceptSet_Concept();
+			ConceptSetMember record = new ConceptSetMember();
 			record.setConceptSet(set);
 			record.setConcept(concept);
+
+			record.setUuid(dataUtil.generateUuid(set.getUuid() + concept.getUuid()));
 
 			records.add(record);
 		}
 
-		// Now save the set member concepts
-		repository.saveAll(table, records);
+		// Delete local members for the concept set that are no longer members
+		dataUtil.diffDelete(ConceptSetMember.class,
+				ConceptSetMember_Table.conceptSet_uuid.eq(set.getUuid()),
+				records);
+
+		// Save records
+		repository.saveAll(getConceptJoinTable(), records);
 	}
 }

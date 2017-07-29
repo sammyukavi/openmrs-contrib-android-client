@@ -51,14 +51,12 @@ public class PatientListContextSubscriptionProvider extends BaseSubscriptionProv
 			return;
 		}
 
-		// Create record info records and update PatientListPatient to have consistent uuid
+		// Create record info records
 		List<RecordInfo> records = new ArrayList<>(patients.size());
 		for (PatientListContext patient : patients) {
 			RecordInfo record = new RecordInfo();
 			record.setUuid(patient.getPatient().getUuid());
 			records.add(record);
-
-			patient.setUuid(patient.getPatientList().getUuid() + patient.getPatient().getUuid());
 		}
 
 		// Find list patient that should be deleted

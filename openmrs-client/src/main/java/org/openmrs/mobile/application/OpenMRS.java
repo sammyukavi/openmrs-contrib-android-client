@@ -366,4 +366,8 @@ public class OpenMRS extends Application {
 	public NetworkUtils getNetworkUtils() {
 		return networkUtils;
 	}
+
+	public DataUtil getDataUtil() {
+		return dataUtil;
+	}
 }

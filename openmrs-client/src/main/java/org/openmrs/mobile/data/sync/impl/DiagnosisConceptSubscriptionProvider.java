@@ -18,13 +18,14 @@ import javax.inject.Inject;
 
 public class DiagnosisConceptSubscriptionProvider extends AdaptiveSubscriptionProvider<Concept,
 		ConceptDbService, ConceptRestServiceImpl> {
-	@Inject
-	protected ConceptSetDbService conceptSetDbService;
+	private ConceptSetDbService conceptSetDbService;
 
 	private ConceptSet icpcDiagnosesSet;
 
 	@Inject
-	public DiagnosisConceptSubscriptionProvider() { }
+	public DiagnosisConceptSubscriptionProvider(ConceptSetDbService conceptSetDbService) {
+		this.conceptSetDbService = conceptSetDbService;
+	}
 
 	@Override
 	public void initialize(PullSubscription subscription) {

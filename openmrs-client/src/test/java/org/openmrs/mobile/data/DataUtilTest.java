@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -72,11 +73,11 @@ public class DataUtilTest {
 		List<Location> models = new ArrayList<>(Arrays.asList(testData));
 		List<String> results = createResults(testData[0]);
 
-		when(repo.queryCustom(eq(String.class), any(), any(IProperty.class))).thenReturn(results);
+		when(repo.queryCustom(eq(String.class), any(), any(IProperty.class), isNull(SQLOperator.class))).thenReturn(results);
 
 		dataUtil.diffDelete(Location.class, models);
 
-		verify(repo).queryCustom(eq(String.class), any(), any(IProperty.class));
+		verify(repo).queryCustom(eq(String.class), any(), any(IProperty.class), isNull(SQLOperator.class));
 		verify(repo, never()).deleteAll(any(), any(SQLOperator.class));
 	}
 
@@ -84,11 +85,12 @@ public class DataUtilTest {
 	public void diffDelete_shouldSkipChecksWhenTableIsEmpty() throws Exception {
 		List<Location> models = new ArrayList<>(Arrays.asList(testData));
 
-		when(repo.queryCustom(eq(String.class), any(), any(IProperty.class))).thenReturn(new ArrayList<>());
+		when(repo.queryCustom(eq(String.class), any(), any(IProperty.class), isNull(SQLOperator.class)))
+				.thenReturn(new ArrayList<>());
 
 		dataUtil.diffDelete(Location.class, models);
 
-		verify(repo).queryCustom(eq(String.class), any(), any(IProperty.class));
+		verify(repo).queryCustom(eq(String.class), any(), any(IProperty.class), isNull(SQLOperator.class));
 		verify(repo, never()).deleteAll(any(), any(SQLOperator.class));
 	}
 
@@ -101,11 +103,11 @@ public class DataUtilTest {
 
 		ArgumentCaptor<SQLOperator> captor = ArgumentCaptor.forClass(SQLOperator.class);
 
-		when(repo.queryCustom(eq(String.class), any(), any(IProperty.class))).thenReturn(results);
+		when(repo.queryCustom(eq(String.class), any(), any(IProperty.class), isNull(SQLOperator.class))).thenReturn(results);
 
 		dataUtil.diffDelete(Location.class, models);
 
-		verify(repo).queryCustom(eq(String.class), any(), any(IProperty.class));
+		verify(repo).queryCustom(eq(String.class), any(), any(IProperty.class), isNull(SQLOperator.class));
 		verify(repo, times(1)).deleteAll(any(), captor.capture());
 
 		SQLOperator op = captor.getValue();
@@ -127,11 +129,11 @@ public class DataUtilTest {
 
 		ArgumentCaptor<SQLOperator> captor = ArgumentCaptor.forClass(SQLOperator.class);
 
-		when(repo.queryCustom(eq(String.class), any(), any(IProperty.class))).thenReturn(results);
+		when(repo.queryCustom(eq(String.class), any(), any(IProperty.class), isNull(SQLOperator.class))).thenReturn(results);
 
 		dataUtil.diffDelete(Location.class, models);
 
-		verify(repo).queryCustom(eq(String.class), any(), any(IProperty.class));
+		verify(repo).queryCustom(eq(String.class), any(), any(IProperty.class), isNull(SQLOperator.class));
 		verify(repo, times(1)).deleteAll(any(), captor.capture());
 
 		SQLOperator op = captor.getValue();
@@ -147,19 +149,18 @@ public class DataUtilTest {
 		dataUtil.diffDelete(Location.class, new ArrayList<>());
 
 		verify(repo, never()).queryCustom(eq(String.class), any(), any(IProperty.class));
-		verify(repo, never()).deleteAll(any(), any(SQLOperator.class));
-		verify(repo).deleteAll(any(Location_Table.class));
+		verify(repo).deleteAll(any(Location_Table.class), Matchers.isNull(SQLOperator.class));
 	}
 
 	@Test
 	public void diffDelete_shouldNotDeleteWhenAllTableRecordsAreFoundInExpectedRecords() throws Exception {
 		List<Location> models = new ArrayList<>(Arrays.asList(testData));
 		List<String> results = createResults(models.toArray(new Location[models.size()]));
-		when(repo.queryCustom(eq(String.class), any(), any(IProperty.class))).thenReturn(results);
+		when(repo.queryCustom(eq(String.class), any(), any(IProperty.class), isNull(SQLOperator.class))).thenReturn(results);
 
 		dataUtil.diffDelete(Location.class, models);
 
-		verify(repo).queryCustom(eq(String.class), any(), any(IProperty.class));
+		verify(repo).queryCustom(eq(String.class), any(), any(IProperty.class), isNull(SQLOperator.class));
 		verify(repo, never()).deleteAll(any(), any(SQLOperator.class));
 	}
 

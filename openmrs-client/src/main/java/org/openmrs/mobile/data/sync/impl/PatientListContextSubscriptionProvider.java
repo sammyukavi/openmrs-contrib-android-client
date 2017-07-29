@@ -1,11 +1,14 @@
 package org.openmrs.mobile.data.sync.impl;
 
+import org.openmrs.mobile.application.OpenMRS;
+import org.openmrs.mobile.data.DataUtil;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.db.impl.PatientListContextDbService;
 import org.openmrs.mobile.data.rest.RestConstants;
 import org.openmrs.mobile.data.rest.impl.PatientListContextRestServiceImpl;
 import org.openmrs.mobile.data.sync.BaseSubscriptionProvider;
 import org.openmrs.mobile.models.PatientListContext;
+import org.openmrs.mobile.models.PatientListContext_Table;
 import org.openmrs.mobile.models.PullSubscription;
 import org.openmrs.mobile.models.RecordInfo;
 import org.openmrs.mobile.utilities.StringUtils;
@@ -56,10 +59,17 @@ public class PatientListContextSubscriptionProvider extends BaseSubscriptionProv
 		for (PatientListContext patient : patients) {
 			RecordInfo record = new RecordInfo();
 			record.setUuid(patient.getPatient().getUuid());
+			record.setDateChanged(patient.getPatient().getDateChanged());
+
 			records.add(record);
 		}
 
-		// Find list patient that should be deleted
+		// Delete context records that are no longer in patient list
+		DataUtil dataUtil = OpenMRS.getInstance().getDataUtil();
+		dataUtil.diffDelete(PatientListContext.class, PatientListContext_Table.patientList_uuid.eq(patientListUuid),
+				records);
 
+		// Insert/update context records
+		listPatientDbService.saveAll(patients);
 	}
 }

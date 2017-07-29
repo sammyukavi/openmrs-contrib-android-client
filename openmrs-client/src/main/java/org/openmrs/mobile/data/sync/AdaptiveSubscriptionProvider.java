@@ -27,6 +27,13 @@ import javax.inject.Inject;
 import retrofit2.Call;
 import retrofit2.Response;
 
+/**
+ * Base class for subscription providers that attempt an incremental pull  but can switch to a table pull if too
+ * many records have changed.
+ * @param <E> The entity class
+ * @param <DS> The db service class
+ * @param <RS> The rest service class
+ */
 public abstract class AdaptiveSubscriptionProvider<E extends BaseOpenmrsAuditableObject,
 		DS extends DbService<E>, RS extends RestService<E>> extends BaseSubscriptionProvider {
 	@Inject
@@ -43,6 +50,11 @@ public abstract class AdaptiveSubscriptionProvider<E extends BaseOpenmrsAuditabl
 
 	private Class<E> entityClass;
 
+	/**
+	 * Executes the pull synchronization process. If no local records are found then a table pull will be done; otherwise,
+	 * an incremental pull is started.
+	 * @param subscription The {@link PullSubscription} that will be processed
+	 */
 	@Override
 	public void pull(PullSubscription subscription) {
 		long recordCount = getRecordCountDb();
@@ -55,6 +67,11 @@ public abstract class AdaptiveSubscriptionProvider<E extends BaseOpenmrsAuditabl
 		}
 	}
 
+	/**
+	 * Pulls the complete set of data from the rest service and saves all data to the local database. No deletions are
+	 * performed.
+	 * @param subscription The {@link PullSubscription} being processed
+	 */
 	protected void pullTable(PullSubscription subscription) {
 		// Get all records via rest
 		List<E> table = getAllRest();
@@ -78,6 +95,12 @@ public abstract class AdaptiveSubscriptionProvider<E extends BaseOpenmrsAuditabl
 		saveAllDb(updated);
 	}
 
+	/**
+	 * Pulls just the {@link RecordInfo} from the rest service, deleting any local records no longer found and calculating
+	 * the new or updated remote records that are needed. If the number of new + updated records is more than the
+	 * {@link PullSubscription#getMaximumIncrementalCount()} then a table pull is performed to update the local records.
+	 * @param subscription The {@link PullSubscription} being processed
+	 */
 	protected void pullIncremental(PullSubscription subscription) {
 		// Get the record info (UUID, DateUpdated) for each record via REST
 		List<RecordInfo> tableInfo = getRecordInfoRest();
@@ -119,6 +142,11 @@ public abstract class AdaptiveSubscriptionProvider<E extends BaseOpenmrsAuditabl
 		}
 	}
 
+	/**
+	 * Calculates the updates that need to be performed, returning the list of uuid's for entities that need to be updated.
+	 * @param since The last time the {@link PullSubscription} was processed
+	 * @return A list containing the uuid's for entities that need to be updated
+	 */
 	protected List<String> calculateIncrementalUpdates(Date since) {
 		Property entityUuidProperty = getModelTable(getEntityClass()).getProperty("uuid");
 
@@ -131,6 +159,10 @@ public abstract class AdaptiveSubscriptionProvider<E extends BaseOpenmrsAuditabl
 		return repository.queryCustom(String.class, from);
 	}
 
+	/**
+	 * Calculates the inserts that need to be performed, returning the list of uuid's for entities that are new.
+	 * @return A list containing the uuid's for entities that are new
+	 */
 	protected List<String> calculateIncrementalInserts() {
 		Property entityUuidProperty = getModelTable(getEntityClass()).getProperty("uuid");
 
@@ -143,6 +175,9 @@ public abstract class AdaptiveSubscriptionProvider<E extends BaseOpenmrsAuditabl
 		return repository.queryCustom(String.class, from);
 	}
 
+	/**
+	 * Deletes the local entities that were not found in the rest results.
+	 */
 	protected void deleteIncremental() {
 		From<E> from = SQLite.delete(getEntityClass()).as("E")
 				.join(RecordInfo.class, Join.JoinType.LEFT_OUTER).as("R")
@@ -154,6 +189,10 @@ public abstract class AdaptiveSubscriptionProvider<E extends BaseOpenmrsAuditabl
 		repository.deleteAll(from);
 	}
 
+	/**
+	 * Gets each entity from the rest service by uuid and then saves all records to the database
+	 * @param records The uuid's of the entities to process
+	 */
 	protected void processIncremental(List<String> records) {
 		List<E> entities = new ArrayList<>(records.size());
 
@@ -166,26 +205,53 @@ public abstract class AdaptiveSubscriptionProvider<E extends BaseOpenmrsAuditabl
 		saveAllDb(entities);
 	}
 
+	/**
+	 * Gets the record count for the entities in the local database.
+	 * @return The record count of local entities
+	 */
 	protected long getRecordCountDb() {
 		return dbService.getCount(null);
 	}
 
+	/**
+	 * Gets all entities from the rest service.
+	 * @return The entities
+	 */
 	protected List<E> getAllRest() {
 		return getCallListValue(restService.getAll(null, null));
 	}
 
+	/**
+	 * Saves the specified entities in the local database.
+	 * @param entities The entities to save
+	 */
 	protected void saveAllDb(List<E> entities) {
 		dbService.saveAll(entities);
 	}
 
+	/**
+	 * Gets an entity from the rest service using the specified uuid.
+	 * @param uuid The uuid
+	 * @return The entity
+	 */
 	protected E getByUuidRest(String uuid) {
 		return getCallValue(restService.getByUuid(uuid, null));
 	}
 
+	/**
+	 * Gets the {@link RecordInfo} from the rest service.
+	 * @return The record info
+	 */
 	protected List<RecordInfo> getRecordInfoRest() {
 		return getCallListValue(restService.getRecordInfo(null));
 	}
 
+	/**
+	 * Gets the model table for the specified model class.
+	 * @param cls The model class
+	 * @param <T> The model class
+	 * @return The model table
+	 */
 	@SuppressWarnings("unchecked")
 	protected <T> ModelAdapter<T> getModelTable(Class<T> cls) {
 		return (ModelAdapter<T>)FlowManager.getInstanceAdapter(cls);

@@ -47,7 +47,7 @@ public class DataUtil {
 	 * @param expectedRecords The records that should exist in the table
 	 * @param <T> The model type
 	 */
-	public <T extends Resource> void diffDelete(@NonNull Class<T> model, @NonNull List<T> expectedRecords) {
+	public <T extends Resource> void diffDelete(@NonNull Class<T> model, @NonNull List<? extends Resource> expectedRecords) {
 		diffDelete(model, (List<SQLOperator>)null, expectedRecords);
 	}
 
@@ -60,7 +60,7 @@ public class DataUtil {
 	 * @param <T> The model type
 	 */
 	public <T extends Resource> void diffDelete(@NonNull Class<T> model, @Nullable SQLOperator operator,
-			@NonNull List<T> expectedRecords) {
+			@NonNull List<? extends Resource> expectedRecords) {
 		List<SQLOperator> operators = null;
 		if (operator != null) {
 			operators = new ArrayList<>(1);
@@ -79,7 +79,7 @@ public class DataUtil {
 	 * @param <T> The model type
 	 */
 	public <T extends Resource> void diffDelete(@NonNull Class<T> model, @Nullable List<SQLOperator> operators,
-			@NonNull List<T> expectedRecords) {
+			@NonNull List<? extends Resource> expectedRecords) {
 		checkNotNull(model);
 		checkNotNull(expectedRecords);
 
@@ -103,7 +103,7 @@ public class DataUtil {
 
 			// Put the record uuid's into a map for searching
 			Map<String, String> recordMap = new HashMap<>(expectedRecords.size());
-			for (T record : expectedRecords) {
+			for (Resource record : expectedRecords) {
 				recordMap.put(record.getUuid(), "");
 			}
 

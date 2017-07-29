@@ -20,17 +20,20 @@ import javax.inject.Inject;
 public class SyncService {
 	private static final Object SYNC_LOCK = new Object();
 
-	@Inject
-	public SyncService() { }
+	private SyncProvider syncProvider;
+	private DbService<SyncLog> syncLogDbService;
+	private DbService<PullSubscription> subscriptionDbService;
 
 	//@Inject
 	//SyncProvider syncProvider;
 
 	@Inject
-	SyncLogDbService syncLogDbService;
-
-	@Inject
-	PullSubscriptionDbService subscriptionDbService;
+	public SyncService(SyncProvider syncProvider, DbService<SyncLog> syncLogDbService,
+			DbService<PullSubscription> subscriptionDbService) {
+		this.syncProvider = syncProvider;
+		this.syncLogDbService = syncLogDbService;
+		this.subscriptionDbService = subscriptionDbService;
+	}
 
 	private Map<String, SubscriptionProvider> subscriptionProviders = new HashMap<String, SubscriptionProvider>();
 
@@ -63,7 +66,7 @@ public class SyncService {
 	 */
 	protected void pull() {
 		// Get subscriptions
-		List<PullSubscription> subscriptions =  subscriptionDbService.getAll(null, null);
+		List<PullSubscription> subscriptions = subscriptionDbService.getAll(null, null);
 		for (PullSubscription sub : subscriptions) {
 			// Check if subscription should be processed, given the minimum interval
 			Integer seconds = null;
@@ -79,7 +82,7 @@ public class SyncService {
 					// Load the provider from the class name defined as the subscription class
 					try {
 						Class<?> cls = Class.forName(sub.getSubscriptionClass());
-						provider = (SubscriptionProvider)cls.newInstance();
+						provider = (SubscriptionProvider) cls.newInstance();
 
 						subscriptionProviders.put(sub.getSubscriptionClass(), provider);
 					} catch (Exception e) {

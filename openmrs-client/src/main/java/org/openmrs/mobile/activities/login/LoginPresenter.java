@@ -93,7 +93,7 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 		loginView.setProgressBarVisibility(true);
 		RestServiceBuilder.setloginUrl(url);
 
-		if (NetworkUtils.isOnline()) {
+		if (mOpenMRS.getNetworkUtils().isOnline()) {
 			mWipeRequired = wipeDatabase;
 			DataService.GetCallback<List<User>> loginUsersFoundCallback =
 					new DataService.GetCallback<List<User>>() {
@@ -173,7 +173,7 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 				} else {
 					loginView.showMessage(AUTH_FAILED);
 				}
-			} else if (NetworkUtils.hasNetwork()) {
+			} else if (mOpenMRS.getNetworkUtils().hasNetwork()) {
 				loginView.showMessage(OFFLINE_LOGIN_UNSUPPORTED);
 				loginView.setProgressBarVisibility(false);
 

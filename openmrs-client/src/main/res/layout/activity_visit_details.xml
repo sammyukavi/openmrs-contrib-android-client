@@ -72,7 +72,8 @@
 			fab:menu_labels_singleLine="true"
 			fab:menu_colorNormal="@color/color_primary_dark"
 			fab:menu_colorPressed="@color/color_primary">
-		
+
+		<!-- andr-115 button hidden for R1 -->
 		<com.github.clans.fab.FloatingActionButton
 				android:id="@+id/capture_vitals"
 				android:layout_width="wrap_content"
@@ -81,7 +82,8 @@
 				fab:fab_colorNormal="@color/color_primary_dark"
 				fab:fab_colorPressed="@color/color_primary"
 				fab:fab_label="@string/label_capture_vitals"
-				fab:fab_size="mini" />
+				fab:fab_size="mini"
+				android:visibility="gone"/>
 		
 		<com.github.clans.fab.FloatingActionButton
 				android:id="@+id/auditDataForm"

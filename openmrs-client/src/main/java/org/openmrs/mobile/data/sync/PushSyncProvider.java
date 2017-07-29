@@ -7,11 +7,13 @@ import org.openmrs.mobile.models.SyncLog;
 import javax.inject.Inject;
 
 public class PushSyncProvider implements SyncProvider {
-	@Inject
-	DbService<Patient> patientDbService;
+
+	private DbService<Patient> patientDbService;
 
 	@Inject
-	public PushSyncProvider() { }
+	public PushSyncProvider(DbService<Patient> patientDbService) {
+		this.patientDbService = patientDbService;
+	}
 
 	@Override
 	public void sync(SyncLog record) {

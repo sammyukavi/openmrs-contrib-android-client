@@ -43,7 +43,6 @@ public abstract class AdaptiveSubscriptionProvider<E extends BaseOpenmrsAuditabl
 
 	private Class<E> entityClass;
 
-	@Inject
 	public AdaptiveSubscriptionProvider(DS dbService, DbService<RecordInfo> recordInfoDbService, RS restService,
 			Repository repository) {
 		this.dbService = dbService;

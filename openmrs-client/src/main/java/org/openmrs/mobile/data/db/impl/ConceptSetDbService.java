@@ -23,8 +23,12 @@ import javax.inject.Inject;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class ConceptSetDbService extends BaseDbService<ConceptSet> implements DbService<ConceptSet> {
+	private DataUtil dataUtil;
+
 	@Inject
-	public ConceptSetDbService() { }
+	public ConceptSetDbService(DataUtil dataUtil) {
+		this.dataUtil = dataUtil;
+	}
 
 	@Override
 	protected ModelAdapter<ConceptSet> getEntityTable() {
@@ -46,8 +50,6 @@ public class ConceptSetDbService extends BaseDbService<ConceptSet> implements Db
 	public void save(@NonNull ConceptSet set, @NonNull List<Concept> setMembers) {
 		checkNotNull(set);
 		checkNotNull(setMembers);
-
-		DataUtil dataUtil = OpenMRS.getInstance().getDataUtil();
 
 		// First save the set
 		super.save(set);

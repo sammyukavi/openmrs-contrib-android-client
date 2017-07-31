@@ -36,19 +36,21 @@ import retrofit2.Response;
  */
 public abstract class AdaptiveSubscriptionProvider<E extends BaseOpenmrsAuditableObject,
 		DS extends DbService<E>, RS extends RestService<E>> extends BaseSubscriptionProvider {
-	@Inject
 	protected DS dbService;
-
-	@Inject
 	protected DbService<RecordInfo> recordInfoDbService;
-
-	@Inject
 	protected RS restService;
-
-	@Inject
 	protected Repository repository;
 
 	private Class<E> entityClass;
+
+	@Inject
+	public AdaptiveSubscriptionProvider(DS dbService, DbService<RecordInfo> recordInfoDbService, RS restService,
+			Repository repository) {
+		this.dbService = dbService;
+		this.recordInfoDbService = recordInfoDbService;
+		this.restService = restService;
+		this.repository = repository;
+	}
 
 	/**
 	 * Executes the pull synchronization process. If no local records are found then a table pull will be done; otherwise,

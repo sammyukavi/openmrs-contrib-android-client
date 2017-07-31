@@ -90,13 +90,13 @@ public class DataUtil {
 			array = operators.toArray(new SQLOperator[operators.size()]);
 		}
 
-		if (expectedRecords.size() == 0) {
+		if (expectedRecords.isEmpty()) {
 			// Delete all records from source table
 			repository.deleteAll(table, array);
 		} else {
 			// Get the uuid's of the current source records
 			List<String> existingRecords = repository.queryCustom(String.class, table, table.getProperty("uuid"), array);
-			if (existingRecords == null || existingRecords.size() == 0) {
+			if (existingRecords == null || existingRecords.isEmpty()) {
 				// There are no records so there is nothing to delete
 				return;
 			}

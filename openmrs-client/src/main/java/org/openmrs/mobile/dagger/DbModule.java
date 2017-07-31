@@ -12,7 +12,7 @@ import dagger.Provides;
 public class DbModule {
 	@Provides
 	@Singleton
-	Repository providesRepository() {
+	public Repository providesRepository() {
 		return new RepositoryImpl();
 	}
 }

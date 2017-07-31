@@ -1,6 +1,8 @@
 package org.openmrs.mobile.data.sync.impl;
 
 import org.openmrs.mobile.data.QueryOptions;
+import org.openmrs.mobile.data.db.DbService;
+import org.openmrs.mobile.data.db.Repository;
 import org.openmrs.mobile.data.db.impl.ConceptDbService;
 import org.openmrs.mobile.data.db.impl.ConceptSetDbService;
 import org.openmrs.mobile.data.rest.RestConstants;
@@ -19,11 +21,13 @@ import javax.inject.Inject;
 public class DiagnosisConceptSubscriptionProvider extends AdaptiveSubscriptionProvider<Concept,
 		ConceptDbService, ConceptRestServiceImpl> {
 	private ConceptSetDbService conceptSetDbService;
-
 	private ConceptSet icpcDiagnosesSet;
 
 	@Inject
-	public DiagnosisConceptSubscriptionProvider(ConceptSetDbService conceptSetDbService) {
+	public DiagnosisConceptSubscriptionProvider(ConceptDbService dbService, DbService<RecordInfo> recordInfoDbService,
+			ConceptRestServiceImpl restService, Repository repository, ConceptSetDbService conceptSetDbService) {
+		super(dbService, recordInfoDbService, restService, repository);
+
 		this.conceptSetDbService = conceptSetDbService;
 	}
 

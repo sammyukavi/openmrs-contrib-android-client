@@ -1,11 +1,12 @@
 package org.openmrs.mobile.data.sync.impl;
 
 import org.openmrs.mobile.data.QueryOptions;
-import org.openmrs.mobile.data.db.DbService;
 import org.openmrs.mobile.data.db.Repository;
 import org.openmrs.mobile.data.db.impl.ConceptDbService;
 import org.openmrs.mobile.data.db.impl.ConceptSetDbService;
+import org.openmrs.mobile.data.db.impl.RecordInfoDbService;
 import org.openmrs.mobile.data.rest.RestConstants;
+import org.openmrs.mobile.data.rest.RestHelper;
 import org.openmrs.mobile.data.rest.impl.ConceptRestServiceImpl;
 import org.openmrs.mobile.data.sync.AdaptiveSubscriptionProvider;
 import org.openmrs.mobile.models.Concept;
@@ -24,7 +25,7 @@ public class DiagnosisConceptSubscriptionProvider extends AdaptiveSubscriptionPr
 	private ConceptSet icpcDiagnosesSet;
 
 	@Inject
-	public DiagnosisConceptSubscriptionProvider(ConceptDbService dbService, DbService<RecordInfo> recordInfoDbService,
+	public DiagnosisConceptSubscriptionProvider(ConceptDbService dbService, RecordInfoDbService recordInfoDbService,
 			ConceptRestServiceImpl restService, Repository repository, ConceptSetDbService conceptSetDbService) {
 		super(dbService, recordInfoDbService, restService, repository);
 
@@ -37,7 +38,8 @@ public class DiagnosisConceptSubscriptionProvider extends AdaptiveSubscriptionPr
 
 		icpcDiagnosesSet = conceptSetDbService.getByUuid(ApplicationConstants.ConceptSets.ICPC_DIAGNOSES, null);
 		if (icpcDiagnosesSet == null) {
-			Concept concept = getCallValue(restService.getByUuid(ApplicationConstants.ConceptSets.ICPC_DIAGNOSES, null));
+			Concept concept = RestHelper.getCallValue(
+					restService.getByUuid(ApplicationConstants.ConceptSets.ICPC_DIAGNOSES, null));
 			if (concept != null) {
 				icpcDiagnosesSet = new ConceptSet();
 				icpcDiagnosesSet.setUuid(concept.getUuid());
@@ -69,11 +71,13 @@ public class DiagnosisConceptSubscriptionProvider extends AdaptiveSubscriptionPr
 		QueryOptions options = new QueryOptions();
 		options.setCustomRepresentation(RestConstants.Representations.DIAGNOSIS_CONCEPT);
 
-		return getCallListValue(restService.getSetConcepts(ApplicationConstants.ConceptSets.ICPC_DIAGNOSES, options));
+		return RestHelper.getCallListValue(
+				restService.getSetConcepts(ApplicationConstants.ConceptSets.ICPC_DIAGNOSES, options));
 	}
 
 	@Override
 	protected List<RecordInfo> getRecordInfoRest() {
-		return getCallListValue(restService.getSetConceptRecordInfo(ApplicationConstants.ConceptSets.ICPC_DIAGNOSES));
+		return RestHelper.getCallListValue(
+				restService.getSetConceptRecordInfo(ApplicationConstants.ConceptSets.ICPC_DIAGNOSES));
 	}
 }

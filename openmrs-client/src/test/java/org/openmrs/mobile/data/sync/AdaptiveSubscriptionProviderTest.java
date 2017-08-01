@@ -131,14 +131,4 @@ public abstract class AdaptiveSubscriptionProviderTest<E extends BaseOpenmrsAudi
 	public void pull_should() throws Exception {
 
 	}
-
-	protected RecordInfo recordInfoFromEntity(@NonNull BaseOpenmrsAuditableObject entity) {
-		checkNotNull(entity);
-
-		RecordInfo info = new RecordInfo();
-		info.setUuid(entity.getUuid());
-		info.setDateChanged(entity.getDateChanged());
-
-		return info;
-	}
 }

@@ -8,27 +8,24 @@ import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.sql.language.property.Property;
 import com.raizlabs.android.dbflow.structure.ModelAdapter;
 
+import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.db.DbService;
 import org.openmrs.mobile.data.db.Repository;
+import org.openmrs.mobile.data.db.impl.RecordInfoDbService;
+import org.openmrs.mobile.data.rest.RestHelper;
 import org.openmrs.mobile.data.rest.RestService;
 import org.openmrs.mobile.models.BaseOpenmrsAuditableObject;
 import org.openmrs.mobile.models.PullSubscription;
 import org.openmrs.mobile.models.RecordInfo;
 import org.openmrs.mobile.models.RecordInfo_Table;
-import org.openmrs.mobile.models.Results;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.inject.Inject;
-
-import retrofit2.Call;
-import retrofit2.Response;
-
 /**
- * Base class for subscription providers that attempt an incremental pull  but can switch to a table pull if too
+ * Base class for subscription providers that attempt an incremental pull but can switch to a table pull if too
  * many records have changed.
  * @param <E> The entity class
  * @param <DS> The db service class
@@ -37,13 +34,13 @@ import retrofit2.Response;
 public abstract class AdaptiveSubscriptionProvider<E extends BaseOpenmrsAuditableObject,
 		DS extends DbService<E>, RS extends RestService<E>> extends BaseSubscriptionProvider {
 	protected DS dbService;
-	protected DbService<RecordInfo> recordInfoDbService;
+	protected RecordInfoDbService recordInfoDbService;
 	protected RS restService;
 	protected Repository repository;
 
 	private Class<E> entityClass;
 
-	public AdaptiveSubscriptionProvider(DS dbService, DbService<RecordInfo> recordInfoDbService, RS restService,
+	public AdaptiveSubscriptionProvider(DS dbService, RecordInfoDbService recordInfoDbService, RS restService,
 			Repository repository) {
 		this.dbService = dbService;
 		this.recordInfoDbService = recordInfoDbService;
@@ -76,7 +73,7 @@ public abstract class AdaptiveSubscriptionProvider<E extends BaseOpenmrsAuditabl
 	protected void pullTable(PullSubscription subscription) {
 		// Get all records via rest
 		List<E> table = getAllRest();
-		if (table == null || table.size() == 0) {
+		if (table == null || table.isEmpty()) {
 			return;
 		}
 
@@ -105,7 +102,7 @@ public abstract class AdaptiveSubscriptionProvider<E extends BaseOpenmrsAuditabl
 	protected void pullIncremental(PullSubscription subscription) {
 		// Get the record info (UUID, DateUpdated) for each record via REST
 		List<RecordInfo> tableInfo = getRecordInfoRest();
-		if (tableInfo == null || tableInfo.size() == 0) {
+		if (tableInfo == null || tableInfo.isEmpty()) {
 			return;
 		}
 
@@ -133,11 +130,11 @@ public abstract class AdaptiveSubscriptionProvider<E extends BaseOpenmrsAuditabl
 			pullTable(subscription);
 		} else {
 			// Else pull each record via rest and save to the local db
-			if (updates != null && updates.size() > 0) {
+			if (updates != null && !updates.isEmpty()) {
 				processIncremental(updates);
 			}
 
-			if (inserts != null && inserts.size() > 0) {
+			if (inserts != null && !inserts.isEmpty()) {
 				processIncremental(inserts);
 			}
 		}
@@ -155,7 +152,7 @@ public abstract class AdaptiveSubscriptionProvider<E extends BaseOpenmrsAuditabl
 				.from(getEntityClass())
 				.innerJoin(RecordInfo.class)
 				.on(entityUuidProperty.withTable().eq(RecordInfo_Table.uuid.withTable()));
-		from.where(RecordInfo_Table.dateChanged.greaterThan(since));
+		from.where(RecordInfo_Table.dateCreated.greaterThan(since)).or(RecordInfo_Table.dateChanged.greaterThan(since));
 
 		return repository.queryCustom(String.class, from);
 	}
@@ -219,7 +216,7 @@ public abstract class AdaptiveSubscriptionProvider<E extends BaseOpenmrsAuditabl
 	 * @return The entities
 	 */
 	protected List<E> getAllRest() {
-		return getCallListValue(restService.getAll(null, null));
+		return RestHelper.getCallListValue(restService.getAll(null, PagingInfo.ALL));
 	}
 
 	/**
@@ -236,7 +233,7 @@ public abstract class AdaptiveSubscriptionProvider<E extends BaseOpenmrsAuditabl
 	 * @return The entity
 	 */
 	protected E getByUuidRest(String uuid) {
-		return getCallValue(restService.getByUuid(uuid, null));
+		return RestHelper.getCallValue(restService.getByUuid(uuid, null));
 	}
 
 	/**
@@ -244,7 +241,7 @@ public abstract class AdaptiveSubscriptionProvider<E extends BaseOpenmrsAuditabl
 	 * @return The record info
 	 */
 	protected List<RecordInfo> getRecordInfoRest() {
-		return getCallListValue(restService.getRecordInfo(null));
+		return RestHelper.getCallListValue(restService.getRecordInfo(null));
 	}
 
 	/**

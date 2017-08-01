@@ -1,10 +1,10 @@
 package org.openmrs.mobile.data.sync.impl;
 
-import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.DataUtil;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.db.impl.PatientListContextDbService;
 import org.openmrs.mobile.data.rest.RestConstants;
+import org.openmrs.mobile.data.rest.RestHelper;
 import org.openmrs.mobile.data.rest.impl.PatientListContextRestServiceImpl;
 import org.openmrs.mobile.data.sync.BaseSubscriptionProvider;
 import org.openmrs.mobile.models.PatientListContext;
@@ -22,13 +22,22 @@ public class PatientListContextSubscriptionProvider extends BaseSubscriptionProv
 	private PatientListContextDbService listPatientDbService;
 	private PatientListContextRestServiceImpl listPatientRestService;
 
+	private DataUtil dataUtil;
+
+	private PatientListPullProvider patientListPullProvider;
+	private VisitPullProvider visitPullProvider;
+
 	private String patientListUuid;
 
 	@Inject
 	public PatientListContextSubscriptionProvider(PatientListContextDbService dbService,
-			PatientListContextRestServiceImpl restService) {
+			PatientListContextRestServiceImpl restService, PatientListPullProvider patientListPullProvider,
+			VisitPullProvider visitPullProvider, DataUtil dataUtil) {
 		this.listPatientDbService = dbService;
 		this.listPatientRestService = restService;
+		this.patientListPullProvider = patientListPullProvider;
+		this.visitPullProvider = visitPullProvider;
+		this.dataUtil = dataUtil;
 	}
 
 	@Override
@@ -46,30 +55,38 @@ public class PatientListContextSubscriptionProvider extends BaseSubscriptionProv
 		}
 
 		// Get list patients
-		QueryOptions options = new QueryOptions();
-		options.setCustomRepresentation(RestConstants.Representations.PATIENT_LIST_PATIENTS);
-		List<PatientListContext> patients = getCallListValue(listPatientRestService.getListPatients(patientListUuid, null,
-				null));
-		if (patients == null || patients.size() == 0) {
-			return;
-		}
+		QueryOptions options = new QueryOptions.Builder()
+				.customRepresentation(RestConstants.Representations.PATIENT_LIST_PATIENTS)
+				.build();
+		List<PatientListContext> patients = RestHelper.getCallListValue(
+				listPatientRestService.getListPatients(patientListUuid, options, null));
 
 		// Create record info records
-		List<RecordInfo> records = new ArrayList<>(patients.size());
-		for (PatientListContext patient : patients) {
-			RecordInfo record = new RecordInfo();
-			record.setUuid(patient.getPatient().getUuid());
-			record.setDateChanged(patient.getPatient().getDateChanged());
+		int size = patients == null ? 0 : patients.size();
+		List<RecordInfo> records = new ArrayList<>(size);
+		if (patients != null && !patients.isEmpty()) {
+			for (PatientListContext patient : patients) {
+				RecordInfo record = RecordInfo.fromEntity(patient.getPatient());
 
-			records.add(record);
+				records.add(record);
+			}
 		}
 
 		// Delete context records that are no longer in patient list
-		DataUtil dataUtil = OpenMRS.getInstance().getDataUtil();
 		dataUtil.diffDelete(PatientListContext.class, PatientListContext_Table.patientList_uuid.eq(patientListUuid),
 				records);
 
+		if (patients == null || patients.isEmpty()) {
+			return;
+		}
+
 		// Insert/update context records
 		listPatientDbService.saveAll(patients);
+
+		// Pull patient information
+		patientListPullProvider.pull(subscription, records);
+
+		// Pull visit information
+		visitPullProvider.pull(subscription, records);
 	}
 }

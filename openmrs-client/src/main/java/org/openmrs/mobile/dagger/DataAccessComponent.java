@@ -28,7 +28,7 @@ import dagger.Component;
 
 @Singleton
 @Component(modules = { CacheModule.class, DbModule.class })
-public interface DataAccess {
+public interface DataAccessComponent {
 	ConceptAnswerDataService conceptAnswer();
 
 	ConceptDataService concept();

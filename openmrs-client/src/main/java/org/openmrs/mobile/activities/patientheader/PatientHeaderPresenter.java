@@ -23,7 +23,7 @@ public class PatientHeaderPresenter extends BasePresenter implements PatientHead
 	@Override
 	public void getPatient() {
 		patientHeaderView.holdHeader(true);
-		patientDataService.getByUuid(patientUuid, QueryOptions.LOAD_RELATED_OBJECTS,
+		patientDataService.getByUuid(patientUuid, QueryOptions.FULL_REP,
 				new DataService.GetCallback<Patient>() {
 			@Override
 			public void onCompleted(Patient patient) {

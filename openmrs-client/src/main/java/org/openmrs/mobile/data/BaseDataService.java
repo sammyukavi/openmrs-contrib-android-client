@@ -53,6 +53,12 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 	@Inject
 	protected CacheService cacheService;
 
+	/**
+	 * The utilities to handle network checks
+	 */
+	@Inject
+	protected NetworkUtils networkUtils;
+
 	private Class<E> entityClass;
 
 	@Override
@@ -250,7 +256,7 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 			Supplier<Call<R>> restSupplier, Function<R, T> responseConverter, Consumer<T> dbSave) {
 		if (!getCachedResult(callback, options)) {
 			//if (!NetworkUtils.isServerAvailable()) {
-			if (!NetworkUtils.isOnline()) {
+			if (!networkUtils.isOnline()) {
 				performOfflineCallback(callback, options, dbSupplier);
 			} else {
 				performOnlineCallback(callback, options, dbSupplier, restSupplier, responseConverter, dbSave);

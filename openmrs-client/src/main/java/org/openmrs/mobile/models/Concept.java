@@ -41,9 +41,9 @@ public class Concept extends BaseOpenmrsAuditableObject {
 	@Expose
 	private List<ConceptAnswer> answers;
 
-	@SerializedName("names")
+	@SerializedName("name")
 	@Expose
-	private List<ConceptName> names;
+	private ConceptName name;
 	@SerializedName("preferredName")
 	@Expose
 	private String preferredName;
@@ -52,6 +52,7 @@ public class Concept extends BaseOpenmrsAuditableObject {
 	private List<ConceptMap> conceptMappings;
 	@SerializedName("value")
 	@Expose
+	@Column
 	private String value;
 
 	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "answers", isVariablePrivate = true)
@@ -59,17 +60,11 @@ public class Concept extends BaseOpenmrsAuditableObject {
 		return loadRelatedObject(ConceptAnswer.class, answers, () -> ConceptAnswer_Table.concept_uuid.eq(getUuid()));
 	}
 
-	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "names", isVariablePrivate = true)
-	List<ConceptName> loadNames() {
-		return loadRelatedObject(ConceptName.class, names, () -> ConceptName_Table.concept_uuid.eq(getUuid()));
-	}
-
 	@Override
 	public void processRelationships() {
 		super.processRelationships();
 
 		processRelatedObjects(answers, (a) -> a.setConcept(this));
-		processRelatedObjects(names, (n) -> n.setConcept(this));
 	}
 
 	public Datatype getDatatype() {
@@ -104,12 +99,12 @@ public class Concept extends BaseOpenmrsAuditableObject {
 		this.answers = answers;
 	}
 
-	public List<ConceptName> getNames() {
-		return names;
+	public ConceptName getName() {
+		return name;
 	}
 
-	public void setNames(List<ConceptName> names) {
-		this.names = names;
+	public void setName(ConceptName name) {
+		this.name = name;
 	}
 
 	public String getPreferredName() {

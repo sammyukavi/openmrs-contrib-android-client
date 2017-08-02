@@ -13,7 +13,6 @@ import com.raizlabs.android.dbflow.structure.database.transaction.FastStoreModel
 
 import org.openmrs.mobile.data.db.AppDatabase;
 import org.openmrs.mobile.data.db.Repository;
-import org.openmrs.mobile.models.Resource;
 
 import java.util.ArrayList;
 import java.util.Collection;

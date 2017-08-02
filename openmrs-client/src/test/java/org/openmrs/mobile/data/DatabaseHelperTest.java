@@ -3,11 +3,9 @@ package org.openmrs.mobile.data;
 import com.raizlabs.android.dbflow.sql.language.Operator;
 import com.raizlabs.android.dbflow.sql.language.SQLOperator;
 import com.raizlabs.android.dbflow.sql.language.property.IProperty;
-import com.raizlabs.android.dbflow.structure.ModelAdapter;
 
 import junit.framework.Assert;
 
-import org.apache.tools.ant.util.CollectionUtils;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,7 +27,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isNull;
@@ -40,7 +37,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class)
-public class DataUtilTest {
+public class DatabaseHelperTest {
 	@Rule
 	public MockitoRule mockitoRule = MockitoJUnit.rule();
 
@@ -48,7 +45,7 @@ public class DataUtilTest {
 	Repository repo;
 
 	@InjectMocks
-	DataUtil dataUtil;
+	DatabaseHelper databaseHelper;
 
 	private Location[] testData = {
 			createLocation(),
@@ -60,12 +57,12 @@ public class DataUtilTest {
 
 	@Test(expected = NullPointerException.class)
 	public void diffDelete_shouldThrowExceptionWithNullTable() throws Exception {
-		dataUtil.diffDelete(null, new ArrayList<Location>());
+		databaseHelper.diffDelete(null, new ArrayList<Location>());
 	}
 
 	@Test(expected = NullPointerException.class)
 	public void diffDelete_shouldThrowExceptionWithNullExpectedRecords() throws Exception {
-		dataUtil.diffDelete(Location.class, null);
+		databaseHelper.diffDelete(Location.class, null);
 	}
 
 	@Test
@@ -75,7 +72,7 @@ public class DataUtilTest {
 
 		when(repo.queryCustom(eq(String.class), any(), any(IProperty.class), isNull(SQLOperator.class))).thenReturn(results);
 
-		dataUtil.diffDelete(Location.class, models);
+		databaseHelper.diffDelete(Location.class, models);
 
 		verify(repo).queryCustom(eq(String.class), any(), any(IProperty.class), isNull(SQLOperator.class));
 		verify(repo, never()).deleteAll(any(), any(SQLOperator.class));
@@ -88,7 +85,7 @@ public class DataUtilTest {
 		when(repo.queryCustom(eq(String.class), any(), any(IProperty.class), isNull(SQLOperator.class)))
 				.thenReturn(new ArrayList<>());
 
-		dataUtil.diffDelete(Location.class, models);
+		databaseHelper.diffDelete(Location.class, models);
 
 		verify(repo).queryCustom(eq(String.class), any(), any(IProperty.class), isNull(SQLOperator.class));
 		verify(repo, never()).deleteAll(any(), any(SQLOperator.class));
@@ -105,7 +102,7 @@ public class DataUtilTest {
 
 		when(repo.queryCustom(eq(String.class), any(), any(IProperty.class), isNull(SQLOperator.class))).thenReturn(results);
 
-		dataUtil.diffDelete(Location.class, models);
+		databaseHelper.diffDelete(Location.class, models);
 
 		verify(repo).queryCustom(eq(String.class), any(), any(IProperty.class), isNull(SQLOperator.class));
 		verify(repo, times(1)).deleteAll(any(), captor.capture());
@@ -131,7 +128,7 @@ public class DataUtilTest {
 
 		when(repo.queryCustom(eq(String.class), any(), any(IProperty.class), isNull(SQLOperator.class))).thenReturn(results);
 
-		dataUtil.diffDelete(Location.class, models);
+		databaseHelper.diffDelete(Location.class, models);
 
 		verify(repo).queryCustom(eq(String.class), any(), any(IProperty.class), isNull(SQLOperator.class));
 		verify(repo, times(1)).deleteAll(any(), captor.capture());
@@ -146,7 +143,7 @@ public class DataUtilTest {
 
 	@Test
 	public void diffDelete_shouldDeleteAllTableRecordsWhenExpectedRecordsIsEmpty() throws Exception {
-		dataUtil.diffDelete(Location.class, new ArrayList<>());
+		databaseHelper.diffDelete(Location.class, new ArrayList<>());
 
 		verify(repo, never()).queryCustom(eq(String.class), any(), any(IProperty.class));
 		verify(repo).deleteAll(any(Location_Table.class), Matchers.isNull(SQLOperator.class));
@@ -158,7 +155,7 @@ public class DataUtilTest {
 		List<String> results = createResults(models.toArray(new Location[models.size()]));
 		when(repo.queryCustom(eq(String.class), any(), any(IProperty.class), isNull(SQLOperator.class))).thenReturn(results);
 
-		dataUtil.diffDelete(Location.class, models);
+		databaseHelper.diffDelete(Location.class, models);
 
 		verify(repo).queryCustom(eq(String.class), any(), any(IProperty.class), isNull(SQLOperator.class));
 		verify(repo, never()).deleteAll(any(), any(SQLOperator.class));

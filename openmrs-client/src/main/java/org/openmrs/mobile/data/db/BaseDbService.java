@@ -3,11 +3,9 @@ package org.openmrs.mobile.data.db;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.language.From;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.ModelAdapter;
-import com.raizlabs.android.dbflow.structure.database.transaction.FastStoreModelTransaction;
 
 import org.openmrs.mobile.data.DataOperationException;
 import org.openmrs.mobile.data.PagingInfo;
@@ -18,16 +16,16 @@ import org.openmrs.mobile.utilities.Consumer;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.raizlabs.android.dbflow.sql.language.Method.count;
 
 public abstract class BaseDbService<E extends BaseOpenmrsObject> implements DbService<E> {
 	private Class<E> entityClass;
 
-	@Inject
 	protected Repository repository;
+
+	public BaseDbService(Repository repository) {
+		this.repository = repository;
+	}
 
 	protected abstract ModelAdapter<E> getEntityTable();
 

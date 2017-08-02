@@ -2,7 +2,7 @@ package org.openmrs.mobile.data.sync.impl;
 
 import android.support.annotation.NonNull;
 
-import org.openmrs.mobile.data.DataUtil;
+import org.openmrs.mobile.data.DatabaseHelper;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.db.impl.EncounterDbService;
@@ -33,17 +33,17 @@ public class VisitPullProvider {
 	private EncounterDbService encounterDbService;
 	private EncounterRestServiceImpl encounterRestService;
 
-	private DataUtil dataUtil;
+	private DatabaseHelper databaseHelper;
 
 	@Inject
 	public VisitPullProvider(VisitDbService visitDbService,
 			VisitRestServiceImpl visitRestService, EncounterDbService encounterDbService,
-			EncounterRestServiceImpl encounterRestService, DataUtil dataUtil) {
+			EncounterRestServiceImpl encounterRestService, DatabaseHelper databaseHelper) {
 		this.visitDbService = visitDbService;
 		this.visitRestService = visitRestService;
 		this.encounterDbService = encounterDbService;
 		this.encounterRestService = encounterRestService;
-		this.dataUtil = dataUtil;
+		this.databaseHelper = databaseHelper;
 	}
 
 	public void pull(@NonNull PullSubscription subscription, @NonNull List<RecordInfo> patientInfo) {
@@ -51,11 +51,11 @@ public class VisitPullProvider {
 		checkNotNull(patientInfo);
 
 		for (RecordInfo patientRecord : patientInfo) {
-			// Process any updated visits
 			List<RecordInfo> visitInfo = pullVisits(subscription, patientRecord);
 
-			// Process any updated visit tasks
 			pullVisitTasks(subscription, patientRecord, visitInfo);
+
+			pullVisitDocuments(subscription, patientRecord, visitInfo);
 
 			pullVisitEncounters(subscription, patientRecord, visitInfo);
 		}
@@ -67,7 +67,7 @@ public class VisitPullProvider {
 				visitRestService.getRecordInfoByPatient(patientRecord.getUuid(), null, PagingInfo.ALL));
 
 		// Delete any missing visits
-		dataUtil.diffDelete(Visit.class, Visit_Table.patient_uuid.eq(patientRecord.getUuid()), visitInfo);
+		databaseHelper.diffDelete(Visit.class, Visit_Table.patient_uuid.eq(patientRecord.getUuid()), visitInfo);
 
 		// Pull any updated visit information
 		List<RecordInfo> checkedVisits = new ArrayList<>();
@@ -97,6 +97,10 @@ public class VisitPullProvider {
 		// TODO: Implement after visit tasks REST tasks are complete
 	}
 
+	private void pullVisitDocuments(PullSubscription subscription, RecordInfo patientRecord, List<RecordInfo> visitInfo) {
+		// TODO: Implement after researching visit document services and image storage
+	}
+
 	private void pullVisitEncounters(PullSubscription subscription, RecordInfo patientRecord, List<RecordInfo> visitInfo) {
 		QueryOptions options = new QueryOptions.Builder()
 				.customRepresentation(RestConstants.Representations.VISIT_ENCOUNTER)
@@ -108,7 +112,7 @@ public class VisitPullProvider {
 					encounterRestService.getRecordInfoByVisit(visitRecord.getUuid(), null, PagingInfo.ALL));
 
 			// Delete any missing encounters
-			dataUtil.diffDelete(Encounter.class, Encounter_Table.visit_uuid.eq(visitRecord.getUuid()), encounterInfo);
+			databaseHelper.diffDelete(Encounter.class, Encounter_Table.visit_uuid.eq(visitRecord.getUuid()), encounterInfo);
 
 			// Pull any updated encounter information
 			List<Encounter> encounters = new ArrayList<>();

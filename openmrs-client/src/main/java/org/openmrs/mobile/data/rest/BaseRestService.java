@@ -13,7 +13,6 @@ import org.openmrs.mobile.models.Results;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
-import java.util.Objects;
 
 import retrofit2.Call;
 

@@ -8,8 +8,6 @@ import com.raizlabs.android.dbflow.sql.language.SQLOperator;
 import com.raizlabs.android.dbflow.sql.language.property.IProperty;
 import com.raizlabs.android.dbflow.structure.ModelAdapter;
 
-import org.openmrs.mobile.models.Resource;
-
 import java.util.Collection;
 import java.util.List;
 

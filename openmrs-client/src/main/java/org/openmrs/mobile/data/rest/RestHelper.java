@@ -1,9 +1,6 @@
 package org.openmrs.mobile.data.rest;
 
 import android.support.annotation.Nullable;
-import android.util.Log;
-
-import com.google.gson.annotations.Expose;
 
 import org.openmrs.mobile.data.DataOperationException;
 import org.openmrs.mobile.models.Results;

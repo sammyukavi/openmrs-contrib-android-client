@@ -5,10 +5,10 @@ import android.support.annotation.NonNull;
 import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.structure.ModelAdapter;
 
-import org.openmrs.mobile.application.OpenMRS;
-import org.openmrs.mobile.data.DataUtil;
+import org.openmrs.mobile.data.DatabaseHelper;
 import org.openmrs.mobile.data.db.BaseDbService;
 import org.openmrs.mobile.data.db.DbService;
+import org.openmrs.mobile.data.db.Repository;
 import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.ConceptSet;
 import org.openmrs.mobile.models.ConceptSetMember;
@@ -23,11 +23,12 @@ import javax.inject.Inject;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class ConceptSetDbService extends BaseDbService<ConceptSet> implements DbService<ConceptSet> {
-	private DataUtil dataUtil;
+	private DatabaseHelper databaseHelper;
 
 	@Inject
-	public ConceptSetDbService(DataUtil dataUtil) {
-		this.dataUtil = dataUtil;
+	public ConceptSetDbService(Repository repository, DatabaseHelper databaseHelper) {
+		super(repository);
+		this.databaseHelper = databaseHelper;
 	}
 
 	@Override
@@ -61,13 +62,13 @@ public class ConceptSetDbService extends BaseDbService<ConceptSet> implements Db
 			record.setConceptSet(set);
 			record.setConcept(concept);
 
-			record.setUuid(dataUtil.generateUuid(set.getUuid() + concept.getUuid()));
+			record.setUuid(databaseHelper.generateUuid(set.getUuid() + concept.getUuid()));
 
 			records.add(record);
 		}
 
 		// Delete local members for the concept set that are no longer members
-		dataUtil.diffDelete(ConceptSetMember.class,
+		databaseHelper.diffDelete(ConceptSetMember.class,
 				ConceptSetMember_Table.conceptSet_uuid.eq(set.getUuid()),
 				records);
 

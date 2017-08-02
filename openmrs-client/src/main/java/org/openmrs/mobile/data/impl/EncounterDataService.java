@@ -8,7 +8,6 @@ import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.db.impl.EncounterDbService;
 import org.openmrs.mobile.data.rest.impl.EncounterRestServiceImpl;
-import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.Encounter;
 
 import java.util.List;

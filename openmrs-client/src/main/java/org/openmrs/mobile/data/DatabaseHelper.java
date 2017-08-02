@@ -19,13 +19,12 @@ import java.util.UUID;
 import javax.inject.Inject;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static java.util.UUID.nameUUIDFromBytes;
 
-public class DataUtil {
+public class DatabaseHelper {
 	private Repository repository;
 
 	@Inject
-	public DataUtil(Repository repository) {
+	public DatabaseHelper(Repository repository) {
 		this.repository = repository;
 	}
 

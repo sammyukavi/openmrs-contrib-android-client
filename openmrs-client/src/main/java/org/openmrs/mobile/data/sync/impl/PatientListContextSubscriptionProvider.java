@@ -1,6 +1,6 @@
 package org.openmrs.mobile.data.sync.impl;
 
-import org.openmrs.mobile.data.DataUtil;
+import org.openmrs.mobile.data.DatabaseHelper;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.db.impl.PatientListContextDbService;
 import org.openmrs.mobile.data.rest.RestConstants;
@@ -22,7 +22,7 @@ public class PatientListContextSubscriptionProvider extends BaseSubscriptionProv
 	private PatientListContextDbService listPatientDbService;
 	private PatientListContextRestServiceImpl listPatientRestService;
 
-	private DataUtil dataUtil;
+	private DatabaseHelper databaseHelper;
 
 	private PatientListPullProvider patientListPullProvider;
 	private VisitPullProvider visitPullProvider;
@@ -32,12 +32,12 @@ public class PatientListContextSubscriptionProvider extends BaseSubscriptionProv
 	@Inject
 	public PatientListContextSubscriptionProvider(PatientListContextDbService dbService,
 			PatientListContextRestServiceImpl restService, PatientListPullProvider patientListPullProvider,
-			VisitPullProvider visitPullProvider, DataUtil dataUtil) {
+			VisitPullProvider visitPullProvider, DatabaseHelper databaseHelper) {
 		this.listPatientDbService = dbService;
 		this.listPatientRestService = restService;
 		this.patientListPullProvider = patientListPullProvider;
 		this.visitPullProvider = visitPullProvider;
-		this.dataUtil = dataUtil;
+		this.databaseHelper = databaseHelper;
 	}
 
 	@Override
@@ -73,7 +73,7 @@ public class PatientListContextSubscriptionProvider extends BaseSubscriptionProv
 		}
 
 		// Delete context records that are no longer in patient list
-		dataUtil.diffDelete(PatientListContext.class, PatientListContext_Table.patientList_uuid.eq(patientListUuid),
+		databaseHelper.diffDelete(PatientListContext.class, PatientListContext_Table.patientList_uuid.eq(patientListUuid),
 				records);
 
 		if (patients == null || patients.isEmpty()) {

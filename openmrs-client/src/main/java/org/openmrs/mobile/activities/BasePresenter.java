@@ -17,30 +17,15 @@ package org.openmrs.mobile.activities;
 import org.openmrs.mobile.dagger.DaggerDataAccessComponent;
 import org.openmrs.mobile.dagger.DataAccessComponent;
 
-import rx.Subscription;
-import rx.subscriptions.CompositeSubscription;
-
 public abstract class BasePresenter implements BasePresenterContract {
-	private CompositeSubscription mSubscription;
 	private DataAccessComponent mDataAccess;
 
 	public BasePresenter() {
-		mSubscription = new CompositeSubscription();
 		mDataAccess = DaggerDataAccessComponent.create();
 	}
 
-	public void addSubscription(Subscription subscription) {
-		if (mSubscription != null) {
-			mSubscription.add(subscription);
-		}
-	}
-
 	@Override
-	public void unsubscribe() {
-		if (mSubscription != null) {
-			mSubscription.clear();
-		}
-	}
+	public void unsubscribe() {	}
 
 	protected DataAccessComponent dataAccess() {
 		return mDataAccess;

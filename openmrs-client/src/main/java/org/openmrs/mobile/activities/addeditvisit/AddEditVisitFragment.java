@@ -51,7 +51,6 @@ import org.openmrs.mobile.utilities.StringUtils;
 import org.openmrs.mobile.utilities.ViewUtils;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -137,7 +136,8 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 					if (startDate) {
 						mPresenter.getVisit()
 								.setStartDatetime(DateUtils.constructDate(selectedyear, selectedmonth, selectedday));
-						visitStartDateInput.setText(DateUtils.convertTime(mPresenter.getVisit().getStartDatetime().getTime(),
+						visitStartDateInput.setText(DateUtils.convertTime(mPresenter.getVisit().getStartDatetime()
+										.getTime(),
 								DateUtils.OPEN_MRS_REQUEST_PATIENT_FORMAT));
 					} else {
 						mPresenter.getVisit()
@@ -172,13 +172,13 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 					DateUtils.getDateToday(DateUtils.OPEN_MRS_REQUEST_PATIENT_FORMAT));
 		}
 
-		if(null != mPresenter.getVisit().getStopDatetime()){
+		if (null != mPresenter.getVisit().getStopDatetime()) {
 			visitEndDateLabel.setVisibility(View.VISIBLE);
 			visitEndDateInput.setVisibility(View.VISIBLE);
 			visitEndDateInput.setText(
 					DateUtils.convertTime(mPresenter.getVisit().getStopDatetime().getTime(),
 							DateUtils.OPEN_MRS_REQUEST_PATIENT_FORMAT));
-			if(mPresenter.isEndVisit()){
+			if (mPresenter.isEndVisit()) {
 				visitStartDateInput.setVisibility(View.GONE);
 				visitStartDateLabel.setVisibility(View.GONE);
 			}
@@ -321,7 +321,7 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 				VisitAttribute visitAttribute = new VisitAttribute();
 				visitAttribute.setValue(conceptAnswer.getUuid());
 				visitAttribute.setAttributeType(visitAttributeType);
-				visitAttributeMap.clear();
+				removeVisitAttributeTypeInMap(visitAttributeType, visitAttributeMap);
 				visitAttributeMap.put(conceptAnswer.getUuid(), visitAttribute);
 			}
 
@@ -329,6 +329,20 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 			public void onNothingSelected(AdapterView<?> parent) {
 			}
 		});
+	}
+
+	private void removeVisitAttributeTypeInMap(VisitAttributeType visitAttributeType,
+			Map<String, VisitAttribute> visitAttributeMap) {
+		if (visitAttributeMap == null || visitAttributeType == null) {
+			return;
+		}
+
+		for (Map.Entry<String, VisitAttribute> set : visitAttributeMap.entrySet()) {
+			if (set.getValue().getAttributeType().equals(visitAttributeType)) {
+				visitAttributeMap.remove(set.getKey());
+				break;
+			}
+		}
 	}
 
 	@Override

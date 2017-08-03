@@ -14,20 +14,24 @@
 
 package org.openmrs.mobile.application;
 
+import javax.inject.Inject;
+
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 
-import com.raizlabs.android.dbflow.config.DatabaseConfig;
-import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
+import org.openmrs.mobile.dagger.ApplicationModule;
+import org.openmrs.mobile.dagger.DaggerApplicationComponent;
 import org.openmrs.mobile.security.SecretKeyGenerator;
+import org.openmrs.mobile.sync.SyncManager;
 import org.openmrs.mobile.utilities.ApplicationConstants;
+import org.openmrs.mobile.utilities.NetworkUtils;
 
 import java.io.File;
 import java.util.HashMap;
@@ -46,9 +50,17 @@ public class OpenMRS extends Application {
 		return instance;
 	}
 
+	@Inject
+	SyncManager syncManager;
+
+	@Inject
+	NetworkUtils networkUtils;
+
 	@Override
 	public void onCreate() {
 		super.onCreate();
+
+		DaggerApplicationComponent.builder().applicationModule(new ApplicationModule(this)).build().inject(this);
 
 		//initializeSQLCipher();
 		instance = this;
@@ -67,6 +79,7 @@ public class OpenMRS extends Application {
 
 		generateKey();
 		initializeDB();
+		syncManager.initializeDataSync();
 	}
 
 	protected void initializeDB() {
@@ -340,5 +353,13 @@ public class OpenMRS extends Application {
 		editor.remove(ApplicationConstants.LOGIN_LOCATIONS);
 		clearCurrentLoggedInUserInfo();
 		editor.commit();
+	}
+
+	public void requestDataSync() {
+		syncManager.requestSync();
+	}
+
+	public NetworkUtils getNetworkUtils() {
+		return networkUtils;
 	}
 }

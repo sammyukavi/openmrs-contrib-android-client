@@ -66,50 +66,51 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 			String visitUuid, boolean isEndVisit, VisitDataService visitDataService, PatientDataService patientDataService,
 			VisitTypeDataService visitTypeDataService, VisitAttributeTypeDataService visitAttributeTypeDataService,
 			ConceptAnswerDataService conceptAnswerDataService, LocationDataService locationDataService) {
+		super();
+
 		this.addEditVisitView = addEditVisitView;
 		this.addEditVisitView.setPresenter(this);
 		this.patientUuid = patientUuid;
 		this.visitUuid = visitUuid;
 		this.isEndVisit = isEndVisit;
 
+		this.visit = new Visit();
+
 		if (visitDataService == null) {
-			this.visitDataService = new VisitDataService();
+			this.visitDataService = dataAccess().visit();
 		} else {
 			this.visitDataService = visitDataService;
 		}
 
 		if (visitAttributeTypeDataService == null) {
-			this.visitAttributeTypeDataService = new VisitAttributeTypeDataService();
+			this.visitAttributeTypeDataService = dataAccess().visitAttributeType();
 		} else {
 			this.visitAttributeTypeDataService = visitAttributeTypeDataService;
 		}
 
 		if (visitTypeDataService == null) {
-			this.visitTypeDataService = new VisitTypeDataService();
+			this.visitTypeDataService = dataAccess().visitType();
 		} else {
 			this.visitTypeDataService = visitTypeDataService;
 		}
 
 		if (patientDataService == null) {
-			this.patientDataService = new PatientDataService();
+			this.patientDataService = dataAccess().patient();
 		} else {
 			this.patientDataService = patientDataService;
 		}
 
 		if (conceptAnswerDataService == null) {
-			this.conceptAnswerDataService = new ConceptAnswerDataService();
+			this.conceptAnswerDataService = dataAccess().conceptAnswer();
 		} else {
 			this.conceptAnswerDataService = conceptAnswerDataService;
 		}
 
 		if (locationDataService == null) {
-			this.locationDataService = new LocationDataService();
+			this.locationDataService = dataAccess().location();
 		} else {
 			this.locationDataService = locationDataService;
 		}
-
-		this.visit = new Visit();
-
 	}
 
 	@Override
@@ -122,14 +123,14 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 		addEditVisitView.showPageSpinner(true);
 		if (StringUtils.notEmpty(patientUuid)) {
 			patientDataService
-					.getByUUID(patientUuid, QueryOptions.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Patient>() {
+					.getByUuid(patientUuid, QueryOptions.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Patient>() {
 						@Override
 						public void onCompleted(Patient entity) {
-							if (null != visitUuid && visitUuid.equalsIgnoreCase(ApplicationConstants.EMPTY_STRING)) {
+							if (visitUuid != null && visitUuid.equalsIgnoreCase(ApplicationConstants.EMPTY_STRING)) {
 								// start visit
-								addEditVisitView.initView(true);
 								visit.setPatient(entity);
 								visit.setStartDatetime(new Date());
+								addEditVisitView.initView(true);
 								loadVisitTypes();
 								loadVisitAttributeTypes();
 							} else {
@@ -148,18 +149,24 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	}
 
 	private void loadVisit() {
-		visitDataService.getByUUID(visitUuid, new QueryOptions(false, true), new DataService.GetCallback<Visit>() {
+		visitDataService.getByUuid(visitUuid, new QueryOptions(false, true), new DataService.GetCallback<Visit>() {
 			@Override
 			public void onCompleted(Visit entity) {
 				if (entity != null) {
-					// edit visit
 					visit = entity;
-					addEditVisitView.initView(false);
+					// end visit
+					if (isEndVisit) {
+						if (visit.getStopDatetime() == null) {
+							visit.setStopDatetime(new Date());
+						}
+
+						addEditVisitView.loadEndVisitView();
+					}
 				}
-				// end visit
-				if (isEndVisit) {
-					addEditVisitView.loadEndVisitView();
-				} else {
+
+				addEditVisitView.initView(false);
+
+				if (!isEndVisit) {
 					loadVisitTypes();
 					loadVisitAttributeTypes();
 				}
@@ -217,7 +224,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	 * TODO: Move to Base class
 	 */
 	public void getLocation() {
-		locationDataService.getByUUID(OpenMRS.getInstance().getLocation(), QueryOptions.LOAD_RELATED_OBJECTS,
+		locationDataService.getByUuid(OpenMRS.getInstance().getLocation(), QueryOptions.LOAD_RELATED_OBJECTS,
 				new DataService.GetCallback<Location>() {
 					@Override
 					public void onCompleted(Location entity) {
@@ -291,7 +298,10 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 		updatedVisit.setAttributes(attributes);
 		updatedVisit.setVisitType(visit.getVisitType());
 		updatedVisit.setStartDatetime(visit.getStartDatetime());
-		updatedVisit.setStopDatetime(visit.getStopDatetime());
+
+		if (visit.getStopDatetime() != null) {
+			updatedVisit.setStopDatetime(visit.getStopDatetime());
+		}
 
 		setProcessing(true);
 		visitDataService.updateVisit(visit.getUuid(), updatedVisit, new DataService.GetCallback<Visit>() {
@@ -320,7 +330,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 
 			visit.setPatient(null);
 
-			visitDataService.update(visit, new DataService.GetCallback<Visit>() {
+			visitDataService.endVisit(visit.getUuid(), visit, null, new DataService.GetCallback<Visit>() {
 				@Override
 				public void onCompleted(Visit entity) {
 					addEditVisitView.showPatientDashboard();

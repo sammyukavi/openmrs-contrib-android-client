@@ -1,7 +1,10 @@
 package org.openmrs.mobile.activities;
 
 import android.util.Log;
+import android.view.View;
 
+import org.openmrs.mobile.dagger.DaggerDataAccess;
+import org.openmrs.mobile.dagger.DataAccess;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
@@ -24,11 +27,14 @@ public class BaseDiagnosisPresenter {
 	private int page = 0;
 	private int limit = 20;
 	private List<String> obsUuids = new ArrayList<>();
+	private DataAccess dataAccess;
 
 	public BaseDiagnosisPresenter() {
-		this.conceptSearchDataService = new ConceptSearchDataService();
-		this.obsDataService = new ObsDataService();
-		this.visitNoteDataService = new VisitNoteDataService();
+		dataAccess = DaggerDataAccess.create();
+
+		this.conceptSearchDataService = dataAccess.conceptSearch();
+		this.obsDataService = dataAccess.obs();
+		this.visitNoteDataService = dataAccess.visitNote();
 	}
 
 	public void findConcept(String searchQuery, IBaseDiagnosisFragment base) {
@@ -44,10 +50,12 @@ public class BaseDiagnosisPresenter {
 					entities.add(nonCodedDiagnosis);
 				}
 				base.getBaseDiagnosisView().setSearchDiagnoses(entities);
+				base.getLoadingProgressBar().setVisibility(View.GONE);
 			}
 
 			@Override
 			public void onError(Throwable t) {
+				base.getLoadingProgressBar().setVisibility(View.GONE);
 				Log.e("error", t.getLocalizedMessage());
 			}
 		});
@@ -62,7 +70,7 @@ public class BaseDiagnosisPresenter {
 
 	private void getObservation(Observation obs, Encounter encounter, IBaseDiagnosisFragment base) {
 		obsDataService
-				.getByUUID(obs.getUuid(), QueryOptions.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Observation>() {
+				.getByUuid(obs.getUuid(), QueryOptions.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Observation>() {
 					@Override
 					public void onCompleted(Observation entity) {
 						obsUuids.add(entity.getUuid());

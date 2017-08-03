@@ -235,6 +235,8 @@ public abstract class ApplicationConstants {
 		public static final String CONCEPT_FIRST_HEART_RATE_ICU = "9360b4f4-4456-4bc2-97fd-68e661a19d78";
 		public static final String CONCEPT_FIRST_GCS_SCORE_ICU = "99659fa6-fe39-41d7-ac6b-f183d9231310";
 		public static final String CONCEPT_SEDETION_PRIOR_FIRST_GCS_SCORE_ICU = "7cccf308-edca-4c3e-afde-e7a3f1155ec6";
+		public static final String CONCEPT_PATIENT_DIABETIC = "a424ed50-5f94-4296-a91c-73ebbc1ccca1";
+		public static final String CONCEPT_WARD_STAY_DURING_ADMISSION = "59073230-e0d9-4cbc-bebc-4bf91a42f3bb";
 
 	}
 

@@ -118,11 +118,13 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 		});
 
 		visitEndDateInput.setOnClickListener(v -> {
-			DateTime dateTime = DateUtils.convertTimeString(
-					DateUtils.convertTime(mPresenter.getVisit().getStopDatetime().getTime(),
-							DateUtils.OPEN_MRS_REQUEST_FORMAT));
+			if (mPresenter.getVisit().getStopDatetime() != null) {
+				DateTime dateTime = DateUtils.convertTimeString(
+						DateUtils.convertTime(mPresenter.getVisit().getStopDatetime().getTime(),
+								DateUtils.OPEN_MRS_REQUEST_FORMAT));
 
-			createVisitDatePicker(dateTime, 0, false);
+				createVisitDatePicker(dateTime, 0, false);
+			}
 		});
 	}
 
@@ -163,16 +165,11 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 			toolbar.setTitle(getString(R.string.label_edit_visit));
 		}
 
-		if (null != mPresenter.getVisit().getStartDatetime() && !mPresenter.isEndVisit()) {
-			visitStartDateInput.setText(
-					DateUtils.convertTime(mPresenter.getVisit().getStartDatetime().getTime(),
-							DateUtils.OPEN_MRS_REQUEST_PATIENT_FORMAT));
-		} else {
-			visitStartDateInput.setText(
-					DateUtils.getDateToday(DateUtils.OPEN_MRS_REQUEST_PATIENT_FORMAT));
-		}
+		visitStartDateInput.setText(
+				DateUtils.convertTime(mPresenter.getVisit().getStartDatetime().getTime(),
+						DateUtils.OPEN_MRS_REQUEST_PATIENT_FORMAT));
 
-		if (null != mPresenter.getVisit().getStopDatetime()) {
+		if (mPresenter.getVisit().getStopDatetime() != null) {
 			visitEndDateLabel.setVisibility(View.VISIBLE);
 			visitEndDateInput.setVisibility(View.VISIBLE);
 			visitEndDateInput.setText(
@@ -191,7 +188,7 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 	public void loadEndVisitView() {
 		showPageSpinner(false);
 		visitSubmitButton.setText(R.string.label_end_visit);
-		visitStartDateLabel.setText(R.string.end_visit_date);
+		//visitStartDateLabel.setText(R.string.end_visit_date);
 		visitTypeRow.setVisibility(View.GONE);
 
 		visitSubmitButton.setOnClickListener(v -> {

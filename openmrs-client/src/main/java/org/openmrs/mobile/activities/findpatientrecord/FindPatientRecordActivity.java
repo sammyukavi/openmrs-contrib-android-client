@@ -41,15 +41,13 @@ import java.util.TimerTask;
 
 public class FindPatientRecordActivity extends ACBaseActivity {
 
-	public FindPatientRecordContract.Presenter findPatientPresenter;
-	FindPatientRecordFragment findPatientRecordFragment;
-	private String query= "";
-	private OpenMRS instance = OpenMRS.getInstance();
-
-	private EditText searchPatientsView;
-
-	private Timer timer;
 	private final long DELAY = 1000;
+	public FindPatientRecordContract.Presenter findPatientPresenter;
+	private FindPatientRecordFragment findPatientRecordFragment;
+	private String query = "";
+	private OpenMRS instance = OpenMRS.getInstance();
+	private EditText searchPatientsView;
+	private Timer timer;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -112,24 +110,20 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 		MenuItem mFindPatientMenuItem = menu.findItem(R.id.action_search);
 
 		if (OpenMRS.getInstance().isRunningHoneycombVersionOrHigher()) {
-			searchPatientsView = (EditText) mFindPatientMenuItem.getActionView().findViewById(R.id.searchPatient);
+			searchPatientsView = (EditText)mFindPatientMenuItem.getActionView().findViewById(R.id.searchPatient);
 		} else {
-			searchPatientsView = (EditText) MenuItemCompat.getActionView(mFindPatientMenuItem);
+			searchPatientsView = (EditText)MenuItemCompat.getActionView(mFindPatientMenuItem);
 		}
 
-		if(StringUtils.notEmpty(query)) {
-			mFindPatientMenuItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM |
-					MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-		} else {
-			setTitle(R.string.nav_find_patient);
-			mFindPatientMenuItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM |
-					MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
-		}
+		setTitle(R.string.nav_find_patient);
+		mFindPatientMenuItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM |
+				MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
 
 		searchPatientsView.setText(query);
 		searchPatientsView.addTextChangedListener(new TextWatcher() {
 			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			}
 
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -165,6 +159,22 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 
 		return true;
 	}
+	
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		super.onPrepareOptionsMenu(menu);
+		MenuItem actionSearchMenuItem = menu.findItem(R.id.action_search);
+		if (StringUtils.notEmpty(query)) {
+			actionSearchMenuItem.expandActionView();
+		}
+		return true;
+	}
+
+	private String getSearchQuery() {
+		return instance.getOpenMRSSharedPreferences().getString(
+				ApplicationConstants.BundleKeys.PATIENT_QUERY_BUNDLE,
+				ApplicationConstants.EMPTY_STRING);
+	}
 
 	private void setSearchQuery(String query) {
 		SharedPreferences.Editor editor = instance.getOpenMRSSharedPreferences().edit();
@@ -172,18 +182,10 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 		editor.commit();
 	}
 
-	private String getSearchQuery(){
-		return instance.getOpenMRSSharedPreferences().getString(
-				ApplicationConstants.BundleKeys.PATIENT_QUERY_BUNDLE,
-				ApplicationConstants.EMPTY_STRING);
-	}
-
 	@Override
 	public void onBackPressed() {
 		if (drawer.isDrawerOpen(GravityCompat.START)) {
 			drawer.closeDrawer(GravityCompat.START);
-		} else {
-			super.onBackPressed();
 		}
 	}
 }

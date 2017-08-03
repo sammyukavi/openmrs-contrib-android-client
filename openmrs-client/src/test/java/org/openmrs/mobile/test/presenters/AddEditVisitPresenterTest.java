@@ -112,7 +112,7 @@ public class AddEditVisitPresenterTest extends ACUnitTestBase {
                 ((DataService.GetCallback<Patient>) invocation.getArguments()[2]).onCompleted(patient);
                 return null;
             }
-        }).when(patientDataService).getByUUID(anyString(), any(QueryOptions.class), any(DataService.GetCallback.class));
+        }).when(patientDataService).getByUuid(anyString(), any(QueryOptions.class), any(DataService.GetCallback.class));
 
         // load visit callback
         doAnswer(new Answer<Void>() {
@@ -121,7 +121,7 @@ public class AddEditVisitPresenterTest extends ACUnitTestBase {
                 ((DataService.GetCallback<Visit>) invocation.getArguments()[2]).onCompleted(visit);
                 return null;
             }
-        }).when(visitDataService).getByUUID(anyString(), any(QueryOptions.class), any(DataService.GetCallback.class));
+        }).when(visitDataService).getByUuid(anyString(), any(QueryOptions.class), any(DataService.GetCallback.class));
 
         // load visit types callback
         doAnswer(new Answer<Void>() {
@@ -140,7 +140,7 @@ public class AddEditVisitPresenterTest extends ACUnitTestBase {
                 ((DataService.GetCallback<Location>) invocation.getArguments()[2]).onCompleted(location);
                 return null;
             }
-        }).when(locationDataService).getByUUID(anyString(), any(QueryOptions.class), any(DataService.GetCallback.class));
+        }).when(locationDataService).getByUuid(anyString(), any(QueryOptions.class), any(DataService.GetCallback.class));
 
         // create visit callback
         doAnswer(new Answer<Void>() {

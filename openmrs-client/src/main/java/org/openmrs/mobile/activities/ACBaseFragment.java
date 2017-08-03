@@ -15,6 +15,7 @@
 package org.openmrs.mobile.activities;
 
 import android.support.v4.app.Fragment;
+import android.view.Menu;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.utilities.ApplicationConstants;
@@ -89,5 +90,4 @@ public abstract class ACBaseFragment<T extends BasePresenterContract> extends Fr
 	public void showError(String message) {
 		createSnackbar(message);
 	}
-
 }

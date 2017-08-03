@@ -144,10 +144,6 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	}
 
 	private void loadVisit() {
-		if(visit != null){
-			return;
-		}
-
 		visitDataService.getByPatient(patient, new QueryOptions(false, true), new PagingInfo(0, 10),
 				new DataService.GetCallback<List<Visit>>() {
 					@Override
@@ -164,7 +160,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 							addEditVisitView.initView(true);
 						}
 
-						if(null == visit.getStartDatetime()){
+						if(visit.getStartDatetime() == null){
 							visit.setStartDatetime(new Date());
 						}
 
@@ -259,7 +255,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 
 	@Override
 	public Patient getPatient() {
-		if (null != visit && null != visit.getPatient()) {
+		if (visit != null && null != visit.getPatient()) {
 			return visit.getPatient();
 		}
 		return null;
@@ -324,7 +320,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 		if (visit.getUuid() == null) {
 			return;
 		} else {
-			if(null == visit.getStopDatetime()) {
+			if(visit.getStopDatetime() == null) {
 				visit.setStopDatetime(new Date());
 			}
 
@@ -362,7 +358,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 
 	@Override
 	public <T> T searchVisitAttributeValueByType(VisitAttributeType visitAttributeType) {
-		if (null != getVisit() && null != getVisit().getAttributes()) {
+		if (getVisit() != null && getVisit().getAttributes() != null) {
 			for (VisitAttribute visitAttribute : getVisit().getAttributes()) {
 				if (visitAttribute.getAttributeType().getUuid().equalsIgnoreCase(visitAttributeType.getUuid())) {
 					return (T)visitAttribute.getValue();

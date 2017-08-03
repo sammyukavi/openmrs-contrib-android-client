@@ -27,7 +27,8 @@ public class AuthorizationManager {
 
 	private DateTime lastUserInteraction;
 	private static final long DISCONNECT_TIMEOUT_HOURS = 4;
-	public static final long DISCONNECT_TIMEOUT_MILLIS = 30000; // 1 min = 1 * 60 * 1000 ms
+	public static final long DISCONNECT_TIMEOUT_MILLIS = DISCONNECT_TIMEOUT_HOURS
+			* 60 * 60 * 1000; // 1 hr = 60 minutes * 60 seconds * 1000 ms
 
 	protected OpenMRS openMRS;
 

@@ -61,7 +61,7 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 		this.loginView = view;
 		this.loginView.setPresenter(this);
 		this.mOpenMRS = mOpenMRS;
-		this.authorizationManager = new AuthorizationManager();
+		this.authorizationManager = mOpenMRS.getAuthorizationManager();
 
 		this.locationDataService = dataAccess().location();
 		this.loginDataService = dataAccess().session();

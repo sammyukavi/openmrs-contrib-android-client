@@ -17,14 +17,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -39,7 +37,6 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.apache.http.auth.AUTH;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
 import org.openmrs.mobile.activities.findpatientrecord.FindPatientRecordActivity;
@@ -59,43 +56,39 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 	protected FragmentManager mFragmentManager;
 	protected CustomFragmentDialog mCustomFragmentDialog;
 	protected DrawerLayout drawer;
-	protected AuthorizationManager mAuthorizationManager;
+	protected AuthorizationManager authorizationManager;
 	protected FrameLayout frameLayout;
 	private MenuItem mSyncbutton;
 	private Toolbar toolbar;
 	private OpenMRS instance = OpenMRS.getInstance();
-	public static final long DISCONNECT_TIMEOUT = 60000; // 1 min = 1 * 60 * 1000 ms
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_acbase);
 		mFragmentManager = getSupportFragmentManager();
-		mAuthorizationManager = new AuthorizationManager();
 		frameLayout = (FrameLayout)findViewById(R.id.content_frame);
 		intitializeToolbar();
 		intitializeNavigationDrawer();
+
+		authorizationManager = mOpenMRS.getAuthorizationManager();
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 		supportInvalidateOptionsMenu();
-		if (!(this instanceof LoginActivity) && !mAuthorizationManager.isUserLoggedIn()) {
-			mAuthorizationManager.moveToLoginActivity();
+		if (!(this instanceof LoginActivity) && (!authorizationManager.isUserLoggedIn() ||
+				authorizationManager.hasUserSessionExpiredDueToInactivity())) {
+			authorizationManager.moveToLoginActivity();
 		}
 
-		if (!(this instanceof LoginActivity)) {
-			resetDisconnectTimer();
-		} else {
-			stopDisconnectTimer();
-		}
+		authorizationManager.trackUserInteraction();
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		stopDisconnectTimer();
 	}
 
 	@Override
@@ -121,7 +114,7 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 
 	public void logout() {
 		mOpenMRS.clearUserPreferencesData();
-		mAuthorizationManager.moveToLoginActivity();
+		authorizationManager.moveToLoginActivity();
 		finish();
 	}
 
@@ -298,33 +291,5 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 			inputMethodManager.hideSoftInputFromWindow(
 					windowToken.getWindowToken(), 0);
 		}
-	}
-
-	@Override
-	public void onUserInteraction() {
-		resetDisconnectTimer();
-	}
-
-	private Handler disconnectHandler = new Handler() {
-		public void handleMessage(NotificationCompat.MessagingStyle.Message msg) {
-		}
-	};
-
-	private Runnable disconnectCallback = new Runnable() {
-		@Override
-		public void run() {
-			// Perform any required operation on disconnect
-			logout();
-			finish();
-		}
-	};
-
-	public void resetDisconnectTimer() {
-		stopDisconnectTimer();
-		disconnectHandler.postDelayed(disconnectCallback, DISCONNECT_TIMEOUT);
-	}
-
-	public void stopDisconnectTimer() {
-		disconnectHandler.removeCallbacks(disconnectCallback);
 	}
 }

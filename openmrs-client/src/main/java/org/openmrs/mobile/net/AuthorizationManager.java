@@ -26,7 +26,8 @@ import org.openmrs.mobile.utilities.ApplicationConstants;
 public class AuthorizationManager {
 
 	private DateTime lastUserInteraction;
-	public static final long DISCONNECT_TIMEOUT = 10000; // 1 min = 1 * 60 * 1000 ms
+	private static final long DISCONNECT_TIMEOUT_HOURS = 4;
+	public static final long DISCONNECT_TIMEOUT_MILLIS = 30000; // 1 min = 1 * 60 * 1000 ms
 
 	protected OpenMRS openMRS;
 
@@ -45,6 +46,10 @@ public class AuthorizationManager {
 		return result;
 	}
 
+	public void invalidateUser() {
+		openMRS.setSessionToken(ApplicationConstants.EMPTY_STRING);
+	}
+
 	public boolean isUserLoggedIn() {
 		return !ApplicationConstants.EMPTY_STRING.equals(openMRS.getSessionToken());
 	}
@@ -57,7 +62,7 @@ public class AuthorizationManager {
 
 	public boolean hasUserSessionExpiredDueToInactivity() {
 		long durationSinceLastInteraction = DateTime.now().getMillis() - lastUserInteraction.getMillis();
-		return durationSinceLastInteraction >= DISCONNECT_TIMEOUT;
+		return durationSinceLastInteraction >= DISCONNECT_TIMEOUT_MILLIS;
 	}
 
 	public void trackUserInteraction() {

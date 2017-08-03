@@ -60,6 +60,10 @@ public class OpenMRS extends Application {
 
 		injectDependencies();
 
+		// This method only called when app starts up from scratch, so invalidate the last user so they don't get
+		// automatically logged in
+		authorizationManager.invalidateUser();
+
 		//initializeSQLCipher();
 		instance = this;
 

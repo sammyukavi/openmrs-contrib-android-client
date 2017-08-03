@@ -45,6 +45,7 @@ import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.listeners.watcher.LoginValidatorWatcher;
 import org.openmrs.mobile.models.Location;
+import org.openmrs.mobile.net.AuthorizationManager;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.FontsUtil;
 import org.openmrs.mobile.utilities.ImageUtils;
@@ -74,6 +75,7 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 	private TextView mChangeUrlIcon;
 	private TextInputLayout mLoginUrlTextLayout;
 	private View mViewsContainer;
+	private AuthorizationManager authorizationManager;
 
 	public static LoginFragment newInstance() {
 		return new LoginFragment();
@@ -89,8 +91,13 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 		initViewFields(mRootView);
 		initListeners();
 		loadLocations();
+		authorizationManager = mOpenMRS.getAuthorizationManager();
 		// Font config
 		FontsUtil.setFont((ViewGroup)this.getActivity().findViewById(android.R.id.content));
+
+		if (authorizationManager.hasUserSessionExpiredDueToInactivity()) {
+			mPresenter.userWasLoggedOutDueToInactivity();
+		}
 
 		return mRootView;
 	}
@@ -223,6 +230,9 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 
 	@Override
 	public void finishLoginActivity() {
+		// Since the user has just logged in, update the interaction time so we don't have a (potentially) immediate
+		// re-login
+		authorizationManager.trackUserInteraction();
 		getActivity().finish();
 	}
 

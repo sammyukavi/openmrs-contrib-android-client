@@ -78,12 +78,14 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 	protected void onResume() {
 		super.onResume();
 		supportInvalidateOptionsMenu();
-		if (!(this instanceof LoginActivity) && (!authorizationManager.isUserLoggedIn() ||
+
+		boolean activityIsLoginActivity = this instanceof LoginActivity;
+		if (!activityIsLoginActivity && (!authorizationManager.isUserLoggedIn() ||
 				authorizationManager.hasUserSessionExpiredDueToInactivity())) {
 			authorizationManager.moveToLoginActivity();
+		} else if (!activityIsLoginActivity) {
+			authorizationManager.trackUserInteraction();
 		}
-
-		authorizationManager.trackUserInteraction();
 	}
 
 	@Override

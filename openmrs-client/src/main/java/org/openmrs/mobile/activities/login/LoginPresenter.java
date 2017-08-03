@@ -38,6 +38,7 @@ import java.util.Map;
 
 import static org.openmrs.mobile.utilities.ApplicationConstants.ErrorCodes.AUTH_FAILED;
 import static org.openmrs.mobile.utilities.ApplicationConstants.ErrorCodes.INVALID_USERNAME_PASSWORD;
+import static org.openmrs.mobile.utilities.ApplicationConstants.ErrorCodes.LOGOUT_DUE_TO_INACTIVITY;
 import static org.openmrs.mobile.utilities.ApplicationConstants.ErrorCodes.NO_INTERNET;
 import static org.openmrs.mobile.utilities.ApplicationConstants.ErrorCodes.OFFLINE_LOGIN;
 import static org.openmrs.mobile.utilities.ApplicationConstants.ErrorCodes.OFFLINE_LOGIN_UNSUPPORTED;
@@ -248,5 +249,9 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 	private void setLogin(boolean isLogin, String serverUrl) {
 		mOpenMRS.setUserLoggedOnline(isLogin);
 		mOpenMRS.setLastLoginServerUrl(serverUrl);
+	}
+
+	public void userWasLoggedOutDueToInactivity() {
+		loginView.showMessage(LOGOUT_DUE_TO_INACTIVITY);
 	}
 }

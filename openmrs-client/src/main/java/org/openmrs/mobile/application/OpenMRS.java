@@ -14,8 +14,6 @@
 
 package org.openmrs.mobile.application;
 
-import javax.inject.Inject;
-
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.os.Build;

@@ -237,6 +237,7 @@
 	
 	<string name="snackbar_edit">EDIT</string>
 	<string name="invalid_login_or_password_message">Invalid login or password, please try again.</string>
+	<string name="logout_due_to_inactivity">You have been logged out due to inactivity.</string>
 	
 	
 	<string name="settings_application_info">Application Info</string>
@@ -317,7 +318,7 @@
 	<string name="no_visit_images">No Visit Images</string>
 	<string name="primary_diagnosis_label">Primary Diagnosis</string>
 	<string name="secondary_diagnosis_label">Secondary Diagnosis</string>
-	<string name="clinical_notes_label">Clinical note</string>
+	<string name="clinical_notes_label">Patient Problem Summary</string>
 	<string name="no_vitals">No vitals recorded for this visit</string>
 	<string name="no_visit_tasks">No tasks for this visit</string>
 	<string name="add_diagnosis">Enter Diagnosis</string>
@@ -365,7 +366,7 @@
 	<string name="visit_note_changes_pending_title">Pending Changes</string>
 	<string name="visit_note_changes_pending_message">You have unsaved changes on the visit note. Leaving this
 		screen while discard your changes</string>
-	<string name="no_clinical_note">No Clinical Note</string>
+	<string name="no_clinical_note">No Patient Problem Summary</string>
 	<string name="civil_status">Civil Status</string>
 	<string name="kin_relationship">Kin Relationship</string>
 	<string name="change_server_url">Change Server URL</string>

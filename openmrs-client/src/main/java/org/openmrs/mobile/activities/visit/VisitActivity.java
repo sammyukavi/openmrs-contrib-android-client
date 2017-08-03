@@ -129,6 +129,7 @@ public class VisitActivity extends ACBaseActivity {
 			tabHost.addTab(getTabNames().get(i).toUpperCase());
 		}
 		final ViewPager viewPager = (ViewPager)findViewById(R.id.visitDetailsPager);
+		viewPager.setOffscreenPageLimit(visitPageAdapter.getCount() - 1);
 		viewPager.setAdapter(visitPageAdapter);
 		viewPager.addOnPageChangeListener(tabHost);
 		tabHost.setOnTabChangeListener(new MaterialTabHost.OnTabChangeListener() {

@@ -30,7 +30,6 @@ import org.openmrs.mobile.models.Session;
 import org.openmrs.mobile.models.User;
 import org.openmrs.mobile.net.AuthorizationManager;
 import org.openmrs.mobile.utilities.ApplicationConstants;
-import org.openmrs.mobile.utilities.NetworkUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -48,8 +47,8 @@ import static org.openmrs.mobile.utilities.ApplicationConstants.ErrorCodes.USER_
 public class LoginPresenter extends BasePresenter implements LoginContract.Presenter {
 
 	private LoginContract.View loginView;
-	private OpenMRS mOpenMRS;
-	private boolean mWipeRequired;
+	private OpenMRS openMRS;
+	private boolean wipeRequired;
 	private AuthorizationManager authorizationManager;
 	private SessionDataService loginDataService;
 	private LocationDataService locationDataService;
@@ -61,7 +60,7 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 	public LoginPresenter(LoginContract.View view, OpenMRS mOpenMRS) {
 		this.loginView = view;
 		this.loginView.setPresenter(this);
-		this.mOpenMRS = mOpenMRS;
+		this.openMRS = mOpenMRS;
 		this.authorizationManager = mOpenMRS.getAuthorizationManager();
 
 		this.locationDataService = dataAccess().location();
@@ -77,14 +76,14 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 	@Override
 	public void login(String username, String password, String url, String oldUrl) {
 		loginView.hideSoftKeys();
-		if ((!mOpenMRS.getUsername().equals(ApplicationConstants.EMPTY_STRING) &&
-				!mOpenMRS.getUsername().equals(username)) ||
-				((!mOpenMRS.getServerUrl().equals(ApplicationConstants.EMPTY_STRING) &&
-						!mOpenMRS.getServerUrl().equals(oldUrl))) ||
-				mWipeRequired) {
+		if ((!openMRS.getUsername().equals(ApplicationConstants.EMPTY_STRING) &&
+				!openMRS.getUsername().equals(username)) ||
+				((!openMRS.getServerUrl().equals(ApplicationConstants.EMPTY_STRING) &&
+						!openMRS.getServerUrl().equals(oldUrl))) ||
+				wipeRequired) {
 			loginView.showWarningDialog();
 		} else {
-			authenticateUser(username, password, url, mWipeRequired);
+			authenticateUser(username, password, url, wipeRequired);
 		}
 	}
 
@@ -94,8 +93,8 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 		loginView.setProgressBarVisibility(true);
 		RestServiceBuilder.setloginUrl(url);
 
-		if (mOpenMRS.getNetworkUtils().isOnline()) {
-			mWipeRequired = wipeDatabase;
+		if (openMRS.getNetworkUtils().isOnline()) {
+			wipeRequired = wipeDatabase;
 			DataService.GetCallback<List<User>> loginUsersFoundCallback =
 					new DataService.GetCallback<List<User>>() {
 						@Override
@@ -127,15 +126,15 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 				public void onCompleted(Session session) {
 					if (session != null && session.isAuthenticated()) {
 						if (wipeDatabase) {
-							mOpenMRS.deleteDatabase(AppDatabase.NAME);
+							openMRS.deleteDatabase(AppDatabase.NAME);
 							setData(session.getSessionId(), url, username, password);
-							mWipeRequired = false;
+							wipeRequired = false;
 						}
 
 						if (authorizationManager.isUserNameOrServerEmpty()) {
 							setData(session.getSessionId(), url, username, password);
 						} else {
-							mOpenMRS.setSessionToken(session.getSessionId());
+							openMRS.setSessionToken(session.getSessionId());
 						}
 
 						setLogin(true, url);
@@ -164,17 +163,17 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 
 			loginDataService.getSession(url, username, password, loginUserCallback);
 		} else {
-			if (mOpenMRS.isUserLoggedOnline() && url.equals(mOpenMRS.getLastLoginServerUrl())) {
+			if (openMRS.isUserLoggedOnline() && url.equals(openMRS.getLastLoginServerUrl())) {
 				loginView.setProgressBarVisibility(false);
-				if (mOpenMRS.getUsername().equals(username) && mOpenMRS.getPassword().equals(password)) {
-					mOpenMRS.setSessionToken(mOpenMRS.getLastSessionToken());
+				if (openMRS.getUsername().equals(username) && openMRS.getPassword().equals(password)) {
+					openMRS.setSessionToken(openMRS.getLastSessionToken());
 					loginView.showMessage(OFFLINE_LOGIN);
 					loginView.userAuthenticated();
 					loginView.finishLoginActivity();
 				} else {
 					loginView.showMessage(AUTH_FAILED);
 				}
-			} else if (mOpenMRS.getNetworkUtils().hasNetwork()) {
+			} else if (openMRS.getNetworkUtils().hasNetwork()) {
 				loginView.showMessage(OFFLINE_LOGIN_UNSUPPORTED);
 				loginView.setProgressBarVisibility(false);
 
@@ -207,9 +206,9 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 
 	@Override
 	public void saveLocationsInPreferences(List<HashMap<String, String>> locationList, int selectedItemPosition) {
-		mOpenMRS.setLocation(locationList.get(selectedItemPosition).get("uuid"));
-		mOpenMRS.setParentLocationUuid(locationList.get(selectedItemPosition).get("parentlocationuuid"));
-		mOpenMRS.saveLocations(new Gson().toJson(locationList));
+		openMRS.setLocation(locationList.get(selectedItemPosition).get("uuid"));
+		openMRS.setParentLocationUuid(locationList.get(selectedItemPosition).get("parentlocationuuid"));
+		openMRS.saveLocations(new Gson().toJson(locationList));
 
 	}
 
@@ -221,7 +220,7 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 				() {
 			@Override
 			public void onCompleted(List<Location> locations) {
-				mOpenMRS.setServerUrl(url);
+				openMRS.setServerUrl(url);
 				loginView.updateLoginFormLocations(locations, url);
 			}
 
@@ -240,15 +239,15 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 	}
 
 	private void setData(String sessionToken, String url, String username, String password) {
-		mOpenMRS.setSessionToken(sessionToken);
-		mOpenMRS.setServerUrl(url);
-		mOpenMRS.setUsername(username);
-		mOpenMRS.setPassword(password);
+		openMRS.setSessionToken(sessionToken);
+		openMRS.setServerUrl(url);
+		openMRS.setUsername(username);
+		openMRS.setPassword(password);
 	}
 
 	private void setLogin(boolean isLogin, String serverUrl) {
-		mOpenMRS.setUserLoggedOnline(isLogin);
-		mOpenMRS.setLastLoginServerUrl(serverUrl);
+		openMRS.setUserLoggedOnline(isLogin);
+		openMRS.setLastLoginServerUrl(serverUrl);
 	}
 
 	public void userWasLoggedOutDueToInactivity() {

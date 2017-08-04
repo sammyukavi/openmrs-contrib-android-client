@@ -58,6 +58,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	private boolean processing, endVisitTag;
 	private String patientUuid;
 	private Location location;
+	private Patient patient;
 
 	public AddEditVisitPresenter(@NonNull AddEditVisitContract.View addEditVisitView, String patientUuid, boolean endVisit) {
 		this(addEditVisitView, patientUuid, endVisit, null, null, null, null, null, null);
@@ -120,13 +121,18 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	}
 
 	private void loadPatient() {
+		if(patient != null){
+			return;
+		}
+
 		addEditVisitView.showPageSpinner(true);
 		if (StringUtils.notEmpty(patientUuid)) {
 			patientDataService
 					.getByUuid(patientUuid, QueryOptions.FULL_REP, new DataService.GetCallback<Patient>() {
 						@Override
 						public void onCompleted(Patient entity) {
-							loadVisit(entity);
+							patient = entity;
+							loadVisit();
 						}
 
 						@Override
@@ -138,7 +144,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 		}
 	}
 
-	private void loadVisit(Patient patient) {
+	private void loadVisit() {
 		visitDataService.getByPatient(patient, QueryOptions.FULL_REP, new PagingInfo(0, 10),
 				new DataService.GetCallback<List<Visit>>() {
 					@Override
@@ -155,7 +161,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 							addEditVisitView.initView(true);
 						}
 
-						if(null == visit.getStartDatetime()){
+						if(visit.getStartDatetime() == null){
 							visit.setStartDatetime(new Date());
 						}
 
@@ -256,7 +262,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 
 	@Override
 	public Patient getPatient() {
-		if (null != visit && null != visit.getPatient()) {
+		if (visit != null && null != visit.getPatient()) {
 			return visit.getPatient();
 		}
 		return null;
@@ -321,7 +327,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 		if (visit.getUuid() == null) {
 			return;
 		} else {
-			if(null == visit.getStopDatetime()) {
+			if(visit.getStopDatetime() == null) {
 				visit.setStopDatetime(new Date());
 			}
 
@@ -359,7 +365,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 
 	@Override
 	public <T> T searchVisitAttributeValueByType(VisitAttributeType visitAttributeType) {
-		if (null != getVisit() && null != getVisit().getAttributes()) {
+		if (getVisit() != null && getVisit().getAttributes() != null) {
 			for (VisitAttribute visitAttribute : getVisit().getAttributes()) {
 				if (visitAttribute.getAttributeType().getUuid().equalsIgnoreCase(visitAttributeType.getUuid())) {
 					return (T)visitAttribute.getValue();

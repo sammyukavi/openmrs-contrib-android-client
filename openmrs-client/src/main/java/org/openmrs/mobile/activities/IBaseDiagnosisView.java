@@ -1,6 +1,6 @@
 package org.openmrs.mobile.activities;
 
-import org.openmrs.mobile.models.DiagnosisSearchResult;
+import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.EncounterDiagnosis;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Visit;
@@ -23,5 +23,5 @@ public interface IBaseDiagnosisView {
 
 	void removeDiagnosis(EncounterDiagnosis removeDiagnosis, String order);
 
-	void setSearchDiagnoses(List<DiagnosisSearchResult> concepts);
+	void setSearchDiagnoses(List<Concept> concepts);
 }

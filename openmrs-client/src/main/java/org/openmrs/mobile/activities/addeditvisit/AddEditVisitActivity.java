@@ -25,7 +25,6 @@ import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
 import org.openmrs.mobile.activities.patientheader.PatientHeaderFragment;
 import org.openmrs.mobile.activities.patientheader.PatientHeaderPresenter;
-import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.StringUtils;
 import org.openmrs.mobile.utilities.TabUtil;
@@ -75,7 +74,7 @@ public class AddEditVisitActivity extends ACBaseActivity {
 				}
 
 				addEditVisitPresenter = new AddEditVisitPresenter(addEditVisitFragment, patientUuid, visitUuid,
-						extras.getBoolean(ApplicationConstants.BundleKeys.IS_END_VISIT, false));
+						extras.getBoolean(ApplicationConstants.BundleKeys.END_VISIT, false));
 
 				// patient header
 				PatientHeaderFragment headerFragment = (PatientHeaderFragment)getSupportFragmentManager()

@@ -188,7 +188,6 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 	public void loadEndVisitView() {
 		showPageSpinner(false);
 		visitSubmitButton.setText(R.string.label_end_visit);
-		//visitStartDateLabel.setText(R.string.end_visit_date);
 		visitTypeRow.setVisibility(View.GONE);
 
 		visitSubmitButton.setOnClickListener(v -> {

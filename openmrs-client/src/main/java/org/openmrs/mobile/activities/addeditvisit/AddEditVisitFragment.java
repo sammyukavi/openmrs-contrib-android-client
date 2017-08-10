@@ -306,7 +306,7 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 
 		// set existing visit attribute if any
 		String visitTypeUuid = mPresenter.searchVisitAttributeValueByType(visitAttributeType);
-		if (null != visitTypeUuid) {
+		if (visitTypeUuid != null) {
 			setDefaultDropdownSelection(conceptNameArrayAdapter, visitTypeUuid, conceptNamesDropdown);
 		}
 
@@ -348,7 +348,7 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 		visitTypeDropdown.setAdapter(visitTypeArrayAdapter);
 
 		// set existing visit type if any
-		if (null != mPresenter.getVisit().getVisitType()) {
+		if (mPresenter.getVisit().getVisitType() != null) {
 			setDefaultDropdownSelection(visitTypeArrayAdapter, mPresenter.getVisit().getVisitType().getUuid(),
 					visitTypeDropdown);
 		}

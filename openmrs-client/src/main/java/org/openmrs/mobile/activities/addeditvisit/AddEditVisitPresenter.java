@@ -56,6 +56,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	private boolean processing, isEndVisit;
 	private String patientUuid, visitUuid;
 	private Location location;
+	private Patient patient;
 
 	public AddEditVisitPresenter(@NonNull AddEditVisitContract.View addEditVisitView, String patientUuid,
 			String visitUuid, boolean isEndVisit) {
@@ -120,6 +121,10 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	}
 
 	private void loadPatient() {
+		if(patient != null){
+			return;
+		}
+
 		addEditVisitView.showPageSpinner(true);
 		if (StringUtils.notEmpty(patientUuid)) {
 			patientDataService
@@ -255,7 +260,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 
 	@Override
 	public Patient getPatient() {
-		if (null != visit && null != visit.getPatient()) {
+		if (visit != null && null != visit.getPatient()) {
 			return visit.getPatient();
 		}
 		return null;
@@ -324,7 +329,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 		if (visit.getUuid() == null) {
 			return;
 		} else {
-			if (null == visit.getStopDatetime()) {
+			if(visit.getStopDatetime() == null) {
 				visit.setStopDatetime(new Date());
 			}
 
@@ -362,7 +367,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 
 	@Override
 	public <T> T searchVisitAttributeValueByType(VisitAttributeType visitAttributeType) {
-		if (null != getVisit() && null != getVisit().getAttributes()) {
+		if (getVisit() != null && getVisit().getAttributes() != null) {
 			for (VisitAttribute visitAttribute : getVisit().getAttributes()) {
 				if (visitAttribute.getAttributeType().getUuid().equalsIgnoreCase(visitAttributeType.getUuid())) {
 					return (T)visitAttribute.getValue();

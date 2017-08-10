@@ -20,6 +20,7 @@ import org.openmrs.mobile.data.sync.impl.VisitAttributeTypeSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.VisitPredefinedTaskSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.VisitTypeSubscriptionProvider;
 import org.openmrs.mobile.models.PullSubscription;
+import org.openmrs.mobile.utilities.TimeConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,46 +46,52 @@ public class AppDatabase {
 
 	@Migration(version = 2, database = AppDatabase.class, priority = 0)
 	public static class CreateSubscriptionsMigration extends BaseMigration {
-		private static final int SECONDS_IN_MINUTE = 60;
-		private static final int MINUTES_IN_HOUR = 60;
-		private static final int HOURS_IN_DAY = 24;
-
-		private static final int SECONDS_IN_HOUR = SECONDS_IN_MINUTE * MINUTES_IN_HOUR;
-		private static final int SECONDS_IN_DAY = SECONDS_IN_HOUR * HOURS_IN_DAY;
+		private final static Integer INT_SECONDS_PER_DAY = (int) TimeConstants.SECONDS_PER_DAY;
+		private final static Integer MAX_INCREMENTAL_COUNT = 25;
 
 		@Override
 		public void migrate(@NonNull DatabaseWrapper database) {
 			List<PullSubscription> pullSubscriptions = new ArrayList<>();
 
 			pullSubscriptions.add(
-					newPullSub(ConceptClassSubscriptionProvider.class.getSimpleName(), 25, SECONDS_IN_DAY)
+					newPullSub(ConceptClassSubscriptionProvider.class.getSimpleName(), MAX_INCREMENTAL_COUNT,
+							INT_SECONDS_PER_DAY)
 			);
 			pullSubscriptions.add(
-					newPullSub(DiagnosisConceptSubscriptionProvider.class.getSimpleName(), 25, SECONDS_IN_DAY)
+					newPullSub(DiagnosisConceptSubscriptionProvider.class.getSimpleName(), MAX_INCREMENTAL_COUNT,
+							INT_SECONDS_PER_DAY)
 			);
 			pullSubscriptions.add(
-					newPullSub(EncounterTypeSubscriptionProvider.class.getSimpleName(), 25, SECONDS_IN_DAY)
+					newPullSub(EncounterTypeSubscriptionProvider.class.getSimpleName(), MAX_INCREMENTAL_COUNT,
+							INT_SECONDS_PER_DAY)
 			);
 			pullSubscriptions.add(
-					newPullSub(LocationSubscriptionProvider.class.getSimpleName(), 25, SECONDS_IN_DAY)
+					newPullSub(LocationSubscriptionProvider.class.getSimpleName(), MAX_INCREMENTAL_COUNT,
+							INT_SECONDS_PER_DAY)
 			);
 			pullSubscriptions.add(
-					newPullSub(PatientIdentifierTypeSubscriptionProvider.class.getSimpleName(), 25, SECONDS_IN_DAY)
+					newPullSub(PatientIdentifierTypeSubscriptionProvider.class.getSimpleName(), MAX_INCREMENTAL_COUNT,
+							INT_SECONDS_PER_DAY)
 			);
 			pullSubscriptions.add(
-					newPullSub(PatientListSubscriptionProvider.class.getSimpleName(), 25, SECONDS_IN_DAY)
+					newPullSub(PatientListSubscriptionProvider.class.getSimpleName(), MAX_INCREMENTAL_COUNT,
+							INT_SECONDS_PER_DAY)
 			);
 			pullSubscriptions.add(
-					newPullSub(PersonAttributeTypeSubscriptionProvider.class.getSimpleName(), 25, SECONDS_IN_DAY)
+					newPullSub(PersonAttributeTypeSubscriptionProvider.class.getSimpleName(), MAX_INCREMENTAL_COUNT,
+							INT_SECONDS_PER_DAY)
 			);
 			pullSubscriptions.add(
-					newPullSub(VisitAttributeTypeSubscriptionProvider.class.getSimpleName(), 25, SECONDS_IN_DAY)
+					newPullSub(VisitAttributeTypeSubscriptionProvider.class.getSimpleName(), MAX_INCREMENTAL_COUNT,
+							INT_SECONDS_PER_DAY)
 			);
 			pullSubscriptions.add(
-					newPullSub(VisitPredefinedTaskSubscriptionProvider.class.getSimpleName(), 25, SECONDS_IN_DAY)
+					newPullSub(VisitPredefinedTaskSubscriptionProvider.class.getSimpleName(), MAX_INCREMENTAL_COUNT,
+							INT_SECONDS_PER_DAY)
 			);
 			pullSubscriptions.add(
-					newPullSub(VisitTypeSubscriptionProvider.class.getSimpleName(), 25, SECONDS_IN_DAY)
+					newPullSub(VisitTypeSubscriptionProvider.class.getSimpleName(), MAX_INCREMENTAL_COUNT,
+							INT_SECONDS_PER_DAY)
 			);
 
 

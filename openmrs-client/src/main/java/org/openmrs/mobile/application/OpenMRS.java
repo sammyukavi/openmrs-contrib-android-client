@@ -54,9 +54,7 @@ public class OpenMRS extends Application {
 	private AuthorizationManager authorizationManager;
 	private SyncManager syncManager;
 	private NetworkUtils networkUtils;
-
-	@Inject
-	DatabaseHelper databaseHelper;
+	private DatabaseHelper databaseHelper;
 
 	@Override
 	public void onCreate() {
@@ -94,6 +92,7 @@ public class OpenMRS extends Application {
 		syncManager = applicationComponent.syncManager();
 		networkUtils = applicationComponent.networkUtils();
 		authorizationManager = applicationComponent.authorizationManager();
+		databaseHelper = applicationComponent.databaseHelper();
 	}
 
 	protected void initializeDB() {

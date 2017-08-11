@@ -49,7 +49,7 @@ public class ObservationDeserializerTest {
 
     @Before
     public void setUp() throws Exception {
-        File jsonResponseFile = new File("openmrs-client/src/test/java/org/openmrs/mobile/test/retrofitMocks/",
+        File jsonResponseFile = new File("src/test/java/org/openmrs/mobile/test/retrofitMocks/",
                 "obsWithDiagnosisDataExampleResponse.json");
         String response = getMockResponseFromFile(jsonResponseFile);
         JsonParser jsonParser = new JsonParser();

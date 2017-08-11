@@ -44,15 +44,12 @@ public class Concept extends BaseOpenmrsAuditableObject {
 	@SerializedName("name")
 	@Expose
 	private ConceptName name;
-	@SerializedName("preferredName")
-	@Expose
-	private String preferredName;
-
+	
 	@SerializedName("mappings")
 	@Expose
 	private List<ConceptMapping> mappings;
-
-	@SerializedName("name")
+	
+	@SerializedName("value")
 	@Expose
 	@Column
 	private String value;
@@ -113,14 +110,6 @@ public class Concept extends BaseOpenmrsAuditableObject {
 
 	public void setName(ConceptName name) {
 		this.name = name;
-	}
-
-	public String getPreferredName() {
-		return preferredName;
-	}
-
-	public void setPreferredName(String preferredName) {
-		this.preferredName = preferredName;
 	}
 
 	public List<ConceptMapping> getMappings() {

@@ -18,7 +18,6 @@ import javax.inject.Inject;
 import retrofit2.Call;
 
 public class ConceptRestServiceImpl extends BaseRestService<Concept, ConceptRestService> {
-	public static final String FIND_CONCEPT_PATH = ApplicationConstants.API.REST_ENDPOINT_V2 + "/custom/diagnoses";
 	public static final String CONCEPT_SET_PATH = ApplicationConstants.API.REST_ENDPOINT_V1 + "/concept";
 
 	@Inject

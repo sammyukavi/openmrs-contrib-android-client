@@ -19,6 +19,7 @@ import android.widget.Spinner;
 import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.DataService;
+import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.impl.ConceptAnswerDataService;
 import org.openmrs.mobile.data.impl.LocationDataService;
@@ -26,6 +27,7 @@ import org.openmrs.mobile.data.impl.PatientDataService;
 import org.openmrs.mobile.data.impl.VisitAttributeTypeDataService;
 import org.openmrs.mobile.data.impl.VisitDataService;
 import org.openmrs.mobile.data.impl.VisitTypeDataService;
+import org.openmrs.mobile.data.rest.RestConstants;
 import org.openmrs.mobile.models.ConceptAnswer;
 import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Patient;
@@ -128,7 +130,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 		addEditVisitView.showPageSpinner(true);
 		if (StringUtils.notEmpty(patientUuid)) {
 			patientDataService
-					.getByUuid(patientUuid, QueryOptions.LOAD_RELATED_OBJECTS, new DataService.GetCallback<Patient>() {
+					.getByUuid(patientUuid, QueryOptions.FULL_REP, new DataService.GetCallback<Patient>() {
 						@Override
 						public void onCompleted(Patient entity) {
 							if (visitUuid != null && visitUuid.equalsIgnoreCase(ApplicationConstants.EMPTY_STRING)) {
@@ -154,7 +156,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	}
 
 	private void loadVisit() {
-		visitDataService.getByUuid(visitUuid, new QueryOptions(false, true), new DataService.GetCallback<Visit>() {
+		visitDataService.getByUuid(visitUuid, QueryOptions.FULL_REP, new DataService.GetCallback<Visit>() {
 			@Override
 			public void onCompleted(Visit entity) {
 				if (entity != null) {
@@ -188,9 +190,12 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	@Override
 	public List<VisitAttributeType> loadVisitAttributeTypes() {
 		final List<VisitAttributeType> visitAttributeTypes = new ArrayList<>();
+		QueryOptions options = new QueryOptions.Builder()
+				.cacheKey(ApplicationConstants.CacheKays.VISIT_ATTRIBUTE_TYPE)
+				.customRepresentation(RestConstants.Representations.FULL)
+				.build();
 		visitAttributeTypeDataService
-				.getAll(new QueryOptions(ApplicationConstants.CacheKays.VISIT_ATTRIBUTE_TYPE, true), null,
-						new DataService.GetCallback<List<VisitAttributeType>>() {
+				.getAll(options, null, new DataService.GetCallback<List<VisitAttributeType>>() {
 							@Override
 							public void onCompleted(List<VisitAttributeType> entities) {
 								visitAttributeTypes.addAll(entities);
@@ -210,9 +215,12 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	}
 
 	public void loadVisitTypes() {
+		QueryOptions options = new QueryOptions.Builder()
+				.cacheKey(ApplicationConstants.CacheKays.VISIT_TYPE)
+				.build();
+
 		visitTypeDataService
-				.getAll(new QueryOptions(ApplicationConstants.CacheKays.VISIT_TYPE, false), null, new DataService
-						.GetCallback<List<VisitType>>() {
+				.getAll(options, null, new DataService.GetCallback<List<VisitType>>() {
 					@Override
 					public void onCompleted(List<VisitType> entities) {
 						addEditVisitView.updateVisitTypes(entities);
@@ -229,7 +237,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	 * TODO: Move to Base class
 	 */
 	public void getLocation() {
-		locationDataService.getByUuid(OpenMRS.getInstance().getLocation(), QueryOptions.LOAD_RELATED_OBJECTS,
+		locationDataService.getByUuid(OpenMRS.getInstance().getLocation(), QueryOptions.FULL_REP,
 				new DataService.GetCallback<Location>() {
 					@Override
 					public void onCompleted(Location entity) {

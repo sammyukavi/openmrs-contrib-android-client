@@ -18,7 +18,6 @@ import javax.inject.Inject;
 import retrofit2.Call;
 
 public class ConceptRestServiceImpl extends BaseRestService<Concept, ConceptRestService> {
-	public static final String FIND_CONCEPT_PATH = ApplicationConstants.API.REST_ENDPOINT_V2 + "/custom/diagnoses";
 	public static final String CONCEPT_SET_PATH = ApplicationConstants.API.REST_ENDPOINT_V1 + "/concept";
 
 	@Inject
@@ -40,8 +39,9 @@ public class ConceptRestServiceImpl extends BaseRestService<Concept, ConceptRest
 
 	public Call<Results<Concept>> findConcept(@NonNull String searchQuery, @Nullable QueryOptions options,
 			@NonNull PagingInfo pagingInfo) {
-		return restService.findConcept(FIND_CONCEPT_PATH, searchQuery, QueryOptions.getRepresentation(options),
-				PagingInfo.getStartIndex(pagingInfo), PagingInfo.getLimit(pagingInfo));
+		return restService.findConcept(buildRestRequestPath(), searchQuery,
+				QueryOptions.getRepresentation(options), PagingInfo.getLimit(pagingInfo),
+				PagingInfo.getStartIndex(pagingInfo));
 	}
 
 	public Call<Results<Concept>> getSetConcepts(String setUuid, QueryOptions options) {

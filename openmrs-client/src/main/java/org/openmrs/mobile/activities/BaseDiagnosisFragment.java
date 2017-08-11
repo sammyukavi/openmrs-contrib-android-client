@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import org.openmrs.mobile.activities.visit.detail.DiagnosisRecyclerViewAdapter;
 import org.openmrs.mobile.application.OpenMRS;
-import org.openmrs.mobile.models.DiagnosisSearchResult;
+import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.EncounterDiagnosis;
 import org.openmrs.mobile.models.Observation;
@@ -89,6 +89,8 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 									.findConcept(searchDiagnosis.getText().toString(), getIBaseDiagnosisFragment());
 						}
 					}, SEARCH_DIAGNOSES_DELAY);
+				} else {
+					loadingProgressBar.setVisibility(View.GONE);
 				}
 			}
 		});
@@ -97,9 +99,9 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				if (ViewUtils.getInput(searchDiagnosis) != null) {
-					DiagnosisSearchResult diagnosisSearchResult =
-							(DiagnosisSearchResult)searchDiagnosis.getAdapter().getItem(position);
-					createEncounterDiagnosis(null, ViewUtils.getInput(searchDiagnosis), diagnosisSearchResult.getValue(),
+					Concept concept =
+							(Concept)searchDiagnosis.getAdapter().getItem(position);
+					createEncounterDiagnosis(null, ViewUtils.getInput(searchDiagnosis), concept.getValue(),
 							true);
 
 					getDiagnosisView().saveVisitNote(encounterUuid, clinicalNoteView.getText().toString(), visit);
@@ -171,7 +173,7 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 		initialSecondaryDiagnosesListHashcode = secondaryDiagnoses.hashCode();
 	}
 
-	public void setSearchDiagnoses(List<DiagnosisSearchResult> diagnoses) {
+	public void setSearchDiagnoses(List<Concept> diagnoses) {
 		CustomDiagnosesDropdownAdapter adapter =
 				new CustomDiagnosesDropdownAdapter(getContext(), android.R.layout.simple_spinner_dropdown_item, diagnoses);
 		filterOutExistingDiagnoses(diagnoses);
@@ -183,8 +185,8 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	 * TODO: Use more effecient search algorithm
 	 * @param diagnoses
 	 */
-	private void filterOutExistingDiagnoses(List<DiagnosisSearchResult> diagnoses) {
-		List<DiagnosisSearchResult> searchDiagnosis = new ArrayList<>(diagnoses);
+	private void filterOutExistingDiagnoses(List<Concept> diagnoses) {
+		List<Concept> searchDiagnosis = new ArrayList<>(diagnoses);
 		List<String> existingDiagnoses = new ArrayList<>();
 		for (EncounterDiagnosis primaryDiagnosis : primaryDiagnoses) {
 			existingDiagnoses.add(primaryDiagnosis.getDisplay());
@@ -194,10 +196,10 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 			existingDiagnoses.add(secondaryDiagnosis.getDisplay());
 		}
 
-		for (DiagnosisSearchResult diagnosis : searchDiagnosis) {
+		for (Concept diagnosis : searchDiagnosis) {
 			for (String existingDiagnosis : existingDiagnoses) {
-				if (null != diagnosis.getConceptName() &&
-						diagnosis.getConceptName().getName().equalsIgnoreCase(existingDiagnosis)
+				if (null != diagnosis.getName() &&
+						diagnosis.getName().getName().equalsIgnoreCase(existingDiagnosis)
 						|| diagnosis.toString().equalsIgnoreCase(existingDiagnosis)) {
 					diagnoses.remove(diagnosis);
 				}

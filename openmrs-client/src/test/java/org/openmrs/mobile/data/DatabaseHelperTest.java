@@ -1,11 +1,15 @@
 package org.openmrs.mobile.data;
 
+import android.content.Context;
+import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.language.Operator;
 import com.raizlabs.android.dbflow.sql.language.SQLOperator;
 import com.raizlabs.android.dbflow.sql.language.property.IProperty;
 
+import com.raizlabs.android.dbflow.structure.ModelAdapter;
 import junit.framework.Assert;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,6 +48,12 @@ public class DatabaseHelperTest {
 	@Mock
 	Repository repo;
 
+	@Mock
+	FlowManager flowManager;
+
+	@Mock
+	Context context;
+
 	@InjectMocks
 	DatabaseHelper databaseHelper;
 
@@ -54,6 +64,11 @@ public class DatabaseHelperTest {
 			createLocation(),
 			createLocation()
 	};
+
+	@Before
+	public void setup() {
+		FlowManager.init(context);
+	}
 
 	@Test(expected = NullPointerException.class)
 	public void diffDelete_shouldThrowExceptionWithNullTable() throws Exception {

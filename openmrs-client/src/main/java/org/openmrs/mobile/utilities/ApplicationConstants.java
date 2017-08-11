@@ -304,6 +304,7 @@ public abstract class ApplicationConstants {
 		public static final int OFFLINE_LOGIN_UNSUPPORTED = 105;
 		public static final int NO_INTERNET = 106;
 		public static final int USER_NOT_FOUND = 107;
+		public static final int LOGOUT_DUE_TO_INACTIVITY = 108;
 
 	}
 

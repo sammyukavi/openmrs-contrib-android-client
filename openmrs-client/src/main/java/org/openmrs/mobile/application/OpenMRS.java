@@ -14,8 +14,6 @@
 
 package org.openmrs.mobile.application;
 
-import javax.inject.Inject;
-
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -26,8 +24,10 @@ import com.raizlabs.android.dbflow.config.FlowManager;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
+import org.openmrs.mobile.dagger.ApplicationComponent;
 import org.openmrs.mobile.dagger.ApplicationModule;
 import org.openmrs.mobile.dagger.DaggerApplicationComponent;
+import org.openmrs.mobile.net.AuthorizationManager;
 import org.openmrs.mobile.data.DatabaseHelper;
 import org.openmrs.mobile.security.SecretKeyGenerator;
 import org.openmrs.mobile.sync.SyncManager;
@@ -51,11 +51,9 @@ public class OpenMRS extends Application {
 		return instance;
 	}
 
-	@Inject
-	SyncManager syncManager;
-
-	@Inject
-	NetworkUtils networkUtils;
+	private AuthorizationManager authorizationManager;
+	private SyncManager syncManager;
+	private NetworkUtils networkUtils;
 
 	@Inject
 	DatabaseHelper databaseHelper;
@@ -64,7 +62,11 @@ public class OpenMRS extends Application {
 	public void onCreate() {
 		super.onCreate();
 
-		DaggerApplicationComponent.builder().applicationModule(new ApplicationModule(this)).build().inject(this);
+		injectDependencies();
+
+		// This method only called when app starts up from scratch, so invalidate the last user so they don't get
+		// automatically logged in
+		authorizationManager.invalidateUser();
 
 		//initializeSQLCipher();
 		instance = this;
@@ -84,6 +86,14 @@ public class OpenMRS extends Application {
 		generateKey();
 		initializeDB();
 		syncManager.initializeDataSync();
+	}
+
+	private void injectDependencies() {
+		ApplicationComponent applicationComponent = DaggerApplicationComponent.builder()
+				.applicationModule(new ApplicationModule(this)).build();
+		syncManager = applicationComponent.syncManager();
+		networkUtils = applicationComponent.networkUtils();
+		authorizationManager = applicationComponent.authorizationManager();
 	}
 
 	protected void initializeDB() {
@@ -367,6 +377,10 @@ public class OpenMRS extends Application {
 		return networkUtils;
 	}
 
+	public AuthorizationManager getAuthorizationManager() {
+		return authorizationManager;
+	}
+  
 	public DatabaseHelper getDatabaseHelper() {
 		return databaseHelper;
 	}

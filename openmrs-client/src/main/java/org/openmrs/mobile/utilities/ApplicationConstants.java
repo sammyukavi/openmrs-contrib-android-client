@@ -134,7 +134,7 @@ public abstract class ApplicationConstants {
 		public static final String CUSTOM_DIALOG_BUNDLE = "customDialogBundle";
 		public static final String PATIENT_UUID_BUNDLE = "patientUUID";
 		public static final String VISIT_UUID_BUNDLE = "visitUUID";
-		public static final String END_VISIT_TAG = "endVisitTag";
+		public static final String END_VISIT = "endVisit";
 		public static final String PROVIDER_UUID_BUNDLE = "providerUUID";
 		public static final String EncounterTypeEntity = "EncounterTypeEntity";
 		public static final String VALUEREFERENCE = "valueReference";
@@ -149,6 +149,10 @@ public abstract class ApplicationConstants {
 		public static final String VISIT_CLOSED_DATE = "visitClosedDate";
 		public static final String AUDIT_DATA_AVAILABILITY = "auditDataAvailability";
 		public static final String LOCATION_UUID_BUNDLE = "locationUuid";
+	}
+
+	public static class ConceptSets {
+		public static final String ICPC_DIAGNOSES = "160167AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 	}
 
 	public static class toastMessages {
@@ -237,7 +241,6 @@ public abstract class ApplicationConstants {
 		public static final String CONCEPT_SEDETION_PRIOR_FIRST_GCS_SCORE_ICU = "7cccf308-edca-4c3e-afde-e7a3f1155ec6";
 		public static final String CONCEPT_PATIENT_DIABETIC = "a424ed50-5f94-4296-a91c-73ebbc1ccca1";
 		public static final String CONCEPT_WARD_STAY_DURING_ADMISSION = "59073230-e0d9-4cbc-bebc-4bf91a42f3bb";
-
 	}
 
 	public abstract static class VITALSFormConcepts {

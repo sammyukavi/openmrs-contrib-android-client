@@ -2,7 +2,6 @@ package org.openmrs.mobile.dagger;
 
 import org.openmrs.mobile.data.impl.ConceptAnswerDataService;
 import org.openmrs.mobile.data.impl.ConceptDataService;
-import org.openmrs.mobile.data.impl.ConceptSearchDataService;
 import org.openmrs.mobile.data.impl.EncounterDataService;
 import org.openmrs.mobile.data.impl.LocationDataService;
 import org.openmrs.mobile.data.impl.ObsDataService;
@@ -27,13 +26,11 @@ import javax.inject.Singleton;
 import dagger.Component;
 
 @Singleton
-@Component(modules = CacheModule.class)
-public interface DataAccess {
+@Component(modules = { CacheModule.class, DbModule.class })
+public interface DataAccessComponent {
 	ConceptAnswerDataService conceptAnswer();
 
 	ConceptDataService concept();
-
-	ConceptSearchDataService conceptSearch();
 
 	EncounterDataService encounter();
 

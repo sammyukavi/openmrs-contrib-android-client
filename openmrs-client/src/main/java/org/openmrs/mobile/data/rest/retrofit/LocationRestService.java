@@ -20,7 +20,8 @@ public interface LocationRestService {
 
 	@GET(RestConstants.GET_ALL)
 	Call<Results<RecordInfo>> getRecordInfo(@Path(value = "restPath", encoded = true) String restPath,
-			@Query("v") String representation);
+			@Query("v") String representation,
+			@Query("includeAll") Boolean includeAll);
 
 	@GET(RestConstants.GET_BY_UUID)
 	Call<Location> getByUuid(@Path(value = "restPath", encoded = true) String restPath,
@@ -29,6 +30,7 @@ public interface LocationRestService {
 			@Query("includeAll") Boolean includeAll);
 
 	@GET(RestConstants.LOCATION_PATH)
-	Call<Results<Location>> getLoginLocations(@Path(value = "restPath", encoded = true) String restPath);
+	Call<Results<Location>> getLoginLocations(@Path(value = "restPath", encoded = true) String restPath,
+			@Query("v") String representation);
 
 }

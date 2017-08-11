@@ -9,7 +9,7 @@ import org.openmrs.mobile.sync.SyncManager;
 import org.openmrs.mobile.utilities.NetworkUtils;
 
 @Singleton
-@Component(modules = ApplicationModule.class)
+@Component(modules = { ApplicationModule.class, DbModule.class })
 public interface ApplicationComponent {
 	SyncManager syncManager();
 

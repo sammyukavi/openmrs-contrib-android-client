@@ -41,24 +41,27 @@ public class Concept extends BaseOpenmrsAuditableObject {
 	@Expose
 	private List<ConceptAnswer> answers;
 
-	@SerializedName("names")
+	@SerializedName("name")
 	@Expose
-	private List<ConceptName> names;
-	@SerializedName("preferredName")
+	private ConceptName name;
+	
+	@SerializedName("mappings")
 	@Expose
-	private String preferredName;
-	@SerializedName("conceptMappings")
+	private List<ConceptMapping> mappings;
+	
+	@SerializedName("value")
 	@Expose
-	private List<ConceptMap> conceptMappings;
+	@Column
+	private String value;
 
 	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "answers", isVariablePrivate = true)
 	List<ConceptAnswer> loadAnswers() {
 		return loadRelatedObject(ConceptAnswer.class, answers, () -> ConceptAnswer_Table.concept_uuid.eq(getUuid()));
 	}
 
-	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "names", isVariablePrivate = true)
-	List<ConceptName> loadNames() {
-		return loadRelatedObject(ConceptName.class, names, () -> ConceptName_Table.concept_uuid.eq(getUuid()));
+	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "mappings", isVariablePrivate = true)
+	List<ConceptMapping> loadMappings() {
+		return loadRelatedObject(ConceptMapping.class, mappings, () -> ConceptMapping_Table.concept_uuid.eq(getUuid()));
 	}
 
 	@Override
@@ -66,7 +69,7 @@ public class Concept extends BaseOpenmrsAuditableObject {
 		super.processRelationships();
 
 		processRelatedObjects(answers, (a) -> a.setConcept(this));
-		processRelatedObjects(names, (n) -> n.setConcept(this));
+		processRelatedObjects(mappings, (m) -> m.setConcept(this));
 	}
 
 	public Datatype getDatatype() {
@@ -101,28 +104,28 @@ public class Concept extends BaseOpenmrsAuditableObject {
 		this.answers = answers;
 	}
 
-	public List<ConceptName> getNames() {
-		return names;
+	public ConceptName getName() {
+		return name;
 	}
 
-	public void setNames(List<ConceptName> names) {
-		this.names = names;
+	public void setName(ConceptName name) {
+		this.name = name;
 	}
 
-	public String getPreferredName() {
-		return preferredName;
+	public List<ConceptMapping> getMappings() {
+		return mappings;
 	}
 
-	public void setPreferredName(String preferredName) {
-		this.preferredName = preferredName;
+	public void setMappings(List<ConceptMapping> mappings) {
+		this.mappings = mappings;
 	}
 
-	public List<ConceptMap> getConceptMappings() {
-		return conceptMappings;
+	public String getValue() {
+		return value;
 	}
 
-	public void setConceptMappings(List<ConceptMap> conceptMappings) {
-		this.conceptMappings = conceptMappings;
+	public void setValue(String value) {
+		this.value = value;
 	}
 
 	@Override
@@ -130,3 +133,4 @@ public class Concept extends BaseOpenmrsAuditableObject {
 		return getDisplay();
 	}
 }
+

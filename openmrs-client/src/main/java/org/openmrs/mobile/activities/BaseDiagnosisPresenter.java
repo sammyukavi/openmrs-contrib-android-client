@@ -21,7 +21,7 @@ import java.util.List;
 
 public class BaseDiagnosisPresenter {
 
-	private ConceptDataService conceptSearchDataService;
+	private ConceptDataService conceptDataService;
 	private ObsDataService obsDataService;
 	private VisitNoteDataService visitNoteDataService;
 	private int page = 0;
@@ -32,14 +32,14 @@ public class BaseDiagnosisPresenter {
 	public BaseDiagnosisPresenter() {
 		dataAccess = DaggerDataAccessComponent.create();
 
-		this.conceptSearchDataService = dataAccess.concept();
+		this.conceptDataService = dataAccess.concept();
 		this.obsDataService = dataAccess.obs();
 		this.visitNoteDataService = dataAccess.visitNote();
 	}
 
 	public void findConcept(String searchQuery, IBaseDiagnosisFragment base) {
 		PagingInfo pagingInfo = new PagingInfo(page, limit);
-		conceptSearchDataService.findConcept(searchQuery, new QueryOptions.Builder().build(), pagingInfo, new DataService
+		conceptDataService.findConcept(searchQuery, new QueryOptions.Builder().build(), pagingInfo, new DataService
 				.GetCallback<List<Concept>>() {
 
 			@Override

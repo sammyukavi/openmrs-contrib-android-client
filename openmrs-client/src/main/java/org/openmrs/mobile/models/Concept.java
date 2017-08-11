@@ -45,10 +45,6 @@ public class Concept extends BaseOpenmrsAuditableObject {
 	@Expose
 	private ConceptName name;
 	
-	@SerializedName("preferredName")
-	@Expose
-	private String preferredName;
-	
 	@SerializedName("mappings")
 	@Expose
 	private List<ConceptMapping> mappings;

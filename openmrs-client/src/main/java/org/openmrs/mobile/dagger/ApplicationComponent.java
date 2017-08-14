@@ -6,6 +6,7 @@ import dagger.Component;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.DatabaseHelper;
 import org.openmrs.mobile.net.AuthorizationManager;
+import org.openmrs.mobile.net.NetworkManager;
 import org.openmrs.mobile.sync.SyncManager;
 import org.openmrs.mobile.utilities.NetworkUtils;
 
@@ -19,4 +20,6 @@ public interface ApplicationComponent {
 	AuthorizationManager authorizationManager();
 
 	DatabaseHelper databaseHelper();
+
+	NetworkManager networkManager();
 }

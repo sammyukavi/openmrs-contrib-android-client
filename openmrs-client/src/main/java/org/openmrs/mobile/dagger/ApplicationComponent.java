@@ -3,7 +3,6 @@ package org.openmrs.mobile.dagger;
 import javax.inject.Singleton;
 
 import dagger.Component;
-import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.DatabaseHelper;
 import org.openmrs.mobile.net.AuthorizationManager;
 import org.openmrs.mobile.net.NetworkManager;

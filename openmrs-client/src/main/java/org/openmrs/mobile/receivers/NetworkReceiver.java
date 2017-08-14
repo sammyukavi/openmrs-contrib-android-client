@@ -8,20 +8,28 @@ import android.net.NetworkInfo;
 
 import org.openmrs.mobile.application.OpenMRS;
 
+import javax.inject.Inject;
+
 /**
  * Monitor device connectivity. Detect network changes and handle accordingly.
  */
 public class NetworkReceiver extends BroadcastReceiver {
 
+	@Inject
+	public NetworkReceiver() {
+	}
+
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		OpenMRS openMRS = (OpenMRS) context.getApplicationContext();
-		ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context
+		OpenMRS openMRS = (OpenMRS)context.getApplicationContext();
+		ConnectivityManager connectivityManager = (ConnectivityManager)context.getSystemService(Context
 				.CONNECTIVITY_SERVICE);
 		NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+		if (networkInfo == null) {
+			return;
+		}
+
 		boolean connected = networkInfo.isConnected();
-		String session = openMRS.getLastSessionToken();
-		System.out.println("CONNECTED::::" + connected);
-		System.out.println("SESSION::" + session);
+		openMRS.getOpenMRSLogger().d("CONNECTED " + connected);
 	}
 }

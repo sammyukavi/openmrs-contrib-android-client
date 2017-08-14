@@ -12,7 +12,7 @@ import javax.inject.Inject;
 
 public class NetworkManager {
 
-	private static OpenMRS openMRS;
+	private OpenMRS openMRS;
 	private ReceiverComponent receiverComponent;
 
 	@Inject
@@ -30,11 +30,11 @@ public class NetworkManager {
 		openMRS.registerReceiver(networkReceiver, networkFilter);
 	}
 
-	private void unregisterReceiver(){
+	private void unregisterReceiver() {
 		openMRS.unregisterReceiver(receiverComponent.networkReceiver());
 	}
 
-	public void initializeNetworkReceiver(){
+	public void initializeNetworkReceiver() {
 		registerReceiver();
 	}
 }

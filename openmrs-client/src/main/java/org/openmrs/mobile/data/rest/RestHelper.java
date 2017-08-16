@@ -3,6 +3,7 @@ package org.openmrs.mobile.data.rest;
 import android.support.annotation.Nullable;
 
 import org.openmrs.mobile.data.DataOperationException;
+import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.models.Results;
 
 import java.util.List;
@@ -67,5 +68,19 @@ public class RestHelper {
 		}
 
 		return result;
+	}
+
+	public static @Nullable <T> void pushValue(Call<T> call, DataService.GetCallback<T> callback) {
+		if( call == null) {
+			return;
+		}
+
+		Response<T> response;
+		try{
+			response = call.execute();
+			callback.onCompleted(response.body());
+		} catch (Exception ex) {
+			callback.onError(ex);
+		}
 	}
 }

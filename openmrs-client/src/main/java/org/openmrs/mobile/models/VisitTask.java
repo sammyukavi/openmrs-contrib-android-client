@@ -46,6 +46,7 @@ public class VisitTask extends BaseOpenmrsEntity {
 
 	@SerializedName("closedOn")
 	@Expose
+	@Column
 	private String closedOn;
 
 	@Expose

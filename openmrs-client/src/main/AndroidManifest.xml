@@ -71,30 +71,6 @@
 					android:value=".activities.patientdashboard.PatientDashboardActivity" />
 		</activity>
 
-		<provider
-			android:name="org.openmrs.mobile.data.sync.StubProvider"
-			android:authorities="org.openmrs.mobile.provider"
-			android:exported="false"
-			android:syncable="true"/>
-
-		<service android:name="org.openmrs.mobile.net.impl.AuthenticatorService">
-			<intent-filter>
-				<action android:name="android.accounts.AccountAuthenticator"/>
-			</intent-filter>
-			<meta-data
-				android:name="android.accounts.AccountAuthenticator"
-				android:resource="@xml/authenticator" />
-		</service>
-		<service
-			android:name="org.openmrs.mobile.sync.AndroidSyncService"
-			android:exported="true"
-			android:process=":sync">
-			<intent-filter>
-				<action android:name="android.content.SyncAdapter"/>
-			</intent-filter>
-			<meta-data android:name="android.content.SyncAdapter"
-				android:resource="@xml/syncadapter" />
-		</service>
 	</application>
 
 </manifest>

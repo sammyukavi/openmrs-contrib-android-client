@@ -69,18 +69,4 @@ public class RestHelper {
 
 		return result;
 	}
-
-	public static @Nullable <T> void pushValue(Call<T> call, DataService.GetCallback<T> callback) {
-		if( call == null) {
-			return;
-		}
-
-		Response<T> response;
-		try{
-			response = call.execute();
-			callback.onCompleted(response.body());
-		} catch (Exception ex) {
-			callback.onError(ex);
-		}
-	}
 }

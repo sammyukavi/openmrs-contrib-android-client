@@ -1,4 +1,4 @@
-package org.openmrs.mobile.data.sync.impl;
+package org.openmrs.mobile.data.sync;
 
 import org.openmrs.mobile.data.DataOperationException;
 import org.openmrs.mobile.data.DataService;
@@ -28,12 +28,18 @@ public abstract class BasePushProvider<E extends BaseOpenmrsAuditableObject,
 		this.restService = restService;
 	}
 
-	public E getEntity(String uuid) {
+	private E getEntity(String uuid) {
 		return dbService.getByUuid(uuid, null);
 	}
 
-	public void pushEntity(E entity, SyncLog syncLog) {
+	protected void push(SyncLog syncLog) {
+		E entity = getEntity(syncLog.getKey());
+		if(entity == null) {
+			throw new DataOperationException("Entity not found");
+		}
+
 		Call<E> call = null;
+
 		switch (syncLog.getAction()) {
 			case NEW:
 				call = restService.create(entity);
@@ -47,18 +53,10 @@ public abstract class BasePushProvider<E extends BaseOpenmrsAuditableObject,
 		}
 
 		// perform rest call
-		RestHelper.pushValue(call, new DataService.GetCallback<E>() {
-			@Override
-			public void onCompleted(E e) {
-				// delete log after the process completes successfully
-				deleteSyncLog(syncLog);
-			}
+		RestHelper.getCallValue(call);
 
-			@Override
-			public void onError(Throwable t) {
-				throw new DataOperationException(t);
-			}
-		});
+		deleteSyncLog(syncLog);
+
 	}
 
 	private void deleteSyncLog(SyncLog entity) {

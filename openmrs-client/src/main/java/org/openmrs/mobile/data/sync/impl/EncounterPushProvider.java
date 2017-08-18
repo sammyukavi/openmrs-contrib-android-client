@@ -1,9 +1,9 @@
-package org.openmrs.mobile.data.sync.impl.push;
+package org.openmrs.mobile.data.sync.impl;
 
 import org.openmrs.mobile.data.db.impl.EncounterDbService;
 import org.openmrs.mobile.data.db.impl.SyncLogDbService;
 import org.openmrs.mobile.data.rest.impl.EncounterRestServiceImpl;
-import org.openmrs.mobile.data.sync.impl.BasePushProvider;
+import org.openmrs.mobile.data.sync.BasePushProvider;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.SyncLog;
 
@@ -20,7 +20,6 @@ public class EncounterPushProvider extends BasePushProvider<Encounter, Encounter
 
 	@Override
 	public void sync(SyncLog record) {
-		// push entity and delete record from synclog
-		pushEntity(getEntity(record.getUuid()), record);
+		push(record);
 	}
 }

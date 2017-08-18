@@ -3,7 +3,6 @@ package org.openmrs.mobile.data.sync;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.dagger.DaggerSyncComponent;
 import org.openmrs.mobile.dagger.SyncComponent;
 import org.openmrs.mobile.data.sync.impl.ConceptClassSubscriptionProvider;
@@ -17,12 +16,11 @@ import org.openmrs.mobile.data.sync.impl.PersonAttributeTypeSubscriptionProvider
 import org.openmrs.mobile.data.sync.impl.VisitAttributeTypeSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.VisitPredefinedTaskSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.VisitTypeSubscriptionProvider;
-import org.openmrs.mobile.data.sync.impl.push.EncounterPushProvider;
-import org.openmrs.mobile.data.sync.impl.push.ObservationPushProvider;
-import org.openmrs.mobile.data.sync.impl.push.PatientPushProvider;
-import org.openmrs.mobile.data.sync.impl.push.VisitPushProvider;
-import org.openmrs.mobile.data.sync.impl.push.VisitTaskPushProvider;
-import org.openmrs.mobile.models.Observation;
+import org.openmrs.mobile.data.sync.impl.EncounterPushProvider;
+import org.openmrs.mobile.data.sync.impl.ObservationPushProvider;
+import org.openmrs.mobile.data.sync.impl.PatientPushProvider;
+import org.openmrs.mobile.data.sync.impl.VisitPushProvider;
+import org.openmrs.mobile.data.sync.impl.VisitTaskPushProvider;
 
 import javax.inject.Inject;
 

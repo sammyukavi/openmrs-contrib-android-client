@@ -1,6 +1,5 @@
 package org.openmrs.mobile.dagger;
 
-import org.openmrs.mobile.data.db.impl.PatientIdentifierTypeDbService;
 import org.openmrs.mobile.data.sync.SyncService;
 import org.openmrs.mobile.data.sync.impl.ConceptClassSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.DiagnosisConceptSubscriptionProvider;
@@ -13,11 +12,11 @@ import org.openmrs.mobile.data.sync.impl.PersonAttributeTypeSubscriptionProvider
 import org.openmrs.mobile.data.sync.impl.VisitAttributeTypeSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.VisitPredefinedTaskSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.VisitTypeSubscriptionProvider;
-import org.openmrs.mobile.data.sync.impl.push.EncounterPushProvider;
-import org.openmrs.mobile.data.sync.impl.push.ObservationPushProvider;
-import org.openmrs.mobile.data.sync.impl.push.PatientPushProvider;
-import org.openmrs.mobile.data.sync.impl.push.VisitPushProvider;
-import org.openmrs.mobile.data.sync.impl.push.VisitTaskPushProvider;
+import org.openmrs.mobile.data.sync.impl.EncounterPushProvider;
+import org.openmrs.mobile.data.sync.impl.ObservationPushProvider;
+import org.openmrs.mobile.data.sync.impl.PatientPushProvider;
+import org.openmrs.mobile.data.sync.impl.VisitPushProvider;
+import org.openmrs.mobile.data.sync.impl.VisitTaskPushProvider;
 import org.openmrs.mobile.sync.AndroidSyncService;
 import org.openmrs.mobile.sync.SyncAdapter;
 

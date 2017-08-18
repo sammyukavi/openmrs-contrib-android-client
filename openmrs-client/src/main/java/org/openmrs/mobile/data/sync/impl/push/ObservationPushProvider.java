@@ -7,8 +7,11 @@ import org.openmrs.mobile.data.sync.impl.BasePushProvider;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.SyncLog;
 
+import javax.inject.Inject;
+
 public class ObservationPushProvider extends BasePushProvider<Observation, ObsDbService, ObsRestServiceImpl> {
 
+	@Inject
 	public ObservationPushProvider(SyncLogDbService syncLogDbService,
 			ObsDbService dbService, ObsRestServiceImpl restService) {
 		super(syncLogDbService, dbService, restService);

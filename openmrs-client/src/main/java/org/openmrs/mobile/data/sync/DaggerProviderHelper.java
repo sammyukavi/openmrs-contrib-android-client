@@ -3,6 +3,7 @@ package org.openmrs.mobile.data.sync;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.dagger.DaggerSyncComponent;
 import org.openmrs.mobile.dagger.SyncComponent;
 import org.openmrs.mobile.data.sync.impl.ConceptClassSubscriptionProvider;
@@ -16,6 +17,12 @@ import org.openmrs.mobile.data.sync.impl.PersonAttributeTypeSubscriptionProvider
 import org.openmrs.mobile.data.sync.impl.VisitAttributeTypeSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.VisitPredefinedTaskSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.VisitTypeSubscriptionProvider;
+import org.openmrs.mobile.data.sync.impl.push.EncounterPushProvider;
+import org.openmrs.mobile.data.sync.impl.push.ObservationPushProvider;
+import org.openmrs.mobile.data.sync.impl.push.PatientPushProvider;
+import org.openmrs.mobile.data.sync.impl.push.VisitPushProvider;
+import org.openmrs.mobile.data.sync.impl.push.VisitTaskPushProvider;
+import org.openmrs.mobile.models.Observation;
 
 import javax.inject.Inject;
 
@@ -39,6 +46,11 @@ public class DaggerProviderHelper {
 			VisitPredefinedTaskSubscriptionProvider.class.getSimpleName();
 	private static final String VISIT_TYPE_SUBSCRIPTION =
 			VisitTypeSubscriptionProvider.class.getSimpleName();
+	private static final String PATIENT_PUSH_SYNC = PatientPushProvider.class.getSimpleName();
+	private static final String ENCOUNTER_PUSH_SYNC = EncounterPushProvider.class.getSimpleName();
+	private static final String OBSERVATION_PUSH_SYNC = ObservationPushProvider.class.getSimpleName();
+	private static final String VISIT_PUSH_SYNC = VisitPushProvider.class.getSimpleName();
+	private static final String VISIT_TASK_PUSH_SYNC = VisitTaskPushProvider.class.getSimpleName();
 
 	private SyncComponent syncComponent;
 
@@ -83,6 +95,21 @@ public class DaggerProviderHelper {
 	}
 
 	public SyncProvider getSyncProvider(String className) {
-		return null;
+		checkNotNull(className);
+
+		SyncProvider provider = null;
+		if (className.endsWith(PATIENT_PUSH_SYNC)) {
+			provider = syncComponent.patientPushProvider();
+		} else if (className.endsWith(ENCOUNTER_PUSH_SYNC)) {
+			provider = syncComponent.encounterPushProvider();
+		} else if (className.endsWith(OBSERVATION_PUSH_SYNC)) {
+			provider = syncComponent.observationPushProvider();
+		} else if (className.endsWith(VISIT_PUSH_SYNC)) {
+			provider = syncComponent.visitPushProvider();
+		} else if (className.endsWith(VISIT_TASK_PUSH_SYNC)) {
+			provider = syncComponent.visitTaskPushProvider();
+		}
+
+		return provider;
 	}
 }

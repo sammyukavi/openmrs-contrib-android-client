@@ -9,7 +9,7 @@ import org.openmrs.mobile.models.SyncLog;
 
 import javax.inject.Inject;
 
-public class PatientPushProvider extends BasePushProvider {
+public class PatientPushProvider extends BasePushProvider<Patient, PatientDbService, PatientRestServiceImpl> {
 
 	@Inject
 	public PatientPushProvider(SyncLogDbService syncLogDbService,
@@ -20,10 +20,7 @@ public class PatientPushProvider extends BasePushProvider {
 
 	@Override
 	public void sync(SyncLog record) {
-		// get entity from db
-		Patient patient = (Patient) getEntity(record.getUuid());
-
 		// push entity and delete record from synclog
-		pushEntity(patient, record);
+		pushEntity(getEntity(record.getUuid()), record);
 	}
 }

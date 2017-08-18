@@ -39,6 +39,6 @@ public class VisitPhotoDataService
 						return null;
 					}
 				},
-				(e) -> dbService.save(e)
+				(e) -> dbService.save(e), null
 		);	}
 }

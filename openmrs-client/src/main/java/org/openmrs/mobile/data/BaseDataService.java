@@ -10,10 +10,13 @@ import com.google.common.base.Supplier;
 
 import org.openmrs.mobile.data.cache.CacheService;
 import org.openmrs.mobile.data.db.BaseDbService;
+import org.openmrs.mobile.data.db.impl.SyncLogDbService;
 import org.openmrs.mobile.data.rest.BaseRestService;
 import org.openmrs.mobile.models.BaseOpenmrsObject;
 import org.openmrs.mobile.models.Resource;
 import org.openmrs.mobile.models.Results;
+import org.openmrs.mobile.models.SyncAction;
+import org.openmrs.mobile.models.SyncLog;
 import org.openmrs.mobile.utilities.Consumer;
 import org.openmrs.mobile.utilities.Function;
 import org.openmrs.mobile.utilities.NetworkUtils;
@@ -59,6 +62,9 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 	@Inject
 	protected NetworkUtils networkUtils;
 
+	@Inject
+	protected SyncLogDbService syncLogDbService;
+
 	private Class<E> entityClass;
 
 	@Override
@@ -88,7 +94,9 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 
 		executeSingleCallback(callback, null,
 				() -> dbService.save(entity),
-				() -> restService.create(entity));
+				() -> restService.create(entity),
+				(e) -> dbService.save(e),
+				() -> syncLogDbService.save(createSyncLog(entity, SyncAction.NEW)));
 	}
 
 	@Override
@@ -98,7 +106,19 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 
 		executeSingleCallback(callback, null,
 				() -> dbService.save(entity),
-				() -> restService.update(entity));
+				() -> restService.update(entity),
+				(e) -> dbService.save(e),
+				() -> syncLogDbService.save(createSyncLog(entity, SyncAction.UPDATED)));
+	}
+
+	private SyncLog createSyncLog(@NonNull E entity, SyncAction action) {
+		checkNotNull(entity);
+		SyncLog syncLog = new SyncLog();
+		syncLog.setAction(action);
+		syncLog.setKey(entity.getUuid());
+		syncLog.setType(entity.getClass().getSimpleName());
+
+		return syncLog;
 	}
 
 	@Override
@@ -145,7 +165,7 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 		Consumer<E> dbOperationWrapper = e -> dbOperation.run();
 
 		performCallback(callbackWrapper, options, dbSupplier, restOperation,
-				(E result) -> result, dbOperationWrapper);
+				(E result) -> result, dbOperationWrapper, null);
 	}
 
 	/**
@@ -157,7 +177,7 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 	 */
 	protected void executeSingleCallback(@NonNull GetCallback<E> callback, @Nullable QueryOptions options,
 			@NonNull Supplier<E> dbQuery, @NonNull Supplier<Call<E>> restQuery) {
-		executeSingleCallback(callback, options, dbQuery, restQuery, (e) -> dbService.save(e));
+		executeSingleCallback(callback, options, dbQuery, restQuery, (e) -> dbService.save(e), null);
 	}
 
 	/**
@@ -167,9 +187,11 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 	 * @param dbQuery     The database query operation to perform
 	 * @param restQuery   The REST query operation to perform
 	 * @param dbOperation The database operation to perform when results are returned from the REST query
+	 * @param syncLogDbQuery    The sync operation to perform when device is not connected to any network
 	 */
 	protected void executeSingleCallback(@NonNull GetCallback<E> callback, @Nullable QueryOptions options,
-			@NonNull Supplier<E> dbQuery, @NonNull Supplier<Call<E>> restQuery, @NonNull Consumer<E> dbOperation) {
+			@NonNull Supplier<E> dbQuery, @NonNull Supplier<Call<E>> restQuery, @NonNull Consumer<E> dbOperation,
+			@NonNull Supplier<SyncLog> syncLogDbQuery) {
 		checkNotNull(callback);
 		checkNotNull(dbQuery);
 		checkNotNull(restQuery);
@@ -177,7 +199,7 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 
 		performCallback(callback, options, dbQuery, restQuery,
 				(E result) -> result,
-				dbOperation);
+				dbOperation, syncLogDbQuery);
 	}
 
 	/**
@@ -190,19 +212,20 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 	 * @param responseConverter	The response converter function
 	 * @param dbOperation		The database operation to perform when the results are returned from the REST query and
 	 *                             converted by the response converter
+	 * @param syncDbQuery       The sync operation to perform when device is not connected to any network
 	 * @param <T>				The entity type
 	 * @param <R>				The type of the object returned by the REST query
 	 */
 	protected <T, R> void executeSingleCallback(@NonNull GetCallback<T> callback, @Nullable QueryOptions options,
 			@NonNull Supplier<T> dbQuery, @NonNull Supplier<Call<R>> restQuery, @NonNull Function<R, T> responseConverter,
-			@NonNull Consumer<T> dbOperation) {
+			@NonNull Consumer<T> dbOperation, Supplier<SyncLog> syncDbQuery) {
 		checkNotNull(callback);
 		checkNotNull(dbQuery);
 		checkNotNull(restQuery);
 		checkNotNull(responseConverter);
 		checkNotNull(dbOperation);
 
-		performCallback(callback, options, dbQuery, restQuery, responseConverter, dbOperation);
+		performCallback(callback, options, dbQuery, restQuery, responseConverter, dbOperation, syncDbQuery);
 	}
 
 	/**
@@ -245,7 +268,7 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 
 					return results.getResults();
 				},
-				dbOperation);
+				dbOperation, null);
 	}
 
 	/**
@@ -253,11 +276,12 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 	 * based on the operation result.
 	 */
 	private <T, R> void performCallback(GetCallback<T> callback, QueryOptions options, Supplier<T> dbSupplier,
-			Supplier<Call<R>> restSupplier, Function<R, T> responseConverter, Consumer<T> dbSave) {
+			Supplier<Call<R>> restSupplier, Function<R, T> responseConverter, Consumer<T> dbSave, Supplier<SyncLog>
+			syncDbSupplier) {
 		if (!getCachedResult(callback, options)) {
 			//if (!NetworkUtils.isServerAvailable()) {
 			if (!networkUtils.isOnline()) {
-				performOfflineCallback(callback, options, dbSupplier);
+				performOfflineCallback(callback, options, dbSupplier, syncDbSupplier);
 			} else {
 				performOnlineCallback(callback, options, dbSupplier, restSupplier, responseConverter, dbSave);
 			}
@@ -268,7 +292,8 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 	 * Executes the specified data operation on the local db and performs the appropriate callback based on the operation
 	 * result.
 	 */
-	private <T> void performOfflineCallback(GetCallback<T> callback, QueryOptions options, Supplier<T> dbSupplier) {
+	private <T> void performOfflineCallback(GetCallback<T> callback, QueryOptions options, Supplier<T> dbSupplier,
+			Supplier<SyncLog> syncLogDbSupplier) {
 		// Perform the db task on another thread
 		new Thread(() -> {
 			try {
@@ -276,6 +301,9 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 				T result = dbSupplier.get();
 
 				setCachedResult(options, result);
+
+				// Update SyncLog
+				syncLogDbSupplier.get();
 
 				// Execute callback on the current UI Thread
 				new Handler(Looper.getMainLooper()).post(() -> callback.onCompleted(result));

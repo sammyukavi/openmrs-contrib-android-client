@@ -41,6 +41,8 @@ public class SyncService {
 
 	private Map<String, SubscriptionProvider> subscriptionProviders = new HashMap<String, SubscriptionProvider>();
 
+	private Map<String, SyncProvider> pushSyncProviders = new HashMap<>();
+
 	public void sync() {
 		// Synchronize access so that only one thread is synchronizing at a time
 		synchronized (SYNC_LOCK) {
@@ -52,16 +54,26 @@ public class SyncService {
 		}
 	}
 
+	/**
+	 * Retrieves all SyncLog entries, and pushes to the server via REST. Once a record has successfully been updated on
+	 * the server, the corresponding synclog entry is deleted.
+	 */
 	protected void push() {
+		// Get synclog records that need to be pushed
 		List<SyncLog> records = syncLogDbService.getAll(null, null);
 
-		/*
 		for (SyncLog record : records) {
-			syncProvider.sync(record);
+			SyncProvider syncProvider = pushSyncProviders.get(record.getType());
+			if(syncProvider == null) {
+				syncProvider = providerHelper.getSyncProvider(record.getType());
 
-			syncLogDbService.delete(record);
+				pushSyncProviders.put(record.getType(), syncProvider);
+			}
+
+			if(syncProvider != null) {
+				syncProvider.sync(record);
+			}
 		}
-		*/
 	}
 
 	/**

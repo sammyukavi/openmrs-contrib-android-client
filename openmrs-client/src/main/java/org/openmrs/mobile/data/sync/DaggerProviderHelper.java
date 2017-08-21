@@ -21,6 +21,11 @@ import org.openmrs.mobile.data.sync.impl.ObservationPushProvider;
 import org.openmrs.mobile.data.sync.impl.PatientPushProvider;
 import org.openmrs.mobile.data.sync.impl.VisitPushProvider;
 import org.openmrs.mobile.data.sync.impl.VisitTaskPushProvider;
+import org.openmrs.mobile.models.Encounter;
+import org.openmrs.mobile.models.Observation;
+import org.openmrs.mobile.models.Patient;
+import org.openmrs.mobile.models.Visit;
+import org.openmrs.mobile.models.VisitTask;
 
 import javax.inject.Inject;
 
@@ -44,11 +49,11 @@ public class DaggerProviderHelper {
 			VisitPredefinedTaskSubscriptionProvider.class.getSimpleName();
 	private static final String VISIT_TYPE_SUBSCRIPTION =
 			VisitTypeSubscriptionProvider.class.getSimpleName();
-	private static final String PATIENT_PUSH_SYNC = PatientPushProvider.class.getSimpleName();
-	private static final String ENCOUNTER_PUSH_SYNC = EncounterPushProvider.class.getSimpleName();
-	private static final String OBSERVATION_PUSH_SYNC = ObservationPushProvider.class.getSimpleName();
-	private static final String VISIT_PUSH_SYNC = VisitPushProvider.class.getSimpleName();
-	private static final String VISIT_TASK_PUSH_SYNC = VisitTaskPushProvider.class.getSimpleName();
+	private static final String PATIENT_PUSH_SYNC = Patient.class.getSimpleName();
+	private static final String ENCOUNTER_PUSH_SYNC = Encounter.class.getSimpleName();
+	private static final String OBSERVATION_PUSH_SYNC = Observation.class.getSimpleName();
+	private static final String VISIT_PUSH_SYNC = Visit.class.getSimpleName();
+	private static final String VISIT_TASK_PUSH_SYNC = VisitTask.class.getSimpleName();
 
 	private SyncComponent syncComponent;
 

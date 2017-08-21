@@ -71,7 +71,26 @@ public class SyncService {
 			}
 
 			if(syncProvider != null) {
-				syncProvider.sync(record);
+				try {
+					syncProvider.sync(record);
+				} catch (DataOperationException doe) {
+					Log.w(TAG, "Data exception occurred while processing push provider '" +
+							syncProvider.getClass().getSimpleName() + ":" +
+							(StringUtils.isBlank(record.getKey()) ? "(null)" :
+									record.getKey()) + "'", doe);
+
+					// Check to see if we're still online, if not, then stop the sync
+					if (!networkUtils.hasNetwork()) {
+						break;
+					}
+				} catch (Exception ex) {
+					Log.e(TAG, "An exception occurred while processing push provider '" +
+							syncProvider.getClass().getSimpleName() + ":" +
+							(StringUtils.isBlank(record.getKey()) ? "(null)" :
+									record.getKey()) + "'", ex);
+				}
+			} else {
+				Log.e(TAG, "Could not find provider for sync type '" + record.getType() + "'");
 			}
 		}
 	}

@@ -5,7 +5,6 @@ import org.openmrs.mobile.data.db.impl.SyncLogDbService;
 import org.openmrs.mobile.data.rest.impl.EncounterRestServiceImpl;
 import org.openmrs.mobile.data.sync.BasePushProvider;
 import org.openmrs.mobile.models.Encounter;
-import org.openmrs.mobile.models.SyncLog;
 
 import javax.inject.Inject;
 
@@ -16,10 +15,5 @@ public class EncounterPushProvider extends BasePushProvider<Encounter, Encounter
 			EncounterDbService encounterDbService,
 			EncounterRestServiceImpl encounterRestService) {
 		super(syncLogDbService, encounterDbService, encounterRestService);
-	}
-
-	@Override
-	public void sync(SyncLog record) {
-		push(record);
 	}
 }

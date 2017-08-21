@@ -17,19 +17,14 @@ import org.openmrs.mobile.data.sync.impl.ObservationPushProvider;
 import org.openmrs.mobile.data.sync.impl.PatientPushProvider;
 import org.openmrs.mobile.data.sync.impl.VisitPushProvider;
 import org.openmrs.mobile.data.sync.impl.VisitTaskPushProvider;
-import org.openmrs.mobile.sync.AndroidSyncService;
-import org.openmrs.mobile.sync.SyncAdapter;
 
 import javax.inject.Singleton;
 
 import dagger.Component;
 
 @Singleton
-@Component(modules = { SyncModule.class, DbModule.class })
+@Component(modules = { DbModule.class })
 public interface SyncComponent {
-	void inject(SyncAdapter syncAdapter);
-	void inject(AndroidSyncService androidSyncService);
-
 	SyncService syncService();
 
 	DiagnosisConceptSubscriptionProvider diagnosisConceptSubscriptionProvider();

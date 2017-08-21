@@ -2,6 +2,7 @@ package org.openmrs.mobile.data.sync;
 
 import org.openmrs.mobile.data.DataOperationException;
 import org.openmrs.mobile.data.DataService;
+import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.db.DbService;
 import org.openmrs.mobile.data.db.impl.SyncLogDbService;
 import org.openmrs.mobile.data.rest.RestHelper;
@@ -34,7 +35,7 @@ public abstract class BasePushProvider<E extends BaseOpenmrsAuditableObject,
 	}
 
 	protected void push(SyncLog syncLog) {
-		E entity = dbService.getByUuid(syncLog.getKey(), null);
+		E entity = dbService.getByUuid(syncLog.getKey(), QueryOptions.FULL_REP);
 		if(entity == null) {
 			throw new DataOperationException("Entity not found");
 		}

@@ -24,7 +24,7 @@ public class ApplicationModule {
 	@Provides
 	@Singleton
 	public Context providesContext() {
-		return openMRS;
+		return providesOpenMRS();
 	}
 
 	@Provides

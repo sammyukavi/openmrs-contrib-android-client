@@ -42,6 +42,9 @@ public class SyncManagerTest {
 	@Mock
 	AlarmManager alarmManager;
 
+	@Mock
+	SyncService syncService;
+
 	private SyncManager syncManager;
 	private TestReceiverComponent testReceiverComponent;
 
@@ -53,15 +56,7 @@ public class SyncManagerTest {
 		Mockito.when(openMRS.getSystemService(openMRS.ALARM_SERVICE)).thenReturn(alarmManager);
 
 		testReceiverComponent = DaggerTestReceiverComponent.create();
-		syncManager = new SyncManager(openMRS, testReceiverComponent);
-	}
-
-	@Test
-	public void syncManager_syncInitializationCreatesSyncAccount() {
-		syncManager.initializeDataSync();
-
-		Mockito.verify(accountManager, Mockito.times(1)).addAccountExplicitly(Mockito.any(Account.class),
-				Mockito.anyString(), Mockito.any(Bundle.class));
+		syncManager = new SyncManager(openMRS, testReceiverComponent.syncReceiver(), syncService);
 	}
 
 	@Test

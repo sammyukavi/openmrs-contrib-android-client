@@ -32,7 +32,7 @@ import retrofit2.Response;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends BaseDbService<E>,
-			RS extends BaseRestService<E, ?>> implements DataService<E> {
+		RS extends BaseRestService<E, ?>> implements DataService<E> {
 	public static final String TAG = "Data Service";
 
 	/**
@@ -60,6 +60,8 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 	protected NetworkUtils networkUtils;
 
 	private Class<E> entityClass;
+
+	private RequestStrategy requestStrategy = RequestStrategy.LOCAL_THEN_REMOTE;
 
 	@Override
 	public void getByUuid(@NonNull String uuid, @Nullable QueryOptions options, @NonNull GetCallback<E> callback) {
@@ -183,15 +185,15 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 	/**
 	 * Executes a data operation which returns a single result. The result returned from the REST request will be
 	 * converted by the specified responseConverter function and then processed by the dbOperation.
-	 * @param callback			The operation callback
-	 * @param options			The query options
-	 * @param dbQuery			The database query operation to perform
-	 * @param restQuery			The REST query operation to perform
-	 * @param responseConverter	The response converter function
-	 * @param dbOperation		The database operation to perform when the results are returned from the REST query and
-	 *                             converted by the response converter
-	 * @param <T>				The entity type
-	 * @param <R>				The type of the object returned by the REST query
+	 * @param callback          The operation callback
+	 * @param options           The query options
+	 * @param dbQuery           The database query operation to perform
+	 * @param restQuery         The REST query operation to perform
+	 * @param responseConverter The response converter function
+	 * @param dbOperation       The database operation to perform when the results are returned from the REST query and
+	 *                          converted by the response converter
+	 * @param <T>               The entity type
+	 * @param <R>               The type of the object returned by the REST query
 	 */
 	protected <T, R> void executeSingleCallback(@NonNull GetCallback<T> callback, @Nullable QueryOptions options,
 			@NonNull Supplier<T> dbQuery, @NonNull Supplier<Call<R>> restQuery, @NonNull Function<R, T> responseConverter,
@@ -255,27 +257,43 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 	private <T, R> void performCallback(GetCallback<T> callback, QueryOptions options, Supplier<T> dbSupplier,
 			Supplier<Call<R>> restSupplier, Function<R, T> responseConverter, Consumer<T> dbSave) {
 		if (!getCachedResult(callback, options)) {
-			//if (!NetworkUtils.isServerAvailable()) {
-			if (!networkUtils.isOnline()) {
-				performOfflineCallback(callback, options, dbSupplier);
-			} else {
-				performOnlineCallback(callback, options, dbSupplier, restSupplier, responseConverter, dbSave);
+
+			if (options != null && options.getRequestStrategy() != null) {
+				requestStrategy = options.getRequestStrategy();
+			}
+
+			switch (requestStrategy) {
+				case LOCAL_ONLY:
+					performOfflineCallback(callback, options, dbSupplier, restSupplier, responseConverter, dbSave);
+					break;
+				case LOCAL_THEN_REMOTE:
+					performOfflineCallback(callback, options, dbSupplier, restSupplier, responseConverter, dbSave);
+					break;
+				case REMOTE_THEN_LOCAL:
+					performOnlineCallback(callback, options, dbSupplier, restSupplier, responseConverter, dbSave);
+					break;
 			}
 		}
 	}
 
 	/**
 	 * Executes the specified data operation on the local db and performs the appropriate callback based on the operation
-	 * result.
+	 * result. If the call fails and the Request Strategy is to LOCAL_THEN_REMOTE, try REST
 	 */
-	private <T> void performOfflineCallback(GetCallback<T> callback, QueryOptions options, Supplier<T> dbSupplier) {
+	private <T, R> void performOfflineCallback(GetCallback<T> callback, QueryOptions options, Supplier<T> dbSupplier,
+			Supplier<Call<R>> restSupplier, Function<R, T> responseConverter, Consumer<T> dbOperation) {
 		// Perform the db task on another thread
 		new Thread(() -> {
 			try {
 				// Try to get the entity from the db. If nothing is found just return null without any error
 				T result = dbSupplier.get();
 
-				setCachedResult(options, result);
+				if (result == null && networkUtils.isOnline() && requestStrategy == RequestStrategy.LOCAL_THEN_REMOTE) {
+					// This call will spin up another thread
+					performOnlineCallback(callback, options, dbSupplier, restSupplier, responseConverter, dbOperation);
+				} else {
+					setCachedResult(options, result);
+				}
 
 				// Execute callback on the current UI Thread
 				new Handler(Looper.getMainLooper()).post(() -> callback.onCompleted(result));
@@ -322,8 +340,10 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 						}
 					}).start();
 				} else {
-					// Something failed. If the issue was a connectivity issue then try to get the entity from the db
-					if (response.code() >= 502 && response.code() <= 504) {
+					// Something failed. If the issue was a connectivity issue then try to get the entity from the db (if
+					// the Request Strategy is not LOCAL_THEN_REMOTE)
+					if (response.code() >= 502 && response.code() <= 504
+							&& requestStrategy != RequestStrategy.LOCAL_THEN_REMOTE) {
 						new Thread(() -> {
 							try {
 								Log.w(TAG, "REST response error; trying local db (" + response.code() +
@@ -347,7 +367,7 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 						}).start();
 					} else {
 						// Some other type of error occurred so just notify the caller about the error
- 						callback.onError(new DataOperationException(response.code() + ": " + response.message()));
+						callback.onError(new DataOperationException(response.code() + ": " + response.message()));
 					}
 				}
 			}
@@ -372,7 +392,8 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 							}
 						} catch (Exception ex) {
 							// An exception occurred while trying to get the entity from the db
-							new Handler(Looper.getMainLooper()).post(() -> callback.onError(new DataOperationException(ex)));
+							new Handler(Looper.getMainLooper()).post(() -> callback.onError(new DataOperationException
+									(ex)));
 						}
 					}).start();
 				} else {

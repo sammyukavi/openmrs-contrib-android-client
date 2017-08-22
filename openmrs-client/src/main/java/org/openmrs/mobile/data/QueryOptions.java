@@ -16,6 +16,7 @@ public class QueryOptions {
 	private String cacheKey;
 	private boolean includeInactive = DEFAULT_INCLUDE_INACTIVE;
 	private String customRepresentation;
+	private RequestStrategy requestStrategy;
 
 	public QueryOptions() { }
 
@@ -59,6 +60,14 @@ public class QueryOptions {
 
 	public void setCustomRepresentation(String customRepresentation) {
 		this.customRepresentation = customRepresentation;
+	}
+
+	public void setRequestStrategy(RequestStrategy requestStrategy){
+		this.requestStrategy = requestStrategy;
+	}
+
+	public RequestStrategy getRequestStrategy(){
+		return requestStrategy;
 	}
 
 	public static class Builder {

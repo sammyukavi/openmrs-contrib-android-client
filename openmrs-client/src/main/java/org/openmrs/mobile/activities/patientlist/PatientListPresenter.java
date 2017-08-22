@@ -19,6 +19,7 @@ import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
+import org.openmrs.mobile.data.RequestStrategy;
 import org.openmrs.mobile.data.impl.PatientListContextDataService;
 import org.openmrs.mobile.data.impl.PatientListDataService;
 import org.openmrs.mobile.models.PatientList;
@@ -118,6 +119,7 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 		setTotalNumberResults(0);
 		setExistingPatientListUuid(patientListUuid);
 		PagingInfo pagingInfo = new PagingInfo(page, limit);
+		pagingInfo.setLoadRecordCount(true);
 		patientListContextDataService.getListPatients(patientListUuid, null, pagingInfo,
 				new DataService.GetCallback<List<PatientListContext>>() {
 					@Override

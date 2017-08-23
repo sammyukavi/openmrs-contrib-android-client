@@ -61,8 +61,6 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 
 	private Class<E> entityClass;
 
-	private RequestStrategy requestStrategy = RequestStrategy.LOCAL_THEN_REMOTE;
-
 	@Override
 	public void getByUuid(@NonNull String uuid, @Nullable QueryOptions options, @NonNull GetCallback<E> callback) {
 		checkNotNull(uuid);
@@ -257,12 +255,7 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 	private <T, R> void performCallback(GetCallback<T> callback, QueryOptions options, Supplier<T> dbSupplier,
 			Supplier<Call<R>> restSupplier, Function<R, T> responseConverter, Consumer<T> dbSave) {
 		if (!getCachedResult(callback, options)) {
-
-			if (options != null && options.getRequestStrategy() != null) {
-				requestStrategy = options.getRequestStrategy();
-			}
-
-			switch (requestStrategy) {
+			switch (QueryOptions.getRequestStrategy(options)) {
 				case LOCAL_ONLY:
 					performOfflineCallback(callback, options, dbSupplier, restSupplier, responseConverter, dbSave);
 					break;
@@ -288,15 +281,15 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 				// Try to get the entity from the db. If nothing is found just return null without any error
 				T result = dbSupplier.get();
 
-				if (result == null && networkUtils.isOnline() && requestStrategy == RequestStrategy.LOCAL_THEN_REMOTE) {
+				if (result == null && networkUtils.isOnline() &&
+						QueryOptions.getRequestStrategy(options) == RequestStrategy.LOCAL_THEN_REMOTE) {
 					// This call will spin up another thread
 					performOnlineCallback(callback, options, dbSupplier, restSupplier, responseConverter, dbOperation);
 				} else {
 					setCachedResult(options, result);
+					// Execute callback on the current UI Thread
+					new Handler(Looper.getMainLooper()).post(() -> callback.onCompleted(result));
 				}
-
-				// Execute callback on the current UI Thread
-				new Handler(Looper.getMainLooper()).post(() -> callback.onCompleted(result));
 			} catch (Exception ex) {
 				// An exception occurred while trying to get the entity from the db
 
@@ -343,7 +336,7 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 					// Something failed. If the issue was a connectivity issue then try to get the entity from the db (if
 					// the Request Strategy is not LOCAL_THEN_REMOTE)
 					if (response.code() >= 502 && response.code() <= 504
-							&& requestStrategy != RequestStrategy.LOCAL_THEN_REMOTE) {
+							&& QueryOptions.getRequestStrategy(options) != RequestStrategy.LOCAL_THEN_REMOTE) {
 						new Thread(() -> {
 							try {
 								Log.w(TAG, "REST response error; trying local db (" + response.code() +
@@ -392,8 +385,8 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 							}
 						} catch (Exception ex) {
 							// An exception occurred while trying to get the entity from the db
-							new Handler(Looper.getMainLooper()).post(() -> callback.onError(new DataOperationException
-									(ex)));
+							new Handler(Looper.getMainLooper()).post(() ->
+									callback.onError(new DataOperationException(ex)));
 						}
 					}).start();
 				} else {

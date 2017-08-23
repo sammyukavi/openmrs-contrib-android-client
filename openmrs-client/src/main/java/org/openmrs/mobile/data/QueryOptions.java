@@ -6,19 +6,18 @@ import org.openmrs.mobile.data.rest.RestConstants;
 import org.openmrs.mobile.utilities.StringUtils;
 
 public class QueryOptions {
-	private static final boolean DEFAULT_INCLUDE_INACTIVE = false;
-
 	public static final QueryOptions INCLUDE_ALL_FULL_REP =
 			new Builder().includeInactive(true).customRepresentation(RestConstants.Representations.FULL).build();
 	public static final QueryOptions FULL_REP =
 			new Builder().customRepresentation(RestConstants.Representations.FULL).build();
-
+	private static final boolean DEFAULT_INCLUDE_INACTIVE = false;
 	private String cacheKey;
 	private boolean includeInactive = DEFAULT_INCLUDE_INACTIVE;
 	private String customRepresentation;
 	private RequestStrategy requestStrategy;
 
-	public QueryOptions() { }
+	public QueryOptions() {
+	}
 
 	public static String getCacheKey(@Nullable QueryOptions options) {
 		return options == null ? null : options.getCacheKey();
@@ -36,6 +35,14 @@ public class QueryOptions {
 		}
 
 		return result;
+	}
+
+	public static RequestStrategy getRequestStrategy(@Nullable QueryOptions options) {
+		if (options != null && options.getRequestStrategy() != null) {
+			return options.getRequestStrategy();
+		}
+
+		return RequestStrategy.LOCAL_THEN_REMOTE;
 	}
 
 	public String getCacheKey() {
@@ -62,12 +69,12 @@ public class QueryOptions {
 		this.customRepresentation = customRepresentation;
 	}
 
-	public void setRequestStrategy(RequestStrategy requestStrategy){
-		this.requestStrategy = requestStrategy;
+	public RequestStrategy getRequestStrategy() {
+		return requestStrategy;
 	}
 
-	public RequestStrategy getRequestStrategy(){
-		return requestStrategy;
+	public void setRequestStrategy(RequestStrategy requestStrategy) {
+		this.requestStrategy = requestStrategy;
 	}
 
 	public static class Builder {
@@ -75,7 +82,8 @@ public class QueryOptions {
 		private String cacheKey;
 		private String customRepresentation;
 
-		public Builder() { }
+		public Builder() {
+		}
 
 		public Builder includeInactive(boolean includeInactive) {
 			this.includeInactive = includeInactive;

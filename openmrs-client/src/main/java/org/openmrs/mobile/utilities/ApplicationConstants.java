@@ -319,10 +319,9 @@ public abstract class ApplicationConstants {
 			}
 
 			public static class Pull {
-				public static final String TOTAL_PULLABLE_ENTITIES = "totalPullableEntities";
-				public static final String ENTITY_DOES_NOT_NEED_TO_PULL_REMOTE_DATA = "entityDoesNotNeedToPullRemoteData";
-				public static final String ENTITY_NEEDS_TO_PULL_REMOTE_DATA = "entityNeedsToPullRemoteData";
-
+				public static final String TOTAL_SUBSCRIPTIONS = "totalSubscriptions";
+				public static final String SUBSCRIPTION_REMOTE_PULL_STARTING = "subscriptionRemotePullStarting";
+				public static final String SUBSCRIPTION_REMOTE_PULL_COMPLETE = "subscriptionRemotePullComplete";
 				public static final String ENTITY_REMOTE_PULL_STARTING = "entityRemotePullStarting";
 				public static final String ENTITY_REMOTE_PULL_COMPLETE = "entityRemotePullComplete";
 			}

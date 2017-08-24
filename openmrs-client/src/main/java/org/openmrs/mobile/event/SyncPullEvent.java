@@ -4,11 +4,13 @@ import android.support.annotation.Nullable;
 
 public class SyncPullEvent {
 
-	public final String entity;
+	public final String itemName;
 	public final String message;
+	public final int totalItemsToPull;
 
-	public SyncPullEvent(String entity, String message) {
-		this.entity = entity;
+	public SyncPullEvent(String message, @Nullable String itemName, @Nullable Integer totalItemsToPull) {
+		this.itemName = itemName;
 		this.message = message;
+		this.totalItemsToPull = totalItemsToPull;
 	}
 }

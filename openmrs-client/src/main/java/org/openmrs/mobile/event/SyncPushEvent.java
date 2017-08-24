@@ -6,11 +6,11 @@ public class SyncPushEvent {
 
 	public final String entity;
 	public final String message;
-	public final int totalRecordsToPush;
+	public final int totalItemsToPush;
 
-	public SyncPushEvent(String entity, String message, @Nullable int totalRecordsToPush) {
+	public SyncPushEvent(String message, @Nullable String entity, @Nullable Integer totalItemsToPush) {
 		this.entity = entity;
 		this.message = message;
-		this.totalRecordsToPush = totalRecordsToPush;
+		this.totalItemsToPush = totalItemsToPush;
 	}
 }

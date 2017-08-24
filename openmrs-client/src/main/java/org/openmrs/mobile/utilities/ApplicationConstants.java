@@ -311,4 +311,27 @@ public abstract class ApplicationConstants {
 	public static class ConceptSource {
 		public static final String ICD_10_WHO = "ICD-10-WHO";
 	}
+
+	public static class EventMessages {
+		public static class Sync {
+			public static class Push {
+				public static final String TOTAL_ENTITIES_TO_PUSH = "totalEntitiesToPush";
+			}
+
+			public static class Pull {
+				public static final String TOTAL_PULLABLE_ENTITIES = "totalPullableEntities";
+				public static final String ENTITY_DOES_NOT_NEED_TO_PULL_REMOTE_DATA = "entityDoesNotNeedToPullRemoteData";
+				public static final String ENTITY_NEEDS_TO_PULL_REMOTE_DATA = "entityNeedsToPullRemoteData";
+
+				public static final String ENTITY_REMOTE_PULL_STARTING = "entityRemotePullStarting";
+				public static final String ENTITY_REMOTE_PULL_COMPLETE = "entityRemotePullComplete";
+			}
+
+			public static class Save {
+				public static final String ENTITY_SAVE_STARTING = "entitySaveStarting";
+				public static final String ENTITY_SAVE_PROGRESS_UPDATE = "entitySaveProgressUpdate";
+				public static final String ENTITY_SAVE_COMPLETE = "entitySaveComplete";
+			}
+		}
+	}
 }

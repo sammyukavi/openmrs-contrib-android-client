@@ -48,23 +48,23 @@ public class LoginSyncFragment extends ACBaseFragment<LoginSyncContract.Presente
 		pullDurationText.setText("");
 	}
 
-	public void updateSyncPushProgress(int percentComplete, String progressText, String durationText) {
-		pushProgressBar.setProgress(percentComplete);
+	public void updateSyncPushProgress(float percentComplete, String progressText, @Nullable String durationText) {
+		pushProgressBar.setProgress((int) Math.floor(percentComplete));
 		pushProgressText.setText(progressText);
 
 		if (percentComplete == 100) {
-			pushDurationText.setVisibility(View.GONE);
+			pushDurationText.setVisibility(View.INVISIBLE);
 		} else {
 			pushDurationText.setText(durationText);
 		}
 	}
 
-	public void updateSyncPullProgress(int percentComplete, String progressText, String durationText) {
-		pullProgressBar.setProgress(percentComplete);
+	public void updateSyncPullProgress(float percentComplete, String progressText, @Nullable String durationText) {
+		pullProgressBar.setProgress((int) Math.floor(percentComplete));
 		pullProgressText.setText(progressText);
 
-		if (percentComplete == 100) {
-			pullDurationText.setVisibility(View.GONE);
+		if (percentComplete == 100 || durationText == null) {
+			pullDurationText.setVisibility(View.INVISIBLE);
 		} else {
 			pullDurationText.setText(durationText);
 		}

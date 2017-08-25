@@ -6,6 +6,8 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
+import org.openmrs.mobile.event.SyncPullEvent;
+import org.openmrs.mobile.event.SyncPushEvent;
 
 public class LoginSyncActivity extends ACBaseActivity {
 
@@ -46,12 +48,12 @@ public class LoginSyncActivity extends ACBaseActivity {
 	}
 
 	@Subscribe(threadMode = ThreadMode.MAIN)
-	public void onSyncPushEvent(int temp) {
-		presenter.onSyncPushEvent();
+	public void onSyncPushEvent(SyncPushEvent syncPushEvent) {
+		presenter.onSyncPushEvent(syncPushEvent);
 	}
 
 	@Subscribe(threadMode = ThreadMode.MAIN)
-	public void onSyncPullEvent(int temp) {
-		presenter.onSyncPullEvent();
+	public void onSyncPullEvent(SyncPullEvent syncPullEvent) {
+		presenter.onSyncPullEvent(syncPullEvent);
 	}
 }

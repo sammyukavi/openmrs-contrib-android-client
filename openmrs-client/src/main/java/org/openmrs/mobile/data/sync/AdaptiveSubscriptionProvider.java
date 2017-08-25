@@ -8,16 +8,19 @@ import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.sql.language.property.Property;
 import com.raizlabs.android.dbflow.structure.ModelAdapter;
 
+import org.greenrobot.eventbus.EventBus;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.db.DbService;
 import org.openmrs.mobile.data.db.Repository;
 import org.openmrs.mobile.data.db.impl.RecordInfoDbService;
 import org.openmrs.mobile.data.rest.RestHelper;
 import org.openmrs.mobile.data.rest.RestService;
+import org.openmrs.mobile.event.SyncPullEvent;
 import org.openmrs.mobile.models.BaseOpenmrsAuditableObject;
 import org.openmrs.mobile.models.PullSubscription;
 import org.openmrs.mobile.models.RecordInfo;
 import org.openmrs.mobile.models.RecordInfo_Table;
+import org.openmrs.mobile.utilities.ApplicationConstants;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
@@ -37,15 +40,17 @@ public abstract class AdaptiveSubscriptionProvider<E extends BaseOpenmrsAuditabl
 	protected RecordInfoDbService recordInfoDbService;
 	protected RS restService;
 	protected Repository repository;
+	protected EventBus eventBus;
 
 	private Class<E> entityClass;
 
 	public AdaptiveSubscriptionProvider(DS dbService, RecordInfoDbService recordInfoDbService, RS restService,
-			Repository repository) {
+			Repository repository, EventBus eventBus) {
 		this.dbService = dbService;
 		this.recordInfoDbService = recordInfoDbService;
 		this.restService = restService;
 		this.repository = repository;
+		this.eventBus = eventBus;
 	}
 
 	/**
@@ -57,12 +62,18 @@ public abstract class AdaptiveSubscriptionProvider<E extends BaseOpenmrsAuditabl
 	public void pull(PullSubscription subscription) {
 		long recordCount = getRecordCountDb();
 
+		eventBus.post(new SyncPullEvent(ApplicationConstants.EventMessages.Sync.Pull.ENTITY_REMOTE_PULL_STARTING,
+				entityClass.getName(), null));
+
 		if (recordCount == 0) {
 			// If table is empty then do a table pull
 			pullTable(subscription);
 		} else {
 			pullIncremental(subscription);
 		}
+
+		eventBus.post(new SyncPullEvent(ApplicationConstants.EventMessages.Sync.Pull.ENTITY_REMOTE_PULL_COMPLETE,
+				entityClass.getName(), null));
 	}
 
 	/**

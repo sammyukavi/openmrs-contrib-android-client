@@ -1,5 +1,6 @@
 package org.openmrs.mobile.data.sync.impl;
 
+import org.greenrobot.eventbus.EventBus;
 import org.openmrs.mobile.data.db.Repository;
 import org.openmrs.mobile.data.db.impl.RecordInfoDbService;
 import org.openmrs.mobile.data.db.impl.VisitPredefinedTaskDbService;
@@ -14,7 +15,7 @@ public class VisitPredefinedTaskSubscriptionProvider extends AdaptiveSubscriptio
 	@Inject
 	public VisitPredefinedTaskSubscriptionProvider(VisitPredefinedTaskDbService dbService,
 			RecordInfoDbService recordInfoDbService,
-			VisitPredefinedTaskRestServiceImpl restService, Repository repository) {
-		super(dbService, recordInfoDbService, restService, repository);
+			VisitPredefinedTaskRestServiceImpl restService, Repository repository, EventBus eventBus) {
+		super(dbService, recordInfoDbService, restService, repository, eventBus);
 	}
 }

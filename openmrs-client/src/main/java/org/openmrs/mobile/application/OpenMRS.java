@@ -56,6 +56,7 @@ public class OpenMRS extends Application {
 	private SyncManager syncManager;
 	private NetworkUtils networkUtils;
 	private DatabaseHelper databaseHelper;
+	private EventBus eventBus;
 
 	@Override
 	public void onCreate() {
@@ -94,6 +95,7 @@ public class OpenMRS extends Application {
 		networkUtils = applicationComponent.networkUtils();
 		authorizationManager = applicationComponent.authorizationManager();
 		databaseHelper = applicationComponent.databaseHelper();
+		eventBus = applicationComponent.eventBus();
 	}
 
 	protected void initializeDB() {
@@ -386,6 +388,6 @@ public class OpenMRS extends Application {
 	}
 
 	public EventBus getEventBus() {
-		return EventBus.getDefault();
+		return eventBus;
 	}
 }

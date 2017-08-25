@@ -40,6 +40,7 @@ import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
 import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
+import org.openmrs.mobile.activities.loginsync.LoginSyncActivity;
 import org.openmrs.mobile.activities.patientlist.PatientListActivity;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
@@ -221,7 +222,14 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 	@Override
 	public void userAuthenticated() {
 		mPresenter.saveLocationsInPreferences(locationsList, dropdownLocation.getSelectedItemPosition());
-		Intent intent = new Intent(openMRS.getApplicationContext(), PatientListActivity.class);
+		// TODO: Make this only get called if this is the user's first access of a new URL
+		Intent intent;
+		boolean isUsersFirstAccessOfNewUrl = true;
+		if (isUsersFirstAccessOfNewUrl) {
+			intent = new Intent(openMRS.getApplicationContext(), LoginSyncActivity.class);
+		} else {
+			intent = new Intent(openMRS.getApplicationContext(), PatientListActivity.class);
+		}
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		openMRS.getApplicationContext().startActivity(intent);
 		getActivity().finish();

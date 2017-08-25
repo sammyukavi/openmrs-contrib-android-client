@@ -314,5 +314,27 @@ public abstract class ApplicationConstants {
 
 	public static class Request {
 		public static int PATIENT_VISIT_COUNT = 5;
-	}
+  }
+
+  public static class EventMessages {
+		public static class Sync {
+			public static class Push {
+				public static final String TOTAL_ENTITIES_TO_PUSH = "totalEntitiesToPush";
+			}
+
+			public static class Pull {
+				public static final String TOTAL_SUBSCRIPTIONS = "totalSubscriptions";
+				public static final String SUBSCRIPTION_REMOTE_PULL_STARTING = "subscriptionRemotePullStarting";
+				public static final String SUBSCRIPTION_REMOTE_PULL_COMPLETE = "subscriptionRemotePullComplete";
+				public static final String ENTITY_REMOTE_PULL_STARTING = "entityRemotePullStarting";
+				public static final String ENTITY_REMOTE_PULL_COMPLETE = "entityRemotePullComplete";
+			}
+
+			public static class Save {
+				public static final String ENTITY_SAVE_STARTING = "entitySaveStarting";
+				public static final String ENTITY_SAVE_PROGRESS_UPDATE = "entitySaveProgressUpdate";
+				public static final String ENTITY_SAVE_COMPLETE = "entitySaveComplete";
+			}
+    }
+  }
 }

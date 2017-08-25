@@ -3,6 +3,7 @@ package org.openmrs.mobile.dagger;
 import javax.inject.Singleton;
 
 import dagger.Component;
+import org.greenrobot.eventbus.EventBus;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.DatabaseHelper;
 import org.openmrs.mobile.net.AuthorizationManager;
@@ -10,7 +11,7 @@ import org.openmrs.mobile.sync.SyncManager;
 import org.openmrs.mobile.utilities.NetworkUtils;
 
 @Singleton
-@Component(modules = { ApplicationModule.class, DbModule.class })
+@Component(modules = { ApplicationModule.class, DbModule.class, SyncModule.class })
 public interface ApplicationComponent {
 	SyncManager syncManager();
 
@@ -19,4 +20,6 @@ public interface ApplicationComponent {
 	AuthorizationManager authorizationManager();
 
 	DatabaseHelper databaseHelper();
+
+	EventBus eventBus();
 }

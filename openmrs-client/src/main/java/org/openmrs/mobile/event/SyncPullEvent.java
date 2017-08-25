@@ -4,7 +4,7 @@ import android.support.annotation.Nullable;
 
 public class SyncPullEvent extends SyncEvent {
 
-	public SyncPullEvent(String message, @Nullable String entity, @Nullable Integer totalItemsToPush) {
-		super(message, entity, totalItemsToPush);
+	public SyncPullEvent(String message, @Nullable String entity, @Nullable Integer totalItemsToPull) {
+		super(message, entity, totalItemsToPull);
 	}
 }

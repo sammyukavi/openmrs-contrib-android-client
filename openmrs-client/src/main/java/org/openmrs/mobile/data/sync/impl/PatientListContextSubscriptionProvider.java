@@ -24,14 +24,14 @@ public class PatientListContextSubscriptionProvider extends BaseSubscriptionProv
 
 	private DatabaseHelper databaseHelper;
 
-	private PatientListPullProvider patientListPullProvider;
+	private PatientPullProvider patientListPullProvider;
 	private VisitPullProvider visitPullProvider;
 
 	private String patientListUuid;
 
 	@Inject
 	public PatientListContextSubscriptionProvider(PatientListContextDbService dbService,
-			PatientListContextRestServiceImpl restService, PatientListPullProvider patientListPullProvider,
+			PatientListContextRestServiceImpl restService, PatientPullProvider patientListPullProvider,
 			VisitPullProvider visitPullProvider, DatabaseHelper databaseHelper) {
 		this.listPatientDbService = dbService;
 		this.listPatientRestService = restService;

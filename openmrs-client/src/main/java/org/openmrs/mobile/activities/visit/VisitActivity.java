@@ -115,7 +115,6 @@ public class VisitActivity extends ACBaseActivity {
 
 		if (visitClosedDate != null && !visitClosedDate.isEmpty()) {
 			captureVitalsButton.setVisibility(View.GONE);
-			editVisitButton.setVisibility(View.GONE);
 			endVisitButton.setVisibility(View.GONE);
 		}
 

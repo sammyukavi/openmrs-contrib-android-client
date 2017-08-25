@@ -49,6 +49,7 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	private Visit visit;
 	private boolean firstTimeEdit;
 	private long lastTextEdit = 0;
+	private Observation clinicalNoteObservation;
 
 	@Override
 	public void initializeListeners() {
@@ -116,8 +117,12 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 		Handler handler = new Handler();
 		Runnable inputCompleteChecker = () -> {
 			if (System.currentTimeMillis() > (lastTextEdit + SAVE_CLINICAL_NOTE_DELAY)) {
-				saveVisitNote(null != getEncounterUuid() ? getEncounterUuid() : ApplicationConstants.EMPTY_STRING,
-						clinicalNoteView.getText().toString(), visit);
+				if (getEncounterUuid() != null) {
+					getClinicalNoteObservation().setDiagnosisNote(clinicalNoteView.getText().toString());
+					diagnosisPresenter.synClinicalNote(getClinicalNoteObservation());
+				} else {
+					saveVisitNote(getEncounterUuid(), clinicalNoteView.getText().toString(), visit);
+				}
 			}
 		};
 
@@ -233,6 +238,8 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 				}
 
 				encounterDiagnosis.setExistingObs(observation.getUuid());
+			} else if (observation.getDisplay().startsWith(ApplicationConstants.ObservationLocators.CLINICAL_NOTE)) {
+				setClinicalNoteObservation(observation);
 			}
 		} else {
 			encounterDiagnosis.setCertainty(ApplicationConstants.DiagnosisStrings.PRESUMED);
@@ -494,5 +501,13 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	@Override
 	public void setVisit(Visit visit) {
 		this.visit = visit;
+	}
+
+	public Observation getClinicalNoteObservation() {
+		return clinicalNoteObservation;
+	}
+
+	public void setClinicalNoteObservation(Observation clinicalNoteObservation) {
+		this.clinicalNoteObservation = clinicalNoteObservation;
 	}
 }

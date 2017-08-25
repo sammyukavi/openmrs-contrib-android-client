@@ -26,6 +26,7 @@ import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Person;
+import org.openmrs.mobile.models.User;
 import org.openmrs.mobile.models.Visit;
 
 import java.lang.reflect.Type;
@@ -118,6 +119,24 @@ public class ObservationDeserializer implements JsonDeserializer<Observation> {
 			person.setUuid(personJson.getAsJsonObject().get(UUID_KEY).getAsString());
 			person.setDisplay(personJson.getAsJsonObject().get(DISPLAY_KEY).getAsString());
 			observation.setPerson(person);
+		}
+
+		JsonElement creatorJson = jsonObject.get("creator");
+		if(creatorJson != null) {
+			User user = new User();
+			user.setUuid(creatorJson.getAsJsonObject().get(UUID_KEY).getAsString());
+			user.setDisplay(creatorJson.getAsJsonObject().get(DISPLAY_KEY).getAsString());
+			observation.setCreator(user);
+		}
+
+		JsonElement dateCreatedJson = jsonObject.get("dateCreated");
+		if (dateCreatedJson != null) {
+			observation.setDateCreated(DateUtils.convertTimeString(dateCreatedJson.getAsString()).toDate());
+		}
+
+		JsonElement voidedJson = jsonObject.get("voided");
+		if (voidedJson != null) {
+			observation.setVoided(Boolean.getBoolean(voidedJson.getAsString()));
 		}
 
 		return observation;

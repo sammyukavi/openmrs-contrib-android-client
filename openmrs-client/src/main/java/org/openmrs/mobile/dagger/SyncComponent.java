@@ -8,6 +8,7 @@ import org.openmrs.mobile.data.sync.impl.LocationSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.PatientIdentifierTypeSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.PatientListContextSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.PatientListSubscriptionProvider;
+import org.openmrs.mobile.data.sync.impl.PatientSummarySyncService;
 import org.openmrs.mobile.data.sync.impl.PersonAttributeTypeSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.VisitAttributeTypeSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.VisitPredefinedTaskSubscriptionProvider;
@@ -18,7 +19,7 @@ import javax.inject.Singleton;
 import dagger.Component;
 
 @Singleton
-@Component(modules = { DbModule.class })
+@Component(modules = { DbModule.class, ContextModule.class })
 public interface SyncComponent {
 	SyncService syncService();
 
@@ -43,4 +44,6 @@ public interface SyncComponent {
 	VisitPredefinedTaskSubscriptionProvider visitPredefinedTaskSubscriptionProvider();
 
 	VisitTypeSubscriptionProvider visitTypeSubscriptionProvider();
+
+	PatientSummarySyncService patientSummarySyncService();
 }

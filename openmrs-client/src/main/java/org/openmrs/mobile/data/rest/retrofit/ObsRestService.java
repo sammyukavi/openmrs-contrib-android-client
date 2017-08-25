@@ -34,12 +34,10 @@ public interface ObsRestService {
 			@Query("v") String representation);
 
 	@GET(RestConstants.REST_PATH)
-	Call<Results<Observation>> getByEncounter(@Path(value = "restPath", encoded = true) String restPath,
+	Call<Observation> getByEncounter(@Path(value = "restPath", encoded = true) String restPath,
 			@Query("encounter") String encounterUuid,
 			@Query("v") String representation,
-			@Query("includeAll") Boolean includeAll,
-			@Query("limit") Integer limit,
-			@Query("startIndex") Integer startIndex);
+			@Query("includeActive") Boolean includeActive);
 
 	@POST(RestConstants.UPDATE)
 	Call<Observation> update(@Path(value = "restPath", encoded = true) String restPath,

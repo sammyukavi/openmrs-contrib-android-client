@@ -75,11 +75,11 @@ public class SyncService {
 			// Check if subscription should be processed, given the minimum interval
 			Integer seconds = null;
 			if (sub.getLastSync() != null && sub.getMinimumInterval() != null) {
-				Period p = new Period(DateTime.now(), new DateTime(sub.getLastSync()));
+				Period p = new Period(new DateTime(sub.getLastSync()), DateTime.now());
 				seconds = p.getSeconds();
 			}
 
-			if (seconds == null || seconds < sub.getMinimumInterval()) {
+			if (seconds == null || sub.getMinimumInterval() == null || seconds > sub.getMinimumInterval()) {
 				// Try to get the cached subscription provider
 				SubscriptionProvider provider = subscriptionProviders.get(sub.getSubscriptionClass());
 				if (provider == null) {

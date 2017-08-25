@@ -3,12 +3,9 @@ package org.openmrs.mobile.activities.patientdashboard;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Handler;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.joda.time.LocalDateTime;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.IBaseDiagnosisFragment;
 import org.openmrs.mobile.activities.visit.VisitActivity;
@@ -266,7 +262,10 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 			intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, OpenMRS.getInstance()
 					.getPatientUuid());
 			intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visit.getUuid());
-			intent.putExtra(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE,  visit.getStopDatetime() == null ? null : visit.getStopDatetime().toString());
+			intent.putExtra(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE,
+					visit.getStopDatetime() == null ? null : DateUtils.convertTime(
+							visit.getStopDatetime().getTime(),
+							DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT));
 
 			intent.setFlags(FLAG_ACTIVITY_CLEAR_TOP);
 

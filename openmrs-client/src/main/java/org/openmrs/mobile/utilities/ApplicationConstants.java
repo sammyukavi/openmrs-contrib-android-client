@@ -311,4 +311,8 @@ public abstract class ApplicationConstants {
 	public static class ConceptSource {
 		public static final String ICD_10_WHO = "ICD-10-WHO";
 	}
+
+	public static class Request {
+		public static int PATIENT_VISIT_COUNT = 5;
+	}
 }

@@ -42,8 +42,6 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	private ProviderDataService providerDataService;
 	private int startIndex = 0;
 	private int totalNumberResults;
-	private int limit = 10;
-	private int page;
 	private Patient patient;
 	private boolean loading;
 
@@ -70,7 +68,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 			@Override
 			public void onCompleted(Patient patient) {
 				setPatient(patient);
-				fetchVisits(patient, getStartIndex());
+				fetchVisits(patient, startIndex);
 			}
 
 			@Override
@@ -86,12 +84,11 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 		if (startIndex < 0) {
 			return;
 		}
-		setStartIndex(startIndex);
 		setLoading(true);
-		setTotalNumberResults(0);
+		totalNumberResults = 0;
 		patientDashboardView.showPageSpinner(true);
 		setLoading(true);
-		PagingInfo pagingInfo = new PagingInfo(startIndex, limit);
+		PagingInfo pagingInfo = new PagingInfo(startIndex, ApplicationConstants.Request.PATIENT_VISIT_COUNT);
 		DataService.GetCallback<List<Visit>> fetchVisitsCallback = new DataService.GetCallback<List<Visit>>() {
 			@Override
 			public void onCompleted(List<Visit> visits) {
@@ -101,7 +98,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
 				if (!visits.isEmpty()) {
 					///patientDashboardView.showNoVisits(true);
-					setTotalNumberResults(pagingInfo.getTotalRecordCount());
+					totalNumberResults = pagingInfo.getTotalRecordCount();
 				}
 				patientDashboardView.showPageSpinner(false);
 			}
@@ -190,43 +187,14 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	}
 
 	@Override
-	public void setLimit(int limit) {
-		this.limit = limit;
-	}
-
-	@Override
-	public int getLimit() {
-		return limit;
-	}
-
-	@Override
-	public void setStartIndex(int startIndex) {
-		this.startIndex = startIndex;
-	}
-
-	@Override
-	public int getStartIndex() {
-		return startIndex;
-	}
-
-	@Override
 	public void loadResults(Patient patient, boolean loadNextResults) {
 		fetchVisits(patient, computePage(loadNextResults));
 	}
 
-	private int getTotalNumberResults() {
-		return totalNumberResults;
-	}
-
-	@Override
-	public void setTotalNumberResults(int totalNumberResults) {
-		this.totalNumberResults = totalNumberResults;
-	}
-
 	private int computePage(boolean next) {
-		int tmpPage = getStartIndex();
+		int tmpPage = startIndex;
 		// check if pagination is required.
-		if (startIndex < (Math.round(getTotalNumberResults() / limit))) {
+		if (startIndex < (Math.round(totalNumberResults / ApplicationConstants.Request.PATIENT_VISIT_COUNT))) {
 			if (next) {
 				// set next page
 				tmpPage += 1;

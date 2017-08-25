@@ -266,7 +266,7 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 			intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, OpenMRS.getInstance()
 					.getPatientUuid());
 			intent.putExtra(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visit.getUuid());
-			intent.putExtra(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE, visit.getStopDatetime());
+			intent.putExtra(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE,  visit.getStopDatetime() == null ? null : visit.getStopDatetime().toString());
 
 			intent.setFlags(FLAG_ACTIVITY_CLEAR_TOP);
 

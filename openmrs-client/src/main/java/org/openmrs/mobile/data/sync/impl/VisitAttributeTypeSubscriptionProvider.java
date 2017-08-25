@@ -1,5 +1,6 @@
 package org.openmrs.mobile.data.sync.impl;
 
+import org.greenrobot.eventbus.EventBus;
 import org.openmrs.mobile.data.db.Repository;
 import org.openmrs.mobile.data.db.impl.RecordInfoDbService;
 import org.openmrs.mobile.data.db.impl.VisitAttributeTypeDbServie;
@@ -14,7 +15,7 @@ public class VisitAttributeTypeSubscriptionProvider extends AdaptiveSubscription
 	@Inject
 	public VisitAttributeTypeSubscriptionProvider(VisitAttributeTypeDbServie dbService,
 			RecordInfoDbService recordInfoDbService,
-			VisitAttributeTypeRestServiceImpl restService, Repository repository) {
-		super(dbService, recordInfoDbService, restService, repository);
+			VisitAttributeTypeRestServiceImpl restService, Repository repository, EventBus eventBus) {
+		super(dbService, recordInfoDbService, restService, repository, eventBus);
 	}
 }

@@ -33,5 +33,7 @@ public interface LoginSyncContract {
 		void startMeasuringConnectivity();
 
 		void stopMeasuringConnectivity();
+
+		void sync();
 	}
 }

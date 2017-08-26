@@ -33,6 +33,17 @@ public class LoginSyncPresenter extends BasePresenter implements LoginSyncContra
 	private final int DELAY = 500;
 	private final double SMOOTHING_FACTOR = 0.005;
 
+	/**
+	 * Conservative estimate of patient information (including context) based on tests with several patients and the
+	 * size of all pertinent information
+	 */
+	private final int AVERAGE_SIZE_OF_PATIENT_PAYLOAD_IN_KB = 80;
+
+	/**
+	 * This could be calculated to give better estimates, but is picked ad hoc as of now
+	 */
+	private final int AVERAGE_NUMBER_OF_PATIENTS_TO_SYNC = 10;
+
 	public LoginSyncPresenter(LoginSyncContract.View view, OpenMRS openMRS) {
 		this.view = view;
 		this.openMRS = openMRS;
@@ -40,7 +51,9 @@ public class LoginSyncPresenter extends BasePresenter implements LoginSyncContra
 		this.view.setPresenter(this);
 		entitiesPulled = new ArrayList<>();
 		entitiesPushed = new ArrayList<>();
+	}
 
+	public void sync() {
 		openMRS.requestDataSync();
 	}
 
@@ -129,8 +142,20 @@ public class LoginSyncPresenter extends BasePresenter implements LoginSyncContra
 	}
 
 	private void updateDurationMessage() {
-		networkDurationMessageId = R.string.download_upload_speed_is_slow;
-		// TODO: Implement logic to change message ID based on averageNetworkSpeed
+		double estimatedTimeUntilDownloadCompletes = (double) AVERAGE_NUMBER_OF_PATIENTS_TO_SYNC
+				* (double) AVERAGE_SIZE_OF_PATIENT_PAYLOAD_IN_KB
+				/ (double) openMRS.getNetworkUtils().getCurrentConnectionSpeed();
+		if (estimatedTimeUntilDownloadCompletes < 60) {
+			networkDurationMessageId = R.string.download_upload_speed_is_fast;
+		} else {
+			// If the network speed is fluctuating enough to have the message go from "fast" to "slow", stop the timer
+			// and just keep the message as "slow" to be safe. I'm assuming people like to see things will speed up, not
+			// that they're slowing down
+			if (networkDurationMessageId == R.string.download_upload_speed_is_fast) {
+				stopMeasuringConnectivity();
+			}
+			networkDurationMessageId = R.string.download_upload_speed_is_slow;
+		}
 	}
 
 	private void updateDurationDisplayText() {

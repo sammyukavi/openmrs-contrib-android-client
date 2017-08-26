@@ -90,7 +90,7 @@ public class NetworkUtils {
 
 	/**
 	 * Get the connection speed based on the current network connection
-	 * @return An estimate of the connection speed based on typical range estimates
+	 * @return An estimate of the connection speed based on typical range estimates in KB/s
 	 */
 	public int getCurrentConnectionSpeed(){
 		if (!hasNetwork()) {
@@ -101,39 +101,39 @@ public class NetworkUtils {
 		int subType = networkInfo.getSubtype();
 
 		if (type == ConnectivityManager.TYPE_WIFI) {
-			return 20000;
+			return 2500; // ~ 20+ Mbps
 		} else if (type == ConnectivityManager.TYPE_MOBILE) {
 			switch(subType){
 				case TelephonyManager.NETWORK_TYPE_1xRTT:
-					return 50; // ~ 50-100 kbps
+					return 7; // ~ 50-100 kbps
 				case TelephonyManager.NETWORK_TYPE_CDMA:
-					return 20; // ~ 14-64 kbps
+					return 2; // ~ 14-64 kbps
 				case TelephonyManager.NETWORK_TYPE_EDGE:
-					return 50; // ~ 50-100 kbps
+					return 7; // ~ 50-100 kbps
 				case TelephonyManager.NETWORK_TYPE_EVDO_0:
-					return 500; // ~ 400-1000 kbps
+					return 60; // ~ 400-1000 kbps
 				case TelephonyManager.NETWORK_TYPE_EVDO_A:
-					return 700; // ~ 600-1400 kbps
+					return 90; // ~ 600-1400 kbps
 				case TelephonyManager.NETWORK_TYPE_GPRS:
-					return 100; // ~ 100 kbps
+					return 12; // ~ 100 kbps
 				case TelephonyManager.NETWORK_TYPE_HSDPA:
-					return 3000; // ~ 2-14 Mbps
+					return 375; // ~ 2-14 Mbps
 				case TelephonyManager.NETWORK_TYPE_HSPA:
-					return 800; // ~ 700-1700 kbps
+					return 100; // ~ 700-1700 kbps
 				case TelephonyManager.NETWORK_TYPE_HSUPA:
-					return 4000; // ~ 1-23 Mbps
+					return 500; // ~ 1-23 Mbps
 				case TelephonyManager.NETWORK_TYPE_UMTS:
-					return 800; // ~ 400-7000 kbps
+					return 100; // ~ 400-7000 kbps
 				case TelephonyManager.NETWORK_TYPE_EHRPD: // API level 11
-					return 1000; // ~ 1-2 Mbps
+					return 125; // ~ 1-2 Mbps
 				case TelephonyManager.NETWORK_TYPE_EVDO_B: // API level 9
-					return 5000; // ~ 5 Mbps
+					return 625; // ~ 5 Mbps
 				case TelephonyManager.NETWORK_TYPE_HSPAP: // API level 13
-					return 10000; // ~ 10-20 Mbps
+					return 1250; // ~ 10-20 Mbps
 				case TelephonyManager.NETWORK_TYPE_IDEN: // API level 8
-					return 25; // ~25 kbps
+					return 3; // ~25 kbps
 				case TelephonyManager.NETWORK_TYPE_LTE: // API level 11
-					return 10000; // ~ 10+ Mbps
+					return 1250; // ~ 10+ Mbps
 				// Unknown
 				case TelephonyManager.NETWORK_TYPE_UNKNOWN:
 				default:

@@ -18,6 +18,8 @@ public class LoginSyncActivity extends ACBaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		eventBus = openMRS.getEventBus();
+
 		setContentView(R.layout.activity_login_sync);
 
 		// Create fragment
@@ -32,13 +34,13 @@ public class LoginSyncActivity extends ACBaseActivity {
 		}
 
 		presenter = new LoginSyncPresenter(loginSyncFragment, openMRS);
-		eventBus = openMRS.getEventBus();
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
 		eventBus.register(this);
+		presenter.sync();
 	}
 
 	@Override

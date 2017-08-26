@@ -1,5 +1,6 @@
 package org.openmrs.mobile.activities.loginsync;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -33,6 +34,18 @@ public class LoginSyncFragment extends ACBaseFragment<LoginSyncContract.Presente
 		return rootView;
 	}
 
+	@Override
+	public void onStart() {
+		super.onStart();
+		mPresenter.startMeasuringConnectivity();
+	}
+
+	@Override
+	public void onStop() {
+		mPresenter.stopMeasuringConnectivity();
+		super.onStop();
+	}
+
 	private void initViewFields() {
 		pushProgressBar = (ProgressBar) rootView.findViewById(R.id.pushProgressBar);
 		pushProgressText = (TextView) rootView.findViewById(R.id.pushProgressText);
@@ -48,29 +61,43 @@ public class LoginSyncFragment extends ACBaseFragment<LoginSyncContract.Presente
 		pullDurationText.setText("");
 	}
 
-	public void updateSyncPushProgress(float percentComplete, String progressText, @Nullable String durationText) {
+	public void updateSyncPushProgress(double percentComplete, String progressText, @Nullable Integer durationTextStringId) {
 		pushProgressBar.setProgress((int) Math.floor(percentComplete));
 		pushProgressText.setText(progressText);
 
 		if (percentComplete == 100) {
 			pushDurationText.setVisibility(View.INVISIBLE);
 		} else {
-			pushDurationText.setText(durationText);
+			pushDurationText.setText(durationTextStringId);
 		}
 	}
 
-	public void updateSyncPullProgress(float percentComplete, String progressText, @Nullable String durationText) {
+	public void updateSyncPullProgress(double percentComplete, String progressText, @Nullable Integer durationTextStringId) {
 		pullProgressBar.setProgress((int) Math.floor(percentComplete));
 		pullProgressText.setText(progressText);
 
-		if (percentComplete == 100 || durationText == null) {
+		if (percentComplete == 100 || durationTextStringId == null) {
 			pullDurationText.setVisibility(View.INVISIBLE);
 		} else {
-			pullDurationText.setText(durationText);
+			pullDurationText.setText(getString(durationTextStringId));
 		}
+	}
+
+	public void updateSyncPushDuration(int durationTextStringId) {
+		pushDurationText.setVisibility(View.VISIBLE);
+		pushDurationText.setText(getString(durationTextStringId));
+	}
+
+	public void updateSyncPullDuration(int durationTextStringId) {
+		pullDurationText.setVisibility(View.VISIBLE);
+		pullDurationText.setText(getString(durationTextStringId));
 	}
 
 	public void finish() {
 		getActivity().finish();
+	}
+
+	public Activity getParentActivity() {
+		return getActivity();
 	}
 }

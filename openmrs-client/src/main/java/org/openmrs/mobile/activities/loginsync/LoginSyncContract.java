@@ -1,5 +1,6 @@
 package org.openmrs.mobile.activities.loginsync;
 
+import android.app.Activity;
 import android.support.annotation.Nullable;
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
@@ -10,11 +11,17 @@ public interface LoginSyncContract {
 
 	interface View extends BaseView<Presenter> {
 
-		void updateSyncPushProgress(float percentComplete, String progressText, @Nullable String durationText);
+		void updateSyncPushProgress(double percentComplete, String progressText, @Nullable Integer durationTextStringId);
 
-		void updateSyncPullProgress(float percentComplete, String progressText, @Nullable String durationText);
+		void updateSyncPullProgress(double percentComplete, String progressText, @Nullable Integer durationTextStringId);
+
+		void updateSyncPushDuration(int durationTextStringId);
+
+		void updateSyncPullDuration(int durationTextStringId);
 
 		void finish();
+
+		Activity getParentActivity();
 	}
 
 	interface Presenter extends BasePresenterContract {
@@ -22,5 +29,9 @@ public interface LoginSyncContract {
 		void onSyncPushEvent(SyncPushEvent syncPushEvent);
 
 		void onSyncPullEvent(SyncPullEvent syncPullEvent);
+
+		void startMeasuringConnectivity();
+
+		void stopMeasuringConnectivity();
 	}
 }

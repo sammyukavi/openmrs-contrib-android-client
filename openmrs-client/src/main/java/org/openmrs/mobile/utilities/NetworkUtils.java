@@ -21,6 +21,7 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import org.openmrs.mobile.application.OpenMRS;
@@ -32,12 +33,11 @@ import java.net.URL;
 public class NetworkUtils {
 
 	@Inject
-	public NetworkUtils() {}
+	public NetworkUtils() {
+	}
 
 	public boolean hasNetwork() {
-		ConnectivityManager connectivityManager
-				= (ConnectivityManager)OpenMRS.getInstance().getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+		NetworkInfo activeNetworkInfo = getNetworkInfo();
 		return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
 	}
 
@@ -47,9 +47,7 @@ public class NetworkUtils {
 		boolean toggle = prefs.getBoolean("sync", true);
 
 		if (toggle) {
-			ConnectivityManager connectivityManager
-					= (ConnectivityManager)OpenMRS.getInstance().getSystemService(Context.CONNECTIVITY_SERVICE);
-			NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+			NetworkInfo activeNetworkInfo = getNetworkInfo();
 			boolean isConnected = activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
 			if (isConnected)
 				return true;
@@ -82,5 +80,67 @@ public class NetworkUtils {
 			Log.d("error", "No network present");
 		}
 		return false;
+	}
+
+	private NetworkInfo getNetworkInfo() {
+		ConnectivityManager connectivityManager =
+				(ConnectivityManager) OpenMRS.getInstance().getSystemService(Context.CONNECTIVITY_SERVICE);
+		return connectivityManager.getActiveNetworkInfo();
+	}
+
+	/**
+	 * Get the connection speed based on the current network connection
+	 * @return An estimate of the connection speed based on typical range estimates
+	 */
+	public int getCurrentConnectionSpeed(){
+		if (!hasNetwork()) {
+			return 0;
+		}
+		NetworkInfo networkInfo = getNetworkInfo();
+		int type = networkInfo.getType();
+		int subType = networkInfo.getSubtype();
+
+		if (type == ConnectivityManager.TYPE_WIFI) {
+			return 20000;
+		} else if (type == ConnectivityManager.TYPE_MOBILE) {
+			switch(subType){
+				case TelephonyManager.NETWORK_TYPE_1xRTT:
+					return 50; // ~ 50-100 kbps
+				case TelephonyManager.NETWORK_TYPE_CDMA:
+					return 20; // ~ 14-64 kbps
+				case TelephonyManager.NETWORK_TYPE_EDGE:
+					return 50; // ~ 50-100 kbps
+				case TelephonyManager.NETWORK_TYPE_EVDO_0:
+					return 500; // ~ 400-1000 kbps
+				case TelephonyManager.NETWORK_TYPE_EVDO_A:
+					return 700; // ~ 600-1400 kbps
+				case TelephonyManager.NETWORK_TYPE_GPRS:
+					return 100; // ~ 100 kbps
+				case TelephonyManager.NETWORK_TYPE_HSDPA:
+					return 3000; // ~ 2-14 Mbps
+				case TelephonyManager.NETWORK_TYPE_HSPA:
+					return 800; // ~ 700-1700 kbps
+				case TelephonyManager.NETWORK_TYPE_HSUPA:
+					return 4000; // ~ 1-23 Mbps
+				case TelephonyManager.NETWORK_TYPE_UMTS:
+					return 800; // ~ 400-7000 kbps
+				case TelephonyManager.NETWORK_TYPE_EHRPD: // API level 11
+					return 1000; // ~ 1-2 Mbps
+				case TelephonyManager.NETWORK_TYPE_EVDO_B: // API level 9
+					return 5000; // ~ 5 Mbps
+				case TelephonyManager.NETWORK_TYPE_HSPAP: // API level 13
+					return 10000; // ~ 10-20 Mbps
+				case TelephonyManager.NETWORK_TYPE_IDEN: // API level 8
+					return 25; // ~25 kbps
+				case TelephonyManager.NETWORK_TYPE_LTE: // API level 11
+					return 10000; // ~ 10+ Mbps
+				// Unknown
+				case TelephonyManager.NETWORK_TYPE_UNKNOWN:
+				default:
+					return 0;
+			}
+		} else {
+			return 0;
+		}
 	}
 }

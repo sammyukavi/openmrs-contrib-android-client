@@ -389,4 +389,8 @@
 	<string name="hiv_negative">Negative</string>
 	<string name="patient_diabetic">Patient diabetic?</string>
 	<string name="ward_stay_admission">Ward stay during admission</string>
+
+	<!-- Login Sync Activity -->
+	<string name="download_upload_speed_is_fast">This should take less than a minute...</string>
+	<string name="download_upload_speed_is_slow">Thie could take a few minutes...</string>
 </resources>

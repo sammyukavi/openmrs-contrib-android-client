@@ -10,6 +10,7 @@ import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.activities.patientlist.PatientListActivity;
 import org.openmrs.mobile.application.OpenMRS;
+import org.openmrs.mobile.event.SyncEvent;
 import org.openmrs.mobile.event.SyncPullEvent;
 import org.openmrs.mobile.event.SyncPushEvent;
 import org.openmrs.mobile.utilities.ApplicationConstants;
@@ -111,10 +112,21 @@ public class LoginSyncPresenter extends BasePresenter implements LoginSyncContra
 		view.updateSyncPullProgress(progress, pullDisplayInformation, networkDurationMessageId);
 
 		if (progress == 100) {
-			Intent intent = new Intent(openMRS.getApplicationContext(), PatientListActivity.class);
-			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-			openMRS.getApplicationContext().startActivity(intent);
-			view.finish();
+			navigateToNextActivity();
+		}
+	}
+
+	private void navigateToNextActivity() {
+		Intent intent = new Intent(openMRS.getApplicationContext(), PatientListActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		openMRS.getApplicationContext().startActivity(intent);
+		view.finish();
+	}
+
+	public void onSyncEvent(SyncEvent syncEvent) {
+		if (syncEvent.message.equals(ApplicationConstants.EventMessages.Sync.CANT_SYNC_NO_NETWORK)) {
+			view.notify(R.string.sync_off_for_now_because_network_not_available);
+			navigateToNextActivity();
 		}
 	}
 

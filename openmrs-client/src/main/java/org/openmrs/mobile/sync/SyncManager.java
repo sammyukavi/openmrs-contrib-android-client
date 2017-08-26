@@ -9,7 +9,9 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.sync.SyncService;
+import org.openmrs.mobile.event.SyncEvent;
 import org.openmrs.mobile.receivers.SyncReceiver;
+import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.TimeConstants;
 
 public class SyncManager {
@@ -56,6 +58,9 @@ public class SyncManager {
 	public void requestSync() {
 		if (openMRS.getAuthorizationManager().isUserLoggedIn()) {
 			syncService.sync();
+		} else {
+			openMRS.getEventBus().post(new SyncEvent(ApplicationConstants.EventMessages.Sync.CANT_SYNC_NO_NETWORK,
+					null, null));
 		}
 	}
 }

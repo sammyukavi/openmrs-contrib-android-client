@@ -8,6 +8,7 @@ import org.joda.time.Period;
 import org.openmrs.mobile.data.DataOperationException;
 import org.openmrs.mobile.data.db.impl.PullSubscriptionDbService;
 import org.openmrs.mobile.data.db.impl.SyncLogDbService;
+import org.openmrs.mobile.event.SyncEvent;
 import org.openmrs.mobile.event.SyncPullEvent;
 import org.openmrs.mobile.models.PullSubscription;
 import org.openmrs.mobile.models.SyncLog;
@@ -116,6 +117,8 @@ public class SyncService {
 
 						// Check to see if we're still online, if not, then stop the sync
 						if (!networkUtils.hasNetwork()) {
+							eventBus.post(new SyncEvent(ApplicationConstants.EventMessages.Sync.CANT_SYNC_NO_NETWORK,
+									null, null));
 							break;
 						}
 					} catch (Exception ex) {

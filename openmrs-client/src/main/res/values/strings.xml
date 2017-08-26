@@ -393,4 +393,5 @@
 	<!-- Login Sync Activity -->
 	<string name="download_upload_speed_is_fast">This should take less than a minute...</string>
 	<string name="download_upload_speed_is_slow">Thie could take a few minutes...</string>
+	<string name="sync_off_for_now_because_network_not_available">Phone offline. Sync will resume when online.</string>
 </resources>

@@ -314,6 +314,8 @@ public abstract class ApplicationConstants {
 
 	public static class EventMessages {
 		public static class Sync {
+			public static final String CANT_SYNC_NO_NETWORK = "cantSyncNoNetwork";
+
 			public static class Push {
 				public static final String TOTAL_ENTITIES_TO_PUSH = "totalEntitiesToPush";
 			}

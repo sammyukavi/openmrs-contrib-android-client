@@ -11,6 +11,7 @@ import android.widget.TextView;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.utilities.FontsUtil;
+import org.openmrs.mobile.utilities.ToastUtil;
 
 public class LoginSyncFragment extends ACBaseFragment<LoginSyncContract.Presenter> implements LoginSyncContract.View {
 
@@ -99,5 +100,9 @@ public class LoginSyncFragment extends ACBaseFragment<LoginSyncContract.Presente
 
 	public Activity getParentActivity() {
 		return getActivity();
+	}
+
+	public void notify(int notificationId) {
+		ToastUtil.notify(getString(notificationId));
 	}
 }

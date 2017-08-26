@@ -224,11 +224,12 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 		mPresenter.saveLocationsInPreferences(locationsList, dropdownLocation.getSelectedItemPosition());
 		// TODO: Make this only get called if this is the user's first access of a new URL
 		Intent intent;
-		boolean isUsersFirstAccessOfNewUrl = true;
+		boolean isUsersFirstAccessOfNewUrl = false;
 		if (isUsersFirstAccessOfNewUrl) {
-			intent = new Intent(openMRS.getApplicationContext(), LoginSyncActivity.class);
+			// Navigate to sync selection page
+			intent = new Intent(); // temporary
 		} else {
-			intent = new Intent(openMRS.getApplicationContext(), PatientListActivity.class);
+			intent = new Intent(openMRS.getApplicationContext(), LoginSyncActivity.class);
 		}
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		openMRS.getApplicationContext().startActivity(intent);

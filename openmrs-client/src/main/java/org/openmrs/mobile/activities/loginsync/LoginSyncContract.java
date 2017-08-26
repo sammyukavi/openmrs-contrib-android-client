@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.support.annotation.Nullable;
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
+import org.openmrs.mobile.event.SyncEvent;
 import org.openmrs.mobile.event.SyncPullEvent;
 import org.openmrs.mobile.event.SyncPushEvent;
 
@@ -22,6 +23,8 @@ public interface LoginSyncContract {
 		void finish();
 
 		Activity getParentActivity();
+
+		void notify(int notificationId);
 	}
 
 	interface Presenter extends BasePresenterContract {
@@ -29,6 +32,8 @@ public interface LoginSyncContract {
 		void onSyncPushEvent(SyncPushEvent syncPushEvent);
 
 		void onSyncPullEvent(SyncPullEvent syncPullEvent);
+
+		void onSyncEvent(SyncEvent syncEvent);
 
 		void startMeasuringConnectivity();
 

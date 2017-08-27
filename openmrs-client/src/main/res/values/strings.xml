@@ -389,4 +389,7 @@
 	<string name="hiv_negative">Negative</string>
 	<string name="patient_diabetic">Patient diabetic?</string>
 	<string name="ward_stay_admission">Ward stay during admission</string>
+
+	<!-- Sync Selection texts -->
+	<string name="select_patient_lists_to_sync">Select Patient Lists to Sync</string>
 </resources>

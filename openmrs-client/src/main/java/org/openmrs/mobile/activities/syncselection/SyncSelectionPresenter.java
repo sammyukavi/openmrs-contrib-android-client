@@ -5,12 +5,16 @@ import java.util.List;
 
 import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.application.OpenMRS;
+import org.openmrs.mobile.dagger.DaggerSyncComponent;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
+import org.openmrs.mobile.data.db.impl.PullSubscriptionDbService;
 import org.openmrs.mobile.data.impl.PatientListDataService;
+import org.openmrs.mobile.data.sync.impl.PatientListContextSubscriptionProvider;
+import org.openmrs.mobile.data.sync.impl.PatientListSubscriptionProvider;
 import org.openmrs.mobile.models.PatientList;
-import org.openmrs.mobile.models.PatientListContext;
-import org.openmrs.mobile.utilities.StringUtils;
+import org.openmrs.mobile.models.PullSubscription;
+import org.openmrs.mobile.utilities.TimeConstants;
 
 public class SyncSelectionPresenter extends BasePresenter implements SyncSelectionContract.Presenter {
 
@@ -18,6 +22,7 @@ public class SyncSelectionPresenter extends BasePresenter implements SyncSelecti
 	private static OpenMRS openMRS;
 
 	private PatientListDataService patientListDataService;
+	private PullSubscriptionDbService pullSubscriptionDbService;
 
 	private List<PatientList> patientLists;
 	private List<PatientList> selectedPatientListsToSync;
@@ -25,11 +30,12 @@ public class SyncSelectionPresenter extends BasePresenter implements SyncSelecti
 	public SyncSelectionPresenter(SyncSelectionContract.View view, OpenMRS openMRS) {
 		this.view = view;
 		this.openMRS = openMRS;
+		this.pullSubscriptionDbService = pullSubscriptionDbService();
 
 		selectedPatientListsToSync = new ArrayList<>(); // temp
 
 		this.view.setPresenter(this);
-		this.patientListDataService = dataAccess().patientList();
+		patientListDataService = dataAccess().patientList();
 	}
 
 	@Override
@@ -72,7 +78,25 @@ public class SyncSelectionPresenter extends BasePresenter implements SyncSelecti
 
 	@Override
 	public void saveUsersSyncSelections() {
-		
+		List<PullSubscription> pullSubscriptionsToAdd = new ArrayList<>();
+
+		int maximumIncrementalCount = 25;
+		for (PatientList patientList : selectedPatientListsToSync) {
+			PullSubscription pullSubscription = new PullSubscription();
+			pullSubscription.setForceSyncAfterPush(false);
+			pullSubscription.setSubscriptionClass(PatientListContextSubscriptionProvider.class.getSimpleName());
+			pullSubscription.setSubscriptionKey(null);
+			pullSubscription.setMaximumIncrementalCount(maximumIncrementalCount);
+			pullSubscription.setMinimumInterval((int) TimeConstants.SYNC_INTERVAL_FOR_FREQUENT_DATA);
+
+			pullSubscriptionsToAdd.add(pullSubscription);
+		}
+
+		if (pullSubscriptionsToAdd.size() > 0) {
+			pullSubscriptionDbService.saveAll(pullSubscriptionsToAdd);
+		}
+
+		view.navigateToNextPage();
 	}
 
 	private void updateAdvanceButtonText() {

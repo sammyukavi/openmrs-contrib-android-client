@@ -70,6 +70,11 @@ public class SyncSelectionPresenter extends BasePresenter implements SyncSelecti
 		updateAdvanceButtonText();
 	}
 
+	@Override
+	public void saveUsersSyncSelections() {
+		
+	}
+
 	private void updateAdvanceButtonText() {
 		boolean isAtLeastOnePatientListSelected = selectedPatientListsToSync.size() > 0;
 		view.updateAdvanceButton(isAtLeastOnePatientListSelected);

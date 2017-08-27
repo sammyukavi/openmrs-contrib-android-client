@@ -17,10 +17,14 @@ public interface SyncSelectionContract {
 		void displayPatientLists(List<PatientList> entities);
 
 		void updateAdvanceButton(boolean isAtLeastOnePatientListSelected);
+
+		void navigateToNextPage();
 	}
 
 	interface Presenter extends BasePresenterContract {
 
 		void toggleSyncSelection(PatientList patientList, boolean isSelected);
+
+		void saveUsersSyncSelections();
 	}
 }

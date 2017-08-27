@@ -2,6 +2,7 @@ package org.openmrs.mobile.activities.syncselection;
 
 import java.util.List;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,6 +14,8 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
+import org.openmrs.mobile.activities.patientlist.PatientListActivity;
+import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.models.PatientList;
 
 public class SyncSelectionFragment extends ACBaseFragment<SyncSelectionContract.Presenter>
@@ -30,6 +33,7 @@ public class SyncSelectionFragment extends ACBaseFragment<SyncSelectionContract.
 		View rootView = inflater.inflate(R.layout.fragment_sync_selection, container, false);
 
 		initViewFields(rootView);
+		registerListeners();
 
 		return rootView;
 	}
@@ -51,6 +55,12 @@ public class SyncSelectionFragment extends ACBaseFragment<SyncSelectionContract.
 
 		layoutManager = new LinearLayoutManager(this.getActivity());
 		syncSelectionModelRecyclerView = (RecyclerView) rootView.findViewById(R.id.syncSelectionModelRecyclerView);
+	}
+
+	private void registerListeners() {
+		advanceButton.setOnClickListener(v -> {
+			mPresenter.saveUsersSyncSelections();
+		});
 	}
 
 	public static SyncSelectionFragment newInstance() {
@@ -79,5 +89,14 @@ public class SyncSelectionFragment extends ACBaseFragment<SyncSelectionContract.
 
 	public void displayPatientLists(List<PatientList> patientLists) {
 		adapter.setItems(patientLists);
+	}
+
+	public void navigateToNextPage() {
+		OpenMRS openMRS = OpenMRS.getInstance();
+		// TODO: Update this to be the sync data screen
+		Intent intent = new Intent(openMRS.getApplicationContext(), PatientListActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		openMRS.getApplicationContext().startActivity(intent);
+		getActivity().finish();
 	}
 }

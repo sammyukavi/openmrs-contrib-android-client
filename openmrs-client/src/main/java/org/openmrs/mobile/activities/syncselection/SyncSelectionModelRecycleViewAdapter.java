@@ -32,12 +32,8 @@ public class SyncSelectionModelRecycleViewAdapter
 		PatientList patientList = items.get(position);
 
 		holder.patientListChoice.setText(patientList.toString());
-		holder.patientListChoice.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
-			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				view.toggleSyncSelection(patientList, isChecked);
-			}
+		holder.patientListChoice.setOnCheckedChangeListener((CompoundButton buttonView, boolean isChecked) -> {
+			view.toggleSyncSelection(patientList, isChecked);
 		});
 	}
 

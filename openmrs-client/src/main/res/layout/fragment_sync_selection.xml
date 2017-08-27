@@ -14,10 +14,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:focusable="true"
-		android:focusableInTouchMode="true"
-		android:orientation="vertical">
+              android:layout_height="match_parent"
+              android:focusable="true"
+              android:focusableInTouchMode="true"
+              android:orientation="vertical">
 
 
 	<RelativeLayout
@@ -40,7 +40,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:orientation="vertical"
-			tools:layout_margin="@dimen/nav_title_margin">
+			android:layout_margin="@dimen/nav_title_margin">
 
 		<TextView
 				android:text="@string/select_patient_lists_to_sync"
@@ -85,5 +85,16 @@
 		</RelativeLayout>
 
 	</LinearLayout>
+
+	<Button
+			android:text="@string/skip_patient_list_sync_selections"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:id="@+id/moveForwardButton"
+			android:background="@color/color_primary_dark"
+			android:textColor="@color/color_white"
+			android:layout_marginRight="@dimen/avatar_size"
+			android:layout_marginLeft="@dimen/avatar_size"
+			android:layout_marginTop="@dimen/nav_title_margin"/>
 
 </LinearLayout>

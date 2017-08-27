@@ -60,6 +60,8 @@
 				android:screenOrientation="portrait"/>
 		<activity android:name=".activities.addeditvisit.AddEditVisitActivity"
 				android:screenOrientation="portrait"/>
+		<activity android:name=".activities.syncselection.SyncSelectionActivity"
+		          android:screenOrientation="portrait"/>
 		<activity android:name=".activities.auditdata.AuditDataActivity"
 				android:screenOrientation="portrait"/>
 		<activity

@@ -1,6 +1,7 @@
 package org.openmrs.mobile.activities.syncselection;
 
 import android.os.Bundle;
+import android.support.v4.view.GravityCompat;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
 
@@ -11,7 +12,10 @@ public class SyncSelectionActivity extends ACBaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_login);
+		getLayoutInflater().inflate(R.layout.activity_sync_selection, frameLayout);
+		setTitle(R.string.title_select_patient_lists_to_sync);
+
+		disableActionBarNavigation();
 
 		// Create fragment
 		SyncSelectionFragment syncSelectionFragment =
@@ -25,5 +29,12 @@ public class SyncSelectionActivity extends ACBaseActivity {
 		}
 
 		presenter = new SyncSelectionPresenter(syncSelectionFragment, openMRS);
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (drawer.isDrawerOpen(GravityCompat.START)) {
+			drawer.closeDrawer(GravityCompat.START);
+		}
 	}
 }

@@ -391,7 +391,12 @@
 	<string name="ward_stay_admission">Ward stay during admission</string>
 
 	<!-- Login Sync Activity -->
-	<string name="download_upload_speed_is_fast">This should take less than a minute...</string>
-	<string name="download_upload_speed_is_slow">Thie could take a few minutes...</string>
+	<string name="download_upload_speed_is_fast">This should take less than a minute&#8230;</string>
+	<string name="download_upload_speed_is_slow">Thie could take a few minutes&#8230;</string>
 	<string name="sync_off_for_now_because_network_not_available">Phone offline. Sync will resume when online.</string>
+	<string name="subscription_remote_pull_starting">Downloading %1$s&#8230;</string>
+	<string name="subscription_remote_pull_complete">%1$s complete!</string>
+	<string name="entity_remote_pull_starting">Downloading %1$s - %2$s&#8230;</string>
+	<string name="entity_remote_pull_complete">%1$s - %2$s complete!</string>
+	<string name="download_complete">Download complete!</string>
 </resources>

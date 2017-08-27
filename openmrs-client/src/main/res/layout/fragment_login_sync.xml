@@ -56,7 +56,6 @@
 
 			</android.support.design.widget.TextInputLayout>
 
-
 			<ProgressBar
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
@@ -85,7 +84,6 @@
 					android:layout_height="wrap_content"
 					android:id="@+id/pushDurationText"
 					android:visibility="visible"/>
-
 
 			<ProgressBar
 					android:layout_width="match_parent"
@@ -117,7 +115,6 @@
 					android:layout_height="wrap_content"
 					android:id="@+id/pullDurationText"
 					android:visibility="visible"/>
-
 
 		</LinearLayout>
 	</ScrollView>

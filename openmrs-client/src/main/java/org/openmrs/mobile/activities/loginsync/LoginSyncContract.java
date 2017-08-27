@@ -12,19 +12,19 @@ public interface LoginSyncContract {
 
 	interface View extends BaseView<Presenter> {
 
-		void updateSyncPushProgress(double percentComplete, String progressText, @Nullable Integer durationTextStringId);
+		void updateSyncPushProgress(double percentComplete, String progressText, @Nullable String durationText);
 
-		void updateSyncPullProgress(double percentComplete, String progressText, @Nullable Integer durationTextStringId);
+		void updateSyncPullProgress(double percentComplete, String progressText, @Nullable String durationText);
 
-		void updateSyncPushDuration(int durationTextStringId);
+		void updateSyncPushDuration(String durationText);
 
-		void updateSyncPullDuration(int durationTextStringId);
+		void updateSyncPullDuration(String durationText);
 
 		void finish();
 
 		Activity getParentActivity();
 
-		void notify(int notificationId);
+		void notify(String notification);
 	}
 
 	interface Presenter extends BasePresenterContract {

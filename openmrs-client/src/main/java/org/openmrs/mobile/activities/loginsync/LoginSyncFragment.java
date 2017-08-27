@@ -62,36 +62,36 @@ public class LoginSyncFragment extends ACBaseFragment<LoginSyncContract.Presente
 		pullDurationText.setText("");
 	}
 
-	public void updateSyncPushProgress(double percentComplete, String progressText, @Nullable Integer durationTextStringId) {
+	public void updateSyncPushProgress(double percentComplete, String progressText, @Nullable String durationText) {
 		pushProgressBar.setProgress((int) Math.floor(percentComplete));
 		pushProgressText.setText(progressText);
 
 		if (percentComplete == 100) {
 			pushDurationText.setVisibility(View.INVISIBLE);
 		} else {
-			pushDurationText.setText(durationTextStringId);
+			pushDurationText.setText(durationText);
 		}
 	}
 
-	public void updateSyncPullProgress(double percentComplete, String progressText, @Nullable Integer durationTextStringId) {
+	public void updateSyncPullProgress(double percentComplete, String progressText, @Nullable String durationText) {
 		pullProgressBar.setProgress((int) Math.floor(percentComplete));
 		pullProgressText.setText(progressText);
 
-		if (percentComplete == 100 || durationTextStringId == null) {
+		if (percentComplete == 100 || durationText == null) {
 			pullDurationText.setVisibility(View.INVISIBLE);
 		} else {
-			pullDurationText.setText(getString(durationTextStringId));
+			pullDurationText.setText(durationText);
 		}
 	}
 
-	public void updateSyncPushDuration(int durationTextStringId) {
+	public void updateSyncPushDuration(String durationText) {
 		pushDurationText.setVisibility(View.VISIBLE);
-		pushDurationText.setText(getString(durationTextStringId));
+		pushDurationText.setText(durationText);
 	}
 
-	public void updateSyncPullDuration(int durationTextStringId) {
+	public void updateSyncPullDuration(String durationText) {
 		pullDurationText.setVisibility(View.VISIBLE);
-		pullDurationText.setText(getString(durationTextStringId));
+		pullDurationText.setText(durationText);
 	}
 
 	public void finish() {
@@ -102,7 +102,7 @@ public class LoginSyncFragment extends ACBaseFragment<LoginSyncContract.Presente
 		return getActivity();
 	}
 
-	public void notify(int notificationId) {
-		ToastUtil.notify(getString(notificationId));
+	public void notify(String notification) {
+		ToastUtil.notify(notification);
 	}
 }

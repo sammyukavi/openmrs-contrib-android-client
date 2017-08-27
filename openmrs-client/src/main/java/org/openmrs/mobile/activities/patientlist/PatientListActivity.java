@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.GravityCompat;
 
+import android.view.Menu;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
 
@@ -31,7 +32,6 @@ public class PatientListActivity extends ACBaseActivity {
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getLayoutInflater().inflate(R.layout.activity_patient_list, frameLayout);
-		setTitle(R.string.nav_patient_list);
 
 		// create fragment
 		PatientListFragment patientListFragment =
@@ -48,6 +48,16 @@ public class PatientListActivity extends ACBaseActivity {
 		if (authorizationManager.isUserLoggedIn()) {
 			patientListPresenter = new PatientListPresenter(patientListFragment);
 		}
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		getMenuInflater().inflate(R.menu.menu_sync_patient_lists, menu);
+
+		setTitle(R.string.nav_patient_list);
+
+		return true;
 	}
 
 	@Override

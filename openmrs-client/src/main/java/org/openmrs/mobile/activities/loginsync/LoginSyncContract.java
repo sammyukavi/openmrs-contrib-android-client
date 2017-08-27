@@ -12,19 +12,29 @@ public interface LoginSyncContract {
 
 	interface View extends BaseView<Presenter> {
 
-		void updateSyncPushProgress(double percentComplete, String progressText, @Nullable String durationText);
+		void updateSyncPullProgressForStartingSubscription(double percentComplete, String subscriptionName);
 
-		void updateSyncPullProgress(double percentComplete, String progressText, @Nullable String durationText);
+		void updateSyncPullProgressForCompletingSubscription(double percentComplete, String subscriptionName);
 
-		void updateSyncPushDuration(String durationText);
+		void updateSyncPullProgressForStartingEntity(double percentComplete, String subscriptionName, String entityName);
 
-		void updateSyncPullDuration(String durationText);
+		void updateSyncPullProgressForCompletingEntity(double percentComplete, String subscriptionName, String entityName);
 
-		void finish();
+		void notifySyncPullComplete();
 
-		Activity getParentActivity();
+		void notifySyncPushComplete();
 
-		void notify(String notification);
+		void notifySyncPushConnectionIsSlow();
+
+		void notifySyncPushConnectionIsFast();
+
+		void notifySyncPullConnectionIsSlow();
+
+		void notifySyncPullConnectionIsFast();
+
+		void navigateToNextActivity();
+
+		void notifyConnectionLost();
 	}
 
 	interface Presenter extends BasePresenterContract {

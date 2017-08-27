@@ -1,6 +1,7 @@
 package org.openmrs.mobile.activities.loginsync;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
+import org.openmrs.mobile.activities.patientlist.PatientListActivity;
 import org.openmrs.mobile.utilities.FontsUtil;
 import org.openmrs.mobile.utilities.ToastUtil;
 
@@ -56,53 +58,89 @@ public class LoginSyncFragment extends ACBaseFragment<LoginSyncContract.Presente
 		pullProgressText = (TextView) rootView.findViewById(R.id.pullProgressText);
 		pullDurationText = (TextView) rootView.findViewById(R.id.pullDurationText);
 
-		pushProgressText.setText("Checking if data needs to be uploaded...");
+		pushProgressText.setText(getString(R.string.initial_sync_push_progress_text));
 		pushDurationText.setText("");
-		pullProgressText.setText("Waiting for upload to finish...");
+		pullProgressText.setText(getString(R.string.initial_sync_pull_progress_text));
 		pullDurationText.setText("");
 	}
 
-	public void updateSyncPushProgress(double percentComplete, String progressText, @Nullable String durationText) {
+	private void updateSyncPushProgress(double percentComplete, String progressText) {
 		pushProgressBar.setProgress((int) Math.floor(percentComplete));
 		pushProgressText.setText(progressText);
 
 		if (percentComplete == 100) {
 			pushDurationText.setVisibility(View.INVISIBLE);
-		} else {
-			pushDurationText.setText(durationText);
 		}
 	}
 
-	public void updateSyncPullProgress(double percentComplete, String progressText, @Nullable String durationText) {
+	private void updateSyncPullProgress(double percentComplete, String progressText) {
 		pullProgressBar.setProgress((int) Math.floor(percentComplete));
 		pullProgressText.setText(progressText);
 
-		if (percentComplete == 100 || durationText == null) {
+		if (percentComplete == 100) {
 			pullDurationText.setVisibility(View.INVISIBLE);
-		} else {
-			pullDurationText.setText(durationText);
 		}
 	}
 
-	public void updateSyncPushDuration(String durationText) {
-		pushDurationText.setVisibility(View.VISIBLE);
-		pushDurationText.setText(durationText);
-	}
-
-	public void updateSyncPullDuration(String durationText) {
-		pullDurationText.setVisibility(View.VISIBLE);
-		pullDurationText.setText(durationText);
-	}
-
-	public void finish() {
+	public void navigateToNextActivity() {
+		Intent intent = new Intent(this.getContext(), PatientListActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		this.getContext().startActivity(intent);
 		getActivity().finish();
 	}
 
-	public Activity getParentActivity() {
-		return getActivity();
+	public void notifyConnectionLost() {
+		ToastUtil.notify(getString(R.string.sync_off_for_now_because_network_not_available));
 	}
 
-	public void notify(String notification) {
-		ToastUtil.notify(notification);
+	public void updateSyncPullProgressForStartingSubscription(double percentComplete, String subscriptionName) {
+		String progressText = String.format(getString(R.string.subscription_remote_pull_starting), subscriptionName);
+		updateSyncPullProgress(percentComplete, progressText);
+	}
+
+	public void updateSyncPullProgressForCompletingSubscription(double percentComplete, String subscriptionName) {
+		String progressText = String.format(getString(R.string.subscription_remote_pull_complete), subscriptionName);
+		updateSyncPullProgress(percentComplete, progressText);
+	}
+
+	public void updateSyncPullProgressForStartingEntity(double percentComplete, String subscriptionName, String entityName) {
+		String progressText = String.format(getString(R.string.entity_remote_pull_starting), subscriptionName, entityName);
+		updateSyncPullProgress(percentComplete, progressText);
+	}
+
+	public void updateSyncPullProgressForCompletingEntity(double percentComplete, String subscriptionName,
+			String entityName) {
+		String progressText = String.format(getString(R.string.entity_remote_pull_complete), subscriptionName, entityName);
+		updateSyncPullProgress(percentComplete, progressText);
+	}
+
+	public void notifySyncPushConnectionIsSlow() {
+		setSyncDurationTextViewText(pushDurationText, getString(R.string.download_upload_speed_is_slow));
+	}
+
+	public void notifySyncPushConnectionIsFast() {
+		setSyncDurationTextViewText(pushDurationText, getString(R.string.download_upload_speed_is_fast));
+	}
+
+	public void notifySyncPullConnectionIsSlow() {
+		setSyncDurationTextViewText(pullDurationText, getString(R.string.download_upload_speed_is_slow));
+	}
+
+	public void notifySyncPullConnectionIsFast() {
+		setSyncDurationTextViewText(pullDurationText, getString(R.string.download_upload_speed_is_fast));
+	}
+
+	private void setSyncDurationTextViewText(TextView durationTextToUpdate, String text) {
+		durationTextToUpdate.setVisibility(View.VISIBLE);
+		durationTextToUpdate.setText(text);
+	}
+
+	public void notifySyncPullComplete() {
+		pullProgressText.setText(getString(R.string.download_complete));
+	}
+
+	public void notifySyncPushComplete() {
+		pullProgressText.setText(getString(R.string.download_complete));
+		pushProgressText.setText(getString(R.string.initial_sync_pull_progress_text_after_upload_complete));
 	}
 }

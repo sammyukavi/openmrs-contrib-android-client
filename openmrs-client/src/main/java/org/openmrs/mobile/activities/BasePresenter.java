@@ -18,16 +18,16 @@ import org.openmrs.mobile.dagger.DaggerDataAccessComponent;
 import org.openmrs.mobile.dagger.DataAccessComponent;
 
 public abstract class BasePresenter implements BasePresenterContract {
-	private DataAccessComponent mDataAccess;
+	private DataAccessComponent dataAccess;
 
 	public BasePresenter() {
-		mDataAccess = DaggerDataAccessComponent.create();
+		dataAccess = DaggerDataAccessComponent.create();
 	}
 
 	@Override
 	public void unsubscribe() {	}
 
 	protected DataAccessComponent dataAccess() {
-		return mDataAccess;
+		return dataAccess;
 	}
 }

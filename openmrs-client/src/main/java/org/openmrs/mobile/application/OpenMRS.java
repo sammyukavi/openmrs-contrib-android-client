@@ -24,6 +24,7 @@ import com.raizlabs.android.dbflow.config.FlowManager;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
+import org.greenrobot.eventbus.EventBus;
 import org.openmrs.mobile.dagger.ApplicationComponent;
 import org.openmrs.mobile.dagger.ApplicationModule;
 import org.openmrs.mobile.dagger.DaggerApplicationComponent;
@@ -55,6 +56,7 @@ public class OpenMRS extends Application {
 	private SyncManager syncManager;
 	private NetworkUtils networkUtils;
 	private DatabaseHelper databaseHelper;
+	private EventBus eventBus;
 
 	@Override
 	public void onCreate() {
@@ -93,6 +95,7 @@ public class OpenMRS extends Application {
 		networkUtils = applicationComponent.networkUtils();
 		authorizationManager = applicationComponent.authorizationManager();
 		databaseHelper = applicationComponent.databaseHelper();
+		eventBus = applicationComponent.eventBus();
 	}
 
 	protected void initializeDB() {
@@ -382,5 +385,9 @@ public class OpenMRS extends Application {
   
 	public DatabaseHelper getDatabaseHelper() {
 		return databaseHelper;
+	}
+
+	public EventBus getEventBus() {
+		return eventBus;
 	}
 }

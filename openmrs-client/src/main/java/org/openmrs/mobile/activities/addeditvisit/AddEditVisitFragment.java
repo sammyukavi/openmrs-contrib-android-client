@@ -161,7 +161,7 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 		if (startVisit) {
 			toolbar.setTitle(getString(R.string.label_start_visit));
 		} else {
-			visitSubmitButton.setText(R.string.update_visit);
+			visitSubmitButton.setText(R.string.label_edit_visit);
 			toolbar.setTitle(getString(R.string.label_edit_visit));
 		}
 
@@ -178,6 +178,7 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 			if (mPresenter.isEndVisit()) {
 				visitStartDateInput.setVisibility(View.GONE);
 				visitStartDateLabel.setVisibility(View.GONE);
+				loadEndVisitView();
 			}
 		}
 

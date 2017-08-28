@@ -10,5 +10,5 @@ public abstract class TimeConstants {
 	public static final long SECONDS_PER_DAY = SECONDS_PER_HOUR * HOURS_PER_DAY;
 	public static final long MILLIS_PER_MINUTE = MILLIS_PER_SECOND * SECONDS_PER_MINUTE;
 
-	public static final long SYNC_INTERVAL_FOR_FREQUENT_DATA = MINUTES_PER_HOUR / 12;
+	public static final long SYNC_INTERVAL_FOR_FREQUENT_DATA = MINUTES_PER_HOUR / 12 * SECONDS_PER_MINUTE;
 }

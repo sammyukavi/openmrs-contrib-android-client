@@ -32,7 +32,7 @@ public interface PatientListContract {
 
 		void setNoPatientListsVisibility(boolean visibility);
 
-		void updatePatientLists(List<PatientList> patientList);
+		void updatePatientLists(List<PatientList> patientList, List<PatientList> selectedPatientLists);
 
 		void updatePatientListData(List<PatientListContext> patientListData);
 

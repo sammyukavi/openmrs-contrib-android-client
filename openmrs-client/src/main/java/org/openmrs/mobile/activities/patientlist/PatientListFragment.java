@@ -177,14 +177,14 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 	}
 
 	@Override
-	public void updatePatientLists(List<PatientList> patientLists) {
+	public void updatePatientLists(List<PatientList> patientLists, List<PatientList> selectedPatientLists) {
 		PatientList patientList = new PatientList();
 		patientList.setName(getString(R.string.select_patient_list));
 
 		patientLists.add(0, patientList);
-		ArrayAdapter<PatientList> patientListArrayAdapter = new ArrayAdapter<PatientList>(getContext(),
-				android.R.layout.simple_spinner_dropdown_item, patientLists);
-		patientListDropdown.setAdapter(patientListArrayAdapter);
+		PatientListSpinnerAdapter patientListSpinnerArrayAdapter = new PatientListSpinnerAdapter(getContext(),
+				patientLists, selectedPatientLists);
+		patientListDropdown.setAdapter(patientListSpinnerArrayAdapter);
 		patientListDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -235,8 +235,7 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 
 	@Override
 	public void updatePagingLabel(int currentPage, int totalNumberOfPages) {
-		pagingLabel
-				.setText(getString(R.string.paging_label, String.valueOf(currentPage), String.valueOf(totalNumberOfPages)));
+		pagingLabel.setText(getString(R.string.paging_label, String.valueOf(currentPage), String.valueOf(totalNumberOfPages)));
 	}
 
 	private void updatePagingLabel(int currentPage) {

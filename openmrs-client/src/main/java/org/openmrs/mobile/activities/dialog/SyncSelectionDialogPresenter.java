@@ -54,7 +54,6 @@ public class SyncSelectionDialogPresenter implements SyncSelectionDialogContract
 	@Override
 	public void saveUsersSyncSelections() {
 		List<PullSubscription> pullSubscriptionsToAdd = new ArrayList<>();
-		List<PullSubscription> pullSubscriptionsToDelete = new ArrayList<>();
 
 		List<PatientList> newlySelectedLists = new ArrayList<>();
 		List<PatientList> removedLists = new ArrayList<>();

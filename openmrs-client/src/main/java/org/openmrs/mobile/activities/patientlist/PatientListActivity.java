@@ -18,8 +18,15 @@ import android.support.annotation.Nullable;
 import android.support.v4.view.GravityCompat;
 
 import android.view.Menu;
+import android.view.MenuItem;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
+import org.openmrs.mobile.activities.dialog.SyncSelectionDialogFragment;
+import org.openmrs.mobile.activities.dialog.SyncSelectionDialogPresenter;
+import org.openmrs.mobile.dagger.DaggerDataAccessComponent;
+import org.openmrs.mobile.dagger.DaggerSyncComponent;
+import org.openmrs.mobile.models.PatientListContext;
+import org.openmrs.mobile.utilities.ToastUtil;
 
 /**
  * Patient List activity
@@ -27,6 +34,7 @@ import org.openmrs.mobile.activities.ACBaseActivity;
 public class PatientListActivity extends ACBaseActivity {
 
 	private PatientListContract.Presenter patientListPresenter;
+
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,6 +66,21 @@ public class PatientListActivity extends ACBaseActivity {
 		setTitle(R.string.nav_patient_list);
 
 		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int id = item.getItemId();
+
+		if (id == R.id.action_sync) {
+			SyncSelectionDialogFragment instance = SyncSelectionDialogFragment.newInstance();
+			SyncSelectionDialogPresenter syncSelectionDialogPresenter = new SyncSelectionDialogPresenter(instance,
+					DaggerDataAccessComponent.create().patientList(),
+					DaggerSyncComponent.create().pullSubscriptionDbService());
+			instance.show(fragmentManager);
+		}
+
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override

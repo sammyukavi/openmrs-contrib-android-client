@@ -12,8 +12,6 @@ public interface SyncSelectionContract {
 
 		void toggleScreenProgressBar(boolean makeVisible);
 
-		void toggleSyncSelection(PatientList patientList, boolean isSelected);
-
 		void displayPatientLists(List<PatientList> entities);
 
 		void updateAdvanceButton(boolean isAtLeastOnePatientListSelected);

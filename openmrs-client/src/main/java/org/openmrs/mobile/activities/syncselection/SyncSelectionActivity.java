@@ -28,7 +28,7 @@ public class SyncSelectionActivity extends ACBaseActivity {
 					syncSelectionFragment, R.id.syncSelectionContentFrame);
 		}
 
-		presenter = new SyncSelectionPresenter(syncSelectionFragment, openMRS);
+		presenter = new SyncSelectionPresenter(syncSelectionFragment);
 	}
 
 	@Override

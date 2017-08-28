@@ -70,6 +70,5 @@ public interface PatientListContract {
 		void loadResults(String patientListUuid, boolean loadNextResults);
 
 		void setExistingPatientListUuid(String uuid);
-
 	}
 }

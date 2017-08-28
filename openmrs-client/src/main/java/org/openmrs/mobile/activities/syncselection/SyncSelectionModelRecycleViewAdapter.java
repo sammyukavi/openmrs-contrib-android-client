@@ -1,5 +1,6 @@
 package org.openmrs.mobile.activities.syncselection;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.support.v7.widget.RecyclerView;
@@ -9,16 +10,19 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import org.openmrs.mobile.R;
+import org.openmrs.mobile.listeners.PatientListSyncSwitchToggle;
 import org.openmrs.mobile.models.PatientList;
 
 public class SyncSelectionModelRecycleViewAdapter
 		extends RecyclerView.Adapter<SyncSelectionModelRecycleViewAdapter.SyncSelectionModelViewHolder> {
 
-	private SyncSelectionContract.View view;
+	private PatientListSyncSwitchToggle viewCallback;
 	private List<PatientList> items;
+	private List<PatientList> selectedItems;
 
-	public SyncSelectionModelRecycleViewAdapter(SyncSelectionContract.View view) {
-		this.view = view;
+	public SyncSelectionModelRecycleViewAdapter(PatientListSyncSwitchToggle viewCallback) {
+		this.viewCallback = viewCallback;
+		this.selectedItems = new ArrayList<>();
 	}
 
 	@Override
@@ -32,8 +36,11 @@ public class SyncSelectionModelRecycleViewAdapter
 		PatientList patientList = items.get(position);
 
 		holder.patientListChoice.setText(patientList.toString());
+		if (selectedItems.contains(patientList)) {
+			holder.patientListChoice.setChecked(true);
+		}
 		holder.patientListChoice.setOnCheckedChangeListener((CompoundButton buttonView, boolean isChecked) -> {
-			view.toggleSyncSelection(patientList, isChecked);
+			viewCallback.toggleSyncSelection(patientList, isChecked);
 		});
 	}
 
@@ -48,6 +55,13 @@ public class SyncSelectionModelRecycleViewAdapter
 
 	public void setItems(List<PatientList> items) {
 		this.items = items;
+
+		notifyDataSetChanged();
+	}
+
+	public void setItems(List<PatientList> items, List<PatientList> selectedItems) {
+		this.items = items;
+		this.selectedItems = selectedItems;
 
 		notifyDataSetChanged();
 	}

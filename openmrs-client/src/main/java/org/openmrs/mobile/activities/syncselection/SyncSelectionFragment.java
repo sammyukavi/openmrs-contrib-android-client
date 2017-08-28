@@ -16,6 +16,7 @@ import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.activities.patientlist.PatientListActivity;
 import org.openmrs.mobile.application.OpenMRS;
+import org.openmrs.mobile.listeners.PatientListSyncSwitchToggle;
 import org.openmrs.mobile.models.PatientList;
 
 public class SyncSelectionFragment extends ACBaseFragment<SyncSelectionContract.Presenter>
@@ -42,7 +43,13 @@ public class SyncSelectionFragment extends ACBaseFragment<SyncSelectionContract.
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
-		adapter = new SyncSelectionModelRecycleViewAdapter(this);
+		adapter = new SyncSelectionModelRecycleViewAdapter(new PatientListSyncSwitchToggle() {
+
+			@Override
+			public void toggleSyncSelection(PatientList patientList, boolean isSelected) {
+				mPresenter.toggleSyncSelection(patientList, isSelected);
+			}
+		});
 		syncSelectionModelRecyclerView.setAdapter(adapter);
 
 		syncSelectionModelRecyclerView.setLayoutManager(layoutManager);
@@ -73,10 +80,6 @@ public class SyncSelectionFragment extends ACBaseFragment<SyncSelectionContract.
 		} else {
 			screenProgressBar.setVisibility(View.INVISIBLE);
 		}
-	}
-
-	public void toggleSyncSelection(PatientList patientList, boolean isSelected) {
-		mPresenter.toggleSyncSelection(patientList, isSelected);
 	}
 
 	public void updateAdvanceButton(boolean isAtLeastOnePatientListSelected) {

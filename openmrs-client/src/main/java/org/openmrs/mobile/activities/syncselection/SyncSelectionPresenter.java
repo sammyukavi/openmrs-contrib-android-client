@@ -4,14 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.openmrs.mobile.activities.BasePresenter;
-import org.openmrs.mobile.application.OpenMRS;
-import org.openmrs.mobile.dagger.DaggerSyncComponent;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.db.impl.PullSubscriptionDbService;
 import org.openmrs.mobile.data.impl.PatientListDataService;
 import org.openmrs.mobile.data.sync.impl.PatientListContextSubscriptionProvider;
-import org.openmrs.mobile.data.sync.impl.PatientListSubscriptionProvider;
 import org.openmrs.mobile.models.PatientList;
 import org.openmrs.mobile.models.PullSubscription;
 import org.openmrs.mobile.utilities.TimeConstants;
@@ -19,7 +16,6 @@ import org.openmrs.mobile.utilities.TimeConstants;
 public class SyncSelectionPresenter extends BasePresenter implements SyncSelectionContract.Presenter {
 
 	private SyncSelectionContract.View view;
-	private static OpenMRS openMRS;
 
 	private PatientListDataService patientListDataService;
 	private PullSubscriptionDbService pullSubscriptionDbService;
@@ -27,12 +23,11 @@ public class SyncSelectionPresenter extends BasePresenter implements SyncSelecti
 	private List<PatientList> patientLists;
 	private List<PatientList> selectedPatientListsToSync;
 
-	public SyncSelectionPresenter(SyncSelectionContract.View view, OpenMRS openMRS) {
+	public SyncSelectionPresenter(SyncSelectionContract.View view) {
 		this.view = view;
-		this.openMRS = openMRS;
 		this.pullSubscriptionDbService = pullSubscriptionDbService();
 
-		selectedPatientListsToSync = new ArrayList<>(); // temp
+		selectedPatientListsToSync = new ArrayList<>();
 
 		this.view.setPresenter(this);
 		patientListDataService = dataAccess().patientList();
@@ -85,7 +80,7 @@ public class SyncSelectionPresenter extends BasePresenter implements SyncSelecti
 			PullSubscription pullSubscription = new PullSubscription();
 			pullSubscription.setForceSyncAfterPush(false);
 			pullSubscription.setSubscriptionClass(PatientListContextSubscriptionProvider.class.getSimpleName());
-			pullSubscription.setSubscriptionKey(null);
+			pullSubscription.setSubscriptionKey(patientList.getUuid());
 			pullSubscription.setMaximumIncrementalCount(maximumIncrementalCount);
 			pullSubscription.setMinimumInterval((int) TimeConstants.SYNC_INTERVAL_FOR_FREQUENT_DATA);
 

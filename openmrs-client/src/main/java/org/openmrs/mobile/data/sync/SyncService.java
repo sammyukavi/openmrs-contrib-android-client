@@ -23,7 +23,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 public class SyncService {
-	public static final String TAG = "Sync Service";
+	private static final String TAG = SyncService.class.getSimpleName();
 
 	private static final Object SYNC_LOCK = new Object();
 

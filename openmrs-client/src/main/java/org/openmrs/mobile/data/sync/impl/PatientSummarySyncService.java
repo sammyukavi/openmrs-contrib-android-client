@@ -34,39 +34,33 @@ public class PatientSummarySyncService {
 	 */
 	public void sync(Observation currentObservation) {
 		// Retrieve the actual observation on the server
-		Observation existingObservation = RestHelper.getCallValue(obsRestService.getByEncounter(currentObservation
-				.getEncounter().getUuid(), new QueryOptions.Builder()
-				.customRepresentation(RestConstants.Representations.OBSERVATION)
-				.build(), true));
+		Observation existingObservation = RestHelper.getCallValue(obsRestService.getByEncounterAndConcept(
+				currentObservation.getEncounter().getUuid(),
+				currentObservation.getConcept().getUuid(),
+				new QueryOptions.Builder().customRepresentation(RestConstants.Representations.OBSERVATION).build(), true));
 
 		if (existingObservation != null) {
+			if (currentObservation.getUuid().equalsIgnoreCase(existingObservation.getUuid())) {
+				// no merging required
+				RestHelper.getCallValue(obsRestService.update(currentObservation));
+			} else {
+				// requires merging
+				String existingPatientSummary = context.getString(R.string.merge_clinical_note_template,
+						existingObservation.getDiagnosisNote(),
+						existingObservation.getCreator().getDisplay(),
+						existingObservation.getDateCreated());
+				String updatedPatientSummary = currentObservation.getDiagnosisNote();
 
+				currentObservation.setValue(existingPatientSummary + "\r\n" + updatedPatientSummary);
+
+				// void existing observation.
+				RestHelper.getCallValue(obsRestService.purge(existingObservation.getUuid()));
+
+				// persist current observation with merged patient summary info
+				RestHelper.getCallValue(obsRestService.update(currentObservation));
+			}
 		} else {
-
+			RestHelper.getCallValue(obsRestService.update(currentObservation));
 		}
-
-		if (currentObservation.getUuid().equalsIgnoreCase(existingObservation.getUuid())) {
-			// no merging required
-			RestHelper.getCallValue(obsRestService.update(existingObservation));
-		} else {
-
-		}
-
-		String existingPatientSummary = context.getString(R.string.merge_clinical_note_template,
-				existingObservation.getDiagnosisNote(),
-				existingObservation.getCreator().getDisplay(),
-				existingObservation.getDateCreated());
-		String updatedPatientSummary = currentObservation.getDiagnosisNote();
-
-		// void current observation
-		existingObservation.setVoided(true);
-		RestHelper.getCallValue(obsRestService.update(existingObservation));
-
-		// create new observation with merged patient summary
-		Observation updatedObservation = existingObservation.createCopyOfObservation();
-		updatedObservation.setValue(existingPatientSummary + "\r\n" + updatedPatientSummary);
-
-		// create new observation
-		RestHelper.getCallValue(obsRestService.create(updatedObservation));
 	}
 }

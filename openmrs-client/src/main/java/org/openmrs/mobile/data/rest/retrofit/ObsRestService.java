@@ -33,9 +33,10 @@ public interface ObsRestService {
 			@Query("conceptList") String conceptList,
 			@Query("v") String representation);
 
-	@GET(RestConstants.REST_PATH)
-	Call<Observation> getByEncounter(@Path(value = "restPath", encoded = true) String restPath,
+	@GET(RestConstants.OBS_SEARCH_BY_ENCOUNTER_PATH)
+	Call<Observation> getByEncounterAndConcept(@Path(value = "restPath", encoded = true) String restPath,
 			@Query("encounter") String encounterUuid,
+			@Query("concept") String conceptUuid,
 			@Query("v") String representation,
 			@Query("includeActive") Boolean includeActive);
 

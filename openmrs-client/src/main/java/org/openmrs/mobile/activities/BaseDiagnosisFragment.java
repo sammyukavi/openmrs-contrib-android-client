@@ -118,6 +118,7 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 		Runnable inputCompleteChecker = () -> {
 			if (System.currentTimeMillis() > (lastTextEdit + SAVE_CLINICAL_NOTE_DELAY)) {
 				if (getEncounterUuid() != null) {
+					getClinicalNoteObservation().setValue(clinicalNoteView.getText().toString());
 					getClinicalNoteObservation().setDiagnosisNote(clinicalNoteView.getText().toString());
 					diagnosisPresenter.synClinicalNote(getClinicalNoteObservation());
 				} else {

@@ -2,6 +2,7 @@ package org.openmrs.mobile.activities.syncselection;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.data.DataService;
@@ -83,6 +84,7 @@ public class SyncSelectionPresenter extends BasePresenter implements SyncSelecti
 			pullSubscription.setSubscriptionKey(patientList.getUuid());
 			pullSubscription.setMaximumIncrementalCount(maximumIncrementalCount);
 			pullSubscription.setMinimumInterval((int) TimeConstants.SYNC_INTERVAL_FOR_FREQUENT_DATA);
+			pullSubscription.setUuid(UUID.randomUUID().toString());
 
 			pullSubscriptionsToAdd.add(pullSubscription);
 		}

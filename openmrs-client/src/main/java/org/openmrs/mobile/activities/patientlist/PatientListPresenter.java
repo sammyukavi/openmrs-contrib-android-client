@@ -230,6 +230,11 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 		return limit;
 	}
 
+	public void syncSelectionsSaved() {
+		List<PatientList> patientListsToSync = getPatientListToSync();
+		patientListView.updatePatientLists(patientLists, patientListsToSync);
+	}
+
 	private List<PatientList> getPatientListToSync() {
 		List<PullSubscription> pullSubscriptions = pullSubscriptionDbService.getAll(null, new PagingInfo(1, 100));
 		List<PatientList> patientListsToSync = new ArrayList<>();

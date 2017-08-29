@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
@@ -78,6 +79,7 @@ public class SyncSelectionDialogPresenter implements SyncSelectionDialogContract
 			pullSubscription.setSubscriptionKey(patientList.getUuid());
 			pullSubscription.setMaximumIncrementalCount(maximumIncrementalCount);
 			pullSubscription.setMinimumInterval((int) TimeConstants.SYNC_INTERVAL_FOR_FREQUENT_DATA);
+			pullSubscription.setUuid(UUID.randomUUID().toString());
 
 			pullSubscriptionsToAdd.add(pullSubscription);
 		}

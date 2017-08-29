@@ -25,8 +25,6 @@ import org.openmrs.mobile.activities.dialog.SyncSelectionDialogFragment;
 import org.openmrs.mobile.activities.dialog.SyncSelectionDialogPresenter;
 import org.openmrs.mobile.dagger.DaggerDataAccessComponent;
 import org.openmrs.mobile.dagger.DaggerSyncComponent;
-import org.openmrs.mobile.models.PatientListContext;
-import org.openmrs.mobile.utilities.ToastUtil;
 
 /**
  * Patient List activity
@@ -74,6 +72,7 @@ public class PatientListActivity extends ACBaseActivity {
 
 		if (id == R.id.action_sync) {
 			SyncSelectionDialogFragment instance = SyncSelectionDialogFragment.newInstance();
+			instance.setRightButtonOnClickListener(v -> patientListPresenter.syncSelectionsSaved());
 			SyncSelectionDialogPresenter syncSelectionDialogPresenter = new SyncSelectionDialogPresenter(instance,
 					DaggerDataAccessComponent.create().patientList(),
 					DaggerSyncComponent.create().pullSubscriptionDbService());

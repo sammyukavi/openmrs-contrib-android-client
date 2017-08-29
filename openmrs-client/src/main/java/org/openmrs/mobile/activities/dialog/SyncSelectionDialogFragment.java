@@ -54,6 +54,7 @@ public class SyncSelectionDialogFragment extends DialogFragment implements SyncS
 	protected RecyclerView syncSelectionModelRecyclerView;
 	protected TextView titleTextView;
 	private Button rightButton;
+	private View.OnClickListener rightButtonOnClickListener;
 
 	private SyncSelectionDialogContract.Presenter presenter;
 	private SyncSelectionModelRecycleViewAdapter adapter;
@@ -197,6 +198,9 @@ public class SyncSelectionDialogFragment extends DialogFragment implements SyncS
 		rightButton.setText(getString(R.string.save_patient_list_sync_selections));
 		rightButton.setOnClickListener(v -> {
 			presenter.saveUsersSyncSelections();
+			if (rightButtonOnClickListener != null) {
+				rightButtonOnClickListener.onClick(v);
+			}
 		});
 		setViewVisible(rightButton, true);
 		return rightButton;
@@ -218,5 +222,9 @@ public class SyncSelectionDialogFragment extends DialogFragment implements SyncS
 	@Override
 	public void displayPatientLists(List<PatientList> patientLists, List<PatientList> syncingPatientLists) {
 		adapter.setItems(patientLists, syncingPatientLists);
+	}
+
+	public void setRightButtonOnClickListener(View.OnClickListener onClickListener) {
+		rightButtonOnClickListener = onClickListener;
 	}
 }

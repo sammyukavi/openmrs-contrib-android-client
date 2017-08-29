@@ -1,6 +1,8 @@
 package org.openmrs.mobile.data.rest.retrofit;
 
 import org.openmrs.mobile.data.rest.RestConstants;
+import org.openmrs.mobile.models.RecordInfo;
+import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.models.VisitPhoto;
 
 import okhttp3.MultipartBody;

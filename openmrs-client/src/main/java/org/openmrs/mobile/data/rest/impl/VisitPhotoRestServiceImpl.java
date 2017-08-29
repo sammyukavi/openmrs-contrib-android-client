@@ -1,7 +1,12 @@
 package org.openmrs.mobile.data.rest.impl;
 
+import org.openmrs.mobile.data.PagingInfo;
+import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.rest.BaseRestService;
+import org.openmrs.mobile.data.rest.RestConstants;
 import org.openmrs.mobile.data.rest.retrofit.VisitPhotoRestService;
+import org.openmrs.mobile.models.RecordInfo;
+import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.models.VisitPhoto;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 

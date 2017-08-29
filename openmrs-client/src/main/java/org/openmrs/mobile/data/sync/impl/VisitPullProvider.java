@@ -6,13 +6,17 @@ import org.openmrs.mobile.data.DatabaseHelper;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.db.impl.EncounterDbService;
+import org.openmrs.mobile.data.db.impl.ObsDbService;
 import org.openmrs.mobile.data.db.impl.VisitDbService;
 import org.openmrs.mobile.data.rest.RestConstants;
 import org.openmrs.mobile.data.rest.RestHelper;
 import org.openmrs.mobile.data.rest.impl.EncounterRestServiceImpl;
+import org.openmrs.mobile.data.rest.impl.ObsRestServiceImpl;
 import org.openmrs.mobile.data.rest.impl.VisitRestServiceImpl;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Encounter_Table;
+import org.openmrs.mobile.models.Observation;
+import org.openmrs.mobile.models.Observation_Table;
 import org.openmrs.mobile.models.PullSubscription;
 import org.openmrs.mobile.models.RecordInfo;
 import org.openmrs.mobile.models.Visit;
@@ -32,17 +36,22 @@ public class VisitPullProvider {
 	private VisitRestServiceImpl visitRestService;
 	private EncounterDbService encounterDbService;
 	private EncounterRestServiceImpl encounterRestService;
+	private ObsDbService obsDbService;
+	private ObsRestServiceImpl obsRestService;
 
 	private DatabaseHelper databaseHelper;
 
 	@Inject
 	public VisitPullProvider(VisitDbService visitDbService,
 			VisitRestServiceImpl visitRestService, EncounterDbService encounterDbService,
-			EncounterRestServiceImpl encounterRestService, DatabaseHelper databaseHelper) {
+			EncounterRestServiceImpl encounterRestService, ObsDbService obsDbService, ObsRestServiceImpl obsRestService,
+			DatabaseHelper databaseHelper) {
 		this.visitDbService = visitDbService;
 		this.visitRestService = visitRestService;
 		this.encounterDbService = encounterDbService;
 		this.encounterRestService = encounterRestService;
+		this.obsDbService = obsDbService;
+		this.obsRestService = obsRestService;
 		this.databaseHelper = databaseHelper;
 	}
 
@@ -98,7 +107,32 @@ public class VisitPullProvider {
 	}
 
 	private void pullVisitDocuments(PullSubscription subscription, RecordInfo patientRecord, List<RecordInfo> visitInfo) {
-		// TODO: Implement after researching visit document services and image storage
+		QueryOptions options =
+				new QueryOptions.Builder().customRepresentation(RestConstants.Representations.VISIT_PHOTO).build();
+
+		for (RecordInfo observationsRecord : visitInfo) {
+			List<RecordInfo> observationInfo = RestHelper.getCallListValue(obsRestService
+					.getVisitDocumentsObsRecordInfoByPatientAndConceptList(patientRecord.getUuid(), options));
+
+			databaseHelper
+					.diffDelete(Observation.class, Observation_Table.uuid.eq(observationsRecord.getUuid()),
+							observationInfo);
+
+			List<Observation> observations = new ArrayList<>();
+			for (RecordInfo observationRecord : observationInfo) {
+				if (observationRecord.isUpdatedSince(subscription)) {
+					Observation observation = RestHelper.getCallValue(obsRestService.getByUuid(observationRecord.getUuid()
+							, options));
+					observation.processRelationships();
+					observations.add(observation);
+				}
+			}
+
+			if (!observations.isEmpty()) {
+				obsDbService.saveAll(observations);
+			}
+		}
+
 	}
 
 	private void pullVisitEncounters(PullSubscription subscription, RecordInfo patientRecord, List<RecordInfo> visitInfo) {

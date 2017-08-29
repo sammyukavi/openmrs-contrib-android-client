@@ -11,7 +11,6 @@ public class RestConstants {
 	public static final String LOCATION_PATH = REST_PATH + "?tag=IM Location";
 	public static final String CONCEPT_SEARCH_PATH = REST_PATH + "?s=diagnosisByTerm";
 
-
 	public class Representations {
 		public static final String FULL = "full";
 		public static final String DEFAULT = "default";
@@ -26,5 +25,7 @@ public class RestConstants {
 				+ "display))";
 		public static final String VISIT_ENCOUNTER = "custom:(uuid,display,encounterDatetime,patient:ref,location:ref,"
 				+ "form:ref,encounterType:ref,obs,creator:ref,dateCreated,changedBy:ref,dateChanged)";
+		public static final String VISIT_PHOTO = "custom(uuid, patient:(uuid, display), visit: (uuid), fileCaption, "
+				+ "instructions, user:(person:(display)), downloadedImage)";
 	}
 }

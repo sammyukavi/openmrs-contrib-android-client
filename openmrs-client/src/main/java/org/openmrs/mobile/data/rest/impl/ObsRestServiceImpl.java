@@ -5,6 +5,7 @@ import org.openmrs.mobile.data.rest.BaseRestService;
 import org.openmrs.mobile.data.rest.RestConstants;
 import org.openmrs.mobile.data.rest.retrofit.ObsRestService;
 import org.openmrs.mobile.models.Observation;
+import org.openmrs.mobile.models.RecordInfo;
 import org.openmrs.mobile.models.Results;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 
@@ -30,6 +31,12 @@ public class ObsRestServiceImpl extends BaseRestService<Observation, ObsRestServ
 
 	public Call<Results<Observation>> getVisitDocumentsObsByPatientAndConceptList(String patientUuid, QueryOptions options) {
 		return restService.getVisitDocumentsObsByPatientAndConceptList(buildRestRequestPath(), patientUuid,
+				VISIT_DOCUMENT_UUID, RestConstants.Representations.FULL);
+	}
+
+	public Call<Results<RecordInfo>> getVisitDocumentsObsRecordInfoByPatientAndConceptList(String patientUuid, QueryOptions
+			options) {
+		return restService.getVisitDocumentsObsRecordInfoByPatientAndConceptList(buildRestRequestPath(), patientUuid,
 				VISIT_DOCUMENT_UUID, RestConstants.Representations.FULL);
 	}
 }

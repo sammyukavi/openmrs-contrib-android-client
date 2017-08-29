@@ -2,13 +2,16 @@ package org.openmrs.mobile.data.sync;
 
 import android.util.Log;
 
+import org.greenrobot.eventbus.EventBus;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
 import org.openmrs.mobile.data.DataOperationException;
 import org.openmrs.mobile.data.db.impl.PullSubscriptionDbService;
 import org.openmrs.mobile.data.db.impl.SyncLogDbService;
+import org.openmrs.mobile.event.SyncPullEvent;
 import org.openmrs.mobile.models.PullSubscription;
 import org.openmrs.mobile.models.SyncLog;
+import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.NetworkUtils;
 import org.openmrs.mobile.utilities.StringUtils;
 
@@ -20,23 +23,25 @@ import java.util.Map;
 import javax.inject.Inject;
 
 public class SyncService {
-	public static final String TAG = "Sync Service";
+	private static final String TAG = SyncService.class.getSimpleName();
 
 	private static final Object SYNC_LOCK = new Object();
 
 	private SyncLogDbService syncLogDbService;
 	private PullSubscriptionDbService subscriptionDbService;
 	private DaggerProviderHelper providerHelper;
+	private EventBus eventBus;
 
 	private NetworkUtils networkUtils;
 
 	@Inject
 	public SyncService(SyncLogDbService syncLogDbService, PullSubscriptionDbService subscriptionDbService,
-			DaggerProviderHelper providerHelper, NetworkUtils networkUtils) {
+			DaggerProviderHelper providerHelper, NetworkUtils networkUtils, EventBus eventBus) {
 		this.syncLogDbService = syncLogDbService;
 		this.subscriptionDbService = subscriptionDbService;
 		this.providerHelper = providerHelper;
 		this.networkUtils = networkUtils;
+		this.eventBus = eventBus;
 	}
 
 	private Map<String, SubscriptionProvider> subscriptionProviders = new HashMap<String, SubscriptionProvider>();
@@ -71,15 +76,19 @@ public class SyncService {
 	protected void pull() {
 		// Get subscriptions
 		List<PullSubscription> subscriptions = subscriptionDbService.getAll(null, null);
+		eventBus.post(new SyncPullEvent(ApplicationConstants.EventMessages.Sync.Pull.TOTAL_SUBSCRIPTIONS, "subscriptions",
+				subscriptions.size()));
 		for (PullSubscription sub : subscriptions) {
+			eventBus.post(new SyncPullEvent(ApplicationConstants.EventMessages.Sync.Pull.SUBSCRIPTION_REMOTE_PULL_STARTING,
+					sub.getSubscriptionClass(), null));
 			// Check if subscription should be processed, given the minimum interval
 			Integer seconds = null;
 			if (sub.getLastSync() != null && sub.getMinimumInterval() != null) {
-				Period p = new Period(DateTime.now(), new DateTime(sub.getLastSync()));
+				Period p = new Period(new DateTime(sub.getLastSync()), DateTime.now());
 				seconds = p.getSeconds();
 			}
 
-			if (seconds == null || seconds < sub.getMinimumInterval()) {
+			if (seconds == null || sub.getMinimumInterval() == null || seconds > sub.getMinimumInterval()) {
 				// Try to get the cached subscription provider
 				SubscriptionProvider provider = subscriptionProviders.get(sub.getSubscriptionClass());
 				if (provider == null) {
@@ -117,6 +126,9 @@ public class SyncService {
 					}
 				}
 			}
+
+			eventBus.post(new SyncPullEvent(ApplicationConstants.EventMessages.Sync.Pull.SUBSCRIPTION_REMOTE_PULL_COMPLETE,
+					sub.getSubscriptionClass(), null));
 		}
 	}
 }

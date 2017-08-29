@@ -19,6 +19,7 @@ import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
+import org.openmrs.mobile.data.RequestStrategy;
 import org.openmrs.mobile.data.impl.PatientListContextDataService;
 import org.openmrs.mobile.data.impl.PatientListDataService;
 import org.openmrs.mobile.models.PatientList;

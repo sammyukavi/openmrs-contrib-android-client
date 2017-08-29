@@ -389,4 +389,5 @@
 	<string name="hiv_negative">Negative</string>
 	<string name="patient_diabetic">Patient diabetic?</string>
 	<string name="ward_stay_admission">Ward stay during admission</string>
+	<string name="error_gcs_score">Invalid GCS value,(should be between %1$d.0 and %2$d.0)</string>
 </resources>

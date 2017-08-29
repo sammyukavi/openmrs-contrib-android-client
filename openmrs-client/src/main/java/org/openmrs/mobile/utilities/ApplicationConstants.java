@@ -286,6 +286,9 @@ public abstract class ApplicationConstants {
 
 		public static int VITALS_BLOOD_OXYGEN_MIN = 0;
 		public static int VITALS_BLOOD_OXYGEN_MAX = 100;
+
+		public static int AUDIT_GCS_SCORE_MIN = 4;
+		public static int AUDIT_GCS_SCORE_MAX = 14;
 	}
 
 	public static class CacheKays {

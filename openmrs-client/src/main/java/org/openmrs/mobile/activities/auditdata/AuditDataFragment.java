@@ -31,6 +31,7 @@ import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import org.joda.time.LocalDateTime;
 import org.openmrs.mobile.R;
@@ -134,6 +135,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 	private String inpatientServiceTypeSelectedUuid, displayInpatientServiceType;
 	private Boolean displayExtraFormFields, displayCd4CountField, displayHbA1CField, displayHduCoManageField;
 	private TextInputLayout hba1cTextLayout, cd4TextInputLayout;
+	private TextView errorFirstGcsScore;
 
 	public static AuditDataFragment newInstance() {
 		return new AuditDataFragment();
@@ -257,9 +259,12 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		patient_diabetic_unknown = (RadioButton)fragmentView.findViewById(R.id.patient_diabetic_unknown);
 		cd4TextInputLayout = (TextInputLayout)fragmentView.findViewById(R.id.cd4TextInputLayout);
 		hba1cTextLayout = (TextInputLayout)fragmentView.findViewById(R.id.hba1cTextLayout);
+		errorFirstGcsScore = (TextView)fragmentView.findViewById(R.id.invalidGscError);
 
 		submitForm.setOnClickListener(v -> {
-			performDataSend();
+			if(hasValidGcsScore()){
+				performDataSend();
+			}
 		});
 
 		progressBar = (RelativeLayout)fragmentView.findViewById(R.id.auditDataRelativeView);
@@ -1223,6 +1228,20 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 			view.setVisibility(View.GONE);
 			view.animate().alpha(0.0f).setDuration(2000);
 		}
+	}
+
+	private boolean hasValidGcsScore(){
+		if(Float.parseFloat(firstGcsScore.getText().toString()) > 3 &&
+				Float.parseFloat(firstGcsScore.getText().toString()) < 15){
+			return true;
+		}
+		else{
+			errorFirstGcsScore.setVisibility(View.VISIBLE);
+			errorFirstGcsScore.setText(getString(R.string.error_gcs_score,
+					ApplicationConstants.ValidationFieldValues.AUDIT_GCS_SCORE_MIN,
+					ApplicationConstants.ValidationFieldValues.AUDIT_GCS_SCORE_MAX));
+		}
+		return false;
 	}
 
 }

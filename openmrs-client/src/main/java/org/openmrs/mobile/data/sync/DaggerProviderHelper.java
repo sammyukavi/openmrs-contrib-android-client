@@ -25,6 +25,7 @@ import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Visit;
+import org.openmrs.mobile.models.VisitNote;
 import org.openmrs.mobile.models.VisitTask;
 
 import javax.inject.Inject;
@@ -54,6 +55,7 @@ public class DaggerProviderHelper {
 	private static final String OBSERVATION_PUSH_SYNC = Observation.class.getSimpleName();
 	private static final String VISIT_PUSH_SYNC = Visit.class.getSimpleName();
 	private static final String VISIT_TASK_PUSH_SYNC = VisitTask.class.getSimpleName();
+	private static final String VISIT_NOTE_PUSH_SYNC = VisitNote.class.getSimpleName();
 
 	private SyncComponent syncComponent;
 
@@ -111,6 +113,8 @@ public class DaggerProviderHelper {
 			provider = syncComponent.visitPushProvider();
 		} else if (className.endsWith(VISIT_TASK_PUSH_SYNC)) {
 			provider = syncComponent.visitTaskPushProvider();
+		} else if (className.endsWith(VISIT_NOTE_PUSH_SYNC)) {
+			provider = syncComponent.visitNotePushProvider();
 		}
 
 		return provider;

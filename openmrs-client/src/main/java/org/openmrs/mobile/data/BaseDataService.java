@@ -397,8 +397,10 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 		});
 	}
 
-	private SyncLog createSyncLog(@NonNull E entity, SyncAction action) {
+	private SyncLog createSyncLog(@NonNull E entity, @NonNull SyncAction action) {
 		checkNotNull(entity);
+		checkNotNull(action);
+
 		SyncLog syncLog = new SyncLog();
 		syncLog.setAction(action);
 		syncLog.setKey(entity.getUuid());

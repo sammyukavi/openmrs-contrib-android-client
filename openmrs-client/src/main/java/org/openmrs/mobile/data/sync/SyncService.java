@@ -29,6 +29,8 @@ public class SyncService {
 	private DaggerProviderHelper providerHelper;
 
 	private NetworkUtils networkUtils;
+	private Map<String, SubscriptionProvider> subscriptionProviders = new HashMap<String, SubscriptionProvider>();
+	private Map<String, SyncProvider> pushSyncProviders = new HashMap<>();
 
 	@Inject
 	public SyncService(SyncLogDbService syncLogDbService, PullSubscriptionDbService subscriptionDbService,
@@ -38,10 +40,6 @@ public class SyncService {
 		this.providerHelper = providerHelper;
 		this.networkUtils = networkUtils;
 	}
-
-	private Map<String, SubscriptionProvider> subscriptionProviders = new HashMap<String, SubscriptionProvider>();
-
-	private Map<String, SyncProvider> pushSyncProviders = new HashMap<>();
 
 	public void sync() {
 		// Synchronize access so that only one thread is synchronizing at a time
@@ -64,13 +62,13 @@ public class SyncService {
 
 		for (SyncLog record : records) {
 			SyncProvider syncProvider = pushSyncProviders.get(record.getType());
-			if(syncProvider == null) {
+			if (syncProvider == null) {
 				syncProvider = providerHelper.getSyncProvider(record.getType());
 
 				pushSyncProviders.put(record.getType(), syncProvider);
 			}
 
-			if(syncProvider != null) {
+			if (syncProvider != null) {
 				try {
 					syncProvider.sync(record);
 				} catch (DataOperationException doe) {
@@ -132,9 +130,9 @@ public class SyncService {
 						sub.setLastSync(lastSync);
 					} catch (DataOperationException doe) {
 						Log.w(TAG, "Data exception occurred while processing subscription provider '" +
-										sub.getSubscriptionClass() + ":" +
-										(StringUtils.isBlank(sub.getSubscriptionKey()) ? "(null)" :
-												sub.getSubscriptionKey()) + "'", doe);
+								sub.getSubscriptionClass() + ":" +
+								(StringUtils.isBlank(sub.getSubscriptionKey()) ? "(null)" :
+										sub.getSubscriptionKey()) + "'", doe);
 
 						// Check to see if we're still online, if not, then stop the sync
 						if (!networkUtils.hasNetwork()) {
@@ -142,9 +140,9 @@ public class SyncService {
 						}
 					} catch (Exception ex) {
 						Log.e(TAG, "An exception occurred while processing subscription provider '" +
-										sub.getSubscriptionClass() + ":" +
-										(StringUtils.isBlank(sub.getSubscriptionKey()) ? "(null)" :
-												sub.getSubscriptionKey()) + "'", ex);
+								sub.getSubscriptionClass() + ":" +
+								(StringUtils.isBlank(sub.getSubscriptionKey()) ? "(null)" :
+										sub.getSubscriptionKey()) + "'", ex);
 					}
 				}
 			}

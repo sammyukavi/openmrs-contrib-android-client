@@ -18,8 +18,6 @@ import android.support.annotation.NonNull;
 import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
-import org.openmrs.mobile.data.QueryOptions;
-import org.openmrs.mobile.data.RequestStrategy;
 import org.openmrs.mobile.data.db.impl.PullSubscriptionDbService;
 import org.openmrs.mobile.data.impl.PatientListContextDataService;
 import org.openmrs.mobile.data.impl.PatientListDataService;
@@ -49,12 +47,12 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 	private List<PatientList> patientLists;
 
 	public PatientListPresenter(@NonNull PatientListContract.View patientListView) {
-		this(patientListView, null, null);
+		this(patientListView, null, null, null);
 	}
 
 	public PatientListPresenter(@NonNull PatientListContract.View patientListView,
-			PatientListDataService patientListDataService,
-			PatientListContextDataService patientListContextDataService) {
+			PatientListDataService patientListDataService, PatientListContextDataService patientListContextDataService,
+			PullSubscriptionDbService pullSubscriptionDbService) {
 		super();
 
 		this.patientListView = patientListView;
@@ -68,9 +66,14 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 
 		if (patientListContextDataService == null) {
 			this.patientListContextDataService = dataAccess().patientListContext();
-			this.pullSubscriptionDbService = pullSubscriptionDbService();
 		} else {
 			this.patientListContextDataService = patientListContextDataService;
+		}
+
+		if (pullSubscriptionDbService == null) {
+			this.pullSubscriptionDbService = pullSubscriptionDbService();
+		} else {
+			this.pullSubscriptionDbService = pullSubscriptionDbService;
 		}
 	}
 
@@ -228,7 +231,7 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 	}
 
 	private List<PatientList> getPatientListToSync() {
-		List<PullSubscription> pullSubscriptions =  pullSubscriptionDbService.getAll(null, new PagingInfo(1, 100));
+		List<PullSubscription> pullSubscriptions = pullSubscriptionDbService.getAll(null, new PagingInfo(1, 100));
 		List<PatientList> patientListsToSync = new ArrayList<>();
 		if (pullSubscriptions != null) {
 			patientListsToSync = mapPullSubscriptions(pullSubscriptions);

@@ -21,6 +21,7 @@ import org.openmrs.mobile.utilities.StringUtils;
 
 import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -281,7 +282,8 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 				// Try to get the entity from the db. If nothing is found just return null without any error
 				T result = dbSupplier.get();
 
-				if (result == null && networkUtils.isOnline() &&
+				if ((result == null || (result instanceof ArrayList && ((List<E>) result).size() == 0)) &&
+						networkUtils.isOnline() &&
 						QueryOptions.getRequestStrategy(options) == RequestStrategy.LOCAL_THEN_REMOTE) {
 					// This call will spin up another thread
 					performOnlineCallback(callback, options, dbSupplier, restSupplier, responseConverter, dbOperation);

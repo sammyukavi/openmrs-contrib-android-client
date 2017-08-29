@@ -3,8 +3,10 @@ package org.openmrs.mobile.data.sync;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.dagger.DaggerSyncComponent;
 import org.openmrs.mobile.dagger.SyncComponent;
+import org.openmrs.mobile.dagger.SyncModule;
 import org.openmrs.mobile.data.sync.impl.ConceptClassSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.DiagnosisConceptSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.EncounterTypeSubscriptionProvider;
@@ -45,8 +47,8 @@ public class DaggerProviderHelper {
 	private SyncComponent syncComponent;
 
 	@Inject
-	public DaggerProviderHelper() {
-		this.syncComponent = DaggerSyncComponent.builder().build();
+	public DaggerProviderHelper(OpenMRS openMRS) {
+		this.syncComponent = DaggerSyncComponent.builder().syncModule(new SyncModule(openMRS)).build();
 	}
 
 	public SubscriptionProvider getSubscriptionProvider(@NonNull String className) {

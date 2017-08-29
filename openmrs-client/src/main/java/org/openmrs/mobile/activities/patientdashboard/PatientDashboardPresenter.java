@@ -19,10 +19,12 @@ import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
+import org.openmrs.mobile.data.RequestStrategy;
 import org.openmrs.mobile.data.impl.LocationDataService;
 import org.openmrs.mobile.data.impl.PatientDataService;
 import org.openmrs.mobile.data.impl.ProviderDataService;
 import org.openmrs.mobile.data.impl.VisitDataService;
+import org.openmrs.mobile.data.rest.RestConstants;
 import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Provider;
@@ -113,7 +115,12 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 				setLoading(false);
 			}
 		};
-		visitDataService.getByPatient(patient, QueryOptions.INCLUDE_ALL_FULL_REP, pagingInfo, fetchVisitsCallback);
+		QueryOptions options = new QueryOptions.Builder()
+				.includeInactive(true)
+				.customRepresentation(RestConstants.Representations.FULL)
+				.requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL)
+				.build();
+		visitDataService.getByPatient(patient, options, pagingInfo, fetchVisitsCallback);
 	}
 
 	@Override

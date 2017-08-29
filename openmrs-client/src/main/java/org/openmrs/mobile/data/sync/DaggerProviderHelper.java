@@ -22,6 +22,8 @@ import javax.inject.Inject;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class DaggerProviderHelper {
+	private static final String TAG = DaggerProviderHelper.class.getSimpleName();
+
 	private static final String DIAGNOSIS_CONCEPT_SUBSCRIPTION = DiagnosisConceptSubscriptionProvider.class.getSimpleName();
 	private static final String LOCATION_SUBSCRIPTION = LocationSubscriptionProvider.class.getSimpleName();
 	private static final String PATIENT_LIST_CONTEXT_SUBSCRIPTION =
@@ -76,7 +78,7 @@ public class DaggerProviderHelper {
 		}
 
 		if (provider == null) {
-			Log.e(SyncService.TAG, "Unknown subscription provider '" + className + "'");
+			Log.e(TAG, "Unknown subscription provider '" + className + "'");
 		}
 
 		return provider;

@@ -13,7 +13,6 @@ import org.openmrs.mobile.data.impl.ConceptDataService;
 import org.openmrs.mobile.data.impl.ObsDataService;
 import org.openmrs.mobile.data.impl.VisitNoteDataService;
 import org.openmrs.mobile.data.rest.RestConstants;
-import org.openmrs.mobile.data.sync.impl.PatientSummarySyncService;
 import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Observation;
@@ -31,7 +30,6 @@ public class BaseDiagnosisPresenter {
 	private int limit = 20;
 	private List<String> obsUuids = new ArrayList<>();
 	private DataAccessComponent dataAccess;
-	private PatientSummarySyncService patientSummarySyncService;
 
 	public BaseDiagnosisPresenter() {
 		dataAccess = DaggerDataAccessComponent.create();
@@ -39,7 +37,6 @@ public class BaseDiagnosisPresenter {
 		this.conceptDataService = dataAccess.concept();
 		this.obsDataService = dataAccess.obs();
 		this.visitNoteDataService = dataAccess.visitNote();
-		this.patientSummarySyncService = DaggerSyncComponent.create().patientSummarySyncService();
 	}
 
 	public void findConcept(String searchQuery, IBaseDiagnosisFragment base) {
@@ -85,12 +82,6 @@ public class BaseDiagnosisPresenter {
 			public void onError(Throwable t) {
 			}
 		});
-	}
-
-	protected void synClinicalNote(Observation currentObservation) {
-		new Thread(() -> {
-			patientSummarySyncService.sync(currentObservation);
-		}).start();
 	}
 
 	private void getObservation(Observation obs, Encounter encounter, IBaseDiagnosisFragment base) {

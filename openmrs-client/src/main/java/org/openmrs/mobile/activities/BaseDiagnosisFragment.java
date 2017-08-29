@@ -117,13 +117,7 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 		Handler handler = new Handler();
 		Runnable inputCompleteChecker = () -> {
 			if (System.currentTimeMillis() > (lastTextEdit + SAVE_CLINICAL_NOTE_DELAY)) {
-				if (getEncounterUuid() != null) {
-					getClinicalNoteObservation().setValue(clinicalNoteView.getText().toString());
-					getClinicalNoteObservation().setDiagnosisNote(clinicalNoteView.getText().toString());
-					diagnosisPresenter.synClinicalNote(getClinicalNoteObservation());
-				} else {
-					saveVisitNote(getEncounterUuid(), clinicalNoteView.getText().toString(), visit);
-				}
+				saveVisitNote(getEncounterUuid(), clinicalNoteView.getText().toString(), visit);
 			}
 		};
 
@@ -372,7 +366,9 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 		visitNote.setW3(OpenMRS.getInstance().getParentLocationUuid());
 		visitNote.setW5(DateUtils.convertTime(visit.getStartDatetime().getTime(), DateUtils.OPEN_MRS_REQUEST_FORMAT));
 		visitNote.setW10(ApplicationConstants.EMPTY_STRING);
-		visitNote.setW12(null == clinicalNote ? ApplicationConstants.EMPTY_STRING : clinicalNote);
+		visitNote.setW12(clinicalNote == null ? ApplicationConstants.EMPTY_STRING : clinicalNote);
+		visitNote.setObservationUuid(
+				getClinicalNoteObservation() != null ? getClinicalNoteObservation().getUuid() : ApplicationConstants.EMPTY_STRING);
 
 		encounterDiagnoses.addAll(primaryDiagnoses);
 		encounterDiagnoses.addAll(secondaryDiagnoses);

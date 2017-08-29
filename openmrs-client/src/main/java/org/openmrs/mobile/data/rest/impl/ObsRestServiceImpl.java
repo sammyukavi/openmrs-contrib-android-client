@@ -32,10 +32,4 @@ public class ObsRestServiceImpl extends BaseRestService<Observation, ObsRestServ
 		return restService.getVisitDocumentsObsByPatientAndConceptList(buildRestRequestPath(), patientUuid,
 				VISIT_DOCUMENT_UUID, RestConstants.Representations.FULL);
 	}
-
-	public Call<Observation> getByEncounterAndConcept(String encounterUuid, String conceptUuid,
-			QueryOptions options, Boolean includeActive) {
-		return restService.getByEncounterAndConcept(buildRestRequestPath(),
-				encounterUuid, conceptUuid, QueryOptions.getRepresentation(options), includeActive);
-	}
 }

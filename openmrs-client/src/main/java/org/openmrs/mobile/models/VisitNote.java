@@ -1,6 +1,7 @@
 package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
+import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.Table;
 
 import org.openmrs.mobile.data.db.AppDatabase;
@@ -54,6 +55,9 @@ public class VisitNote extends BaseOpenmrsEntity {
 
 	@Expose
 	private String w12;
+
+	@Column
+	private String observationUuid;
 
 	public String getPersonId() {
 		return personId;
@@ -181,5 +185,13 @@ public class VisitNote extends BaseOpenmrsEntity {
 		}
 
 		encounterDiagnoses.add(encounterDiagnosis);
+	}
+
+	public String getObservationUuid() {
+		return observationUuid;
+	}
+
+	public void setObservationUuid(String observationUuid) {
+		this.observationUuid = observationUuid;
 	}
 }

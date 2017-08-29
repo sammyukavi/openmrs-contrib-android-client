@@ -10,8 +10,6 @@ public class RestConstants {
 	public static final String PURGE = GET_BY_UUID;
 	public static final String LOCATION_PATH = REST_PATH + "?tag=IM Location";
 	public static final String CONCEPT_SEARCH_PATH = REST_PATH + "?s=diagnosisByTerm";
-	public static final String OBS_SEARCH_BY_ENCOUNTER_PATH = REST_PATH + "?s=byEncounter";
-
 
 	public class Representations {
 		public static final String FULL = "full";
@@ -27,7 +25,6 @@ public class RestConstants {
 				+ "display))";
 		public static final String VISIT_ENCOUNTER = "custom:(uuid,display,encounterDatetime,patient:ref,location:ref,"
 				+ "form:ref,encounterType:ref,obs,creator:ref,dateCreated,changedBy:ref,dateChanged)";
-		public static final String PATIENT_SUMMARY = "custom:(uuid,valueText,display,creator,dateCreated)";
 		public static final String OBSERVATION = "custom:(uuid,display,value,groupMembers,concept,encounter,dateCreated,"
 				+ "creator:(uuid,display))";
 	}

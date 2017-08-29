@@ -33,13 +33,6 @@ public interface ObsRestService {
 			@Query("conceptList") String conceptList,
 			@Query("v") String representation);
 
-	@GET(RestConstants.OBS_SEARCH_BY_ENCOUNTER_PATH)
-	Call<Observation> getByEncounterAndConcept(@Path(value = "restPath", encoded = true) String restPath,
-			@Query("encounter") String encounterUuid,
-			@Query("concept") String conceptUuid,
-			@Query("v") String representation,
-			@Query("includeActive") Boolean includeActive);
-
 	@POST(RestConstants.UPDATE)
 	Call<Observation> update(@Path(value = "restPath", encoded = true) String restPath,
 			@Path("uuid") String uuid, @Body Observation entity);

@@ -1,6 +1,5 @@
 package org.openmrs.mobile.dagger;
 
-import org.greenrobot.eventbus.EventBus;
 import org.openmrs.mobile.data.sync.SyncService;
 import org.openmrs.mobile.data.sync.impl.ConceptClassSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.DiagnosisConceptSubscriptionProvider;
@@ -9,7 +8,6 @@ import org.openmrs.mobile.data.sync.impl.LocationSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.PatientIdentifierTypeSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.PatientListContextSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.PatientListSubscriptionProvider;
-import org.openmrs.mobile.data.sync.impl.PatientSummarySyncService;
 import org.openmrs.mobile.data.sync.impl.PersonAttributeTypeSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.VisitAttributeTypeSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.VisitPredefinedTaskSubscriptionProvider;
@@ -45,6 +43,4 @@ public interface SyncComponent {
 	VisitPredefinedTaskSubscriptionProvider visitPredefinedTaskSubscriptionProvider();
 
 	VisitTypeSubscriptionProvider visitTypeSubscriptionProvider();
-
-	PatientSummarySyncService patientSummarySyncService();
 }

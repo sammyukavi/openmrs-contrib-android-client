@@ -21,7 +21,6 @@ import org.openmrs.mobile.utilities.StringUtils;
 
 import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -146,9 +145,7 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 		Consumer<E> dbOperationWrapper = e -> dbOperation.run();
 
 		performCallback(callbackWrapper, options, dbSupplier, restOperation,
-				(E result) -> result,
-				dbOperationWrapper,
-				null);
+				(E result) -> result, dbOperationWrapper);
 	}
 
 	/**
@@ -180,8 +177,7 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 
 		performCallback(callback, options, dbQuery, restQuery,
 				(E result) -> result,
-				dbOperation,
-				null);
+				dbOperation);
 	}
 
 	/**
@@ -199,14 +195,14 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 	 */
 	protected <T, R> void executeSingleCallback(@NonNull GetCallback<T> callback, @Nullable QueryOptions options,
 			@NonNull Supplier<T> dbQuery, @NonNull Supplier<Call<R>> restQuery, @NonNull Function<R, T> responseConverter,
-			@NonNull Consumer<T> dbOperation, @Nullable Function<T, T> dbResultConverter) {
+			@NonNull Consumer<T> dbOperation) {
 		checkNotNull(callback);
 		checkNotNull(dbQuery);
 		checkNotNull(restQuery);
 		checkNotNull(responseConverter);
 		checkNotNull(dbOperation);
 
-		performCallback(callback, options, dbQuery, restQuery, responseConverter, dbOperation, dbResultConverter);
+		performCallback(callback, options, dbQuery, restQuery, responseConverter, dbOperation);
 	}
 
 	/**
@@ -249,14 +245,7 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 
 					return results.getResults();
 				},
-				dbOperation,
-				(List<E> results) -> {
-					if (pagingInfo != null) {
-						pagingInfo.setTotalRecordCount(results.size());
-					}
-
-					return results;
-				});
+				dbOperation);
 	}
 
 	/**
@@ -264,25 +253,17 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 	 * based on the operation result.
 	 */
 	private <T, R> void performCallback(GetCallback<T> callback, QueryOptions options, Supplier<T> dbSupplier,
-			Supplier<Call<R>> restSupplier, Function<R, T> responseConverter, Consumer<T> dbSave,
-			@Nullable Function<T, T> dbResultConverter) {
-		if (dbResultConverter == null) {
-			dbResultConverter = (T result) -> result;
-		}
-
+			Supplier<Call<R>> restSupplier, Function<R, T> responseConverter, Consumer<T> dbSave) {
 		if (!getCachedResult(callback, options)) {
 			switch (QueryOptions.getRequestStrategy(options)) {
 				case LOCAL_ONLY:
-					performOfflineCallback(callback, options, dbSupplier, restSupplier, responseConverter, dbResultConverter,
-							dbSave);
+					performOfflineCallback(callback, options, dbSupplier, restSupplier, responseConverter, dbSave);
 					break;
 				case LOCAL_THEN_REMOTE:
-					performOfflineCallback(callback, options, dbSupplier, restSupplier, responseConverter, dbResultConverter,
-							dbSave);
+					performOfflineCallback(callback, options, dbSupplier, restSupplier, responseConverter, dbSave);
 					break;
 				case REMOTE_THEN_LOCAL:
-					performOnlineCallback(callback, options, dbSupplier, restSupplier, responseConverter, dbResultConverter,
-							dbSave);
+					performOnlineCallback(callback, options, dbSupplier, restSupplier, responseConverter, dbSave);
 					break;
 			}
 		}
@@ -293,21 +274,18 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 	 * result. If the call fails and the Request Strategy is to LOCAL_THEN_REMOTE, try REST
 	 */
 	private <T, R> void performOfflineCallback(GetCallback<T> callback, QueryOptions options, Supplier<T> dbSupplier,
-			Supplier<Call<R>> restSupplier, Function<R, T> responseConverter, Function<T, T> dbResultConverter,
-			Consumer<T> dbOperation) {
+			Supplier<Call<R>> restSupplier, Function<R, T> responseConverter, Consumer<T> dbOperation) {
 		// Perform the db task on another thread
 		new Thread(() -> {
 			try {
 				// Try to get the entity from the db. If nothing is found just return null without any error
-				T result = dbResultConverter.apply(dbSupplier.get());
+				T result = dbSupplier.get();
 
 				if (result == null && networkUtils.isOnline() &&
 						QueryOptions.getRequestStrategy(options) == RequestStrategy.LOCAL_THEN_REMOTE) {
 					// This call will spin up another thread
-					performOnlineCallback(callback, options, dbSupplier, restSupplier, responseConverter, dbResultConverter,
-							dbOperation);
+					performOnlineCallback(callback, options, dbSupplier, restSupplier, responseConverter, dbOperation);
 				} else {
-
 					setCachedResult(options, result);
 					// Execute callback on the current UI Thread
 					new Handler(Looper.getMainLooper()).post(() -> callback.onCompleted(result));
@@ -328,8 +306,7 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 	 * local db operation returns null then an exception is thrown to indicate that the call failed.
 	 */
 	private <T, R> void performOnlineCallback(GetCallback<T> callback, QueryOptions options, Supplier<T> dbSupplier,
-			Supplier<Call<R>> restSupplier, Function<R, T> responseConverter, Function<T, T> dbResultConverter,
-			Consumer<T> dbOperation) {
+			Supplier<Call<R>> restSupplier, Function<R, T> responseConverter, Consumer<T> dbOperation) {
 		// Perform the rest task
 		restSupplier.get().enqueue(new Callback<R>() {
 			@Override
@@ -364,7 +341,7 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 							try {
 								Log.w(TAG, "REST response error; trying local db (" + response.code() +
 										": " + response.message() + "");
-								T result = dbResultConverter.apply(dbSupplier.get());
+								T result = dbSupplier.get();
 
 								if (result != null) {
 									// Found it! Return this entity and ignore the rest connection error

@@ -72,9 +72,9 @@ public interface VisitTaskRestService {
 
 	@GET(RestConstants.REST_PATH)
 	Call<Results<RecordInfo>> getRecordInfoByVisit(@Path(value = "restPath", encoded = true) String restPath,
-			@Query("visit") String visitUuid,
+			@Query("visit_uuid") String visitUuid,
 			@Query("v") String representation,
 			@Query("includeInactive") Boolean includeAll,
-			@Query("limit") int limit,
-			@Query("startIndex") int startIndex);
+			@Query("limit") Integer limit,
+			@Query("startIndex") Integer startIndex);
 }

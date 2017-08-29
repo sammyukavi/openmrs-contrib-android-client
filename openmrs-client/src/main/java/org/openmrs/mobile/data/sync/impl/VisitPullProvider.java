@@ -103,14 +103,13 @@ public class VisitPullProvider {
 	}
 
 	private void pullVisitTasks(PullSubscription subscription, RecordInfo patientRecord, List<RecordInfo> visitInfo) {
-		QueryOptions options = new QueryOptions.Builder().customRepresentation(RestConstants.Representations.VISiT_TASKS)
+		QueryOptions options = new QueryOptions.Builder().customRepresentation(RestConstants.Representations.VISIT_TASKS)
 				.build();
 
 		for (RecordInfo visitRecord : visitInfo) {
 			List<RecordInfo> visitTasks = RestHelper.getCallListValue(visitTaskRestService.getRecordInfoByVisit
 					(visitRecord.getUuid(), null, PagingInfo.ALL));
 
-			assert visitTasks != null;
 			databaseHelper.diffDelete(VisitTask.class, VisitTask_Table.visit_uuid.eq(visitRecord.getUuid()), visitTasks);
 
 			List<VisitTask> visitTaskList = new ArrayList<>();
@@ -123,7 +122,7 @@ public class VisitPullProvider {
 				}
 			}
 
-			if (!visitTaskList.isEmpty()){
+			if (!visitTaskList.isEmpty()) {
 				visitTaskDbService.saveAll(visitTaskList);
 			}
 		}

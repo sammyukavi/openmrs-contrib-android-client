@@ -382,9 +382,9 @@
 	<string name="first_map">1st MAP in ICU ≤ 65?</string>
 	<string name="any_prior_sedetion">Had patient received any sedation prior to 1st GCS score at ICU admission?</string>
 	<string name="surgery_during_hospital_stay">Surgery during hospital stay?</string>
-	<string name="not_applicable">N/A</string>
-	<string name="planned">Planned</string>
-	<string name="unplanned">Unplanned</string>
+	<string name="not_applicable">No</string>
+	<string name="planned">Yes - Scheduled in clinic</string>
+	<string name="unplanned">Yes - Not scheduled in clinic</string>
 	<string name="hiv_positive">Positive</string>
 	<string name="hiv_negative">Negative</string>
 	<string name="patient_diabetic">Patient diabetic?</string>

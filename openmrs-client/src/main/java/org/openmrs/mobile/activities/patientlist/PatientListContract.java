@@ -44,7 +44,7 @@ public interface PatientListContract {
 
 		void updatePagingLabel(int currentPage, int totalNumberOfPages);
 
-		void updatePatientListSelectionDisplay(List<PatientList> patientList, List<PatientList> syncingPatientLists);
+		void updatePatientListSyncDisplay(List<PatientList> patientList, List<PatientList> syncingPatientLists);
 	}
 
 	interface Presenter extends BasePresenterContract {

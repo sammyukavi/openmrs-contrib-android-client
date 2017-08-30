@@ -232,7 +232,7 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 
 	public void syncSelectionsSaved() {
 		List<PatientList> patientListsToSync = getPatientListToSync();
-		patientListView.updatePatientLists(patientLists, patientListsToSync);
+		patientListView.updatePatientListSyncDisplay(patientLists, patientListsToSync);
 	}
 
 	private List<PatientList> getPatientListToSync() {

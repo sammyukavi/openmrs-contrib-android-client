@@ -248,7 +248,7 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 	}
 
 	@Override
-	public void updatePatientListSelectionDisplay(List<PatientList> patientList, List<PatientList> syncingPatientLists) {
+	public void updatePatientListSyncDisplay(List<PatientList> patientList, List<PatientList> syncingPatientLists) {
 		List<PatientList> patientListsToShow = getPatientListDisplayList(patientList);
 		patientListSpinnerAdapter.setItems(patientListsToShow, syncingPatientLists);
 	}

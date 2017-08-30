@@ -82,6 +82,7 @@ public class QueryOptions {
 		private boolean includeInactive = DEFAULT_INCLUDE_INACTIVE;
 		private String cacheKey;
 		private String customRepresentation;
+		private RequestStrategy requestStrategy = DEFAULT_REQUEST_STRATEGY;
 
 		public Builder() {
 		}
@@ -104,11 +105,18 @@ public class QueryOptions {
 			return this;
 		}
 
+		public Builder requestStrategy(RequestStrategy requestStrategy) {
+			this.requestStrategy = requestStrategy;
+
+			return this;
+		}
+
 		public QueryOptions build() {
 			QueryOptions instance = new QueryOptions();
 			instance.setIncludeInactive(includeInactive);
 			instance.setCacheKey(cacheKey);
 			instance.setCustomRepresentation(customRepresentation);
+			instance.setRequestStrategy(requestStrategy);
 
 			return instance;
 		}

@@ -17,33 +17,32 @@ import javax.inject.Inject;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class PatientListPullProvider {
+public class PatientPullProvider {
 	private PatientDbService patientDbService;
 	private PatientRestServiceImpl patientRestService;
 
 	@Inject
-	public PatientListPullProvider(PatientDbService patientDbService,
+	public PatientPullProvider(PatientDbService patientDbService,
 			PatientRestServiceImpl patientRestService) {
 		this.patientDbService = patientDbService;
 		this.patientRestService = patientRestService;
 	}
 
-	public void pull(@NonNull PullSubscription subscription, @NonNull List<RecordInfo> patienInfo) {
+	public void pull(@NonNull PullSubscription subscription, @NonNull List<RecordInfo> patientInfo) {
 		checkNotNull(subscription);
-		checkNotNull(patienInfo);
+		checkNotNull(patientInfo);
 
 		// Calculate the patients that need to be pulled
 		List<RecordInfo> patients = new ArrayList<>();
-		for (RecordInfo record : patienInfo) {
+		for (RecordInfo record : patientInfo) {
 			if (record.getDateChanged().compareTo(subscription.getLastSync()) > 0) {
 				patients.add(record);
 			}
 		}
 
-		for (RecordInfo patientInfo : patients) {
+		for (RecordInfo info : patients) {
 			// Get full patient data
-			Patient patient = RestHelper.getCallValue(
-					patientRestService.getByUuid(patientInfo.getUuid(), QueryOptions.FULL_REP));
+			Patient patient = RestHelper.getCallValue(patientRestService.getByUuid(info.getUuid(), QueryOptions.FULL_REP));
 
 			// Save patient in db
 			if (patient != null) {

@@ -27,7 +27,7 @@ public class PatientListContextSubscriptionProvider extends BaseSubscriptionProv
 
 	private DatabaseHelper databaseHelper;
 
-	private PatientListPullProvider patientListPullProvider;
+	private PatientPullProvider patientListPullProvider;
 	private VisitPullProvider visitPullProvider;
 	private EventBus eventBus;
 
@@ -35,11 +35,11 @@ public class PatientListContextSubscriptionProvider extends BaseSubscriptionProv
 
 	@Inject
 	public PatientListContextSubscriptionProvider(PatientListContextDbService dbService,
-			PatientListContextRestServiceImpl restService, PatientListPullProvider patientListPullProvider,
+			PatientListContextRestServiceImpl restService, PatientPullProvider patientPullProvider,
 			VisitPullProvider visitPullProvider, DatabaseHelper databaseHelper, EventBus eventBus) {
 		this.listPatientDbService = dbService;
 		this.listPatientRestService = restService;
-		this.patientListPullProvider = patientListPullProvider;
+		this.patientListPullProvider = patientPullProvider;
 		this.visitPullProvider = visitPullProvider;
 		this.databaseHelper = databaseHelper;
 		this.eventBus = eventBus;

@@ -112,7 +112,7 @@ public class VisitPullProvider {
 
 		for (RecordInfo observationsRecord : visitInfo) {
 			List<RecordInfo> observationInfo = RestHelper.getCallListValue(obsRestService
-					.getVisitDocumentsObsRecordInfoByPatientAndConceptList(patientRecord.getUuid(), options));
+					.getVisitDocumentsObsRecordInfoByPatientAndConceptList(patientRecord.getUuid()));
 
 			databaseHelper
 					.diffDelete(Observation.class, Observation_Table.uuid.eq(observationsRecord.getUuid()),
@@ -132,6 +132,8 @@ public class VisitPullProvider {
 				obsDbService.saveAll(observations);
 			}
 		}
+
+		for (RecordInfo visitPhotoRecord: )
 
 	}
 

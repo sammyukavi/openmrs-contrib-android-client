@@ -20,6 +20,7 @@ import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.impl.ObsDataService;
 import org.openmrs.mobile.data.impl.VisitPhotoDataService;
+import org.openmrs.mobile.data.rest.RestConstants;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Provider;
@@ -58,7 +59,9 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 	private void loadVisitDocumentObservations() {
 		visitPhotoView.showTabSpinner(true);
 		// get obs for patient.
-		obsDataService.getVisitDocumentsObsByPatientAndConceptList(patientUuid, null,
+		QueryOptions options = new QueryOptions.Builder()
+				.customRepresentation(RestConstants.Representations.FULL).build();
+		obsDataService.getVisitDocumentsObsByPatientAndConceptList(patientUuid, options,
 				new DataService.GetCallback<List<Observation>>() {
 					@Override
 					public void onCompleted(List<Observation> observations) {
@@ -121,7 +124,7 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 	}
 
 	private void initVisitPhoto() {
-		if(visitPhoto != null){
+		if (visitPhoto != null) {
 			return;
 		}
 
@@ -174,7 +177,8 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 	}
 
 	@Override
-	public void unsubscribe() {}
+	public void unsubscribe() {
+	}
 
 	@Override
 	public void deleteImage(VisitPhoto visitPhoto) {

@@ -25,7 +25,7 @@ public class RestConstants {
 				+ "display))";
 		public static final String VISIT_ENCOUNTER = "custom:(uuid,display,encounterDatetime,patient:ref,location:ref,"
 				+ "form:ref,encounterType:ref,obs,creator:ref,dateCreated,changedBy:ref,dateChanged)";
-		public static final String VISIT_PHOTO = "custom(uuid, patient:(uuid, display), visit: (uuid), fileCaption, "
-				+ "instructions, user:(person:(display)), downloadedImage)";
+		public static final String VISIT_PHOTO = "custom:(uuid,patient:(uuid,display),visit:(uuid),fileCaption,"
+				+ "instructions,user:(person:(display)),downloadedImage)";
 	}
 }

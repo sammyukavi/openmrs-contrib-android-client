@@ -1,7 +1,5 @@
 package org.openmrs.mobile.data.rest.impl;
 
-import org.openmrs.mobile.data.PagingInfo;
-import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.rest.BaseRestService;
 import org.openmrs.mobile.data.rest.RestConstants;
 import org.openmrs.mobile.data.rest.retrofit.VisitPhotoRestService;
@@ -19,7 +17,8 @@ import retrofit2.Call;
 
 public class VisitPhotoRestServiceImpl extends BaseRestService<VisitPhoto, VisitPhotoRestService> {
 	@Inject
-	public VisitPhotoRestServiceImpl() { }
+	public VisitPhotoRestServiceImpl() {
+	}
 
 	@Override
 	protected String getRestPath() {
@@ -45,5 +44,10 @@ public class VisitPhotoRestServiceImpl extends BaseRestService<VisitPhoto, Visit
 
 	public Call<ResponseBody> downloadPhoto(String obsUuid, String view) {
 		return restService.downloadVisitPhoto(buildRestRequestPath(), obsUuid, view);
+	}
+
+	public Call<Results<RecordInfo>> downloadPhotoRecordInfo(String obsUuid, String view) {
+		return restService.downloadVisitPhotoRecordInfo(buildRestRequestPath(), obsUuid, RestConstants.Representations
+				.RECORD_INFO);
 	}
 }

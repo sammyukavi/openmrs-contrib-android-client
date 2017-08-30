@@ -16,11 +16,9 @@ package org.openmrs.mobile.activities.patientdashboard;
 
 import android.content.Context;
 
-import org.openmrs.mobile.activities.BaseDiagnosisPresenter;
-import org.openmrs.mobile.activities.IBaseDiagnosisView;
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
-import org.openmrs.mobile.models.Encounter;
+import org.openmrs.mobile.activities.IBaseDiagnosisView;
 import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
@@ -52,6 +50,8 @@ public interface PatientDashboardContract {
 
 		void updateClinicVisitNote(Observation observation, String encounterUuid);
 
+		void showNoPatientData(boolean visible);
+
 	}
 
 	interface Presenter extends BasePresenterContract {
@@ -62,17 +62,17 @@ public interface PatientDashboardContract {
 
 		Patient getPatient();
 
-		void setLimit(int limit);
-
-		void setStartIndex(int startIndex);
-
 		boolean isLoading();
 
 		void setLoading(boolean loading);
 
 		int getStartIndex();
 
+		void setStartIndex(int startIndex);
+
 		int getLimit();
+
+		void setLimit(int limit);
 
 		void loadResults(Patient patient, boolean loadNextResults);
 

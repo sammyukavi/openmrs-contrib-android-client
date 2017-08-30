@@ -12,6 +12,7 @@ import android.widget.TextView;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.activities.patientlist.PatientListActivity;
+import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.FontsUtil;
 import org.openmrs.mobile.utilities.ToastUtil;
 
@@ -59,9 +60,9 @@ public class LoginSyncFragment extends ACBaseFragment<LoginSyncContract.Presente
 		pullDurationText = (TextView) rootView.findViewById(R.id.pullDurationText);
 
 		pushProgressText.setText(getString(R.string.initial_sync_push_progress_text));
-		pushDurationText.setText("");
+		pushDurationText.setText(ApplicationConstants.EMPTY_STRING);
 		pullProgressText.setText(getString(R.string.initial_sync_pull_progress_text));
-		pullDurationText.setText("");
+		pullDurationText.setText(ApplicationConstants.EMPTY_STRING);
 	}
 
 	private void updateSyncPushProgress(double percentComplete, String progressText) {
@@ -94,23 +95,23 @@ public class LoginSyncFragment extends ACBaseFragment<LoginSyncContract.Presente
 	}
 
 	public void updateSyncPullProgressForStartingSubscription(double percentComplete, String subscriptionName) {
-		String progressText = String.format(getString(R.string.subscription_remote_pull_starting), subscriptionName);
+		String progressText = getString(R.string.subscription_remote_pull_starting, subscriptionName);
 		updateSyncPullProgress(percentComplete, progressText);
 	}
 
 	public void updateSyncPullProgressForCompletingSubscription(double percentComplete, String subscriptionName) {
-		String progressText = String.format(getString(R.string.subscription_remote_pull_complete), subscriptionName);
+		String progressText = getString(R.string.subscription_remote_pull_complete, subscriptionName);
 		updateSyncPullProgress(percentComplete, progressText);
 	}
 
 	public void updateSyncPullProgressForStartingEntity(double percentComplete, String subscriptionName, String entityName) {
-		String progressText = String.format(getString(R.string.entity_remote_pull_starting), subscriptionName, entityName);
+		String progressText = getString(R.string.entity_remote_pull_starting, subscriptionName, entityName);
 		updateSyncPullProgress(percentComplete, progressText);
 	}
 
 	public void updateSyncPullProgressForCompletingEntity(double percentComplete, String subscriptionName,
 			String entityName) {
-		String progressText = String.format(getString(R.string.entity_remote_pull_complete), subscriptionName, entityName);
+		String progressText = getString(R.string.entity_remote_pull_complete, subscriptionName, entityName);
 		updateSyncPullProgress(percentComplete, progressText);
 	}
 

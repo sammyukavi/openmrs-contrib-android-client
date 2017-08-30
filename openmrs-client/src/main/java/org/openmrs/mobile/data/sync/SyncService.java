@@ -115,17 +115,18 @@ public class SyncService {
 										(StringUtils.isBlank(sub.getSubscriptionKey()) ? "(null)" :
 												sub.getSubscriptionKey()) + "'", doe);
 
+					} catch (Exception ex) {
+						Log.e(TAG, "An exception occurred while processing subscription provider '" +
+										sub.getSubscriptionClass() + ":" +
+										(StringUtils.isBlank(sub.getSubscriptionKey()) ? "(null)" :
+												sub.getSubscriptionKey()) + "'", ex);
+					} finally {
 						// Check to see if we're still online, if not, then stop the sync
 						if (!networkUtils.hasNetwork()) {
 							eventBus.post(new SyncEvent(ApplicationConstants.EventMessages.Sync.CANT_SYNC_NO_NETWORK,
 									null, null));
 							break;
 						}
-					} catch (Exception ex) {
-						Log.e(TAG, "An exception occurred while processing subscription provider '" +
-										sub.getSubscriptionClass() + ":" +
-										(StringUtils.isBlank(sub.getSubscriptionKey()) ? "(null)" :
-												sub.getSubscriptionKey()) + "'", ex);
 					}
 				}
 			}

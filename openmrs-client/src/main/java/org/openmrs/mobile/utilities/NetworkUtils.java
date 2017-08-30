@@ -33,6 +33,8 @@ import java.net.URL;
 
 public class NetworkUtils {
 
+	public static final double UNKNOWN_CONNECTION_SPEED = -1;
+
 	@Inject
 	public NetworkUtils() {
 	}
@@ -155,10 +157,10 @@ public class NetworkUtils {
 				// Unknown
 				case TelephonyManager.NETWORK_TYPE_UNKNOWN:
 				default:
-					return null;
+					return UNKNOWN_CONNECTION_SPEED;
 			}
 		} else {
-			return null;
+			return UNKNOWN_CONNECTION_SPEED;
 		}
 	}
 }

@@ -58,9 +58,6 @@ public class SyncManager {
 	public void requestSync() {
 		if (openMRS.getAuthorizationManager().isUserLoggedIn()) {
 			syncService.sync();
-		} else {
-			openMRS.getEventBus().post(new SyncEvent(ApplicationConstants.EventMessages.Sync.CANT_SYNC_NO_NETWORK,
-					null, null));
 		}
 	}
 }

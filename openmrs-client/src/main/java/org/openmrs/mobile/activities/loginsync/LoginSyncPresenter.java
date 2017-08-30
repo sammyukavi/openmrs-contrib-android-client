@@ -77,9 +77,9 @@ public class LoginSyncPresenter extends BasePresenter implements LoginSyncContra
 		double progress;
 
 		// First check for information to determine of progress should be updated
-		switch (syncPullEvent.message) {
+		switch (syncPullEvent.getMessage()) {
 			case ApplicationConstants.EventMessages.Sync.Pull.TOTAL_SUBSCRIPTIONS:
-				totalSyncPushes = syncPullEvent.totalItems;
+				totalSyncPushes = syncPullEvent.getTotalItems();
 				break;
 			case ApplicationConstants.EventMessages.Sync.Pull.SUBSCRIPTION_REMOTE_PULL_COMPLETE:
 				entitiesPulled++;
@@ -94,20 +94,21 @@ public class LoginSyncPresenter extends BasePresenter implements LoginSyncContra
 			progress = entitiesPulled / totalSyncPushes;
 		}
 
-		switch (syncPullEvent.message) {
+		switch (syncPullEvent.getMessage()) {
 			case ApplicationConstants.EventMessages.Sync.Pull.SUBSCRIPTION_REMOTE_PULL_STARTING:
-				view.updateSyncPullProgressForStartingSubscription(progress, syncPullEvent.entity);
-				currentDownloadingSubscription = syncPullEvent.entity;
+				view.updateSyncPullProgressForStartingSubscription(progress, syncPullEvent.getEntity());
+				currentDownloadingSubscription = syncPullEvent.getEntity();
 				break;
 			case ApplicationConstants.EventMessages.Sync.Pull.SUBSCRIPTION_REMOTE_PULL_COMPLETE:
-				view.updateSyncPullProgressForCompletingSubscription(progress, syncPullEvent.entity);
+				view.updateSyncPullProgressForCompletingSubscription(progress, syncPullEvent.getEntity());
 				break;
 			case ApplicationConstants.EventMessages.Sync.Pull.ENTITY_REMOTE_PULL_STARTING:
-				view.updateSyncPullProgressForStartingEntity(progress, currentDownloadingSubscription, syncPullEvent.entity);
+				view.updateSyncPullProgressForStartingEntity(progress, currentDownloadingSubscription,
+						syncPullEvent.getEntity());
 				break;
 			case ApplicationConstants.EventMessages.Sync.Pull.ENTITY_REMOTE_PULL_COMPLETE:
 				view.updateSyncPullProgressForCompletingEntity(progress, currentDownloadingSubscription,
-						syncPullEvent.entity);
+						syncPullEvent.getEntity());
 				break;
 		}
 
@@ -122,7 +123,7 @@ public class LoginSyncPresenter extends BasePresenter implements LoginSyncContra
 	}
 
 	public void onSyncEvent(SyncEvent syncEvent) {
-		if (syncEvent.message.equals(ApplicationConstants.EventMessages.Sync.CANT_SYNC_NO_NETWORK)) {
+		if (syncEvent.getMessage().equals(ApplicationConstants.EventMessages.Sync.CANT_SYNC_NO_NETWORK)) {
 			view.notifyConnectionLost();
 			navigateToNextActivity();
 		}
@@ -187,7 +188,7 @@ public class LoginSyncPresenter extends BasePresenter implements LoginSyncContra
 
 	private void calculateNewAverageNetworkSpeed() {
 		Double networkSpeed = openMRS.getNetworkUtils().getCurrentConnectionSpeed();
-		if (networkSpeed != null) {
+		if (networkSpeed != null && networkSpeed != openMRS.getNetworkUtils().UNKNOWN_CONNECTION_SPEED) {
 			averageNetworkSpeed = SMOOTHING_FACTOR * networkSpeed + (1 - SMOOTHING_FACTOR) * averageNetworkSpeed;
 		}
 	}

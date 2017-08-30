@@ -45,7 +45,8 @@ import org.openmrs.mobile.models.PatientList;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.FontsUtil;
 
-public class SyncSelectionDialogFragment extends DialogFragment implements SyncSelectionDialogContract.View {
+public class PatientListSyncSelectionDialogFragment extends DialogFragment implements
+		PatientListSyncSelectionDialogContract.View {
 
 	private static final int TYPED_DIMENSION_VALUE = 10;
 
@@ -56,11 +57,11 @@ public class SyncSelectionDialogFragment extends DialogFragment implements SyncS
 	private Button rightButton;
 	private View.OnClickListener rightButtonOnClickListener;
 
-	private SyncSelectionDialogContract.Presenter presenter;
+	private PatientListSyncSelectionDialogContract.Presenter presenter;
 	private SyncSelectionModelRecycleViewAdapter adapter;
 
-	public static SyncSelectionDialogFragment newInstance() {
-		return new SyncSelectionDialogFragment();
+	public static PatientListSyncSelectionDialogFragment newInstance() {
+		return new PatientListSyncSelectionDialogFragment();
 	}
 
 	@Override
@@ -211,7 +212,7 @@ public class SyncSelectionDialogFragment extends DialogFragment implements SyncS
 	}
 
 	@Override
-	public void setPresenter(SyncSelectionDialogContract.Presenter presenter) {
+	public void setPresenter(PatientListSyncSelectionDialogContract.Presenter presenter) {
 		this.presenter = presenter;
 	}
 

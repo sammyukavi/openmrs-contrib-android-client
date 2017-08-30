@@ -6,13 +6,12 @@ import java.util.UUID;
 
 import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.data.DataService;
-import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.db.impl.PullSubscriptionDbService;
 import org.openmrs.mobile.data.impl.PatientListDataService;
 import org.openmrs.mobile.data.sync.impl.PatientListContextSubscriptionProvider;
 import org.openmrs.mobile.models.PatientList;
 import org.openmrs.mobile.models.PullSubscription;
-import org.openmrs.mobile.utilities.TimeConstants;
+import org.openmrs.mobile.utilities.SyncConstants;
 
 public class SyncSelectionPresenter extends BasePresenter implements SyncSelectionContract.Presenter {
 
@@ -44,7 +43,7 @@ public class SyncSelectionPresenter extends BasePresenter implements SyncSelecti
 
 	private void getPatientLists() {
 		view.toggleScreenProgressBar(true);
-		patientListDataService.getAll(null, new PagingInfo(1, 100),
+		patientListDataService.getAll(null, null,
 				new DataService.GetCallback<List<PatientList>>() {
 					@Override
 					public void onCompleted(List<PatientList> entities) {
@@ -83,7 +82,7 @@ public class SyncSelectionPresenter extends BasePresenter implements SyncSelecti
 			pullSubscription.setSubscriptionClass(PatientListContextSubscriptionProvider.class.getSimpleName());
 			pullSubscription.setSubscriptionKey(patientList.getUuid());
 			pullSubscription.setMaximumIncrementalCount(maximumIncrementalCount);
-			pullSubscription.setMinimumInterval((int) TimeConstants.SYNC_INTERVAL_FOR_FREQUENT_DATA);
+			pullSubscription.setMinimumInterval((int) SyncConstants.SYNC_INTERVAL_FOR_FREQUENT_DATA);
 			pullSubscription.setUuid(UUID.randomUUID().toString());
 
 			pullSubscriptionsToAdd.add(pullSubscription);

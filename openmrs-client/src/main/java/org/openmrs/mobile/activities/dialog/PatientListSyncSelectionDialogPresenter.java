@@ -27,14 +27,14 @@ import org.openmrs.mobile.data.impl.PatientListDataService;
 import org.openmrs.mobile.data.sync.impl.PatientListContextSubscriptionProvider;
 import org.openmrs.mobile.models.PatientList;
 import org.openmrs.mobile.models.PullSubscription;
-import org.openmrs.mobile.utilities.TimeConstants;
+import org.openmrs.mobile.utilities.SyncConstants;
 
 /**
  * General class for creating dialog fragment instances
  */
-public class SyncSelectionDialogPresenter implements SyncSelectionDialogContract.Presenter {
+public class PatientListSyncSelectionDialogPresenter implements PatientListSyncSelectionDialogContract.Presenter {
 
-	private SyncSelectionDialogContract.View view;
+	private PatientListSyncSelectionDialogContract.View view;
 
 	private PatientListDataService patientListDataService;
 	private PullSubscriptionDbService pullSubscriptionDbService;
@@ -43,7 +43,7 @@ public class SyncSelectionDialogPresenter implements SyncSelectionDialogContract
 	private List<PatientList> selectedPatientListsToSync;
 	private Map<String, PullSubscription> patientListUuidSubscriptionMap;
 
-	public SyncSelectionDialogPresenter(SyncSelectionDialogContract.View view, PatientListDataService patientListDataService,
+	public PatientListSyncSelectionDialogPresenter(PatientListSyncSelectionDialogContract.View view, PatientListDataService patientListDataService,
 			PullSubscriptionDbService pullSubscriptionDbService) {
 		this.view = view;
 		this.patientListDataService = patientListDataService;
@@ -78,7 +78,7 @@ public class SyncSelectionDialogPresenter implements SyncSelectionDialogContract
 			pullSubscription.setSubscriptionClass(PatientListContextSubscriptionProvider.class.getSimpleName());
 			pullSubscription.setSubscriptionKey(patientList.getUuid());
 			pullSubscription.setMaximumIncrementalCount(maximumIncrementalCount);
-			pullSubscription.setMinimumInterval((int) TimeConstants.SYNC_INTERVAL_FOR_FREQUENT_DATA);
+			pullSubscription.setMinimumInterval((int) SyncConstants.SYNC_INTERVAL_FOR_FREQUENT_DATA);
 			pullSubscription.setUuid(UUID.randomUUID().toString());
 
 			pullSubscriptionsToAdd.add(pullSubscription);
@@ -115,12 +115,10 @@ public class SyncSelectionDialogPresenter implements SyncSelectionDialogContract
 	}
 
 	private void getPatientLists() {
-//		view.toggleScreenProgressBar(true);
 		patientListDataService.getAll(null, new PagingInfo(1, 100),
 				new DataService.GetCallback<List<PatientList>>() {
 					@Override
 					public void onCompleted(List<PatientList> entities) {
-//						view.toggleScreenProgressBar(false);
 						if (entities != null) {
 							patientLists = entities;
 						} else {
@@ -131,7 +129,6 @@ public class SyncSelectionDialogPresenter implements SyncSelectionDialogContract
 
 					@Override
 					public void onError(Throwable t) {
-//						view.toggleScreenProgressBar(false);
 						// TODO: We can't display the list, so we should probably move on to the next screen
 					}
 				});
@@ -143,7 +140,7 @@ public class SyncSelectionDialogPresenter implements SyncSelectionDialogContract
 	}
 
 	private List<PatientList> getPatientListToSync() {
-		List<PullSubscription> pullSubscriptions =  pullSubscriptionDbService.getAll(null, new PagingInfo(1, 100));
+		List<PullSubscription> pullSubscriptions =  pullSubscriptionDbService.getAll(null, null);
 		List<PatientList> patientListsToSync = new ArrayList<>();
 		if (pullSubscriptions != null) {
 			patientListsToSync = mapPullSubscriptions(pullSubscriptions);

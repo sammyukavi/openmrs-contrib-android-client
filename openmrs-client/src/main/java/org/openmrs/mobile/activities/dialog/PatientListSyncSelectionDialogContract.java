@@ -5,7 +5,7 @@ import java.util.List;
 import org.openmrs.mobile.activities.BaseView;
 import org.openmrs.mobile.models.PatientList;
 
-public interface SyncSelectionDialogContract {
+public interface PatientListSyncSelectionDialogContract {
 
 	interface View extends BaseView<Presenter> {
 

@@ -236,7 +236,7 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 	}
 
 	private List<PatientList> getPatientListToSync() {
-		List<PullSubscription> pullSubscriptions = pullSubscriptionDbService.getAll(null, new PagingInfo(1, 100));
+		List<PullSubscription> pullSubscriptions = pullSubscriptionDbService.getAll(null, null);
 		List<PatientList> patientListsToSync = new ArrayList<>();
 		if (pullSubscriptions != null) {
 			patientListsToSync = mapPullSubscriptions(pullSubscriptions);

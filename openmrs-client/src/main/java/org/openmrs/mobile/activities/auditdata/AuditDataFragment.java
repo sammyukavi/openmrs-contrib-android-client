@@ -18,6 +18,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -260,6 +263,21 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		cd4TextInputLayout = (TextInputLayout)fragmentView.findViewById(R.id.cd4TextInputLayout);
 		hba1cTextLayout = (TextInputLayout)fragmentView.findViewById(R.id.hba1cTextLayout);
 		errorFirstGcsScore = (TextView)fragmentView.findViewById(R.id.invalidGscError);
+
+		firstGcsScore.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence charSequence, int startPos, int count, int after) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+			}
+
+			@Override
+			public void afterTextChanged(Editable editable) {
+				hasValidGcsScore();
+			}
+		});
 
 		submitForm.setOnClickListener(v -> {
 			if(hasValidGcsScore()){
@@ -1231,8 +1249,12 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 	}
 
 	private boolean hasValidGcsScore(){
-		if(Integer.parseInt(firstGcsScore.getText().toString()) > 2 &&
+		if(firstGcsScore.getText().toString().length() == 0){
+			errorFirstGcsScore.setVisibility(View.GONE);
+		}
+		else if(	Integer.parseInt(firstGcsScore.getText().toString()) > 2 &&
 				Integer.parseInt(firstGcsScore.getText().toString()) < 16){
+			errorFirstGcsScore.setVisibility(View.GONE);
 			return true;
 		}
 		else{
@@ -1243,5 +1265,4 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		}
 		return false;
 	}
-
 }

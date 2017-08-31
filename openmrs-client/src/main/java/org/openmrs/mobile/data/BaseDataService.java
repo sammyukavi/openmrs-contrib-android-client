@@ -436,4 +436,3 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 		return entityClass;
 	}
 }
-

@@ -32,7 +32,7 @@ public interface PatientListContract {
 
 		void setNoPatientListsVisibility(boolean visibility);
 
-		void updatePatientLists(List<PatientList> patientList);
+		void updatePatientLists(List<PatientList> patientList, List<PatientList> syncingPatientLists);
 
 		void updatePatientListData(List<PatientListContext> patientListData);
 
@@ -43,6 +43,8 @@ public interface PatientListContract {
 		void showPatientListProgressSpinner(boolean visible);
 
 		void updatePagingLabel(int currentPage, int totalNumberOfPages);
+
+		void updatePatientListSyncDisplay(List<PatientList> patientList, List<PatientList> syncingPatientLists);
 	}
 
 	interface Presenter extends BasePresenterContract {
@@ -71,5 +73,6 @@ public interface PatientListContract {
 
 		void setExistingPatientListUuid(String uuid);
 
+		void syncSelectionsSaved();
 	}
 }

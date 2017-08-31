@@ -1,6 +1,7 @@
 package org.openmrs.mobile.dagger;
 
 import org.greenrobot.eventbus.EventBus;
+import org.openmrs.mobile.data.db.impl.PullSubscriptionDbService;
 import org.openmrs.mobile.data.sync.SyncService;
 import org.openmrs.mobile.data.sync.impl.ConceptClassSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.DiagnosisConceptSubscriptionProvider;
@@ -29,6 +30,8 @@ import dagger.Component;
 @Component(modules = { DbModule.class, SyncModule.class })
 public interface SyncComponent {
 	SyncService syncService();
+
+	PullSubscriptionDbService pullSubscriptionDbService();
 
 	DiagnosisConceptSubscriptionProvider diagnosisConceptSubscriptionProvider();
 

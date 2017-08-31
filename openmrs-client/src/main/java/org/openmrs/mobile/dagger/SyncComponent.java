@@ -11,6 +11,7 @@ import org.openmrs.mobile.data.sync.impl.PatientListSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.PersonAttributeTypeSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.VisitAttributeTypeSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.VisitNotePushProvider;
+import org.openmrs.mobile.data.sync.impl.VisitPhotoPushProvider;
 import org.openmrs.mobile.data.sync.impl.VisitPredefinedTaskSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.VisitTypeSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.EncounterPushProvider;
@@ -61,4 +62,6 @@ public interface SyncComponent {
 	VisitTaskPushProvider visitTaskPushProvider();
 
 	VisitNotePushProvider visitNotePushProvider();
+
+	VisitPhotoPushProvider visitPhotoPushProvider();
 }

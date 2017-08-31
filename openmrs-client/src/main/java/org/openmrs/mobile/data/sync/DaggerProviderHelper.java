@@ -16,6 +16,18 @@ import org.openmrs.mobile.data.sync.impl.PersonAttributeTypeSubscriptionProvider
 import org.openmrs.mobile.data.sync.impl.VisitAttributeTypeSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.VisitPredefinedTaskSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.VisitTypeSubscriptionProvider;
+import org.openmrs.mobile.data.sync.impl.EncounterPushProvider;
+import org.openmrs.mobile.data.sync.impl.ObservationPushProvider;
+import org.openmrs.mobile.data.sync.impl.PatientPushProvider;
+import org.openmrs.mobile.data.sync.impl.VisitPushProvider;
+import org.openmrs.mobile.data.sync.impl.VisitTaskPushProvider;
+import org.openmrs.mobile.models.Encounter;
+import org.openmrs.mobile.models.Observation;
+import org.openmrs.mobile.models.Patient;
+import org.openmrs.mobile.models.Visit;
+import org.openmrs.mobile.models.VisitNote;
+import org.openmrs.mobile.models.VisitPhoto;
+import org.openmrs.mobile.models.VisitTask;
 
 import javax.inject.Inject;
 
@@ -41,6 +53,13 @@ public class DaggerProviderHelper {
 			VisitPredefinedTaskSubscriptionProvider.class.getSimpleName();
 	private static final String VISIT_TYPE_SUBSCRIPTION =
 			VisitTypeSubscriptionProvider.class.getSimpleName();
+	private static final String PATIENT_PUSH_SYNC = Patient.class.getSimpleName();
+	private static final String ENCOUNTER_PUSH_SYNC = Encounter.class.getSimpleName();
+	private static final String OBSERVATION_PUSH_SYNC = Observation.class.getSimpleName();
+	private static final String VISIT_PUSH_SYNC = Visit.class.getSimpleName();
+	private static final String VISIT_TASK_PUSH_SYNC = VisitTask.class.getSimpleName();
+	private static final String VISIT_NOTE_PUSH_SYNC = VisitNote.class.getSimpleName();
+	private static final String VISIT_PHOTO_PUSH_SYNC = VisitPhoto.class.getSimpleName();
 
 	private SyncComponent syncComponent;
 
@@ -85,6 +104,25 @@ public class DaggerProviderHelper {
 	}
 
 	public SyncProvider getSyncProvider(String className) {
-		return null;
+		checkNotNull(className);
+
+		SyncProvider provider = null;
+		if (className.endsWith(PATIENT_PUSH_SYNC)) {
+			provider = syncComponent.patientPushProvider();
+		} else if (className.endsWith(ENCOUNTER_PUSH_SYNC)) {
+			provider = syncComponent.encounterPushProvider();
+		} else if (className.endsWith(OBSERVATION_PUSH_SYNC)) {
+			provider = syncComponent.observationPushProvider();
+		} else if (className.endsWith(VISIT_PUSH_SYNC)) {
+			provider = syncComponent.visitPushProvider();
+		} else if (className.endsWith(VISIT_TASK_PUSH_SYNC)) {
+			provider = syncComponent.visitTaskPushProvider();
+		} else if (className.endsWith(VISIT_NOTE_PUSH_SYNC)) {
+			provider = syncComponent.visitNotePushProvider();
+		} else if (className.endsWith(VISIT_PHOTO_PUSH_SYNC)) {
+			provider = syncComponent.visitPhotoPushProvider();
+		}
+
+		return provider;
 	}
 }

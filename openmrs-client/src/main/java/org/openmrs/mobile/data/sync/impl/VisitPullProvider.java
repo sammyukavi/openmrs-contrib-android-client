@@ -8,11 +8,14 @@ import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.db.impl.EncounterDbService;
 import org.openmrs.mobile.data.db.impl.ObsDbService;
 import org.openmrs.mobile.data.db.impl.VisitDbService;
+import org.openmrs.mobile.data.db.impl.VisitPhotoDbService;
 import org.openmrs.mobile.data.rest.RestConstants;
 import org.openmrs.mobile.data.rest.RestHelper;
 import org.openmrs.mobile.data.rest.impl.EncounterRestServiceImpl;
 import org.openmrs.mobile.data.rest.impl.ObsRestServiceImpl;
+import org.openmrs.mobile.data.rest.impl.VisitPhotoRestServiceImpl;
 import org.openmrs.mobile.data.rest.impl.VisitRestServiceImpl;
+import org.openmrs.mobile.data.rest.retrofit.VisitPhotoRestService;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Encounter_Table;
 import org.openmrs.mobile.models.Observation;
@@ -21,6 +24,7 @@ import org.openmrs.mobile.models.PullSubscription;
 import org.openmrs.mobile.models.RecordInfo;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.Visit_Table;
+import org.openmrs.mobile.utilities.ApplicationConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +42,8 @@ public class VisitPullProvider {
 	private EncounterRestServiceImpl encounterRestService;
 	private ObsDbService obsDbService;
 	private ObsRestServiceImpl obsRestService;
+	private VisitPhotoDbService visitPhotoDbService;
+	private VisitPhotoRestServiceImpl visitPhotoRestService;
 
 	private DatabaseHelper databaseHelper;
 
@@ -45,6 +51,7 @@ public class VisitPullProvider {
 	public VisitPullProvider(VisitDbService visitDbService,
 			VisitRestServiceImpl visitRestService, EncounterDbService encounterDbService,
 			EncounterRestServiceImpl encounterRestService, ObsDbService obsDbService, ObsRestServiceImpl obsRestService,
+			VisitPhotoDbService visitPhotoDbService, VisitPhotoRestServiceImpl visitPhotoRestService,
 			DatabaseHelper databaseHelper) {
 		this.visitDbService = visitDbService;
 		this.visitRestService = visitRestService;
@@ -52,6 +59,8 @@ public class VisitPullProvider {
 		this.encounterRestService = encounterRestService;
 		this.obsDbService = obsDbService;
 		this.obsRestService = obsRestService;
+		this.visitPhotoDbService = visitPhotoDbService;
+		this.visitPhotoRestService = visitPhotoRestService;
 		this.databaseHelper = databaseHelper;
 	}
 
@@ -108,7 +117,7 @@ public class VisitPullProvider {
 
 	private void pullVisitDocuments(PullSubscription subscription, RecordInfo patientRecord, List<RecordInfo> visitInfo) {
 		QueryOptions options =
-				new QueryOptions.Builder().customRepresentation(RestConstants.Representations.VISIT_PHOTO).build();
+				new QueryOptions.Builder().customRepresentation(RestConstants.Representations.OBSERVATION).build();
 
 		for (RecordInfo observationsRecord : visitInfo) {
 			List<RecordInfo> observationInfo = RestHelper.getCallListValue(obsRestService
@@ -132,8 +141,6 @@ public class VisitPullProvider {
 				obsDbService.saveAll(observations);
 			}
 		}
-
-		for (RecordInfo visitPhotoRecord: )
 
 	}
 

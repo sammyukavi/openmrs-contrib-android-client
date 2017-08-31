@@ -30,7 +30,7 @@ public interface VisitPhotoRestService {
 			@Query("view") String view);
 
 	@GET(RestConstants.REST_PATH)
-	Call<Results<RecordInfo>> downloadVisitPhotoRecordInfo(@Path(value = "restPath", encoded = true) String restPath,
+	Call<Results<RecordInfo>> getVisitPhotoRecordInfo(@Path(value = "restPath", encoded = true) String restPath,
 			@Query("obs") String uuid,
 			@Query("view") String view);
 

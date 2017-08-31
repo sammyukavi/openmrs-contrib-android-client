@@ -27,5 +27,7 @@ public class RestConstants {
 				+ "form:ref,encounterType:ref,obs,creator:ref,dateCreated,changedBy:ref,dateChanged)";
 		public static final String VISIT_PHOTO = "custom:(uuid,patient:(uuid,display),visit:(uuid),fileCaption,"
 				+ "instructions,user:(person:(display)),downloadedImage)";
+		public static final String OBSERVATION = "custom:(uuid,display,value,groupMembers,concept,encounter,dateCreated,"
+				+ "creator:(uuid,display))";
 	}
 }

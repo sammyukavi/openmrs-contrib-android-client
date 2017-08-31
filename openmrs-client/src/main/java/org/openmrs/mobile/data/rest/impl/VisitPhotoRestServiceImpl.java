@@ -46,8 +46,8 @@ public class VisitPhotoRestServiceImpl extends BaseRestService<VisitPhoto, Visit
 		return restService.downloadVisitPhoto(buildRestRequestPath(), obsUuid, view);
 	}
 
-	public Call<Results<RecordInfo>> downloadPhotoRecordInfo(String obsUuid, String view) {
-		return restService.downloadVisitPhotoRecordInfo(buildRestRequestPath(), obsUuid, RestConstants.Representations
+	public Call<Results<RecordInfo>> getPhotoRecordInfo(String obsUuid, String view) {
+		return restService.getVisitPhotoRecordInfo(buildRestRequestPath(), obsUuid, RestConstants.Representations
 				.RECORD_INFO);
 	}
 }

@@ -45,11 +45,10 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	protected TextInputEditText clinicalNoteView;
 	protected BaseDiagnosisPresenter diagnosisPresenter = new BaseDiagnosisPresenter();
 	private Timer timer;
-	private String encounterUuid;
+	private String encounterUuid, observationUuid;
 	private Visit visit;
 	private boolean firstTimeEdit;
 	private long lastTextEdit = 0;
-	private Observation clinicalNoteObservation;
 
 	@Override
 	public void initializeListeners() {
@@ -234,7 +233,7 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 
 				encounterDiagnosis.setExistingObs(observation.getUuid());
 			} else if (observation.getDisplay().startsWith(ApplicationConstants.ObservationLocators.CLINICAL_NOTE)) {
-				setClinicalNoteObservation(observation);
+				setObservationUuid(observation.getUuid());
 			}
 		} else {
 			encounterDiagnosis.setCertainty(ApplicationConstants.DiagnosisStrings.PRESUMED);
@@ -367,8 +366,7 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 		visitNote.setW5(DateUtils.convertTime(visit.getStartDatetime().getTime(), DateUtils.OPEN_MRS_REQUEST_FORMAT));
 		visitNote.setW10(ApplicationConstants.EMPTY_STRING);
 		visitNote.setW12(clinicalNote == null ? ApplicationConstants.EMPTY_STRING : clinicalNote);
-		visitNote.setObservationUuid(
-				getClinicalNoteObservation() != null ? getClinicalNoteObservation().getUuid() : ApplicationConstants.EMPTY_STRING);
+		visitNote.setObservationUuid(getObservationUuid());
 
 		encounterDiagnoses.addAll(primaryDiagnoses);
 		encounterDiagnoses.addAll(secondaryDiagnoses);
@@ -500,11 +498,13 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 		this.visit = visit;
 	}
 
-	public Observation getClinicalNoteObservation() {
-		return clinicalNoteObservation;
+	@Override
+	public void setObservationUuid(String uuid) {
+		this.observationUuid = uuid;
 	}
 
-	public void setClinicalNoteObservation(Observation clinicalNoteObservation) {
-		this.clinicalNoteObservation = clinicalNoteObservation;
+	@Override
+	public String getObservationUuid() {
+		return observationUuid;
 	}
 }

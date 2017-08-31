@@ -74,12 +74,16 @@ public class BaseDiagnosisPresenter {
 	public void saveVisitNote(VisitNote visitNote, IBaseDiagnosisFragment base) {
 		visitNoteDataService.save(visitNote, new DataService.GetCallback<VisitNote>() {
 			@Override
-			public void onCompleted(VisitNote visitNote) {
-				base.setEncounterUuid(visitNote.getEncounterId());
+			public void onCompleted(VisitNote entity) {
+				base.setObservationUuid(entity.getObservationUuid());
+				base.setEncounterUuid(entity.getEncounterId());
+				base.getClinicalNoteView().setText(entity.getW12());
 			}
 
 			@Override
 			public void onError(Throwable t) {
+				Log.e("error", t.getLocalizedMessage());
+				base.getBaseDiagnosisView().showTabSpinner(false);
 			}
 		});
 	}

@@ -57,6 +57,7 @@ public class VisitNote extends BaseOpenmrsEntity {
 	private String w12;
 
 	@Column
+	@Expose
 	private String observationUuid;
 
 	public String getPersonId() {

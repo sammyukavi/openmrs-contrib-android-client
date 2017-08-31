@@ -41,6 +41,7 @@ import org.openmrs.mobile.activities.ACBaseActivity;
 import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
 import org.openmrs.mobile.activities.patientlist.PatientListActivity;
+import org.openmrs.mobile.activities.syncselection.SyncSelectionActivity;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.listeners.watcher.LoginValidatorWatcher;
@@ -147,16 +148,13 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 		loginValidatorWatcher = new LoginValidatorWatcher(url, username, password, dropdownLocation, loginButton);
 
 		url.setOnFocusChangeListener((view, b1) -> {
-			if (StringUtils.notEmpty(url.getText().toString())
-					&& !view.isFocused()
-					&& loginValidatorWatcher.isUrlChanged()
-					|| (loginValidatorWatcher.isUrlChanged() && !view.isFocused()
-					&& loginValidatorWatcher.isLocationErrorOccurred())
-					|| (!loginValidatorWatcher.isUrlChanged() && !view.isFocused())) {
-				((LoginFragment)getActivity()
-						.getSupportFragmentManager()
-						.findFragmentById(R.id.loginContentFrame))
-						.setUrl(url.getText().toString());
+			boolean isViewFocused = view.isFocused();
+			boolean isUrlEntered = StringUtils.notEmpty(url.getText().toString());
+			boolean isUrlChanged = loginValidatorWatcher.isUrlChanged();
+			boolean isLocationErrorOccurred = loginValidatorWatcher.isLocationErrorOccurred();
+
+			if (!isViewFocused && (!isUrlChanged || isUrlChanged && (isUrlEntered || isLocationErrorOccurred))) {
+				setUrl(url.getText().toString());
 				loginValidatorWatcher.setUrlChanged(false);
 			}
 		});
@@ -164,9 +162,10 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 		loginButton.setOnClickListener(v -> mPresenter.login(username.getText().toString(),
 				password.getText().toString(),
 				url.getText().toString(),
-				loginUrl));
+				openMRS.getLastLoginServerUrl()));
 	}
 
+	@Override
 	public void login(boolean wipeDatabase) {
 		mPresenter.authenticateUser(username.getText().toString(),
 				password.getText().toString(),
@@ -219,9 +218,16 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 	}
 
 	@Override
-	public void userAuthenticated() {
+	public void userAuthenticated(boolean isUsersFirstAccessOfNewUrl) {
 		mPresenter.saveLocationsInPreferences(locationsList, dropdownLocation.getSelectedItemPosition());
-		Intent intent = new Intent(openMRS.getApplicationContext(), PatientListActivity.class);
+		// TODO: Make this only get called if this is the user's first access of a new URL
+		Intent intent;
+		if (isUsersFirstAccessOfNewUrl) {
+			intent = new Intent(openMRS.getApplicationContext(), SyncSelectionActivity.class);
+		} else {
+			intent = new Intent(openMRS.getApplicationContext(), PatientListActivity.class); // temporary
+			//intent = new Intent(openMRS.getApplicationContext(), LoginSyncActivity.class);
+		}
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		openMRS.getApplicationContext().startActivity(intent);
 		getActivity().finish();
@@ -234,14 +240,6 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 		// re-login
 		authorizationManager.trackUserInteraction();
 		getActivity().finish();
-	}
-
-	public void showToast(String message, ToastUtil.ToastType toastType) {
-		ToastUtil.showShortToast(getContext(), toastType, message);
-	}
-
-	public void showToast(int textId, ToastUtil.ToastType toastType) {
-		ToastUtil.showShortToast(getContext(), toastType, getResources().getString(textId));
 	}
 
 	@Override

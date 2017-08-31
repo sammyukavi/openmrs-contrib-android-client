@@ -28,6 +28,8 @@ public class PagingInfo {
 	public PagingInfo(int page, int pageSize) {
 		this.page = page;
 		this.pageSize = pageSize;
+
+		this.loadRecordCount = true;
 	}
 
 	public static Integer getPage(@Nullable PagingInfo pagingInfo) {

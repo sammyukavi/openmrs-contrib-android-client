@@ -33,6 +33,8 @@ public class SyncService {
 	private EventBus eventBus;
 
 	private NetworkUtils networkUtils;
+	private Map<String, SubscriptionProvider> subscriptionProviders = new HashMap<String, SubscriptionProvider>();
+	private Map<String, SyncProvider> pushSyncProviders = new HashMap<>();
 
 	@Inject
 	public SyncService(SyncLogDbService syncLogDbService, PullSubscriptionDbService subscriptionDbService,
@@ -43,8 +45,6 @@ public class SyncService {
 		this.networkUtils = networkUtils;
 		this.eventBus = eventBus;
 	}
-
-	private Map<String, SubscriptionProvider> subscriptionProviders = new HashMap<String, SubscriptionProvider>();
 
 	public void sync() {
 		// Synchronize access so that only one thread is synchronizing at a time
@@ -57,16 +57,45 @@ public class SyncService {
 		}
 	}
 
+	/**
+	 * Retrieves all SyncLog entries, and pushes to the server via REST. Once a record has successfully been updated on
+	 * the server, the corresponding synclog entry is deleted.
+	 */
 	protected void push() {
+		// Get synclog records that need to be pushed
 		List<SyncLog> records = syncLogDbService.getAll(null, null);
 
-		/*
 		for (SyncLog record : records) {
-			syncProvider.sync(record);
+			SyncProvider syncProvider = pushSyncProviders.get(record.getType());
+			if (syncProvider == null) {
+				syncProvider = providerHelper.getSyncProvider(record.getType());
 
-			syncLogDbService.delete(record);
+				pushSyncProviders.put(record.getType(), syncProvider);
+			}
+
+			if (syncProvider != null) {
+				try {
+					syncProvider.sync(record);
+				} catch (DataOperationException doe) {
+					Log.w(TAG, "Data exception occurred while processing push provider '" +
+							syncProvider.getClass().getSimpleName() + ":" +
+							(StringUtils.isBlank(record.getKey()) ? "(null)" :
+									record.getKey()) + "'", doe);
+
+					// Check to see if we're still online, if not, then stop the sync
+					if (!networkUtils.hasNetwork()) {
+						break;
+					}
+				} catch (Exception ex) {
+					Log.e(TAG, "An exception occurred while processing push provider '" +
+							syncProvider.getClass().getSimpleName() + ":" +
+							(StringUtils.isBlank(record.getKey()) ? "(null)" :
+									record.getKey()) + "'", ex);
+				}
+			} else {
+				Log.e(TAG, "Could not find provider for sync type '" + record.getType() + "'");
+			}
 		}
-		*/
 	}
 
 	/**
@@ -110,9 +139,9 @@ public class SyncService {
 						sub.setLastSync(lastSync);
 					} catch (DataOperationException doe) {
 						Log.w(TAG, "Data exception occurred while processing subscription provider '" +
-										sub.getSubscriptionClass() + ":" +
-										(StringUtils.isBlank(sub.getSubscriptionKey()) ? "(null)" :
-												sub.getSubscriptionKey()) + "'", doe);
+								sub.getSubscriptionClass() + ":" +
+								(StringUtils.isBlank(sub.getSubscriptionKey()) ? "(null)" :
+										sub.getSubscriptionKey()) + "'", doe);
 
 						// Check to see if we're still online, if not, then stop the sync
 						if (!networkUtils.hasNetwork()) {
@@ -120,9 +149,9 @@ public class SyncService {
 						}
 					} catch (Exception ex) {
 						Log.e(TAG, "An exception occurred while processing subscription provider '" +
-										sub.getSubscriptionClass() + ":" +
-										(StringUtils.isBlank(sub.getSubscriptionKey()) ? "(null)" :
-												sub.getSubscriptionKey()) + "'", ex);
+								sub.getSubscriptionClass() + ":" +
+								(StringUtils.isBlank(sub.getSubscriptionKey()) ? "(null)" :
+										sub.getSubscriptionKey()) + "'", ex);
 					}
 				}
 			}

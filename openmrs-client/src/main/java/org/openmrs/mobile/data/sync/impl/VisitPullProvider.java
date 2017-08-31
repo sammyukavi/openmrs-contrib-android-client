@@ -15,7 +15,6 @@ import org.openmrs.mobile.data.rest.impl.EncounterRestServiceImpl;
 import org.openmrs.mobile.data.rest.impl.ObsRestServiceImpl;
 import org.openmrs.mobile.data.rest.impl.VisitPhotoRestServiceImpl;
 import org.openmrs.mobile.data.rest.impl.VisitRestServiceImpl;
-import org.openmrs.mobile.data.rest.retrofit.VisitPhotoRestService;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Encounter_Table;
 import org.openmrs.mobile.models.Observation;
@@ -23,6 +22,8 @@ import org.openmrs.mobile.models.Observation_Table;
 import org.openmrs.mobile.models.PullSubscription;
 import org.openmrs.mobile.models.RecordInfo;
 import org.openmrs.mobile.models.Visit;
+import org.openmrs.mobile.models.VisitPhoto;
+import org.openmrs.mobile.models.VisitPhoto_Table;
 import org.openmrs.mobile.models.Visit_Table;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 
@@ -119,6 +120,9 @@ public class VisitPullProvider {
 		QueryOptions options =
 				new QueryOptions.Builder().customRepresentation(RestConstants.Representations.OBSERVATION).build();
 
+		QueryOptions visitPhotoOptions =
+				new QueryOptions.Builder().customRepresentation(RestConstants.Representations.VISIT_PHOTO).build();
+
 		for (RecordInfo observationsRecord : visitInfo) {
 			List<RecordInfo> observationInfo = RestHelper.getCallListValue(obsRestService
 					.getVisitDocumentsObsRecordInfoByPatientAndConceptList(patientRecord.getUuid()));
@@ -139,6 +143,29 @@ public class VisitPullProvider {
 
 			if (!observations.isEmpty()) {
 				obsDbService.saveAll(observations);
+			}
+
+			for (RecordInfo visitPhotosRecord : observationInfo) {
+				List<RecordInfo> visitPhotoInfo = RestHelper.getCallListValue(visitPhotoRestService.getPhotoRecordInfo
+						(visitPhotosRecord.getUuid(), ApplicationConstants.THUMBNAIL_VIEW));
+
+				databaseHelper
+						.diffDelete(VisitPhoto.class, VisitPhoto_Table.uuid.eq(visitPhotosRecord.getUuid()),
+								visitPhotoInfo);
+
+				List<VisitPhoto> visitPhotos = new ArrayList<>();
+				for (RecordInfo visitPhotoRecord : visitPhotoInfo) {
+					if (visitPhotoRecord.isUpdatedSince(subscription)) {
+						VisitPhoto visitPhoto = RestHelper.getCallValue(
+								visitPhotoRestService.getByUuid(visitPhotoRecord.getUuid(), visitPhotoOptions));
+						visitPhoto.processRelationships();
+						visitPhotos.add(visitPhoto);
+					}
+				}
+
+				if (!observations.isEmpty()) {
+					visitPhotoDbService.saveAll(visitPhotos);
+				}
 			}
 		}
 

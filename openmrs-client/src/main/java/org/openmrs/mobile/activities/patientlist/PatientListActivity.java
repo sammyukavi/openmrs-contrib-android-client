@@ -23,8 +23,11 @@ import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
 import org.openmrs.mobile.activities.dialog.PatientListSyncSelectionDialogFragment;
 import org.openmrs.mobile.activities.dialog.PatientListSyncSelectionDialogPresenter;
+import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.dagger.DaggerDataAccessComponent;
 import org.openmrs.mobile.dagger.DaggerSyncComponent;
+import org.openmrs.mobile.dagger.SyncComponent;
+import org.openmrs.mobile.dagger.SyncModule;
 import org.openmrs.mobile.data.db.impl.PullSubscriptionDbService;
 import org.openmrs.mobile.data.impl.PatientListDataService;
 
@@ -59,7 +62,9 @@ public class PatientListActivity extends ACBaseActivity {
 			patientListPresenter = new PatientListPresenter(patientListFragment);
 
 			patientListDataService = DaggerDataAccessComponent.create().patientList();
-			pullSubscriptionDbService = DaggerSyncComponent.create().pullSubscriptionDbService();
+			SyncComponent syncComponent = DaggerSyncComponent.builder().syncModule(new SyncModule(OpenMRS.getInstance()))
+					.build();
+			pullSubscriptionDbService = syncComponent.pullSubscriptionDbService();
 		}
 	}
 

@@ -49,11 +49,12 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	private int page;
 	private Patient patient;
 	private boolean loading;
+	private OpenMRS openMRS;
 
-	public PatientDashboardPresenter(PatientDashboardContract.View view) {
+	public PatientDashboardPresenter(PatientDashboardContract.View view, OpenMRS openMRS) {
 		this.patientDashboardView = view;
 		this.patientDashboardView.setPresenter(this);
-
+		this.openMRS = openMRS;
 		this.patientDataService = dataAccess().patient();
 		this.visitDataService = dataAccess().visit();
 		this.providerDataService = dataAccess().provider();
@@ -78,7 +79,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
 			@Override
 			public void onError(Throwable t) {
-				if (t instanceof DataOperationException && t.getMessage().contains("java.net.UnknownHostException")) {
+				if (t instanceof DataOperationException && !openMRS.getNetworkUtils().hasNetwork()) {
 					patientDashboardView.showNoPatientData(true);
 				} else {
 					patientDashboardView.showPageSpinner(false);

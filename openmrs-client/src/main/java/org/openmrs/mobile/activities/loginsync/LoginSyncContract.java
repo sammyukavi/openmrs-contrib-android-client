@@ -35,6 +35,10 @@ public interface LoginSyncContract {
 		void navigateToNextActivity();
 
 		void notifyConnectionLost();
+
+		void updateSyncPushProgressForStartingRecord(double percentComplete, Integer recordNumber, Integer totalNumber);
+
+		void updateSyncPushProgressForCompletingRecord(double percentComplete, Integer recordNumber, Integer totalNumber);
 	}
 
 	interface Presenter extends BasePresenterContract {

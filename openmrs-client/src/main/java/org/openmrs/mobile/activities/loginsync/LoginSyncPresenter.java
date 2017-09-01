@@ -61,15 +61,44 @@ public class LoginSyncPresenter extends BasePresenter implements LoginSyncContra
 
 	public void onSyncPushEvent(SyncPushEvent syncPushEvent) {
 		arePushing = true;
-		String pullDisplayInformation = new String();
-		double progress = 0;
+		double progress = 0, previousProgress = 0;
+		double previousEntitiesPushed = 0;
 
-		// Handle getting total amount for push
-		// Handle getting incremental amount for push
-		// Handle getting push complete
-		arePushing = false;
+		// First check for information to determine of progress should be updated
+		switch (syncPushEvent.getMessage()) {
+			case ApplicationConstants.EventMessages.Sync.Push.TOTAL_RECORDS:
+				totalSyncPushes = syncPushEvent.getTotalItems();
+				break;
+			case ApplicationConstants.EventMessages.Sync.Push.RECORD_REMOTE_PUSH_COMPLETE:
+				entitiesPushed++;
+				break;
+		}
 
-//		view.updateSyncPushProgress(progress, pullDisplayInformation);
+		if (entitiesPushed > 0) {
+			previousEntitiesPushed = entitiesPushed - 1;
+			previousProgress = (entitiesPushed - 1) / totalSyncPushes;
+		}
+		if (totalSyncPushes == entitiesPushed) {
+			progress = 100;
+			entitiesPushed = 0;
+			arePushing = false;
+		} else {
+			progress = entitiesPushed / totalSyncPushes;
+		}
+
+		switch (syncPushEvent.getMessage()) {
+			case ApplicationConstants.EventMessages.Sync.Push.RECORD_REMOTE_PUSH_STARTING:
+				view.updateSyncPushProgressForStartingRecord(progress, (int) entitiesPushed, (int) totalSyncPushes);
+				break;
+			case ApplicationConstants.EventMessages.Sync.Push.RECORD_REMOTE_PUSH_COMPLETE:
+				view.updateSyncPushProgressForCompletingRecord(previousProgress, (int) previousEntitiesPushed,
+						(int) totalSyncPushes);
+				break;
+		}
+
+		if (progress == 100) {
+			view.notifySyncPushComplete();
+		}
 	}
 
 	public void onSyncPullEvent(SyncPullEvent syncPullEvent) {
@@ -79,7 +108,7 @@ public class LoginSyncPresenter extends BasePresenter implements LoginSyncContra
 		// First check for information to determine of progress should be updated
 		switch (syncPullEvent.getMessage()) {
 			case ApplicationConstants.EventMessages.Sync.Pull.TOTAL_SUBSCRIPTIONS:
-				totalSyncPushes = syncPullEvent.getTotalItems();
+				totalSyncPulls = syncPullEvent.getTotalItems();
 				break;
 			case ApplicationConstants.EventMessages.Sync.Pull.SUBSCRIPTION_REMOTE_PULL_COMPLETE:
 				entitiesPulled++;
@@ -91,7 +120,7 @@ public class LoginSyncPresenter extends BasePresenter implements LoginSyncContra
 			entitiesPulled = 0;
 			arePulling = false;
 		} else {
-			progress = entitiesPulled / totalSyncPushes;
+			progress = entitiesPulled / totalSyncPulls;
 		}
 
 		switch (syncPullEvent.getMessage()) {
@@ -142,7 +171,13 @@ public class LoginSyncPresenter extends BasePresenter implements LoginSyncContra
 				determineNetworkConnectionSpeed();
 				if ((previousConnectionSpeedIsFast && !networkConnectionIsFast) || (!previousConnectionSpeedIsFast &&
 						networkConnectionIsFast)) {
-					notifyViewToUpdateConnectionDisplay();
+					view.runOnUIThread(new Runnable() {
+
+						@Override
+						public void run() {
+							notifyViewToUpdateConnectionDisplay();
+						}
+					});
 				}
 			}
 		}, DELAY, DELAY);

@@ -141,7 +141,20 @@ public class LoginSyncFragment extends ACBaseFragment<LoginSyncContract.Presente
 	}
 
 	public void notifySyncPushComplete() {
-		pullProgressText.setText(getString(R.string.download_complete));
-		pushProgressText.setText(getString(R.string.initial_sync_pull_progress_text_after_upload_complete));
+		pullProgressText.setText(getString(R.string.initial_sync_pull_progress_text_after_upload_complete));
+		pushProgressText.setText(getString(R.string.upload_complete));
+	}
+
+	public void updateSyncPushProgressForStartingRecord(double percentComplete, Integer recordNumber, Integer totalNumber) {
+		String progressText = getString(R.string.record_remote_push_starting, recordNumber.toString(),
+				totalNumber.toString());
+		updateSyncPullProgress(percentComplete, progressText);
+	}
+
+	public void updateSyncPushProgressForCompletingRecord(double percentComplete, Integer recordNumber,
+			Integer totalNumber) {
+		String progressText = getString(R.string.record_remote_push_complete, recordNumber.toString(),
+				totalNumber.toString());
+		updateSyncPullProgress(percentComplete, progressText);
 	}
 }

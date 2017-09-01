@@ -7,7 +7,9 @@ import org.openmrs.mobile.models.PatientList;
 
 public interface PatientListSyncSelectionDialogContract {
 
-	interface View extends BaseView<Presenter> {
+	interface View {
+
+		void setPresenter(PatientListSyncSelectionDialogContract.Presenter presenter);
 
 		void dismissDialog();
 

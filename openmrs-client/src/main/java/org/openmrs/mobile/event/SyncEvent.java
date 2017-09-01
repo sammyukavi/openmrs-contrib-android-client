@@ -23,6 +23,6 @@ public class SyncEvent {
 	}
 
 	public Integer getTotalItems() {
-		return getTotalItems();
+		return totalItems;
 	}
 }

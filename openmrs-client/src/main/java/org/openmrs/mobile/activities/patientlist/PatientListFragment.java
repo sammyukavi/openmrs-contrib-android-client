@@ -21,7 +21,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -42,9 +41,8 @@ import java.util.List;
 public class PatientListFragment extends ACBaseFragment<PatientListContract.Presenter> implements PatientListContract.View {
 
 	private Spinner patientListDropdown;
-	private TextView emptyPatientList;
-	private TextView noPatientLists;
-	private TextView numberOfPatients, pagingLabel;
+	private PatientListSpinnerAdapter patientListSpinnerAdapter;
+	private TextView emptyPatientList, noPatientLists, numberOfPatients, pagingLabel;
 	private RecyclerView patientListModelRecyclerView;
 	private LinearLayoutManager layoutManager;
 	private LinearLayout patientListScreen, patientListRecyclerView;
@@ -177,18 +175,17 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 	}
 
 	@Override
-	public void updatePatientLists(List<PatientList> patientLists) {
-		PatientList patientList = new PatientList();
-		patientList.setName(getString(R.string.select_patient_list));
+	public void updatePatientLists(List<PatientList> patientLists, List<PatientList> syncingPatientLists) {
+		List<PatientList> patientListsToShow = getPatientListDisplayList(patientLists);
 
-		patientLists.add(0, patientList);
-		ArrayAdapter<PatientList> patientListArrayAdapter = new ArrayAdapter<PatientList>(getContext(),
-				android.R.layout.simple_spinner_dropdown_item, patientLists);
-		patientListDropdown.setAdapter(patientListArrayAdapter);
+		patientListSpinnerAdapter = new PatientListSpinnerAdapter(getContext(),
+				patientListsToShow, syncingPatientLists);
+		patientListDropdown.setAdapter(patientListSpinnerAdapter);
+
 		patientListDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-				setSelectedPatientList(patientLists.get(position));
+				setSelectedPatientList(patientListsToShow.get(position));
 				currentPage = 1;
 				adapter.clearItems();
 				if (selectedPatientList.getUuid() == null) {
@@ -206,6 +203,18 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 			public void onNothingSelected(AdapterView<?> parent) {
 			}
 		});
+	}
+
+	private List<PatientList> getPatientListDisplayList(List<PatientList> patientLists) { new ArrayList<>();
+		List<PatientList> patientListsToShow = new ArrayList<>();
+
+		PatientList patientList = new PatientList();
+		patientList.setName(getString(R.string.select_patient_list));
+
+		patientListsToShow.add(patientList);
+		patientListsToShow.addAll(patientLists);
+
+		return patientListsToShow;
 	}
 
 	@Override
@@ -235,8 +244,13 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 
 	@Override
 	public void updatePagingLabel(int currentPage, int totalNumberOfPages) {
-		pagingLabel
-				.setText(getString(R.string.paging_label, String.valueOf(currentPage), String.valueOf(totalNumberOfPages)));
+		pagingLabel.setText(getString(R.string.paging_label, String.valueOf(currentPage), String.valueOf(totalNumberOfPages)));
+	}
+
+	@Override
+	public void updatePatientListSyncDisplay(List<PatientList> patientList, List<PatientList> syncingPatientLists) {
+		List<PatientList> patientListsToShow = getPatientListDisplayList(patientList);
+		patientListSpinnerAdapter.setItems(patientListsToShow, syncingPatientLists);
 	}
 
 	private void updatePagingLabel(int currentPage) {

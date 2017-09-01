@@ -71,6 +71,7 @@ public abstract class ApplicationConstants {
 		public static final String ADD_VISIT_TASK_DIALOG_TAG = "addVisitTaskDialogTag";
 		public static final String VISIT_NOTE_TAG = "visitNoteTag";
 		public static final String PENDING_VISIT_NOTE_CHANGES_TAG = "pendingVisitNoteChangesTag";
+		public static final String MERGE_PATIENT_SUMMARY_TAG = "mergePatientSummaryTag";
 	}
 
 	public abstract static class RegisterPatientRequirements {

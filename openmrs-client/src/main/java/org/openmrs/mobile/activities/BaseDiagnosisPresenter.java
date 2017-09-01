@@ -4,7 +4,6 @@ import android.util.Log;
 import android.view.View;
 
 import org.openmrs.mobile.dagger.DaggerDataAccessComponent;
-import org.openmrs.mobile.dagger.DaggerSyncComponent;
 import org.openmrs.mobile.dagger.DataAccessComponent;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
@@ -75,9 +74,16 @@ public class BaseDiagnosisPresenter {
 		visitNoteDataService.save(visitNote, new DataService.GetCallback<VisitNote>() {
 			@Override
 			public void onCompleted(VisitNote entity) {
-				base.setObservationUuid(entity.getObservationUuid());
 				base.setEncounterUuid(entity.getEncounterId());
-				base.getClinicalNoteView().setText(entity.getW12());
+
+				if (entity.getObservationUuid() != null) {
+					base.setObservationUuid(entity.getObservationUuid());
+				}
+
+				if (entity.getW12() != null) {
+					base.getClinicalNoteView().setText(entity.getW12());
+					base.createPatientSummaryMergeDialog(entity.getW12());
+				}
 			}
 
 			@Override

@@ -14,7 +14,7 @@ public class ContextModule {
 
 	@Provides
 	@Singleton
-	public static Context providesContext() {
+	public Context providesContext() {
 		return OpenMRS.getInstance();
 	}
 }

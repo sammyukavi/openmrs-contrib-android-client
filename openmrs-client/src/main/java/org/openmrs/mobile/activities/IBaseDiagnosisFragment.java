@@ -53,4 +53,6 @@ public interface IBaseDiagnosisFragment {
 	String getObservationUuid();
 
 	IBaseDiagnosisView getBaseDiagnosisView();
+
+	void createPatientSummaryMergeDialog(String mergePatientSummaryText);
 }

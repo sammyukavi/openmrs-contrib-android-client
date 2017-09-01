@@ -12,8 +12,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.openmrs.mobile.R;
+import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
 import org.openmrs.mobile.activities.visit.detail.DiagnosisRecyclerViewAdapter;
 import org.openmrs.mobile.application.OpenMRS;
+import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.EncounterDiagnosis;
@@ -49,6 +52,7 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	private Visit visit;
 	private boolean firstTimeEdit;
 	private long lastTextEdit = 0;
+	private CustomFragmentDialog mergePatientSummaryDialog;
 
 	@Override
 	public void initializeListeners() {
@@ -56,13 +60,16 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 		secondaryDiagnoses.clear();
 		addDiagnosisListeners();
 		addClinicalNoteListener();
+
+		// load patient summary merge dialog if need be
+		createPatientSummaryMergeDialog(clinicalNoteView.getText().toString());
 	}
 
 	protected IBaseDiagnosisFragment getIBaseDiagnosisFragment() {
 		return this;
 	}
 
-	abstract public IBaseDiagnosisView getDiagnosisView();
+	public abstract IBaseDiagnosisView getDiagnosisView();
 
 	private void addDiagnosisListeners() {
 		searchDiagnosis.addTextChangedListener(new TextWatcher() {
@@ -141,6 +148,27 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 				}
 			}
 		});
+	}
+
+	public void mergePatientSummary() {
+		String updatedPatientSummary = mergePatientSummaryDialog.getEditNoteTextValue();
+		saveVisitNote(getEncounterUuid(), updatedPatientSummary, visit);
+		clinicalNoteView.setText(updatedPatientSummary);
+	}
+
+	public void createPatientSummaryMergeDialog(String mergePatientSummaryText) {
+		// This condition will be changed. It's just a way of detecting a conflict that needs to be resolved.
+		if (mergePatientSummaryText.contains("@@")) {
+			CustomDialogBundle bundle = new CustomDialogBundle();
+			bundle.setTitleViewMessage(getString(R.string.merge_patient_summary));
+			bundle.setEditNoteTextViewMessage(mergePatientSummaryText);
+			bundle.setRightButtonAction(CustomFragmentDialog.OnClickAction.MERGE_PATIENT_SUMMARY);
+			bundle.setRightButtonText(getString(R.string.dialog_button_confirm));
+
+			mergePatientSummaryDialog = CustomFragmentDialog.newInstance(bundle);
+			mergePatientSummaryDialog.show(
+					getActivity().getSupportFragmentManager(), ApplicationConstants.DialogTAG.MERGE_PATIENT_SUMMARY_TAG);
+		}
 	}
 
 	public void setDiagnoses(Visit visit) {
@@ -499,12 +527,12 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	}
 
 	@Override
-	public void setObservationUuid(String uuid) {
-		this.observationUuid = uuid;
+	public String getObservationUuid() {
+		return observationUuid;
 	}
 
 	@Override
-	public String getObservationUuid() {
-		return observationUuid;
+	public void setObservationUuid(String uuid) {
+		this.observationUuid = uuid;
 	}
 }

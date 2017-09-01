@@ -14,7 +14,7 @@ public class QueryOptions {
 	private String cacheKey;
 	private boolean includeInactive = DEFAULT_INCLUDE_INACTIVE;
 	private String customRepresentation;
-	private static final RequestStrategy DEFAULT_REQUEST_STRATEGY = RequestStrategy.REMOTE_THEN_LOCAL;
+	private static final RequestStrategy DEFAULT_REQUEST_STRATEGY = RequestStrategy.LOCAL_THEN_REMOTE;
 	private RequestStrategy requestStrategy = DEFAULT_REQUEST_STRATEGY;
 
 	public QueryOptions() {

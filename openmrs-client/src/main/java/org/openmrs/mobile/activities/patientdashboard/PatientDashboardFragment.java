@@ -224,13 +224,13 @@ public class PatientDashboardFragment extends BaseDiagnosisFragment<PatientDashb
 	}
 
 	public void setPatientUuid(Patient patient) {
-		SharedPreferences.Editor editor = instance.getOpenMRSSharedPreferences().edit();
+		SharedPreferences.Editor editor = instance.getPreferences().edit();
 		editor.putString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patient.getPerson().getUuid());
 		editor.commit();
 	}
 
 	public void setVisitUuid(Visit visit) {
-		SharedPreferences.Editor editor = instance.getOpenMRSSharedPreferences().edit();
+		SharedPreferences.Editor editor = instance.getPreferences().edit();
 		editor.putString(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visit.getUuid());
 		editor.commit();
 	}
@@ -239,7 +239,7 @@ public class PatientDashboardFragment extends BaseDiagnosisFragment<PatientDashb
 	public void setProviderUuid(String providerUuid) {
 		if (StringUtils.isBlank(providerUuid))
 			return;
-		SharedPreferences.Editor editor = instance.getOpenMRSSharedPreferences().edit();
+		SharedPreferences.Editor editor = instance.getPreferences().edit();
 		editor.putString(ApplicationConstants.BundleKeys.PROVIDER_UUID_BUNDLE, providerUuid);
 		editor.commit();
 	}

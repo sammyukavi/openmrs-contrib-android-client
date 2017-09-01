@@ -280,7 +280,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		});
 
 		submitForm.setOnClickListener(v -> {
-			if(hasValidGcsScore()){
+			if( hasValidGcsScore() ){
 				performDataSend();
 			}
 		});
@@ -1251,13 +1251,11 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 	private boolean hasValidGcsScore(){
 		if(firstGcsScore.getText().toString().length() == 0){
 			errorFirstGcsScore.setVisibility(View.GONE);
-		}
-		else if(	Integer.parseInt(firstGcsScore.getText().toString()) > 2 &&
+		}else if(Integer.parseInt(firstGcsScore.getText().toString()) > 2 &&
 				Integer.parseInt(firstGcsScore.getText().toString()) < 16){
 			errorFirstGcsScore.setVisibility(View.GONE);
 			return true;
-		}
-		else{
+		}else{
 			errorFirstGcsScore.setVisibility(View.VISIBLE);
 			errorFirstGcsScore.setText(getString(R.string.error_gcs_score,
 					ApplicationConstants.ValidationFieldValues.AUDIT_GCS_SCORE_MIN,

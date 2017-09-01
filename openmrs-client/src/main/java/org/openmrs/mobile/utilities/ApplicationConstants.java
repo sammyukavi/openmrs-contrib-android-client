@@ -32,8 +32,9 @@ public abstract class ApplicationConstants {
 	public static final String CIVIL_STATUS = "Civil Status";
 	public static final String KIN_RELATIONSHIP = "Kin Relationship";
 
-	public abstract static class OpenMRSSharedPreferenceNames {
+	public abstract static class Preferences {
 		public static final String SHARED_PREFERENCES_NAME = "shared_preferences";
+		public static final String LAST_TRIM_DATE = "last_trim_date";
 	}
 
 	public abstract static class API {

@@ -18,7 +18,7 @@ public class ApplicationModule {
 	public ApplicationModule(OpenMRS openMRS) {
 		this.openMRS = openMRS;
 		this.receiverComponent = DaggerReceiverComponent.create();
-		this.syncComponent = DaggerSyncComponent.create();
+		this.syncComponent = DaggerSyncComponent.builder().syncModule(new SyncModule(openMRS)).build();
 	}
 
 	@Provides

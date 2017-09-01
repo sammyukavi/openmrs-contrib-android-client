@@ -37,7 +37,7 @@ public class Patient extends BaseOpenmrsAuditableObject implements Serializable 
 
 	@SerializedName("person")
 	@Expose
-	@ForeignKey
+	@ForeignKey(saveForeignKeyModel = true, deleteForeignKeyModel = true)
 	private Person person;
 
 	@SerializedName("voided")

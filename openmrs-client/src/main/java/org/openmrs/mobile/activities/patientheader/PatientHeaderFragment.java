@@ -51,14 +51,16 @@ public class PatientHeaderFragment extends ACBaseFragment<PatientHeaderContract.
 
 	@Override
 	public void updatePatientHeader(Patient patient) {
-		patientDisplayName.setText(patient.getPerson().getName().getNameString());
-		patientGender.setImageResource(patient.getPerson().getGender().equalsIgnoreCase("f") ? R.drawable.female : R
-				.drawable.male);
-		fileNumber.setText(patient.getIdentifier().getIdentifier());
-		DateTime date = DateUtils.convertTimeString(patient.getPerson().getBirthdate());
-		patientAge.setText(DateUtils.calculateAge(patient.getPerson().getBirthdate()));
-		patientDob.setText(
-				DateUtils.convertTime1(patient.getPerson().getBirthdate(), DateUtils.DATE_FORMAT));
+		if (patient.getPerson() != null || patient.getIdentifier() != null) {
+			patientDisplayName.setText(patient.getPerson().getName().getNameString());
+			patientGender.setImageResource(patient.getPerson().getGender().equalsIgnoreCase("f") ? R.drawable.female : R
+					.drawable.male);
+			fileNumber.setText(patient.getIdentifier().getIdentifier());
+			DateTime date = DateUtils.convertTimeString(patient.getPerson().getBirthdate());
+			patientAge.setText(DateUtils.calculateAge(patient.getPerson().getBirthdate()));
+			patientDob.setText(
+					DateUtils.convertTime1(patient.getPerson().getBirthdate(), DateUtils.DATE_FORMAT));
+		}
 	}
 
 	@Override

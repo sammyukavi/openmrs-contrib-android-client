@@ -224,11 +224,9 @@ public class PatientDashboardFragment extends BaseDiagnosisFragment<PatientDashb
 	}
 
 	public void setPatientUuid(Patient patient) {
-		if (patient.getPerson() != null) {
-			SharedPreferences.Editor editor = instance.getPreferences().edit();
-			editor.putString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patient.getPerson().getUuid());
-			editor.commit();
-		}
+		SharedPreferences.Editor editor = instance.getPreferences().edit();
+		editor.putString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patient.getPerson().getUuid());
+		editor.commit();
 	}
 
 	public void setVisitUuid(Visit visit) {

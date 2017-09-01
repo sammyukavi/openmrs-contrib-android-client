@@ -189,6 +189,10 @@ public class SyncService {
 	 * Trims patient data for patients that are not subscribed.
 	 */
 	protected void trim() {
+
+		eventBus.post(new SyncPullEvent(ApplicationConstants.EventMessages.Sync.Pull.TRIM_STARTING,
+				ApplicationConstants.EventMessages.Sync.SyncType.TRIM, null));
+
 		// Get the number of seconds since the trim was last executed
 		Date lastTrimDate = openmrs.getLastTrimDate();
 		Integer seconds = null;
@@ -206,6 +210,9 @@ public class SyncService {
 				openmrs.setLastTrimDate(new Date());
 			}
 		}
+
+		eventBus.post(new SyncPullEvent(ApplicationConstants.EventMessages.Sync.Pull.TRIM_COMPLETE,
+				ApplicationConstants.EventMessages.Sync.SyncType.TRIM, null));
 	}
 }
 

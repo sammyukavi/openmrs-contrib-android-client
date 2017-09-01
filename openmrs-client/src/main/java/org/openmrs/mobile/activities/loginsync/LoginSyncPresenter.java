@@ -26,6 +26,7 @@ public class LoginSyncPresenter extends BasePresenter implements LoginSyncContra
 	private boolean networkConnectionIsFast = true;
 	private boolean arePushing = false;
 	private boolean arePulling = false;
+	private boolean trimHasBeenCompleted = false;
 
 	private final int DELAY = 500;
 	private final double SMOOTHING_FACTOR = 0.005;
@@ -102,8 +103,9 @@ public class LoginSyncPresenter extends BasePresenter implements LoginSyncContra
 	}
 
 	public void onSyncPullEvent(SyncPullEvent syncPullEvent) {
-		arePushing = true;
+		arePulling = true;
 		double progress;
+		double trimSquenceProgressAdjustment = 1;
 
 		// First check for information to determine of progress should be updated
 		switch (syncPullEvent.getMessage()) {
@@ -113,14 +115,18 @@ public class LoginSyncPresenter extends BasePresenter implements LoginSyncContra
 			case ApplicationConstants.EventMessages.Sync.Pull.SUBSCRIPTION_REMOTE_PULL_COMPLETE:
 				entitiesPulled++;
 				break;
+			case ApplicationConstants.EventMessages.Sync.Pull.TRIM_COMPLETE:
+				trimHasBeenCompleted = true;
+				break;
 		}
 
-		if (totalSyncPulls == entitiesPulled) {
+		if (totalSyncPulls == entitiesPulled && trimHasBeenCompleted) {
 			progress = 100;
 			entitiesPulled = 0;
+			trimHasBeenCompleted = false;
 			arePulling = false;
 		} else {
-			progress = entitiesPulled / totalSyncPulls;
+			progress = entitiesPulled / (totalSyncPulls + trimSquenceProgressAdjustment);
 		}
 
 		switch (syncPullEvent.getMessage()) {
@@ -138,6 +144,12 @@ public class LoginSyncPresenter extends BasePresenter implements LoginSyncContra
 			case ApplicationConstants.EventMessages.Sync.Pull.ENTITY_REMOTE_PULL_COMPLETE:
 				view.updateSyncPullProgressForCompletingEntity(progress, currentDownloadingSubscription,
 						syncPullEvent.getEntity());
+				break;
+			case ApplicationConstants.EventMessages.Sync.Pull.TRIM_STARTING:
+				view.updateSyncPullProgressForStartingTrim(progress);
+				break;
+			case ApplicationConstants.EventMessages.Sync.Pull.TRIM_COMPLETE:
+				view.updateSyncPullProgressForCompletingTrim(progress);
 				break;
 		}
 

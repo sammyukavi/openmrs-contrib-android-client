@@ -330,11 +330,14 @@ public abstract class ApplicationConstants {
 				public static final String SUBSCRIPTION_REMOTE_PULL_COMPLETE = "subscriptionRemotePullComplete";
 				public static final String ENTITY_REMOTE_PULL_STARTING = "entityRemotePullStarting";
 				public static final String ENTITY_REMOTE_PULL_COMPLETE = "entityRemotePullComplete";
+				public static final String TRIM_STARTING = "trimStarting";
+				public static final String TRIM_COMPLETE = "trimComplete";
 			}
 
 			public static class SyncType {
 				public static final String SUBSCRIPTION = "subscription";
 				public static final String RECORD = "record";
+				public static final String TRIM = "trim";
 			}
 		}
 	}

@@ -61,7 +61,7 @@ public class SyncManager {
 				try {
 					syncService.sync();
 				} catch (Exception ex) {
-					openMRS.getOpenMRSLogger().e("Error running the sync service ", ex);
+					openMRS.getOpenMRSLogger().e("Error running the sync service", ex);
 				}
 			}).start();
 		}

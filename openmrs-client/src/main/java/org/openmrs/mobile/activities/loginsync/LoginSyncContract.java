@@ -39,6 +39,10 @@ public interface LoginSyncContract {
 		void updateSyncPushProgressForStartingRecord(double percentComplete, Integer recordNumber, Integer totalNumber);
 
 		void updateSyncPushProgressForCompletingRecord(double percentComplete, Integer recordNumber, Integer totalNumber);
+
+		void updateSyncPullProgressForStartingTrim(double percentComplete);
+
+		void updateSyncPullProgressForCompletingTrim(double percentComplete);
 	}
 
 	interface Presenter extends BasePresenterContract {

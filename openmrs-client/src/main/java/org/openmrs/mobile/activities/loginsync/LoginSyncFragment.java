@@ -138,11 +138,15 @@ public class LoginSyncFragment extends ACBaseFragment<LoginSyncContract.Presente
 
 	public void notifySyncPullComplete() {
 		pullProgressText.setText(getString(R.string.download_complete));
+		pullProgressBar.setProgress(100);
 	}
 
 	public void notifySyncPushComplete() {
 		pullProgressText.setText(getString(R.string.initial_sync_pull_progress_text_after_upload_complete));
 		pushProgressText.setText(getString(R.string.upload_complete));
+		pushDurationText.setVisibility(View.INVISIBLE);
+		pushProgressBar.setProgress(100);
+
 	}
 
 	public void updateSyncPushProgressForStartingRecord(double percentComplete, Integer recordNumber, Integer totalNumber) {
@@ -155,6 +159,18 @@ public class LoginSyncFragment extends ACBaseFragment<LoginSyncContract.Presente
 			Integer totalNumber) {
 		String progressText = getString(R.string.record_remote_push_complete, recordNumber.toString(),
 				totalNumber.toString());
+		updateSyncPullProgress(percentComplete, progressText);
+	}
+
+	@Override
+	public void updateSyncPullProgressForStartingTrim(double percentComplete) {
+		String progressText = getString(R.string.trim_starting);
+		updateSyncPullProgress(percentComplete, progressText);
+	}
+
+	@Override
+	public void updateSyncPullProgressForCompletingTrim(double percentComplete) {
+		String progressText = getString(R.string.trim_complete);
 		updateSyncPullProgress(percentComplete, progressText);
 	}
 }

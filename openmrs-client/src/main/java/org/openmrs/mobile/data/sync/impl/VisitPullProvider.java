@@ -7,15 +7,19 @@ import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.db.impl.EncounterDbService;
 import org.openmrs.mobile.data.db.impl.VisitDbService;
+import org.openmrs.mobile.data.db.impl.VisitTaskDbService;
 import org.openmrs.mobile.data.rest.RestConstants;
 import org.openmrs.mobile.data.rest.RestHelper;
 import org.openmrs.mobile.data.rest.impl.EncounterRestServiceImpl;
 import org.openmrs.mobile.data.rest.impl.VisitRestServiceImpl;
+import org.openmrs.mobile.data.rest.impl.VisitTaskRestServiceImpl;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Encounter_Table;
 import org.openmrs.mobile.models.PullSubscription;
 import org.openmrs.mobile.models.RecordInfo;
 import org.openmrs.mobile.models.Visit;
+import org.openmrs.mobile.models.VisitTask;
+import org.openmrs.mobile.models.VisitTask_Table;
 import org.openmrs.mobile.models.Visit_Table;
 
 import java.util.ArrayList;
@@ -32,17 +36,22 @@ public class VisitPullProvider {
 	private VisitRestServiceImpl visitRestService;
 	private EncounterDbService encounterDbService;
 	private EncounterRestServiceImpl encounterRestService;
+	private VisitTaskDbService visitTaskDbService;
+	private VisitTaskRestServiceImpl visitTaskRestService;
 
 	private DatabaseHelper databaseHelper;
 
 	@Inject
-	public VisitPullProvider(VisitDbService visitDbService,
-			VisitRestServiceImpl visitRestService, EncounterDbService encounterDbService,
-			EncounterRestServiceImpl encounterRestService, DatabaseHelper databaseHelper) {
+	public VisitPullProvider(VisitDbService visitDbService, VisitRestServiceImpl visitRestService,
+			EncounterDbService encounterDbService, EncounterRestServiceImpl encounterRestService,
+			VisitTaskDbService visitTaskDbService, VisitTaskRestServiceImpl visitTaskRestService,
+			DatabaseHelper databaseHelper) {
 		this.visitDbService = visitDbService;
 		this.visitRestService = visitRestService;
 		this.encounterDbService = encounterDbService;
 		this.encounterRestService = encounterRestService;
+		this.visitTaskDbService = visitTaskDbService;
+		this.visitTaskRestService = visitTaskRestService;
 		this.databaseHelper = databaseHelper;
 	}
 
@@ -94,7 +103,29 @@ public class VisitPullProvider {
 	}
 
 	private void pullVisitTasks(PullSubscription subscription, RecordInfo patientRecord, List<RecordInfo> visitInfo) {
-		// TODO: Implement after visit tasks REST tasks are complete
+		QueryOptions options = new QueryOptions.Builder().customRepresentation(RestConstants.Representations.VISIT_TASKS)
+				.build();
+
+		for (RecordInfo visitRecord : visitInfo) {
+			List<RecordInfo> visitTasks = RestHelper.getCallListValue(visitTaskRestService.getRecordInfoByVisit
+					(visitRecord.getUuid(), null, PagingInfo.ALL));
+
+			databaseHelper.diffDelete(VisitTask.class, VisitTask_Table.visit_uuid.eq(visitRecord.getUuid()), visitTasks);
+
+			List<VisitTask> visitTaskList = new ArrayList<>();
+			for (RecordInfo visitTasksRecord : visitTasks) {
+				if (visitTasksRecord.isUpdatedSince(subscription)) {
+					VisitTask visitTask = RestHelper.getCallValue(visitTaskRestService.getByUuid(visitTasksRecord.getUuid
+							(), options));
+					visitTask.processRelationships();
+					visitTaskList.add(visitTask);
+				}
+			}
+
+			if (!visitTaskList.isEmpty()) {
+				visitTaskDbService.saveAll(visitTaskList);
+			}
+		}
 	}
 
 	private void pullVisitDocuments(PullSubscription subscription, RecordInfo patientRecord, List<RecordInfo> visitInfo) {

@@ -9,12 +9,14 @@ import org.openmrs.mobile.data.db.impl.EncounterDbService;
 import org.openmrs.mobile.data.db.impl.ObsDbService;
 import org.openmrs.mobile.data.db.impl.VisitDbService;
 import org.openmrs.mobile.data.db.impl.VisitPhotoDbService;
+import org.openmrs.mobile.data.db.impl.VisitTaskDbService;
 import org.openmrs.mobile.data.rest.RestConstants;
 import org.openmrs.mobile.data.rest.RestHelper;
 import org.openmrs.mobile.data.rest.impl.EncounterRestServiceImpl;
 import org.openmrs.mobile.data.rest.impl.ObsRestServiceImpl;
 import org.openmrs.mobile.data.rest.impl.VisitPhotoRestServiceImpl;
 import org.openmrs.mobile.data.rest.impl.VisitRestServiceImpl;
+import org.openmrs.mobile.data.rest.impl.VisitTaskRestServiceImpl;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Encounter_Table;
 import org.openmrs.mobile.models.Observation;
@@ -24,6 +26,8 @@ import org.openmrs.mobile.models.RecordInfo;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitPhoto;
 import org.openmrs.mobile.models.VisitPhoto_Table;
+import org.openmrs.mobile.models.VisitTask;
+import org.openmrs.mobile.models.VisitTask_Table;
 import org.openmrs.mobile.models.Visit_Table;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 
@@ -45,6 +49,8 @@ public class VisitPullProvider {
 	private ObsRestServiceImpl obsRestService;
 	private VisitPhotoDbService visitPhotoDbService;
 	private VisitPhotoRestServiceImpl visitPhotoRestService;
+	private VisitTaskDbService visitTaskDbService;
+	private VisitTaskRestServiceImpl visitTaskRestService;
 
 	private DatabaseHelper databaseHelper;
 
@@ -53,6 +59,7 @@ public class VisitPullProvider {
 			VisitRestServiceImpl visitRestService, EncounterDbService encounterDbService,
 			EncounterRestServiceImpl encounterRestService, ObsDbService obsDbService, ObsRestServiceImpl obsRestService,
 			VisitPhotoDbService visitPhotoDbService, VisitPhotoRestServiceImpl visitPhotoRestService,
+			VisitTaskDbService visitTaskDbService, VisitTaskRestServiceImpl visitTaskRestService,
 			DatabaseHelper databaseHelper) {
 		this.visitDbService = visitDbService;
 		this.visitRestService = visitRestService;
@@ -62,6 +69,8 @@ public class VisitPullProvider {
 		this.obsRestService = obsRestService;
 		this.visitPhotoDbService = visitPhotoDbService;
 		this.visitPhotoRestService = visitPhotoRestService;
+		this.visitTaskDbService = visitTaskDbService;
+		this.visitTaskRestService = visitTaskRestService;
 		this.databaseHelper = databaseHelper;
 	}
 
@@ -113,7 +122,29 @@ public class VisitPullProvider {
 	}
 
 	private void pullVisitTasks(PullSubscription subscription, RecordInfo patientRecord, List<RecordInfo> visitInfo) {
-		// TODO: Implement after visit tasks REST tasks are complete
+		QueryOptions options = new QueryOptions.Builder().customRepresentation(RestConstants.Representations.VISIT_TASKS)
+				.build();
+
+		for (RecordInfo visitRecord : visitInfo) {
+			List<RecordInfo> visitTasks = RestHelper.getCallListValue(visitTaskRestService.getRecordInfoByVisit
+					(visitRecord.getUuid(), null, PagingInfo.ALL));
+
+			databaseHelper.diffDelete(VisitTask.class, VisitTask_Table.visit_uuid.eq(visitRecord.getUuid()), visitTasks);
+
+			List<VisitTask> visitTaskList = new ArrayList<>();
+			for (RecordInfo visitTasksRecord : visitTasks) {
+				if (visitTasksRecord.isUpdatedSince(subscription)) {
+					VisitTask visitTask = RestHelper.getCallValue(visitTaskRestService.getByUuid(visitTasksRecord.getUuid
+							(), options));
+					visitTask.processRelationships();
+					visitTaskList.add(visitTask);
+				}
+			}
+
+			if (!visitTaskList.isEmpty()) {
+				visitTaskDbService.saveAll(visitTaskList);
+			}
+		}
 	}
 
 	private void pullVisitDocuments(PullSubscription subscription, RecordInfo patientRecord, List<RecordInfo> visitInfo) {

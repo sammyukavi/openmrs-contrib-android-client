@@ -29,5 +29,6 @@ public class RestConstants {
 				+ "instructions,user:(person:(display)),downloadedImage)";
 		public static final String OBSERVATION = "custom:(uuid,display,value,groupMembers,concept,encounter,dateCreated,"
 				+ "creator:(uuid,display))";
+		public static final String VISIT_TASKS = "custom:(uuid,status,name,closedOn)";
 	}
 }

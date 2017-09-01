@@ -5,15 +5,18 @@ import android.util.Log;
 import org.greenrobot.eventbus.EventBus;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
+import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.DataOperationException;
 import org.openmrs.mobile.data.db.impl.PullSubscriptionDbService;
 import org.openmrs.mobile.data.db.impl.SyncLogDbService;
+import org.openmrs.mobile.data.sync.impl.PatientTrimProvider;
 import org.openmrs.mobile.event.SyncPullEvent;
 import org.openmrs.mobile.models.PullSubscription;
 import org.openmrs.mobile.models.SyncLog;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.NetworkUtils;
 import org.openmrs.mobile.utilities.StringUtils;
+import org.openmrs.mobile.utilities.TimeConstants;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -24,26 +27,32 @@ import javax.inject.Inject;
 
 public class SyncService {
 	private static final String TAG = SyncService.class.getSimpleName();
+	private static final long TRIM_INTERVAL = TimeConstants.SECONDS_PER_DAY;
 
 	private static final Object SYNC_LOCK = new Object();
 
+	private OpenMRS openmrs;
 	private SyncLogDbService syncLogDbService;
 	private PullSubscriptionDbService subscriptionDbService;
 	private DaggerProviderHelper providerHelper;
 	private EventBus eventBus;
+	private PatientTrimProvider patientTrimProvider;
 
 	private NetworkUtils networkUtils;
 	private Map<String, SubscriptionProvider> subscriptionProviders = new HashMap<String, SubscriptionProvider>();
 	private Map<String, SyncProvider> pushSyncProviders = new HashMap<>();
 
 	@Inject
-	public SyncService(SyncLogDbService syncLogDbService, PullSubscriptionDbService subscriptionDbService,
-			DaggerProviderHelper providerHelper, NetworkUtils networkUtils, EventBus eventBus) {
+	public SyncService(OpenMRS openmrs, SyncLogDbService syncLogDbService, PullSubscriptionDbService subscriptionDbService,
+			DaggerProviderHelper providerHelper, NetworkUtils networkUtils, EventBus eventBus,
+			PatientTrimProvider patientTrimProvider) {
+		this.openmrs = openmrs;
 		this.syncLogDbService = syncLogDbService;
 		this.subscriptionDbService = subscriptionDbService;
 		this.providerHelper = providerHelper;
 		this.networkUtils = networkUtils;
 		this.eventBus = eventBus;
+		this.patientTrimProvider = patientTrimProvider;
 	}
 
 	public void sync() {
@@ -54,6 +63,9 @@ public class SyncService {
 
 			// Pull subscription changes
 			pull();
+
+			// Trim patient data that is not subscribed
+			trim();
 		}
 	}
 
@@ -158,6 +170,29 @@ public class SyncService {
 
 			eventBus.post(new SyncPullEvent(ApplicationConstants.EventMessages.Sync.Pull.SUBSCRIPTION_REMOTE_PULL_COMPLETE,
 					sub.getSubscriptionClass(), null));
+		}
+	}
+
+	/**
+	 * Trims patient data for patients that are not subscribed.
+	 */
+	protected void trim() {
+		// Get the number of seconds since the trim was last executed
+		Date lastTrimDate = openmrs.getLastTrimDate();
+		Integer seconds = null;
+		if (lastTrimDate != null) {
+			Period p = new Period(new DateTime(lastTrimDate), DateTime.now());
+			seconds = p.getSeconds();
+		}
+
+		if (seconds == null || seconds > TRIM_INTERVAL) {
+			try {
+				patientTrimProvider.trim();
+			} catch (Exception ex) {
+				Log.e(TAG, "An exception occurred while trimming the patient data.", ex);
+			} finally {
+				openmrs.setLastTrimDate(new Date());
+			}
 		}
 	}
 }

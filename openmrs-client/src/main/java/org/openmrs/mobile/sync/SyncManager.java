@@ -55,7 +55,13 @@ public class SyncManager {
 
 	public void requestSync() {
 		if (openMRS.getAuthorizationManager().isUserLoggedIn()) {
-			syncService.sync();
+			new Thread(() -> {
+				try {
+					syncService.sync();
+				} catch (Exception ex) {
+					openMRS.getOpenMRSLogger().e("Error running the sync service ", ex);
+				}
+			}).start();
 		}
 	}
 }

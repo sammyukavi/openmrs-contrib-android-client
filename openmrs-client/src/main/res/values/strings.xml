@@ -169,6 +169,7 @@
 	<string name="login">Login</string>
 	<string name="create_account">No account yet? Create one</string>
 	<string name="search_hint">Search patients</string>
+	<string name="sync_hint">Sync selections</string>
 	
 	<string name="nav_find_patient">Find Patient Record</string>
 	<string name="nav_register_patient">Register Patient</string>
@@ -390,4 +391,9 @@
 	<string name="patient_diabetic">Patient diabetic?</string>
 	<string name="ward_stay_admission">Ward stay during admission</string>
 	<string name="no_patient_data">You are offline and cannot view patient information that is not synced.</string>
+	<!-- Sync Selection texts -->
+	<string name="select_patient_lists_to_sync">Select Patient Lists to Sync</string>
+	<string name="title_select_patient_lists_to_sync">Patient List Sync Selections</string>
+	<string name="skip_patient_list_sync_selections">Skip</string>
+	<string name="save_patient_list_sync_selections">Save Selections</string>
 </resources>

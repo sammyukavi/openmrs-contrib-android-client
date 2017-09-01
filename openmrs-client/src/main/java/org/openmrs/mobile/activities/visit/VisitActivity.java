@@ -61,7 +61,7 @@ public class VisitActivity extends ACBaseActivity {
 	private String providerUuid, visitClosedDate;
 	private Intent intent;
 	private OpenMRS instance = OpenMRS.getInstance();
-	private SharedPreferences sharedPreferences = instance.getOpenMRSSharedPreferences();
+	private SharedPreferences sharedPreferences = instance.getPreferences();
 	private FloatingActionButton captureVitalsButton, endVisitButton, editVisitButton, auditData;
 	private FloatingActionMenu visitDetailsMenu;
 

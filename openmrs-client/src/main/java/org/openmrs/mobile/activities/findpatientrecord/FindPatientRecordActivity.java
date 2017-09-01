@@ -169,13 +169,13 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 	}
 
 	private String getSearchQuery() {
-		return instance.getOpenMRSSharedPreferences().getString(
+		return instance.getPreferences().getString(
 				ApplicationConstants.BundleKeys.PATIENT_QUERY_BUNDLE,
 				ApplicationConstants.EMPTY_STRING);
 	}
 
 	private void setSearchQuery(String query) {
-		SharedPreferences.Editor editor = instance.getOpenMRSSharedPreferences().edit();
+		SharedPreferences.Editor editor = instance.getPreferences().edit();
 		editor.putString(ApplicationConstants.BundleKeys.PATIENT_QUERY_BUNDLE, query);
 		editor.commit();
 	}

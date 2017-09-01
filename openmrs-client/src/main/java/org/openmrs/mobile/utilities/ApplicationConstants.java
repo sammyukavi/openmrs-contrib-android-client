@@ -32,8 +32,9 @@ public abstract class ApplicationConstants {
 	public static final String CIVIL_STATUS = "Civil Status";
 	public static final String KIN_RELATIONSHIP = "Kin Relationship";
 
-	public abstract static class OpenMRSSharedPreferenceNames {
+	public abstract static class Preferences {
 		public static final String SHARED_PREFERENCES_NAME = "shared_preferences";
+		public static final String LAST_TRIM_DATE = "last_trim_date";
 	}
 
 	public abstract static class API {
@@ -71,6 +72,7 @@ public abstract class ApplicationConstants {
 		public static final String ADD_VISIT_TASK_DIALOG_TAG = "addVisitTaskDialogTag";
 		public static final String VISIT_NOTE_TAG = "visitNoteTag";
 		public static final String PENDING_VISIT_NOTE_CHANGES_TAG = "pendingVisitNoteChangesTag";
+		public static final String SELECT_PATIENT_LISTS_TO_SYNC_DIALOG_TAG = "selectPatientListsToSyncDialogTag";
 	}
 
 	public abstract static class RegisterPatientRequirements {

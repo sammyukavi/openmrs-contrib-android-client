@@ -355,7 +355,7 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 	}
 
 	private void setVisitStopDate(Visit visit) {
-		SharedPreferences.Editor editor = instance.getOpenMRSSharedPreferences().edit();
+		SharedPreferences.Editor editor = instance.getPreferences().edit();
 		editor.putString(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE,
 				visit.getStopDatetime() == null ? null : DATE_FORMAT.format(visit.getStopDatetime()));
 		editor.commit();

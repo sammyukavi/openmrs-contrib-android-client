@@ -47,7 +47,7 @@ import org.openmrs.mobile.activities.ACBaseActivity;
 import org.openmrs.mobile.activities.addeditpatient.AddEditPatientActivity;
 import org.openmrs.mobile.activities.addeditpatient.SimilarPatientsRecyclerViewAdapter;
 import org.openmrs.mobile.activities.login.LoginActivity;
-import org.openmrs.mobile.activities.login.LoginFragment;
+import org.openmrs.mobile.activities.login.LoginContract;
 import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
@@ -382,8 +382,9 @@ public class CustomFragmentDialog extends DialogFragment {
 						dismiss();
 						break;
 					case LOGIN:
-						((LoginFragment)getActivity().getSupportFragmentManager().findFragmentById(R.id.loginContentFrame))
-								.login(true);
+						LoginContract.View view = (LoginContract.View) getActivity().getSupportFragmentManager()
+								.findFragmentById(R.id.loginContentFrame);
+						view.login(true);
 						dismiss();
 						break;
 					case LOGOUT:

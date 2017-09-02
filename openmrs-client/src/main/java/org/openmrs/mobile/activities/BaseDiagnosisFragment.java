@@ -53,13 +53,13 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	private boolean firstTimeEdit;
 	private long lastTextEdit = 0;
 	private CustomFragmentDialog mergePatientSummaryDialog;
+	private TextWatcher clinicalNoteListener;
 
 	@Override
 	public void initializeListeners() {
 		primaryDiagnoses.clear();
 		secondaryDiagnoses.clear();
 		addDiagnosisListeners();
-		addClinicalNoteListener();
 
 		// load patient summary merge dialog if need be
 		createPatientSummaryMergeDialog(clinicalNoteView.getText().toString());
@@ -127,27 +127,35 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 			}
 		};
 
-		clinicalNoteView.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-			}
-
-			@Override
-			public void onTextChanged(final CharSequence s, int start, int before, int count) {
-				//Remove this to run only once
-				handler.removeCallbacks(inputCompleteChecker);
-			}
-
-			@Override
-			public void afterTextChanged(final Editable s) {
-				if (s.length() > 0 && !firstTimeEdit) {
-					lastTextEdit = System.currentTimeMillis();
-					handler.postDelayed(inputCompleteChecker, SAVE_CLINICAL_NOTE_DELAY);
-				} else {
-					firstTimeEdit = false;
+		if (clinicalNoteListener == null) {
+			clinicalNoteListener = new TextWatcher() {
+				@Override
+				public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 				}
-			}
-		});
+
+				@Override
+				public void onTextChanged(final CharSequence s, int start, int before, int count) {
+					//Remove this to run only once
+					handler.removeCallbacks(inputCompleteChecker);
+				}
+
+				@Override
+				public void afterTextChanged(final Editable s) {
+					if (s.length() > 0 && !firstTimeEdit) {
+						lastTextEdit = System.currentTimeMillis();
+						handler.postDelayed(inputCompleteChecker, SAVE_CLINICAL_NOTE_DELAY);
+					} else {
+						firstTimeEdit = false;
+					}
+				}
+			};
+		}
+
+		clinicalNoteView.addTextChangedListener(clinicalNoteListener);
+	}
+
+	private void removeClinicalNoteListener() {
+		clinicalNoteView.removeTextChangedListener(clinicalNoteListener);
 	}
 
 	public void mergePatientSummary() {
@@ -157,8 +165,9 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	}
 
 	public void createPatientSummaryMergeDialog(String mergePatientSummaryText) {
+		removeClinicalNoteListener();
 		// This condition will be changed. It's just a way of detecting a conflict that needs to be resolved.
-		if (mergePatientSummaryText.contains("@@")) {
+		if (mergePatientSummaryText.contains(ApplicationConstants.PatientSummary.SEARCH_PATIENT_SUMMARY_CONFLICT)) {
 			CustomDialogBundle bundle = new CustomDialogBundle();
 			bundle.setTitleViewMessage(getString(R.string.merge_patient_summary));
 			bundle.setEditNoteTextViewMessage(mergePatientSummaryText);
@@ -168,6 +177,8 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 			mergePatientSummaryDialog = CustomFragmentDialog.newInstance(bundle);
 			mergePatientSummaryDialog.show(
 					getActivity().getSupportFragmentManager(), ApplicationConstants.DialogTAG.MERGE_PATIENT_SUMMARY_TAG);
+		} else {
+			addClinicalNoteListener();
 		}
 	}
 
@@ -394,7 +405,10 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 		visitNote.setW5(DateUtils.convertTime(visit.getStartDatetime().getTime(), DateUtils.OPEN_MRS_REQUEST_FORMAT));
 		visitNote.setW10(ApplicationConstants.EMPTY_STRING);
 		visitNote.setW12(clinicalNote == null ? ApplicationConstants.EMPTY_STRING : clinicalNote);
-		visitNote.setObservationUuid(getObservationUuid());
+
+		if (getObservationUuid() != null) {
+			visitNote.setObservationUuid(getObservationUuid());
+		}
 
 		encounterDiagnoses.addAll(primaryDiagnoses);
 		encounterDiagnoses.addAll(secondaryDiagnoses);

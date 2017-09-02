@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BaseDiagnosisPresenter {
+	private static final String TAG = BaseDiagnosisPresenter.class.getSimpleName();
 
 	private ConceptDataService conceptDataService;
 	private ObsDataService obsDataService;
@@ -58,7 +59,7 @@ public class BaseDiagnosisPresenter {
 			@Override
 			public void onError(Throwable t) {
 				base.getLoadingProgressBar().setVisibility(View.GONE);
-				Log.e("error", t.getLocalizedMessage());
+				Log.e(TAG, "Error finding concept: " + t.getLocalizedMessage());
 			}
 		});
 	}
@@ -88,7 +89,7 @@ public class BaseDiagnosisPresenter {
 
 			@Override
 			public void onError(Throwable t) {
-				Log.e("error", t.getLocalizedMessage());
+				Log.e(TAG, "Error saving visit note: " + t.getLocalizedMessage());
 				base.getBaseDiagnosisView().showTabSpinner(false);
 			}
 		});
@@ -110,6 +111,7 @@ public class BaseDiagnosisPresenter {
 
 					@Override
 					public void onError(Throwable t) {
+						Log.e(TAG, "Error getting Observation: " + t.getLocalizedMessage());
 						base.getBaseDiagnosisView().showTabSpinner(false);
 					}
 				});

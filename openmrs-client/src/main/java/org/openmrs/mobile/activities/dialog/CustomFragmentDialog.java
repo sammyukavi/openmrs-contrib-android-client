@@ -421,20 +421,11 @@ public class CustomFragmentDialog extends DialogFragment {
 						break;
 					case DELETE_PATIENT:
 						PatientDashboardActivity patientDashboardActivity = (PatientDashboardActivity)getActivity();
-						//activity.findPatientPresenter.deletePatient();
 						dismiss();
 						patientDashboardActivity.finish();
 						break;
 					case ADD_VISIT_TASKS:
-						if (StringUtils.notEmpty(getAutoCompleteTextValue())) {
-							/*((VisitTasksActivity)getActivity()).presenter
-									.createVisitTasksObject(getAutoCompleteTextValue());
-							dismiss();
-							break;*/
-						} else {
-							dismiss();
-							break;
-						}
+						break;
 					case MERGE_PATIENT_SUMMARY:
 						mergePatientSummary();
 						dismiss();

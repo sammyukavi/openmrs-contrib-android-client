@@ -334,4 +334,8 @@ public abstract class ApplicationConstants {
 			}
 		}
 	}
+
+	public static class PatientSummary {
+		public static final String SEARCH_PATIENT_SUMMARY_CONFLICT = "[Author";
+	}
 }

@@ -1,6 +1,7 @@
 package org.openmrs.mobile.data.db.impl;
 
 import com.raizlabs.android.dbflow.config.FlowManager;
+import com.raizlabs.android.dbflow.sql.language.From;
 import com.raizlabs.android.dbflow.structure.ModelAdapter;
 
 import org.openmrs.mobile.data.PagingInfo;
@@ -28,7 +29,7 @@ public class UserDbService extends BaseDbService<User> implements DbService<User
 
 	public List<User> getByUsername(String username, QueryOptions options, PagingInfo pagingInfo) {
 		return executeQuery(options, pagingInfo,
-				(f) -> f.where(User_Table.username.eq(username))
+				(f) -> ((From<User>) f).where(User_Table.username.eq(username))
 		);
 	}
 }

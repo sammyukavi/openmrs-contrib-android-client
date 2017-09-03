@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.raizlabs.android.dbflow.config.FlowManager;
+import com.raizlabs.android.dbflow.sql.language.BaseModelQueriable;
 import com.raizlabs.android.dbflow.sql.language.From;
 import com.raizlabs.android.dbflow.sql.language.SQLOperator;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
@@ -45,31 +46,31 @@ public class RepositoryImpl implements Repository {
 		checkNotNull(property);
 
 
-		From<M> from = SQLite.select(property).from(table.getModelClass());
+		BaseModelQueriable<M> query = SQLite.select(property).from(table.getModelClass());
 
 		if (operators != null) {
-			from.where(operators);
+			query = ((From<M>) query).where(operators);
 		}
 
-		return from.queryCustomSingle(cls);
+		return query.queryCustomSingle(cls);
 	}
 
 	@Override
 	public <M> List<M> query(@NonNull ModelAdapter<M> table, @Nullable SQLOperator... operators) {
 		checkNotNull(table);
 
-		From<M> from = SQLite.select()
+		BaseModelQueriable<M> query = SQLite.select()
 				.from(table.getModelClass());
 
 		if (operators != null) {
-			from.where(operators);
+			query = ((From<M>) query).where(operators);
 		}
 
-		return from.queryList();
+		return query.queryList();
 	}
 
 	@Override
-	public <M> List<M> query(@NonNull From<M> query) {
+	public <M> List<M> query(@NonNull BaseModelQueriable<M> query) {
 		checkNotNull(query);
 
 		return query.queryList();
@@ -94,18 +95,18 @@ public class RepositoryImpl implements Repository {
 		checkNotNull(table);
 		checkNotNull(properties);
 
-		From<M> from = SQLite.select((IProperty[])properties.toArray())
+		BaseModelQueriable<M> query = SQLite.select((IProperty[])properties.toArray())
 				.from(table.getModelClass());
 
 		if (operators != null) {
-			from.where(operators);
+			query = ((From<M>) query).where(operators);
 		}
 
-		return from.queryCustomList(cls);
+		return query.queryCustomList(cls);
 	}
 
 	@Override
-	public <T, M> List<T> queryCustom(@NonNull Class<T> cls, @NonNull From<M> query) {
+	public <T, M> List<T> queryCustom(@NonNull Class<T> cls, @NonNull BaseModelQueriable<M> query) {
 		checkNotNull(cls);
 		checkNotNull(query);
 
@@ -116,21 +117,21 @@ public class RepositoryImpl implements Repository {
 	public <M> long count(@NonNull ModelAdapter<M> table, @Nullable SQLOperator... operators) {
 		checkNotNull(table);
 
-		From<M> from = SQLite.selectCountOf()
+		BaseModelQueriable<M> query = SQLite.selectCountOf()
 				.from(table.getModelClass());
 
 		if (operators != null) {
-			from.where(operators);
+			query = ((From<M>) query).where(operators);
 		}
 
-		return from.count();
+		return query.count();
 	}
 
 	@Override
-	public <M> long count(@NonNull From<M> from) {
-		checkNotNull(from);
+	public <M> long count(@NonNull BaseModelQueriable<M> query) {
+		checkNotNull(query);
 
-		return from.count();
+		return query.count();
 	}
 
 	@Override
@@ -179,17 +180,17 @@ public class RepositoryImpl implements Repository {
 	public <M> void deleteAll(@NonNull ModelAdapter<M> table, @Nullable SQLOperator... operators) {
 		checkNotNull(table);
 
-		From<M> from = SQLite.delete().from(table.getModelClass());
+		BaseModelQueriable<M> query = SQLite.delete().from(table.getModelClass());
 
 		if (operators != null) {
-			from.where(operators);
+			query = ((From<M>) query).where(operators);
 		}
 
-		from.execute();
+		query.execute();
 	}
 
 	@Override
-	public <M> void deleteAll(@NonNull From<M> query) {
+	public <M> void deleteAll(@NonNull BaseModelQueriable<M> query) {
 		checkNotNull(query);
 
 		query.execute();

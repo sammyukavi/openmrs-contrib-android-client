@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.raizlabs.android.dbflow.config.FlowManager;
+import com.raizlabs.android.dbflow.sql.language.From;
 import com.raizlabs.android.dbflow.structure.ModelAdapter;
 
 import org.openmrs.mobile.data.PagingInfo;
@@ -41,6 +42,6 @@ public class ObsDbService extends BaseDbService<Observation> implements DbServic
 		checkNotNull(encounter);
 
 		return executeQuery(options, pagingInfo,
-				(f) -> f.where(Observation_Table.encounter_uuid.eq(encounter.getUuid())));
+				(f) -> ((From<Observation>) f).where(Observation_Table.encounter_uuid.eq(encounter.getUuid())));
 	}
 }

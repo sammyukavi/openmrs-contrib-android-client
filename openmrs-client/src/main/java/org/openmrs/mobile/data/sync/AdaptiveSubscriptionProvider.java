@@ -1,6 +1,7 @@
 package org.openmrs.mobile.data.sync;
 
 import com.raizlabs.android.dbflow.config.FlowManager;
+import com.raizlabs.android.dbflow.sql.language.BaseModelQueriable;
 import com.raizlabs.android.dbflow.sql.language.From;
 import com.raizlabs.android.dbflow.sql.language.Join;
 import com.raizlabs.android.dbflow.sql.language.NameAlias;
@@ -159,13 +160,14 @@ public abstract class AdaptiveSubscriptionProvider<E extends BaseOpenmrsAuditabl
 	protected List<String> calculateIncrementalUpdates(Date since) {
 		Property entityUuidProperty = getModelTable(getEntityClass()).getProperty("uuid");
 
-		From<E> from = SQLite.select(entityUuidProperty)
+		BaseModelQueriable<E> query = SQLite.select(entityUuidProperty)
 				.from(getEntityClass())
 				.innerJoin(RecordInfo.class)
 				.on(entityUuidProperty.withTable().eq(RecordInfo_Table.uuid.withTable()));
-		from.where(RecordInfo_Table.dateCreated.greaterThan(since)).or(RecordInfo_Table.dateChanged.greaterThan(since));
+		query = ((From<E>) query).where(RecordInfo_Table.dateCreated.greaterThan(since))
+				.or(RecordInfo_Table.dateChanged.greaterThan(since));
 
-		return repository.queryCustom(String.class, from);
+		return repository.queryCustom(String.class, query);
 	}
 
 	/**
@@ -175,27 +177,27 @@ public abstract class AdaptiveSubscriptionProvider<E extends BaseOpenmrsAuditabl
 	protected List<String> calculateIncrementalInserts() {
 		Property entityUuidProperty = getModelTable(getEntityClass()).getProperty("uuid");
 
-		From<RecordInfo> from = SQLite.select(RecordInfo_Table.uuid)
+		BaseModelQueriable<RecordInfo> query = SQLite.select(RecordInfo_Table.uuid)
 				.from(RecordInfo.class)
 				.leftOuterJoin(getEntityClass())
 				.on(RecordInfo_Table.uuid.withTable().eq(entityUuidProperty.withTable()));
-		from.where(entityUuidProperty.withTable().isNull());
+		query = ((From<RecordInfo>) query).where(entityUuidProperty.withTable().isNull());
 
-		return repository.queryCustom(String.class, from);
+		return repository.queryCustom(String.class, query);
 	}
 
 	/**
 	 * Deletes the local entities that were not found in the rest results.
 	 */
 	protected void deleteIncremental() {
-		From<E> from = SQLite.delete(getEntityClass()).as("E")
+		BaseModelQueriable<E> query = SQLite.delete(getEntityClass()).as("E")
 				.join(RecordInfo.class, Join.JoinType.LEFT_OUTER).as("R")
 				.on(
 						getModelTable(getEntityClass()).getProperty("uuid").withTable(NameAlias.of("E"))
 								.eq(RecordInfo_Table.uuid.withTable(NameAlias.of("R"))));
-		from.where(RecordInfo_Table.uuid.withTable(NameAlias.of("R")).isNull());
+		query = ((From<E>) query).where(RecordInfo_Table.uuid.withTable(NameAlias.of("R")).isNull());
 
-		repository.deleteAll(from);
+		repository.deleteAll(query);
 	}
 
 	/**

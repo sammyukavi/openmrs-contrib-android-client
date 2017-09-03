@@ -3,6 +3,7 @@ package org.openmrs.mobile.data.db.impl;
 import android.support.annotation.NonNull;
 
 import com.raizlabs.android.dbflow.config.FlowManager;
+import com.raizlabs.android.dbflow.sql.language.From;
 import com.raizlabs.android.dbflow.sql.language.Method;
 import com.raizlabs.android.dbflow.sql.language.SQLOperator;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
@@ -39,25 +40,25 @@ public class PatientDbService extends BaseDbService<Patient> implements DbServic
 
 	public List<Patient> getByName(String name, QueryOptions options, PagingInfo pagingInfo) {
 		return executeQuery(options, pagingInfo,
-				(f) -> f.where(findByNameFragment(name))
+				(f) -> ((From<Patient>) f).where(findByNameFragment(name))
 		);
 	}
 
 	public List<Patient> getByIdentifier(String id, QueryOptions options, PagingInfo pagingInfo) {
 		return executeQuery(options, pagingInfo,
-				(f) -> f.where(findById(id))
+				(f) -> ((From<Patient>) f).where(findById(id))
 		);
 	}
 
 	public List<Patient> getByNameOrIdentifier(String name, String id, QueryOptions options, PagingInfo pagingInfo) {
 		return executeQuery(options, pagingInfo,
-				(f) -> f.where(findByNameFragment(name)).or(findById(id))
+				(f) -> ((From<Patient>) f).where(findByNameFragment(name)).or(findById(id))
 		);
 	}
 
 	public List<Patient> getLastViewed(QueryOptions options, PagingInfo pagingInfo) {
 		return executeQuery(options, pagingInfo,
-				(f) -> f.orderBy(Patient_Table.dateChanged, false)
+				(f) -> ((From<Patient>) f).orderBy(Patient_Table.dateChanged, false)
 		);
 	}
 

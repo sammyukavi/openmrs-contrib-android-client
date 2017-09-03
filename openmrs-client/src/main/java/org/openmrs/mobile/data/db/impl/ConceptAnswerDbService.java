@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.raizlabs.android.dbflow.config.FlowManager;
+import com.raizlabs.android.dbflow.sql.language.From;
 import com.raizlabs.android.dbflow.structure.ModelAdapter;
 
 import org.openmrs.mobile.data.QueryOptions;
@@ -30,7 +31,7 @@ public class ConceptAnswerDbService extends BaseDbService<ConceptAnswer> impleme
 
 	public List<ConceptAnswer> getByConceptUuid(@NonNull String conceptUuid, @Nullable QueryOptions options) {
 		return executeQuery(options, null,
-				(f) -> f.where(ConceptAnswer_Table.concept_uuid.eq(conceptUuid))
+				(f) -> ((From<ConceptAnswer>) f).where(ConceptAnswer_Table.concept_uuid.eq(conceptUuid))
 		);
 	}
 }

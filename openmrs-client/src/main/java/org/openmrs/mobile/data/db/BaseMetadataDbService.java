@@ -1,5 +1,6 @@
 package org.openmrs.mobile.data.db;
 
+import com.raizlabs.android.dbflow.sql.language.From;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.models.BaseOpenmrsMetadata;
@@ -14,7 +15,8 @@ public abstract class BaseMetadataDbService<E extends BaseOpenmrsMetadata> exten
 
 	@Override
 	public List<E> getByNameFragment(String name, QueryOptions options, PagingInfo pagingInfo) {
-		return executeQuery(options, pagingInfo, (w) -> w.where(getEntityTable().getProperty("name").like(name + "%")));
+		return executeQuery(options, pagingInfo,
+				(f) -> ((From<E>) f).where(getEntityTable().getProperty("name").like(name + "%")));
 	}
 }
 

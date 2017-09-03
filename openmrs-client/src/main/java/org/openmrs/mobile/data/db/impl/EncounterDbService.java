@@ -3,6 +3,7 @@ package org.openmrs.mobile.data.db.impl;
 import android.support.annotation.NonNull;
 
 import com.raizlabs.android.dbflow.config.FlowManager;
+import com.raizlabs.android.dbflow.sql.language.From;
 import com.raizlabs.android.dbflow.structure.ModelAdapter;
 
 import org.openmrs.mobile.data.PagingInfo;
@@ -38,6 +39,6 @@ public class EncounterDbService extends BaseDbService<Encounter> implements DbSe
 		checkNotNull(visitUuid);
 
 		return executeQuery(options, pagingInfo,
-				(f) -> f.where(Encounter_Table.visit_uuid.eq(visitUuid)));
+				(f) -> ((From<Encounter>) f).where(Encounter_Table.visit_uuid.eq(visitUuid)));
 	}
 }

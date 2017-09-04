@@ -105,7 +105,8 @@ public class ObservationDeserializer implements JsonDeserializer<Observation> {
 			}
 		} else if (conceptJson != null &&
 				"Text of encounter note".equals(conceptJson.getAsJsonObject().get(DISPLAY_KEY).getAsString())) {
-			observation.setDiagnosisNote(jsonObject.getAsJsonObject().get(VALUE_KEY).getAsString());
+			JsonElement encounterNote = jsonObject.getAsJsonObject().get(VALUE_KEY);
+			observation.setDiagnosisNote(!encounterNote.isJsonNull() ? encounterNote.getAsString() : "");
 		}
 		if (conceptJson != null) {
 			Concept concept = new Concept();

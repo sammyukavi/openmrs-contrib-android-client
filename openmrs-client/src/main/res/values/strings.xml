@@ -383,13 +383,15 @@
 	<string name="first_map">1st MAP in ICU ≤ 65?</string>
 	<string name="any_prior_sedetion">Had patient received any sedation prior to 1st GCS score at ICU admission?</string>
 	<string name="surgery_during_hospital_stay">Surgery during hospital stay?</string>
-	<string name="not_applicable">N/A</string>
-	<string name="planned">Planned</string>
-	<string name="unplanned">Unplanned</string>
+	<string name="not_applicable">No</string>
+	<string name="planned">Yes - Scheduled in clinic</string>
+	<string name="unplanned">Yes - Not scheduled in clinic</string>
 	<string name="hiv_positive">Positive</string>
 	<string name="hiv_negative">Negative</string>
 	<string name="patient_diabetic">Patient diabetic?</string>
 	<string name="ward_stay_admission">Ward stay during admission</string>
+	<string name="error_gcs_score">Invalid GCS value (should be between %1$d and %2$d)</string>
+
 
 	<!-- Login Sync Activity -->
 	<string name="download_upload_speed_is_fast">This should take less than a minute&#8230;</string>
@@ -415,4 +417,5 @@
 	<string name="title_select_patient_lists_to_sync">Patient List Sync Selections</string>
 	<string name="skip_patient_list_sync_selections">Skip</string>
 	<string name="save_patient_list_sync_selections">Save Selections</string>
+
 </resources>

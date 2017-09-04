@@ -76,10 +76,12 @@ public abstract class BaseDbServiceTest<E extends BaseOpenmrsObject> {
 	@Test
 	public void getByUuid_shouldLoadRelatedEntities() throws Exception {
 		E initial = createEntity(true);
-		dbService.save(initial);
+		if (initial != null) {
+			dbService.save(initial);
 
-		E entity = dbService.getByUuid(initial.getUuid(), null);
-		asserter.assertModel(initial, entity);
+			E entity = dbService.getByUuid(initial.getUuid(), null);
+			asserter.assertModel(initial, entity);
+		}
 	}
 
 	@Test

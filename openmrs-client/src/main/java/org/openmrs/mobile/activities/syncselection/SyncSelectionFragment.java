@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
+import org.openmrs.mobile.activities.loginsync.LoginSyncActivity;
 import org.openmrs.mobile.activities.patientlist.PatientListActivity;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.listeners.PatientListSyncSwitchToggle;
@@ -94,10 +95,14 @@ public class SyncSelectionFragment extends ACBaseFragment<SyncSelectionContract.
 		adapter.setItems(patientLists);
 	}
 
-	public void navigateToNextPage() {
+	public void navigateToNextPage(boolean skipSyncing) {
 		OpenMRS openMRS = OpenMRS.getInstance();
-		// TODO: Update this to be the sync data screen
-		Intent intent = new Intent(openMRS.getApplicationContext(), PatientListActivity.class);
+		Intent intent;
+		if (skipSyncing) {
+			intent = new Intent(openMRS.getApplicationContext(), PatientListActivity.class);
+		} else {
+			intent = new Intent(openMRS.getApplicationContext(), LoginSyncActivity.class);
+		}
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		openMRS.getApplicationContext().startActivity(intent);
 		getActivity().finish();

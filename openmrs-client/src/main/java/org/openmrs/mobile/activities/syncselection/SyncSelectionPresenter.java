@@ -92,7 +92,8 @@ public class SyncSelectionPresenter extends BasePresenter implements SyncSelecti
 			pullSubscriptionDbService.saveAll(pullSubscriptionsToAdd);
 		}
 
-		view.navigateToNextPage();
+		boolean skipSyncing = pullSubscriptionsToAdd.size() == 0;
+		view.navigateToNextPage(skipSyncing);
 	}
 
 	private void updateAdvanceButtonText() {

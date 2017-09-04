@@ -85,9 +85,6 @@ public class PatientListContextSubscriptionProvider extends BaseSubscriptionProv
 			return;
 		}
 
-		// Insert/update context records
-		listPatientDbService.saveAll(patients);
-
 		String syncEntityName = "patients";
 		eventBus.post(new SyncPullEvent(ApplicationConstants.EventMessages.Sync.Pull.ENTITY_REMOTE_PULL_STARTING,
 				syncEntityName, null));

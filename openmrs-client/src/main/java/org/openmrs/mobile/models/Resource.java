@@ -114,10 +114,10 @@ public class Resource implements Serializable {
 
 	protected <E> List<E> loadRelatedObject(Class<E> cls, List<E> field, Supplier<SQLOperator> op) {
 		if (field == null || field.isEmpty()) {
-			field = SQLite.select()
+			field.addAll(SQLite.select()
 					.from(cls)
 					.where(op.get())
-					.queryList();
+					.queryList());
 		}
 
 		return field;

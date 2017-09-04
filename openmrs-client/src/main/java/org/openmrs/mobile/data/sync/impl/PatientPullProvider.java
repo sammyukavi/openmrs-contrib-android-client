@@ -35,7 +35,7 @@ public class PatientPullProvider {
 		// Calculate the patients that need to be pulled
 		List<RecordInfo> patients = new ArrayList<>();
 		for (RecordInfo record : patientInfo) {
-			if (record.getDateChanged().compareTo(subscription.getLastSync()) > 0) {
+			if (subscription.getLastSync() == null || record.getDateChanged().compareTo(subscription.getLastSync()) > 0) {
 				patients.add(record);
 			}
 		}

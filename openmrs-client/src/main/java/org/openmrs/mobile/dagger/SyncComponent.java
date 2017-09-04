@@ -9,6 +9,7 @@ import org.openmrs.mobile.data.sync.impl.LocationSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.PatientIdentifierTypeSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.PatientListContextSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.PatientListSubscriptionProvider;
+import org.openmrs.mobile.data.sync.impl.PatientTrimProvider;
 import org.openmrs.mobile.data.sync.impl.PersonAttributeTypeSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.VisitAttributeTypeSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.VisitNotePushProvider;
@@ -31,6 +32,8 @@ public interface SyncComponent {
 	SyncService syncService();
 
 	PullSubscriptionDbService pullSubscriptionDbService();
+
+	PatientTrimProvider patientTrimProvider();
 
 	DiagnosisConceptSubscriptionProvider diagnosisConceptSubscriptionProvider();
 

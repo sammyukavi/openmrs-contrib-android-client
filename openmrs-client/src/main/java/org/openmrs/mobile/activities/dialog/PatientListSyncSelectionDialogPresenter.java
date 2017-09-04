@@ -24,7 +24,9 @@ import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.db.impl.PullSubscriptionDbService;
 import org.openmrs.mobile.data.impl.PatientListDataService;
+import org.openmrs.mobile.data.sync.SyncService;
 import org.openmrs.mobile.data.sync.impl.PatientListContextSubscriptionProvider;
+import org.openmrs.mobile.data.sync.impl.PatientTrimProvider;
 import org.openmrs.mobile.models.PatientList;
 import org.openmrs.mobile.models.PullSubscription;
 import org.openmrs.mobile.utilities.SyncConstants;
@@ -38,16 +40,21 @@ public class PatientListSyncSelectionDialogPresenter implements PatientListSyncS
 
 	private PatientListDataService patientListDataService;
 	private PullSubscriptionDbService pullSubscriptionDbService;
+	private PatientTrimProvider patientTrimProvider;
+	private SyncService syncService;
 
 	private List<PatientList> patientLists;
 	private List<PatientList> selectedPatientListsToSync;
 	private Map<String, PullSubscription> patientListUuidSubscriptionMap;
 
-	public PatientListSyncSelectionDialogPresenter(PatientListSyncSelectionDialogContract.View view, PatientListDataService patientListDataService,
-			PullSubscriptionDbService pullSubscriptionDbService) {
+	public PatientListSyncSelectionDialogPresenter(PatientListSyncSelectionDialogContract.View view,
+			PatientListDataService patientListDataService, PullSubscriptionDbService pullSubscriptionDbService,
+			PatientTrimProvider patientTrimProvider, SyncService syncService) {
 		this.view = view;
 		this.patientListDataService = patientListDataService;
 		this.pullSubscriptionDbService = pullSubscriptionDbService;
+		this.patientTrimProvider = patientTrimProvider;
+		this.syncService = syncService;
 
 		this.view.setPresenter(this);
 	}
@@ -90,9 +97,10 @@ public class PatientListSyncSelectionDialogPresenter implements PatientListSyncS
 
 		for (PatientList patientList : removedLists) {
 			pullSubscriptionDbService.delete(patientListUuidSubscriptionMap.get(patientList.getUuid()));
-			// TODO: Need to kick something off here that will remove extra stuff from the DB
+			patientTrimProvider.trimFromPatientList(patientList.getUuid());
 		}
 
+		syncService.sync();
 		view.dismissDialog();
 	}
 

@@ -23,13 +23,14 @@ import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseActivity;
 import org.openmrs.mobile.activities.dialog.PatientListSyncSelectionDialogFragment;
 import org.openmrs.mobile.activities.dialog.PatientListSyncSelectionDialogPresenter;
-import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.dagger.DaggerDataAccessComponent;
 import org.openmrs.mobile.dagger.DaggerSyncComponent;
 import org.openmrs.mobile.dagger.SyncComponent;
 import org.openmrs.mobile.dagger.SyncModule;
 import org.openmrs.mobile.data.db.impl.PullSubscriptionDbService;
 import org.openmrs.mobile.data.impl.PatientListDataService;
+import org.openmrs.mobile.data.sync.SyncService;
+import org.openmrs.mobile.data.sync.impl.PatientTrimProvider;
 
 /**
  * Patient List activity
@@ -40,6 +41,8 @@ public class PatientListActivity extends ACBaseActivity {
 
 	private PatientListDataService patientListDataService;
 	private PullSubscriptionDbService pullSubscriptionDbService;
+	private PatientTrimProvider patientTrimProvider;
+	private SyncService syncService;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,9 +65,10 @@ public class PatientListActivity extends ACBaseActivity {
 			patientListPresenter = new PatientListPresenter(patientListFragment);
 
 			patientListDataService = DaggerDataAccessComponent.create().patientList();
-			SyncComponent syncComponent = DaggerSyncComponent.builder().syncModule(new SyncModule(OpenMRS.getInstance()))
-					.build();
+			SyncComponent syncComponent = DaggerSyncComponent.builder().syncModule(new SyncModule(openMRS)).build();
 			pullSubscriptionDbService = syncComponent.pullSubscriptionDbService();
+			patientTrimProvider = syncComponent.patientTrimProvider();
+			syncService = syncComponent.syncService();
 		}
 	}
 
@@ -86,7 +90,8 @@ public class PatientListActivity extends ACBaseActivity {
 			PatientListSyncSelectionDialogFragment instance = PatientListSyncSelectionDialogFragment.newInstance();
 			instance.setRightButtonOnClickListener(v -> patientListPresenter.syncSelectionsSaved());
 			PatientListSyncSelectionDialogPresenter patientListSyncSelectionDialogPresenter =
-					new PatientListSyncSelectionDialogPresenter(instance, patientListDataService, pullSubscriptionDbService);
+					new PatientListSyncSelectionDialogPresenter(instance, patientListDataService, pullSubscriptionDbService,
+							patientTrimProvider, syncService);
 			instance.show(fragmentManager);
 		}
 

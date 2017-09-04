@@ -61,7 +61,7 @@ public class PatientListContextSubscriptionProvider extends BaseSubscriptionProv
 
 		// Get list patients
 		QueryOptions options = new QueryOptions.Builder()
-				.customRepresentation(RestConstants.Representations.PATIENT_LIST_PATIENTS)
+				.customRepresentation(RestConstants.Representations.PATIENT_LIST_PATIENTS_CONTEXT)
 				.build();
 		List<PatientListContext> patients = RestHelper.getCallListValue(
 				listPatientRestService.getListPatients(patientListUuid, options, null));

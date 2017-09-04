@@ -7,8 +7,11 @@ import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.language.SQLOperator;
 import com.raizlabs.android.dbflow.structure.ModelAdapter;
 
+import java8.util.stream.Collectors;
+import java8.util.stream.StreamSupport;
 import org.openmrs.mobile.data.db.Repository;
 import org.openmrs.mobile.models.Resource;
+import org.openmrs.mobile.models.queryModel.EntityUuid;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -94,7 +97,9 @@ public class DatabaseHelper {
 			repository.deleteAll(table, array);
 		} else {
 			// Get the uuid's of the current source records
-			List<String> existingRecords = repository.queryCustom(String.class, table, table.getProperty("uuid"), array);
+			List<String> existingRecords = StreamSupport
+					.stream(repository.queryCustom(EntityUuid.class, table, table.getProperty("uuid"), array))
+					.map(EntityUuid::getUuid).collect(Collectors.toList());
 			if (existingRecords == null || existingRecords.isEmpty()) {
 				// There are no records so there is nothing to delete
 				return;

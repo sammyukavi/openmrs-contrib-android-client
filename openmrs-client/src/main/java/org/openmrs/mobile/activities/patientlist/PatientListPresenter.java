@@ -18,15 +18,18 @@ import android.support.annotation.NonNull;
 import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
-import org.openmrs.mobile.data.QueryOptions;
+import org.openmrs.mobile.data.db.impl.PullSubscriptionDbService;
 import org.openmrs.mobile.data.impl.PatientListContextDataService;
 import org.openmrs.mobile.data.impl.PatientListDataService;
 import org.openmrs.mobile.models.PatientList;
 import org.openmrs.mobile.models.PatientListContext;
+import org.openmrs.mobile.models.PullSubscription;
 import org.openmrs.mobile.utilities.StringUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PatientListPresenter extends BasePresenter implements PatientListContract.Presenter {
 
@@ -40,15 +43,16 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 
 	private PatientListDataService patientListDataService;
 	private PatientListContextDataService patientListContextDataService;
+	private PullSubscriptionDbService pullSubscriptionDbService;
 	private List<PatientList> patientLists;
 
 	public PatientListPresenter(@NonNull PatientListContract.View patientListView) {
-		this(patientListView, null, null);
+		this(patientListView, null, null, null);
 	}
 
 	public PatientListPresenter(@NonNull PatientListContract.View patientListView,
-			PatientListDataService patientListDataService,
-			PatientListContextDataService patientListContextDataService) {
+			PatientListDataService patientListDataService, PatientListContextDataService patientListContextDataService,
+			PullSubscriptionDbService pullSubscriptionDbService) {
 		super();
 
 		this.patientListView = patientListView;
@@ -64,6 +68,12 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 			this.patientListContextDataService = dataAccess().patientListContext();
 		} else {
 			this.patientListContextDataService = patientListContextDataService;
+		}
+
+		if (pullSubscriptionDbService == null) {
+			this.pullSubscriptionDbService = pullSubscriptionDbService();
+		} else {
+			this.pullSubscriptionDbService = pullSubscriptionDbService;
 		}
 	}
 
@@ -90,9 +100,10 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 					public void onCompleted(List<PatientList> entities) {
 						if (entities != null) {
 							patientLists = entities;
+							List<PatientList> patientListsToSync = getPatientListToSync();
 							patientListView.showPatientListProgressSpinner(false);
 							patientListView.setNoPatientListsVisibility(false);
-							patientListView.updatePatientLists(entities);
+							patientListView.updatePatientLists(entities, patientListsToSync);
 							if (StringUtils.notNull(patientListUuid)) {
 								getPatientListData(patientListUuid, getPage());
 							}
@@ -217,5 +228,38 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 	@Override
 	public int getLimit() {
 		return limit;
+	}
+
+	public void syncSelectionsSaved() {
+		List<PatientList> patientListsToSync = getPatientListToSync();
+		patientListView.updatePatientListSyncDisplay(patientLists, patientListsToSync);
+	}
+
+	private List<PatientList> getPatientListToSync() {
+		List<PullSubscription> pullSubscriptions = pullSubscriptionDbService.getAll(null, null);
+		List<PatientList> patientListsToSync = new ArrayList<>();
+		if (pullSubscriptions != null) {
+			patientListsToSync = mapPullSubscriptions(pullSubscriptions);
+		}
+		return patientListsToSync;
+	}
+
+	private List<PatientList> mapPullSubscriptions(List<PullSubscription> pullSubscriptions) {
+		List<String> patientListUuids = new ArrayList<>();
+		Map<String, PatientList> patientMap = new HashMap<>();
+		for (PatientList patientList : patientLists) {
+			patientListUuids.add(patientList.getUuid());
+			patientMap.put(patientList.getUuid(), patientList);
+		}
+
+		List<PatientList> syncingPatientLists = new ArrayList<>();
+		for (PullSubscription pullSubscription : pullSubscriptions) {
+			String patientListUuid = pullSubscription.getSubscriptionKey();
+			if (patientListUuid != null && patientListUuids.contains(patientListUuid)) {
+				syncingPatientLists.add(patientMap.get(patientListUuid));
+			}
+		}
+
+		return syncingPatientLists;
 	}
 }

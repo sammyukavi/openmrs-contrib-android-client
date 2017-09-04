@@ -51,6 +51,7 @@ import org.openmrs.mobile.utilities.ApplicationConstants;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public abstract class ACBaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
 	protected final OpenMRS openMRS = OpenMRS.getInstance();
 	protected final OpenMRSLogger openMRSLogger = openMRS.getOpenMRSLogger();
 	protected FragmentManager fragmentManager;
@@ -58,9 +59,11 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 	protected DrawerLayout drawer;
 	protected AuthorizationManager authorizationManager;
 	protected FrameLayout frameLayout;
+
 	private MenuItem syncbutton;
 	private Toolbar toolbar;
 	private OpenMRS instance = OpenMRS.getInstance();
+	private ActionBarDrawerToggle toggle;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -211,8 +214,7 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 
 	private void intitializeNavigationDrawer() {
 		drawer = (DrawerLayout)findViewById(R.id.drawer_layout);
-		ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-				this, drawer, toolbar, R.string.label_open, R.string.label_close);
+		toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.label_open, R.string.label_close);
 		drawer.setDrawerListener(toggle);
 		toggle.syncState();
 
@@ -223,6 +225,11 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 			logoutMenuItem.setTitle(getString(R.string.action_logout) + " " + openMRS.getUsername());
 		}
 		navigationView.setNavigationItemSelectedListener(this);
+	}
+
+	protected void disableActionBarNavigation() {
+		toggle.setDrawerIndicatorEnabled(false);
+		toggle.syncState();
 	}
 
 	@Override

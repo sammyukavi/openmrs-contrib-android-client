@@ -32,8 +32,9 @@ public abstract class ApplicationConstants {
 	public static final String CIVIL_STATUS = "Civil Status";
 	public static final String KIN_RELATIONSHIP = "Kin Relationship";
 
-	public abstract static class OpenMRSSharedPreferenceNames {
+	public abstract static class Preferences {
 		public static final String SHARED_PREFERENCES_NAME = "shared_preferences";
+		public static final String LAST_TRIM_DATE = "last_trim_date";
 	}
 
 	public abstract static class API {
@@ -71,6 +72,7 @@ public abstract class ApplicationConstants {
 		public static final String ADD_VISIT_TASK_DIALOG_TAG = "addVisitTaskDialogTag";
 		public static final String VISIT_NOTE_TAG = "visitNoteTag";
 		public static final String PENDING_VISIT_NOTE_CHANGES_TAG = "pendingVisitNoteChangesTag";
+		public static final String SELECT_PATIENT_LISTS_TO_SYNC_DIALOG_TAG = "selectPatientListsToSyncDialogTag";
 	}
 
 	public abstract static class RegisterPatientRequirements {
@@ -314,4 +316,30 @@ public abstract class ApplicationConstants {
 	public static class ConceptSource {
 		public static final String ICD_10_WHO = "ICD-10-WHO";
 	}
+
+	public static class Request {
+		public static int PATIENT_VISIT_COUNT = 5;
+  }
+
+  public static class EventMessages {
+		public static class Sync {
+			public static class Push {
+				public static final String TOTAL_ENTITIES_TO_PUSH = "totalEntitiesToPush";
+			}
+
+			public static class Pull {
+				public static final String TOTAL_SUBSCRIPTIONS = "totalSubscriptions";
+				public static final String SUBSCRIPTION_REMOTE_PULL_STARTING = "subscriptionRemotePullStarting";
+				public static final String SUBSCRIPTION_REMOTE_PULL_COMPLETE = "subscriptionRemotePullComplete";
+				public static final String ENTITY_REMOTE_PULL_STARTING = "entityRemotePullStarting";
+				public static final String ENTITY_REMOTE_PULL_COMPLETE = "entityRemotePullComplete";
+			}
+
+			public static class Save {
+				public static final String ENTITY_SAVE_STARTING = "entitySaveStarting";
+				public static final String ENTITY_SAVE_PROGRESS_UPDATE = "entitySaveProgressUpdate";
+				public static final String ENTITY_SAVE_COMPLETE = "entitySaveComplete";
+			}
+    }
+  }
 }

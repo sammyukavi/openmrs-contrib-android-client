@@ -1,23 +1,28 @@
 package org.openmrs.mobile.data.sync;
 
 import com.raizlabs.android.dbflow.config.FlowManager;
+import com.raizlabs.android.dbflow.sql.language.BaseQueriable;
 import com.raizlabs.android.dbflow.sql.language.From;
 import com.raizlabs.android.dbflow.sql.language.Join;
 import com.raizlabs.android.dbflow.sql.language.NameAlias;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.sql.language.property.Property;
+import com.raizlabs.android.dbflow.sql.queriable.ModelQueriable;
 import com.raizlabs.android.dbflow.structure.ModelAdapter;
 
+import org.greenrobot.eventbus.EventBus;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.db.DbService;
 import org.openmrs.mobile.data.db.Repository;
 import org.openmrs.mobile.data.db.impl.RecordInfoDbService;
 import org.openmrs.mobile.data.rest.RestHelper;
 import org.openmrs.mobile.data.rest.RestService;
+import org.openmrs.mobile.event.SyncPullEvent;
 import org.openmrs.mobile.models.BaseOpenmrsAuditableObject;
 import org.openmrs.mobile.models.PullSubscription;
 import org.openmrs.mobile.models.RecordInfo;
 import org.openmrs.mobile.models.RecordInfo_Table;
+import org.openmrs.mobile.utilities.ApplicationConstants;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
@@ -37,15 +42,17 @@ public abstract class AdaptiveSubscriptionProvider<E extends BaseOpenmrsAuditabl
 	protected RecordInfoDbService recordInfoDbService;
 	protected RS restService;
 	protected Repository repository;
+	protected EventBus eventBus;
 
 	private Class<E> entityClass;
 
 	public AdaptiveSubscriptionProvider(DS dbService, RecordInfoDbService recordInfoDbService, RS restService,
-			Repository repository) {
+			Repository repository, EventBus eventBus) {
 		this.dbService = dbService;
 		this.recordInfoDbService = recordInfoDbService;
 		this.restService = restService;
 		this.repository = repository;
+		this.eventBus = eventBus;
 	}
 
 	/**
@@ -57,12 +64,18 @@ public abstract class AdaptiveSubscriptionProvider<E extends BaseOpenmrsAuditabl
 	public void pull(PullSubscription subscription) {
 		long recordCount = getRecordCountDb();
 
+		eventBus.post(new SyncPullEvent(ApplicationConstants.EventMessages.Sync.Pull.ENTITY_REMOTE_PULL_STARTING,
+				entityClass.getName(), null));
+
 		if (recordCount == 0) {
 			// If table is empty then do a table pull
 			pullTable(subscription);
 		} else {
 			pullIncremental(subscription);
 		}
+
+		eventBus.post(new SyncPullEvent(ApplicationConstants.EventMessages.Sync.Pull.ENTITY_REMOTE_PULL_COMPLETE,
+				entityClass.getName(), null));
 	}
 
 	/**
@@ -148,13 +161,14 @@ public abstract class AdaptiveSubscriptionProvider<E extends BaseOpenmrsAuditabl
 	protected List<String> calculateIncrementalUpdates(Date since) {
 		Property entityUuidProperty = getModelTable(getEntityClass()).getProperty("uuid");
 
-		From<E> from = SQLite.select(entityUuidProperty)
+		ModelQueriable<E> query = SQLite.select(entityUuidProperty)
 				.from(getEntityClass())
 				.innerJoin(RecordInfo.class)
 				.on(entityUuidProperty.withTable().eq(RecordInfo_Table.uuid.withTable()));
-		from.where(RecordInfo_Table.dateCreated.greaterThan(since)).or(RecordInfo_Table.dateChanged.greaterThan(since));
+		query = ((From<E>) query).where(RecordInfo_Table.dateCreated.greaterThan(since))
+				.or(RecordInfo_Table.dateChanged.greaterThan(since));
 
-		return repository.queryCustom(String.class, from);
+		return repository.queryCustom(String.class, query);
 	}
 
 	/**
@@ -164,27 +178,27 @@ public abstract class AdaptiveSubscriptionProvider<E extends BaseOpenmrsAuditabl
 	protected List<String> calculateIncrementalInserts() {
 		Property entityUuidProperty = getModelTable(getEntityClass()).getProperty("uuid");
 
-		From<RecordInfo> from = SQLite.select(RecordInfo_Table.uuid)
+		ModelQueriable<RecordInfo> query = SQLite.select(RecordInfo_Table.uuid)
 				.from(RecordInfo.class)
 				.leftOuterJoin(getEntityClass())
 				.on(RecordInfo_Table.uuid.withTable().eq(entityUuidProperty.withTable()));
-		from.where(entityUuidProperty.withTable().isNull());
+		query = ((From<RecordInfo>) query).where(entityUuidProperty.withTable().isNull());
 
-		return repository.queryCustom(String.class, from);
+		return repository.queryCustom(String.class, query);
 	}
 
 	/**
 	 * Deletes the local entities that were not found in the rest results.
 	 */
 	protected void deleteIncremental() {
-		From<E> from = SQLite.delete(getEntityClass()).as("E")
+		ModelQueriable<E> query = SQLite.delete(getEntityClass()).as("E")
 				.join(RecordInfo.class, Join.JoinType.LEFT_OUTER).as("R")
 				.on(
 						getModelTable(getEntityClass()).getProperty("uuid").withTable(NameAlias.of("E"))
 								.eq(RecordInfo_Table.uuid.withTable(NameAlias.of("R"))));
-		from.where(RecordInfo_Table.uuid.withTable(NameAlias.of("R")).isNull());
+		query = ((From<E>) query).where(RecordInfo_Table.uuid.withTable(NameAlias.of("R")).isNull());
 
-		repository.deleteAll(from);
+		repository.deleteAll(query);
 	}
 
 	/**

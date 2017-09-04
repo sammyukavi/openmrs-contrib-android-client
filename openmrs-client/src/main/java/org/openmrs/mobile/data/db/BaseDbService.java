@@ -3,17 +3,17 @@ package org.openmrs.mobile.data.db;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.raizlabs.android.dbflow.sql.language.BaseModelQueriable;
 import com.raizlabs.android.dbflow.sql.language.From;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.sql.language.Where;
+import com.raizlabs.android.dbflow.sql.queriable.ModelQueriable;
 import com.raizlabs.android.dbflow.structure.ModelAdapter;
 
 import org.openmrs.mobile.data.DataOperationException;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.models.BaseOpenmrsObject;
-import org.openmrs.mobile.utilities.Appender;
+import org.openmrs.mobile.utilities.Function;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
@@ -170,7 +170,7 @@ public abstract class BaseDbService<E extends BaseOpenmrsObject> implements DbSe
 	}
 
 	protected List<E> executeQuery(@Nullable QueryOptions options, @Nullable PagingInfo pagingInfo,
-			@Nullable Appender<BaseModelQueriable<E>> where) {
+			@Nullable Function<From<E>, ModelQueriable<E>> where) {
 		return executeQuery(options, pagingInfo, getEntityClass(), where);
 	}
 
@@ -182,7 +182,7 @@ public abstract class BaseDbService<E extends BaseOpenmrsObject> implements DbSe
 	}
 
 	protected <M> List<M> executeQuery(@Nullable QueryOptions options, @Nullable PagingInfo pagingInfo,
-			@NonNull Class<M> cls, @Nullable Appender<BaseModelQueriable<M>> where) {
+			@NonNull Class<M> cls, @Nullable Function<From<M>, ModelQueriable<M>> where) {
 		checkNotNull(cls);
 		ModelAdapter<E> table = getEntityTable();
 		if (table == null) {
@@ -190,11 +190,11 @@ public abstract class BaseDbService<E extends BaseOpenmrsObject> implements DbSe
 		}
 
 		// Set up basic select query
-		BaseModelQueriable<M> query = SQLite.select().from(cls);
+		ModelQueriable<M> query = SQLite.select().from(cls);
 
 		// Add Where clauses, if defined
 		if (where != null) {
-			query = where.accept(query);
+			query = where.apply((From<M>) query);
 		}
 
 		// Add paging logic, if defined
@@ -202,13 +202,13 @@ public abstract class BaseDbService<E extends BaseOpenmrsObject> implements DbSe
 			// Check if paging total should be loaded
 			if (pagingInfo.shouldLoadRecordCount()) {
 				// Loading total record count
-				BaseModelQueriable<M> pagingTotalQuery = SQLite.selectCountOf().from(cls);
+				ModelQueriable<M> pagingTotalQuery = SQLite.selectCountOf().from(cls);
 
 				if (where != null) {
-					pagingTotalQuery = where.accept(pagingTotalQuery);
+					pagingTotalQuery = where.apply((From<M>) pagingTotalQuery);
 				}
 
-				pagingInfo.setTotalRecordCount((int)repository.count(pagingTotalQuery));
+				pagingInfo.setTotalRecordCount((int) repository.count(pagingTotalQuery));
 			}
 
 			// Set up paging logic

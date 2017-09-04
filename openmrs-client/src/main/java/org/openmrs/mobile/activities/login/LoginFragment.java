@@ -219,10 +219,10 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 	}
 
 	@Override
-	public void userAuthenticated(boolean isUsersFirstAccessOfNewUrl) {
+	public void userAuthenticated(boolean isFirstAccessOfNewUrl) {
 		mPresenter.saveLocationsInPreferences(locationsList, dropdownLocation.getSelectedItemPosition());
 		Intent intent;
-		if (isUsersFirstAccessOfNewUrl) {
+		if (isFirstAccessOfNewUrl) {
 			intent = new Intent(openMRS.getApplicationContext(), SyncSelectionActivity.class);
 		} else {
 			intent = new Intent(openMRS.getApplicationContext(), LoginSyncActivity.class);

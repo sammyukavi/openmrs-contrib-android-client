@@ -24,7 +24,6 @@ import org.openmrs.mobile.data.db.AppDatabase;
 import org.openmrs.mobile.data.impl.LocationDataService;
 import org.openmrs.mobile.data.impl.SessionDataService;
 import org.openmrs.mobile.data.impl.UserDataService;
-import org.openmrs.mobile.data.rest.RestConstants;
 import org.openmrs.mobile.data.rest.retrofit.RestServiceBuilder;
 import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Session;
@@ -54,7 +53,7 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 	private SessionDataService loginDataService;
 	private LocationDataService locationDataService;
 	private UserDataService userService;
-	private boolean isUsersFirstAccessOfNewUrl;
+	private boolean isFirstAccessOfNewUrl;
 
 	private int startIndex = 0;//Old API, works with indexes not pages
 	private int limit = 100;
@@ -92,7 +91,7 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 		} else if ((userNameIsNotStored || enteredUserNameMatchesWhatIsStored)
 				&& (serverUrlIsNotStored || oldUrlMatchesWhatIsStored || oldUrlIsEmpty)) {
 			if (!oldUrlMatchesWhatIsStored || userNameIsNotStored || serverUrlIsNotStored) {
-				isUsersFirstAccessOfNewUrl = true;
+				isFirstAccessOfNewUrl = true;
 			}
 			authenticateUser(username, password, url, wipeRequired);
 		} else {
@@ -140,7 +139,7 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 					if (session != null && session.isAuthenticated()) {
 						if (wipeRequired) {
 							openMRS.deleteDatabase(AppDatabase.NAME);
-							isUsersFirstAccessOfNewUrl = true;
+							isFirstAccessOfNewUrl = true;
 							setData(session.getSessionId(), url, username, password);
 							wipeRequired = false;
 						}
@@ -157,7 +156,7 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 						//userService = new UserDataService();
 						userService.getByUsername(username, QueryOptions.FULL_REP, pagingInfo,
 								loginUsersFoundCallback);
-						loginView.userAuthenticated(isUsersFirstAccessOfNewUrl);
+						loginView.userAuthenticated(isFirstAccessOfNewUrl);
 						loginView.finishLoginActivity();
 
 					} else {
@@ -182,7 +181,7 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 				if (openMRS.getUsername().equals(username) && openMRS.getPassword().equals(password)) {
 					openMRS.setSessionToken(openMRS.getLastSessionToken());
 					loginView.showMessage(OFFLINE_LOGIN);
-					loginView.userAuthenticated(isUsersFirstAccessOfNewUrl);
+					loginView.userAuthenticated(isFirstAccessOfNewUrl);
 					loginView.finishLoginActivity();
 				} else {
 					loginView.showMessage(AUTH_FAILED);

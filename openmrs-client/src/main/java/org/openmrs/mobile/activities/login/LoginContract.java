@@ -29,7 +29,7 @@ public interface LoginContract {
 
 		void showWarningDialog();
 
-		void userAuthenticated(boolean isUsersFirstAccessOfNewUrl);
+		void userAuthenticated(boolean isFirstAccessOfNewUrl);
 
 		void finishLoginActivity();
 

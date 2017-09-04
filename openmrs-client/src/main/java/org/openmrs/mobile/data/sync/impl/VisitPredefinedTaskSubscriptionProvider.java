@@ -12,6 +12,7 @@ import javax.inject.Inject;
 
 public class VisitPredefinedTaskSubscriptionProvider extends AdaptiveSubscriptionProvider<VisitPredefinedTask,
 		VisitPredefinedTaskDbService, VisitPredefinedTaskRestServiceImpl> {
+
 	@Inject
 	public VisitPredefinedTaskSubscriptionProvider(VisitPredefinedTaskDbService dbService,
 			RecordInfoDbService recordInfoDbService,

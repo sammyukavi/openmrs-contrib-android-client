@@ -88,6 +88,15 @@ public class Person extends BaseOpenmrsEntity implements Serializable {
 		processRelatedObjects(attributes, (a) -> a.setPerson(this));
 	}
 
+	@Override
+	public void loadRelatedObjects() {
+		super.loadRelatedObjects();
+
+		this.names = loadNames();
+		this.addresses = loadAddresses();
+		this.attributes = loadAttributes();
+	}
+
 	/**
 	 * @return The names
 	 */

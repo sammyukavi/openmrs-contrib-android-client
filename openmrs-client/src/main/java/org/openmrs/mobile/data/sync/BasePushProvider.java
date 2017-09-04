@@ -35,10 +35,20 @@ public abstract class BasePushProvider<E extends BaseOpenmrsAuditableObject,
 	}
 
 	protected void push(SyncLog syncLog) {
-		E entity = dbService.getByUuid(syncLog.getKey(), QueryOptions.FULL_REP);
+		syncLogDbService.delete(syncLog.getUuid());
+		E entity = null;
+		try {
+			entity = dbService.getByUuid(syncLog.getKey(), QueryOptions.FULL_REP);
+		} catch(Exception ex) {
+			String error = ex.getMessage();
+			throw new DataOperationException("Problem retrieving entity: " + ex.getMessage());
+		}
+
 		if(entity == null) {
 			throw new DataOperationException("Entity not found");
 		}
+
+		entity.loadRelatedObjects();
 
 		Call<E> call = null;
 
@@ -57,6 +67,6 @@ public abstract class BasePushProvider<E extends BaseOpenmrsAuditableObject,
 		// perform rest call
 		RestHelper.getCallValue(call);
 
-		syncLogDbService.delete(syncLog);
+		syncLogDbService.delete(syncLog.getUuid());
 	}
 }

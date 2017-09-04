@@ -66,6 +66,13 @@ public class Patient extends BaseOpenmrsAuditableObject implements Serializable 
 		processRelatedObjects(identifiers, (i) -> i.setPatient(this));
 	}
 
+	@Override
+	public void loadRelatedObjects() {
+		super.loadRelatedObjects();
+
+		this.identifiers = loadIdentifiers();
+	}
+
 	/**
 	 * @return The identifiers
 	 */

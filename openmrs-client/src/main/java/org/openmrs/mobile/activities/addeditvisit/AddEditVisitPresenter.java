@@ -316,7 +316,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 		}
 
 		setProcessing(true);
-		visitDataService.updateVisit(visit.getUuid(), updatedVisit, new DataService.GetCallback<Visit>() {
+		visitDataService.updateVisit(visit, updatedVisit, new DataService.GetCallback<Visit>() {
 			@Override
 			public void onCompleted(Visit entity) {
 				setProcessing(false);

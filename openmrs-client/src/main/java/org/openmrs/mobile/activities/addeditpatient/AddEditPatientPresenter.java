@@ -285,7 +285,10 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 					} else {
 						dropdown.setPrompt(ApplicationConstants.KIN_RELATIONSHIP);
 					}
-					patientRegistrationView.updateConceptAnswerView(dropdown, concept.getAnswers());
+
+					if(concept.getAnswers() != null) {
+						patientRegistrationView.updateConceptAnswerView(dropdown, concept.getAnswers());
+					}
 				}
 
 			}

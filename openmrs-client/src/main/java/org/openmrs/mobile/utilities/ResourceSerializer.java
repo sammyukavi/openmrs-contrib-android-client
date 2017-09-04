@@ -52,7 +52,7 @@ public class ResourceSerializer implements JsonSerializer<Resource> {
 				if (Resource.class.isAssignableFrom(field.getType())) {
 					try {
 						if (field.get(src) != null) {
-							srcJson.add(field.getName(), serializeField((Resource)field.get(src), context));
+							srcJson.add(field.getName(), serializeField((Resource)field.get(src), context, false));
 						}
 					} catch (IllegalAccessException e) {
 						Log.e(RESOURCE_SERIALIZER, EXCEPTION, e);
@@ -64,16 +64,16 @@ public class ResourceSerializer implements JsonSerializer<Resource> {
 							if (isResourceCollection(collection)) {
 								JsonArray jsonArray = new JsonArray();
 								for (Object resource : collection) {
-									if (null == ((Resource)resource).getUuid()) {
-										jsonArray.add(serializeField((Resource)resource, context));
-									} else {
+									//if (null == ((Resource)resource).getUuid()) {
+									//	jsonArray.add(serializeField((Resource)resource, context));
+									//} else {
 										if (!(resource instanceof Observation)) {
-											jsonArray.add(serializeField((Resource)resource, context));
+											jsonArray.add(serializeField((Resource)resource, context, false));
 										} else {
 											jsonArray.add(obsGson.toJsonTree(resource));
 										}
 
-									}
+									//}
 								}
 								srcJson.add(field.getName(), jsonArray);
 							} else {
@@ -126,8 +126,8 @@ public class ResourceSerializer implements JsonSerializer<Resource> {
 				.create();
 	}
 
-	private JsonElement serializeField(Resource src, JsonSerializationContext context) {
-		if (src.getUuid() != null) {
+	private JsonElement serializeField(Resource src, JsonSerializationContext context, boolean serializeWithUuid) {
+		if (serializeWithUuid) {
 			return new JsonPrimitive(src.getUuid());
 		} else {
 			return context.serialize(src);

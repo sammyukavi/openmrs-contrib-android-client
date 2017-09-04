@@ -24,10 +24,22 @@ import org.openmrs.mobile.utilities.Consumer;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class Resource implements Serializable {
 	private static final long serialVersionUID = 1;
-
+	@SerializedName("uuid")
+	@Expose
+	@PrimaryKey
+	@Column
+	protected String uuid = generateUuid();
+	@SerializedName("display")
+	@Expose
+	@Column
+	protected String display;
+	@SerializedName("links")
+	@Expose
+	protected List<Link> links = new ArrayList<Link>();
 	private Long id;
 
 	public Long getId() {
@@ -37,20 +49,6 @@ public class Resource implements Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
-	@SerializedName("uuid")
-	@Expose
-	@PrimaryKey
-	protected String uuid;
-
-	@SerializedName("display")
-	@Expose
-	@Column
-	protected String display;
-
-	@SerializedName("links")
-	@Expose
-	protected List<Link> links = new ArrayList<Link>();
 
 	/**
 	 * @return The uuid
@@ -94,7 +92,11 @@ public class Resource implements Serializable {
 		this.links = links;
 	}
 
-	public void processRelationships() { }
+	public void processRelationships() {
+	}
+
+	public void loadRelatedObjects() {
+	}
 
 	protected <R extends Resource> void processRelatedObjects(@Nullable List<R> resources) {
 		processRelatedObjects(resources, null);
@@ -121,5 +123,9 @@ public class Resource implements Serializable {
 		}
 
 		return field;
+	}
+
+	public String generateUuid() {
+		return UUID.randomUUID().toString();
 	}
 }

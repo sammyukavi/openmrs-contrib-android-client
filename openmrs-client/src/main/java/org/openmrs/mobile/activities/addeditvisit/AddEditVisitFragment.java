@@ -222,7 +222,9 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 		if (!mPresenter.isProcessing()) {
 			setSpinnerVisibility(true);
 			if (StringUtils.notEmpty(mPresenter.getVisit().getUuid())) {
-				mPresenter.updateVisit(new ArrayList<>(visitAttributeMap.values()));
+				List<VisitAttribute> attributes = new ArrayList<>(visitAttributeMap.values());
+				mPresenter.getVisit().setAttributes(attributes);
+				mPresenter.updateVisit(attributes);
 			} else {
 				mPresenter.startVisit(new ArrayList<>(visitAttributeMap.values()));
 			}

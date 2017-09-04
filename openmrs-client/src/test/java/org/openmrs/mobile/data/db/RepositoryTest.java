@@ -7,7 +7,6 @@ import com.raizlabs.android.dbflow.sql.language.SQLite;
 import junit.framework.Assert;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -12,6 +12,11 @@ import org.openmrs.mobile.models.BaseOpenmrsObject;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Patient;
+import org.openmrs.mobile.models.PatientIdentifier;
+import org.openmrs.mobile.models.Person;
+import org.openmrs.mobile.models.PersonAddress;
+import org.openmrs.mobile.models.PersonAttribute;
+import org.openmrs.mobile.models.PersonName;
 import org.openmrs.mobile.models.User;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitAttribute;
@@ -25,6 +30,11 @@ public class ModelAsserters {
 	public static final EncounterAsserter ENCOUNTER = new EncounterAsserter();
 	public static final LocationAsserter LOCATION = new LocationAsserter();
 	public static final PatientAsserter PATIENT = new PatientAsserter();
+	public static final PatientIdentifierAsserter PATIENT_IDENTIFIER = new PatientIdentifierAsserter();
+	public static final PersonAsserter PERSON = new PersonAsserter();
+	public static final PersonAddressAsserter PERSON_ADDRESS = new PersonAddressAsserter();
+	public static final PersonAttributeAsserter PERSON_ATTRIBUTE = new PersonAttributeAsserter();
+	public static final PersonNameAsserter PERSON_NAME = new PersonNameAsserter();
 	public static final UserAsserter USER = new UserAsserter();
 	public static final UuidAsserter UUID = new UuidAsserter();
 	public static final VisitAsserter VISIT = new VisitAsserter();
@@ -90,8 +100,8 @@ public class ModelAsserters {
 			Assert.assertEquals(expected.getDateCreated(), actual.getDateCreated());
 			Assert.assertEquals(expected.getDateChanged(), actual.getDateChanged());
 
-			assertSubModel(expected.getCreator(), actual.getCreator(), USER);
-			assertSubModel(expected.getChangedBy(), actual.getChangedBy(), USER);
+			assertSubModel(expected.getCreator(), actual.getCreator(), UUID);
+			assertSubModel(expected.getChangedBy(), actual.getChangedBy(), UUID);
 		}
 	}
 
@@ -114,7 +124,7 @@ public class ModelAsserters {
 			Assert.assertEquals(expected.getVoidReason(), actual.getVoidReason());
 			Assert.assertEquals(expected.getDateVoided(), actual.getDateVoided());
 
-			assertSubModel(expected.getVoidedBy(), actual.getVoidedBy(), USER);
+			assertSubModel(expected.getVoidedBy(), actual.getVoidedBy(), UUID);
 		}
 	}
 
@@ -145,7 +155,85 @@ public class ModelAsserters {
 		public void assertModel(@NonNull Patient expected, @NonNull Patient actual) {
 			super.assertModel(expected, actual);
 
-			// Assert patient fields
+			Assert.assertEquals(expected.getVoided(), actual.getVoided());
+			Assert.assertEquals(expected.getResourceVersion(), actual.getResourceVersion());
+
+			assertSubModel(expected.getPerson(), actual.getPerson(), PERSON);
+
+			assertSubList(expected.getIdentifiers(), actual.getIdentifiers(), PATIENT_IDENTIFIER);
+		}
+	}
+
+	public static class PersonAsserter extends EntityAsserter<Person> {
+		@Override
+		public void assertModel(@NonNull Person expected, @NonNull Person actual) {
+			super.assertModel(expected, actual);
+
+			Assert.assertEquals(expected.getGender(), actual.getGender());
+			Assert.assertEquals(expected.getBirthdate(), actual.getBirthdate());
+			Assert.assertEquals(expected.getBirthdateEstimated(), actual.getBirthdateEstimated());
+			Assert.assertEquals(expected.getDeathDate(), actual.getDeathDate());
+			Assert.assertEquals(expected.getAge(), actual.getAge());
+
+			assertSubList(expected.getNames(), actual.getNames(), PERSON_NAME);
+			assertSubList(expected.getAddresses(), actual.getAddresses(), PERSON_ADDRESS);
+			assertSubList(expected.getAttributes(), actual.getAttributes(), PERSON_ATTRIBUTE);
+		}
+	}
+
+	public static class PersonNameAsserter extends EntityAsserter<PersonName> {
+		@Override
+		public void assertModel(@NonNull PersonName expected, @NonNull PersonName actual) {
+			super.assertModel(expected, actual);
+
+			Assert.assertEquals(expected.getGivenName(), actual.getGivenName());
+			Assert.assertEquals(expected.getMiddleName(), actual.getMiddleName());
+			Assert.assertEquals(expected.getFamilyName(), actual.getFamilyName());
+
+			assertSubModel(expected.getPerson(), actual.getPerson(), UUID);
+		}
+	}
+
+	public static class PersonAddressAsserter extends EntityAsserter<PersonAddress> {
+		@Override
+		public void assertModel(@NonNull PersonAddress expected, @NonNull PersonAddress actual) {
+			super.assertModel(expected, actual);
+
+			Assert.assertEquals(expected.getPreferred(), actual.getPreferred());
+			Assert.assertEquals(expected.getAddress1(), actual.getAddress1());
+			Assert.assertEquals(expected.getAddress2(), actual.getAddress2());
+			Assert.assertEquals(expected.getCityVillage(), actual.getCityVillage());
+			Assert.assertEquals(expected.getStateProvince(), actual.getStateProvince());
+			Assert.assertEquals(expected.getCountry(), actual.getCountry());
+			Assert.assertEquals(expected.getPostalCode(), actual.getPostalCode());
+
+			assertSubModel(expected.getPerson(), actual.getPerson(), UUID);
+		}
+	}
+
+	public static class PersonAttributeAsserter extends ObjectAsserter<PersonAttribute> {
+		@Override
+		public void assertModel(@NonNull PersonAttribute expected, @NonNull PersonAttribute actual) {
+			super.assertModel(expected, actual);
+
+			Assert.assertEquals(expected.getStringValue(), actual.getStringValue());
+
+			assertSubModel(expected.getAttributeType(), actual.getAttributeType(), UUID);
+			assertSubModel(expected.getConceptValue(), actual.getConceptValue(), UUID);
+			assertSubModel(expected.getPerson(), actual.getPerson(), UUID);
+		}
+	}
+
+	public static class PatientIdentifierAsserter extends EntityAsserter<PatientIdentifier> {
+		@Override
+		public void assertModel(@NonNull PatientIdentifier expected, @NonNull PatientIdentifier actual) {
+			super.assertModel(expected, actual);
+
+			Assert.assertEquals(expected.getIdentifier(), actual.getIdentifier());
+
+			assertSubModel(expected.getLocation(), actual.getLocation(), UUID);
+			assertSubModel(expected.getPatient(), actual.getPatient(), UUID);
+			assertSubModel(expected.getIdentifierType(), actual.getIdentifierType(), UUID);
 		}
 	}
 

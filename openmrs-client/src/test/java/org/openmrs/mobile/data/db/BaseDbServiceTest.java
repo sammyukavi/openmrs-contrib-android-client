@@ -10,6 +10,8 @@ import org.openmrs.mobile.BuildConfig;
 import org.openmrs.mobile.data.DBFlowRule;
 import org.openmrs.mobile.data.ModelAsserters;
 import org.openmrs.mobile.models.BaseOpenmrsObject;
+import org.openmrs.mobile.models.PersonAttribute;
+import org.openmrs.mobile.models.PersonAttributeType;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -26,17 +28,19 @@ public abstract class BaseDbServiceTest<E extends BaseOpenmrsObject> {
 
 	protected abstract ModelAsserters.ModelAsserter<E> getAsserter();
 
-	protected abstract E createEntity();
+	protected abstract E createEntity(boolean createSubEntities);
 
 	@Before
 	public void setUp() throws Exception {
 		this.dbService = getDbService();
 		this.asserter = getAsserter();
+
+		CoreTestData.load();
 	}
 
 	@After
 	public void tearDown() throws Exception {
-
+		CoreTestData.clear();
 	}
 
 	@Test
@@ -67,6 +71,15 @@ public abstract class BaseDbServiceTest<E extends BaseOpenmrsObject> {
 	@Test
 	public void getByUuid_shouldReturnNullWhenNoEntityFound() throws Exception {
 
+	}
+
+	@Test
+	public void getByUuid_shouldLoadRelatedEntities() throws Exception {
+		E initial = createEntity(true);
+		dbService.save(initial);
+
+		E entity = dbService.getByUuid(initial.getUuid(), null);
+		asserter.assertModel(initial, entity);
 	}
 
 	@Test

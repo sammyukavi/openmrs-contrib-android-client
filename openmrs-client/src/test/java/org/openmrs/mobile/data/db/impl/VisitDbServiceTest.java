@@ -18,7 +18,7 @@ public class VisitDbServiceTest extends BaseEntityDbServiceTest<Visit> {
 	}
 
 	@Override
-	protected Visit createEntity() {
+	protected Visit createEntity(boolean createSubEntities) {
 		return null;
 	}
 

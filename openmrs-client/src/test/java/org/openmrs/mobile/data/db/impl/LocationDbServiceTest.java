@@ -19,7 +19,7 @@ public class LocationDbServiceTest extends BaseMetadataDbServiceTest<Location> {
 	}
 
 	@Override
-	protected Location createEntity() {
+	protected Location createEntity(boolean createSubEntities) {
 		Location entity = new Location();
 
 		entity.setUuid(UUID.randomUUID().toString());

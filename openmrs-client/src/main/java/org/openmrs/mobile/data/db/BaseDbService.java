@@ -5,13 +5,15 @@ import android.support.annotation.Nullable;
 
 import com.raizlabs.android.dbflow.sql.language.From;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
+import com.raizlabs.android.dbflow.sql.language.Where;
+import com.raizlabs.android.dbflow.sql.queriable.ModelQueriable;
 import com.raizlabs.android.dbflow.structure.ModelAdapter;
 
 import org.openmrs.mobile.data.DataOperationException;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.models.BaseOpenmrsObject;
-import org.openmrs.mobile.utilities.Consumer;
+import org.openmrs.mobile.utilities.Function;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
@@ -163,7 +165,7 @@ public abstract class BaseDbService<E extends BaseOpenmrsObject> implements DbSe
 	}
 
 	protected List<E> executeQuery(@Nullable QueryOptions options, @Nullable PagingInfo pagingInfo,
-			@Nullable Consumer<From<E>> where) {
+			@Nullable Function<From<E>, ModelQueriable<E>> where) {
 		return executeQuery(options, pagingInfo, getEntityClass(), where);
 	}
 
@@ -175,41 +177,41 @@ public abstract class BaseDbService<E extends BaseOpenmrsObject> implements DbSe
 	}
 
 	protected <M> List<M> executeQuery(@Nullable QueryOptions options, @Nullable PagingInfo pagingInfo,
-			@NonNull Class<M> cls, @Nullable Consumer<From<M>> where) {
+			@NonNull Class<M> cls, @Nullable Function<From<M>, ModelQueriable<M>> where) {
 		checkNotNull(cls);
 		if (entityTable == null) {
 			return null;
 		}
 
 		// Set up basic select query
-		From<M> from = SQLite.select().from(cls);
+		ModelQueriable<M> query = SQLite.select().from(cls);
+
+		// Add Where clauses, if defined
+		if (where != null) {
+			query = where.apply((From<M>) query);
+		}
 
 		// Add paging logic, if defined
 		if (PagingInfo.isValid(pagingInfo)) {
 			// Check if paging total should be loaded
 			if (pagingInfo.shouldLoadRecordCount()) {
 				// Loading total record count
-				From<M> pagingTotalQuery = SQLite.selectCountOf().from(cls);
+				ModelQueriable<M> pagingTotalQuery = SQLite.selectCountOf().from(cls);
 
 				if (where != null) {
-					where.accept(pagingTotalQuery);
+					pagingTotalQuery = where.apply((From<M>) pagingTotalQuery);
 				}
 
-				pagingInfo.setTotalRecordCount((int)repository.count(pagingTotalQuery));
+				pagingInfo.setTotalRecordCount((int) repository.count(pagingTotalQuery));
 			}
 
 			// Set up paging logic
-			from.limit(pagingInfo.getPageSize())
+			query = (query instanceof From<?> ? (From<M>) query : (Where<M>) query).limit(pagingInfo.getPageSize())
 					.offset((pagingInfo.getPage() - 1) * pagingInfo.getPageSize());
 		}
 
-		// Add Where clauses, if defined
-		if (where != null) {
-			where.accept(from);
-		}
-
 		// Return the results
-		List<M> results = repository.query(from);
+		List<M> results = repository.query(query);
 
 		// Ensure entity class is loaded
 		getEntityClass();

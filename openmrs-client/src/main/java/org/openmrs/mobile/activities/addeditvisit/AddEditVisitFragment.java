@@ -161,7 +161,7 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 		if (startVisit) {
 			toolbar.setTitle(getString(R.string.label_start_visit));
 		} else {
-			visitSubmitButton.setText(R.string.label_edit_visit);
+			visitSubmitButton.setText(R.string.update_visit);
 			toolbar.setTitle(getString(R.string.label_edit_visit));
 		}
 

@@ -336,6 +336,13 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 							if (result instanceof Resource) {
 								((Resource)result).processRelationships();
 							}
+							if (result instanceof List<?> && ((List<?>) result).size() > 0
+									&& ((List<?>) result).get(0) instanceof Resource) {
+								List<Resource> castResults = (List<Resource>) result;
+								for (Resource castResult : castResults) {
+									castResult.processRelationships();
+								}
+							}
 
 							dbOperation.accept(result);
 

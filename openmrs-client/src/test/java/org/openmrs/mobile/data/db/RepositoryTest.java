@@ -7,6 +7,7 @@ import com.raizlabs.android.dbflow.sql.language.SQLite;
 import junit.framework.Assert;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,19 +28,11 @@ public class RepositoryTest {
 	@Rule
 	public DBFlowRule dbflowTestRule = DBFlowRule.create();
 
-	private Repository repository;
+	private Repository repository = new RepositoryImpl();;
 
 	@Before
-	public void Setup() {
-			/*FlowManager.init(FlowConfig.builder(OpenMRS.getInstance())
-					.addDatabaseConfig(
-							DatabaseConfig.inMemoryBuilder(TestAppDatabase.class)
-							.databaseName("TestDatabase")
-							.build())
-					.build());
-		*/
+	public void setup() {
 
-		repository = new RepositoryImpl();
 	}
 
 	@Test

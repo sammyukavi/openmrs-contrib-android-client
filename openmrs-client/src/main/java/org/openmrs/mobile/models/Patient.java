@@ -50,7 +50,7 @@ public class Patient extends BaseOpenmrsAuditableObject implements Serializable 
 	@Column
 	private String resourceVersion;
 
-	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "identifiers", isVariablePrivate = true)
+	@OneToMany(methods = { OneToMany.Method.ALL }, variableName = "identifiers")
 	List<PatientIdentifier> loadIdentifiers() {
 		return loadRelatedObject(PatientIdentifier.class, identifiers,
 				() -> PatientIdentifier_Table.patient_uuid.eq(getUuid()));

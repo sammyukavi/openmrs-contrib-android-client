@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Table(database = AppDatabase.class)
-public class Form extends Resource implements Serializable {
+public class Form extends BaseOpenmrsObject implements Serializable {
 	@SerializedName("name")
 	@Expose
 	@Column

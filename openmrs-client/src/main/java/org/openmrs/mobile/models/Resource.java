@@ -28,16 +28,6 @@ import java.util.List;
 public class Resource implements Serializable {
 	private static final long serialVersionUID = 1;
 
-	private Long id;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
 	@SerializedName("uuid")
 	@Expose
 	@PrimaryKey
@@ -47,10 +37,6 @@ public class Resource implements Serializable {
 	@Expose
 	@Column
 	protected String display;
-
-	@SerializedName("links")
-	@Expose
-	protected List<Link> links = new ArrayList<Link>();
 
 	/**
 	 * @return The uuid
@@ -80,20 +66,6 @@ public class Resource implements Serializable {
 		this.display = display;
 	}
 
-	/**
-	 * @return The links
-	 */
-	public List<Link> getLinks() {
-		return links;
-	}
-
-	/**
-	 * @param links The links
-	 */
-	public void setLinks(List<Link> links) {
-		this.links = links;
-	}
-
 	public void processRelationships() { }
 
 	protected <R extends Resource> void processRelatedObjects(@Nullable List<R> resources) {
@@ -113,11 +85,16 @@ public class Resource implements Serializable {
 	}
 
 	protected <E> List<E> loadRelatedObject(Class<E> cls, List<E> field, Supplier<SQLOperator> op) {
-		if (field == null || field.isEmpty()) {
-			field = SQLite.select()
-					.from(cls)
-					.where(op.get())
-					.queryList();
+		if (field == null) {
+			field = new ArrayList<>();
+		}
+
+		if (field.isEmpty()) {
+			field.addAll(
+					SQLite.select()
+							.from(cls)
+							.where(op.get()).queryList()
+			);
 		}
 
 		return field;

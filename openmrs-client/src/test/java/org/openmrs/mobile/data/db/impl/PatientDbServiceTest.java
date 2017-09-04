@@ -19,6 +19,11 @@ public class PatientDbServiceTest extends BaseAuditableDbServiceTest<Patient> {
 		return ModelAsserters.PATIENT;
 	}
 
+	@Override
+	protected Patient createEntity() {
+		return null;
+	}
+
 	@Test
 	public void getByName_shouldSearchByNameWithFullWildcard() throws Exception {
 

@@ -7,7 +7,6 @@ import com.raizlabs.android.dbflow.config.FlowManager;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
-import org.openmrs.mobile.data.db.AppDatabase;
 import org.openmrs.mobile.data.db.TestAppDatabase;
 import org.robolectric.RuntimeEnvironment;
 
@@ -34,11 +33,7 @@ public class DBFlowRule implements TestRule {
 				try {
 					base.evaluate();
 				} finally {
-					try {
-						FlowManager.destroy();
-					} catch(Exception ex) {
-
-					}
+					FlowManager.destroy();
 				}
 			}
 		};

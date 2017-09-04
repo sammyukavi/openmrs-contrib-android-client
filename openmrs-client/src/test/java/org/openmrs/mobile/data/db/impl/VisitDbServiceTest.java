@@ -17,6 +17,11 @@ public class VisitDbServiceTest extends BaseEntityDbServiceTest<Visit> {
 		return ModelAsserters.VISIT;
 	}
 
+	@Override
+	protected Visit createEntity() {
+		return null;
+	}
+
 	@Test
 	public void endVisit_shouldSetStopDateAndSave() throws Exception {
 

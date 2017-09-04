@@ -288,6 +288,9 @@ public abstract class ApplicationConstants {
 
 		public static int VITALS_BLOOD_OXYGEN_MIN = 0;
 		public static int VITALS_BLOOD_OXYGEN_MAX = 100;
+
+		public static int AUDIT_GCS_SCORE_MIN = 3;
+		public static int AUDIT_GCS_SCORE_MAX = 15;
 	}
 
 	public static class CacheKays {
@@ -314,7 +317,11 @@ public abstract class ApplicationConstants {
 		public static final String ICD_10_WHO = "ICD-10-WHO";
 	}
 
-	public static class EventMessages {
+	public static class Request {
+		public static int PATIENT_VISIT_COUNT = 5;
+  }
+
+  public static class EventMessages {
 		public static class Sync {
 			public static class Push {
 				public static final String TOTAL_ENTITIES_TO_PUSH = "totalEntitiesToPush";
@@ -333,6 +340,6 @@ public abstract class ApplicationConstants {
 				public static final String ENTITY_SAVE_PROGRESS_UPDATE = "entitySaveProgressUpdate";
 				public static final String ENTITY_SAVE_COMPLETE = "entitySaveComplete";
 			}
-		}
-	}
+    }
+  }
 }

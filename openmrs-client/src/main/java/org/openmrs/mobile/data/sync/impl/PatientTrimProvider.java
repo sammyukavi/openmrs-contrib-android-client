@@ -4,6 +4,7 @@ import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.language.From;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
+import com.raizlabs.android.dbflow.sql.queriable.ModelQueriable;
 import org.openmrs.mobile.data.db.Repository;
 import org.openmrs.mobile.data.db.impl.EncounterDbService;
 import org.openmrs.mobile.data.db.impl.ObsDbService;
@@ -72,13 +73,13 @@ public class PatientTrimProvider {
 
 		// NOTE: If other types of subscriptions are added in the future then they need to be included in this calculation
 
-		From<Patient> from = SQLite.select(Patient_Table.uuid)
+		ModelQueriable<Patient> query = SQLite.select(Patient_Table.uuid)
 				.from(Patient.class)
 				.leftOuterJoin(PatientListContext_Table.class)
 				.on(Patient_Table.uuid.withTable().eq(PatientListContext_Table.patient_uuid.withTable()));
-		from.where(PatientListContext_Table.uuid.withTable().isNull());
+		query = ((From<Patient>) query).where(PatientListContext_Table.uuid.withTable().isNull());
 
-		return repository.queryCustom(String.class, from);
+		return repository.queryCustom(String.class, query);
 	}
 
 	private void trimPatients(List<String> patientsToTrim) {

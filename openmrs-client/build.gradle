@@ -17,7 +17,7 @@ apply plugin: 'com.github.triplet.play'
 apply plugin: 'me.tatarka.retrolambda'
 
 def version = "2.6.1-beta"
-def dbflow_version = "4.0.4"
+def dbflow_version = "4.1.1"
 def sqlcipher_version = "3.5.7"
 
 android {

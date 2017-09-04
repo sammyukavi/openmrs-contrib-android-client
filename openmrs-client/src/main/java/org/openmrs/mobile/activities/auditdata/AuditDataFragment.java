@@ -18,6 +18,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +34,7 @@ import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import org.joda.time.LocalDateTime;
 import org.openmrs.mobile.R;
@@ -134,6 +138,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 	private String inpatientServiceTypeSelectedUuid, displayInpatientServiceType;
 	private Boolean displayExtraFormFields, displayCd4CountField, displayHbA1CField, displayHduCoManageField;
 	private TextInputLayout hba1cTextLayout, cd4TextInputLayout;
+	private TextView errorFirstGcsScore;
 
 	public static AuditDataFragment newInstance() {
 		return new AuditDataFragment();
@@ -257,9 +262,27 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		patient_diabetic_unknown = (RadioButton)fragmentView.findViewById(R.id.patient_diabetic_unknown);
 		cd4TextInputLayout = (TextInputLayout)fragmentView.findViewById(R.id.cd4TextInputLayout);
 		hba1cTextLayout = (TextInputLayout)fragmentView.findViewById(R.id.hba1cTextLayout);
+		errorFirstGcsScore = (TextView)fragmentView.findViewById(R.id.invalidGscError);
+
+		firstGcsScore.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence charSequence, int startPos, int count, int after) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+			}
+
+			@Override
+			public void afterTextChanged(Editable editable) {
+				hasValidGcsScore();
+			}
+		});
 
 		submitForm.setOnClickListener(v -> {
-			performDataSend();
+			if( hasValidGcsScore() ){
+				performDataSend();
+			}
 		});
 
 		progressBar = (RelativeLayout)fragmentView.findViewById(R.id.auditDataRelativeView);
@@ -1225,4 +1248,19 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		}
 	}
 
+	private boolean hasValidGcsScore(){
+		if(firstGcsScore.getText().toString().length() == 0){
+			errorFirstGcsScore.setVisibility(View.GONE);
+		}else if(Integer.parseInt(firstGcsScore.getText().toString()) > 2 &&
+				Integer.parseInt(firstGcsScore.getText().toString()) < 16){
+			errorFirstGcsScore.setVisibility(View.GONE);
+			return true;
+		}else{
+			errorFirstGcsScore.setVisibility(View.VISIBLE);
+			errorFirstGcsScore.setText(getString(R.string.error_gcs_score,
+					ApplicationConstants.ValidationFieldValues.AUDIT_GCS_SCORE_MIN,
+					ApplicationConstants.ValidationFieldValues.AUDIT_GCS_SCORE_MAX));
+		}
+		return false;
+	}
 }

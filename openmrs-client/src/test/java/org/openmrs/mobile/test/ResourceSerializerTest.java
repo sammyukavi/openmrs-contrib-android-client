@@ -99,6 +99,7 @@ public class ResourceSerializerTest {
 
     private Person generatePersonWithoutUuid() {
         Person person = new Person();
+        person.setUuid(null);
         person.setBirthdate(DateUtils.convertTime(System.currentTimeMillis()));
         PersonName  personName = new PersonName();
         personName.setFamilyName("family");

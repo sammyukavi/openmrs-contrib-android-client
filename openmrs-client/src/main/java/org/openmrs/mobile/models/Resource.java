@@ -20,23 +20,52 @@ import com.raizlabs.android.dbflow.sql.language.SQLOperator;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import org.openmrs.mobile.utilities.Consumer;
+import org.openmrs.mobile.utilities.StringUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class Resource implements Serializable {
 	private static final long serialVersionUID = 1;
 
+	public static final int LOCAL_UUID_LENGTH = 35;
+
 	@SerializedName("uuid")
 	@Expose
 	@PrimaryKey
-	protected String uuid;
+	protected String uuid = generateLocalUuid();
 
 	@SerializedName("display")
 	@Expose
 	@Column
 	protected String display;
+
+	/**
+	 * Returns {@code true} if the specified uuid is a local uuid (based on the string length); otherwise, false.
+	 * @param uuid The uuid to check
+	 * @return True if the uuid is a local uuid, otherwise; false.
+	 */
+	public static boolean isLocalUuid(String uuid) {
+		if (StringUtils.isBlank(uuid)) {
+			return false;
+		}
+
+		return (uuid.length() == LOCAL_UUID_LENGTH);
+	}
+
+	/**
+	 * Generates a Uuid with the last character trimmed off so that the uuid can be differentiated from a server-generated
+	 * uuid. Note the while this does reduce the uniqueness of the id, these uuids are intended to only be used until the
+	 * resource is saved to the server, at which point this local uuid will be replaced.
+	 * @return The local uuid.
+	 */
+	public static String generateLocalUuid() {
+		String result = UUID.randomUUID().toString();
+
+		return result.substring(0, result.length() - 1);
+	}
 
 	/**
 	 * @return The uuid

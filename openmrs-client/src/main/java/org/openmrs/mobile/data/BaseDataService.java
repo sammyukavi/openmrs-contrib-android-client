@@ -93,7 +93,6 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 	public void create(@NonNull E entity, @NonNull GetCallback<E> callback) {
 		checkNotNull(entity);
 		checkNotNull(callback);
-		checkUuid(entity);
 
 		executeSingleCallback(callback, null,
 				() -> {
@@ -420,12 +419,6 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 				}
 			}
 		});
-	}
-
-	private void checkUuid(E entity) {
-		if(entity.getUuid() == null || entity.getUuid().equalsIgnoreCase(ApplicationConstants.EMPTY_STRING)) {
-			entity.setUuid(entity.generateUuid());
-		}
 	}
 
 	protected SyncLog createSyncLog(@NonNull E entity, @NonNull SyncAction action) {

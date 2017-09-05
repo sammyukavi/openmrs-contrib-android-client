@@ -24,15 +24,13 @@ import org.openmrs.mobile.utilities.Consumer;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class Resource implements Serializable {
 	private static final long serialVersionUID = 1;
 	@SerializedName("uuid")
 	@Expose
 	@PrimaryKey
-	@Column
-	protected String uuid = generateUuid();
+	protected String uuid;
 	@SerializedName("display")
 	@Expose
 	@Column
@@ -123,9 +121,5 @@ public class Resource implements Serializable {
 		}
 
 		return field;
-	}
-
-	public String generateUuid() {
-		return UUID.randomUUID().toString();
 	}
 }

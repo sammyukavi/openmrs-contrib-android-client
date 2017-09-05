@@ -70,7 +70,7 @@ public class VisitPhotoRecyclerViewAdapter
 		view.downloadImage(visitPhoto.getObservation().getUuid(), new DataService.GetCallback<byte[]>() {
 			@Override
 			public void onCompleted(byte[] entity) {
-				visitPhoto.setDownloadedImage(entity);
+				visitPhoto.setImage(entity);
 				holder.image.setImageBitmap(BitmapFactory.decodeByteArray(entity, 0, entity.length));
 				holder.image.invalidate();
 				map.put(holder.image, visitPhoto);
@@ -98,7 +98,7 @@ public class VisitPhotoRecyclerViewAdapter
 					expandImage.setLayoutParams(layoutParams);
 					expandImage.setImageBitmap(
 							BitmapFactory.decodeByteArray(
-									visitPhoto.getDownloadedImage(), 0, visitPhoto.getDownloadedImage().length));
+									visitPhoto.getImageColumn().getBlob(), 0, visitPhoto.getImageColumn().getBlob().length));
 
 					TextView descriptionView = new TextView(context);
 					descriptionView.setText(view.formatVisitImageDescription(visitPhoto.getFileCaption(),
@@ -127,7 +127,7 @@ public class VisitPhotoRecyclerViewAdapter
 
 	@Override
 	public int getItemCount() {
-		return visitPhotos.size();
+		return visitPhotos != null ? visitPhotos.size() : 0;
 	}
 
 	class DownloadVisitPhotoViewHolder extends RecyclerView.ViewHolder {

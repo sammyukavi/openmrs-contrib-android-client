@@ -25,6 +25,7 @@ public abstract class BaseRestService<E extends BaseOpenmrsObject, RS> implement
 	public static final String CREATE_METHOD_NAME = "create";
 	public static final String UPDATE_METHOD_NAME = "update";
 	public static final String PURGE_METHOD_NAME = "purge";
+	public static final String UPLOAD_METHOD_NAME = "upload";
 
 	/**
 	 * The REST service for this entity.
@@ -64,6 +65,11 @@ public abstract class BaseRestService<E extends BaseOpenmrsObject, RS> implement
 	 * The update method in the restService class
 	 */
 	private Method purgeMethod;
+
+	/**
+	 *  The create method in the restService class
+	 */
+	private Method uploadMethod;
 
 	protected BaseRestService() {
 		loadGenericClasses();
@@ -258,6 +264,34 @@ public abstract class BaseRestService<E extends BaseOpenmrsObject, RS> implement
 		return call;
 	}
 
+	@Override
+	public Call<E> upload(E entity) {
+		checkNotNull(entity);
+
+		if (uploadMethod == null) {
+			Log.w("Rest Service", "Attempt to call 'upload' REST method but REST service method could not be found for "
+					+ "entity '" + entityClass.getName() + "'");
+
+			return null;
+		}
+
+		Call<E> call = null;
+
+		try {
+			Object result = uploadMethod.invoke(restService, buildRestRequestPath(), entity);
+
+			if (result != null) {
+				call = (Call<E>)result;
+			}
+		} catch (Exception nex) {
+			Log.e("Rest Service", "Exception executing REST upload method", nex);
+
+			call = null;
+		}
+
+		return call;
+	}
+
 	/**
 	 * Helper method to build the rest request path.
 	 * @return The rest request path
@@ -278,6 +312,7 @@ public abstract class BaseRestService<E extends BaseOpenmrsObject, RS> implement
 		createMethod = findMethod(methods, CREATE_METHOD_NAME);
 		updateMethod = findMethod(methods, UPDATE_METHOD_NAME);
 		purgeMethod = findMethod(methods, PURGE_METHOD_NAME);
+		uploadMethod = findMethod(methods, UPLOAD_METHOD_NAME);
 	}
 
 	protected Method findMethod(Method[] methods, String name) {

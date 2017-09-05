@@ -20,4 +20,6 @@ public interface RestService<E extends BaseOpenmrsObject> {
 	Call<E> update(E entity);
 
 	Call<E> purge(String uuid);
+
+	Call<E> upload(E entity);
 }

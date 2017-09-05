@@ -6,6 +6,7 @@ import org.openmrs.mobile.data.BaseDataService;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.db.impl.VisitPhotoDbService;
 import org.openmrs.mobile.data.rest.impl.VisitPhotoRestServiceImpl;
+import org.openmrs.mobile.models.SyncAction;
 import org.openmrs.mobile.models.VisitPhoto;
 
 import java.io.IOException;
@@ -22,8 +23,13 @@ public class VisitPhotoDataService
 
 	public void uploadPhoto(VisitPhoto visitPhoto, @NonNull GetCallback<VisitPhoto> callback) {
 		executeSingleCallback(callback, null,
-				() -> dbService.save(visitPhoto),
-				() -> restService.uploadPhoto(visitPhoto));
+				() -> {
+					visitPhoto.setUuid(VisitPhoto.generateUuid());
+					VisitPhoto result = dbService.save(visitPhoto);
+					syncLogDbService.save(createSyncLog(result, SyncAction.UPLOADED));
+					return result;
+				},
+				() -> restService.upload(visitPhoto));
 	}
 
 	public void downloadPhoto(String obsUuid, String view, @NonNull GetCallback<VisitPhoto> callback) {
@@ -33,7 +39,7 @@ public class VisitPhotoDataService
 				(ResponseBody body) -> {
 					try {
 						VisitPhoto photo = new VisitPhoto();
-						photo.setDownloadedImage(body.bytes());
+						photo.setImage(body.bytes());
 						return photo;
 					} catch (IOException ex) {
 						return null;

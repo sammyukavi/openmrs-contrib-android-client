@@ -36,7 +36,8 @@ public class ApplicationModule {
 	@Provides
 	@Singleton
 	public SyncManager provideSyncManager() {
-		return new SyncManager(providesOpenMRS(), receiverComponent.syncReceiver(), syncComponent.syncService());
+		return new SyncManager(providesOpenMRS(), receiverComponent.syncReceiver(), syncComponent.syncService(),
+				syncComponent.patientTrimProvider());
 	}
 
 	@Provides

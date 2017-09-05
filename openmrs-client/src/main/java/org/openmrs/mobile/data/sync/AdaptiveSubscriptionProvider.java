@@ -9,8 +9,6 @@ import com.raizlabs.android.dbflow.sql.language.property.Property;
 import com.raizlabs.android.dbflow.sql.queriable.ModelQueriable;
 import com.raizlabs.android.dbflow.structure.ModelAdapter;
 
-import java8.util.stream.Collectors;
-import java8.util.stream.StreamSupport;
 import org.greenrobot.eventbus.EventBus;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.db.DbService;
@@ -166,12 +164,11 @@ public abstract class AdaptiveSubscriptionProvider<E extends BaseOpenmrsAuditabl
 		ModelQueriable<E> query = SQLite.select(entityUuidProperty)
 				.from(getEntityClass())
 				.innerJoin(RecordInfo.class)
-				.on(entityUuidProperty.withTable().eq(RecordInfo_Table.uuid.withTable()));
-		query = ((From<E>) query).where(RecordInfo_Table.dateCreated.greaterThan(since))
+				.on(entityUuidProperty.withTable().eq(RecordInfo_Table.uuid.withTable()))
+				.where(RecordInfo_Table.dateCreated.greaterThan(since))
 				.or(RecordInfo_Table.dateChanged.greaterThan(since));
 
-		return StreamSupport.stream(repository.queryCustom(EntityUuid.class, query))
-				.map(EntityUuid::getUuid).collect(Collectors.toList());
+		return EntityUuid.getUuids(repository.queryCustom(EntityUuid.class, query));
 	}
 
 	/**
@@ -184,11 +181,10 @@ public abstract class AdaptiveSubscriptionProvider<E extends BaseOpenmrsAuditabl
 		ModelQueriable<RecordInfo> query = SQLite.select(RecordInfo_Table.uuid)
 				.from(RecordInfo.class)
 				.leftOuterJoin(getEntityClass())
-				.on(RecordInfo_Table.uuid.withTable().eq(entityUuidProperty.withTable()));
-		query = ((From<RecordInfo>) query).where(entityUuidProperty.withTable().isNull());
+				.on(RecordInfo_Table.uuid.withTable().eq(entityUuidProperty.withTable()))
+				.where(entityUuidProperty.withTable().isNull());
 
-		return StreamSupport.stream(repository.queryCustom(EntityUuid.class, query))
-				.map(EntityUuid::getUuid).collect(Collectors.toList());
+		return EntityUuid.getUuids(repository.queryCustom(EntityUuid.class, query));
 	}
 
 	/**
@@ -199,8 +195,8 @@ public abstract class AdaptiveSubscriptionProvider<E extends BaseOpenmrsAuditabl
 				.join(RecordInfo.class, Join.JoinType.LEFT_OUTER).as("R")
 				.on(
 						getModelTable(getEntityClass()).getProperty("uuid").withTable(NameAlias.of("E"))
-								.eq(RecordInfo_Table.uuid.withTable(NameAlias.of("R"))));
-		query = ((From<E>) query).where(RecordInfo_Table.uuid.withTable(NameAlias.of("R")).isNull());
+								.eq(RecordInfo_Table.uuid.withTable(NameAlias.of("R"))))
+				.where(RecordInfo_Table.uuid.withTable(NameAlias.of("R")).isNull());
 
 		repository.deleteAll(query);
 	}

@@ -5,8 +5,6 @@ import com.raizlabs.android.dbflow.sql.language.From;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import com.raizlabs.android.dbflow.sql.queriable.ModelQueriable;
-import java8.util.stream.Collectors;
-import java8.util.stream.StreamSupport;
 import org.openmrs.mobile.data.db.Repository;
 import org.openmrs.mobile.data.db.impl.EncounterDbService;
 import org.openmrs.mobile.data.db.impl.ObsDbService;
@@ -93,10 +91,9 @@ public class PatientTrimProvider {
 		ModelQueriable<Patient> query = SQLite.select(Patient_Table.uuid.withTable())
 				.from(Patient.class)
 				.leftOuterJoin(PatientListContext.class)
-				.on(Patient_Table.uuid.withTable().eq(PatientListContext_Table.patient_uuid.withTable()));
-		query = ((From<Patient>) query).where(PatientListContext_Table.patientList_uuid.eq(patientListUuid));
-		List<String> patientsAssociatedWithList = StreamSupport.stream(repository.queryCustom(EntityUuid.class, query))
-				.map(EntityUuid::getUuid).collect(Collectors.toList());
+				.on(Patient_Table.uuid.withTable().eq(PatientListContext_Table.patient_uuid.withTable()))
+				.where(PatientListContext_Table.patientList_uuid.eq(patientListUuid));
+		List<String> patientsAssociatedWithList = EntityUuid.getUuids(repository.queryCustom(EntityUuid.class, query));
 
 		if (patientsAssociatedWithList == null || patientsAssociatedWithList.isEmpty()) {
 			return new ArrayList<String>();
@@ -106,10 +103,9 @@ public class PatientTrimProvider {
 		query = SQLite.select(Patient_Table.uuid.withTable())
 				.from(Patient.class)
 				.leftOuterJoin(PatientListContext.class)
-				.on(Patient_Table.uuid.withTable().eq(PatientListContext_Table.patient_uuid.withTable()));
-		query = ((From<Patient>) query).where(PatientListContext_Table.patientList_uuid.notEq(patientListUuid));
-		List<String> patientsToRemain = StreamSupport.stream(repository.queryCustom(EntityUuid.class, query))
-				.map(EntityUuid::getUuid).collect(Collectors.toList());
+				.on(Patient_Table.uuid.withTable().eq(PatientListContext_Table.patient_uuid.withTable()))
+				.where(PatientListContext_Table.patientList_uuid.notEq(patientListUuid));
+		List<String> patientsToRemain = EntityUuid.getUuids(repository.queryCustom(EntityUuid.class, query));
 
 		List<String> patientsToTrim = new ArrayList<>();
 		if (patientsToRemain == null || patientsToRemain.isEmpty()) {
@@ -135,11 +131,10 @@ public class PatientTrimProvider {
 		ModelQueriable<Patient> query = SQLite.select(Patient_Table.uuid.withTable())
 				.from(Patient.class)
 				.leftOuterJoin(PatientListContext.class)
-				.on(Patient_Table.uuid.withTable().eq(PatientListContext_Table.patient_uuid.withTable()));
-		query = ((From<Patient>) query).where(PatientListContext_Table.uuid.withTable().isNull());
+				.on(Patient_Table.uuid.withTable().eq(PatientListContext_Table.patient_uuid.withTable()))
+				.where(PatientListContext_Table.uuid.withTable().isNull());
 
-		return StreamSupport.stream(repository.queryCustom(EntityUuid.class, query))
-				.map(EntityUuid::getUuid).collect(Collectors.toList());
+		return EntityUuid.getUuids(repository.queryCustom(EntityUuid.class, query));
 	}
 
 	private void trimPatients(List<String> patientsToTrim) {

@@ -428,4 +428,8 @@ public class OpenMRS extends Application {
 	public EventBus getEventBus() {
 		return eventBus;
 	}
+
+	public SyncManager getSyncManager() {
+		return syncManager;
+	}
 }

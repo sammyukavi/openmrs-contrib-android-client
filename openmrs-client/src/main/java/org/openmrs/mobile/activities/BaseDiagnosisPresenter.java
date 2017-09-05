@@ -59,7 +59,7 @@ public class BaseDiagnosisPresenter {
 			@Override
 			public void onError(Throwable t) {
 				base.getLoadingProgressBar().setVisibility(View.GONE);
-				Log.e(TAG, "Error finding concept: " + t.getLocalizedMessage());
+				Log.e(TAG, "Error finding concept: " + t.getLocalizedMessage(), t);
 			}
 		});
 	}
@@ -89,7 +89,7 @@ public class BaseDiagnosisPresenter {
 
 			@Override
 			public void onError(Throwable t) {
-				Log.e(TAG, "Error saving visit note: " + t.getLocalizedMessage());
+				Log.e(TAG, "Error saving visit note: " + t.getLocalizedMessage(), t);
 				base.getBaseDiagnosisView().showTabSpinner(false);
 			}
 		});
@@ -111,7 +111,7 @@ public class BaseDiagnosisPresenter {
 
 					@Override
 					public void onError(Throwable t) {
-						Log.e(TAG, "Error getting Observation: " + t.getLocalizedMessage());
+						Log.e(TAG, "Error getting Observation: " + t.getLocalizedMessage(), t);
 						base.getBaseDiagnosisView().showTabSpinner(false);
 					}
 				});

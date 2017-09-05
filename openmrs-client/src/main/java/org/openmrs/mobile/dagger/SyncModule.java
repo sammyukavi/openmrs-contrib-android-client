@@ -1,33 +1,29 @@
 package org.openmrs.mobile.dagger;
 
-import android.content.Context;
-import org.openmrs.mobile.data.db.DbService;
-import org.openmrs.mobile.data.db.impl.PatientDbService;
-import org.openmrs.mobile.data.db.impl.PullSubscriptionDbService;
-import org.openmrs.mobile.data.db.impl.SyncLogDbService;
-import org.openmrs.mobile.data.sync.PushSyncProvider;
-import org.openmrs.mobile.data.sync.SyncProvider;
-import org.openmrs.mobile.data.sync.SyncService;
-import org.openmrs.mobile.models.Patient;
-import org.openmrs.mobile.models.PullSubscription;
-import org.openmrs.mobile.models.SyncLog;
-
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import org.openmrs.mobile.sync.SyncAdapter;
+import org.greenrobot.eventbus.EventBus;
+import org.openmrs.mobile.application.OpenMRS;
 
 @Module
 public class SyncModule {
-	protected Context context;
+	protected OpenMRS openMRS;
 
-	public SyncModule(Context context) {
-		this.context = context;
+	public SyncModule(OpenMRS openMRS) {
+		this.openMRS = openMRS;
 	}
 
 	@Provides
-	public Context providesContext() {
-		return this.context;
+	@Singleton
+	public OpenMRS providesOpenMRS() {
+		return openMRS;
+	}
+
+	@Provides
+	@Singleton
+	public EventBus providesEventBus() {
+		return EventBus.getDefault();
 	}
 }

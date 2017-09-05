@@ -54,15 +54,16 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 	private SessionDataService loginDataService;
 	private LocationDataService locationDataService;
 	private UserDataService userService;
+	private boolean isUsersFirstAccessOfNewUrl;
 
 	private int startIndex = 0;//Old API, works with indexes not pages
 	private int limit = 100;
 
-	public LoginPresenter(LoginContract.View view, OpenMRS mOpenMRS) {
+	public LoginPresenter(LoginContract.View view, OpenMRS openMRS) {
 		this.loginView = view;
 		this.loginView.setPresenter(this);
-		this.openMRS = mOpenMRS;
-		this.authorizationManager = mOpenMRS.getAuthorizationManager();
+		this.openMRS = openMRS;
+		this.authorizationManager = openMRS.getAuthorizationManager();
 
 		this.locationDataService = dataAccess().location();
 		this.loginDataService = dataAccess().session();
@@ -77,14 +78,25 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 	@Override
 	public void login(String username, String password, String url, String oldUrl) {
 		loginView.hideSoftKeys();
-		if ((!openMRS.getUsername().equals(ApplicationConstants.EMPTY_STRING) &&
-				!openMRS.getUsername().equals(username)) ||
-				((!openMRS.getServerUrl().equals(ApplicationConstants.EMPTY_STRING) &&
-						!openMRS.getServerUrl().equals(oldUrl))) ||
-				wipeRequired) {
+		String storedUserName = openMRS.getUsername();
+		String storedServerUrl = openMRS.getServerUrl();
+
+		boolean userNameIsNotStored = storedUserName.equals(ApplicationConstants.EMPTY_STRING);
+		boolean serverUrlIsNotStored = storedServerUrl.equals(ApplicationConstants.EMPTY_STRING);
+		boolean enteredUserNameMatchesWhatIsStored = storedUserName.equals(username);
+		boolean oldUrlMatchesWhatIsStored = storedServerUrl.equals(oldUrl);
+		boolean oldUrlIsEmpty = oldUrl.equals(ApplicationConstants.EMPTY_STRING);
+
+		if (wipeRequired) {
 			loginView.showWarningDialog();
-		} else {
+		} else if ((userNameIsNotStored || enteredUserNameMatchesWhatIsStored)
+				&& (serverUrlIsNotStored || oldUrlMatchesWhatIsStored || oldUrlIsEmpty)) {
+			if (!oldUrlMatchesWhatIsStored || userNameIsNotStored || serverUrlIsNotStored) {
+				isUsersFirstAccessOfNewUrl = true;
+			}
 			authenticateUser(username, password, url, wipeRequired);
+		} else {
+			loginView.showWarningDialog();
 		}
 	}
 
@@ -126,8 +138,9 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 				@Override
 				public void onCompleted(Session session) {
 					if (session != null && session.isAuthenticated()) {
-						if (wipeDatabase) {
+						if (wipeRequired) {
 							openMRS.deleteDatabase(AppDatabase.NAME);
+							isUsersFirstAccessOfNewUrl = true;
 							setData(session.getSessionId(), url, username, password);
 							wipeRequired = false;
 						}
@@ -144,7 +157,7 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 						//userService = new UserDataService();
 						userService.getByUsername(username, QueryOptions.FULL_REP, pagingInfo,
 								loginUsersFoundCallback);
-						loginView.userAuthenticated();
+						loginView.userAuthenticated(isUsersFirstAccessOfNewUrl);
 						loginView.finishLoginActivity();
 
 					} else {
@@ -169,7 +182,7 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 				if (openMRS.getUsername().equals(username) && openMRS.getPassword().equals(password)) {
 					openMRS.setSessionToken(openMRS.getLastSessionToken());
 					loginView.showMessage(OFFLINE_LOGIN);
-					loginView.userAuthenticated();
+					loginView.userAuthenticated(isUsersFirstAccessOfNewUrl);
 					loginView.finishLoginActivity();
 				} else {
 					loginView.showMessage(AUTH_FAILED);

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:card_view="http://schemas.android.com/apk/res-auto"
 		xmlns:android="http://schemas.android.com/apk/res/android"
-		android:orientation="vertical"
-		android:animateLayoutChanges="true"
+	android:animateLayoutChanges="true"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent">
+		android:layout_height="match_parent"
+	android:orientation="vertical">
 	
 	<RelativeLayout
 			android:id="@+id/auditDataFormProgressBar"
@@ -269,21 +269,22 @@
 					</RadioGroup>
 					
 					<android.support.design.widget.TextInputLayout
+							android:id="@+id/cd4TextInputLayout"
 							android:layout_width="match_parent"
 							android:layout_height="wrap_content"
 							android:layout_marginLeft="10dp"
 							android:layout_marginEnd="10dp"
 							android:layout_marginRight="10dp"
 							android:layout_marginStart="10dp"
-							android:layout_marginBottom="10dp">
+							android:layout_marginBottom="10dp"
+							android:visibility="gone">
 						
 						<EditText
 								android:id="@+id/cd4"
 								android:layout_width="match_parent"
 								android:layout_height="wrap_content"
 								android:hint="@string/cd4"
-								android:inputType="number"
-								android:visibility="gone" />
+								android:inputType="number" />
 					</android.support.design.widget.TextInputLayout>
 					
 					
@@ -334,21 +335,22 @@
 					</RadioGroup>
 					
 					<android.support.design.widget.TextInputLayout
+							android:id="@+id/hba1cTextLayout"
 							android:layout_width="match_parent"
 							android:layout_height="wrap_content"
 							android:layout_marginLeft="10dp"
 							android:layout_marginEnd="10dp"
 							android:layout_marginRight="10dp"
 							android:layout_marginStart="10dp"
-							android:layout_marginBottom="10dp">
+							android:layout_marginBottom="10dp"
+							android:visibility="gone">
 						
 						<EditText
 								android:id="@+id/hba1c"
 								android:layout_width="match_parent"
 								android:layout_height="wrap_content"
 								android:hint="@string/hba1c"
-								android:inputType="numberDecimal"
-								android:visibility="gone" />
+								android:inputType="numberDecimal" />
 					</android.support.design.widget.TextInputLayout>
 					
 					<TextView
@@ -832,7 +834,7 @@
 						
 						<RadioGroup
 								android:layout_width="match_parent"
-								android:orientation="horizontal"
+								android:orientation="vertical"
 								android:layout_height="wrap_content"
 								android:layout_marginBottom="18dp"
 								android:layout_marginLeft="10dp"
@@ -898,6 +900,21 @@
 									android:hint="@string/first_gcs_score"
 									android:inputType="number" />
 						</android.support.design.widget.TextInputLayout>
+						<TextView
+							android:id="@+id/invalidGscError"
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:layout_weight="1"
+							android:paddingStart="10dp"
+							android:paddingLeft="10dp"
+							android:paddingRight="10dp"
+							android:paddingEnd="10dp"
+							android:padding="2dp"
+							android:text="@string/emptyerror"
+							android:textColor="@color/red"
+							android:textSize="12sp"
+							android:textStyle="normal"
+							android:visibility="gone" />
 					</LinearLayout>
 					
 					<CheckBox

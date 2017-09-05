@@ -17,6 +17,10 @@ package org.openmrs.mobile.activities.auditdata;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputLayout;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +34,7 @@ import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import org.joda.time.LocalDateTime;
 import org.openmrs.mobile.R;
@@ -101,10 +106,9 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 	private Visit visit;
 	//private Patient patient;
 	private View fragmentView;
-	private String locationUuid;
 	private EditText cd4, hBa1c, firstIcuHeartRate, firstGcsScore;
 	private String encounterUuid = null;
-	private String visitUuid, patientUuid, visitStopDate;
+	private String visitUuid, patientUuid, visitStopDate, locationUuid;
 	private OpenMRS instance = OpenMRS.getInstance();
 
 	private Observation deathInHospitalObservation, palliativeConsultObservation, preopRiskAssessmentObservation,
@@ -133,6 +137,8 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 	private List<ConceptAnswer> conceptAnswerList;
 	private String inpatientServiceTypeSelectedUuid, displayInpatientServiceType;
 	private Boolean displayExtraFormFields, displayCd4CountField, displayHbA1CField, displayHduCoManageField;
+	private TextInputLayout hba1cTextLayout, cd4TextInputLayout;
+	private TextView errorFirstGcsScore;
 
 	public static AuditDataFragment newInstance() {
 		return new AuditDataFragment();
@@ -254,9 +260,29 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		patient_diabetic_yes = (RadioButton)fragmentView.findViewById(R.id.patient_diabetic_yes);
 		patient_diabetic_no = (RadioButton)fragmentView.findViewById(R.id.patient_diabetic_no);
 		patient_diabetic_unknown = (RadioButton)fragmentView.findViewById(R.id.patient_diabetic_unknown);
+		cd4TextInputLayout = (TextInputLayout)fragmentView.findViewById(R.id.cd4TextInputLayout);
+		hba1cTextLayout = (TextInputLayout)fragmentView.findViewById(R.id.hba1cTextLayout);
+		errorFirstGcsScore = (TextView)fragmentView.findViewById(R.id.invalidGscError);
+
+		firstGcsScore.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence charSequence, int startPos, int count, int after) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+			}
+
+			@Override
+			public void afterTextChanged(Editable editable) {
+				hasValidGcsScore();
+			}
+		});
 
 		submitForm.setOnClickListener(v -> {
-			performDataSend();
+			if( hasValidGcsScore() ){
+				performDataSend();
+			}
 		});
 
 		progressBar = (RelativeLayout)fragmentView.findViewById(R.id.auditDataRelativeView);
@@ -394,20 +420,20 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 				hivPositiveObservation =
 						setObservationFields(hivPositiveObservation, CONCEPT_HIV_STATUS,
 								CONCEPT_ANSWER_POSITIVE);
-				showAnimateView(true, cd4);
+				showAnimateView(true, cd4TextInputLayout);
 				break;
 
 			case R.id.is_hiv_positive_no:
 				hivPositiveObservation = setObservationFields(hivPositiveObservation,
 						CONCEPT_HIV_STATUS, CONCEPT_ANSWER_NEGATIVE);
-				showAnimateView(false, cd4);
+				showAnimateView(false, cd4TextInputLayout);
 				setObservationVoided(cd4Observation);
 				break;
 
 			case R.id.is_hiv_positive_unknown:
 				hivPositiveObservation = setObservationFields(hivPositiveObservation,
 						CONCEPT_HIV_STATUS, CONCEPT_ANSWER_UNKNOWN);
-				showAnimateView(false, cd4);
+				showAnimateView(false, cd4TextInputLayout);
 				setObservationVoided(cd4Observation);
 				break;
 
@@ -552,20 +578,20 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 				firstMapObservation =
 						setObservationFields(patientDiabeticObservation, CONCEPT_PATIENT_DIABETIC,
 								CONCEPT_ANSWER_YES);
-				showAnimateView(true, hBa1c);
+				showAnimateView(true, hba1cTextLayout);
 				break;
 
 			case R.id.patient_diabetic_no:
 				firstMapObservation =
 						setObservationFields(patientDiabeticObservation, CONCEPT_PATIENT_DIABETIC, CONCEPT_ANSWER_NO);
-				showAnimateView(false, hBa1c);
+				showAnimateView(false, hba1cTextLayout);
 				setObservationVoided(hBa1cObservation);
 				break;
 
 			case R.id.patient_diabetic_unknown:
 				firstMapObservation =
 						setObservationFields(patientDiabeticObservation, CONCEPT_PATIENT_DIABETIC, CONCEPT_ANSWER_UNKNOWN);
-				showAnimateView(false, hBa1c);
+				showAnimateView(false, hba1cTextLayout);
 				setObservationVoided(hBa1cObservation);
 				break;
 			default:
@@ -798,18 +824,18 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 						hivPositiveYes.setChecked(true);
 						hivPositiveObservation = setObservationFields(observation, CONCEPT_HIV_STATUS,
 								CONCEPT_ANSWER_POSITIVE);
-						showAnimateView(true, cd4);
+						showAnimateView(true, cd4TextInputLayout);
 
 					} else if (displayValue.equalsIgnoreCase(ANSWER_NEGATIVE)) {
 						hivPositiveNo.setChecked(true);
 						hivPositiveObservation = setObservationFields(observation, CONCEPT_HIV_STATUS,
 								CONCEPT_ANSWER_NEGATIVE);
-						showAnimateView(false, cd4);
+						showAnimateView(false, cd4TextInputLayout);
 					} else if (displayValue.equalsIgnoreCase(ANSWER_UNKNOWN)) {
 						hivPositiveUnknown.setChecked(true);
 						hivPositiveObservation =
 								setObservationFields(observation, CONCEPT_HIV_STATUS, CONCEPT_ANSWER_UNKNOWN);
-						showAnimateView(false, cd4);
+						showAnimateView(false, cd4TextInputLayout);
 
 					}
 					break;
@@ -1027,21 +1053,21 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 						patientDiabeticObservation =
 								setObservationFields(observation, CONCEPT_PATIENT_DIABETIC,
 										CONCEPT_ANSWER_YES);
-						showAnimateView(true, hBa1c);
+						showAnimateView(true, hba1cTextLayout);
 
 					} else if (displayValue.equalsIgnoreCase(ANSWER_NO)) {
 						patient_diabetic_yes.setChecked(true);
 						patientDiabeticObservation =
 								setObservationFields(observation, CONCEPT_PATIENT_DIABETIC,
 										CONCEPT_ANSWER_NO);
-						showAnimateView(false, hBa1c);
+						showAnimateView(false, hba1cTextLayout);
 
 					} else if (displayValue.equalsIgnoreCase(ANSWER_UNKNOWN)) {
 						patient_diabetic_yes.setChecked(true);
 						patientDiabeticObservation =
 								setObservationFields(observation, CONCEPT_PATIENT_DIABETIC,
 										CONCEPT_ANSWER_UNKNOWN);
-						showAnimateView(false, hBa1c);
+						showAnimateView(false, hba1cTextLayout);
 
 					}
 
@@ -1222,4 +1248,19 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		}
 	}
 
+	private boolean hasValidGcsScore(){
+		if(firstGcsScore.getText().toString().length() == 0){
+			errorFirstGcsScore.setVisibility(View.GONE);
+		}else if(Integer.parseInt(firstGcsScore.getText().toString()) > 2 &&
+				Integer.parseInt(firstGcsScore.getText().toString()) < 16){
+			errorFirstGcsScore.setVisibility(View.GONE);
+			return true;
+		}else{
+			errorFirstGcsScore.setVisibility(View.VISIBLE);
+			errorFirstGcsScore.setText(getString(R.string.error_gcs_score,
+					ApplicationConstants.ValidationFieldValues.AUDIT_GCS_SCORE_MIN,
+					ApplicationConstants.ValidationFieldValues.AUDIT_GCS_SCORE_MAX));
+		}
+		return false;
+	}
 }

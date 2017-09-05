@@ -178,6 +178,7 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 			if (mPresenter.isEndVisit()) {
 				visitStartDateInput.setVisibility(View.GONE);
 				visitStartDateLabel.setVisibility(View.GONE);
+				loadEndVisitView();
 			}
 		}
 

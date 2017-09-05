@@ -39,8 +39,6 @@ import javax.inject.Inject;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class VisitPullProvider {
-	private static final int SYNC_VISIT_COUNT = 3;
-
 	private VisitDbService visitDbService;
 	private VisitRestServiceImpl visitRestService;
 	private EncounterDbService encounterDbService;
@@ -100,7 +98,7 @@ public class VisitPullProvider {
 		// Pull any updated visit information
 		List<RecordInfo> checkedVisits = new ArrayList<>();
 		List<Visit> visits = new ArrayList<>();
-		for (int i = 0; i < SYNC_VISIT_COUNT && i < visitInfo.size(); i++) {
+		for (int i = 0; i < ApplicationConstants.Request.PATIENT_VISIT_COUNT && i < visitInfo.size(); i++) {
 			RecordInfo visitRecord = visitInfo.get(i);
 			if (visitRecord.isUpdatedSince(subscription)) {
 				Visit visit = RestHelper.getCallValue(

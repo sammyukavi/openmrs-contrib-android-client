@@ -34,7 +34,7 @@ public class LoginSyncActivity extends ACBaseActivity {
 					loginSyncFragment, R.id.loginSyncContentFrame);
 		}
 
-		presenter = new LoginSyncPresenter(loginSyncFragment, openMRS);
+		presenter = new LoginSyncPresenter(loginSyncFragment, openMRS, openMRS.getSyncManager());
 	}
 
 	@Override

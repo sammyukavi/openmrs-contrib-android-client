@@ -10,9 +10,7 @@ import android.net.ConnectivityManager;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.sync.SyncService;
 import org.openmrs.mobile.data.sync.impl.PatientTrimProvider;
-import org.openmrs.mobile.event.SyncEvent;
 import org.openmrs.mobile.receivers.SyncReceiver;
-import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.TimeConstants;
 
 public class SyncManager {
@@ -26,6 +24,8 @@ public class SyncManager {
 	private static OpenMRS openMRS;
 	private SyncReceiver syncReceiver;
 	private PatientTrimProvider patientTrimProvider;
+
+	private boolean canSync = false;
 
 	@Inject
 	public SyncManager(OpenMRS openMRS, SyncReceiver syncReceiver, SyncService syncService,
@@ -54,21 +54,31 @@ public class SyncManager {
 		int dummyFlag = 0;
 		PendingIntent appIntent = PendingIntent.getBroadcast(openMRS, dummyRequestCode, startIntent, dummyFlag);
 		AlarmManager alarmManager = (AlarmManager) openMRS.getSystemService(openMRS.ALARM_SERVICE);
-		int initialIntervalInMillis = 0;
-		alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, initialIntervalInMillis,
+		long initialTriggerTimeInMillis = AlarmManager.ELAPSED_REALTIME + SYNC_INTERVAL_IN_MILLISECONDS;
+		alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, initialTriggerTimeInMillis,
 				SYNC_INTERVAL_IN_MILLISECONDS, appIntent);
 	}
 
 	public void requestSync() {
 		if (openMRS.getAuthorizationManager().isUserLoggedIn()) {
-			new Thread(() -> {
-				try {
-					syncService.sync();
-				} catch (Exception ex) {
-					openMRS.getOpenMRSLogger().e("Error running the sync service", ex);
-				}
-			}).start();
+			if (canSync) {
+				new Thread(() -> {
+					try {
+						syncService.sync();
+					}
+					catch (Exception ex) {
+						openMRS.getOpenMRSLogger().e("Error running the sync service", ex);
+					}
+				}).start();
+			}
+		} else {
+			canSync = false;
 		}
+	}
+
+	public void requestInitialSync() {
+		canSync = true;
+		requestSync();
 	}
 
 	public void trimUnsyncedPatientListData(String patientListUuuid) {

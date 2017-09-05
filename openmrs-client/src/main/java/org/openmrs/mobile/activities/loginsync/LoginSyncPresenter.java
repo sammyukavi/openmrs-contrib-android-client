@@ -3,11 +3,13 @@ package org.openmrs.mobile.activities.loginsync;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.support.annotation.Nullable;
 import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.event.SyncEvent;
 import org.openmrs.mobile.event.SyncPullEvent;
 import org.openmrs.mobile.event.SyncPushEvent;
+import org.openmrs.mobile.sync.SyncManager;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.TimeConstants;
 
@@ -15,15 +17,16 @@ public class LoginSyncPresenter extends BasePresenter implements LoginSyncContra
 
 	private LoginSyncContract.View view;
 	private OpenMRS openMRS;
+	private SyncManager syncManager;
 
 	private double totalSyncPushes;
 	private double totalSyncPulls;
 	private double entitiesPushed;
 	private double entitiesPulled;
 	private String currentDownloadingSubscription;
-	private double averageNetworkSpeed;
+	private @Nullable Double averageNetworkSpeed;
 	private Timer networkConnectivityCheckTimer;
-	private boolean networkConnectionIsFast = true;
+	private @Nullable Boolean networkConnectionIsFast;
 	private boolean arePushing = false;
 	private boolean arePulling = false;
 	private boolean trimHasBeenCompleted = false;
@@ -42,17 +45,19 @@ public class LoginSyncPresenter extends BasePresenter implements LoginSyncContra
 	 */
 	private final double AVERAGE_NUMBER_OF_PATIENTS_TO_SYNC = 10;
 
-	public LoginSyncPresenter(LoginSyncContract.View view, OpenMRS openMRS) {
+	public LoginSyncPresenter(LoginSyncContract.View view, OpenMRS openMRS, SyncManager syncManager) {
 		this.view = view;
 		this.openMRS = openMRS;
+		this.syncManager = syncManager;
 
 		this.view.setPresenter(this);
 		entitiesPulled = 0;
 		entitiesPushed = 0;
 	}
 
+	@Override
 	public void sync() {
-		openMRS.requestDataSync();
+		syncManager.requestInitialSync();
 	}
 
 	@Override
@@ -84,7 +89,7 @@ public class LoginSyncPresenter extends BasePresenter implements LoginSyncContra
 			entitiesPushed = 0;
 			arePushing = false;
 		} else {
-			progress = entitiesPushed / totalSyncPushes;
+			progress = entitiesPushed / totalSyncPushes * 100D;
 		}
 
 		switch (syncPushEvent.getMessage()) {
@@ -126,7 +131,7 @@ public class LoginSyncPresenter extends BasePresenter implements LoginSyncContra
 			trimHasBeenCompleted = false;
 			arePulling = false;
 		} else {
-			progress = entitiesPulled / (totalSyncPulls + trimSquenceProgressAdjustment);
+			progress = entitiesPulled / (totalSyncPulls + trimSquenceProgressAdjustment) * 100D;
 		}
 
 		switch (syncPullEvent.getMessage()) {
@@ -138,12 +143,16 @@ public class LoginSyncPresenter extends BasePresenter implements LoginSyncContra
 				view.updateSyncPullProgressForCompletingSubscription(progress, syncPullEvent.getEntity());
 				break;
 			case ApplicationConstants.EventMessages.Sync.Pull.ENTITY_REMOTE_PULL_STARTING:
-				view.updateSyncPullProgressForStartingEntity(progress, currentDownloadingSubscription,
-						syncPullEvent.getEntity());
+				if (syncPullEvent.getEntity() != null) {
+					view.updateSyncPullProgressForStartingEntity(progress, currentDownloadingSubscription,
+							syncPullEvent.getEntity());
+				}
 				break;
 			case ApplicationConstants.EventMessages.Sync.Pull.ENTITY_REMOTE_PULL_COMPLETE:
-				view.updateSyncPullProgressForCompletingEntity(progress, currentDownloadingSubscription,
-						syncPullEvent.getEntity());
+				if (syncPullEvent.getEntity() != null) {
+					view.updateSyncPullProgressForCompletingEntity(progress, currentDownloadingSubscription,
+							syncPullEvent.getEntity());
+				}
 				break;
 			case ApplicationConstants.EventMessages.Sync.Pull.TRIM_STARTING:
 				view.updateSyncPullProgressForStartingTrim(progress);
@@ -171,7 +180,8 @@ public class LoginSyncPresenter extends BasePresenter implements LoginSyncContra
 	}
 
 	public void startMeasuringConnectivity() {
-		averageNetworkSpeed = 0;
+		averageNetworkSpeed = null;
+		networkConnectionIsFast = null;
 		if (networkConnectivityCheckTimer == null) {
 			networkConnectivityCheckTimer = new Timer();
 		}
@@ -179,23 +189,22 @@ public class LoginSyncPresenter extends BasePresenter implements LoginSyncContra
 			@Override
 			public void run() {
 				calculateNewAverageNetworkSpeed();
-				boolean previousConnectionSpeedIsFast = networkConnectionIsFast;
+				Boolean previousConnectionSpeedIsFast = networkConnectionIsFast;
 				determineNetworkConnectionSpeed();
-				if ((previousConnectionSpeedIsFast && !networkConnectionIsFast) || (!previousConnectionSpeedIsFast &&
-						networkConnectionIsFast)) {
-					view.runOnUIThread(new Runnable() {
-
-						@Override
-						public void run() {
-							notifyViewToUpdateConnectionDisplay();
-						}
-					});
+				if (previousConnectionSpeedIsFast == null || (previousConnectionSpeedIsFast && !networkConnectionIsFast)
+						|| (!previousConnectionSpeedIsFast && networkConnectionIsFast)) {
+					view.runOnUIThread(() -> notifyViewToUpdateConnectionDisplay());
 				}
 			}
 		}, DELAY, DELAY);
 	}
 
 	private void determineNetworkConnectionSpeed() {
+		if (averageNetworkSpeed == null) {
+			networkConnectionIsFast = null;
+			return;
+		}
+
 		double estimatedTimeUntilDownloadCompletes = AVERAGE_NUMBER_OF_PATIENTS_TO_SYNC
 				* AVERAGE_SIZE_OF_PATIENT_PAYLOAD_IN_KB
 				/ averageNetworkSpeed;
@@ -236,7 +245,11 @@ public class LoginSyncPresenter extends BasePresenter implements LoginSyncContra
 	private void calculateNewAverageNetworkSpeed() {
 		Double networkSpeed = openMRS.getNetworkUtils().getCurrentConnectionSpeed();
 		if (networkSpeed != null && networkSpeed != openMRS.getNetworkUtils().UNKNOWN_CONNECTION_SPEED) {
-			averageNetworkSpeed = SMOOTHING_FACTOR * networkSpeed + (1 - SMOOTHING_FACTOR) * averageNetworkSpeed;
+			if (averageNetworkSpeed == null) {
+				averageNetworkSpeed = networkSpeed;
+			} else {
+				averageNetworkSpeed = SMOOTHING_FACTOR * networkSpeed + (1 - SMOOTHING_FACTOR) * averageNetworkSpeed;
+			}
 		}
 	}
 }

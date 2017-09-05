@@ -71,6 +71,8 @@ public class LoginSyncFragment extends ACBaseFragment<LoginSyncContract.Presente
 
 		if (percentComplete == 100) {
 			pushDurationText.setVisibility(View.INVISIBLE);
+			pullDurationText.setText(pushDurationText.getText());
+			pullDurationText.setVisibility(View.VISIBLE);
 		}
 	}
 

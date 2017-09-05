@@ -76,7 +76,9 @@
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:id="@+id/pushProgressText"
-					android:visibility="visible"/>
+					android:visibility="visible"
+					android:maxLines="2"
+					android:minLines="2"/>
 
 			<TextView
 					android:text="TextView"
@@ -107,7 +109,9 @@
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:id="@+id/pullProgressText"
-					android:visibility="visible"/>
+					android:visibility="visible"
+					android:minLines="2"
+					android:maxLines="2"/>
 
 			<TextView
 					android:text="TextView"

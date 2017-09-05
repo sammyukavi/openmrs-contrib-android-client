@@ -5,7 +5,9 @@ import com.raizlabs.android.dbflow.sql.language.From;
 import com.raizlabs.android.dbflow.sql.language.Join;
 import com.raizlabs.android.dbflow.sql.language.NameAlias;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
+import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.sql.language.property.Property;
+import com.raizlabs.android.dbflow.sql.language.property.PropertyFactory;
 import com.raizlabs.android.dbflow.sql.queriable.ModelQueriable;
 import com.raizlabs.android.dbflow.structure.ModelAdapter;
 
@@ -65,7 +67,7 @@ public abstract class AdaptiveSubscriptionProvider<E extends BaseOpenmrsAuditabl
 		long recordCount = getRecordCountDb();
 
 		eventBus.post(new SyncPullEvent(ApplicationConstants.EventMessages.Sync.Pull.ENTITY_REMOTE_PULL_STARTING,
-				entityClass.getName(), null));
+				(entityClass == null ? null : entityClass.getName()), null));
 
 		if (recordCount == 0) {
 			// If table is empty then do a table pull
@@ -75,7 +77,7 @@ public abstract class AdaptiveSubscriptionProvider<E extends BaseOpenmrsAuditabl
 		}
 
 		eventBus.post(new SyncPullEvent(ApplicationConstants.EventMessages.Sync.Pull.ENTITY_REMOTE_PULL_COMPLETE,
-				entityClass.getName(), null));
+				(entityClass == null ? null : entityClass.getName()), null));
 	}
 
 	/**
@@ -161,12 +163,12 @@ public abstract class AdaptiveSubscriptionProvider<E extends BaseOpenmrsAuditabl
 	protected List<String> calculateIncrementalUpdates(Date since) {
 		Property entityUuidProperty = getModelTable(getEntityClass()).getProperty("uuid");
 
-		ModelQueriable<E> query = SQLite.select(entityUuidProperty)
+		ModelQueriable<E> query = SQLite.select(entityUuidProperty.withTable())
 				.from(getEntityClass())
 				.innerJoin(RecordInfo.class)
 				.on(entityUuidProperty.withTable().eq(RecordInfo_Table.uuid.withTable()))
-				.where(RecordInfo_Table.dateCreated.greaterThan(since))
-				.or(RecordInfo_Table.dateChanged.greaterThan(since));
+				.where(RecordInfo_Table.dateCreated.withTable().greaterThan(since))
+				.or(RecordInfo_Table.dateChanged.withTable().greaterThan(since));
 
 		return EntityUuid.getUuids(repository.queryCustom(EntityUuid.class, query));
 	}
@@ -191,12 +193,37 @@ public abstract class AdaptiveSubscriptionProvider<E extends BaseOpenmrsAuditabl
 	 * Deletes the local entities that were not found in the rest results.
 	 */
 	protected void deleteIncremental() {
-		ModelQueriable<E> query = SQLite.delete(getEntityClass()).as("E")
-				.join(RecordInfo.class, Join.JoinType.LEFT_OUTER).as("R")
-				.on(
-						getModelTable(getEntityClass()).getProperty("uuid").withTable(NameAlias.of("E"))
-								.eq(RecordInfo_Table.uuid.withTable(NameAlias.of("R"))))
-				.where(RecordInfo_Table.uuid.withTable(NameAlias.of("R")).isNull());
+		/**
+		 * SQLite (or at least the wrapper) doesn't like joins to deletes, so you have to do a nested query
+		 * https://stackoverflow.com/questions/24511153/how-delete-table-inner-join-with-other-table-in-sqlite
+		 *
+		 * The code below produces a query similar to the following:
+		 *  DELETE
+		 *  FROM entityClass
+		 *  WHERE uuid IN (
+		 *      SELECT E.uuid
+		 *      FROM entityClass E
+		 *      LEFT OUTER JOIN RecordInfo R
+		 *          ON E.uuid = R.uuid
+		 *      WHERE R.uuid IS NULL
+		 *  )
+		 */
+		ModelQueriable<E> query = SQLite.delete(getEntityClass())
+				.where(getModelTable(getEntityClass()).getProperty("uuid").in(
+						PropertyFactory.from(
+								SQLite.select(
+										getModelTable(getEntityClass()).getProperty("uuid").withTable(NameAlias.of("E"))
+								)
+										.from(getEntityClass()).as("E")
+										.join(RecordInfo.class, Join.JoinType.LEFT_OUTER).as("R")
+										.on(
+												getModelTable(getEntityClass())
+														.getProperty("uuid").withTable(NameAlias.of("E"))
+														.eq(RecordInfo_Table.uuid.withTable(NameAlias.of("R")))
+										)
+										.where(RecordInfo_Table.uuid.withTable(NameAlias.of("R")).isNull())
+						)
+				));
 
 		repository.deleteAll(query);
 	}

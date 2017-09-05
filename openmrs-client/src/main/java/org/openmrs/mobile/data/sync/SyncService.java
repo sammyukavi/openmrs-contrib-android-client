@@ -158,6 +158,7 @@ public class SyncService {
 						provider.pull(sub);
 
 						sub.setLastSync(lastSync);
+						subscriptionDbService.save(sub);
 					} catch (DataOperationException doe) {
 						Log.w(TAG, "Data exception occurred while processing subscription provider '" +
 								sub.getSubscriptionClass() + ":" +

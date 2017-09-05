@@ -66,16 +66,6 @@ public interface PatientDashboardContract {
 
 		void setLoading(boolean loading);
 
-		int getStartIndex();
-
-		void setStartIndex(int startIndex);
-
-		int getLimit();
-
-		void setLimit(int limit);
-
 		void loadResults(Patient patient, boolean loadNextResults);
-
-		void setTotalNumberResults(int totalNumberResults);
 	}
 }

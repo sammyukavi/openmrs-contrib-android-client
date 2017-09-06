@@ -30,7 +30,11 @@ public final class StringUtils {
 	}
 
 	public static boolean notEmpty(String string) {
-		return string != null && !string.isEmpty();
+		return !isNullOrEmpty(string);
+	}
+
+	public static boolean isNullOrEmpty(String string) {
+		return string == null || string.isEmpty();
 	}
 
 	public static String unescapeJavaString(String st) {

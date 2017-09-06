@@ -45,7 +45,9 @@ public class Form extends BaseOpenmrsObject implements Serializable {
 
 	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "pages", isVariablePrivate = true)
 	List<Page> loadPages() {
-		return loadRelatedObject(Page.class, pages, () -> Page_Table.form_uuid.eq(getUuid()));
+		pages = loadRelatedObject(Page.class, pages, () -> Page_Table.form_uuid.eq(getUuid()));
+
+		return pages;
 	}
 
 	@Override

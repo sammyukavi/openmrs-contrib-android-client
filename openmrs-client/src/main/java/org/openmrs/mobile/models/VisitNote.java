@@ -73,8 +73,10 @@ public class VisitNote extends BaseOpenmrsEntity {
 
 	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "encounterDiagnoses", isVariablePrivate = true)
 	List<EncounterDiagnosis> loadEncounterDiagnoses() {
-		return loadRelatedObject(EncounterDiagnosis.class, encounterDiagnoses,
+		encounterDiagnoses = loadRelatedObject(EncounterDiagnosis.class, encounterDiagnoses,
 				() -> EncounterDiagnosis_Table.visitNote_uuid.eq(getUuid()));
+
+		return encounterDiagnoses;
 	}
 
 	@Override

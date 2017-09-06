@@ -95,9 +95,6 @@ public class Resource implements Serializable {
 	public void processRelationships() {
 	}
 
-	public void loadRelatedObjects() {
-	}
-
 	protected <R extends Resource> void processRelatedObjects(@Nullable List<R> resources) {
 		processRelatedObjects(resources, null);
 	}

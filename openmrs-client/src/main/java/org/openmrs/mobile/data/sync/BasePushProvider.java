@@ -39,8 +39,6 @@ public abstract class BasePushProvider<E extends BaseOpenmrsAuditableObject,
 			throw new DataOperationException("Entity not found");
 		}
 
-		entity.loadRelatedObjects();
-
 		Call<E> call = null;
 
 		switch (syncLog.getAction()) {

@@ -66,17 +66,21 @@ public class Person extends BaseOpenmrsEntity implements Serializable {
 
 	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "names", isVariablePrivate = true)
 	List<PersonName> loadNames() {
-		return loadRelatedObject(PersonName.class, names, () -> PersonName_Table.person_uuid.eq(getUuid()));
+		names = loadRelatedObject(PersonName.class, names, () -> PersonName_Table.person_uuid.eq(getUuid()));
+		return names;
 	}
 
 	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "addresses", isVariablePrivate = true)
 	List<PersonAddress> loadAddresses() {
-		return loadRelatedObject(PersonAddress.class, addresses, () -> PersonAddress_Table.person_uuid.eq(getUuid()));
+		addresses = loadRelatedObject(PersonAddress.class, addresses, () -> PersonAddress_Table.person_uuid.eq(getUuid()));
+		return addresses;
 	}
 
 	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "attributes", isVariablePrivate = true)
 	List<PersonAttribute> loadAttributes() {
-		return loadRelatedObject(PersonAttribute.class, attributes, () -> PersonAttribute_Table.person_uuid.eq(getUuid()));
+		attributes = loadRelatedObject(PersonAttribute.class, attributes, () -> PersonAttribute_Table.person_uuid.eq
+				(getUuid()));
+		return attributes;
 	}
 
 	@Override
@@ -86,15 +90,6 @@ public class Person extends BaseOpenmrsEntity implements Serializable {
 		processRelatedObjects(names, (n) -> n.setPerson(this));
 		processRelatedObjects(addresses, (a) -> a.setPerson(this));
 		processRelatedObjects(attributes, (a) -> a.setPerson(this));
-	}
-
-	@Override
-	public void loadRelatedObjects() {
-		super.loadRelatedObjects();
-
-		this.names = loadNames();
-		this.addresses = loadAddresses();
-		this.attributes = loadAttributes();
 	}
 
 	/**

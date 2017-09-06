@@ -52,8 +52,9 @@ public class Patient extends BaseOpenmrsAuditableObject implements Serializable 
 
 	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "identifiers", isVariablePrivate = true)
 	List<PatientIdentifier> loadIdentifiers() {
-		return loadRelatedObject(PatientIdentifier.class, identifiers,
+		identifiers = loadRelatedObject(PatientIdentifier.class, identifiers,
 				() -> PatientIdentifier_Table.patient_uuid.eq(getUuid()));
+		return identifiers;
 	}
 
 	@Override
@@ -64,13 +65,6 @@ public class Patient extends BaseOpenmrsAuditableObject implements Serializable 
 			person.processRelationships();
 		}
 		processRelatedObjects(identifiers, (i) -> i.setPatient(this));
-	}
-
-	@Override
-	public void loadRelatedObjects() {
-		super.loadRelatedObjects();
-
-		this.identifiers = loadIdentifiers();
 	}
 
 	/**

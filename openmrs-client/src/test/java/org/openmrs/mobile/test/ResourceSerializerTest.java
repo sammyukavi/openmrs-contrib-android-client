@@ -75,7 +75,6 @@ public class ResourceSerializerTest {
     public void shouldNotSerializeFieldWithoutExposeAnnotation(){
         when(context.serialize(any())).thenReturn(getJsonObject());
         Patient patient = generatePatient(false);
-        patient.setId(10000L);
         JsonElement serialize = new ResourceSerializer().serialize(patient, Patient.class, context);
         assertThat(serialize.toString(), not(containsString("\"id\":")));
     }

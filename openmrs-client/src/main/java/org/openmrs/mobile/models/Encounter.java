@@ -84,12 +84,11 @@ public class Encounter extends BaseOpenmrsAuditableObject implements Serializabl
 	@Expose
 	private String resourceVersion;
 
-	private Long visitID;
-	private String patientUUID;
-
 	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "obs", isVariablePrivate = true)
 	List<Observation> loadObservations() {
-		return loadRelatedObject(Observation.class, obs, () -> Observation_Table.encounter_uuid.eq(getUuid()));
+		obs = loadRelatedObject(Observation.class, obs, () -> Observation_Table.encounter_uuid.eq(getUuid()));
+
+		return obs;
 	}
 
 	@Override
@@ -100,22 +99,6 @@ public class Encounter extends BaseOpenmrsAuditableObject implements Serializabl
 			form.processRelationships();
 		}
 		processRelatedObjects(obs);
-	}
-
-	public Long getVisitID() {
-		return visitID;
-	}
-
-	public void setVisitID(Long visitID) {
-		this.visitID = visitID;
-	}
-
-	public String getPatientUUID() {
-		return patientUUID;
-	}
-
-	public void setPatientUUID(String patientUUID) {
-		this.patientUUID = patientUUID;
 	}
 
 	/**
@@ -310,20 +293,6 @@ public class Encounter extends BaseOpenmrsAuditableObject implements Serializabl
 				join.save();
 			}
 		}
-	}
-
-	/**
-	 * @return The links
-	 */
-	public List<Link> getLinks() {
-		return links;
-	}
-
-	/**
-	 * @param links The links
-	 */
-	public void setLinks(List<Link> links) {
-		this.links = links;
 	}
 
 	/**

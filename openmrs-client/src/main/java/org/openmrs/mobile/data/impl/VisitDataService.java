@@ -18,7 +18,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class VisitDataService extends BaseEntityDataService<Visit, VisitDbService, VisitRestServiceImpl>
 		implements EntityDataService<Visit> {
 	@Inject
-	public VisitDataService() { }
+	public VisitDataService() {
+	}
 
 	public void endVisit(@NonNull String uuid, @NonNull Visit visit, @Nullable QueryOptions options,
 			@NonNull GetCallback<Visit> callback) {
@@ -38,6 +39,6 @@ public class VisitDataService extends BaseEntityDataService<Visit, VisitDbServic
 					syncLogDbService.save(createSyncLog(existingVisit, SyncAction.UPDATED));
 					return result;
 				},
-				() -> restService.updateVisit(existingVisit.getUuid(), updatedVisit));
+				() -> restService.updateVisit(updatedVisit));
 	}
 }

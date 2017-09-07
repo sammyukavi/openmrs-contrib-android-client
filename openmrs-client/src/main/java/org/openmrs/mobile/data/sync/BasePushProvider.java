@@ -33,9 +33,13 @@ public abstract class BasePushProvider<E extends BaseOpenmrsAuditableObject,
 	}
 
 	protected void push(SyncLog syncLog) {
+		if (syncLog.getKey() == null) {
+			throw new DataOperationException("Entity UUID must be set");
+		}
+
 		E entity = dbService.getByUuid(syncLog.getKey(), QueryOptions.FULL_REP);
 
-		if(entity == null) {
+		if (entity == null) {
 			throw new DataOperationException("Entity not found");
 		}
 
@@ -52,15 +56,12 @@ public abstract class BasePushProvider<E extends BaseOpenmrsAuditableObject,
 			case DELETED:
 				call = restService.purge(entity.getUuid());
 				break;
-			case UPLOADED:
-				call = restService.upload(entity);
-				break;
 		}
 
 		// perform rest call
 		RestHelper.getCallValue(call);
 
-		if(syncLog.getUuid() != null) {
+		if (syncLog.getUuid() != null) {
 			syncLogDbService.delete(syncLog.getUuid());
 		} else {
 			syncLogDbService.delete(syncLog);

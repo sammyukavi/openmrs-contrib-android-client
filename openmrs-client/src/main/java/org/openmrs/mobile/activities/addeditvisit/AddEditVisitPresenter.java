@@ -307,6 +307,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	@Override
 	public void updateVisit(List<VisitAttribute> attributes) {
 		Visit updatedVisit = new Visit();
+		updatedVisit.setUuid(visit.getUuid());
 		updatedVisit.setAttributes(attributes);
 		updatedVisit.setVisitType(visit.getVisitType());
 		updatedVisit.setStartDatetime(visit.getStartDatetime());

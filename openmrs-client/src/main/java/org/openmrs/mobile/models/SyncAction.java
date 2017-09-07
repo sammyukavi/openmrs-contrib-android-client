@@ -4,5 +4,4 @@ public enum SyncAction {
 	NEW,
 	UPDATED,
 	DELETED,
-	UPLOADED
 }

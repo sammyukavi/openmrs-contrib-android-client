@@ -19,14 +19,15 @@ public class VisitPhotoDataService
 		extends BaseDataService<VisitPhoto, VisitPhotoDbService, VisitPhotoRestServiceImpl>
 		implements DataService<VisitPhoto> {
 	@Inject
-	public VisitPhotoDataService() { }
+	public VisitPhotoDataService() {
+	}
 
 	public void uploadPhoto(VisitPhoto visitPhoto, @NonNull GetCallback<VisitPhoto> callback) {
 		executeSingleCallback(callback, null,
 				() -> {
 					visitPhoto.setUuid(VisitPhoto.generateUuid());
 					VisitPhoto result = dbService.save(visitPhoto);
-					syncLogDbService.save(createSyncLog(result, SyncAction.UPLOADED));
+					syncLogDbService.save(createSyncLog(result, SyncAction.UPDATED));
 					return result;
 				},
 				() -> restService.upload(visitPhoto));
@@ -46,5 +47,6 @@ public class VisitPhotoDataService
 					}
 				},
 				(e) -> dbService.save(e)
-		);	}
+		);
+	}
 }

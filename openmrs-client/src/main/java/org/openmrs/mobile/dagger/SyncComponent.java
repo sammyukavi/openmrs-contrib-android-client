@@ -1,6 +1,5 @@
 package org.openmrs.mobile.dagger;
 
-import org.greenrobot.eventbus.EventBus;
 import org.openmrs.mobile.data.db.impl.PullSubscriptionDbService;
 import org.openmrs.mobile.data.sync.SyncService;
 import org.openmrs.mobile.data.sync.impl.ConceptClassSubscriptionProvider;
@@ -27,7 +26,7 @@ import javax.inject.Singleton;
 import dagger.Component;
 
 @Singleton
-@Component(modules = { DbModule.class, SyncModule.class })
+@Component(modules = { DbModule.class, SyncModule.class, ContextModule.class })
 public interface SyncComponent {
 	SyncService syncService();
 

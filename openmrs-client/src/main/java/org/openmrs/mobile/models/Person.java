@@ -66,21 +66,18 @@ public class Person extends BaseOpenmrsEntity implements Serializable {
 
 	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "names", isVariablePrivate = true)
 	List<PersonName> loadNames() {
-		names = loadRelatedObject(PersonName.class, names, () -> PersonName_Table.person_uuid.eq(getUuid()));
-		return names;
+		return loadRelatedObject(PersonName.class, names, () -> PersonName_Table.person_uuid.eq(getUuid()));
 	}
 
 	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "addresses", isVariablePrivate = true)
 	List<PersonAddress> loadAddresses() {
-		addresses = loadRelatedObject(PersonAddress.class, addresses, () -> PersonAddress_Table.person_uuid.eq(getUuid()));
-		return addresses;
+		return loadRelatedObject(PersonAddress.class, addresses, () -> PersonAddress_Table.person_uuid.eq(getUuid()));
 	}
 
 	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "attributes", isVariablePrivate = true)
 	List<PersonAttribute> loadAttributes() {
-		attributes = loadRelatedObject(PersonAttribute.class, attributes, () -> PersonAttribute_Table.person_uuid.eq
+		return loadRelatedObject(PersonAttribute.class, attributes, () -> PersonAttribute_Table.person_uuid.eq
 				(getUuid()));
-		return attributes;
 	}
 
 	@Override

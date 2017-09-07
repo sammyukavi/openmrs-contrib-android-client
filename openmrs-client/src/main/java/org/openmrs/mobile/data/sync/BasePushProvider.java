@@ -48,23 +48,31 @@ public abstract class BasePushProvider<E extends BaseOpenmrsAuditableObject,
 		switch (syncLog.getAction()) {
 			case NEW:
 				entity.setUuid(null);
-				call = restService.create(entity);
+				call = create(entity);
 				break;
 			case UPDATED:
-				call = restService.update(entity);
+				call = update(entity);
 				break;
 			case DELETED:
-				call = restService.purge(entity.getUuid());
+				call = purge(entity);
 				break;
 		}
 
 		// perform rest call
 		RestHelper.getCallValue(call);
 
-		if (syncLog.getUuid() != null) {
-			syncLogDbService.delete(syncLog.getUuid());
-		} else {
-			syncLogDbService.delete(syncLog);
-		}
+		syncLogDbService.delete(syncLog);
+	}
+
+	protected Call<E> create(E entity) {
+		return restService.create(entity);
+	}
+
+	protected Call<E> update(E entity) {
+		return restService.update(entity);
+	}
+
+	protected Call<E> purge(E entity) {
+		return restService.purge(entity.getUuid());
 	}
 }

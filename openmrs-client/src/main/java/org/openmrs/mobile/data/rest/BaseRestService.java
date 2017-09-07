@@ -65,11 +65,6 @@ public abstract class BaseRestService<E extends BaseOpenmrsObject, RS> implement
 	 */
 	private Method purgeMethod;
 
-	/**
-	 *  The create method in the restService class
-	 */
-	private Method uploadMethod;
-
 	protected BaseRestService() {
 		loadGenericClasses();
 

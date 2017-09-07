@@ -27,7 +27,7 @@ public class VisitPhotoDataService
 				() -> {
 					visitPhoto.setUuid(VisitPhoto.generateUuid());
 					VisitPhoto result = dbService.save(visitPhoto);
-					syncLogDbService.save(createSyncLog(result, SyncAction.UPDATED));
+					syncLogDbService.save(createSyncLog(result, SyncAction.NEW));
 					return result;
 				},
 				() -> restService.upload(visitPhoto));

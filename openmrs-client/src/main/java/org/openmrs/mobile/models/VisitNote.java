@@ -2,6 +2,7 @@ package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.OneToMany;
 import com.raizlabs.android.dbflow.annotation.Table;
 
 import org.openmrs.mobile.data.db.AppDatabase;
@@ -12,53 +13,80 @@ import java.util.List;
 @Table(database = AppDatabase.class)
 public class VisitNote extends BaseOpenmrsEntity {
 	@Expose
+	@Column
 	private String personId;
 
 	@Expose
+	@Column
 	private String htmlFormId;
 
 	@Expose
+	@Column
 	private String createVisit;
 
 	@Expose
+	@Column
 	private String formModifiedTimestamp;
 
 	@Expose
+	@Column
 	private String encounterModifiedTimestamp;
 
 	@Expose
+	@Column
 	private String visitId;
 
 	@Expose
+	@Column
 	private String returnUrl;
 
 	@Expose
+	@Column
 	private String closeAfterSubmission;
 
 	@Expose
 	private List<EncounterDiagnosis> encounterDiagnoses;
 
 	@Expose
+	@Column
 	private String encounterId;
 
 	@Expose
+	@Column
 	private String w1;
 
 	@Expose
+	@Column
 	private String w3;
 
 	@Expose
+	@Column
 	private String w5;
 
 	@Expose
+	@Column
 	private String w10;
 
 	@Expose
+	@Column
 	private String w12;
 
 	@Column
 	@Expose
 	private String observationUuid;
+
+	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "encounterDiagnoses", isVariablePrivate = true)
+	List<EncounterDiagnosis> loadEncounterDiagnoses() {
+		return loadRelatedObject(EncounterDiagnosis.class, encounterDiagnoses,
+				() -> EncounterDiagnosis_Table.visitNote_uuid.eq(getUuid()));
+	}
+
+	@Override
+	public void processRelationships() {
+		super.processRelationships();
+
+		processRelatedObjects(encounterDiagnoses);
+	}
 
 	public String getPersonId() {
 		return personId;

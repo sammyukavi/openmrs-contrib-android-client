@@ -169,6 +169,7 @@
 	<string name="login">Login</string>
 	<string name="create_account">No account yet? Create one</string>
 	<string name="search_hint">Search patients</string>
+	<string name="sync_hint">Sync selections</string>
 	
 	<string name="nav_find_patient">Find Patient Record</string>
 	<string name="nav_register_patient">Register Patient</string>
@@ -382,13 +383,22 @@
 	<string name="first_map">1st MAP in ICU ≤ 65?</string>
 	<string name="any_prior_sedetion">Had patient received any sedation prior to 1st GCS score at ICU admission?</string>
 	<string name="surgery_during_hospital_stay">Surgery during hospital stay?</string>
-	<string name="not_applicable">N/A</string>
-	<string name="planned">Planned</string>
-	<string name="unplanned">Unplanned</string>
+	<string name="not_applicable">No</string>
+	<string name="planned">Yes - Scheduled in clinic</string>
+	<string name="unplanned">Yes - Not scheduled in clinic</string>
 	<string name="hiv_positive">Positive</string>
 	<string name="hiv_negative">Negative</string>
 	<string name="patient_diabetic">Patient diabetic?</string>
 	<string name="ward_stay_admission">Ward stay during admission</string>
 	<string name="merge_clinical_note_template">%1$s [created by %2$s on %3$s]</string>
 	<string name="merge_patient_summary">Merge Patient Summary</string>
+	<string name="no_patient_data">You are offline and cannot view patient information that is not synced.</string>
+	<string name="error_gcs_score">Invalid GCS value (should be between %1$d and %2$d)</string>
+	<!-- Sync Selection texts -->
+	<string name="select_patient_lists_to_sync">Select Patient Lists to Sync</string>
+	<string name="title_select_patient_lists_to_sync">Patient List Sync Selections</string>
+	<string name="skip_patient_list_sync_selections">Skip</string>
+	<string name="save_patient_list_sync_selections">Save Selections</string>
+
+>>>>>>> cf61a62e4875444c40e163f48708e3f19fb57e29
 </resources>

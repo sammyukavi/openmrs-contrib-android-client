@@ -10,10 +10,13 @@ import com.google.common.base.Supplier;
 
 import org.openmrs.mobile.data.cache.CacheService;
 import org.openmrs.mobile.data.db.BaseDbService;
+import org.openmrs.mobile.data.db.impl.SyncLogDbService;
 import org.openmrs.mobile.data.rest.BaseRestService;
 import org.openmrs.mobile.models.BaseOpenmrsObject;
 import org.openmrs.mobile.models.Resource;
 import org.openmrs.mobile.models.Results;
+import org.openmrs.mobile.models.SyncAction;
+import org.openmrs.mobile.models.SyncLog;
 import org.openmrs.mobile.utilities.Consumer;
 import org.openmrs.mobile.utilities.Function;
 import org.openmrs.mobile.utilities.NetworkUtils;
@@ -21,6 +24,7 @@ import org.openmrs.mobile.utilities.StringUtils;
 
 import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -59,6 +63,9 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 	@Inject
 	protected NetworkUtils networkUtils;
 
+	@Inject
+	protected SyncLogDbService syncLogDbService;
+
 	private Class<E> entityClass;
 
 	@Override
@@ -87,7 +94,11 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 		checkNotNull(callback);
 
 		executeSingleCallback(callback, null,
-				() -> dbService.save(entity),
+				() -> {
+					E result = dbService.save(entity);
+					syncLogDbService.save(createSyncLog(result, SyncAction.NEW));
+					return result;
+				},
 				() -> restService.create(entity));
 	}
 
@@ -97,7 +108,11 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 		checkNotNull(callback);
 
 		executeSingleCallback(callback, null,
-				() -> dbService.save(entity),
+				() -> {
+					E result = dbService.save(entity);
+					syncLogDbService.save(createSyncLog(result, SyncAction.UPDATED));
+					return result;
+				},
 				() -> restService.update(entity));
 	}
 
@@ -162,7 +177,7 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 
 	/**
 	 * Executes a data operation which returns a single result. The result returned from the REST request will be processed
-	 * by the specified dbOperation.
+	 * by the specified dbOperation.-
 	 * @param callback    The operation callback
 	 * @param dbQuery     The database query operation to perform
 	 * @param restQuery   The REST query operation to perform
@@ -176,8 +191,7 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 		checkNotNull(dbOperation);
 
 		performCallback(callback, options, dbQuery, restQuery,
-				(E result) -> result,
-				dbOperation);
+				(E result) -> result, dbOperation);
 	}
 
 	/**
@@ -281,7 +295,8 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 				// Try to get the entity from the db. If nothing is found just return null without any error
 				T result = dbSupplier.get();
 
-				if (result == null && networkUtils.isOnline() &&
+				if ((result == null || (result instanceof List<?> && ((List<?>) result).size() == 0)) &&
+						networkUtils.isOnline() &&
 						QueryOptions.getRequestStrategy(options) == RequestStrategy.LOCAL_THEN_REMOTE) {
 					// This call will spin up another thread
 					performOnlineCallback(callback, options, dbSupplier, restSupplier, responseConverter, dbOperation);
@@ -320,6 +335,13 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 							T result = responseConverter.apply(response.body());
 							if (result instanceof Resource) {
 								((Resource)result).processRelationships();
+							}
+							if (result instanceof List<?> && ((List<?>) result).size() > 0
+									&& ((List<?>) result).get(0) instanceof Resource) {
+								List<Resource> castResults = (List<Resource>) result;
+								for (Resource castResult : castResults) {
+									castResult.processRelationships();
+								}
 							}
 
 							dbOperation.accept(result);
@@ -398,6 +420,18 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 		});
 	}
 
+	private SyncLog createSyncLog(@NonNull E entity, @NonNull SyncAction action) {
+		checkNotNull(entity);
+		checkNotNull(action);
+
+		SyncLog syncLog = new SyncLog();
+		syncLog.setAction(action);
+		syncLog.setKey(entity.getUuid());
+		syncLog.setType(entity.getClass().getSimpleName());
+
+		return syncLog;
+	}
+
 	protected <T> boolean getCachedResult(GetCallback<T> callback, QueryOptions options) {
 		String cacheKey = QueryOptions.getCacheKey(options);
 		if (StringUtils.notEmpty(cacheKey)) {
@@ -434,4 +468,3 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 		return entityClass;
 	}
 }
-

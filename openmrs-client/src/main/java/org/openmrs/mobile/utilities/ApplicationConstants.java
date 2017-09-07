@@ -32,8 +32,9 @@ public abstract class ApplicationConstants {
 	public static final String CIVIL_STATUS = "Civil Status";
 	public static final String KIN_RELATIONSHIP = "Kin Relationship";
 
-	public abstract static class OpenMRSSharedPreferenceNames {
+	public abstract static class Preferences {
 		public static final String SHARED_PREFERENCES_NAME = "shared_preferences";
+		public static final String LAST_TRIM_DATE = "last_trim_date";
 	}
 
 	public abstract static class API {
@@ -72,6 +73,7 @@ public abstract class ApplicationConstants {
 		public static final String VISIT_NOTE_TAG = "visitNoteTag";
 		public static final String PENDING_VISIT_NOTE_CHANGES_TAG = "pendingVisitNoteChangesTag";
 		public static final String MERGE_PATIENT_SUMMARY_TAG = "mergePatientSummaryTag";
+		public static final String SELECT_PATIENT_LISTS_TO_SYNC_DIALOG_TAG = "selectPatientListsToSyncDialogTag";
 	}
 
 	public abstract static class RegisterPatientRequirements {
@@ -287,6 +289,9 @@ public abstract class ApplicationConstants {
 
 		public static int VITALS_BLOOD_OXYGEN_MIN = 0;
 		public static int VITALS_BLOOD_OXYGEN_MAX = 100;
+
+		public static int AUDIT_GCS_SCORE_MIN = 3;
+		public static int AUDIT_GCS_SCORE_MAX = 15;
 	}
 
 	public static class CacheKays {
@@ -313,7 +318,11 @@ public abstract class ApplicationConstants {
 		public static final String ICD_10_WHO = "ICD-10-WHO";
 	}
 
-	public static class EventMessages {
+	public static class Request {
+		public static int PATIENT_VISIT_COUNT = 5;
+  }
+
+  public static class EventMessages {
 		public static class Sync {
 			public static class Push {
 				public static final String TOTAL_ENTITIES_TO_PUSH = "totalEntitiesToPush";

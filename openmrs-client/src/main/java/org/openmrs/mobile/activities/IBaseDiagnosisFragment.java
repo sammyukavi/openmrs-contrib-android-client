@@ -49,5 +49,10 @@ public interface IBaseDiagnosisFragment {
 	void setVisit(Visit visit);
 	Visit getVisit();
 
+	void setObservationUuid(String uuid);
+	String getObservationUuid();
+
 	IBaseDiagnosisView getBaseDiagnosisView();
+
+	void createPatientSummaryMergeDialog(String mergePatientSummaryText);
 }

@@ -20,7 +20,6 @@ public class VisitNoteDataService extends BaseDataService<VisitNote, VisitNoteDb
 	public void save(VisitNote visitNote, @NonNull GetCallback<VisitNote> callback) {
 		executeSingleCallback(callback, null,
 				() -> {
-					visitNote.setUuid(VisitNote.generateUuid());
 					VisitNote result = dbService.save(visitNote);
 					syncLogDbService.save(createSyncLog(result, SyncAction.UPDATED));
 					return result;

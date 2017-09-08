@@ -25,7 +25,6 @@ public class VisitPhotoDataService
 	public void uploadPhoto(VisitPhoto visitPhoto, @NonNull GetCallback<VisitPhoto> callback) {
 		executeSingleCallback(callback, null,
 				() -> {
-					visitPhoto.setUuid(VisitPhoto.generateUuid());
 					VisitPhoto result = dbService.save(visitPhoto);
 					syncLogDbService.save(createSyncLog(result, SyncAction.NEW));
 					return result;

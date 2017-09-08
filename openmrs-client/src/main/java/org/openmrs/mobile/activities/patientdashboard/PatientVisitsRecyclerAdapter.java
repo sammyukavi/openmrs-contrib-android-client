@@ -229,7 +229,7 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 			baseDiagnosisFragment.setClinicalNoteView(
 					(TextInputEditText)view.findViewById(R.id.editClinicalNote));
 			baseDiagnosisFragment.setLoadingProgressBar((RelativeLayout)view.findViewById(R.id.loadingDiagnoses));
-			baseDiagnosisFragment.setDiagnosesContent((LinearLayout) view.findViewById(R.id.diagnosesContent));
+			baseDiagnosisFragment.setDiagnosesContent((LinearLayout)view.findViewById(R.id.diagnosesContent));
 
 			primaryDiagnosisLayoutManager = new LinearLayoutManager(context);
 			secondaryDiagnosisLayoutManager = new LinearLayoutManager(context);
@@ -342,7 +342,7 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 				secondaryDiagnosisString += (StringUtils.getConceptName(observationDisplay));
 				secondaryDiagnosis.setText(secondaryDiagnosisString);
 			} else if (observationDisplay.contains(CLINICAL_NOTE)) {
-				clinicalNoteString = StringUtils.splitStrings(observationDisplay, ":");
+				clinicalNoteString = StringUtils.splitStrings(observationDisplay, CLINICAL_NOTE);
 				if (isActiveVisit) {
 					baseDiagnosisFragment.getClinicalNoteView().setText(clinicalNoteString.get(1).toString());
 					view.findViewById(R.id.clinicalNoteTitle).setVisibility(View.VISIBLE);

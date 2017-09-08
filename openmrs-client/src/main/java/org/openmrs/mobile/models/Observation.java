@@ -322,5 +322,4 @@ public class Observation extends BaseOpenmrsEntity implements Serializable {
 	public void setDiagnosisNote(String diagnosisNote) {
 		this.diagnosisNote = diagnosisNote;
 	}
-
 }

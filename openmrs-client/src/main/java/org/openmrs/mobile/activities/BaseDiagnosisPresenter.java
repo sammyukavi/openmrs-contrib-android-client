@@ -11,6 +11,7 @@ import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.impl.ConceptDataService;
 import org.openmrs.mobile.data.impl.ObsDataService;
 import org.openmrs.mobile.data.impl.VisitNoteDataService;
+import org.openmrs.mobile.data.rest.RestConstants;
 import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Observation;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BaseDiagnosisPresenter {
+	private static final String TAG = BaseDiagnosisPresenter.class.getSimpleName();
 
 	private ConceptDataService conceptDataService;
 	private ObsDataService obsDataService;
@@ -39,8 +41,9 @@ public class BaseDiagnosisPresenter {
 
 	public void findConcept(String searchQuery, IBaseDiagnosisFragment base) {
 		PagingInfo pagingInfo = new PagingInfo(page, limit);
-		conceptDataService.findConcept(searchQuery, new QueryOptions.Builder().build(), pagingInfo, new DataService
-				.GetCallback<List<Concept>>() {
+		conceptDataService.findConcept(searchQuery,
+				new QueryOptions.Builder().customRepresentation(RestConstants.Representations.DIAGNOSIS_CONCEPT).build(),
+				pagingInfo, new DataService.GetCallback<List<Concept>>() {
 
 			@Override
 			public void onCompleted(List<Concept> entities) {
@@ -57,7 +60,7 @@ public class BaseDiagnosisPresenter {
 			@Override
 			public void onError(Throwable t) {
 				base.getLoadingProgressBar().setVisibility(View.GONE);
-				Log.e("error", t.getLocalizedMessage());
+				Log.e(TAG, "Error finding concept: " + t.getLocalizedMessage(), t);
 			}
 		});
 	}
@@ -69,9 +72,37 @@ public class BaseDiagnosisPresenter {
 		}
 	}
 
+	public void saveVisitNote(VisitNote visitNote, IBaseDiagnosisFragment base) {
+		visitNoteDataService.save(visitNote, new DataService.GetCallback<VisitNote>() {
+			@Override
+			public void onCompleted(VisitNote entity) {
+				base.setEncounterUuid(entity.getEncounterId());
+
+				if (entity.getObservationUuid() != null) {
+					base.setObservationUuid(entity.getObservationUuid());
+				}
+
+				if (entity.getW12() != null) {
+					base.getClinicalNoteView().setText(entity.getW12());
+					base.createPatientSummaryMergeDialog(entity.getW12());
+				}
+			}
+
+			@Override
+			public void onError(Throwable t) {
+				Log.e(TAG, "Error saving visit note: " + t.getLocalizedMessage(), t);
+				base.getBaseDiagnosisView().showTabSpinner(false);
+			}
+		});
+	}
+
 	private void getObservation(Observation obs, Encounter encounter, IBaseDiagnosisFragment base) {
+		QueryOptions options = new QueryOptions.Builder()
+				.customRepresentation(RestConstants.Representations.OBSERVATION)
+				.build();
+
 		obsDataService
-				.getByUuid(obs.getUuid(), QueryOptions.FULL_REP, new DataService.GetCallback<Observation>() {
+				.getByUuid(obs.getUuid(), options, new DataService.GetCallback<Observation>() {
 					@Override
 					public void onCompleted(Observation entity) {
 						obsUuids.add(entity.getUuid());
@@ -81,21 +112,9 @@ public class BaseDiagnosisPresenter {
 
 					@Override
 					public void onError(Throwable t) {
+						Log.e(TAG, "Error getting Observation: " + t.getLocalizedMessage(), t);
 						base.getBaseDiagnosisView().showTabSpinner(false);
 					}
 				});
-	}
-
-	public void saveVisitNote(VisitNote visitNote, IBaseDiagnosisFragment base) {
-		visitNoteDataService.save(visitNote, new DataService.GetCallback<VisitNote>() {
-			@Override
-			public void onCompleted(VisitNote visitNote) {
-				base.setEncounterUuid(visitNote.getEncounterId());
-			}
-
-			@Override
-			public void onError(Throwable t) {
-			}
-		});
 	}
 }

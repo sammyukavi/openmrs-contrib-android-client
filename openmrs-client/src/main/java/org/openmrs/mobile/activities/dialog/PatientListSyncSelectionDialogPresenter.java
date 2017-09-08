@@ -94,7 +94,7 @@ public class PatientListSyncSelectionDialogPresenter implements PatientListSyncS
 
 		for (PatientList patientList : removedLists) {
 			pullSubscriptionDbService.delete(patientListUuidSubscriptionMap.get(patientList.getUuid()));
-			syncManager.trimUnsyncedPatientListData(patientList.getUuid());
+			syncManager.deleteUnsyncedPatientListData(patientList.getUuid());
 		}
 
 		syncManager.requestSync();

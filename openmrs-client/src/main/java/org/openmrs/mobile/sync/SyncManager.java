@@ -2,14 +2,17 @@ package org.openmrs.mobile.sync;
 
 import javax.inject.Inject;
 
+import java.util.List;
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import org.openmrs.mobile.application.OpenMRS;
+import org.openmrs.mobile.data.db.impl.PatientListContextDbService;
 import org.openmrs.mobile.data.sync.SyncService;
-import org.openmrs.mobile.data.sync.impl.PatientTrimProvider;
+import org.openmrs.mobile.models.PatientListContext;
 import org.openmrs.mobile.receivers.SyncReceiver;
 import org.openmrs.mobile.utilities.TimeConstants;
 
@@ -23,17 +26,17 @@ public class SyncManager {
 	private SyncService syncService;
 	private static OpenMRS openMRS;
 	private SyncReceiver syncReceiver;
-	private PatientTrimProvider patientTrimProvider;
+	private PatientListContextDbService patientListContextDbService;
 
 	private boolean canSync = false;
 
 	@Inject
 	public SyncManager(OpenMRS openMRS, SyncReceiver syncReceiver, SyncService syncService,
-			PatientTrimProvider patientTrimProvider) {
+			PatientListContextDbService patientListContextDbService) {
 		this.openMRS = openMRS;
 		this.syncReceiver = syncReceiver;
 		this.syncService = syncService;
-		this.patientTrimProvider = patientTrimProvider;
+		this.patientListContextDbService = patientListContextDbService;
 	}
 
 	private void registerReceivers() {
@@ -81,7 +84,11 @@ public class SyncManager {
 		requestSync();
 	}
 
-	public void trimUnsyncedPatientListData(String patientListUuuid) {
-		patientTrimProvider.trimFromPatientList(patientListUuuid);
+	public void deleteUnsyncedPatientListData(String patientListUuid) {
+		List<PatientListContext> patientListContextsToDelete = patientListContextDbService.getListPatients(patientListUuid,
+				null, null);
+		for (PatientListContext patientListContextToDelete : patientListContextsToDelete) {
+			patientListContextDbService.delete(patientListContextToDelete);
+		}
 	}
 }

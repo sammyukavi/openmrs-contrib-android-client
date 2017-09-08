@@ -146,11 +146,6 @@ public class VisitPhotoFragment extends VisitFragment implements VisitContract.V
 	}
 
 	@Override
-	public void downloadImage(String obsUuid, DataService.GetCallback<byte[]> callback) {
-		((VisitPhotoPresenter)mPresenter).downloadImage(obsUuid, callback);
-	}
-
-	@Override
 	public void refresh() {
 		fileCaption.setText(ApplicationConstants.EMPTY_STRING);
 		FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();

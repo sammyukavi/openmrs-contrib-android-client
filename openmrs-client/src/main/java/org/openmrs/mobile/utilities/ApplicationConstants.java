@@ -72,6 +72,7 @@ public abstract class ApplicationConstants {
 		public static final String ADD_VISIT_TASK_DIALOG_TAG = "addVisitTaskDialogTag";
 		public static final String VISIT_NOTE_TAG = "visitNoteTag";
 		public static final String PENDING_VISIT_NOTE_CHANGES_TAG = "pendingVisitNoteChangesTag";
+		public static final String MERGE_PATIENT_SUMMARY_TAG = "mergePatientSummaryTag";
 		public static final String SELECT_PATIENT_LISTS_TO_SYNC_DIALOG_TAG = "selectPatientListsToSyncDialogTag";
 	}
 
@@ -114,7 +115,7 @@ public abstract class ApplicationConstants {
 	}
 
 	public abstract static class ObservationLocators {
-		public static final String CLINICAL_NOTE = "Text of encounter note";
+		public static final String CLINICAL_NOTE = "Text of encounter note:";
 		public static final String DIAGNOSES = "Visit Diagnoses";
 		public static final String PRIMARY_DIAGNOSIS = "Primary";
 		public static final String SECONDARY_DIAGNOSIS = "Secondary";
@@ -346,6 +347,10 @@ public abstract class ApplicationConstants {
 				public static final String RECORD = "record";
 				public static final String TRIM = "trim";
 			}
-    }
-  }
+		}
+	}
+
+	public static class PatientSummary {
+		public static final String SEARCH_PATIENT_SUMMARY_CONFLICT = "[Author";
+	}
 }

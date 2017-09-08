@@ -49,8 +49,9 @@ public class PatientList extends BaseOpenmrsMetadata implements Serializable {
 
 	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "patientListConditions", isVariablePrivate = true)
 	List<PatientListCondition> loadConditions() {
-		patientListConditions = loadRelatedObject(PatientListCondition.class, patientListConditions, () ->
-				PatientListCondition_Table.patientList_uuid.eq(super.getUuid()));
+		patientListConditions = loadRelatedObject(PatientListCondition.class, patientListConditions,
+				() -> PatientListCondition_Table.patientList_uuid.eq(super.getUuid()));
+
 		return patientListConditions;
 	}
 
@@ -58,6 +59,7 @@ public class PatientList extends BaseOpenmrsMetadata implements Serializable {
 	List<PatientListOrder> loadOrdering() {
 		patientListOrders = loadRelatedObject(PatientListOrder.class, patientListOrders,
 				() -> PatientListOrder_Table.patientList_uuid.eq(super.getUuid()));
+
 		return patientListOrders;
 	}
 

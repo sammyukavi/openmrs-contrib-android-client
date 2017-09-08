@@ -72,7 +72,6 @@ public class AddEditVisitPresenterTest extends ACUnitTestBase {
 
         patient = new Patient();
         patient.setUuid(patientUuid);
-        patient.setId(1L);
         Person person = new Person();
         person.setUuid("654321");
         person.setGender("Female");

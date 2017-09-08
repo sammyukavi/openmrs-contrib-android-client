@@ -19,6 +19,7 @@ public class ConceptSet extends BaseOpenmrsObject {
 	List<ConceptSetMember> loadMemberConcepts() {
 		memberConcepts = loadRelatedObject(ConceptSetMember.class, memberConcepts,
 				() -> ConceptAnswer_Table.concept_uuid.eq(getUuid()));
+
 		return memberConcepts;
 	}
 

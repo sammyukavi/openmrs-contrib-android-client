@@ -40,6 +40,7 @@ public class Page extends Resource implements Serializable {
 	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "sections", isVariablePrivate = true)
 	List<Section> loadSections() {
 		sections = loadRelatedObject(Section.class, sections, () -> Section_Table.page_uuid.eq(getUuid()));
+
 		return sections;
 	}
 

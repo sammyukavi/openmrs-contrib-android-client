@@ -27,7 +27,7 @@ import javax.inject.Singleton;
 import dagger.Component;
 
 @Singleton
-@Component(modules = { DbModule.class, SyncModule.class })
+@Component(modules = { DbModule.class, SyncModule.class, ContextModule.class })
 public interface SyncComponent {
 	SyncService syncService();
 

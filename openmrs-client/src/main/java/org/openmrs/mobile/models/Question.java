@@ -53,6 +53,7 @@ public class Question extends Resource implements Serializable {
 	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "questions", isVariablePrivate = true)
 	List<Question> loadQuestions() {
 		questions = loadRelatedObject(Question.class, questions, () -> Question_Table.parentQuestion_uuid.eq(getUuid()));
+
 		return questions;
 	}
 

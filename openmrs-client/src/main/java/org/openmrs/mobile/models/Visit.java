@@ -69,15 +69,15 @@ public class Visit extends BaseOpenmrsEntity implements Serializable {
 
 	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "encounters", isVariablePrivate = true)
 	List<Encounter> loadEncounters() {
-		encounters = loadRelatedObject(Encounter.class, encounters,
-				() -> Encounter_Table.visit_uuid.eq(getUuid()));
+		encounters = loadRelatedObject(Encounter.class, encounters, () -> Encounter_Table.visit_uuid.eq(getUuid()));
+
 		return encounters;
 	}
 
 	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "attributes", isVariablePrivate = true)
 	List<VisitAttribute> loadAttributes() {
-		attributes = loadRelatedObject(VisitAttribute.class, attributes,
-				() -> VisitAttribute_Table.visit_uuid.eq(getUuid()));
+		attributes =loadRelatedObject(VisitAttribute.class, attributes, () -> VisitAttribute_Table.visit_uuid.eq(getUuid()));
+
 		return attributes;
 	}
 

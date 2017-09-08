@@ -57,12 +57,14 @@ public class Concept extends BaseOpenmrsAuditableObject {
 	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "answers", isVariablePrivate = true)
 	List<ConceptAnswer> loadAnswers() {
 		answers = loadRelatedObject(ConceptAnswer.class, answers, () -> ConceptAnswer_Table.concept_uuid.eq(getUuid()));
+
 		return answers;
 	}
 
 	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "mappings", isVariablePrivate = true)
 	List<ConceptMapping> loadMappings() {
 		mappings = loadRelatedObject(ConceptMapping.class, mappings, () -> ConceptMapping_Table.concept_uuid.eq(getUuid()));
+
 		return mappings;
 	}
 

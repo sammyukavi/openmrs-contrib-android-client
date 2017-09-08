@@ -75,7 +75,6 @@ public class ResourceSerializerTest {
     public void shouldNotSerializeFieldWithoutExposeAnnotation(){
         when(context.serialize(any())).thenReturn(getJsonObject());
         Patient patient = generatePatient(false);
-        patient.setId(10000L);
         JsonElement serialize = new ResourceSerializer().serialize(patient, Patient.class, context);
         assertThat(serialize.toString(), not(containsString("\"id\":")));
     }
@@ -100,6 +99,7 @@ public class ResourceSerializerTest {
 
     private Person generatePersonWithoutUuid() {
         Person person = new Person();
+        person.setUuid(null);
         person.setBirthdate(DateUtils.convertTime(System.currentTimeMillis()));
         PersonName  personName = new PersonName();
         personName.setFamilyName("family");

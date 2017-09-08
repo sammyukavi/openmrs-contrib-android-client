@@ -67,12 +67,14 @@ public class Person extends BaseOpenmrsEntity implements Serializable {
 	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "names", isVariablePrivate = true)
 	List<PersonName> loadNames() {
 		names = loadRelatedObject(PersonName.class, names, () -> PersonName_Table.person_uuid.eq(getUuid()));
+
 		return names;
 	}
 
 	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "addresses", isVariablePrivate = true)
 	List<PersonAddress> loadAddresses() {
 		addresses = loadRelatedObject(PersonAddress.class, addresses, () -> PersonAddress_Table.person_uuid.eq(getUuid()));
+
 		return addresses;
 	}
 
@@ -80,6 +82,7 @@ public class Person extends BaseOpenmrsEntity implements Serializable {
 	List<PersonAttribute> loadAttributes() {
 		attributes = loadRelatedObject(PersonAttribute.class, attributes,
 				() -> PersonAttribute_Table.person_uuid.eq(getUuid()));
+
 		return attributes;
 	}
 

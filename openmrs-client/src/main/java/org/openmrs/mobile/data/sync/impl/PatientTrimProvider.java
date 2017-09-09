@@ -70,58 +70,6 @@ public class PatientTrimProvider {
 		trimPatients(patientsToTrim);
 	}
 
-	public void trimFromPatientList(String patientListUuid) {
-		// Get uuid's for all patients that are not subscribed
-		List<String> patientsToTrim = calculatePatientListPatientsToTrim(patientListUuid);
-		if (patientsToTrim == null || patientsToTrim.isEmpty()) {
-			// No patients to trim
-			return;
-		}
-
-		// Trim patient information
-		trimPatients(patientsToTrim);
-
-		ModelQueriable<PatientListContext> query = SQLite.delete(PatientListContext.class)
-				.where(PatientListContext_Table.patientList_uuid.eq(patientListUuid));
-		repository.deleteAll(query);
-	}
-
-	private List<String> calculatePatientListPatientsToTrim(String patientListUuid) {
-		// Get patients associated with the list
-		ModelQueriable<Patient> query = SQLite.select(Patient_Table.uuid.withTable())
-				.from(Patient.class)
-				.leftOuterJoin(PatientListContext.class)
-				.on(Patient_Table.uuid.withTable().eq(PatientListContext_Table.patient_uuid.withTable()))
-				.where(PatientListContext_Table.patientList_uuid.eq(patientListUuid));
-		List<String> patientsAssociatedWithList = EntityUuid.getUuids(repository.queryCustom(EntityUuid.class, query));
-
-		if (patientsAssociatedWithList == null || patientsAssociatedWithList.isEmpty()) {
-			return new ArrayList<String>();
-		}
-
-		// Get patients associated with other lists
-		query = SQLite.select(Patient_Table.uuid.withTable())
-				.from(Patient.class)
-				.leftOuterJoin(PatientListContext.class)
-				.on(Patient_Table.uuid.withTable().eq(PatientListContext_Table.patient_uuid.withTable()))
-				.where(PatientListContext_Table.patientList_uuid.notEq(patientListUuid));
-		List<String> patientsToRemain = EntityUuid.getUuids(repository.queryCustom(EntityUuid.class, query));
-
-		List<String> patientsToTrim = new ArrayList<>();
-		if (patientsToRemain == null || patientsToRemain.isEmpty()) {
-			patientsToTrim = patientsAssociatedWithList;
-		} else {
-			// If the patient to trim is not associated with another list, keep it
-			for (String patientUuid : patientsAssociatedWithList) {
-				if (!patientsToRemain.contains(patientUuid)) {
-					patientsToTrim.add(patientUuid);
-				}
-			}
-		}
-
-		return patientsToTrim;
-	}
-
 	private List<String> calculatePatientsToTrim() {
 		// Currently, the all subscribed patients are found in the PatientListContext table so any patients not found in
 		// that table can be safely trimmed

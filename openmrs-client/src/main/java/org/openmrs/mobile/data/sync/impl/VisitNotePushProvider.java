@@ -1,5 +1,6 @@
 package org.openmrs.mobile.data.sync.impl;
 
+import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.db.impl.SyncLogDbService;
 import org.openmrs.mobile.data.db.impl.VisitNoteDbService;
 import org.openmrs.mobile.data.rest.impl.VisitNoteRestServiceImpl;
@@ -12,7 +13,7 @@ public class VisitNotePushProvider extends BasePushProvider<VisitNote, VisitNote
 
 	@Inject
 	public VisitNotePushProvider(SyncLogDbService syncLogDbService,
-			VisitNoteDbService dbService, VisitNoteRestServiceImpl restService) {
-		super(syncLogDbService, dbService, restService);
+			VisitNoteDbService dbService, VisitNoteRestServiceImpl restService, OpenMRS openMRS) {
+		super(syncLogDbService, dbService, restService, openMRS);
 	}
 }

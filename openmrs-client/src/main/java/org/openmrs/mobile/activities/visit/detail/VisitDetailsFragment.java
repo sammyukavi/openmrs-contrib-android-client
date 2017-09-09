@@ -44,6 +44,7 @@ import org.openmrs.mobile.activities.capturevitals.CaptureVitalsActivity;
 import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
 import org.openmrs.mobile.activities.visit.VisitActivity;
 import org.openmrs.mobile.activities.visit.VisitContract;
+import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.Encounter;
@@ -166,6 +167,7 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 	public void setVisit(Visit visit) {
 		this.visit = visit;
 		if (visit != null) {
+			OpenMRS.getInstance().setVisitUuid(visit.getUuid());
 			setVisitDates(visit);
 			setVisitType(visit);
 			setVitals(visit);

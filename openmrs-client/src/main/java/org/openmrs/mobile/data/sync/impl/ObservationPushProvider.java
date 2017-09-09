@@ -1,5 +1,6 @@
 package org.openmrs.mobile.data.sync.impl;
 
+import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.db.impl.ObsDbService;
 import org.openmrs.mobile.data.db.impl.SyncLogDbService;
 import org.openmrs.mobile.data.rest.impl.ObsRestServiceImpl;
@@ -12,7 +13,7 @@ public class ObservationPushProvider extends BasePushProvider<Observation, ObsDb
 
 	@Inject
 	public ObservationPushProvider(SyncLogDbService syncLogDbService,
-			ObsDbService dbService, ObsRestServiceImpl restService) {
-		super(syncLogDbService, dbService, restService);
+			ObsDbService dbService, ObsRestServiceImpl restService, OpenMRS openMRS) {
+		super(syncLogDbService, dbService, restService, openMRS);
 	}
 }

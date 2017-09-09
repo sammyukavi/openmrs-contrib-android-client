@@ -195,7 +195,7 @@ public class PatientDashboardFragment extends BaseDiagnosisFragment<PatientDashb
 	@Override
 	public void patientContacts(Patient patient) {
 		this.patient = patient;
-		setPatientUuid(patient);
+		instance.setPatientUuid(patient.getPerson().getUuid());
 	}
 
 	@Override
@@ -205,7 +205,7 @@ public class PatientDashboardFragment extends BaseDiagnosisFragment<PatientDashb
 			if (visit.getStopDatetime() == null) {
 				//hasActiveVisit = true;
 				startVisitButton.setVisibility(View.GONE);
-				setVisitUuid(visit);
+				instance.setVisitUuid(visit.getUuid());
 				break;
 			}
 		}
@@ -223,18 +223,6 @@ public class PatientDashboardFragment extends BaseDiagnosisFragment<PatientDashb
 	@Override
 	public Patient getPatient() {
 		return patient;
-	}
-
-	public void setPatientUuid(Patient patient) {
-		SharedPreferences.Editor editor = instance.getPreferences().edit();
-		editor.putString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patient.getPerson().getUuid());
-		editor.commit();
-	}
-
-	public void setVisitUuid(Visit visit) {
-		SharedPreferences.Editor editor = instance.getPreferences().edit();
-		editor.putString(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visit.getUuid());
-		editor.commit();
 	}
 
 	@Override

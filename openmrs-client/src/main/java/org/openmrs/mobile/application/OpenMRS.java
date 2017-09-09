@@ -245,6 +245,12 @@ public class OpenMRS extends Application {
 				.EMPTY_STRING);
 	}
 
+	public void setPatientUuid(String patientUuid) {
+		SharedPreferences.Editor editor = instance.getPreferences().edit();
+		editor.putString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, patientUuid);
+		editor.commit();
+	}
+
 	public String getPatientUuid() {
 		SharedPreferences sharedPreferences = instance.getPreferences();
 		return sharedPreferences.getString(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, ApplicationConstants
@@ -255,6 +261,12 @@ public class OpenMRS extends Application {
 		SharedPreferences sharedPreferences = instance.getPreferences();
 		return sharedPreferences.getString(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, ApplicationConstants
 				.EMPTY_STRING);
+	}
+
+	public void setVisitUuid(String visitUuid) {
+		SharedPreferences.Editor editor = instance.getPreferences().edit();
+		editor.putString(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE, visitUuid);
+		editor.commit();
 	}
 
 	public String getVisitTypeUUID() {

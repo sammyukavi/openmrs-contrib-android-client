@@ -14,15 +14,12 @@
 
 package org.openmrs.mobile.activities.visit;
 
-import android.graphics.Bitmap;
 import android.widget.TextView;
 
 import org.openmrs.mobile.activities.IBaseDiagnosisView;
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
-import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.models.Concept;
-import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitAttributeType;
 import org.openmrs.mobile.models.VisitPhoto;
@@ -83,8 +80,6 @@ public interface VisitContract {
 	interface VisitPhotoView extends ViewVisitDetailsMain {
 		void updateVisitImageMetadata(List<VisitPhoto> visitPhotos);
 
-		void downloadImage(String obsUuid, DataService.GetCallback<byte[]> callback);
-
 		void deleteImage(VisitPhoto visitPhoto);
 
 		void refresh();
@@ -118,8 +113,6 @@ public interface VisitContract {
 	}
 
 	interface VisitPhotoPresenter extends VisitDetailsMainPresenter {
-		void downloadImage(String obsUuid, DataService.GetCallback<byte[]> callback);
-
 		boolean isLoading();
 
 		void setLoading(boolean loading);

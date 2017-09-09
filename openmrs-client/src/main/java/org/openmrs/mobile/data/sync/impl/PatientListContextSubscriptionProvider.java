@@ -72,7 +72,6 @@ public class PatientListContextSubscriptionProvider extends BaseSubscriptionProv
 		if (patients != null && !patients.isEmpty()) {
 			for (PatientListContext patient : patients) {
 				RecordInfo record = RecordInfo.fromEntity(patient.getPatient());
-
 				records.add(record);
 			}
 		}

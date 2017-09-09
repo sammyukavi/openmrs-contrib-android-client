@@ -71,10 +71,16 @@ public class VisitNote extends BaseOpenmrsEntity {
 	@Column
 	private String w12;
 
+	@Column
+	@Expose
+	private String observationUuid;
+
 	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "encounterDiagnoses", isVariablePrivate = true)
 	List<EncounterDiagnosis> loadEncounterDiagnoses() {
-		return loadRelatedObject(EncounterDiagnosis.class, encounterDiagnoses,
+		encounterDiagnoses = loadRelatedObject(EncounterDiagnosis.class, encounterDiagnoses,
 				() -> EncounterDiagnosis_Table.visitNote_uuid.eq(getUuid()));
+
+		return encounterDiagnoses;
 	}
 
 	@Override
@@ -210,5 +216,13 @@ public class VisitNote extends BaseOpenmrsEntity {
 		}
 
 		encounterDiagnoses.add(encounterDiagnosis);
+	}
+
+	public String getObservationUuid() {
+		return observationUuid;
+	}
+
+	public void setObservationUuid(String observationUuid) {
+		this.observationUuid = observationUuid;
 	}
 }

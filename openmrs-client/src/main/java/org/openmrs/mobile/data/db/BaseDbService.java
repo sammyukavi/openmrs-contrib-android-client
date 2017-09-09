@@ -24,9 +24,11 @@ public abstract class BaseDbService<E extends BaseOpenmrsObject> implements DbSe
 	private Class<E> entityClass;
 
 	protected Repository repository;
+	protected ModelAdapter<E> entityTable;
 
 	public BaseDbService(Repository repository) {
 		this.repository = repository;
+		this.entityTable = getEntityTable();
 	}
 
 	protected abstract ModelAdapter<E> getEntityTable();
@@ -51,12 +53,11 @@ public abstract class BaseDbService<E extends BaseOpenmrsObject> implements DbSe
 
 	@Override
 	public long getCount(QueryOptions options) {
-		ModelAdapter<E> table = getEntityTable();
-		if (table == null) {
+		if (entityTable == null) {
 			return 0;
 		}
 
-		return repository.count(table);
+		return repository.count(entityTable);
 	}
 
 	@Override
@@ -67,12 +68,11 @@ public abstract class BaseDbService<E extends BaseOpenmrsObject> implements DbSe
 	@Override
 	public E getByUuid(@NonNull String uuid, @Nullable QueryOptions options) {
 		checkNotNull(uuid);
-		ModelAdapter<E> table = getEntityTable();
-		if (table == null) {
+		if (entityTable == null) {
 			return null;
 		}
 
-		E result = repository.querySingle(table, table.getProperty("uuid").eq(uuid));
+		E result = repository.querySingle(entityTable, entityTable.getProperty("uuid").eq(uuid));
 
 		if (result != null) {
 			postLoad(result);
@@ -84,8 +84,7 @@ public abstract class BaseDbService<E extends BaseOpenmrsObject> implements DbSe
 	@Override
 	public List<E> saveAll(@NonNull List<E> entities) {
 		checkNotNull(entities);
-		ModelAdapter<E> table = getEntityTable();
-		if (table == null) {
+		if (entityTable == null) {
 			return null;
 		}
 
@@ -95,7 +94,7 @@ public abstract class BaseDbService<E extends BaseOpenmrsObject> implements DbSe
 			}
 		}
 
-		repository.saveAll(table, entities);
+		repository.saveAll(entityTable, entities);
 
 		for (E entity : entities) {
 			if (entity != null) {
@@ -109,14 +108,13 @@ public abstract class BaseDbService<E extends BaseOpenmrsObject> implements DbSe
 	@Override
 	public E save(@NonNull E entity) {
 		checkNotNull(entity);
-		ModelAdapter<E> table = getEntityTable();
-		if (table == null) {
+		if (entityTable == null) {
 			return null;
 		}
 
 		preSave(entity);
 
-		if (repository.save(table, entity)) {
+		if (repository.save(entityTable, entity)) {
 			postSave(entity);
 
 			return entity;
@@ -128,14 +126,13 @@ public abstract class BaseDbService<E extends BaseOpenmrsObject> implements DbSe
 	@Override
 	public void delete(@NonNull E entity) {
 		checkNotNull(entity);
-		ModelAdapter<E> table = getEntityTable();
-		if (table == null) {
+		if (entityTable == null) {
 			return;
 		}
 
 		preDelete(entity);
 
-		if (repository.delete(table, entity)) {
+		if (repository.delete(entityTable, entity)) {
 			postDelete(entity);
 		}
 	}
@@ -143,28 +140,26 @@ public abstract class BaseDbService<E extends BaseOpenmrsObject> implements DbSe
 	@Override
 	public void delete(@NonNull String uuid) {
 		checkNotNull(uuid);
-		ModelAdapter<E> table = getEntityTable();
-		if (table == null) {
+		if (entityTable == null) {
 			return;
 		}
 
 		preDelete(uuid);
 
-		repository.deleteAll(table, table.getProperty("uuid").eq(uuid));
+		repository.deleteAll(entityTable, entityTable.getProperty("uuid").eq(uuid));
 
 		postDelete(uuid);
 	}
 
 	@Override
 	public void deleteAll() {
-		ModelAdapter<E> table = getEntityTable();
-		if (table == null) {
+		if (entityTable == null) {
 			return;
 		}
 
 		preDeleteAll();
 
-		repository.deleteAll(table);
+		repository.deleteAll(entityTable);
 
 		postDeleteAll();
 	}
@@ -184,8 +179,7 @@ public abstract class BaseDbService<E extends BaseOpenmrsObject> implements DbSe
 	protected <M> List<M> executeQuery(@Nullable QueryOptions options, @Nullable PagingInfo pagingInfo,
 			@NonNull Class<M> cls, @Nullable Function<From<M>, ModelQueriable<M>> where) {
 		checkNotNull(cls);
-		ModelAdapter<E> table = getEntityTable();
-		if (table == null) {
+		if (entityTable == null) {
 			return null;
 		}
 

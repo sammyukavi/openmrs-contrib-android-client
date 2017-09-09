@@ -140,8 +140,9 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 						} else {
 							setViewAfterLoadData(false);
 							patientListView.updatePatientListData(entities);
-							setTotalNumberResults(pagingInfo.getTotalRecordCount());
-							if (pagingInfo.getTotalRecordCount() > 0) {
+							setTotalNumberResults(pagingInfo.getTotalRecordCount() != null ? pagingInfo
+									.getTotalRecordCount() : 0);
+							if (pagingInfo.getTotalRecordCount() != null && pagingInfo.getTotalRecordCount() > 0) {
 								patientListView.setNumberOfPatientsView(pagingInfo.getTotalRecordCount());
 								totalNumberPages = pagingInfo.getTotalPages();
 								patientListView.updatePagingLabel(page, totalNumberPages);

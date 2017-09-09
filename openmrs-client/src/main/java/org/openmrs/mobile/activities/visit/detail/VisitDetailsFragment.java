@@ -451,11 +451,11 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 					}
 
 					for (int v = 0; v < encounter.getObs().size(); v++) {
-						ArrayList locators = StringUtils.splitStrings(encounter.getObs().get(v).getDisplay(), ":");
-						if (locators.get(0).toString()
-								.equalsIgnoreCase(ApplicationConstants.ObservationLocators.CLINICAL_NOTE)) {
-							initialClinicNoteHashcode = locators.get(1).toString().hashCode();
-							clinicalNoteView.setText(locators.get(1).toString());
+						ArrayList<String> clinicalNote = StringUtils.splitStrings(encounter.getObs().get(v).getDisplay(),
+								ApplicationConstants.ObservationLocators.CLINICAL_NOTE);
+						if (clinicalNote.size() > 1) {
+							initialClinicNoteHashcode = clinicalNote.get(1).hashCode();
+							clinicalNoteView.setText(clinicalNote.get(1));
 						}
 					}
 				}

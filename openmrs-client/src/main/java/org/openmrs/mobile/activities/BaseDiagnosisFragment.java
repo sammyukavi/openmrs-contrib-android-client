@@ -12,8 +12,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.openmrs.mobile.R;
+import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
 import org.openmrs.mobile.activities.visit.detail.DiagnosisRecyclerViewAdapter;
 import org.openmrs.mobile.application.OpenMRS;
+import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.EncounterDiagnosis;
@@ -45,24 +48,28 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	protected TextInputEditText clinicalNoteView;
 	protected BaseDiagnosisPresenter diagnosisPresenter = new BaseDiagnosisPresenter();
 	private Timer timer;
-	private String encounterUuid;
+	private String encounterUuid, observationUuid;
 	private Visit visit;
 	private boolean firstTimeEdit;
 	private long lastTextEdit = 0;
+	private CustomFragmentDialog mergePatientSummaryDialog;
+	private TextWatcher clinicalNoteListener;
 
 	@Override
 	public void initializeListeners() {
 		primaryDiagnoses.clear();
 		secondaryDiagnoses.clear();
 		addDiagnosisListeners();
-		addClinicalNoteListener();
+
+		// load patient summary merge dialog if need be
+		createPatientSummaryMergeDialog(clinicalNoteView.getText().toString());
 	}
 
 	protected IBaseDiagnosisFragment getIBaseDiagnosisFragment() {
 		return this;
 	}
 
-	abstract public IBaseDiagnosisView getDiagnosisView();
+	public abstract IBaseDiagnosisView getDiagnosisView();
 
 	private void addDiagnosisListeners() {
 		searchDiagnosis.addTextChangedListener(new TextWatcher() {
@@ -116,32 +123,63 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 		Handler handler = new Handler();
 		Runnable inputCompleteChecker = () -> {
 			if (System.currentTimeMillis() > (lastTextEdit + SAVE_CLINICAL_NOTE_DELAY)) {
-				saveVisitNote(null != getEncounterUuid() ? getEncounterUuid() : ApplicationConstants.EMPTY_STRING,
-						clinicalNoteView.getText().toString(), visit);
+				saveVisitNote(getEncounterUuid(), clinicalNoteView.getText().toString(), visit);
 			}
 		};
 
-		clinicalNoteView.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-			}
-
-			@Override
-			public void onTextChanged(final CharSequence s, int start, int before, int count) {
-				//Remove this to run only once
-				handler.removeCallbacks(inputCompleteChecker);
-			}
-
-			@Override
-			public void afterTextChanged(final Editable s) {
-				if (s.length() > 0 && !firstTimeEdit) {
-					lastTextEdit = System.currentTimeMillis();
-					handler.postDelayed(inputCompleteChecker, SAVE_CLINICAL_NOTE_DELAY);
-				} else {
-					firstTimeEdit = false;
+		if (clinicalNoteListener == null) {
+			clinicalNoteListener = new TextWatcher() {
+				@Override
+				public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 				}
-			}
-		});
+
+				@Override
+				public void onTextChanged(final CharSequence s, int start, int before, int count) {
+					//Remove this to run only once
+					handler.removeCallbacks(inputCompleteChecker);
+				}
+
+				@Override
+				public void afterTextChanged(final Editable s) {
+					if (s.length() > 0 && !firstTimeEdit) {
+						lastTextEdit = System.currentTimeMillis();
+						handler.postDelayed(inputCompleteChecker, SAVE_CLINICAL_NOTE_DELAY);
+					} else {
+						firstTimeEdit = false;
+					}
+				}
+			};
+		}
+
+		clinicalNoteView.addTextChangedListener(clinicalNoteListener);
+	}
+
+	private void removeClinicalNoteListener() {
+		clinicalNoteView.removeTextChangedListener(clinicalNoteListener);
+	}
+
+	public void mergePatientSummary() {
+		String updatedPatientSummary = mergePatientSummaryDialog.getEditNoteTextValue();
+		saveVisitNote(getEncounterUuid(), updatedPatientSummary, visit);
+		clinicalNoteView.setText(updatedPatientSummary);
+	}
+
+	public void createPatientSummaryMergeDialog(String mergePatientSummaryText) {
+		removeClinicalNoteListener();
+		// This condition will be changed. It's just a way of detecting a conflict that needs to be resolved.
+		if (mergePatientSummaryText.contains(ApplicationConstants.PatientSummary.SEARCH_PATIENT_SUMMARY_CONFLICT)) {
+			CustomDialogBundle bundle = new CustomDialogBundle();
+			bundle.setTitleViewMessage(getString(R.string.merge_patient_summary));
+			bundle.setEditNoteTextViewMessage(mergePatientSummaryText);
+			bundle.setRightButtonAction(CustomFragmentDialog.OnClickAction.MERGE_PATIENT_SUMMARY);
+			bundle.setRightButtonText(getString(R.string.dialog_button_confirm));
+
+			mergePatientSummaryDialog = CustomFragmentDialog.newInstance(bundle);
+			mergePatientSummaryDialog.show(
+					getActivity().getSupportFragmentManager(), ApplicationConstants.DialogTAG.MERGE_PATIENT_SUMMARY_TAG);
+		} else {
+			addClinicalNoteListener();
+		}
 	}
 
 	public void setDiagnoses(Visit visit) {
@@ -233,6 +271,8 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 				}
 
 				encounterDiagnosis.setExistingObs(observation.getUuid());
+			} else if (observation.getDisplay().startsWith(ApplicationConstants.ObservationLocators.CLINICAL_NOTE)) {
+				setObservationUuid(observation.getUuid());
 			}
 		} else {
 			encounterDiagnosis.setCertainty(ApplicationConstants.DiagnosisStrings.PRESUMED);
@@ -364,7 +404,11 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 		visitNote.setW3(OpenMRS.getInstance().getParentLocationUuid());
 		visitNote.setW5(DateUtils.convertTime(visit.getStartDatetime().getTime(), DateUtils.OPEN_MRS_REQUEST_FORMAT));
 		visitNote.setW10(ApplicationConstants.EMPTY_STRING);
-		visitNote.setW12(null == clinicalNote ? ApplicationConstants.EMPTY_STRING : clinicalNote);
+		visitNote.setW12(clinicalNote == null ? ApplicationConstants.EMPTY_STRING : clinicalNote);
+
+		if (getObservationUuid() != null) {
+			visitNote.setObservationUuid(getObservationUuid());
+		}
 
 		encounterDiagnoses.addAll(primaryDiagnoses);
 		encounterDiagnoses.addAll(secondaryDiagnoses);
@@ -494,5 +538,15 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	@Override
 	public void setVisit(Visit visit) {
 		this.visit = visit;
+	}
+
+	@Override
+	public String getObservationUuid() {
+		return observationUuid;
+	}
+
+	@Override
+	public void setObservationUuid(String uuid) {
+		this.observationUuid = uuid;
 	}
 }

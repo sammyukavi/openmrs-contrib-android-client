@@ -31,6 +31,7 @@ import org.openmrs.mobile.models.Session;
 import org.openmrs.mobile.models.User;
 import org.openmrs.mobile.net.AuthorizationManager;
 import org.openmrs.mobile.utilities.ApplicationConstants;
+import org.openmrs.mobile.utilities.StringUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -105,8 +106,9 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 			final boolean wipeDatabase) {
 		loginView.setProgressBarVisibility(true);
 		RestServiceBuilder.setloginUrl(url);
+		boolean storedSessionIsEmpty = StringUtils.isNullOrEmpty(openMRS.getLastSessionToken());
 
-		if (openMRS.getNetworkUtils().isOnline()) {
+		if (openMRS.getNetworkUtils().isOnline() || storedSessionIsEmpty) {
 			wipeRequired = wipeDatabase;
 			DataService.GetCallback<List<User>> loginUsersFoundCallback =
 					new DataService.GetCallback<List<User>>() {

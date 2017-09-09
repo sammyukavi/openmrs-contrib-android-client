@@ -53,4 +53,29 @@ public class SyncServiceTest {
 	public void sync_shouldRemoveOldReadOnlyData() throws Exception {
 
 	}
+
+	@Test
+	public void push_shouldUpdateLocalUuid() throws Exception {
+
+	}
+
+	@Test
+	public void push_shouldKeepServerUuid() throws Exception {
+
+	}
+
+	@Test
+	public void push_shouldUpdateLocalChildUuid() throws Exception {
+
+	}
+
+	@Test
+	public void push_shouldUpdateRelatedObjectsFK() throws Exception {
+
+	}
+
+	@Test
+	public void push_() throws Exception {
+
+	}
 }

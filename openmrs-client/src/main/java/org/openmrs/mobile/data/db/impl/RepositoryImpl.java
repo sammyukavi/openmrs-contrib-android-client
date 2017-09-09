@@ -14,10 +14,12 @@ import com.raizlabs.android.dbflow.structure.database.transaction.FastStoreModel
 
 import org.openmrs.mobile.data.db.AppDatabase;
 import org.openmrs.mobile.data.db.Repository;
+import org.openmrs.mobile.models.BaseOpenmrsObject;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -132,6 +134,32 @@ public class RepositoryImpl implements Repository {
 		checkNotNull(query);
 
 		return query.count();
+	}
+
+	@Override
+	public <M extends BaseOpenmrsObject> boolean update(@NonNull ModelAdapter<M> table, @NonNull String id,
+			@NonNull M model) {
+		checkNotNull(table);
+		checkNotNull(id);
+		checkNotNull(model);
+
+		boolean performUpdate = true;
+		if (!id.equals(model.getUuid())) {
+			long recordsUpdated = SQLite.update(table.getModelClass())
+					.set(table.getProperty("uuid").eq(model.getUuid()))
+					.where(table.getProperty("uuid").eq(id))
+					.executeUpdateDelete();
+
+			if (recordsUpdated == 0) {
+				performUpdate = false;
+			}
+		}
+
+		if (performUpdate) {
+			performUpdate = save(table, model);
+		}
+
+		return performUpdate;
 	}
 
 	@Override

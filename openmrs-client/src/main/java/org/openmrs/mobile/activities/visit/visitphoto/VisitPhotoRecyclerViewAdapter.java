@@ -67,20 +67,10 @@ public class VisitPhotoRecyclerViewAdapter
 			return;
 		}
 
-		view.downloadImage(visitPhoto.getObservation().getUuid(), new DataService.GetCallback<byte[]>() {
-			@Override
-			public void onCompleted(byte[] entity) {
-				visitPhoto.setImage(entity);
-				holder.image.setImageBitmap(BitmapFactory.decodeByteArray(entity, 0, entity.length));
-				holder.image.invalidate();
-				map.put(holder.image, visitPhoto);
-			}
-
-			@Override
-			public void onError(Throwable t) {
-				holder.image.setVisibility(View.GONE);
-			}
-		});
+		byte[] photoBytes = visitPhoto.getImageColumn().getBlob();
+		holder.image.setImageBitmap(BitmapFactory.decodeByteArray(photoBytes, 0, photoBytes.length));
+		holder.image.invalidate();
+		map.put(holder.image, visitPhoto);
 
 		holder.image.setOnClickListener(new View.OnClickListener() {
 			@Override

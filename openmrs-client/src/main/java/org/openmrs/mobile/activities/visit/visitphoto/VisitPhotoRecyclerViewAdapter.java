@@ -67,20 +67,10 @@ public class VisitPhotoRecyclerViewAdapter
 			return;
 		}
 
-		view.downloadImage(visitPhoto.getObservation().getUuid(), new DataService.GetCallback<byte[]>() {
-			@Override
-			public void onCompleted(byte[] entity) {
-				visitPhoto.setDownloadedImage(entity);
-				holder.image.setImageBitmap(BitmapFactory.decodeByteArray(entity, 0, entity.length));
-				holder.image.invalidate();
-				map.put(holder.image, visitPhoto);
-			}
-
-			@Override
-			public void onError(Throwable t) {
-				holder.image.setVisibility(View.GONE);
-			}
-		});
+		byte[] photoBytes = visitPhoto.getImageColumn().getBlob();
+		holder.image.setImageBitmap(BitmapFactory.decodeByteArray(photoBytes, 0, photoBytes.length));
+		holder.image.invalidate();
+		map.put(holder.image, visitPhoto);
 
 		holder.image.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -98,7 +88,8 @@ public class VisitPhotoRecyclerViewAdapter
 					expandImage.setLayoutParams(layoutParams);
 					expandImage.setImageBitmap(
 							BitmapFactory.decodeByteArray(
-									visitPhoto.getDownloadedImage(), 0, visitPhoto.getDownloadedImage().length));
+									visitPhoto.getImageColumn().getBlob(), 0, visitPhoto.getImageColumn().getBlob()
+											.length));
 
 					TextView descriptionView = new TextView(context);
 					descriptionView.setText(view.formatVisitImageDescription(visitPhoto.getFileCaption(),
@@ -127,7 +118,7 @@ public class VisitPhotoRecyclerViewAdapter
 
 	@Override
 	public int getItemCount() {
-		return visitPhotos.size();
+		return visitPhotos != null ? visitPhotos.size() : 0;
 	}
 
 	class DownloadVisitPhotoViewHolder extends RecyclerView.ViewHolder {

@@ -93,7 +93,8 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 		checkNotNull(entity);
 		checkNotNull(callback);
 
-		executeSingleCallback(callback, null,
+		QueryOptions options = new QueryOptions.Builder().requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL).build();
+		executeSingleCallback(callback, options,
 				() -> {
 					E result = dbService.save(entity);
 					syncLogDbService.save(createSyncLog(result, SyncAction.NEW));
@@ -107,7 +108,8 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 		checkNotNull(entity);
 		checkNotNull(callback);
 
-		executeSingleCallback(callback, null,
+		QueryOptions options = new QueryOptions.Builder().requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL).build();
+		executeSingleCallback(callback, options,
 				() -> {
 					E result = dbService.save(entity);
 					syncLogDbService.save(createSyncLog(result, SyncAction.UPDATED));

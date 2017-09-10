@@ -13,9 +13,9 @@ import javax.inject.Inject;
 
 public class VisitNoteDataService extends BaseDataService<VisitNote, VisitNoteDbService, VisitNoteRestServiceImpl>
 		implements DataService<VisitNote> {
+
 	@Inject
-	public VisitNoteDataService() {
-	}
+	public VisitNoteDataService() {}
 
 	public void save(VisitNote visitNote, @NonNull GetCallback<VisitNote> callback) {
 		executeSingleCallback(callback, null,

@@ -3,25 +3,55 @@ package org.openmrs.mobile.data.db;
 import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
+import org.openmrs.mobile.models.Encounter;
+import org.openmrs.mobile.models.EncounterType;
+import org.openmrs.mobile.models.EncounterType_Table;
+import org.openmrs.mobile.models.Location;
+import org.openmrs.mobile.models.Location_Table;
 import org.openmrs.mobile.models.PatientIdentifierType;
 import org.openmrs.mobile.models.PatientIdentifierType_Table;
 import org.openmrs.mobile.models.PersonAttributeType;
 import org.openmrs.mobile.models.PersonAttributeType_Table;
+import org.openmrs.mobile.models.VisitAttributeType;
+import org.openmrs.mobile.models.VisitAttributeType_Table;
+import org.openmrs.mobile.models.VisitTask_Table;
+import org.openmrs.mobile.models.VisitType;
+import org.openmrs.mobile.models.VisitType_Table;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CoreTestData {
+	private static List<EncounterType> encounterTypes = new ArrayList<>(3);
+	private static List<Location> locations = new ArrayList<>(2);
 	private static List<PersonAttributeType> personAttributeTypes = new ArrayList<>(3);
 	private static List<PatientIdentifierType> patientIdentifierTypes = new ArrayList<>(2);
+	private static List<VisitType> visitTypes = new ArrayList<>(1);
+	private static List<VisitAttributeType> visitAttributeTypes = new ArrayList<>(1);
 
+	public static EncounterType_Table encounterTypeTable =
+			(EncounterType_Table)FlowManager.getInstanceAdapter(EncounterType.class);
+	public static Location_Table locationTable = (Location_Table)FlowManager.getInstanceAdapter(Location.class);
 	public static PersonAttributeType_Table personAttributeTypeTable =
 			(PersonAttributeType_Table)FlowManager.getInstanceAdapter(PersonAttributeType.class);
 	public static PatientIdentifierType_Table patientIdentifierTypeTable =
 			(PatientIdentifierType_Table)FlowManager.getInstanceAdapter(PatientIdentifierType.class);
-
+	public static VisitType_Table visitTaskTable =
+			(VisitType_Table)FlowManager.getInstanceAdapter(VisitType.class);
+	public static VisitAttributeType_Table visitAttributeTypeTable =
+			(VisitAttributeType_Table)FlowManager.getInstanceAdapter(VisitAttributeType.class);
 
 	public static void load() {
+		if (encounterTypes.size() == 0) {
+			loadEncounters();
+		}
+		encounterTypes.containsAll(encounterTypes);
+
+		if (locations.size() == 0) {
+			loadLocations();
+		}
+		locationTable.saveAll(locations);
+
 		if (personAttributeTypes.size() == 0) {
 			loadPersonAttributeTypes();
 		}
@@ -31,11 +61,61 @@ public class CoreTestData {
 			loadPatientIdentifierTypes();
 		}
 		patientIdentifierTypeTable.saveAll(patientIdentifierTypes);
+
+		if (visitTypes.size() == 0) {
+			loadVisitTypes();
+		}
+		visitTaskTable.saveAll(visitTypes);
+
+		if (visitAttributeTypes.size() == 0) {
+			loadVisitAttributeTypes();
+		}
+		visitAttributeTypeTable.saveAll(visitAttributeTypes);
 	}
 
 	public static void clear() {
+		SQLite.delete(EncounterType.class).execute();
+		SQLite.delete(Location.class).execute();
 		SQLite.delete(PersonAttributeType.class).execute();
 		SQLite.delete(PatientIdentifierType.class).execute();
+		SQLite.delete(VisitType.class).execute();
+		SQLite.delete(VisitAttributeType.class).execute();
+	}
+
+	private static void loadEncounters() {
+		EncounterType type = new EncounterType();
+		type.setUuid(Constants.EncounterType.ADMISSION_UUID);
+		type.setDisplay("Admission");
+		type.setName("Admission");
+
+		EncounterType type2 = new EncounterType();
+		type2.setUuid(Constants.EncounterType.VISIT_NOTE_UUID);
+		type2.setDisplay("Visit Note");
+		type2.setName("Visit Note");
+
+		EncounterType type3 = new EncounterType();
+		type3.setUuid(Constants.EncounterType.VITALS_UUID);
+		type3.setDisplay("Vitals");
+		type3.setName("Vitals");
+
+		encounterTypes.add(type);
+		encounterTypes.add(type2);
+		encounterTypes.add(type3);
+	}
+
+	private static void loadLocations() {
+		Location location = new Location();
+		location.setUuid(Constants.Location.INPATIENT_WARD_UUID);
+		location.setName("Inpatient Ward");
+		location.setDisplay("Inpatient Ward");
+
+		Location location2 = new Location();
+		location2.setUuid(Constants.Location.REGISTRATION_DESK_UUID);
+		location2.setName("Registration Desk");
+		location2.setDisplay("Registration Desk");
+
+		locations.add(location);
+		locations.add(location2);
 	}
 
 	private static void loadPersonAttributeTypes() {
@@ -93,7 +173,39 @@ public class CoreTestData {
 		patientIdentifierTypes.add(type2);
 	}
 
+	private static void loadVisitTypes() {
+		VisitType type = new VisitType();
+
+		type.setUuid(Constants.VisitType.INPATIENT_MEDICINE_UUID);
+		type.setDisplay("Inpatient Medicine");
+		type.setName("Inpatient Medicine");
+		type.setDescription("Internal medicine service");
+
+		visitTypes.add(type);
+	}
+
+	private static void loadVisitAttributeTypes() {
+		VisitAttributeType type = new VisitAttributeType();
+		type.setUuid(Constants.VisitAttributeType.BED_NUMBER_UUID);
+		type.setDisplay("Bed Number");
+		type.setName("Bed Number");
+		type.setDescription("IMed Patients Bed Numbers");
+
+		visitAttributeTypes.add(type);
+	}
+
 	public static class Constants {
+		public static class EncounterType {
+			public static String ADMISSION_UUID = "e22e39fd-7db2-45e7-80f1-60fa0d5a4378";
+			public static String VISIT_NOTE_UUID = "d7151f82-c1f3-4152-a605-2f9ea7414a79";
+			public static String VITALS_UUID = "67a71486-1a54-468f-ac3e-7091a9a79584";
+		}
+
+		public static class Location {
+			public static String INPATIENT_WARD_UUID = "b1a8b05e-3542-4037-bbd3-998ee9c40574";
+			public static String REGISTRATION_DESK_UUID = "6351fcf4-e311-4a19-90f9-35667d99a8af";
+		}
+
 		public static class PersonAttributeType {
 			public static String PHONE_NUMBER_UUID = "14d4f066-15f5-102d-96e4-000c29c2a5d7";
 			public static String WARD_UUID = "18e3b47a-666d-4173-85a2-8044f8841f0c";
@@ -103,6 +215,14 @@ public class CoreTestData {
 		public static class PatientIdentifierType {
 			public static String FILE_NUMBER_UUID = "cf54df63-db87-4dea-a14d-dfc44e6d65e5";
 			public static String OPENMRS_ID_UUID = "05a29f94-c0ed-11e2-94be-8c13b969e334";
+		}
+
+		public static class VisitType {
+			public static String INPATIENT_MEDICINE_UUID = "a933acf6-9313-4cf3-bb24-24b5c750fda6";
+		}
+
+		public static class VisitAttributeType {
+			public static String BED_NUMBER_UUID = "36ab5534-276b-4853-b86a-b9fd09a26085";
 		}
 	}
 }

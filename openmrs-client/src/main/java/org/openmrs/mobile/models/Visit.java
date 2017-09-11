@@ -23,6 +23,7 @@ import com.raizlabs.android.dbflow.annotation.Table;
 import org.openmrs.mobile.data.db.AppDatabase;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -50,11 +51,11 @@ public class Visit extends BaseOpenmrsEntity implements Serializable {
 
 	@SerializedName("encounters")
 	@Expose
-	private List<Encounter> encounters;
+	private List<Encounter> encounters = new ArrayList<>();
 
 	@SerializedName("attributes")
 	@Expose
-	private List<VisitAttribute> attributes;
+	private List<VisitAttribute> attributes = new ArrayList<>();
 
 	@Expose
 	@SerializedName("patient")

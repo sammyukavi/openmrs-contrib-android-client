@@ -40,7 +40,7 @@ public class SyncService {
 
 	private NetworkUtils networkUtils;
 	private Map<String, SubscriptionProvider> subscriptionProviders = new HashMap<String, SubscriptionProvider>();
-	private Map<String, SyncProvider> pushSyncProviders = new HashMap<>();
+	private Map<String, PushProvider> pushSyncProviders = new HashMap<>();
 
 	@Inject
 	public SyncService(OpenMRS openmrs, SyncLogDbService syncLogDbService, PullSubscriptionDbService subscriptionDbService,
@@ -78,19 +78,21 @@ public class SyncService {
 		List<SyncLog> records = syncLogDbService.getAll(null, null);
 
 		for (SyncLog record : records) {
-			SyncProvider syncProvider = pushSyncProviders.get(record.getType());
-			if (syncProvider == null) {
-				syncProvider = providerHelper.getSyncProvider(record.getType());
+			PushProvider pushProvider = pushSyncProviders.get(record.getType());
+			if (pushProvider == null) {
+				pushProvider = providerHelper.getSyncProvider(record.getType());
 
-				pushSyncProviders.put(record.getType(), syncProvider);
+				pushSyncProviders.put(record.getType(), pushProvider);
 			}
 
-			if (syncProvider != null) {
+			if (pushProvider != null) {
 				try {
-					syncProvider.sync(record);
+					pushProvider.push(record);
+
+					syncLogDbService.delete(record);
 				} catch (DataOperationException doe) {
 					Log.w(TAG, "Data exception occurred while processing push provider '" +
-							syncProvider.getClass().getSimpleName() + ":" +
+							pushProvider.getClass().getSimpleName() + ":" +
 							(StringUtils.isBlank(record.getKey()) ? "(null)" :
 									record.getKey()) + "'", doe);
 
@@ -100,7 +102,7 @@ public class SyncService {
 					}
 				} catch (Exception ex) {
 					Log.e(TAG, "An exception occurred while processing push provider '" +
-							syncProvider.getClass().getSimpleName() + ":" +
+							pushProvider.getClass().getSimpleName() + ":" +
 							(StringUtils.isBlank(record.getKey()) ? "(null)" :
 									record.getKey()) + "'", ex);
 				}

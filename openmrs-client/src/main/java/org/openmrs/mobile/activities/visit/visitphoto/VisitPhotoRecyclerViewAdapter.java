@@ -88,8 +88,7 @@ public class VisitPhotoRecyclerViewAdapter
 					expandImage.setLayoutParams(layoutParams);
 					expandImage.setImageBitmap(
 							BitmapFactory.decodeByteArray(
-									visitPhoto.getImageColumn().getBlob(), 0, visitPhoto.getImageColumn().getBlob()
-											.length));
+									visitPhoto.getImageColumn().getBlob(), 0, visitPhoto.getImageColumn().getBlob().length));
 
 					TextView descriptionView = new TextView(context);
 					descriptionView.setText(view.formatVisitImageDescription(visitPhoto.getFileCaption(),

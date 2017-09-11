@@ -31,8 +31,12 @@ public class VisitPhotoDataService
 
 	public void uploadPhoto(VisitPhoto visitPhoto, @NonNull GetCallback<VisitPhoto> callback) {
 		executeSingleCallback(callback, null,
-				() -> dbService.save(visitPhoto),
-				() -> restService.uploadPhoto(visitPhoto));
+				() -> {
+					VisitPhoto result = dbService.save(visitPhoto);
+					syncLogDbService.save(createSyncLog(result, SyncAction.NEW));
+					return result;
+				},
+				() -> restService.upload(visitPhoto));
 	}
 
 	public void downloadPhotoMetadata(String patientUuid, QueryOptions options, ObsDataService obsDataService,
@@ -46,7 +50,7 @@ public class VisitPhotoDataService
 				() -> restService.downloadPhoto(photo.getObservation().getUuid(), view),
 				(ResponseBody body) -> {
 					try {
-						photo.setDownloadedImage(body.bytes());
+						photo.setImage(body.bytes());
 						return photo;
 					} catch (IOException ex) {
 						Log.e(TAG, "Error downloading image with obs uuid '" + photo.getObservation().getUuid() + "'", ex);

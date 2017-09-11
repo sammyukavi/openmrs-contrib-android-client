@@ -23,6 +23,7 @@ import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Observation_Table;
 import org.openmrs.mobile.models.PullSubscription;
 import org.openmrs.mobile.models.RecordInfo;
+import org.openmrs.mobile.models.User;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitPhoto;
 import org.openmrs.mobile.models.VisitPhoto_Table;
@@ -30,11 +31,16 @@ import org.openmrs.mobile.models.VisitTask;
 import org.openmrs.mobile.models.VisitTask_Table;
 import org.openmrs.mobile.models.Visit_Table;
 import org.openmrs.mobile.utilities.ApplicationConstants;
+import org.openmrs.mobile.utilities.DateUtils;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import okhttp3.ResponseBody;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -160,6 +166,7 @@ public class VisitPullProvider {
 					.diffDelete(Observation.class, Observation_Table.uuid.eq(observationsRecord.getUuid()),
 							observationInfo);
 
+			List<VisitPhoto> visitPhotos = new ArrayList<>();
 			List<Observation> observations = new ArrayList<>();
 			for (RecordInfo observationRecord : observationInfo) {
 				if (observationRecord.isUpdatedSince(subscription)) {
@@ -167,6 +174,18 @@ public class VisitPullProvider {
 							, options));
 					observation.processRelationships();
 					observations.add(observation);
+
+					VisitPhoto visitPhoto = new VisitPhoto();
+					visitPhoto.setObservation(observation);
+					visitPhoto.setFileCaption(observation.getComment());
+					visitPhoto.setDateCreated(new Date(DateUtils.convertTime(observation.getObsDatetime())));
+
+					User creator = new User();
+					creator.setPerson(observation.getPerson());
+					visitPhoto.setCreator(creator);
+
+					visitPhoto.setObservation(observation);
+					visitPhotos.add(visitPhoto);
 				}
 			}
 
@@ -174,27 +193,18 @@ public class VisitPullProvider {
 				obsDbService.saveAll(observations);
 			}
 
-			for (RecordInfo visitPhotosRecord : observationInfo) {
-				List<RecordInfo> visitPhotoInfo = RestHelper.getCallListValue(visitPhotoRestService.getPhotoRecordInfo
-						(visitPhotosRecord.getUuid(), ApplicationConstants.THUMBNAIL_VIEW));
-
-				databaseHelper
-						.diffDelete(VisitPhoto.class, VisitPhoto_Table.uuid.eq(visitPhotosRecord.getUuid()),
-								visitPhotoInfo);
-
-				List<VisitPhoto> visitPhotos = new ArrayList<>();
-				for (RecordInfo visitPhotoRecord : visitPhotoInfo) {
-					if (visitPhotoRecord.isUpdatedSince(subscription)) {
-						VisitPhoto visitPhoto = RestHelper.getCallValue(
-								visitPhotoRestService.getByUuid(visitPhotoRecord.getUuid(), visitPhotoOptions));
-						visitPhoto.processRelationships();
-						visitPhotos.add(visitPhoto);
-					}
+			for (VisitPhoto visitPhotoRecord : visitPhotos) {
+				ResponseBody image = RestHelper.getCallValue(
+						visitPhotoRestService.downloadPhoto(visitPhotoRecord.getObservation().getUuid(), null));
+				try {
+					visitPhotoRecord.setDownloadedImage(image.bytes());
+				} catch(IOException ex) {
+					// add logging exception
 				}
+			}
 
-				if (!observations.isEmpty()) {
-					visitPhotoDbService.saveAll(visitPhotos);
-				}
+			if (!visitPhotos.isEmpty()) {
+				visitPhotoDbService.saveAll(visitPhotos);
 			}
 		}
 

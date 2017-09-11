@@ -38,7 +38,7 @@ public class VisitRestServiceImpl extends BaseEntityRestService<Visit, VisitRest
 		final String stopDateTime;
 		final String visitUuid = updatedVisit.getUuid();
 		updatedVisit.setUuid(null);
-		if (null != updatedVisit.getStopDatetime()) {
+		if (updatedVisit.getStopDatetime() != null) {
 			stopDateTime = DateUtils.convertTime(
 					updatedVisit.getStopDatetime().getTime(), DateUtils.OPEN_MRS_REQUEST_PATIENT_FORMAT);
 		} else

@@ -1,6 +1,7 @@
 package org.openmrs.mobile.data.sync.impl;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import org.openmrs.mobile.data.DatabaseHelper;
 import org.openmrs.mobile.data.PagingInfo;
@@ -26,7 +27,6 @@ import org.openmrs.mobile.models.RecordInfo;
 import org.openmrs.mobile.models.User;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitPhoto;
-import org.openmrs.mobile.models.VisitPhoto_Table;
 import org.openmrs.mobile.models.VisitTask;
 import org.openmrs.mobile.models.VisitTask_Table;
 import org.openmrs.mobile.models.Visit_Table;
@@ -45,6 +45,8 @@ import okhttp3.ResponseBody;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class VisitPullProvider {
+	private static final String TAG = VisitPullProvider.class.getSimpleName();
+
 	private VisitDbService visitDbService;
 	private VisitRestServiceImpl visitRestService;
 	private EncounterDbService encounterDbService;
@@ -156,9 +158,6 @@ public class VisitPullProvider {
 		QueryOptions options =
 				new QueryOptions.Builder().customRepresentation(RestConstants.Representations.OBSERVATION).build();
 
-		QueryOptions visitPhotoOptions =
-				new QueryOptions.Builder().customRepresentation(RestConstants.Representations.VISIT_PHOTO).build();
-
 		for (RecordInfo observationsRecord : visitInfo) {
 			List<RecordInfo> observationInfo = RestHelper.getCallListValue(obsRestService
 					.getVisitDocumentsObsRecordInfoByPatientAndConceptList(patientRecord.getUuid()));
@@ -198,9 +197,9 @@ public class VisitPullProvider {
 				ResponseBody image = RestHelper.getCallValue(
 						visitPhotoRestService.downloadPhoto(visitPhotoRecord.getObservation().getUuid(), null));
 				try {
-					visitPhotoRecord.setDownloadedImage(image.bytes());
-				} catch(IOException ex) {
-					// add logging exception
+					visitPhotoRecord.setImage(image.bytes());
+				} catch (IOException ex) {
+					Log.e(TAG, "Visit image could not be saved.", ex);
 				}
 			}
 

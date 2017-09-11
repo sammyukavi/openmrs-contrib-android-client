@@ -307,6 +307,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	@Override
 	public void updateVisit(List<VisitAttribute> attributes) {
 		Visit updatedVisit = new Visit();
+		updatedVisit.setUuid(visit.getUuid());
 		updatedVisit.setAttributes(attributes);
 		updatedVisit.setVisitType(visit.getVisitType());
 		updatedVisit.setStartDatetime(visit.getStartDatetime());
@@ -316,7 +317,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 		}
 
 		setProcessing(true);
-		visitDataService.updateVisit(visit.getUuid(), updatedVisit, new DataService.GetCallback<Visit>() {
+		visitDataService.updateVisit(visit, updatedVisit, new DataService.GetCallback<Visit>() {
 			@Override
 			public void onCompleted(Visit entity) {
 				setProcessing(false);

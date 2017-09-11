@@ -11,6 +11,7 @@ import org.openmrs.mobile.utilities.ApplicationConstants;
 import javax.inject.Inject;
 
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -30,16 +31,18 @@ public class VisitPhotoRestServiceImpl extends BaseRestService<VisitPhoto, Visit
 		return "photos";
 	}
 
-	public Call<VisitPhoto> uploadPhoto(VisitPhoto visitPhoto) {
+	public Call<VisitPhoto> upload(VisitPhoto visitPhoto) {
 		RequestBody patient =
 				RequestBody.create(MediaType.parse("text/plain"), visitPhoto.getPatient().getUuid());
 		RequestBody visit = RequestBody.create(MediaType.parse("text/plain"), visitPhoto.getVisit().getUuid());
 		RequestBody provider =
 				RequestBody.create(MediaType.parse("text/plain"), visitPhoto.getProvider().getUuid());
 		RequestBody fileCaption = RequestBody.create(MediaType.parse("text/plain"), visitPhoto.getFileCaption());
+		RequestBody file =  RequestBody.create(MediaType.parse("image/jpeg"), visitPhoto.getImageColumn().getBlob());
+		MultipartBody.Part uploadFile = MultipartBody.Part.createFormData("file", "create.jpg", file);
 
 		return restService.uploadVisitPhoto(buildRestRequestPath(), patient, visit,
-				provider, fileCaption, visitPhoto.getRequestImage());
+				provider, fileCaption, uploadFile);
 	}
 
 	public Call<ResponseBody> downloadPhoto(String obsUuid, String view) {

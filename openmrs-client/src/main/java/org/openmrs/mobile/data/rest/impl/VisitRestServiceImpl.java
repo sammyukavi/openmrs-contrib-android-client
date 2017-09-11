@@ -34,8 +34,10 @@ public class VisitRestServiceImpl extends BaseEntityRestService<Visit, VisitRest
 		return restService.endVisit(buildRestRequestPath(), uuid, visit);
 	}
 
-	public Call<Visit> updateVisit(String visitUuid, Visit updatedVisit) {
+	public Call<Visit> updateVisit(Visit updatedVisit) {
 		final String stopDateTime;
+		final String visitUuid = updatedVisit.getUuid();
+		updatedVisit.setUuid(null);
 		if (null != updatedVisit.getStopDatetime()) {
 			stopDateTime = DateUtils.convertTime(
 					updatedVisit.getStopDatetime().getTime(), DateUtils.OPEN_MRS_REQUEST_PATIENT_FORMAT);

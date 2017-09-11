@@ -1,6 +1,7 @@
 package org.openmrs.mobile.dagger;
 
 import org.openmrs.mobile.application.OpenMRS;
+import org.openmrs.mobile.data.db.impl.PatientListContextDbService;
 import org.openmrs.mobile.net.AuthorizationManager;
 import org.openmrs.mobile.net.NetworkManager;
 import org.openmrs.mobile.sync.SyncManager;
@@ -37,8 +38,9 @@ public class ApplicationModule {
 
 	@Provides
 	@Singleton
-	public SyncManager provideSyncManager() {
-		return new SyncManager(providesOpenMRS(), receiverComponent.syncReceiver(), syncComponent.syncService());
+	public SyncManager provideSyncManager(PatientListContextDbService patientListContextDbService) {
+		return new SyncManager(providesOpenMRS(), receiverComponent.syncReceiver(), syncComponent.syncService(),
+				patientListContextDbService);
 	}
 
 	@Provides

@@ -394,6 +394,25 @@
 	<string name="merge_patient_summary">Merge Patient Summary</string>
 	<string name="no_patient_data">You are offline and cannot view patient information that is not synced.</string>
 	<string name="error_gcs_score">Invalid GCS value (should be between %1$d and %2$d)</string>
+	<!-- Login Sync Activity -->
+	<string name="download_upload_speed_is_fast">This should take less than a minute&#8230;</string>
+	<string name="download_upload_speed_is_slow">This could take a few minutes&#8230;</string>
+	<string name="sync_off_for_now_because_network_not_available">Phone offline. Sync will resume when online.</string>
+	<string name="subscription_remote_pull_starting">Downloading %1$s&#8230;</string>
+	<string name="subscription_remote_pull_complete">%1$s complete!</string>
+	<string name="record_remote_push_starting">Uploading record %1$s of %2$s&#8230;</string>
+	<string name="record_remote_push_complete">Uploading record %1$s of %2$s complete!</string>
+	<string name="entity_remote_pull_starting">Downloading %1$s - %2$s&#8230;</string>
+	<string name="entity_remote_pull_complete">%1$s - %2$s complete!</string>
+	<string name="download_complete">Download complete!</string>
+	<string name="upload_complete">Upload complete!</string>
+	<string name="initial_sync_push_progress_text">Checking if data needs to be uploaded&#8230;</string>
+	<string name="initial_sync_pull_progress_text">Waiting for upload to finish&#8230;</string>
+	<string name="initial_sync_pull_progress_text_after_upload_complete">Checking if data needs to be downloaded
+		&#8230;</string>
+	<string name="trim_starting">Updating database&#8230;</string>
+	<string name="trim_complete">Database update complete!</string>
+		
 	<!-- Sync Selection texts -->
 	<string name="select_patient_lists_to_sync">Select Patient Lists to Sync</string>
 	<string name="title_select_patient_lists_to_sync">Patient List Sync Selections</string>

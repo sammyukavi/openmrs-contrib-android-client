@@ -23,12 +23,12 @@ import org.openmrs.mobile.dagger.SyncModule;
 import org.openmrs.mobile.data.db.impl.PullSubscriptionDbService;
 
 public abstract class BasePresenter implements BasePresenterContract {
-	private DataAccessComponent mDataAccess;
+	private DataAccessComponent dataAccess;
 	// TODO: refactor this to do better DI with Dagger 2 and a single component
 	private SyncComponent syncComponent;
 
 	public BasePresenter() {
-		mDataAccess = DaggerDataAccessComponent.create();
+		dataAccess = DaggerDataAccessComponent.create();
 		syncComponent = DaggerSyncComponent.builder().syncModule(new SyncModule(OpenMRS.getInstance())).build();
 	}
 
@@ -36,7 +36,7 @@ public abstract class BasePresenter implements BasePresenterContract {
 	public void unsubscribe() {	}
 
 	protected DataAccessComponent dataAccess() {
-		return mDataAccess;
+		return dataAccess;
 	}
 
 	protected PullSubscriptionDbService pullSubscriptionDbService() {

@@ -46,11 +46,18 @@ public class AppDatabase {
 
 	@Migration(version = 2, database = AppDatabase.class, priority = 0)
 	public static class CreateSubscriptionsMigration extends BaseMigration {
+		@Override
+		public void migrate(@NonNull DatabaseWrapper database) {
+			Initialization.initializePullSubscriptions(database);
+		}
+	}
+
+	@Migration(version = 0, database = AppDatabase.class)
+	public static class Initialization extends BaseMigration {
 		private final static Integer INT_SECONDS_PER_DAY = (int) TimeConstants.SECONDS_PER_DAY;
 		private final static Integer MAX_INCREMENTAL_COUNT = 25;
 
-		@Override
-		public void migrate(@NonNull DatabaseWrapper database) {
+		public static void initializePullSubscriptions(@NonNull DatabaseWrapper database) {
 			List<PullSubscription> pullSubscriptions = new ArrayList<>();
 
 			pullSubscriptions.add(
@@ -98,7 +105,12 @@ public class AppDatabase {
 			FlowManager.getModelAdapter(PullSubscription.class).saveAll(pullSubscriptions, database);
 		}
 
-		private PullSubscription newPullSub(String cls, Integer maxIncCount, Integer minInterval) {
+		@Override
+		public void migrate(@NonNull DatabaseWrapper database) {
+			initializePullSubscriptions(database);
+		}
+
+		private static PullSubscription newPullSub(String cls, Integer maxIncCount, Integer minInterval) {
 			PullSubscription sub = new PullSubscription();
 			sub.setForceSyncAfterPush(false);
 			sub.setSubscriptionClass(cls);

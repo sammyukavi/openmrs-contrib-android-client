@@ -10,7 +10,9 @@ import org.openmrs.mobile.data.DataOperationException;
 import org.openmrs.mobile.data.db.impl.PullSubscriptionDbService;
 import org.openmrs.mobile.data.db.impl.SyncLogDbService;
 import org.openmrs.mobile.data.sync.impl.PatientTrimProvider;
+import org.openmrs.mobile.event.SyncEvent;
 import org.openmrs.mobile.event.SyncPullEvent;
+import org.openmrs.mobile.event.SyncPushEvent;
 import org.openmrs.mobile.models.PullSubscription;
 import org.openmrs.mobile.models.SyncLog;
 import org.openmrs.mobile.utilities.ApplicationConstants;
@@ -76,8 +78,12 @@ public class SyncService {
 	protected void push() {
 		// Get synclog records that need to be pushed
 		List<SyncLog> records = syncLogDbService.getAll(null, null);
+		eventBus.post(new SyncPushEvent(ApplicationConstants.EventMessages.Sync.Push.TOTAL_RECORDS,
+				ApplicationConstants.EventMessages.Sync.SyncType.RECORD, records.size()));
 
 		for (SyncLog record : records) {
+			eventBus.post(new SyncPushEvent(ApplicationConstants.EventMessages.Sync.Push.RECORD_REMOTE_PUSH_STARTING,
+					record.getType(), null));
 			SyncProvider syncProvider = pushSyncProviders.get(record.getType());
 			if (syncProvider == null) {
 				syncProvider = providerHelper.getSyncProvider(record.getType());
@@ -93,20 +99,23 @@ public class SyncService {
 							syncProvider.getClass().getSimpleName() + ":" +
 							(StringUtils.isBlank(record.getKey()) ? "(null)" :
 									record.getKey()) + "'", doe);
-
-					// Check to see if we're still online, if not, then stop the sync
-					if (!networkUtils.hasNetwork()) {
-						break;
-					}
 				} catch (Exception ex) {
 					Log.e(TAG, "An exception occurred while processing push provider '" +
 							syncProvider.getClass().getSimpleName() + ":" +
 							(StringUtils.isBlank(record.getKey()) ? "(null)" :
 									record.getKey()) + "'", ex);
+				} finally {
+					// Check to see if we're still online, if not, then stop the sync
+					if (!networkUtils.hasNetwork()) {
+						break;
+					}
 				}
 			} else {
 				Log.e(TAG, "Could not find provider for sync type '" + record.getType() + "'");
 			}
+
+			eventBus.post(new SyncPushEvent(ApplicationConstants.EventMessages.Sync.Push.RECORD_REMOTE_PUSH_COMPLETE,
+					record.getType(), null));
 		}
 	}
 
@@ -117,8 +126,8 @@ public class SyncService {
 	protected void pull() {
 		// Get subscriptions
 		List<PullSubscription> subscriptions = subscriptionDbService.getAll(null, null);
-		eventBus.post(new SyncPullEvent(ApplicationConstants.EventMessages.Sync.Pull.TOTAL_SUBSCRIPTIONS, "subscriptions",
-				subscriptions.size()));
+		eventBus.post(new SyncPullEvent(ApplicationConstants.EventMessages.Sync.Pull.TOTAL_SUBSCRIPTIONS,
+				ApplicationConstants.EventMessages.Sync.SyncType.SUBSCRIPTION, subscriptions.size()));
 		for (PullSubscription sub : subscriptions) {
 			eventBus.post(new SyncPullEvent(ApplicationConstants.EventMessages.Sync.Pull.SUBSCRIPTION_REMOTE_PULL_STARTING,
 					sub.getSubscriptionClass(), null));
@@ -149,21 +158,25 @@ public class SyncService {
 						provider.pull(sub);
 
 						sub.setLastSync(lastSync);
+						subscriptionDbService.save(sub);
 					} catch (DataOperationException doe) {
 						Log.w(TAG, "Data exception occurred while processing subscription provider '" +
 								sub.getSubscriptionClass() + ":" +
 								(StringUtils.isBlank(sub.getSubscriptionKey()) ? "(null)" :
 										sub.getSubscriptionKey()) + "'", doe);
 
-						// Check to see if we're still online, if not, then stop the sync
-						if (!networkUtils.hasNetwork()) {
-							break;
-						}
 					} catch (Exception ex) {
 						Log.e(TAG, "An exception occurred while processing subscription provider '" +
 								sub.getSubscriptionClass() + ":" +
 								(StringUtils.isBlank(sub.getSubscriptionKey()) ? "(null)" :
 										sub.getSubscriptionKey()) + "'", ex);
+					} finally {
+						// Check to see if we're still online, if not, then stop the sync
+						if (!networkUtils.hasNetwork()) {
+							eventBus.post(new SyncEvent(ApplicationConstants.EventMessages.Sync.CANT_SYNC_NO_NETWORK,
+									null, null));
+							break;
+						}
 					}
 				}
 			}
@@ -177,6 +190,10 @@ public class SyncService {
 	 * Trims patient data for patients that are not subscribed.
 	 */
 	protected void trim() {
+
+		eventBus.post(new SyncPullEvent(ApplicationConstants.EventMessages.Sync.Pull.TRIM_STARTING,
+				ApplicationConstants.EventMessages.Sync.SyncType.TRIM, null));
+
 		// Get the number of seconds since the trim was last executed
 		Date lastTrimDate = openmrs.getLastTrimDate();
 		Integer seconds = null;
@@ -194,6 +211,9 @@ public class SyncService {
 				openmrs.setLastTrimDate(new Date());
 			}
 		}
+
+		eventBus.post(new SyncPullEvent(ApplicationConstants.EventMessages.Sync.Pull.TRIM_COMPLETE,
+				ApplicationConstants.EventMessages.Sync.SyncType.TRIM, null));
 	}
 }
 

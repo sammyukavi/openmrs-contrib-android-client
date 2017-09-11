@@ -93,4 +93,9 @@ public abstract class ACBaseFragment<T extends BasePresenterContract> extends Fr
 	public void showError(String message) {
 		createSnackbar(message);
 	}
+
+	@Override
+	public void runOnUIThread(Runnable runnable) {
+		getActivity().runOnUiThread(runnable);
+	}
 }

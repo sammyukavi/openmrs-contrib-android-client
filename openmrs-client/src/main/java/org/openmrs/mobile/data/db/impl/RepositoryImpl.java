@@ -95,7 +95,7 @@ public class RepositoryImpl implements Repository {
 		checkNotNull(table);
 		checkNotNull(properties);
 
-		ModelQueriable<M> query = SQLite.select((IProperty[])properties.toArray())
+		ModelQueriable<M> query = SQLite.select(properties.toArray(new IProperty[properties.size()]))
 				.from(table.getModelClass());
 
 		if (operators != null) {

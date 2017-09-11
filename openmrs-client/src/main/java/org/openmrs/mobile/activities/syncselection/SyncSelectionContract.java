@@ -16,7 +16,7 @@ public interface SyncSelectionContract {
 
 		void updateAdvanceButton(boolean isAtLeastOnePatientListSelected);
 
-		void navigateToNextPage();
+		void navigateToNextPage(boolean skipSyncing);
 	}
 
 	interface Presenter extends BasePresenterContract {

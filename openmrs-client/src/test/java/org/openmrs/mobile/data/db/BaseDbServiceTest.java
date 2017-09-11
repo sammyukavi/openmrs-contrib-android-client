@@ -2,17 +2,15 @@ package org.openmrs.mobile.data.db;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openmrs.mobile.BuildConfig;
+import org.openmrs.mobile.data.CoreTestData;
 import org.openmrs.mobile.data.DBFlowRule;
 import org.openmrs.mobile.data.ModelAsserters;
 import org.openmrs.mobile.data.ModelGenerators;
 import org.openmrs.mobile.models.BaseOpenmrsObject;
-import org.openmrs.mobile.models.PersonAttribute;
-import org.openmrs.mobile.models.PersonAttributeType;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 

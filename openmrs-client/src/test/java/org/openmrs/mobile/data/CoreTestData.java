@@ -1,8 +1,12 @@
-package org.openmrs.mobile.data.db;
+package org.openmrs.mobile.data;
 
 import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
+import org.openmrs.mobile.models.ConceptClass;
+import org.openmrs.mobile.models.ConceptClass_Table;
+import org.openmrs.mobile.models.Datatype;
+import org.openmrs.mobile.models.Datatype_Table;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.EncounterType;
 import org.openmrs.mobile.models.EncounterType_Table;
@@ -22,6 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CoreTestData {
+	private static List<ConceptClass> conceptClasses = new ArrayList<>(3);
+	private static List<Datatype> datatypes = new ArrayList<>(3);
 	private static List<EncounterType> encounterTypes = new ArrayList<>(3);
 	private static List<Location> locations = new ArrayList<>(2);
 	private static List<PersonAttributeType> personAttributeTypes = new ArrayList<>(3);
@@ -29,6 +35,9 @@ public class CoreTestData {
 	private static List<VisitType> visitTypes = new ArrayList<>(1);
 	private static List<VisitAttributeType> visitAttributeTypes = new ArrayList<>(1);
 
+	public static ConceptClass_Table conceptClassTable =
+			(ConceptClass_Table)FlowManager.getInstanceAdapter(ConceptClass.class);
+	public static Datatype_Table datatypeTable = (Datatype_Table)FlowManager.getInstanceAdapter(Datatype.class);
 	public static EncounterType_Table encounterTypeTable =
 			(EncounterType_Table)FlowManager.getInstanceAdapter(EncounterType.class);
 	public static Location_Table locationTable = (Location_Table)FlowManager.getInstanceAdapter(Location.class);
@@ -42,10 +51,20 @@ public class CoreTestData {
 			(VisitAttributeType_Table)FlowManager.getInstanceAdapter(VisitAttributeType.class);
 
 	public static void load() {
+		if (conceptClasses.size() == 0) {
+			loadConceptClasses();
+		}
+		conceptClassTable.saveAll(conceptClasses);
+
+		if (datatypes.size() == 0) {
+			loadDatatypes();
+		}
+		datatypeTable.saveAll(datatypes);
+
 		if (encounterTypes.size() == 0) {
 			loadEncounters();
 		}
-		encounterTypes.containsAll(encounterTypes);
+		encounterTypeTable.saveAll(encounterTypes);
 
 		if (locations.size() == 0) {
 			loadLocations();
@@ -74,12 +93,52 @@ public class CoreTestData {
 	}
 
 	public static void clear() {
+		SQLite.delete(Datatype.class).execute();
 		SQLite.delete(EncounterType.class).execute();
 		SQLite.delete(Location.class).execute();
 		SQLite.delete(PersonAttributeType.class).execute();
 		SQLite.delete(PatientIdentifierType.class).execute();
 		SQLite.delete(VisitType.class).execute();
 		SQLite.delete(VisitAttributeType.class).execute();
+	}
+
+	private static void loadConceptClasses() {
+		ConceptClass conceptClass = new ConceptClass();
+		conceptClass.setUuid(Constants.ConceptClass.CONV_SET_UUID);
+		conceptClass.setName("ConvSet");
+		conceptClass.setDisplay("ConvSet");
+
+		ConceptClass conceptClass2 = new ConceptClass();
+		conceptClass2.setUuid(Constants.ConceptClass.DIAGNOSIS_UUID);
+		conceptClass2.setName("Diagnosis");
+		conceptClass2.setDisplay("Diagnosis");
+
+		ConceptClass conceptClass3 = new ConceptClass();
+		conceptClass3.setUuid(Constants.ConceptClass.TEST_UUID);
+		conceptClass3.setName("Test");
+		conceptClass3.setDisplay("Test");
+
+		conceptClasses.add(conceptClass);
+		conceptClasses.add(conceptClass2);
+		conceptClasses.add(conceptClass3);
+	}
+
+	private static void loadDatatypes() {
+		Datatype datatype = new Datatype();
+		datatype.setUuid(Constants.Datatype.NUMERIC_UUID);
+		datatype.setDisplay("Numeric");
+
+		Datatype datatype2 = new Datatype();
+		datatype2.setUuid(Constants.Datatype.CODED_UUID);
+		datatype2.setDisplay("Coded");
+
+		Datatype datatype3 = new Datatype();
+		datatype3.setUuid(Constants.Datatype.TEXT_UUID);
+		datatype3.setDisplay("Text");
+
+		datatypes.add(datatype);
+		datatypes.add(datatype2);
+		datatypes.add(datatype3);
 	}
 
 	private static void loadEncounters() {
@@ -195,6 +254,18 @@ public class CoreTestData {
 	}
 
 	public static class Constants {
+		public static class ConceptClass {
+			public static String TEST_UUID = "8d4907b2-c2cc-11de-8d13-0010c6dffd0f";
+			public static String DIAGNOSIS_UUID = "8d4918b0-c2cc-11de-8d13-0010c6dffd0f";
+			public static String CONV_SET_UUID = "8d492594-c2cc-11de-8d13-0010c6dffd0f";
+		}
+
+		public static class Datatype {
+			public static String NUMERIC_UUID = "8d4a4488-c2cc-11de-8d13-0010c6dffd0f";
+			public static String CODED_UUID = "8d4a48b6-c2cc-11de-8d13-0010c6dffd0f";
+			public static String TEXT_UUID = "8d4a4ab4-c2cc-11de-8d13-0010c6dffd0f";
+		}
+
 		public static class EncounterType {
 			public static String ADMISSION_UUID = "e22e39fd-7db2-45e7-80f1-60fa0d5a4378";
 			public static String VISIT_NOTE_UUID = "d7151f82-c1f3-4152-a605-2f9ea7414a79";

@@ -9,6 +9,8 @@ import com.raizlabs.android.dbflow.structure.ModelAdapter;
 import org.openmrs.mobile.data.db.BaseEntityDbService;
 import org.openmrs.mobile.data.db.EntityDbService;
 import org.openmrs.mobile.data.db.Repository;
+import org.openmrs.mobile.models.Encounter;
+import org.openmrs.mobile.models.Encounter_Table;
 import org.openmrs.mobile.models.Resource;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitAttribute;
@@ -23,9 +25,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class VisitDbService extends BaseEntityDbService<Visit> implements EntityDbService<Visit> {
 	private static VisitAttribute_Table visitAttributeTable;
+	private static Encounter_Table encounterTable;
 
 	static {
 		visitAttributeTable = (VisitAttribute_Table)FlowManager.getInstanceAdapter(VisitAttribute.class);
+		encounterTable = (Encounter_Table)FlowManager.getInstanceAdapter(Encounter.class);
 	}
 
 	@Inject
@@ -55,5 +59,7 @@ public class VisitDbService extends BaseEntityDbService<Visit> implements Entity
 
 		repository.deleteAll(visitAttributeTable, VisitAttribute_Table.visit_uuid.eq(visit.getUuid()),
 				new Method("LENGTH", VisitAttribute_Table.uuid).lessThanOrEq(Resource.LOCAL_UUID_LENGTH));
+		repository.deleteAll(encounterTable, Encounter_Table.visit_uuid.eq(visit.getUuid()),
+				new Method("LENGTH", Encounter_Table.uuid).lessThanOrEq(Resource.LOCAL_UUID_LENGTH));
 	}
 }

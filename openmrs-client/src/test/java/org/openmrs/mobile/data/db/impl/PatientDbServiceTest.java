@@ -5,20 +5,7 @@ import org.openmrs.mobile.data.ModelAsserters;
 import org.openmrs.mobile.data.ModelGenerators;
 import org.openmrs.mobile.data.db.BaseAuditableDbServiceTest;
 import org.openmrs.mobile.data.db.BaseDbService;
-import org.openmrs.mobile.data.db.CoreTestData;
 import org.openmrs.mobile.models.Patient;
-import org.openmrs.mobile.models.PatientIdentifier;
-import org.openmrs.mobile.models.PatientIdentifierType;
-import org.openmrs.mobile.models.Person;
-import org.openmrs.mobile.models.PersonAddress;
-import org.openmrs.mobile.models.PersonAttribute;
-import org.openmrs.mobile.models.PersonAttributeType;
-import org.openmrs.mobile.models.PersonName;
-import org.openmrs.mobile.utilities.DateUtils;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.UUID;
 
 public class PatientDbServiceTest extends BaseAuditableDbServiceTest<Patient> {
 	@Override

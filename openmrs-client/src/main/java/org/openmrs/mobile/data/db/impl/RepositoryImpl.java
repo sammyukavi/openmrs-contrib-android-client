@@ -137,17 +137,17 @@ public class RepositoryImpl implements Repository {
 	}
 
 	@Override
-	public <M extends BaseOpenmrsObject> boolean update(@NonNull ModelAdapter<M> table, @NonNull String id,
+	public <M extends BaseOpenmrsObject> boolean update(@NonNull ModelAdapter<M> table, @NonNull String uuid,
 			@NonNull M model) {
 		checkNotNull(table);
-		checkNotNull(id);
+		checkNotNull(uuid);
 		checkNotNull(model);
 
 		boolean performUpdate = true;
-		if (!id.equals(model.getUuid())) {
+		if (!uuid.equals(model.getUuid())) {
 			long recordsUpdated = SQLite.update(table.getModelClass())
 					.set(table.getProperty("uuid").eq(model.getUuid()))
-					.where(table.getProperty("uuid").eq(id))
+					.where(table.getProperty("uuid").eq(uuid))
 					.executeUpdateDelete();
 
 			if (recordsUpdated == 0) {

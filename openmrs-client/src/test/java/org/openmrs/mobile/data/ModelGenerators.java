@@ -2,6 +2,7 @@ package org.openmrs.mobile.data;
 
 import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.ConceptClass;
+import org.openmrs.mobile.models.ConceptName;
 import org.openmrs.mobile.models.Datatype;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.EncounterType;
@@ -42,6 +43,7 @@ public class ModelGenerators {
 	public static class ConceptGenerator implements ModelGenerator<Concept> {
 		private Datatype datatype;
 		private ConceptClass conceptClass;
+		private ConceptName conceptName;
 
 		public Datatype getDatatype() {
 			return datatype;
@@ -57,6 +59,14 @@ public class ModelGenerators {
 
 		public void setConceptClass(ConceptClass conceptClass) {
 			this.conceptClass = conceptClass;
+		}
+
+		public ConceptName getConceptName() {
+			return conceptName;
+		}
+
+		public void setConceptName(ConceptName conceptName) {
+			this.conceptName = conceptName;
 		}
 
 		@Override
@@ -76,9 +86,15 @@ public class ModelGenerators {
 				conceptClass.setUuid(CoreTestData.Constants.ConceptClass.TEST_UUID);
 			}
 			concept.setConceptClass(conceptClass);
+			if (conceptName == null) {
+				conceptName = new ConceptName();
+				conceptName.setName("Name");
+			}
+			concept.setName(conceptName);
 
 			datatype = null;
 			conceptClass = null;
+			conceptName = null;
 
 			return concept;
 		}

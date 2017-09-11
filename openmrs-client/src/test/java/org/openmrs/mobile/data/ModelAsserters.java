@@ -10,6 +10,7 @@ import org.openmrs.mobile.models.BaseOpenmrsEntity;
 import org.openmrs.mobile.models.BaseOpenmrsMetadata;
 import org.openmrs.mobile.models.BaseOpenmrsObject;
 import org.openmrs.mobile.models.Concept;
+import org.openmrs.mobile.models.ConceptName;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Observation;
@@ -30,6 +31,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class ModelAsserters {
 	public static final ConceptAsserter CONCEPT = new ConceptAsserter();
+	public static final ConceptNameAsserter CONCEPT_NAME = new ConceptNameAsserter();
 	public static final LocationAsserter LOCATION = new LocationAsserter();
 	public static final EncounterAsserter ENCOUNTER = new EncounterAsserter();
 	public static final ObservationAsserter OBSERVATION = new ObservationAsserter();
@@ -164,9 +166,17 @@ public class ModelAsserters {
 
 			assertSubModel(expected.getDatatype(), actual.getDatatype(), UUID);
 			assertSubModel(expected.getConceptClass(), actual.getConceptClass(), UUID);
+			assertSubModel(expected.getName(), actual.getName(), CONCEPT_NAME);
 
 			assertSubList(expected.getAnswers(), actual.getAnswers());
 			assertSubList(expected.getMappings(), actual.getMappings());
+		}
+	}
+
+	public static class ConceptNameAsserter extends MetadataAsserter<ConceptName> {
+		@Override
+		public void assertModel(@NonNull ConceptName expected, @NonNull ConceptName actual) {
+			super.assertModel(expected, actual);
 		}
 	}
 

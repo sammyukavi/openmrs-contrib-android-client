@@ -72,7 +72,8 @@ public class VisitPullProvider {
 	private List<RecordInfo> pullVisits(@NonNull PullSubscription subscription, RecordInfo patientRecord) {
 		// Get record info for patient visits
 		List<RecordInfo> visitInfo = RestHelper.getCallListValue(
-				visitRestService.getRecordInfoByPatient(patientRecord.getUuid(), null, PagingInfo.ALL));
+				visitRestService.getRecordInfoByPatient(patientRecord.getUuid(),
+						new QueryOptions.Builder().includeInactive(true).build(), PagingInfo.ALL));
 
 		// Delete any missing visits
 		databaseHelper.diffDelete(Visit.class, Visit_Table.patient_uuid.eq(patientRecord.getUuid()), visitInfo);

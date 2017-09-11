@@ -19,7 +19,6 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 
 import com.raizlabs.android.dbflow.config.FlowManager;
 
@@ -53,7 +52,7 @@ public class OpenMRS extends Application {
 
 	private static OpenMRS instance;
 	private static boolean ENCRYPTED = true;
-	private OpenMRSLogger mLogger;
+	private OpenMRSLogger logger;
 
 	public static OpenMRS getInstance() {
 		return instance;
@@ -92,7 +91,7 @@ public class OpenMRS extends Application {
 			}
 		}
 
-		mLogger = new OpenMRSLogger();
+		logger = new OpenMRSLogger();
 
 		syncManager.initializeDataSync();
 		networkManager.initializeNetworkReceiver();
@@ -331,7 +330,7 @@ public class OpenMRS extends Application {
 				result = DateFormat.getDateTimeInstance().parse(dateString);
 
 			} catch (ParseException e) {
-				mLogger.w("Could not parse last trim date '" + dateString + "'");
+				logger.w("Could not parse last trim date '" + dateString + "'");
 				result = null;
 			}
 		}
@@ -377,7 +376,7 @@ public class OpenMRS extends Application {
 	}
 
 	public OpenMRSLogger getOpenMRSLogger() {
-		return mLogger;
+		return logger;
 	}
 
 	public String getOpenMRSDir() {
@@ -431,5 +430,9 @@ public class OpenMRS extends Application {
 
 	public EventBus getEventBus() {
 		return eventBus;
+	}
+
+	public SyncManager getSyncManager() {
+		return syncManager;
 	}
 }

@@ -324,8 +324,12 @@ public abstract class ApplicationConstants {
 
   public static class EventMessages {
 		public static class Sync {
+			public static final String CANT_SYNC_NO_NETWORK = "cantSyncNoNetwork";
+
 			public static class Push {
-				public static final String TOTAL_ENTITIES_TO_PUSH = "totalEntitiesToPush";
+				public static final String TOTAL_RECORDS = "totalRecords";
+				public static final String RECORD_REMOTE_PUSH_STARTING = "recordRemotePushStarting";
+				public static final String RECORD_REMOTE_PUSH_COMPLETE = "recordRemotePushComplete";
 			}
 
 			public static class Pull {
@@ -334,12 +338,14 @@ public abstract class ApplicationConstants {
 				public static final String SUBSCRIPTION_REMOTE_PULL_COMPLETE = "subscriptionRemotePullComplete";
 				public static final String ENTITY_REMOTE_PULL_STARTING = "entityRemotePullStarting";
 				public static final String ENTITY_REMOTE_PULL_COMPLETE = "entityRemotePullComplete";
+				public static final String TRIM_STARTING = "trimStarting";
+				public static final String TRIM_COMPLETE = "trimComplete";
 			}
 
-			public static class Save {
-				public static final String ENTITY_SAVE_STARTING = "entitySaveStarting";
-				public static final String ENTITY_SAVE_PROGRESS_UPDATE = "entitySaveProgressUpdate";
-				public static final String ENTITY_SAVE_COMPLETE = "entitySaveComplete";
+			public static class SyncType {
+				public static final String SUBSCRIPTION = "subscription";
+				public static final String RECORD = "record";
+				public static final String TRIM = "trim";
 			}
 		}
 	}

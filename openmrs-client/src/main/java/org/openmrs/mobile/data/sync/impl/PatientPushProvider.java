@@ -1,6 +1,5 @@
 package org.openmrs.mobile.data.sync.impl;
 
-import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.db.impl.PatientDbService;
 import org.openmrs.mobile.data.db.impl.SyncLogDbService;
 import org.openmrs.mobile.data.rest.impl.PatientRestServiceImpl;
@@ -14,7 +13,7 @@ public class PatientPushProvider extends BasePushProvider<Patient, PatientDbServ
 	@Inject
 	public PatientPushProvider(SyncLogDbService syncLogDbService,
 			PatientDbService patientDbService,
-			PatientRestServiceImpl patientRestService, OpenMRS openMRS) {
-		super(syncLogDbService, patientDbService, patientRestService, openMRS);
+			PatientRestServiceImpl patientRestService) {
+		super(syncLogDbService, patientDbService, patientRestService);
 	}
 }

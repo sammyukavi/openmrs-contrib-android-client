@@ -277,6 +277,13 @@ public class PatientDashboardFragment extends BaseDiagnosisFragment<PatientDashb
 	}
 
 	@Override
+	public void onDestroy() {
+		super.onDestroy();
+
+		instance.setPatientUuid(ApplicationConstants.EMPTY_STRING);
+	}
+
+	@Override
 	public IBaseDiagnosisView getDiagnosisView() {
 		return this;
 	}

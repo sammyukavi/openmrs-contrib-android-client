@@ -531,6 +531,13 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 		}*/
 	}
 
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+
+		OpenMRS.getInstance().setVisitUuid(ApplicationConstants.EMPTY_STRING);
+	}
+
 	private void showPendingVisitNoteChangesDialog() {
 		CustomDialogBundle bundle = new CustomDialogBundle();
 		bundle.setTitleViewMessage(getString(R.string.visit_note_changes_pending_title));

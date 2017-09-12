@@ -93,7 +93,21 @@ public class SyncService {
 
 			if (syncProvider != null) {
 				try {
+
+					if (StringUtils.notNull(openmrs.getPatientUuid()) &&
+							openmrs.getPatientUuid().equalsIgnoreCase(record.getKey())) {
+						Log.i(TAG, "Skip. The Patient with uuid '" + record.getKey() + "' is currently being viewed");
+						continue;
+					}
+
+					if (StringUtils.notNull(openmrs.getVisitUuid()) &&
+							openmrs.getVisitUuid().equalsIgnoreCase(record.getKey())) {
+						Log.i(TAG, "Skip. The Visit with uuid '" + record.getKey() + "' is currently being viewed");
+						continue;
+					}
+
 					syncProvider.sync(record);
+
 				} catch (DataOperationException doe) {
 					Log.w(TAG, "Data exception occurred while processing push provider '" +
 							syncProvider.getClass().getSimpleName() + ":" +

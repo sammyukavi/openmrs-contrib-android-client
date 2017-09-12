@@ -38,7 +38,7 @@ public class VisitPhotoRestServiceImpl extends BaseRestService<VisitPhoto, Visit
 		RequestBody provider =
 				RequestBody.create(MediaType.parse("text/plain"), visitPhoto.getProvider().getUuid());
 		RequestBody fileCaption = RequestBody.create(MediaType.parse("text/plain"), visitPhoto.getFileCaption());
-		RequestBody file =  RequestBody.create(MediaType.parse("image/jpeg"), visitPhoto.getImageColumn().getBlob());
+		RequestBody file = RequestBody.create(MediaType.parse("image/jpeg"), visitPhoto.getImageColumn().getBlob());
 		MultipartBody.Part uploadFile = MultipartBody.Part.createFormData("file", "create.jpg", file);
 
 		return restService.uploadVisitPhoto(buildRestRequestPath(), patient, visit,
@@ -50,7 +50,7 @@ public class VisitPhotoRestServiceImpl extends BaseRestService<VisitPhoto, Visit
 	}
 
 	public Call<Results<RecordInfo>> getPhotoRecordInfo(String obsUuid, String view) {
-		return restService.getVisitPhotoRecordInfo(buildRestRequestPath(), obsUuid, RestConstants.Representations
-				.RECORD_INFO);
+		return restService.getVisitPhotoRecordInfo(buildRestRequestPath(), obsUuid,
+				RestConstants.Representations.RECORD_INFO);
 	}
 }

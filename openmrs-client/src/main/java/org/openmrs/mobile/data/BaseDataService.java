@@ -24,7 +24,6 @@ import org.openmrs.mobile.utilities.StringUtils;
 
 import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -297,7 +296,7 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 				// Try to get the entity from the db. If nothing is found just return null without any error
 				T result = dbSupplier.get();
 
-				if ((result == null || (result instanceof List<?> && ((List<?>) result).size() == 0)) &&
+				if ((result == null || (result instanceof List<?> && ((List<?>)result).size() == 0)) &&
 						networkUtils.isOnline() &&
 						QueryOptions.getRequestStrategy(options) == RequestStrategy.LOCAL_THEN_REMOTE) {
 					// This call will spin up another thread
@@ -338,9 +337,9 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 							if (result instanceof Resource) {
 								((Resource)result).processRelationships();
 							}
-							if (result instanceof List<?> && ((List<?>) result).size() > 0
-									&& ((List<?>) result).get(0) instanceof Resource) {
-								List<Resource> castResults = (List<Resource>) result;
+							if (result instanceof List<?> && ((List<?>)result).size() > 0
+									&& ((List<?>)result).get(0) instanceof Resource) {
+								List<Resource> castResults = (List<Resource>)result;
 								for (Resource castResult : castResults) {
 									castResult.processRelationships();
 								}
@@ -422,7 +421,7 @@ public abstract class BaseDataService<E extends BaseOpenmrsObject, DS extends Ba
 		});
 	}
 
-	private SyncLog createSyncLog(@NonNull E entity, @NonNull SyncAction action) {
+	protected SyncLog createSyncLog(@NonNull E entity, @NonNull SyncAction action) {
 		checkNotNull(entity);
 		checkNotNull(action);
 

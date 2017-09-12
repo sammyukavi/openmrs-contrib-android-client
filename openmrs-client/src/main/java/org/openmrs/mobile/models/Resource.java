@@ -56,7 +56,7 @@ public class Resource implements Serializable {
 	}
 
 	/**
-	 * Generates a Uuid with the last character trimmed off so that the uuid can be differentiated from a server-generated
+	 * Generates a uuid with the last character trimmed off so that the uuid can be differentiated from a server-generated
 	 * uuid. Note the while this does reduce the uniqueness of the id, these uuids are intended to only be used until the
 	 * resource is saved to the server, at which point this local uuid will be replaced.
 	 * @return The local uuid.

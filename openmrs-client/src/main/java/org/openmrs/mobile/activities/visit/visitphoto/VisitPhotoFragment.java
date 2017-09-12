@@ -146,11 +146,6 @@ public class VisitPhotoFragment extends VisitFragment implements VisitContract.V
 	}
 
 	@Override
-	public void downloadImage(String obsUuid, DataService.GetCallback<byte[]> callback) {
-		((VisitPhotoPresenter)mPresenter).downloadImage(obsUuid, callback);
-	}
-
-	@Override
 	public void refresh() {
 		fileCaption.setText(ApplicationConstants.EMPTY_STRING);
 		FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
@@ -280,10 +275,7 @@ public class VisitPhotoFragment extends VisitFragment implements VisitContract.V
 				ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 				visitPhoto.compress(Bitmap.CompressFormat.JPEG, 0, byteArrayOutputStream);
 
-				MultipartBody.Part uploadFile = MultipartBody.Part.createFormData("file",
-						output.getName(), RequestBody.create(MediaType.parse("image/jpeg"), output));
-
-				((VisitPhotoPresenter)mPresenter).getVisitPhoto().setRequestImage(uploadFile);
+				((VisitPhotoPresenter)mPresenter).getVisitPhoto().setImage(byteArrayOutputStream.toByteArray());
 				((VisitPhotoPresenter)mPresenter).getVisitPhoto().setFileCaption(
 						StringUtils.notEmpty(
 								ViewUtils.getInput(fileCaption)) ?

@@ -191,6 +191,10 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 
 		if (visit.getEncounters().size() != 0) {
 			for (Encounter encounter : visit.getEncounters()) {
+				if (encounter.getVoided()) {
+					continue;
+				}
+
 				if (encounter.getEncounterType().getUuid()
 						.equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.CLINICAL_NOTE_UUID)) {
 					if (encounter.getObs().size() == 0) {

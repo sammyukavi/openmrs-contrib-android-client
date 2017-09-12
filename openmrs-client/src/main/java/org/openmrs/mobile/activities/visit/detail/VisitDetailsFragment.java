@@ -44,6 +44,7 @@ import org.openmrs.mobile.activities.capturevitals.CaptureVitalsActivity;
 import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
 import org.openmrs.mobile.activities.visit.VisitActivity;
 import org.openmrs.mobile.activities.visit.VisitContract;
+import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
 import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.Encounter;
@@ -166,6 +167,7 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 	public void setVisit(Visit visit) {
 		this.visit = visit;
 		if (visit != null) {
+			OpenMRS.getInstance().setVisitUuid(visit.getUuid());
 			setVisitDates(visit);
 			setVisitType(visit);
 			setVitals(visit);
@@ -356,8 +358,8 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 
 						if (visit.getEncounters().get(i).getObs().size() != 0) {
 							visitVitalsAuditInfo.setVisibility(View.VISIBLE);
-							visitVitalsDate.setText(DATE_FORMAT.format(visit.getEncounters().get(i).getEncounterDatetime
-									()));
+							visitVitalsDate.setText(DATE_FORMAT.format(
+									visit.getEncounters().get(i).getEncounterDatetime()));
 
 							for (int v = 0; v < visit.getEncounters().get(i).getEncounterProviders().size(); v++) {
 								if (v == 0) {
@@ -527,6 +529,13 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 				(initialSecondaryDiagnosesListHashcode != subsequentSecondaryDiagnosesListHashcode)) {
 			showPendingVisitNoteChangesDialog();
 		}*/
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+
+		OpenMRS.getInstance().setVisitUuid(ApplicationConstants.EMPTY_STRING);
 	}
 
 	private void showPendingVisitNoteChangesDialog() {

@@ -269,7 +269,6 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 		patient.setIdentifiers(patientIdentifierList);
 
 		patient.setPerson(createPerson());
-		patient.setUuid("");
 		return patient;
 	}
 

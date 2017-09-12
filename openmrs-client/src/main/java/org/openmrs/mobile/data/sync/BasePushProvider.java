@@ -9,6 +9,7 @@ import org.openmrs.mobile.data.rest.RestHelper;
 import org.openmrs.mobile.data.rest.RestService;
 import org.openmrs.mobile.models.BaseOpenmrsAuditableObject;
 import org.openmrs.mobile.models.SyncLog;
+import org.openmrs.mobile.utilities.StringUtils;
 
 import retrofit2.Call;
 
@@ -29,8 +30,12 @@ public abstract class BasePushProvider<E extends BaseOpenmrsAuditableObject,
 
 	@Override
 	public void push(SyncLog syncLog) {
+		if (syncLog.getKey() == null) {
+			throw new DataOperationException("Entity UUID must be set");
+		}
+
 		E entity = dbService.getByUuid(syncLog.getKey(), QueryOptions.FULL_REP);
-		if(entity == null) {
+		if (entity == null) {
 			throw new DataOperationException("Entity not found");
 		}
 
@@ -38,19 +43,27 @@ public abstract class BasePushProvider<E extends BaseOpenmrsAuditableObject,
 		Call<E> call = null;
 		switch (syncLog.getAction()) {
 			case NEW:
-				call = restService.create(entity);
+				entity.setUuid(null);
+				call = create(entity);
 				break;
 			case UPDATED:
-				call = restService.update(entity);
+				call = update(entity);
 				break;
 			case DELETED:
-				call = restService.purge(entity.getUuid());
+				call = purge(entity);
 				break;
 		}
 
 		// Perform rest call
 		E restEntity = RestHelper.getCallValue(call);
 		if (restEntity != null) {
+			if (StringUtils.isNullOrEmpty(entity.getUuid())) {
+				// The local uuid can be removed when sent to the REST service so add the original uuid back if blank
+				// Note: this entity won't be saved to the db and so this uuid will not be used except to delete/update
+				// old records
+				entity.setUuid(syncLog.getKey());
+			}
+
 			// Delete any related records with local uuids, records with the server-generated uuids will be saved when
 			// saving the entity below
 			deleteLocalRelatedRecords(entity, restEntity);
@@ -61,5 +74,17 @@ public abstract class BasePushProvider<E extends BaseOpenmrsAuditableObject,
 				dbService.update(entity.getUuid(), restEntity);
 			}
 		}
+	}
+
+	protected Call<E> create(E entity) {
+		return restService.create(entity);
+	}
+
+	protected Call<E> update(E entity) {
+		return restService.update(entity);
+	}
+
+	protected Call<E> purge(E entity) {
+		return restService.purge(entity.getUuid());
 	}
 }

@@ -7,14 +7,24 @@ import org.openmrs.mobile.models.Visit;
 
 import javax.inject.Inject;
 
+import retrofit2.Call;
+
 public class VisitPushProvider extends BasePushProvider<Visit, VisitDbService, VisitRestServiceImpl> {
+	private VisitRestServiceImpl restService;
+
 	@Inject
 	public VisitPushProvider(VisitDbService dbService, VisitRestServiceImpl restService) {
 		super(dbService, restService);
+		this.restService = restService;
 	}
 
 	@Override
 	protected void deleteLocalRelatedRecords(Visit originalEntity, Visit restEntity) {
 		dbService.deleteLocalRelatedObjects(originalEntity);
+	}
+
+	@Override
+	protected Call<Visit> update(Visit entity) {
+		return restService.updateVisit(entity);
 	}
 }

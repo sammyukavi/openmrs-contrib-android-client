@@ -41,7 +41,7 @@ public class DiagnosisConceptSubscriptionProvider extends AdaptiveSubscriptionPr
 		icpcDiagnosesSet = conceptSetDbService.getByUuid(ApplicationConstants.ConceptSets.ICPC_DIAGNOSES, null);
 		if (icpcDiagnosesSet == null) {
 			Concept concept = RestHelper.getCallValue(
-					restService.getByUuid(ApplicationConstants.ConceptSets.ICPC_DIAGNOSES, null));
+					restService.getByUuid(ApplicationConstants.ConceptSets.ICPC_DIAGNOSES, QueryOptions.FULL_REP));
 			if (concept != null) {
 				icpcDiagnosesSet = new ConceptSet();
 				icpcDiagnosesSet.setUuid(concept.getUuid());

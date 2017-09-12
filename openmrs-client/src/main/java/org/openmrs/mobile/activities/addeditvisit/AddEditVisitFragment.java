@@ -41,6 +41,7 @@ import org.openmrs.mobile.activities.patientdashboard.PatientDashboardActivity;
 import org.openmrs.mobile.activities.visit.VisitActivity;
 import org.openmrs.mobile.models.BaseOpenmrsObject;
 import org.openmrs.mobile.models.ConceptAnswer;
+import org.openmrs.mobile.models.Resource;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitAttribute;
 import org.openmrs.mobile.models.VisitAttributeType;
@@ -221,10 +222,12 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 
 		if (!mPresenter.isProcessing()) {
 			setSpinnerVisibility(true);
-			if (StringUtils.notEmpty(mPresenter.getVisit().getUuid())) {
-				mPresenter.updateVisit(new ArrayList<>(visitAttributeMap.values()));
-			} else {
+			if (Resource.isLocalUuid(mPresenter.getVisit().getUuid())) {
 				mPresenter.startVisit(new ArrayList<>(visitAttributeMap.values()));
+			} else {
+				List<VisitAttribute> attributes = new ArrayList<>(visitAttributeMap.values());
+				mPresenter.getVisit().setAttributes(attributes);
+				mPresenter.updateVisit(attributes);
 			}
 		}
 	}

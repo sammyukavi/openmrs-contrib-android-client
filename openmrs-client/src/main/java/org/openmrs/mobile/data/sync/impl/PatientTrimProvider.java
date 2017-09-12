@@ -16,13 +16,16 @@ import org.openmrs.mobile.data.db.impl.VisitTaskDbService;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Encounter_Table;
 import org.openmrs.mobile.models.Patient;
+import org.openmrs.mobile.models.PatientListContext;
 import org.openmrs.mobile.models.PatientListContext_Table;
 import org.openmrs.mobile.models.Patient_Table;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitTask;
 import org.openmrs.mobile.models.VisitTask_Table;
 import org.openmrs.mobile.models.Visit_Table;
+import org.openmrs.mobile.models.queryModel.EntityUuid;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -73,13 +76,13 @@ public class PatientTrimProvider {
 
 		// NOTE: If other types of subscriptions are added in the future then they need to be included in this calculation
 
-		ModelQueriable<Patient> query = SQLite.select(Patient_Table.uuid)
+		ModelQueriable<Patient> query = SQLite.select(Patient_Table.uuid.withTable())
 				.from(Patient.class)
-				.leftOuterJoin(PatientListContext_Table.class)
-				.on(Patient_Table.uuid.withTable().eq(PatientListContext_Table.patient_uuid.withTable()));
-		query = ((From<Patient>) query).where(PatientListContext_Table.uuid.withTable().isNull());
+				.leftOuterJoin(PatientListContext.class)
+				.on(Patient_Table.uuid.withTable().eq(PatientListContext_Table.patient_uuid.withTable()))
+				.where(PatientListContext_Table.uuid.withTable().isNull());
 
-		return repository.queryCustom(String.class, query);
+		return EntityUuid.getUuids(repository.queryCustom(EntityUuid.class, query));
 	}
 
 	private void trimPatients(List<String> patientsToTrim) {

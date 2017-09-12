@@ -27,6 +27,7 @@ import org.openmrs.mobile.data.impl.PatientListDataService;
 import org.openmrs.mobile.data.sync.impl.PatientListContextSubscriptionProvider;
 import org.openmrs.mobile.models.PatientList;
 import org.openmrs.mobile.models.PullSubscription;
+import org.openmrs.mobile.sync.SyncManager;
 import org.openmrs.mobile.utilities.SyncConstants;
 
 /**
@@ -38,16 +39,19 @@ public class PatientListSyncSelectionDialogPresenter implements PatientListSyncS
 
 	private PatientListDataService patientListDataService;
 	private PullSubscriptionDbService pullSubscriptionDbService;
+	private SyncManager syncManager;
 
 	private List<PatientList> patientLists;
 	private List<PatientList> selectedPatientListsToSync;
 	private Map<String, PullSubscription> patientListUuidSubscriptionMap;
 
-	public PatientListSyncSelectionDialogPresenter(PatientListSyncSelectionDialogContract.View view, PatientListDataService patientListDataService,
-			PullSubscriptionDbService pullSubscriptionDbService) {
+	public PatientListSyncSelectionDialogPresenter(PatientListSyncSelectionDialogContract.View view,
+			PatientListDataService patientListDataService, PullSubscriptionDbService pullSubscriptionDbService,
+			SyncManager syncManager) {
 		this.view = view;
 		this.patientListDataService = patientListDataService;
 		this.pullSubscriptionDbService = pullSubscriptionDbService;
+		this.syncManager = syncManager;
 
 		this.view.setPresenter(this);
 	}
@@ -90,9 +94,10 @@ public class PatientListSyncSelectionDialogPresenter implements PatientListSyncS
 
 		for (PatientList patientList : removedLists) {
 			pullSubscriptionDbService.delete(patientListUuidSubscriptionMap.get(patientList.getUuid()));
-			// TODO: Need to kick something off here that will remove extra stuff from the DB
+			syncManager.deleteUnsyncedPatientListData(patientList.getUuid());
 		}
 
+		syncManager.requestSync();
 		view.dismissDialog();
 	}
 

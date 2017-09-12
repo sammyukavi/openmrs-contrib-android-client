@@ -34,6 +34,7 @@ import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.PatientIdentifierType;
 import org.openmrs.mobile.models.PersonAttribute;
 import org.openmrs.mobile.models.PersonAttributeType;
+import org.openmrs.mobile.models.Resource;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.StringUtils;
 import org.openmrs.mobile.utilities.ToastUtil;
@@ -197,7 +198,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		if (!registeringPatient && validate(patient)) {
 			patientRegistrationView.hideSoftKeys();
 			registeringPatient = true;
-			if (patient.getUuid() == null || patient.getUuid().equalsIgnoreCase("")) {
+			if (Resource.isLocalUuid(patient.getUuid())) {
 				findSimilarPatients(patient);
 			} else {
 				addEditPatient(patient);
@@ -240,7 +241,8 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 								.addErrorMessage, ToastUtil.ToastType.ERROR);
 			}
 		};
-		if (patient.getUuid() == null || patient.getUuid().equalsIgnoreCase("")) {
+
+		if (Resource.isLocalUuid(patient.getUuid())) {
 			patientDataService.create(patient, getSingleCallback);
 		} else {
 			patientDataService.update(patient, getSingleCallback);
@@ -271,7 +273,8 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		};
 
 		//Just check if the identifier are the same. If not it saves the patient.
-		patientDataService.getByIdentifier(patient.getIdentifier().getIdentifier(), QueryOptions.FULL_REP, pagingInfo, callback);
+		patientDataService
+				.getByIdentifier(patient.getIdentifier().getIdentifier(), QueryOptions.FULL_REP, pagingInfo, callback);
 	}
 
 	@Override
@@ -285,7 +288,10 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 					} else {
 						dropdown.setPrompt(ApplicationConstants.KIN_RELATIONSHIP);
 					}
-					patientRegistrationView.updateConceptAnswerView(dropdown, concept.getAnswers());
+
+					if (concept.getAnswers() != null) {
+						patientRegistrationView.updateConceptAnswerView(dropdown, concept.getAnswers());
+					}
 				}
 
 			}

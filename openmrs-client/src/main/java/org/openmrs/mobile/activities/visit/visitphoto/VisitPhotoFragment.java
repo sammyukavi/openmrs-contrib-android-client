@@ -275,10 +275,7 @@ public class VisitPhotoFragment extends VisitFragment implements VisitContract.V
 				ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 				visitPhoto.compress(Bitmap.CompressFormat.JPEG, 0, byteArrayOutputStream);
 
-				MultipartBody.Part uploadFile = MultipartBody.Part.createFormData("file",
-						output.getName(), RequestBody.create(MediaType.parse("image/jpeg"), output));
-
-				((VisitPhotoPresenter)mPresenter).getVisitPhoto().setRequestImage(uploadFile);
+				((VisitPhotoPresenter)mPresenter).getVisitPhoto().setImage(byteArrayOutputStream.toByteArray());
 				((VisitPhotoPresenter)mPresenter).getVisitPhoto().setFileCaption(
 						StringUtils.notEmpty(
 								ViewUtils.getInput(fileCaption)) ?

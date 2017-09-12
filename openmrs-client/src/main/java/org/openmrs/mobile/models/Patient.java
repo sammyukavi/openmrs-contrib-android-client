@@ -17,6 +17,7 @@ import com.raizlabs.android.dbflow.annotation.OneToMany;
 import com.raizlabs.android.dbflow.annotation.Table;
 
 import org.openmrs.mobile.data.db.AppDatabase;
+import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.StringUtils;
 
 import java.io.Serializable;
@@ -29,7 +30,7 @@ import java.util.Map;
 public class Patient extends BaseOpenmrsAuditableObject implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private String encounters = "";
+	private String encounters = ApplicationConstants.EMPTY_STRING;
 
 	@SerializedName("identifiers")
 	@Expose

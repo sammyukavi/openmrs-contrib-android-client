@@ -69,7 +69,7 @@ public class Encounter extends BaseOpenmrsAuditableObject implements Serializabl
 
 	@SerializedName("visit")
 	@Expose
-	@ForeignKey
+	@ForeignKey(stubbedRelationship = true)
 	private Visit visit;
 
 	@SerializedName("encounterProviders")

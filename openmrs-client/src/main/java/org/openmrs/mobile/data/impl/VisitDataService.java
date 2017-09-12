@@ -8,6 +8,7 @@ import org.openmrs.mobile.data.EntityDataService;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.db.impl.VisitDbService;
 import org.openmrs.mobile.data.rest.impl.VisitRestServiceImpl;
+import org.openmrs.mobile.models.SyncAction;
 import org.openmrs.mobile.models.Visit;
 
 import javax.inject.Inject;
@@ -17,7 +18,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class VisitDataService extends BaseEntityDataService<Visit, VisitDbService, VisitRestServiceImpl>
 		implements EntityDataService<Visit> {
 	@Inject
-	public VisitDataService() { }
+	public VisitDataService() {
+	}
 
 	public void endVisit(@NonNull String uuid, @NonNull Visit visit, @Nullable QueryOptions options,
 			@NonNull GetCallback<Visit> callback) {
@@ -30,9 +32,13 @@ public class VisitDataService extends BaseEntityDataService<Visit, VisitDbServic
 				() -> restService.endVisit(uuid, visit, options));
 	}
 
-	public void updateVisit(String visitUuid, Visit updatedVisit, GetCallback<Visit> callback) {
+	public void updateVisit(Visit existingVisit, Visit updatedVisit, GetCallback<Visit> callback) {
 		executeSingleCallback(callback, null,
-				() -> dbService.save(updatedVisit),
-				() -> restService.updateVisit(visitUuid, updatedVisit));
+				() -> {
+					Visit result = dbService.save(existingVisit);
+					syncLogDbService.save(createSyncLog(existingVisit, SyncAction.UPDATED));
+					return result;
+				},
+				() -> restService.updateVisit(updatedVisit));
 	}
 }

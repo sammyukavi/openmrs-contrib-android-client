@@ -1,13 +1,11 @@
 package org.openmrs.mobile.data.sync;
 
 import org.openmrs.mobile.data.DataOperationException;
-import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.db.DbService;
 import org.openmrs.mobile.data.db.impl.SyncLogDbService;
 import org.openmrs.mobile.data.rest.RestHelper;
 import org.openmrs.mobile.data.rest.RestService;
-import org.openmrs.mobile.data.sync.SyncProvider;
 import org.openmrs.mobile.models.BaseOpenmrsAuditableObject;
 import org.openmrs.mobile.models.SyncLog;
 
@@ -35,8 +33,13 @@ public abstract class BasePushProvider<E extends BaseOpenmrsAuditableObject,
 	}
 
 	protected void push(SyncLog syncLog) {
+		if (syncLog.getKey() == null) {
+			throw new DataOperationException("Entity UUID must be set");
+		}
+
 		E entity = dbService.getByUuid(syncLog.getKey(), QueryOptions.FULL_REP);
-		if(entity == null) {
+
+		if (entity == null) {
 			throw new DataOperationException("Entity not found");
 		}
 
@@ -44,13 +47,14 @@ public abstract class BasePushProvider<E extends BaseOpenmrsAuditableObject,
 
 		switch (syncLog.getAction()) {
 			case NEW:
-				call = restService.create(entity);
+				entity.setUuid(null);
+				call = create(entity);
 				break;
 			case UPDATED:
-				call = restService.update(entity);
+				call = update(entity);
 				break;
 			case DELETED:
-				call = restService.purge(entity.getUuid());
+				call = purge(entity);
 				break;
 		}
 
@@ -58,5 +62,17 @@ public abstract class BasePushProvider<E extends BaseOpenmrsAuditableObject,
 		RestHelper.getCallValue(call);
 
 		syncLogDbService.delete(syncLog);
+	}
+
+	protected Call<E> create(E entity) {
+		return restService.create(entity);
+	}
+
+	protected Call<E> update(E entity) {
+		return restService.update(entity);
+	}
+
+	protected Call<E> purge(E entity) {
+		return restService.purge(entity.getUuid());
 	}
 }

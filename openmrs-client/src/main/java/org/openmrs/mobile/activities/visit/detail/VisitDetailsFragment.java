@@ -358,8 +358,8 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 
 						if (visit.getEncounters().get(i).getObs().size() != 0) {
 							visitVitalsAuditInfo.setVisibility(View.VISIBLE);
-							visitVitalsDate.setText(DATE_FORMAT.format(visit.getEncounters().get(i).getEncounterDatetime
-									()));
+							visitVitalsDate.setText(DATE_FORMAT.format(
+									visit.getEncounters().get(i).getEncounterDatetime()));
 
 							for (int v = 0; v < visit.getEncounters().get(i).getEncounterProviders().size(); v++) {
 								if (v == 0) {

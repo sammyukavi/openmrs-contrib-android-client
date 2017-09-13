@@ -170,8 +170,8 @@ public class VisitPullProvider {
 			List<Observation> observations = new ArrayList<>();
 			for (RecordInfo observationRecord : observationInfo) {
 				if (observationRecord.isUpdatedSince(subscription)) {
-					Observation observation = RestHelper.getCallValue(obsRestService.getByUuid(observationRecord.getUuid()
-							, options));
+					Observation observation =
+							RestHelper.getCallValue(obsRestService.getByUuid(observationRecord.getUuid(), options));
 					observation.processRelationships();
 					observations.add(observation);
 

@@ -10,7 +10,7 @@ public class PagingInfo {
 	/**
 	 * Sets the page size to 10,000 so that all results will be included and the server-defined default limit won't be used.
 	 */
-	public static final PagingInfo ALL = new PagingInfo(1,10000);
+	public static final PagingInfo ALL = new PagingInfo(0,10000);
 
 	private int page;
 	private int pageSize;

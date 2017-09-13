@@ -89,6 +89,7 @@ public class Observation extends BaseOpenmrsEntity implements Serializable {
 	@ForeignKey(stubbedRelationship = true)
 	private Provider provider;
 
+	@Column
 	private String diagnosisList;
 	private String diagnosisCertainty;
 	private String diagnosisOrder;

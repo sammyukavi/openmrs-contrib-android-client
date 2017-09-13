@@ -13,6 +13,7 @@ import com.raizlabs.android.dbflow.structure.ModelAdapter;
 
 import org.greenrobot.eventbus.EventBus;
 import org.openmrs.mobile.data.PagingInfo;
+import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.db.DbService;
 import org.openmrs.mobile.data.db.Repository;
 import org.openmrs.mobile.data.db.impl.RecordInfoDbService;
@@ -257,7 +258,7 @@ public abstract class AdaptiveSubscriptionProvider<E extends BaseOpenmrsAuditabl
 	 * @return The entities
 	 */
 	protected List<E> getAllRest() {
-		return RestHelper.getCallListValue(restService.getAll(null, PagingInfo.ALL));
+		return RestHelper.getCallListValue(restService.getAll(QueryOptions.FULL_REP, PagingInfo.ALL));
 	}
 
 	/**

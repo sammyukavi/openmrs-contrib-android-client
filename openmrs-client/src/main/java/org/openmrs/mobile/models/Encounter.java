@@ -51,7 +51,7 @@ public class Encounter extends BaseOpenmrsAuditableObject implements Serializabl
 
 	@SerializedName("encounterType")
 	@Expose
-	@ForeignKey(stubbedRelationship = true)
+	@ForeignKey(saveForeignKeyModel = true)
 	private EncounterType encounterType;
 
 	@SerializedName("obs")

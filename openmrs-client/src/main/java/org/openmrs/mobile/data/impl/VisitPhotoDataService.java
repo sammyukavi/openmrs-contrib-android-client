@@ -6,6 +6,7 @@ import android.util.Log;
 import org.openmrs.mobile.data.BaseDataService;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.QueryOptions;
+import org.openmrs.mobile.data.RequestStrategy;
 import org.openmrs.mobile.data.db.impl.VisitPhotoDbService;
 import org.openmrs.mobile.data.rest.impl.VisitPhotoRestServiceImpl;
 import org.openmrs.mobile.models.Observation;
@@ -30,7 +31,7 @@ public class VisitPhotoDataService
 	}
 
 	public void uploadPhoto(VisitPhoto visitPhoto, @NonNull GetCallback<VisitPhoto> callback) {
-		executeSingleCallback(callback, null,
+		executeSingleCallback(callback, new QueryOptions.Builder().requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL).build(),
 				() -> {
 					VisitPhoto result = dbService.save(visitPhoto);
 					syncLogDbService.save(createSyncLog(result, SyncAction.NEW));

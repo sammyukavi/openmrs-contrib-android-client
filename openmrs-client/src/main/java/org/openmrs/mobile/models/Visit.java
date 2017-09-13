@@ -31,12 +31,12 @@ import java.util.List;
 public class Visit extends BaseOpenmrsEntity implements Serializable {
 	@SerializedName("visitType")
 	@Expose
-	@ForeignKey
+	@ForeignKey(saveForeignKeyModel = true)
 	private VisitType visitType;
 
 	@SerializedName("location")
 	@Expose
-	@ForeignKey
+	@ForeignKey(saveForeignKeyModel = true)
 	private Location location;
 
 	@SerializedName("startDatetime")
@@ -86,8 +86,8 @@ public class Visit extends BaseOpenmrsEntity implements Serializable {
 	public void processRelationships() {
 		super.processRelationships();
 
-		processRelatedObjects(encounters);
-		processRelatedObjects(attributes);
+		processRelatedObjects(encounters, (e) -> e.setVisit(this));
+		processRelatedObjects(attributes, (a) -> a.setVisit(this));
 	}
 
 	public Patient getPatient() {

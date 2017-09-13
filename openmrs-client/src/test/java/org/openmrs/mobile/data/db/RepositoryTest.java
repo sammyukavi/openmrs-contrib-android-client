@@ -11,7 +11,11 @@ import org.junit.runner.RunWith;
 import org.openmrs.mobile.BuildConfig;
 import org.openmrs.mobile.data.CoreTestData;
 import org.openmrs.mobile.data.DBFlowRule;
+import org.openmrs.mobile.data.ModelAsserters;
+import org.openmrs.mobile.data.ModelGenerators;
 import org.openmrs.mobile.data.db.impl.RepositoryImpl;
+import org.openmrs.mobile.models.Encounter;
+import org.openmrs.mobile.models.Encounter_Table;
 import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Location_Table;
 import org.openmrs.mobile.models.Patient;
@@ -20,9 +24,12 @@ import org.openmrs.mobile.models.Person;
 import org.openmrs.mobile.models.PersonName;
 import org.openmrs.mobile.models.PersonName_Table;
 import org.openmrs.mobile.models.Person_Table;
+import org.openmrs.mobile.models.Visit;
+import org.openmrs.mobile.models.Visit_Table;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,19 +40,23 @@ public class RepositoryTest {
 	public DBFlowRule dbflowTestRule = DBFlowRule.create();
 
 	private Repository repository = new RepositoryImpl();
+	private Encounter_Table encounterTable;
 	private Location_Table locationTable;
 	private Patient_Table patientTable;
 	private Person_Table personTable;
 	private PersonName_Table personNameTable;
+	private Visit_Table visitTable;
 
 	@Before
 	public void before() {
 		CoreTestData.load();
 
+		encounterTable = (Encounter_Table)FlowManager.getInstanceAdapter(Encounter.class);
 		locationTable = (Location_Table)FlowManager.getInstanceAdapter(Location.class);
 		patientTable = (Patient_Table)FlowManager.getInstanceAdapter(Patient.class);
 		personTable = (Person_Table)FlowManager.getInstanceAdapter(Person.class);
 		personNameTable = (PersonName_Table)FlowManager.getInstanceAdapter(PersonName.class);
+		visitTable = (Visit_Table)FlowManager.getInstanceAdapter(Visit.class);
 	}
 
 	@After
@@ -180,5 +191,81 @@ public class RepositoryTest {
 		Assert.assertNotNull(personSearch);
 		Assert.assertNotNull(patientSearch.getPerson());
 		Assert.assertEquals(person.getUuid(), patientSearch.getPerson().getUuid());
+	}
+
+	@Test
+	public void save_shouldSaveRelatedObjects() throws Exception {
+		Patient patient = ModelGenerators.PATIENT.generate(false);
+		ModelGenerators.VISIT.setPatient(patient);
+		Visit visit = ModelGenerators.VISIT.generate(true);
+
+		Visit dbVisit = repository.querySingle(visitTable, Visit_Table.uuid.eq(visit.getUuid()));
+		Assert.assertNull(dbVisit);
+
+		repository.save(visitTable, visit);
+
+		dbVisit = repository.querySingle(visitTable, Visit_Table.uuid.eq(visit.getUuid()));
+		Assert.assertNotNull(dbVisit);
+		ModelAsserters.VISIT.assertModel(visit, dbVisit);
+	}
+
+	@Test
+	public void saveAll_shouldSaveRelatedObjects() throws Exception {
+		Patient patient = ModelGenerators.PATIENT.generate(false);
+		ModelGenerators.VISIT.setPatient(patient);
+		Visit visit = ModelGenerators.VISIT.generate(true);
+		ModelGenerators.VISIT.setPatient(patient);
+		Visit visit2 = ModelGenerators.VISIT.generate(true);
+
+		Visit dbVisit = repository.querySingle(visitTable, Visit_Table.uuid.eq(visit.getUuid()));
+		Assert.assertNull(dbVisit);
+		dbVisit = repository.querySingle(visitTable, Visit_Table.uuid.eq(visit2.getUuid()));
+		Assert.assertNull(dbVisit);
+
+		List<Visit> temp = new ArrayList<>(2);
+		temp.add(visit);
+		temp.add((visit2));
+		repository.saveAll(visitTable, temp);
+
+		dbVisit = repository.querySingle(visitTable, Visit_Table.uuid.eq(visit.getUuid()));
+		Assert.assertNotNull(dbVisit);
+		ModelAsserters.VISIT.assertModel(visit, dbVisit);
+		dbVisit = repository.querySingle(visitTable, Visit_Table.uuid.eq(visit2.getUuid()));
+		Assert.assertNotNull(dbVisit);
+		ModelAsserters.VISIT.assertModel(visit2, dbVisit);
+	}
+
+	@Test
+	public void saveAll_shouldSaveRelatedObjects2() throws Exception {
+		Patient patient = ModelGenerators.PATIENT.generate(true);
+		patient.processRelationships();
+
+		Patient dbPatient = repository.querySingle(patientTable, Patient_Table.uuid.eq(patient.getUuid()));
+		Assert.assertNull(dbPatient);
+
+		List<Patient> temp = new ArrayList<>(2);
+		temp.add(patient);
+		repository.saveAll(patientTable, temp);
+
+		dbPatient = repository.querySingle(patientTable, Patient_Table.uuid.eq(patient.getUuid()));
+		Assert.assertNotNull(dbPatient);
+		ModelAsserters.PATIENT.assertModel(patient, dbPatient);
+	}
+
+	@Test
+	public void saveAll_shouldSaveRelatedObjects3() throws Exception {
+		Person person = ModelGenerators.PERSON.generate(true);
+		person.processRelationships();
+
+		Person dbPerson = repository.querySingle(personTable, Person_Table.uuid.eq(person.getUuid()));
+		Assert.assertNull(dbPerson);
+
+		List<Person> temp = new ArrayList<>(2);
+		temp.add(person);
+		repository.saveAll(personTable, temp);
+
+		dbPerson = repository.querySingle(personTable, Person_Table.uuid.eq(person.getUuid()));
+		Assert.assertNotNull(dbPerson);
+		ModelAsserters.PERSON.assertModel(person, dbPerson);
 	}
 }

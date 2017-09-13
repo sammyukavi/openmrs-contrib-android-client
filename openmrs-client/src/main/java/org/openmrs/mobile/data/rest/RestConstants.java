@@ -22,7 +22,7 @@ public class RestConstants {
 				+ "(uuid,display),retired,mappings:(uuid,display,conceptReferenceTerm:(uuid,display,code)),dateCreated,"
 				+ "dateChanged,value)";
 		public static final String PATIENT_LIST_PATIENTS_CONTEXT = "custom:(uuid,patient:(uuid,dateChanged),patientList:(uuid,"
-				+ "display,headerContent,bodyContent))";
+				+ "display),headerContent,bodyContent)";
 		public static final String PATIENT_LIST_PATIENTS = "custom:(uuid,patient,visit,patientList:(uuid,display),"
 				+ "headerContent,bodyContent)";
 		public static final String VISIT_ENCOUNTER = "custom:(uuid,display,encounterDatetime,patient:ref,location:ref,"

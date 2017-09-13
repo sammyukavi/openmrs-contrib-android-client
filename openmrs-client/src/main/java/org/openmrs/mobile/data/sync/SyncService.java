@@ -42,7 +42,7 @@ public class SyncService {
 
 	private NetworkUtils networkUtils;
 	private Map<String, SubscriptionProvider> subscriptionProviders = new HashMap<String, SubscriptionProvider>();
-	private Map<String, SyncProvider> pushSyncProviders = new HashMap<>();
+	private Map<String, PushProvider> pushSyncProviders = new HashMap<>();
 
 	@Inject
 	public SyncService(OpenMRS openmrs, SyncLogDbService syncLogDbService, PullSubscriptionDbService subscriptionDbService,
@@ -84,14 +84,14 @@ public class SyncService {
 		for (SyncLog record : records) {
 			eventBus.post(new SyncPushEvent(ApplicationConstants.EventMessages.Sync.Push.RECORD_REMOTE_PUSH_STARTING,
 					record.getType(), null));
-			SyncProvider syncProvider = pushSyncProviders.get(record.getType());
-			if (syncProvider == null) {
-				syncProvider = providerHelper.getSyncProvider(record.getType());
+			PushProvider pushProvider = pushSyncProviders.get(record.getType());
+			if (pushProvider == null) {
+				pushProvider = providerHelper.getSyncProvider(record.getType());
 
-				pushSyncProviders.put(record.getType(), syncProvider);
+				pushSyncProviders.put(record.getType(), pushProvider);
 			}
 
-			if (syncProvider != null) {
+			if (pushProvider != null) {
 				try {
 
 					if (StringUtils.notNull(openmrs.getPatientUuid()) &&
@@ -106,16 +106,17 @@ public class SyncService {
 						continue;
 					}
 
-					syncProvider.sync(record);
+					pushProvider.push(record);
 
+					syncLogDbService.delete(record);
 				} catch (DataOperationException doe) {
 					Log.w(TAG, "Data exception occurred while processing push provider '" +
-							syncProvider.getClass().getSimpleName() + ":" +
+							pushProvider.getClass().getSimpleName() + ":" +
 							(StringUtils.isBlank(record.getKey()) ? "(null)" :
 									record.getKey()) + "'", doe);
 				} catch (Exception ex) {
 					Log.e(TAG, "An exception occurred while processing push provider '" +
-							syncProvider.getClass().getSimpleName() + ":" +
+							pushProvider.getClass().getSimpleName() + ":" +
 							(StringUtils.isBlank(record.getKey()) ? "(null)" :
 									record.getKey()) + "'", ex);
 				} finally {
@@ -204,7 +205,6 @@ public class SyncService {
 	 * Trims patient data for patients that are not subscribed.
 	 */
 	protected void trim() {
-
 		eventBus.post(new SyncPullEvent(ApplicationConstants.EventMessages.Sync.Pull.TRIM_STARTING,
 				ApplicationConstants.EventMessages.Sync.SyncType.TRIM, null));
 

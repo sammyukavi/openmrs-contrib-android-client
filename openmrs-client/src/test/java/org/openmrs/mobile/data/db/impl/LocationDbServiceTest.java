@@ -1,6 +1,7 @@
 package org.openmrs.mobile.data.db.impl;
 
 import org.openmrs.mobile.data.ModelAsserters;
+import org.openmrs.mobile.data.ModelGenerators;
 import org.openmrs.mobile.data.db.BaseDbService;
 import org.openmrs.mobile.data.db.BaseMetadataDbServiceTest;
 import org.openmrs.mobile.models.Location;
@@ -19,18 +20,7 @@ public class LocationDbServiceTest extends BaseMetadataDbServiceTest<Location> {
 	}
 
 	@Override
-	protected Location createEntity(boolean createSubEntities) {
-		Location entity = new Location();
-
-		entity.setUuid(UUID.randomUUID().toString());
-		entity.setName("Location 1");
-		entity.setAddress1("Address 1");
-		entity.setAddress2("Address 2");
-		entity.setCityVillage("City Village");
-		entity.setCountry("Country");
-		entity.setPostalCode("12345");
-		entity.setStateProvince("State Province");
-
-		return entity;
+	protected ModelGenerators.ModelGenerator<Location> getGenerator() {
+		return ModelGenerators.LOCATION;
 	}
 }

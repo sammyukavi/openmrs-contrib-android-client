@@ -20,7 +20,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -200,6 +199,27 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 
 			}
 		});
+
+		firstGcsScore.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence charSequence, int startPos, int count, int after) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+			}
+
+			@Override
+			public void afterTextChanged(Editable editable) {
+				hasValidGcsScore();
+			}
+		});
+
+		submitForm.setOnClickListener(v -> {
+			if (hasValidGcsScore()) {
+				performDataSend();
+			}
+		});
 	}
 
 	private void initViewFields() {
@@ -263,28 +283,6 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		cd4TextInputLayout = (TextInputLayout)fragmentView.findViewById(R.id.cd4TextInputLayout);
 		hba1cTextLayout = (TextInputLayout)fragmentView.findViewById(R.id.hba1cTextLayout);
 		errorFirstGcsScore = (TextView)fragmentView.findViewById(R.id.invalidGscError);
-
-		firstGcsScore.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void beforeTextChanged(CharSequence charSequence, int startPos, int count, int after) {
-			}
-
-			@Override
-			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-			}
-
-			@Override
-			public void afterTextChanged(Editable editable) {
-				hasValidGcsScore();
-			}
-		});
-
-		submitForm.setOnClickListener(v -> {
-			if( hasValidGcsScore() ){
-				performDataSend();
-			}
-		});
-
 		progressBar = (RelativeLayout)fragmentView.findViewById(R.id.auditDataRelativeView);
 		auditDataFormProgressBar = (RelativeLayout)fragmentView.findViewById(R.id.auditDataFormProgressBar);
 		auditDataFormScreen = (LinearLayout)fragmentView.findViewById(R.id.auditDataFormScreen);
@@ -1248,19 +1246,20 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		}
 	}
 
-	private boolean hasValidGcsScore(){
-		if(firstGcsScore.getText().toString().length() == 0){
+	private boolean hasValidGcsScore() {
+		if (firstGcsScore.getText().toString().length() == 0) {
 			errorFirstGcsScore.setVisibility(View.GONE);
-		}else if(Float.parseFloat(firstGcsScore.getText().toString()) > 2 &&
-				Float.parseFloat(firstGcsScore.getText().toString()) < 16){
+		} else if (Float.parseFloat(firstGcsScore.getText().toString()) > 2 &&
+				Float.parseFloat(firstGcsScore.getText().toString()) < 16) {
 			errorFirstGcsScore.setVisibility(View.GONE);
 			return true;
-		}else{
+		} else {
 			errorFirstGcsScore.setVisibility(View.VISIBLE);
 			errorFirstGcsScore.setText(getString(R.string.error_gcs_score,
 					ApplicationConstants.ValidationFieldValues.AUDIT_GCS_SCORE_MIN,
 					ApplicationConstants.ValidationFieldValues.AUDIT_GCS_SCORE_MAX));
+			return false;
 		}
-		return false;
+		return true;
 	}
 }

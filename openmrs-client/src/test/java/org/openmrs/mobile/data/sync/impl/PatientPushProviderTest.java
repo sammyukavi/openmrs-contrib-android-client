@@ -29,7 +29,7 @@ public class PatientPushProviderTest extends BasePushProviderTest<Patient, Patie
 	public void push_shouldFetchEntityDb() throws Exception {
 		mockSuccessfulDbCalls();
 
-		provider.sync(syncLogEntries.get(0));
+		provider.push(syncLogEntries.get(0));
 		verify(dbService).getByUuid(anyString(), any(QueryOptions.class));
 	}
 
@@ -37,17 +37,8 @@ public class PatientPushProviderTest extends BasePushProviderTest<Patient, Patie
 	public void push_shouldCallRest() throws Exception {
 		mockSuccessfulCalls();
 
-		provider.sync(syncLogEntries.get(0));
+		provider.push(syncLogEntries.get(0));
 		verify(restService).create(any(Patient.class));
-	}
-
-	@Test
-	public void push_shouldDeleteSyncLog() throws Exception {
-		mockSuccessfulCalls();
-		mockDeleteSyncCall();
-
-		provider.sync(syncLogEntries.get(0));
-		verify(syncLogDbService).delete(any(SyncLog.class));
 	}
 
 	@Test(expected = DataOperationException.class)
@@ -55,7 +46,7 @@ public class PatientPushProviderTest extends BasePushProviderTest<Patient, Patie
 		mockErrorDbCalls();
 		SyncLog log = new SyncLog();
 		log.setKey("2343223423");
-		provider.sync(log);
+		provider.push(log);
 		verify(dbService).getByUuid(anyString(), any(QueryOptions.class));
 	}
 

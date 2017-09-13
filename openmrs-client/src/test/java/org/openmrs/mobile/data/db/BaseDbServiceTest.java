@@ -2,16 +2,15 @@ package org.openmrs.mobile.data.db;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openmrs.mobile.BuildConfig;
+import org.openmrs.mobile.data.CoreTestData;
 import org.openmrs.mobile.data.DBFlowRule;
 import org.openmrs.mobile.data.ModelAsserters;
+import org.openmrs.mobile.data.ModelGenerators;
 import org.openmrs.mobile.models.BaseOpenmrsObject;
-import org.openmrs.mobile.models.PersonAttribute;
-import org.openmrs.mobile.models.PersonAttributeType;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -23,17 +22,19 @@ public abstract class BaseDbServiceTest<E extends BaseOpenmrsObject> {
 
 	protected BaseDbService<E> dbService;
 	protected ModelAsserters.ModelAsserter<E> asserter;
+	protected ModelGenerators.ModelGenerator<E> generator;
 
 	protected abstract BaseDbService<E> getDbService();
 
 	protected abstract ModelAsserters.ModelAsserter<E> getAsserter();
 
-	protected abstract E createEntity(boolean createSubEntities);
+	protected abstract ModelGenerators.ModelGenerator<E> getGenerator();
 
 	@Before
 	public void setUp() throws Exception {
 		this.dbService = getDbService();
 		this.asserter = getAsserter();
+		this.generator = getGenerator();
 
 		CoreTestData.load();
 	}
@@ -75,7 +76,9 @@ public abstract class BaseDbServiceTest<E extends BaseOpenmrsObject> {
 
 	@Test
 	public void getByUuid_shouldLoadRelatedEntities() throws Exception {
-		E initial = createEntity(true);
+		if (generator == null) return;
+
+		E initial = generator.generate(true);
 		if (initial != null) {
 			dbService.save(initial);
 

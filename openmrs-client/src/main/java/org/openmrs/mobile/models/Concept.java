@@ -24,7 +24,7 @@ import java.util.List;
 public class Concept extends BaseOpenmrsAuditableObject {
 	@SerializedName("datatype")
 	@Expose
-	@ForeignKey
+	@ForeignKey(stubbedRelationship = true)
 	private Datatype datatype;
 
 	@SerializedName("description")
@@ -34,17 +34,18 @@ public class Concept extends BaseOpenmrsAuditableObject {
 
 	@SerializedName("conceptClass")
 	@Expose
-	@ForeignKey
+	@ForeignKey(stubbedRelationship = true)
 	private ConceptClass conceptClass;
+
+	@SerializedName("name")
+	@Expose
+	@ForeignKey(saveForeignKeyModel = true, deleteForeignKeyModel = true)
+	private ConceptName name;
 
 	@SerializedName("answers")
 	@Expose
 	private List<ConceptAnswer> answers;
 
-	@SerializedName("name")
-	@Expose
-	private ConceptName name;
-	
 	@SerializedName("mappings")
 	@Expose
 	private List<ConceptMapping> mappings;

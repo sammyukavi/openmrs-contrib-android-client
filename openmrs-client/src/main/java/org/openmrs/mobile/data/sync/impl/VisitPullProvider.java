@@ -95,7 +95,7 @@ public class VisitPullProvider {
 		}
 	}
 
-	private List<RecordInfo> pullVisits(@NonNull PullSubscription subscription, RecordInfo patientRecord) {
+	protected List<RecordInfo> pullVisits(@NonNull PullSubscription subscription, RecordInfo patientRecord) {
 		// Get record info for patient visits
 		List<RecordInfo> visitInfo = RestHelper.getCallListValue(
 				visitRestService.getRecordInfoByPatient(patientRecord.getUuid(),
@@ -128,7 +128,7 @@ public class VisitPullProvider {
 		return checkedVisits;
 	}
 
-	private void pullVisitTasks(PullSubscription subscription, RecordInfo patientRecord, List<RecordInfo> visitInfo) {
+	protected void pullVisitTasks(PullSubscription subscription, RecordInfo patientRecord, List<RecordInfo> visitInfo) {
 		QueryOptions options = new QueryOptions.Builder().customRepresentation(RestConstants.Representations.VISIT_TASKS)
 				.build();
 
@@ -207,10 +207,10 @@ public class VisitPullProvider {
 				visitPhotoDbService.saveAll(visitPhotos);
 			}
 		}
-
 	}
 
-	private void pullVisitEncounters(PullSubscription subscription, RecordInfo patientRecord, List<RecordInfo> visitInfo) {
+	protected void pullVisitEncounters(PullSubscription subscription, RecordInfo patientRecord, List<RecordInfo>
+			visitInfo) {
 		QueryOptions options = new QueryOptions.Builder()
 				.customRepresentation(RestConstants.Representations.VISIT_ENCOUNTER)
 				.build();

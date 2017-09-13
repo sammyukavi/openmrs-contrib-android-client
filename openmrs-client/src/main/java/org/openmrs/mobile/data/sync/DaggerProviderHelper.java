@@ -18,11 +18,6 @@ import org.openmrs.mobile.data.sync.impl.PersonAttributeTypeSubscriptionProvider
 import org.openmrs.mobile.data.sync.impl.VisitAttributeTypeSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.VisitPredefinedTaskSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.VisitTypeSubscriptionProvider;
-import org.openmrs.mobile.data.sync.impl.EncounterPushProvider;
-import org.openmrs.mobile.data.sync.impl.ObservationPushProvider;
-import org.openmrs.mobile.data.sync.impl.PatientPushProvider;
-import org.openmrs.mobile.data.sync.impl.VisitPushProvider;
-import org.openmrs.mobile.data.sync.impl.VisitTaskPushProvider;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
@@ -105,10 +100,10 @@ public class DaggerProviderHelper {
 		return provider;
 	}
 
-	public SyncProvider getSyncProvider(String className) {
+	public PushProvider getSyncProvider(String className) {
 		checkNotNull(className);
 
-		SyncProvider provider = null;
+		PushProvider provider = null;
 		if (className.endsWith(PATIENT_PUSH_SYNC)) {
 			provider = syncComponent.patientPushProvider();
 		} else if (className.endsWith(ENCOUNTER_PUSH_SYNC)) {

@@ -263,7 +263,6 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 	public void refresh() {
 		((VisitTasksPresenter)mPresenter).getVisit();
 		((VisitTasksPresenter)mPresenter).getPredefinedTasks();
-		((VisitTasksPresenter)mPresenter).getVisitTasks();
 	}
 
 	@Override
@@ -273,6 +272,7 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 			if (visit.getStopDatetime() != null) {
 				addTaskLayout.setVisibility(View.GONE);
 			}
+			((VisitTasksPresenter)mPresenter).getVisitTasks();
 		}
 
 	}
@@ -298,7 +298,7 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 		if (visitPredefinedTasks == null || visitTasks == null) {
 			return visitPredefinedTasks;
 		}
-		
+
 		String visitTasksName, predefinedTaskName;
 		VisitTaskStatus visitTaskStatus;
 

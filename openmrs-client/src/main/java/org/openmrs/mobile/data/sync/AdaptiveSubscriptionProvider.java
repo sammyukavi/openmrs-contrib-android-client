@@ -178,7 +178,7 @@ public abstract class AdaptiveSubscriptionProvider<E extends BaseOpenmrsAuditabl
 	protected List<String> calculateIncrementalInserts() {
 		Property entityUuidProperty = getModelTable(getEntityClass()).getProperty("uuid");
 
-		ModelQueriable<RecordInfo> query = SQLite.select(RecordInfo_Table.uuid)
+		ModelQueriable<RecordInfo> query = SQLite.select(RecordInfo_Table.uuid.withTable())
 				.from(RecordInfo.class)
 				.leftOuterJoin(getEntityClass())
 				.on(RecordInfo_Table.uuid.withTable().eq(entityUuidProperty.withTable()))

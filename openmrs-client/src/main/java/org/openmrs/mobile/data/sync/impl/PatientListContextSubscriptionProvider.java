@@ -12,7 +12,6 @@ import org.openmrs.mobile.data.rest.RestHelper;
 import org.openmrs.mobile.data.rest.impl.PatientListContextRestServiceImpl;
 import org.openmrs.mobile.data.sync.BaseSubscriptionProvider;
 import org.openmrs.mobile.event.SyncPullEvent;
-import org.openmrs.mobile.models.PatientList;
 import org.openmrs.mobile.models.PatientListContext;
 import org.openmrs.mobile.models.PatientListContext_Table;
 import org.openmrs.mobile.models.PullSubscription;
@@ -123,8 +122,10 @@ public class PatientListContextSubscriptionProvider extends BaseSubscriptionProv
 					patientListDbService.getByUuid(patientListContext.getPatientList().getUuid(), null));
 			patientListContext.setPatient(
 					patientDbService.getByUuid(patientListContext.getPatient().getUuid(), null));
-			patientListContext.setVisit(
-					visitDbService.getByUuid(patientListContext.getVisit().getUuid(), null));
+			if (patientListContext.getVisit() != null) {
+				patientListContext.setVisit(
+						visitDbService.getByUuid(patientListContext.getVisit().getUuid(), null));
+			}
 		}
 		listPatientDbService.saveAll(patientListContexts);
 	}

@@ -1,6 +1,5 @@
 package org.openmrs.mobile.data.sync.impl;
 
-import org.openmrs.mobile.data.db.impl.SyncLogDbService;
 import org.openmrs.mobile.data.db.impl.VisitPhotoDbService;
 import org.openmrs.mobile.data.rest.impl.VisitPhotoRestServiceImpl;
 import org.openmrs.mobile.data.sync.BasePushProvider;
@@ -14,12 +13,15 @@ public class VisitPhotoPushProvider extends BasePushProvider<VisitPhoto, VisitPh
 	private VisitPhotoRestServiceImpl restService;
 
 	@Inject
-	public VisitPhotoPushProvider(SyncLogDbService syncLogDbService,
-			VisitPhotoDbService dbService, VisitPhotoRestServiceImpl restService) {
-		super(syncLogDbService, dbService, restService);
+	public VisitPhotoPushProvider(VisitPhotoDbService dbService, VisitPhotoRestServiceImpl restService) {
+		super(dbService, restService);
 		this.restService = restService;
 	}
 
+	@Override
+	protected void deleteLocalRelatedRecords(VisitPhoto originalEntity, VisitPhoto restEntity) {
+	}
+	
 	@Override
 	protected Call<VisitPhoto> create(VisitPhoto entity) {
 		return restService.upload(entity);

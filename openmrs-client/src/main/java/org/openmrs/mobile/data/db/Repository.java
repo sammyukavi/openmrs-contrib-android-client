@@ -8,6 +8,8 @@ import com.raizlabs.android.dbflow.sql.language.property.IProperty;
 import com.raizlabs.android.dbflow.sql.queriable.ModelQueriable;
 import com.raizlabs.android.dbflow.structure.ModelAdapter;
 
+import org.openmrs.mobile.models.BaseOpenmrsObject;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -106,6 +108,16 @@ public interface Repository {
 	 * @return The record count
 	 */
 	<M> long count(@NonNull ModelQueriable<M> from);
+
+	/**
+	 * Updates the model with the specified id.
+	 * @param table The table where the model will be updated
+	 * @param id The id for the model to update
+	 * @param model The updated model
+	 * @param <M> The model class
+	 * @return {@code true} if the model was found and updated; otherwise, {@code false}
+	 */
+	<M extends BaseOpenmrsObject> boolean update(@NonNull ModelAdapter<M> table, @NonNull String id, @NonNull M model);
 
 	/**
 	 * Saves the specified model.

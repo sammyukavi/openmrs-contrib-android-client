@@ -124,6 +124,25 @@ public abstract class BaseDbService<E extends BaseOpenmrsObject> implements DbSe
 	}
 
 	@Override
+	public E update(@NonNull String originalUuid, @NonNull E entity) {
+		checkNotNull(originalUuid);
+		checkNotNull(entity);
+		if (entityTable == null) {
+			return null;
+		}
+
+		preSave(entity);
+
+		if (repository.update(entityTable, originalUuid, entity)) {
+			postSave(entity);
+
+			return entity;
+		} else {
+			throw new DataOperationException("Entity update failed.");
+		}
+	}
+
+	@Override
 	public void delete(@NonNull E entity) {
 		checkNotNull(entity);
 		if (entityTable == null) {

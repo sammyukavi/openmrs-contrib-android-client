@@ -9,8 +9,11 @@ import org.openmrs.mobile.models.BaseOpenmrsAuditableObject;
 import org.openmrs.mobile.models.BaseOpenmrsEntity;
 import org.openmrs.mobile.models.BaseOpenmrsMetadata;
 import org.openmrs.mobile.models.BaseOpenmrsObject;
+import org.openmrs.mobile.models.Concept;
+import org.openmrs.mobile.models.ConceptName;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Location;
+import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.PatientIdentifier;
 import org.openmrs.mobile.models.Person;
@@ -27,8 +30,11 @@ import java.util.List;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class ModelAsserters {
-	public static final EncounterAsserter ENCOUNTER = new EncounterAsserter();
+	public static final ConceptAsserter CONCEPT = new ConceptAsserter();
+	public static final ConceptNameAsserter CONCEPT_NAME = new ConceptNameAsserter();
 	public static final LocationAsserter LOCATION = new LocationAsserter();
+	public static final EncounterAsserter ENCOUNTER = new EncounterAsserter();
+	public static final ObservationAsserter OBSERVATION = new ObservationAsserter();
 	public static final PatientAsserter PATIENT = new PatientAsserter();
 	public static final PatientIdentifierAsserter PATIENT_IDENTIFIER = new PatientIdentifierAsserter();
 	public static final PersonAsserter PERSON = new PersonAsserter();
@@ -39,7 +45,7 @@ public class ModelAsserters {
 	public static final UuidAsserter UUID = new UuidAsserter();
 	public static final VisitAsserter VISIT = new VisitAsserter();
 	public static final VisitAttributeAsserter VISIT_ATTRIBUTE = new VisitAttributeAsserter();
-	public static final VistTypeAsserter VIST_TYPE = new VistTypeAsserter();
+	public static final VistTypeAsserter VISIT_TYPE = new VistTypeAsserter();
 
 	public interface ModelAsserter<E> {
 		void assertModel(E expected, E actual);
@@ -147,6 +153,93 @@ public class ModelAsserters {
 			Assert.assertEquals(expected.getUsername(), actual.getUsername());
 
 			assertSubModel(expected.getPerson(), actual.getPerson(), UUID);
+		}
+	}
+
+	public static class ConceptAsserter extends AuditableAsserter<Concept> {
+		@Override
+		public void assertModel(@NonNull Concept expected, @NonNull Concept actual) {
+			super.assertModel(expected, actual);
+
+			Assert.assertEquals(expected.getDescription(), actual.getDescription());
+			Assert.assertEquals(expected.getValue(), actual.getValue());
+
+			assertSubModel(expected.getDatatype(), actual.getDatatype(), UUID);
+			assertSubModel(expected.getConceptClass(), actual.getConceptClass(), UUID);
+			assertSubModel(expected.getName(), actual.getName(), CONCEPT_NAME);
+
+			assertSubList(expected.getAnswers(), actual.getAnswers());
+			assertSubList(expected.getMappings(), actual.getMappings());
+		}
+	}
+
+	public static class ConceptNameAsserter extends MetadataAsserter<ConceptName> {
+		@Override
+		public void assertModel(@NonNull ConceptName expected, @NonNull ConceptName actual) {
+			super.assertModel(expected, actual);
+		}
+	}
+
+	public static class LocationAsserter extends MetadataAsserter<Location> {
+		@Override
+		public void assertModel(@NonNull Location expected, @NonNull Location actual) {
+			super.assertModel(expected, actual);
+
+			Assert.assertEquals(expected.getAddress1(), actual.getAddress1());
+			Assert.assertEquals(expected.getAddress2(), actual.getAddress2());
+			Assert.assertEquals(expected.getCityVillage(), actual.getCityVillage());
+			Assert.assertEquals(expected.getCountry(), actual.getCountry());
+			Assert.assertEquals(expected.getPostalCode(), actual.getPostalCode());
+			Assert.assertEquals(expected.getStateProvince(), actual.getStateProvince());
+
+			if (expected.getParentLocation() == null) {
+				Assert.assertNull(actual.getParentLocation());
+			} else {
+				assertModel(expected.getParentLocation(), actual.getParentLocation());
+			}
+		}
+	}
+
+	public static class EncounterAsserter extends AuditableAsserter<Encounter> {
+		@Override
+		public void assertModel(@NonNull Encounter expected, @NonNull Encounter actual) {
+			super.assertModel(expected, actual);
+
+			Assert.assertEquals(expected.getEncounterDatetime(), actual.getEncounterDatetime());
+			Assert.assertEquals(expected.getVoided(), actual.getVoided());
+			Assert.assertEquals(expected.getProvider(), actual.getProvider());
+			Assert.assertEquals(expected.getResourceVersion(), actual.getResourceVersion());
+
+			assertSubModel(expected.getPatient(), actual.getPatient(), UUID);
+			assertSubModel(expected.getLocation(), actual.getLocation(), UUID);
+			assertSubModel(expected.getForm(), actual.getForm(), UUID);
+			assertSubModel(expected.getEncounterType(), actual.getEncounterType(), UUID);
+			assertSubModel(expected.getVisit(), actual.getVisit(), UUID);
+
+			assertSubList(expected.getObs(), actual.getObs(), OBSERVATION);
+			assertSubList(expected.getEncounterProviders(), actual.getEncounterProviders());
+		}
+	}
+
+	public static class ObservationAsserter extends EntityAsserter<Observation> {
+		@Override
+		public void assertModel(@NonNull Observation expected, @NonNull Observation actual) {
+			super.assertModel(expected, actual);
+
+			Assert.assertEquals(expected.getObsDatetime(), actual.getObsDatetime());
+			Assert.assertEquals(expected.getAccessionNumber(), actual.getAccessionNumber());
+			Assert.assertEquals(expected.getValueCodedName(), actual.getValueCodedName());
+			Assert.assertEquals(expected.getComment(), actual.getComment());
+			Assert.assertEquals(expected.getLocation(), actual.getLocation());
+			Assert.assertEquals(expected.getFormFieldPath(), actual.getFormFieldPath());
+			Assert.assertEquals(expected.getFormFieldNamespace(), actual.getFormFieldNamespace());
+			Assert.assertEquals(expected.getResourceVersion(), actual.getResourceVersion());
+
+			assertSubModel(expected.getPerson(), actual.getPerson(), UUID);
+			assertSubModel(expected.getConcept(), actual.getConcept(), UUID);
+			assertSubModel(expected.getEncounter(), actual.getEncounter(), UUID);
+			assertSubModel(expected.getObsGroup(), actual.getObsGroup(), UUID);
+			assertSubModel(expected.getProvider(), actual.getProvider(), UUID);
 		}
 	}
 
@@ -270,47 +363,6 @@ public class ModelAsserters {
 
 			assertSubModel(expected.getVisit(), actual.getVisit(), UUID);
 			assertSubModel(expected.getAttributeType(), actual.getAttributeType(), UUID);
-		}
-	}
-
-	public static class LocationAsserter extends MetadataAsserter<Location> {
-		@Override
-		public void assertModel(@NonNull Location expected, @NonNull Location actual) {
-			super.assertModel(expected, actual);
-
-			Assert.assertEquals(expected.getAddress1(), actual.getAddress1());
-			Assert.assertEquals(expected.getAddress2(), actual.getAddress2());
-			Assert.assertEquals(expected.getCityVillage(), actual.getCityVillage());
-			Assert.assertEquals(expected.getCountry(), actual.getCountry());
-			Assert.assertEquals(expected.getPostalCode(), actual.getPostalCode());
-			Assert.assertEquals(expected.getStateProvince(), actual.getStateProvince());
-
-			if (expected.getParentLocation() == null) {
-				Assert.assertNull(actual.getParentLocation());
-			} else {
-				assertModel(expected.getParentLocation(), actual.getParentLocation());
-			}
-		}
-	}
-
-	public static class EncounterAsserter extends AuditableAsserter<Encounter> {
-		@Override
-		public void assertModel(@NonNull Encounter expected, @NonNull Encounter actual) {
-			super.assertModel(expected, actual);
-
-			Assert.assertEquals(expected.getEncounterDatetime(), actual.getEncounterDatetime());
-			Assert.assertEquals(expected.getVoided(), actual.getVoided());
-			Assert.assertEquals(expected.getProvider(), actual.getProvider());
-			Assert.assertEquals(expected.getResourceVersion(), actual.getResourceVersion());
-
-			assertSubModel(expected.getPatient(), actual.getPatient(), UUID);
-			assertSubModel(expected.getLocation(), actual.getLocation(), UUID);
-			assertSubModel(expected.getForm(), actual.getForm(), UUID);
-			assertSubModel(expected.getEncounterType(), actual.getEncounterType(), UUID);
-			assertSubModel(expected.getVisit(), actual.getVisit(), UUID);
-
-			assertSubList(expected.getObs(), actual.getObs());
-			assertSubList(expected.getEncounterProviders(), actual.getEncounterProviders());
 		}
 	}
 }

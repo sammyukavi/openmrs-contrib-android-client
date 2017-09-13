@@ -1,6 +1,8 @@
 package org.openmrs.mobile.data.db;
 
 import com.raizlabs.android.dbflow.config.FlowManager;
+import com.raizlabs.android.dbflow.sql.language.Method;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -8,11 +10,14 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.openmrs.mobile.BuildConfig;
 import org.openmrs.mobile.data.CoreTestData;
 import org.openmrs.mobile.data.DBFlowRule;
 import org.openmrs.mobile.data.ModelAsserters;
 import org.openmrs.mobile.data.ModelGenerators;
+import org.openmrs.mobile.data.db.impl.PatientDbService;
+import org.openmrs.mobile.data.db.impl.PatientDbServiceTest;
 import org.openmrs.mobile.data.db.impl.RepositoryImpl;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Encounter_Table;
@@ -267,5 +272,42 @@ public class RepositoryTest {
 		dbPerson = repository.querySingle(personTable, Person_Table.uuid.eq(person.getUuid()));
 		Assert.assertNotNull(dbPerson);
 		ModelAsserters.PERSON.assertModel(person, dbPerson);
+	}
+
+	@Test
+	public void testSearchPatient(){
+		PatientDbService patientDbService = Mockito.mock(PatientDbService.class);
+//		Repository repositoryTest = Mockito.mock(RepositoryImpl.class);
+		List<Patient> patients;
+
+		Patient p1 = ModelGenerators.PATIENT.generate(true);
+		Patient p2 = ModelGenerators.PATIENT.generate(true);
+		Patient p3 = ModelGenerators.PATIENT.generate(true);
+
+		p1.getPerson().getName().setGivenName("Mso");
+		p2.getPerson().getName().setGivenName("Mika");
+		p3.getPerson().getName().setGivenName("Mwas");
+
+		//save the records
+		repository.save(patientTable,p1);
+		repository.save(patientTable,p2);
+		repository.save(patientTable,p3);
+
+		//retreive patient "Mika"
+		patients = repository.query(patientTable,
+		Patient_Table.person_uuid.in(
+				SQLite.select(PersonName_Table.person_uuid)
+						.from(PersonName.class)
+						.where(Method.group_concat(
+								PersonName_Table.givenName,
+								PersonName_Table.middleName,
+								PersonName_Table.familyName
+								)
+										.like("Mika")
+						)));
+
+		Assert.assertNotNull(patients);
+		Assert.assertEquals(1,patients.size());
+		Assert.assertEquals("Mika",patients.get(0).getPerson().getName().getGivenName());
 	}
 }

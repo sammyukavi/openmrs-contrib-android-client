@@ -58,7 +58,6 @@ public class VisitTasksPresenter extends VisitPresenterImpl implements VisitCont
 	public void subscribe() {
 		getVisit();
 		getPredefinedTasks();
-		getVisitTasks();
 	}
 
 	@Override

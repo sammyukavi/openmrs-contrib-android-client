@@ -10,7 +10,9 @@ import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.sql.language.property.IProperty;
 import com.raizlabs.android.dbflow.sql.queriable.ModelQueriable;
 import com.raizlabs.android.dbflow.structure.ModelAdapter;
+import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 import com.raizlabs.android.dbflow.structure.database.transaction.FastStoreModelTransaction;
+import com.raizlabs.android.dbflow.structure.database.transaction.ITransaction;
 
 import org.openmrs.mobile.data.db.AppDatabase;
 import org.openmrs.mobile.data.db.Repository;
@@ -175,12 +177,25 @@ public class RepositoryImpl implements Repository {
 		checkNotNull(table);
 		checkNotNull(models);
 
+		/*
+		This is the fast way to save multiple models to the db but this is currently not saving One-To-Many relations.
+		Once we find out what we're doing wrong (or the bug is fixed) uncomment this code and use it instead of just
+		saving each model.
+
 		FlowManager.getDatabase(AppDatabase.class).executeTransaction(
 				FastStoreModelTransaction
 						.saveBuilder(table)
 						.addAll(models)
 						.build()
 		);
+		*/
+
+		FlowManager.getDatabase(AppDatabase.class).executeTransaction(databaseWrapper -> {
+			for (M model : models) {
+				table.save(model);
+			}
+			table.saveAll(models);
+		});
 	}
 
 	@Override

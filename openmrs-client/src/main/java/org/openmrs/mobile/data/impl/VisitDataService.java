@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import org.openmrs.mobile.data.BaseEntityDataService;
 import org.openmrs.mobile.data.EntityDataService;
 import org.openmrs.mobile.data.QueryOptions;
+import org.openmrs.mobile.data.RequestStrategy;
 import org.openmrs.mobile.data.db.impl.VisitDbService;
 import org.openmrs.mobile.data.rest.impl.VisitRestServiceImpl;
 import org.openmrs.mobile.models.SyncAction;
@@ -33,7 +34,7 @@ public class VisitDataService extends BaseEntityDataService<Visit, VisitDbServic
 	}
 
 	public void updateVisit(Visit existingVisit, Visit updatedVisit, GetCallback<Visit> callback) {
-		executeSingleCallback(callback, null,
+		executeSingleCallback(callback, new QueryOptions.Builder().requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL).build(),
 				() -> {
 					Visit result = dbService.save(existingVisit);
 					syncLogDbService.save(createSyncLog(existingVisit, SyncAction.UPDATED));

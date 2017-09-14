@@ -14,8 +14,6 @@ import javax.inject.Inject;
 import retrofit2.Call;
 
 public class ObsRestServiceImpl extends BaseRestService<Observation, ObsRestService> {
-	public static final String VISIT_DOCUMENT_UUID =
-			"7cac8397-53cd-4f00-a6fe-028e8d743f8e,42ed45fd-f3f6-44b6-bfc2-8bde1bb41e00";
 
 	@Inject
 	public ObsRestServiceImpl() {
@@ -34,11 +32,11 @@ public class ObsRestServiceImpl extends BaseRestService<Observation, ObsRestServ
 	public Call<Results<Observation>> getVisitDocumentsObsByPatientAndConceptList(String patientUuid,
 			QueryOptions options) {
 		return restService.getVisitDocumentsObsByPatientAndConceptList(buildRestRequestPath(), patientUuid,
-				VISIT_DOCUMENT_UUID, options.getCustomRepresentation());
+				ApplicationConstants.ConceptSets.VISIT_DOCUMENT_UUID, options.getCustomRepresentation());
 	}
 
 	public Call<Results<RecordInfo>> getVisitDocumentsObsRecordInfoByPatientAndConceptList(String patientUuid) {
 		return restService.getVisitDocumentsObsRecordInfoByPatientAndConceptList(buildRestRequestPath(), patientUuid,
-				VISIT_DOCUMENT_UUID, RestConstants.Representations.RECORD_INFO);
+				ApplicationConstants.ConceptSets.VISIT_DOCUMENT_UUID, RestConstants.Representations.RECORD_INFO);
 	}
 }

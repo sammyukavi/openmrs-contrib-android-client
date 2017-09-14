@@ -24,7 +24,6 @@ import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Observation_Table;
 import org.openmrs.mobile.models.PullSubscription;
 import org.openmrs.mobile.models.RecordInfo;
-import org.openmrs.mobile.models.User;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitPhoto;
 import org.openmrs.mobile.models.VisitTask;
@@ -179,10 +178,7 @@ public class VisitPullProvider {
 					visitPhoto.setObservation(observation);
 					visitPhoto.setFileCaption(observation.getComment());
 					visitPhoto.setDateCreated(new Date(DateUtils.convertTime(observation.getObsDatetime())));
-
-					User creator = new User();
-					creator.setPerson(observation.getPerson());
-					visitPhoto.setCreator(creator);
+					visitPhoto.setCreator(observation.getCreator());
 
 					visitPhoto.setObservation(observation);
 					visitPhotos.add(visitPhoto);

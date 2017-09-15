@@ -64,7 +64,7 @@ public class VisitDbService extends BaseEntityDbService<Visit> implements Entity
 				new Method("LENGTH", Encounter_Table.uuid).lessThanOrEq(Resource.LOCAL_UUID_LENGTH));
 	}
 
-	public void deleteExistingVisitAttributes(@NonNull Visit visit) {
+	public void voidExistingVisitAttributes(@NonNull Visit visit) {
 		repository.deleteAll(visitAttributeTable, VisitAttribute_Table.visit_uuid.eq(visit.getUuid()));
 	}
 }

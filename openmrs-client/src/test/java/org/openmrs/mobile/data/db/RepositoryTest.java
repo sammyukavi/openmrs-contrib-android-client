@@ -296,16 +296,8 @@ public class RepositoryTest {
 		//retreive patient "Mika"
 		patients = repository.query(patientTable,
 		Patient_Table.person_uuid.in(
-				SQLite.select(PersonName_Table.person_uuid)
-						.from(PersonName.class)
-						.where(Method.group_concat(
-								PersonName_Table.givenName,
-								PersonName_Table.middleName,
-								PersonName_Table.familyName
-								)
-										.like("Mika")
-						)));
-
+				SQLite.select(PersonName_Table.person_uuid).from(PersonName.class)
+						.where(PersonName_Table.givenName.like("Mika"))));
 		Assert.assertNotNull(patients);
 		Assert.assertEquals(1,patients.size());
 		Assert.assertEquals("Mika",patients.get(0).getPerson().getName().getGivenName());

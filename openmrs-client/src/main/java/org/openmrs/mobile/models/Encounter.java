@@ -98,7 +98,8 @@ public class Encounter extends BaseOpenmrsAuditableObject implements Serializabl
 		if (form != null) {
 			form.processRelationships();
 		}
-		processRelatedObjects(obs);
+
+		processRelatedObjects(obs, (e) -> e.setEncounter(this));
 	}
 
 	/**

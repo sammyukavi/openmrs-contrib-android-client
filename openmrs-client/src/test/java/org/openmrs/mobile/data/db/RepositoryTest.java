@@ -2,6 +2,7 @@ package org.openmrs.mobile.data.db;
 
 import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.language.Method;
+import com.raizlabs.android.dbflow.sql.language.OperatorGroup;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import org.junit.After;
@@ -296,8 +297,12 @@ public class RepositoryTest {
 		//retreive patient "Mika"
 		patients = repository.query(patientTable,
 		Patient_Table.person_uuid.in(
-				SQLite.select(PersonName_Table.person_uuid).from(PersonName.class)
-						.where(PersonName_Table.givenName.like("Mika"))));
+				SQLite.select(PersonName_Table.person_uuid).from(PersonName.class).
+						where(OperatorGroup.clause()
+						.or(PersonName_Table.givenName.like("Mika"))
+						.or(PersonName_Table.middleName.like("Mika"))
+						.or(PersonName_Table.familyName.like("Mika"))
+						)));
 		Assert.assertNotNull(patients);
 		Assert.assertEquals(1,patients.size());
 		Assert.assertEquals("Mika",patients.get(0).getPerson().getName().getGivenName());

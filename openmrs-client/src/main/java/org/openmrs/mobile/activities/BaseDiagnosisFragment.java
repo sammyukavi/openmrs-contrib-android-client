@@ -240,7 +240,7 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 
 		for (Concept diagnosis : searchDiagnosis) {
 			for (String existingDiagnosis : existingDiagnoses) {
-				if (null != diagnosis.getName() &&
+				if (diagnosis.getName() != null && diagnosis.getName().getName() != null &&
 						diagnosis.getName().getName().equalsIgnoreCase(existingDiagnosis)
 						|| diagnosis.toString().equalsIgnoreCase(existingDiagnosis)) {
 					diagnoses.remove(diagnosis);

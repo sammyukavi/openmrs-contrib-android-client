@@ -20,6 +20,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public class ConceptDbService extends BaseDbService<Concept> implements DbService<Concept> {
 	@Inject
 	public ConceptDbService(Repository repository) {
@@ -32,6 +34,8 @@ public class ConceptDbService extends BaseDbService<Concept> implements DbServic
 	}
 
 	public List<Concept> getByName(@NonNull String conceptName, @Nullable QueryOptions options) {
+		checkNotNull(conceptName);
+		
 		conceptName = conceptName.trim();
 		if (!conceptName.startsWith("%")) {
 			conceptName = "%" + conceptName;

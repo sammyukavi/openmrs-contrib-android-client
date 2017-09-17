@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.raizlabs.android.dbflow.config.FlowManager;
-import com.raizlabs.android.dbflow.sql.language.SQLOperator;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.ModelAdapter;
 
@@ -33,27 +32,21 @@ public class ConceptDbService extends BaseDbService<Concept> implements DbServic
 	}
 
 	public List<Concept> getByName(@NonNull String conceptName, @Nullable QueryOptions options) {
-		return null;
-	}
-
-	public List<Concept> findConcept(@NonNull String name, @Nullable QueryOptions options) {
-		if (!name.startsWith("%")) {
-			name = "%" + name;
+		conceptName = conceptName.trim();
+		if (!conceptName.startsWith("%")) {
+			conceptName = "%" + conceptName;
 		}
-		if (!name.endsWith("%")) {
-			name = name + "%";
+		if (!conceptName.endsWith("%")) {
+			conceptName = conceptName + "%";
 		}
 
-		final String search = name;
+		final String search = conceptName;
 
-		return executeQuery(options, null, (f) -> f.where(searchByName(search)));
-	}
-
-	private SQLOperator searchByName(String name) {
-		return Concept_Table.name_uuid.in(
-				SQLite.select(ConceptName_Table.uuid)
-						.from(ConceptName.class)
-						.where(ConceptName_Table.name.like(name))
-		);
+		return executeQuery(options, null, (f) -> f.where(
+				Concept_Table.name_uuid.in(
+						SQLite.select(ConceptName_Table.uuid)
+								.from(ConceptName.class)
+								.where(ConceptName_Table.name.like(search)))
+		));
 	}
 }

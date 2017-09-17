@@ -51,7 +51,7 @@ public class ConceptDataService extends BaseDataService<Concept, ConceptDbServic
 		checkNotNull(callback);
 
 		executeMultipleCallback(callback, options, pagingInfo,
-				() -> dbService.findConcept(searchQuery, options),
+				() -> dbService.getByName(searchQuery, options),
 				() -> restService.findConcept(searchQuery, options, pagingInfo));
 	}
 }

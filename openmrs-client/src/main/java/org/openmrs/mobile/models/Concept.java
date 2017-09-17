@@ -39,7 +39,7 @@ public class Concept extends BaseOpenmrsAuditableObject {
 
 	@SerializedName("name")
 	@Expose
-	@ForeignKey(stubbedRelationship = true)
+	@ForeignKey(saveForeignKeyModel = true, deleteForeignKeyModel = true)
 	private ConceptName name;
 
 	@SerializedName("answers")

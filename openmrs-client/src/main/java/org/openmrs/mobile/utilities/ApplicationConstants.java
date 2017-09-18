@@ -190,11 +190,12 @@ public abstract class ApplicationConstants {
 		public static final String BIRTH_PLACE_UUID = "8d8718c2-c2cc-11de-8d13-0010c6dffd0f";
 		public static final String HEALTH_CENTER_UUID = "8d87236c-c2cc-11de-8d13-0010c6dffd0f";
 		public static final String HEALTH_DISTRICT_UUID = "8d872150-c2cc-11de-8d13-0010c6dffd0f";
-		public static final String MOTHER_NAME_UUID = "8d871d18-c2cc-11de-8d13-0010c6dffd0f";
 		public static final String RACE_UUID = "8d871386-c2cc-11de-8d13-0010c6dffd0f";
 		public static final String UNKNOWN_PATIENT_UUID = "8b56eac7-5c76-4b9c-8c6f-1deab8d3fc47";
 		public static final String TEST_PATIENT_UUID = "4f07985c-88a5-4abd-aa0c-f3ec8324d8e7";
 		public static final String IS_DECEASED_UUID = "072a51fd-ef9c-4cdf-a50c-329125213d73";
+		public static final String FUNDING_SPONSOR_UUID = "69de9f94-f638-4b18-a3bb-c47ae4ae8f91";
+		public static final String FIRST_LANGUAGE_UUID = "9080b86a-3a1f-4682-a0d3-8b9ccc9520ba";
 	}
 
 	public abstract static class FORM_UUIDS {

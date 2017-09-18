@@ -137,13 +137,14 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		}
 
 		// Validate telephone number
-		if (patient.getPerson().getAttributes() != null) {
-			for (PersonAttribute personAttribute : getPatient().getPerson().getAttributes()) {
+		if (patient.getPerson().getAttributes() != null && patient.getPerson().getAttributes().size() > 0) {
+			for (PersonAttribute personAttribute : patient.getPerson().getAttributes()) {
 				if (personAttribute.getAttributeType().getUuid().equalsIgnoreCase(ApplicationConstants
 						.RequiredPersonAttributes.TELEPHONE_NUMBER_UUID)) {
-					if (personAttribute.getValue() == null) {
-						phonenumberError = true;
-					}
+					phonenumberError = personAttribute.getValue() == null;
+					break;
+				} else {
+					phonenumberError = true;
 				}
 			}
 		} else {
@@ -452,9 +453,10 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		unwantedPersonAttributes.add(ApplicationConstants.unwantedPersonAttributes.RACE_UUID);
 		unwantedPersonAttributes.add(ApplicationConstants.unwantedPersonAttributes.HEALTH_CENTER_UUID);
 		unwantedPersonAttributes.add(ApplicationConstants.unwantedPersonAttributes.HEALTH_DISTRICT_UUID);
-		unwantedPersonAttributes.add(ApplicationConstants.unwantedPersonAttributes.MOTHER_NAME_UUID);
+		unwantedPersonAttributes.add(ApplicationConstants.unwantedPersonAttributes.FUNDING_SPONSOR_UUID);
 		unwantedPersonAttributes.add(ApplicationConstants.unwantedPersonAttributes.BIRTH_PLACE_UUID);
 		unwantedPersonAttributes.add(ApplicationConstants.unwantedPersonAttributes.IS_DECEASED_UUID);
+		unwantedPersonAttributes.add(ApplicationConstants.unwantedPersonAttributes.FIRST_LANGUAGE_UUID);
 
 		return unwantedPersonAttributes;
 	}

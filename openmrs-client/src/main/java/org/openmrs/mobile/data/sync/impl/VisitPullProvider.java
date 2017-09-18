@@ -3,7 +3,6 @@ package org.openmrs.mobile.data.sync.impl;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.raizlabs.android.dbflow.sql.language.Operator;
 import com.raizlabs.android.dbflow.sql.language.SQLOperator;
 
 import org.openmrs.mobile.data.DatabaseHelper;
@@ -37,6 +36,7 @@ import org.openmrs.mobile.utilities.DateUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -160,14 +160,14 @@ public class VisitPullProvider {
 		QueryOptions options =
 				new QueryOptions.Builder().customRepresentation(RestConstants.Representations.OBSERVATION).build();
 
-		for (RecordInfo observationsRecord : visitInfo) {
+		for (RecordInfo recordInfo : visitInfo) {
 			List<RecordInfo> observationInfo = RestHelper.getCallListValue(obsRestService
 					.getVisitDocumentsObsRecordInfoByPatientAndConceptList(patientRecord.getUuid()));
 
 			List<SQLOperator> observationsOperators = new ArrayList<>();
-			observationsOperators.add(Observation_Table.uuid.eq(observationsRecord.getUuid()));
-			observationsOperators.add(Observation_Table.concept_uuid.eq(ApplicationConstants.ConceptSets
-					.VISIT_DOCUMENT_UUID));
+			observationsOperators.add(Observation_Table.uuid.eq(recordInfo.getUuid()));
+			observationsOperators.add(Observation_Table.concept_uuid.in(Arrays.asList(ApplicationConstants.ConceptSets
+					.VISIT_DOCUMENT_UUID.split(","))));
 
 			databaseHelper
 					.diffDelete(Observation.class, observationsOperators, observationInfo);
@@ -181,13 +181,15 @@ public class VisitPullProvider {
 					observation.processRelationships();
 					observations.add(observation);
 
+					Visit visit = new Visit();
+					visit.setUuid(recordInfo.getUuid());
+
 					VisitPhoto visitPhoto = new VisitPhoto();
+					visitPhoto.setVisit(visit);
 					visitPhoto.setObservation(observation);
 					visitPhoto.setFileCaption(observation.getComment());
 					visitPhoto.setDateCreated(new Date(DateUtils.convertTime(observation.getObsDatetime())));
 					visitPhoto.setCreator(observation.getCreator());
-
-					visitPhoto.setObservation(observation);
 					visitPhotos.add(visitPhoto);
 				}
 			}

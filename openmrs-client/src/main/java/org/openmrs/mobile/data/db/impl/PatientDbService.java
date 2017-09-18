@@ -95,7 +95,7 @@ public class PatientDbService extends BaseDbService<Patient> implements DbServic
 
 	private SQLOperator findByNameFragment(@NonNull String name) {
 		checkNotNull(name);
-
+		name = name.trim();
 		if (!name.startsWith("%")) {
 			name = "%" + name;
 		}

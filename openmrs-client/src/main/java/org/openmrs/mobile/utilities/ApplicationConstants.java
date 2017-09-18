@@ -26,8 +26,9 @@ public abstract class ApplicationConstants {
 	public static final String VISIT_TYPE_UUID = "visit_type_uuid";
 	public static final String LAST_SESSION_TOKEN = "last_session_id";
 	public static final String LAST_LOGIN_SERVER_URL = "last_login_server_url";
-	public static final String DEFAULT_OPEN_MRS_URL = "http://192.168.2.210:9996/openmrs/";
-	//public static final String DEFAULT_OPEN_MRS_URL = "http://sandbox.openhmisafrica.org/openmrs/";
+	//public static final String DEFAULT_OPEN_MRS_URL = "http://192.168.2.210:9996/openmrs/"; This is to be used when
+	// testing this registration feature with the BK server
+	public static final String DEFAULT_OPEN_MRS_URL = "http://sandbox.openhmisafrica.org/openmrs/";
 	public static final String THUMBNAIL_VIEW = "complexdata.view.thumbnail";
 	public static final String CIVIL_STATUS_DISPLAY = "Civil Status";
 	public static final String CIVIL_STATUS = "Select Civil Status";

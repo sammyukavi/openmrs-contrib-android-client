@@ -115,7 +115,7 @@ public abstract class ApplicationConstants {
 	}
 
 	public abstract static class ObservationLocators {
-		public static final String CLINICAL_NOTE = "Text of encounter note:";
+		public static final String CLINICAL_NOTE = "Text of encounter note: ";
 		public static final String DIAGNOSES = "Visit Diagnoses";
 		public static final String PRIMARY_DIAGNOSIS = "Primary";
 		public static final String SECONDARY_DIAGNOSIS = "Secondary";

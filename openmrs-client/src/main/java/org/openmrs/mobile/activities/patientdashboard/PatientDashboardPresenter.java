@@ -104,8 +104,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 				patientDashboardView.patientContacts(patient);
 				patientDashboardView.patientVisits(visits);
 
-				if (!visits.isEmpty()) {
-					///patientDashboardView.showNoVisits(true);
+				if (!visits.isEmpty() && pagingInfo.getTotalRecordCount() != null) {
 					totalNumberResults = pagingInfo.getTotalRecordCount();
 				}
 				patientDashboardView.showPageSpinner(false);

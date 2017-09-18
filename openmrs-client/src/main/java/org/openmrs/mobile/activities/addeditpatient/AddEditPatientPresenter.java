@@ -136,6 +136,20 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 			patientFileNumberError = true;
 		}
 
+		// Validate telephone number
+		if (patient.getPerson().getAttributes() != null) {
+			for (PersonAttribute personAttribute : getPatient().getPerson().getAttributes()) {
+				if (personAttribute.getAttributeType().getUuid().equalsIgnoreCase(ApplicationConstants
+						.RequiredPersonAttributes.TELEPHONE_NUMBER_UUID)) {
+					if (personAttribute.getValue() == null) {
+						phonenumberError = true;
+					}
+				}
+			}
+		} else {
+			phonenumberError = true;
+		}
+
 		boolean result =
 				!familyNameError && !lastNameError && !dateOfBirthError && !countyError && !genderError
 						&& !patientFileNumberError && !civilStatusError && !occupationError && !subCountyError &&
@@ -283,7 +297,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 			@Override
 			public void onCompleted(Concept concept) {
 				if (concept != null) {
-					if (concept.getDisplay().equalsIgnoreCase(ApplicationConstants.CIVIL_STATUS)) {
+					if (concept.getDisplay().equalsIgnoreCase(ApplicationConstants.CIVIL_STATUS_DISPLAY)) {
 						dropdown.setPrompt(ApplicationConstants.CIVIL_STATUS);
 					} else {
 						dropdown.setPrompt(ApplicationConstants.KIN_RELATIONSHIP);
@@ -440,6 +454,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 		unwantedPersonAttributes.add(ApplicationConstants.unwantedPersonAttributes.HEALTH_DISTRICT_UUID);
 		unwantedPersonAttributes.add(ApplicationConstants.unwantedPersonAttributes.MOTHER_NAME_UUID);
 		unwantedPersonAttributes.add(ApplicationConstants.unwantedPersonAttributes.BIRTH_PLACE_UUID);
+		unwantedPersonAttributes.add(ApplicationConstants.unwantedPersonAttributes.IS_DECEASED_UUID);
 
 		return unwantedPersonAttributes;
 	}

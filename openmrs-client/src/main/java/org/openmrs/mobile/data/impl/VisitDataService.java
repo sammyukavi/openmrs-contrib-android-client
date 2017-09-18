@@ -22,15 +22,19 @@ public class VisitDataService extends BaseEntityDataService<Visit, VisitDbServic
 	public VisitDataService() {
 	}
 
-	public void endVisit(@NonNull String uuid, @NonNull Visit visit, @Nullable QueryOptions options,
-			@NonNull GetCallback<Visit> callback) {
+	public void endVisit(@NonNull String uuid, @NonNull Visit visit, @NonNull GetCallback<Visit> callback) {
 		checkNotNull(uuid);
 		checkNotNull(visit);
 		checkNotNull(callback);
 
-		executeSingleCallback(callback, options,
-				() -> dbService.endVisit(visit),
-				() -> restService.endVisit(uuid, visit, options));
+		executeSingleCallback(callback, new QueryOptions.Builder().requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL).build(),
+				() -> {
+					Visit result = dbService.endVisit(visit);
+					syncLogDbService.save(createSyncLog(visit, SyncAction.DELETED));
+					return result;
+
+				},
+				() -> restService.endVisit(uuid, visit));
 	}
 
 	public void updateVisit(Visit existingVisit, Visit updatedVisit, GetCallback<Visit> callback) {

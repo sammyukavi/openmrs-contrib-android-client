@@ -338,9 +338,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 			visit.setStopDatetime(new Date());
 		}
 
-		visit.setPatient(null);
-
-		visitDataService.endVisit(visit.getUuid(), visit, null, new DataService.GetCallback<Visit>() {
+		visitDataService.endVisit(visit.getUuid(), visit, new DataService.GetCallback<Visit>() {
 			@Override
 			public void onCompleted(Visit entity) {
 				addEditVisitView.showPatientDashboard();
@@ -348,7 +346,6 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 
 			@Override
 			public void onError(Throwable t) {
-				System.out.println(t.getLocalizedMessage());
 				ToastUtil.error(t.getMessage());
 			}
 		});

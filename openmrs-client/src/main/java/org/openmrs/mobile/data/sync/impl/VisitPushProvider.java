@@ -27,4 +27,9 @@ public class VisitPushProvider extends BasePushProvider<Visit, VisitDbService, V
 	protected Call<Visit> update(Visit entity) {
 		return restService.updateVisit(entity);
 	}
+
+	@Override
+	protected Call<Visit> purge(Visit entity) {
+		return restService.endVisit(entity.getUuid(), entity);
+	}
 }

@@ -9,6 +9,7 @@ import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.RequestStrategy;
 import org.openmrs.mobile.data.db.impl.VisitPhotoDbService;
 import org.openmrs.mobile.data.rest.impl.VisitPhotoRestServiceImpl;
+import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.SyncAction;
 import org.openmrs.mobile.models.VisitPhoto;
 
@@ -34,7 +35,10 @@ public class VisitPhotoDataService
 					return result;
 				},
 				() -> restService.upload(visitPhoto),
-				(e) -> dbService.save(visitPhoto));
+				(e) -> {
+					visitPhoto.setObservation(e.getObservation());
+					dbService.save(visitPhoto);
+				});
 	}
 
 	public void getPhotosByVisit(@NonNull String visitUuid, @Nullable PagingInfo pagingInfo,

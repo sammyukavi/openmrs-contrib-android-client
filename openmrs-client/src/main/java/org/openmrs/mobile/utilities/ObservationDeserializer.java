@@ -48,7 +48,9 @@ public class ObservationDeserializer implements JsonDeserializer<Observation> {
 
 		Observation observation = new Observation();
 		observation.setUuid(jsonObject.get(UUID_KEY).getAsString());
-		observation.setDisplay(jsonObject.get(DISPLAY_KEY).getAsString());
+		if(jsonObject.get(DISPLAY_KEY) != JsonNull.INSTANCE && jsonObject.get(DISPLAY_KEY) != null) {
+			observation.setDisplay(jsonObject.get(DISPLAY_KEY).getAsString());
+		}
 
 		if(jsonObject.get(COMMENT_KEY) != JsonNull.INSTANCE && jsonObject.get(COMMENT_KEY) != null) {
 			observation.setComment(jsonObject.get(COMMENT_KEY).getAsString());

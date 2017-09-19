@@ -206,19 +206,19 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 	public void loadLocations(String url) {
 		loginView.setProgressBarVisibility(true);
 		RestServiceBuilder.setBaseUrl(url);
-		DataService.GetCallback<List<Location>> locationDataServiceCallback = new DataService.GetCallback<List<Location>>
-				() {
-			@Override
-			public void onCompleted(List<Location> locations) {
-				openMRS.setServerUrl(url);
-				loginView.updateLoginFormLocations(locations, url);
-			}
+		DataService.GetCallback<List<Location>> locationDataServiceCallback =
+				new DataService.GetCallback<List<Location>>() {
+					@Override
+					public void onCompleted(List<Location> locations) {
+						openMRS.setServerUrl(url);
+						loginView.updateLoginFormLocations(locations, url);
+					}
 
-			@Override
-			public void onError(Throwable t) {
-				loginView.showMessage(SERVER_ERROR);
-			}
-		};
+					@Override
+					public void onError(Throwable t) {
+						loginView.showMessage(SERVER_ERROR);
+					}
+				};
 
 		try {
 			locationDataService.getLoginLocations(url, locationDataServiceCallback);

@@ -32,7 +32,6 @@ public class VisitDataService extends BaseEntityDataService<Visit, VisitDbServic
 					Visit result = dbService.endVisit(visit);
 					syncLogDbService.save(createSyncLog(visit, SyncAction.DELETED));
 					return result;
-
 				},
 				() -> restService.endVisit(uuid, visit));
 	}

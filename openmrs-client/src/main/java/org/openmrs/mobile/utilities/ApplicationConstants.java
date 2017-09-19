@@ -48,6 +48,7 @@ public abstract class ApplicationConstants {
 		public static final String PASSWORD = "password";
 		public static final String USER_PERSON_NAME = "userDisplay";
 		public static final String USER_UUID = "userUUID";
+		public static final String LOGIN_USER_UUID = "loginUserUUID";
 		public static final String LOGIN = "login";
 	}
 

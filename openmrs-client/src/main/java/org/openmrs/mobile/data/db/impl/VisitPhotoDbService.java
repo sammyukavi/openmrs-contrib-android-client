@@ -37,5 +37,11 @@ public class VisitPhotoDbService extends BaseDbService<VisitPhoto> implements Db
 
 		return executeQuery(options, pagingInfo, (f) -> f.where(VisitPhoto_Table.visit_uuid.eq(visitUuid)));
 	}
+
+	public VisitPhoto getPhotoByObservation(@NonNull String obsUuid) {
+		checkNotNull(obsUuid);
+
+		return repository.querySingle(entityTable, entityTable.getProperty("observation_uuid").eq(obsUuid));
+	}
 }
 

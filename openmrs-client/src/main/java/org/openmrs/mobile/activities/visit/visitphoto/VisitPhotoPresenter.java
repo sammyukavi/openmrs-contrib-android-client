@@ -22,11 +22,14 @@ import org.openmrs.mobile.data.impl.VisitPhotoDataService;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Provider;
+import org.openmrs.mobile.models.User;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitPhoto;
-import org.openmrs.mobile.utilities.StringUtils;
+import org.openmrs.mobile.utilities.ApplicationConstants;
+import org.openmrs.mobile.utilities.DateUtils;
 import org.openmrs.mobile.utilities.ToastUtil;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -51,31 +54,59 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 		this.obsDataService = dataAccess().obs();
 	}
 
-	private void getVisitPhotos() {
-		if (StringUtils.isNullOrEmpty(visitUuid))
-			return;
+	private void getPhotoMetadata() {
+		visitPhotoView.showTabSpinner(true);
+		// download all photo metadata
+		visitPhotoDataService.downloadPhotoMetadata(patientUuid, visitUuid, null, obsDataService,
+				new DataService.GetCallback<List<Observation>>() {
+					@Override
+					public void onCompleted(List<Observation> observations) {
+						List<VisitPhoto> visitPhotos = new ArrayList<>();
+						for (Observation observation : observations) {
+							VisitPhoto visitPhoto = new VisitPhoto();
+							visitPhoto.setFileCaption(observation.getComment());
+							visitPhoto.setDateCreated(new Date(DateUtils.convertTime(observation.getObsDatetime())));
 
-		visitPhotoDataService.getPhotosByVisit(visitUuid, null, new DataService.GetCallback<List<VisitPhoto>>() {
-			@Override
-			public void onCompleted(List<VisitPhoto> visitPhotos) {
-				visitPhotoView.showTabSpinner(false);
-				if (!visitPhotos.isEmpty()) {
-					visitPhotoView.updateVisitImageMetadata(visitPhotos);
-				}
-			}
+							User creator = new User();
+							creator.setPerson(observation.getPerson());
+							visitPhoto.setCreator(creator);
 
-			@Override
-			public void onError(Throwable t) {
-				visitPhotoView.showTabSpinner(false);
-				ToastUtil.error(t.getMessage());
-			}
-		});
+							visitPhoto.setObservation(observation);
+
+							// download photo bytes
+							visitPhotoDataService.downloadPhotoImage(visitPhoto, ApplicationConstants.THUMBNAIL_VIEW,
+									new DataService.GetCallback<VisitPhoto>() {
+										@Override
+										public void onCompleted(VisitPhoto entity) {
+											visitPhoto.setImage(entity.getImageColumn().getBlob());
+											visitPhotos.add(visitPhoto);
+											visitPhotoView.showTabSpinner(false);
+
+											visitPhotoView.updateVisitImageMetadata(visitPhotos);
+										}
+
+										@Override
+										public void onError(Throwable t) {
+											visitPhotoView.showTabSpinner(false);
+											ToastUtil.error(t.getMessage());
+										}
+									});
+						}
+
+						visitPhotoView.showTabSpinner(false);
+					}
+
+					@Override
+					public void onError(Throwable t) {
+						visitPhotoView.showTabSpinner(false);
+					}
+				});
 	}
 
 	@Override
 	public void subscribe() {
 		initVisitPhoto();
-		getVisitPhotos();
+		getPhotoMetadata();
 	}
 
 	private void initVisitPhoto() {

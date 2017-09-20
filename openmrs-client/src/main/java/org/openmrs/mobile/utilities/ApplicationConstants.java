@@ -122,6 +122,8 @@ public abstract class ApplicationConstants {
 		public static final String PRESUMED_DIAGNOSIS = "Presumed diagnosis";
 		public static final String CONFIRMED_DIAGNOSIS = "Confirmed diagnosis";
 		public static final String CHIEF_COMPLAINT = "Chief complaint";
+		public static final String VISIT_DOCUMENT_UUID = "7cac8397-53cd-4f00-a6fe-028e8d743f8e,"
+				+ "42ed45fd-f3f6-44b6-bfc2-8bde1bb41e00";
 	}
 
 	public abstract static class DiagnosisStrings {

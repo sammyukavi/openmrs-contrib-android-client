@@ -27,7 +27,7 @@ public interface ObsRestService {
 			@Query("includeAll") Boolean includeAll);
 
 	@GET(RestConstants.GET_ALL)
-	Call<Results<Observation>> getVisitDocumentsObsByPatientAndConceptList(
+	Call<Results<Observation>> getObsByPatientAndConceptList(
 			@Path(value = "restPath", encoded = true) String restPath,
 			@Query("patient") String patientUuid,
 			@Query("conceptList") String conceptList,

@@ -1,10 +1,10 @@
 package org.openmrs.mobile.data.impl;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import org.openmrs.mobile.data.BaseDataService;
 import org.openmrs.mobile.data.DataService;
-import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.RequestStrategy;
 import org.openmrs.mobile.data.db.impl.VisitPhotoDbService;
@@ -13,14 +13,18 @@ import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.SyncAction;
 import org.openmrs.mobile.models.VisitPhoto;
 
+import java.io.IOException;
 import java.util.List;
 
-import javax.annotation.Nullable;
 import javax.inject.Inject;
+
+import okhttp3.ResponseBody;
 
 public class VisitPhotoDataService
 		extends BaseDataService<VisitPhoto, VisitPhotoDbService, VisitPhotoRestServiceImpl>
 		implements DataService<VisitPhoto> {
+
+	private static final String TAG = VisitPhotoDataService.class.getSimpleName();
 
 	@Inject
 	public VisitPhotoDataService() {
@@ -34,21 +38,28 @@ public class VisitPhotoDataService
 					syncLogDbService.save(createSyncLog(result, SyncAction.NEW));
 					return result;
 				},
-				() -> restService.upload(visitPhoto),
-				(e) -> {
-					visitPhoto.setObservation(e.getObservation());
-					dbService.save(visitPhoto);
-				});
+				() -> restService.upload(visitPhoto));
 	}
 
-	public void getPhotosByVisit(@NonNull String visitUuid, @Nullable PagingInfo pagingInfo,
-			@NonNull GetCallback<List<VisitPhoto>> callback) {
-		QueryOptions options = new QueryOptions.Builder()
-				.requestStrategy(RequestStrategy.LOCAL_ONLY)
-				.build();
+	public void downloadPhotoMetadata(String patientUuid, String visitUuid,
+			QueryOptions options, ObsDataService obsDataService, GetCallback<List<Observation>> callback) {
+		obsDataService.getObsByConceptList(patientUuid, visitUuid, options, callback);
+	}
 
-		executeMultipleCallback(callback, options, pagingInfo,
-				() -> dbService.getPhotosByVisit(visitUuid, options, pagingInfo),
-				() -> restService.getAll(options, pagingInfo));
+	public void downloadPhotoImage(VisitPhoto photo, String view, @NonNull GetCallback<VisitPhoto> callback) {
+		executeSingleCallback(callback, null,
+				() -> dbService.getPhotoByObservation(photo.getObservation().getUuid()),
+				() -> restService.downloadPhoto(photo.getObservation().getUuid(), view),
+				(ResponseBody body) -> {
+					try {
+						photo.setImage(body.bytes());
+						return photo;
+					} catch (IOException ex) {
+						Log.e(TAG, "Error downloading image with obs uuid '" + photo.getObservation().getUuid() + "'", ex);
+						return null;
+					}
+				},
+				(e) -> dbService.save(e)
+		);
 	}
 }

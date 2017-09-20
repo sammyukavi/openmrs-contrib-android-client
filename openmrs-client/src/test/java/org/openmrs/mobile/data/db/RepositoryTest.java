@@ -274,37 +274,4 @@ public class RepositoryTest {
 		Assert.assertNotNull(dbPerson);
 		ModelAsserters.PERSON.assertModel(person, dbPerson);
 	}
-
-	@Test
-	public void testSearchPatient(){
-		PatientDbService patientDbService = Mockito.mock(PatientDbService.class);
-//		Repository repositoryTest = Mockito.mock(RepositoryImpl.class);
-		List<Patient> patients;
-
-		Patient p1 = ModelGenerators.PATIENT.generate(true);
-		Patient p2 = ModelGenerators.PATIENT.generate(true);
-		Patient p3 = ModelGenerators.PATIENT.generate(true);
-
-		p1.getPerson().getName().setGivenName("Mso");
-		p2.getPerson().getName().setGivenName("Mika");
-		p3.getPerson().getName().setGivenName("Mwas");
-
-		//save the records
-		repository.save(patientTable,p1);
-		repository.save(patientTable,p2);
-		repository.save(patientTable,p3);
-
-		//retreive patient "Mika"
-		patients = repository.query(patientTable,
-		Patient_Table.person_uuid.in(
-				SQLite.select(PersonName_Table.person_uuid).from(PersonName.class).
-						where(OperatorGroup.clause()
-						.or(PersonName_Table.givenName.like("Mika"))
-						.or(PersonName_Table.middleName.like("Mika"))
-						.or(PersonName_Table.familyName.like("Mika"))
-						)));
-		Assert.assertNotNull(patients);
-		Assert.assertEquals(1,patients.size());
-		Assert.assertEquals("Mika",patients.get(0).getPerson().getName().getGivenName());
-	}
 }

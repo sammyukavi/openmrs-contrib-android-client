@@ -38,7 +38,11 @@ public class VisitPhotoDataService
 					syncLogDbService.save(createSyncLog(result, SyncAction.NEW));
 					return result;
 				},
-				() -> restService.upload(visitPhoto));
+				() -> restService.upload(visitPhoto),
+				(e) -> {
+					visitPhoto.setObservation(e.getObservation());
+					dbService.save(visitPhoto);
+				});
 	}
 
 	public void downloadPhotoMetadata(String visitUuid,

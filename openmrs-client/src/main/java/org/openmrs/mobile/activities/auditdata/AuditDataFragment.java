@@ -172,8 +172,6 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 			locationUuid = instance.getParentLocationUuid();
 		}
 
-		mPresenter.fetchVisit(visitUuid);
-
 		initObservations();
 		addListeners();
 		displayExtraFormFields = false;

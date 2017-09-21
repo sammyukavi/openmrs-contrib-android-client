@@ -30,16 +30,18 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 	private AuditDataContract.View auditDataView;
 	private VisitDataService visitDataService;
 	private ConceptDataService conceptDataService;
+	private String visitUuid;
 
 	private EncounterDataService encounterDataService;
 
-	public AuditDataPresenter(AuditDataContract.View view) {
+	public AuditDataPresenter(AuditDataContract.View view, String visitUuid) {
 		this.auditDataView = view;
 		this.auditDataView.setPresenter(this);
 
 		this.visitDataService = dataAccess().visit();
 		this.encounterDataService = dataAccess().encounter();
 		this.conceptDataService = dataAccess().concept();
+		this.visitUuid = visitUuid;
 	}
 
 	@Override
@@ -55,6 +57,7 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 				if (concept != null) {
 					if (!concept.getAnswers().isEmpty()) {
 						auditDataView.setInpatientTypeServices(concept.getAnswers());
+						fetchVisit(visitUuid);
 					}
 				}
 			}

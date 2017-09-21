@@ -105,9 +105,8 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 			final boolean wipeDatabase) {
 		loginView.setProgressBarVisibility(true);
 		RestServiceBuilder.setloginUrl(url);
-		boolean storedSessionIsEmpty = StringUtils.isNullOrEmpty(openMRS.getLastSessionToken());
 
-		if (openMRS.getNetworkUtils().isOnline() || storedSessionIsEmpty) {
+		if (openMRS.getNetworkUtils().isOnline()) {
 			wipeRequired = wipeDatabase;
 			DataService.GetCallback<Session> loginUserCallback = new DataService.GetCallback<Session>() {
 				@Override

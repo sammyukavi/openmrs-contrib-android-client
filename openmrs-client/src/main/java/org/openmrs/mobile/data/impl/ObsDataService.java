@@ -15,10 +15,10 @@ public class ObsDataService extends BaseDataService<Observation, ObsDbService, O
 	public ObsDataService() {
 	}
 
-	public void getObsByConceptList(String patientUuid, String visitUuid, QueryOptions options,
+	public void getVisitPhotoObservations(String visitUuid, QueryOptions options,
 			GetCallback<List<Observation>> callback) {
 		executeMultipleCallback(callback, options, null,
-				() -> dbService.getObsByVisitAndConceptList(visitUuid, options),
-				() -> restService.getObsByPatientAndConceptList(patientUuid, options));
+				() -> dbService.getVisitPhotoObservations(visitUuid, options),
+				() -> restService.getVisitPhotoObservations(visitUuid));
 	}
 }

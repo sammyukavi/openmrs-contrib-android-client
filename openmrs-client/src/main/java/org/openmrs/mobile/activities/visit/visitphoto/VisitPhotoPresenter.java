@@ -57,7 +57,7 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 	private void getPhotoMetadata() {
 		visitPhotoView.showTabSpinner(true);
 		// download all photo metadata
-		visitPhotoDataService.downloadPhotoMetadata(patientUuid, visitUuid, null, obsDataService,
+		visitPhotoDataService.downloadPhotoMetadata(visitUuid, null, obsDataService,
 				new DataService.GetCallback<List<Observation>>() {
 					@Override
 					public void onCompleted(List<Observation> observations) {

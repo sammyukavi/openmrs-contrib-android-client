@@ -42,7 +42,7 @@ public class ObsDbService extends BaseDbService<Observation> implements DbServic
 		return (Observation_Table)FlowManager.getInstanceAdapter(Observation.class);
 	}
 
-	public List<Observation> getObsByVisitAndConceptList(String visitUuid, QueryOptions options) {
+	public List<Observation> getVisitPhotoObservations(String visitUuid, QueryOptions options) {
 		return executeQuery(options, null,
 				(f) -> f.where(Observation_Table.concept_uuid.in(Arrays.asList(ApplicationConstants.ObservationLocators
 						.VISIT_DOCUMENT_UUID.split(","))))

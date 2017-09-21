@@ -10,6 +10,7 @@ public class RestConstants {
 	public static final String PURGE = GET_BY_UUID;
 	public static final String LOCATION_PATH = REST_PATH + "?tag=IM Location";
 	public static final String CONCEPT_SEARCH_PATH = REST_PATH + "?s=diagnosisByTerm";
+	public static final String OBS_SEARCH_PATH = REST_PATH + "?s=obsByConceptListVisit";
 
 	public class Representations {
 		public static final String FULL = "full";

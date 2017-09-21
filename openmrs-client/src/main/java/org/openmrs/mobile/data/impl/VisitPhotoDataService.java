@@ -41,9 +41,9 @@ public class VisitPhotoDataService
 				() -> restService.upload(visitPhoto));
 	}
 
-	public void downloadPhotoMetadata(String patientUuid, String visitUuid,
+	public void downloadPhotoMetadata(String visitUuid,
 			QueryOptions options, ObsDataService obsDataService, GetCallback<List<Observation>> callback) {
-		obsDataService.getObsByConceptList(patientUuid, visitUuid, options, callback);
+		obsDataService.getVisitPhotoObservations(visitUuid, options, callback);
 	}
 
 	public void downloadPhotoImage(VisitPhoto photo, String view, @NonNull GetCallback<VisitPhoto> callback) {

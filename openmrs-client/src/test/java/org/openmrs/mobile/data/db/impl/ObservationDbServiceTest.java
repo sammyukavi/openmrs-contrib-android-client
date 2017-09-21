@@ -41,7 +41,7 @@ public class ObservationDbServiceTest  extends BaseAuditableDbServiceTest<Observ
 
 		Assert.assertEquals(1, dbService.getAll(null, null).size());
 
-		List<Observation> results = obsDbService.getObsByVisitAndConceptList(CoreTestData.Constants.Visit
+		List<Observation> results = obsDbService.getVisitPhotoObservations(CoreTestData.Constants.Visit
 				.VISIT_UUID, null);
 		Assert.assertEquals(1, results.size());
 	}

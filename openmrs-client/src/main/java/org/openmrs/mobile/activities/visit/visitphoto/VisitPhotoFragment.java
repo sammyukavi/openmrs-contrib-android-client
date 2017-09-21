@@ -161,7 +161,7 @@ public class VisitPhotoFragment extends VisitFragment implements VisitContract.V
 
 	@Override
 	public String formatVisitImageDescription(String description, String uploadedOn, String uploadedBy) {
-		return getString(R.string.visit_image_description, description, uploadedOn, uploadedBy);
+		return getString(R.string.visit_image_description, description, uploadedOn);
 	}
 
 	@Override

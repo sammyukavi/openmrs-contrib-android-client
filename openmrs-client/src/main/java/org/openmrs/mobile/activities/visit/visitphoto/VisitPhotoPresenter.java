@@ -22,7 +22,6 @@ import org.openmrs.mobile.data.impl.VisitPhotoDataService;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Provider;
-import org.openmrs.mobile.models.User;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitPhoto;
 import org.openmrs.mobile.utilities.ApplicationConstants;
@@ -67,9 +66,7 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 							visitPhoto.setFileCaption(observation.getComment());
 							visitPhoto.setDateCreated(new Date(DateUtils.convertTime(observation.getObsDatetime())));
 
-							User creator = new User();
-							creator.setPerson(observation.getPerson());
-							visitPhoto.setCreator(creator);
+							visitPhoto.setCreator(observation.getCreator());
 
 							visitPhoto.setObservation(observation);
 
@@ -98,6 +95,7 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 
 					@Override
 					public void onError(Throwable t) {
+						ToastUtil.error("Error downloading visit images");
 						visitPhotoView.showTabSpinner(false);
 					}
 				});
@@ -143,7 +141,7 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 			@Override
 			public void onError(Throwable t) {
 				visitPhotoView.showTabSpinner(false);
-				ToastUtil.error(t.getMessage());
+				ToastUtil.error("Unable to upload image");
 			}
 		});
 	}

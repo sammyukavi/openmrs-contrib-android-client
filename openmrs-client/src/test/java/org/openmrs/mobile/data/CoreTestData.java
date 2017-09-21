@@ -254,10 +254,6 @@ public class CoreTestData {
 	}
 
 	public static class Constants {
-		public static class Concept {
-			public static String VISIT_DOCUMENT_UUID = "7cac8397-53cd-4f00-a6fe-028e8d743f8e";
-		}
-
 		public static class ConceptClass {
 			public static String TEST_UUID = "8d4907b2-c2cc-11de-8d13-0010c6dffd0f";
 			public static String DIAGNOSIS_UUID = "8d4918b0-c2cc-11de-8d13-0010c6dffd0f";
@@ -298,10 +294,6 @@ public class CoreTestData {
 
 		public static class VisitAttributeType {
 			public static String BED_NUMBER_UUID = "36ab5534-276b-4853-b86a-b9fd09a26085";
-		}
-
-		public static class Visit {
-			public static String VISIT_UUID = "34ab5534-576b-4843-b86a-b9fd09a46082";
 		}
 	}
 }

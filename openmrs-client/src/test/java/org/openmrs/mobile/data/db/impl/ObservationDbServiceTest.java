@@ -36,17 +36,22 @@ public class ObservationDbServiceTest  extends BaseAuditableDbServiceTest<Observ
 	@Test
 	public void getObsByVisitAndConcept_shouldReturnExpectedResults() throws Exception {
 		String conceptVisitDocumentUuid = ApplicationConstants.ObservationLocators.VISIT_DOCUMENT_UUID.split(",")[0];
-		Observation obs = generator.generate(true);
-		obs.getConcept().setUuid(conceptVisitDocumentUuid);
+		Observation obs1 = generator.generate(true);
+		obs1.getConcept().setUuid(conceptVisitDocumentUuid);
 
-		dbService.save(obs);
+		Observation obs2 = generator.generate(true);
+		Observation obs3 = generator.generate(true);
+
+		dbService.save(obs1);
+		dbService.save(obs2);
+		dbService.save(obs3);
 
 		List<Observation> observations = dbService.getAll(null, null);
 
 		Assert.assertEquals(1, observations.size());
-		Assert.assertEquals(obs.getUuid(), observations.get(0).getUuid());
+		Assert.assertEquals(obs1.getUuid(), observations.get(0).getUuid());
 
-		List<Observation> results = obsDbService.getVisitPhotoObservations(obs.getEncounter().getVisit().getUuid(), null);
+		List<Observation> results = obsDbService.getVisitPhotoObservations(obs1.getEncounter().getVisit().getUuid(), null);
 
 		Assert.assertEquals(1, results.size());
 		Assert.assertEquals(conceptVisitDocumentUuid, results.get(0).getConcept().getUuid());

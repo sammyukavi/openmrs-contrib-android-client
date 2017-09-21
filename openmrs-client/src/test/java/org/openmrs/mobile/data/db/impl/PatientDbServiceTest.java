@@ -49,27 +49,34 @@ public class PatientDbServiceTest extends BaseAuditableDbServiceTest<Patient> {
 
 	@Test
 	public void getByName_shouldSearchByNameWithFullWildcard() throws Exception {
-		repository = mock(RepositoryImpl.class);
+		repository = new RepositoryImpl();
 		PatientDbService patientDbService = new PatientDbService(repository);
 		List<Patient> patientSearchResults;
 
 		Patient p1 = ModelGenerators.PATIENT.generate(true);
 		Patient p2 = ModelGenerators.PATIENT.generate(true);
 		Patient p3 = ModelGenerators.PATIENT.generate(true);
+		Patient p4 = ModelGenerators.PATIENT.generate(true);
 
 		p1.getPerson().getName().setMiddleName("Mishi");
 		p2.getPerson().getName().setGivenName("Mika");
 		p3.getPerson().getName().setFamilyName("Mistari");
+		p4.getPerson().getName().setGivenName("Rabashmisna");
 
 		repository.save(patientTable,p1);
 		repository.save(patientTable,p2);
 		repository.save(patientTable,p3);
+		repository.save(patientTable,p4);
 
-		Assert.assertNotNull(p3);
-		patientSearchResults = patientDbService.getByName("Mishi", null, null);
+		//get all names with fragment 'mis' in them
+		patientSearchResults = patientDbService.getByName("Mis", null, null);
+
 		Assert.assertNotNull(patientSearchResults);
+		Assert.assertFalse(patientSearchResults.isEmpty());
 		Assert.assertEquals(3, patientSearchResults.size());
-		Assert.assertEquals("Mishi", patientSearchResults.get(0).getPerson().getName().getGivenName());
+		Assert.assertFalse(patientSearchResults.contains(p2)); //results must NOT have "Mika"
+		Assert.assertEquals("Mistari", patientSearchResults.get(1).getPerson().getName().getFamilyName());
+		Assert.assertEquals("Rabashmisna", patientSearchResults.get(2).getPerson().getName().getGivenName());
 	}
 
 	@Test

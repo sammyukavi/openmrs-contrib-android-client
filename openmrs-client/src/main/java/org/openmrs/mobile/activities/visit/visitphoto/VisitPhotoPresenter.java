@@ -67,13 +67,11 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 					@Override
 					public void onCompleted(List<Observation> observations) {
 						List<VisitPhoto> visitPhotos = new ArrayList<>();
-						for (Observation observation : observations) {
-							if (StringUtils.notNull(observation.getEncounter().getVisit().getUuid()) &&
-									observation.getEncounter().getVisit().getUuid().equalsIgnoreCase(visitUuid)) {
+						if (observations != null) {
+							for (Observation observation : observations) {
 								VisitPhoto visitPhoto = new VisitPhoto();
 								visitPhoto.setFileCaption(observation.getComment());
 								visitPhoto.setDateCreated(new Date(DateUtils.convertTime(observation.getObsDatetime())));
-
 								visitPhoto.setCreator(observation.getCreator());
 								visitPhoto.setObservation(observation);
 
@@ -82,11 +80,13 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 										new DataService.GetCallback<VisitPhoto>() {
 											@Override
 											public void onCompleted(VisitPhoto entity) {
-												visitPhoto.setImage(entity.getImageColumn().getBlob());
-												visitPhotos.add(visitPhoto);
-												visitPhotoView.showTabSpinner(false);
+												if(entity != null) {
+													visitPhoto.setImage(entity.getImageColumn().getBlob());
+													visitPhotos.add(visitPhoto);
+													visitPhotoView.showTabSpinner(false);
 
-												visitPhotoView.updateVisitImageMetadata(visitPhotos);
+													visitPhotoView.updateVisitImageMetadata(visitPhotos);
+												}
 											}
 
 											@Override

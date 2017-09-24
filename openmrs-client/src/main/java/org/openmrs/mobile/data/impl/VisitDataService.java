@@ -30,7 +30,7 @@ public class VisitDataService extends BaseEntityDataService<Visit, VisitDbServic
 		executeSingleCallback(callback, new QueryOptions.Builder().requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL).build(),
 				() -> {
 					Visit result = dbService.endVisit(visit);
-					syncLogDbService.save(createSyncLog(visit, SyncAction.DELETED));
+					syncLogService.save(visit, SyncAction.DELETED);
 					return result;
 				},
 				() -> restService.endVisit(uuid, visit));
@@ -41,7 +41,7 @@ public class VisitDataService extends BaseEntityDataService<Visit, VisitDbServic
 				() -> {
 					existingVisit.processRelationships();
 					Visit result = dbService.save(existingVisit);
-					syncLogDbService.save(createSyncLog(existingVisit, SyncAction.UPDATED));
+					syncLogService.save(existingVisit, SyncAction.UPDATED);
 					return result;
 				},
 				() -> restService.updateVisit(updatedVisit),

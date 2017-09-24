@@ -20,4 +20,8 @@ public class SyncLogDbService extends BaseDbService<SyncLog> {
 	protected ModelAdapter<SyncLog> getEntityTable() {
 		return (SyncLog_Table)FlowManager.getInstanceAdapter(SyncLog.class);
 	}
+
+	public SyncLog getByKey(String key) {
+		return repository.querySingle(getEntityTable(), SyncLog_Table.key.eq(key));
+	}
 }

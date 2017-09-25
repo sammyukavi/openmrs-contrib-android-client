@@ -27,5 +27,9 @@ public class VisitPhotoDbService extends BaseDbService<VisitPhoto> implements Db
 	public List<VisitPhoto> getByVisit(String uuid) {
 		return repository.query(getEntityTable(), VisitPhoto_Table.visit_uuid.eq(uuid));
 	}
+
+	public List<VisitPhoto> getByPatient(String uuid) {
+		return repository.query(getEntityTable(), VisitPhoto_Table.patient_uuid.eq(uuid));
+	}
 }
 

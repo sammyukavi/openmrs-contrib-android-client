@@ -8,6 +8,8 @@ import org.openmrs.mobile.models.BaseOpenmrsObject;
 import org.openmrs.mobile.models.SyncAction;
 import org.openmrs.mobile.models.SyncLog;
 
+import java.util.Random;
+
 import javax.inject.Inject;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -48,6 +50,14 @@ public class SyncLogServiceImpl implements SyncLogService {
 		syncLog.setAction(action);
 		syncLog.setKey(entity.getUuid());
 		syncLog.setType(entity.getClass().getSimpleName());
+
+		if(entity.getClass().getSimpleName().equalsIgnoreCase("Patient")) {
+			syncLog.setOrder(0);
+		} else if(entity.getClass().getSimpleName().equalsIgnoreCase("Visit")) {
+			syncLog.setOrder(1);
+		} else {
+			syncLog.setOrder(new Random().nextInt(10) + 2);
+		}
 
 		return syncLog;
 	}

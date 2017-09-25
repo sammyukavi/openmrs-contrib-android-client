@@ -10,6 +10,7 @@ import org.openmrs.mobile.data.db.BaseDbService;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,23 +36,31 @@ public class ObservationDbServiceTest  extends BaseAuditableDbServiceTest<Observ
 
 	@Test
 	public void getObsByVisitAndConcept_shouldReturnExpectedResults() throws Exception {
+		List<Observation> observations = new ArrayList<>();
+
 		String conceptVisitDocumentUuid = ApplicationConstants.ObservationLocators.VISIT_DOCUMENT_UUID.split(",")[0];
 		Observation obs1 = generator.generate(true);
 		obs1.getConcept().setUuid(conceptVisitDocumentUuid);
+		observations.add(obs1);
 
 		Observation obs2 = generator.generate(true);
+		observations.add(obs2);
+
 		Observation obs3 = generator.generate(true);
-
-		dbService.save(obs1);
-		dbService.save(obs2);
-		dbService.save(obs3);
-
-		List<Observation> observations = dbService.getAll(null, null);
-
-		Assert.assertEquals(1, observations.size());
-		Assert.assertEquals(obs1.getUuid(), observations.get(0).getUuid());
+		observations.add(obs3);
 
 		List<Observation> results = obsDbService.getVisitPhotoObservations(obs1.getEncounter().getVisit().getUuid(), null);
+
+		Assert.assertEquals(0, results.size());
+
+		dbService.saveAll(observations);
+
+		observations = dbService.getAll(null, null);
+
+		Assert.assertEquals(3, observations.size());
+		Assert.assertEquals(obs1.getUuid(), observations.get(0).getUuid());
+
+		results = obsDbService.getVisitPhotoObservations(obs1.getEncounter().getVisit().getUuid(), null);
 
 		Assert.assertEquals(1, results.size());
 		Assert.assertEquals(conceptVisitDocumentUuid, results.get(0).getConcept().getUuid());
@@ -66,7 +75,7 @@ public class ObservationDbServiceTest  extends BaseAuditableDbServiceTest<Observ
 		List<Observation> observations = dbService.getAll(null, null);
 
 		Assert.assertEquals(1, observations.size());
-		Assert.assertEquals(obs.getUuid(), obs.getEncounter().getVisit().getUuid());
+		Assert.assertEquals(obs.getUuid(), observations.get(0).getUuid());
 
 		List<Observation> results = obsDbService.getVisitPhotoObservations(obs.getEncounter().getVisit().getUuid(), null);
 		Assert.assertEquals(0, results.size());

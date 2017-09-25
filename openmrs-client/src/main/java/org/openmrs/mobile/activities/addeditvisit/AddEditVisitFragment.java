@@ -194,7 +194,7 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 
 		visitSubmitButton.setOnClickListener(v -> {
 			if (!mPresenter.isProcessing()) {
-				mPresenter.endVisit(mPresenter.getVisit());
+				mPresenter.endVisit();
 			}
 		});
 

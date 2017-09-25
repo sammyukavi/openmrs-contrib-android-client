@@ -333,7 +333,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	}
 
 	@Override
-	public void endVisit(Visit visit) {
+	public void endVisit() {
 		if (visit.getStopDatetime() == null) {
 			visit.setStopDatetime(new Date());
 		}

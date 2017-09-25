@@ -46,7 +46,7 @@ public class PatientPushProvider extends BasePushProvider<Patient, PatientDbServ
 
 		List<VisitTask> visitTasks = visitTaskDbService.getByPatient(originalEntity, null, null);
 		if (!visitTasks.isEmpty()) {
-			for(VisitTask visitTask : visitTasks) {
+			for (VisitTask visitTask : visitTasks) {
 				visitTask.setPatient(restEntity);
 			}
 			visitTaskDbService.saveAll(visitTasks);

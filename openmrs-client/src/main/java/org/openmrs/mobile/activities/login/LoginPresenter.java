@@ -152,6 +152,7 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 			loginDataService.getSession(url, username, password, loginUserCallback);
 		} else {
 			if (openMRS.isUserLoggedOnline() && url.equals(openMRS.getLastLoginServerUrl())) {
+				RestServiceBuilder.applyDefaultBaseUrl();
 				loginView.setProgressBarVisibility(false);
 				if (openMRS.getUsername().equals(username) && openMRS.getPassword().equals(password)) {
 					openMRS.setSessionToken(openMRS.getLastSessionToken());

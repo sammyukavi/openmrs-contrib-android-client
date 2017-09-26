@@ -22,13 +22,13 @@ import org.openmrs.mobile.data.impl.VisitPhotoDataService;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Provider;
+import org.openmrs.mobile.models.User;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitPhoto;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.DateUtils;
 import org.openmrs.mobile.utilities.ToastUtil;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -55,18 +55,27 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 
 	private void getPhotoMetadata() {
 		visitPhotoView.showTabSpinner(true);
+		// get local photos
+		List<VisitPhoto> visitPhotos = visitPhotoDataService.getByVisit(visitUuid);
 		// download all photo metadata
 		visitPhotoDataService.downloadPhotoMetadata(visitUuid, null, obsDataService,
 				new DataService.GetCallback<List<Observation>>() {
 					@Override
 					public void onCompleted(List<Observation> observations) {
-						List<VisitPhoto> visitPhotos = new ArrayList<>();
+						if (observations == null) {
+							visitPhotoView.showTabSpinner(false);
+							visitPhotoView.updateVisitImageMetadata(visitPhotos);
+							return;
+						}
+
 						for (Observation observation : observations) {
 							VisitPhoto visitPhoto = new VisitPhoto();
 							visitPhoto.setFileCaption(observation.getComment());
 							visitPhoto.setDateCreated(new Date(DateUtils.convertTime(observation.getObsDatetime())));
 
-							visitPhoto.setCreator(observation.getCreator());
+							User creator = new User();
+							creator.setPerson(observation.getPerson());
+							visitPhoto.setCreator(creator);
 
 							visitPhoto.setObservation(observation);
 
@@ -75,11 +84,13 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 									new DataService.GetCallback<VisitPhoto>() {
 										@Override
 										public void onCompleted(VisitPhoto entity) {
-											visitPhoto.setImage(entity.getImageColumn().getBlob());
-											visitPhotos.add(visitPhoto);
-											visitPhotoView.showTabSpinner(false);
+											if (entity != null) {
+												visitPhoto.setImage(entity.getImageColumn().getBlob());
+												visitPhotos.add(visitPhoto);
+												visitPhotoView.showTabSpinner(false);
 
-											visitPhotoView.updateVisitImageMetadata(visitPhotos);
+												visitPhotoView.updateVisitImageMetadata(visitPhotos);
+											}
 										}
 
 										@Override

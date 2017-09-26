@@ -11,6 +11,7 @@ import org.openmrs.mobile.data.db.impl.VisitPhotoDbService;
 import org.openmrs.mobile.data.rest.impl.VisitPhotoRestServiceImpl;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.SyncAction;
+import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitPhoto;
 
 import java.io.IOException;
@@ -35,7 +36,7 @@ public class VisitPhotoDataService
 				new QueryOptions.Builder().requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL).build(),
 				() -> {
 					VisitPhoto result = dbService.save(visitPhoto);
-					syncLogDbService.save(createSyncLog(result, SyncAction.NEW));
+					syncLogService.save(result, SyncAction.NEW);
 					return result;
 				},
 				() -> restService.upload(visitPhoto),
@@ -65,5 +66,9 @@ public class VisitPhotoDataService
 				},
 				(e) -> dbService.save(e)
 		);
+	}
+
+	public List<VisitPhoto> getByVisit(String uuid) {
+		return dbService.getPhotosByVisit(uuid, null, null);
 	}
 }

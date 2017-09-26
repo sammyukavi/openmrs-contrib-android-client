@@ -18,19 +18,19 @@ import com.google.gson.Gson;
 import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.DataService;
-import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
+import org.openmrs.mobile.data.RequestStrategy;
 import org.openmrs.mobile.data.db.AppDatabase;
 import org.openmrs.mobile.data.impl.LocationDataService;
 import org.openmrs.mobile.data.impl.SessionDataService;
 import org.openmrs.mobile.data.impl.UserDataService;
+import org.openmrs.mobile.data.rest.RestConstants;
 import org.openmrs.mobile.data.rest.retrofit.RestServiceBuilder;
 import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Session;
 import org.openmrs.mobile.models.User;
 import org.openmrs.mobile.net.AuthorizationManager;
 import org.openmrs.mobile.utilities.ApplicationConstants;
-import org.openmrs.mobile.utilities.StringUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -43,7 +43,6 @@ import static org.openmrs.mobile.utilities.ApplicationConstants.ErrorCodes.NO_IN
 import static org.openmrs.mobile.utilities.ApplicationConstants.ErrorCodes.OFFLINE_LOGIN;
 import static org.openmrs.mobile.utilities.ApplicationConstants.ErrorCodes.OFFLINE_LOGIN_UNSUPPORTED;
 import static org.openmrs.mobile.utilities.ApplicationConstants.ErrorCodes.SERVER_ERROR;
-import static org.openmrs.mobile.utilities.ApplicationConstants.ErrorCodes.USER_NOT_FOUND;
 
 public class LoginPresenter extends BasePresenter implements LoginContract.Presenter {
 
@@ -67,7 +66,9 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 
 		this.locationDataService = dataAccess().location();
 		this.loginDataService = dataAccess().session();
-		this.userService = dataAccess().user();
+		// the user service requires to be authenticated before it can be used to retrieve user information.
+		// it cannot be initialized here since no user/password has been set in the OpenMRS instance
+		//this.userService = dataAccess().user();
 	}
 
 	@Override
@@ -105,10 +106,10 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 			final boolean wipeDatabase) {
 		loginView.setProgressBarVisibility(true);
 		RestServiceBuilder.setloginUrl(url);
-		boolean storedSessionIsEmpty = StringUtils.isNullOrEmpty(openMRS.getLastSessionToken());
 
-		if (openMRS.getNetworkUtils().isOnline() || storedSessionIsEmpty) {
+		if (openMRS.getNetworkUtils().isOnline()) {
 			wipeRequired = wipeDatabase;
+
 			DataService.GetCallback<Session> loginUserCallback = new DataService.GetCallback<Session>() {
 				@Override
 				public void onCompleted(Session session) {
@@ -117,6 +118,7 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 							openMRS.deleteDatabase(AppDatabase.NAME);
 							isFirstAccessOfNewUrl = true;
 							setData(session.getSessionId(), url, username, password);
+
 							wipeRequired = false;
 						}
 
@@ -128,9 +130,8 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 
 						setLogin(true, url);
 						RestServiceBuilder.applyDefaultBaseUrl();
-						//Instantiate the user service  here to use our new session
-						//userService = new UserDataService();
 						openMRS.setLoginUserUuid(session.getUser().getUuid());
+
 						fetchFullUserInformation(session.getUser().getUuid());
 						loginView.userAuthenticated(isFirstAccessOfNewUrl);
 						loginView.finishLoginActivity();
@@ -153,6 +154,7 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 			loginDataService.getSession(url, username, password, loginUserCallback);
 		} else {
 			if (openMRS.isUserLoggedOnline() && url.equals(openMRS.getLastLoginServerUrl())) {
+				RestServiceBuilder.applyDefaultBaseUrl();
 				loginView.setProgressBarVisibility(false);
 				if (openMRS.getUsername().equals(username) && openMRS.getPassword().equals(password)) {
 					openMRS.setSessionToken(openMRS.getLastSessionToken());
@@ -178,11 +180,14 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 		DataService.GetCallback<User> fetchUserCallback = new DataService.GetCallback<User>() {
 			@Override
 			public void onCompleted(User user) {
-				Map<String, String> userInfo = new HashMap<>();
-				userInfo.put(ApplicationConstants.UserKeys.USER_PERSON_NAME, user.getPerson().getDisplay());
-				userInfo.put(ApplicationConstants.UserKeys.USER_UUID, user.getPerson().getUuid());
-				openMRS.setCurrentUserInformation(userInfo);
-				openMRS.setLoginUserUuid(ApplicationConstants.EMPTY_STRING);
+				if (user != null) {
+					userService.save(user);
+					Map<String, String> userInfo = new HashMap<>();
+					userInfo.put(ApplicationConstants.UserKeys.USER_PERSON_NAME, user.getPerson().getDisplay());
+					userInfo.put(ApplicationConstants.UserKeys.USER_UUID, user.getPerson().getUuid());
+					openMRS.setCurrentUserInformation(userInfo);
+					openMRS.setLoginUserUuid(ApplicationConstants.EMPTY_STRING);
+				}
 			}
 
 			@Override
@@ -191,7 +196,15 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 			}
 		};
 
-		userService.getByUuid(uuid, QueryOptions.INCLUDE_ALL_FULL_REP, fetchUserCallback);
+		QueryOptions options = new QueryOptions.Builder()
+				.includeInactive(true)
+				.customRepresentation(RestConstants.Representations.FULL)
+				.requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL)
+				.build();
+
+		// initialize here after setting the username and password
+		userService = dataAccess().user();
+		userService.getByUuid(uuid, options, fetchUserCallback);
 	}
 
 	@Override

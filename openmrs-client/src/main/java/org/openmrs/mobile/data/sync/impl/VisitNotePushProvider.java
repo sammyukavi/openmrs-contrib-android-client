@@ -45,6 +45,8 @@ public class VisitNotePushProvider extends BasePushProvider<VisitNote, VisitNote
 		// save new obs
 		encounterDbService.save(restEntity.getEncounter());
 
+		// visit note no longer required
+		dbService.deleteLocalRelatedObjects(originalEntity);
 		dbService.delete(syncLog.getKey());
 	}
 }

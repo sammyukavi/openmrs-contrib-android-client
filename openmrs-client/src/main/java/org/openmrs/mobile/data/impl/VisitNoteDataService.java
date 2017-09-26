@@ -45,7 +45,8 @@ public class VisitNoteDataService extends BaseDataService<VisitNote, VisitNoteDb
 					// save new obs
 					e.getEncounter().processRelationships();
 					encounterDbService.save(e.getEncounter());
-					// remove visit note
+					// visit note no longer required
+					dbService.deleteLocalRelatedObjects(visitNote);
 					dbService.delete(visitNote.getUuid());
 				});
 	}

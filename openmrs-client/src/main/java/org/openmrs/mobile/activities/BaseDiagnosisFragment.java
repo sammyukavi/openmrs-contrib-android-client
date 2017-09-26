@@ -414,7 +414,6 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	}
 
 	protected VisitNote createVisitNote(Encounter encounter, String clinicalNote, Visit visit) {
-		String s = clinicalNoteView.getText().toString();
 		List<EncounterDiagnosis> encounterDiagnoses = new ArrayList<>();
 		VisitNote visitNote = new VisitNote();
 		visitNote.setUuid(visit.getUuid());

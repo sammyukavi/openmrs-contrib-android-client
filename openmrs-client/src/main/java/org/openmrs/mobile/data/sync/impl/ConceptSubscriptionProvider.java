@@ -16,16 +16,12 @@ import javax.inject.Inject;
 
 public class ConceptSubscriptionProvider extends AdaptiveSubscriptionProvider<Concept, ConceptDbService,
 		ConceptRestServiceImpl> {
-	private ConceptDbService conceptDbService;
-	private ConceptRestServiceImpl conceptRestService;
 
 	@Inject
 	public ConceptSubscriptionProvider(ConceptDbService dbService,
 			RecordInfoDbService recordInfoDbService,
 			ConceptRestServiceImpl restService, Repository repository, EventBus eventBus) {
 		super(dbService, recordInfoDbService, restService, repository, eventBus);
-		this.conceptDbService = dbService;
-		this.conceptRestService = restService;
 	}
 
 	@Override
@@ -35,12 +31,12 @@ public class ConceptSubscriptionProvider extends AdaptiveSubscriptionProvider<Co
 
 	@Override
 	public void pull(PullSubscription subscription) {
-		Concept concept = RestHelper.getCallValue(conceptRestService.getByUuid(ApplicationConstants.AuditFormConcepts
+		Concept concept = RestHelper.getCallValue(restService.getByUuid(ApplicationConstants.AuditFormConcepts
 				.CONCEPT_INPATIENT_SERVICE_TYPE, QueryOptions.FULL_REP));
 		concept.processRelationships();
 
 		if (concept != null) {
-			conceptDbService.save(concept);
+			dbService.save(concept);
 		}
 
 	}

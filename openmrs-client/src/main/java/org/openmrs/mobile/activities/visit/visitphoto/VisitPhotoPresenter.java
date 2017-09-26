@@ -17,7 +17,6 @@ package org.openmrs.mobile.activities.visit.visitphoto;
 import org.openmrs.mobile.activities.visit.VisitContract;
 import org.openmrs.mobile.activities.visit.VisitPresenterImpl;
 import org.openmrs.mobile.data.DataService;
-import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.impl.ObsDataService;
 import org.openmrs.mobile.data.impl.VisitPhotoDataService;
 import org.openmrs.mobile.models.Observation;
@@ -28,10 +27,8 @@ import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitPhoto;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.DateUtils;
-import org.openmrs.mobile.utilities.StringUtils;
 import org.openmrs.mobile.utilities.ToastUtil;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -58,44 +55,51 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 
 	private void getPhotoMetadata() {
 		visitPhotoView.showTabSpinner(true);
+		// get local photos
+		List<VisitPhoto> visitPhotos = visitPhotoDataService.getByVisit(visitUuid);
 		// download all photo metadata
 		visitPhotoDataService.downloadPhotoMetadata(patientUuid, null, obsDataService,
 				new DataService.GetCallback<List<Observation>>() {
 					@Override
 					public void onCompleted(List<Observation> observations) {
-						List<VisitPhoto> visitPhotos = new ArrayList<>();
+						if (observations == null) {
+							visitPhotoView.showTabSpinner(false);
+							visitPhotoView.updateVisitImageMetadata(visitPhotos);
+							return;
+						}
+
 						for (Observation observation : observations) {
-							if (StringUtils.notNull(observation.getEncounter().getVisit().getUuid()) &&
-									observation.getEncounter().getVisit().getUuid().equalsIgnoreCase(visitUuid)) {
-								VisitPhoto visitPhoto = new VisitPhoto();
-								visitPhoto.setFileCaption(observation.getComment());
-								visitPhoto.setDateCreated(new Date(DateUtils.convertTime(observation.getObsDatetime())));
+							VisitPhoto visitPhoto = new VisitPhoto();
+							visitPhoto.setFileCaption(observation.getComment());
+							visitPhoto.setDateCreated(new Date(DateUtils.convertTime(observation.getObsDatetime())));
 
-								User creator = new User();
-								creator.setPerson(observation.getPerson());
-								visitPhoto.setCreator(creator);
+							User creator = new User();
+							creator.setPerson(observation.getPerson());
+							visitPhoto.setCreator(creator);
+							visitPhoto.setCreator(observation.getCreator());
 
-								visitPhoto.setObservation(observation);
+							visitPhoto.setObservation(observation);
 
-								// download photo bytes
-								visitPhotoDataService.downloadPhotoImage(visitPhoto, ApplicationConstants.THUMBNAIL_VIEW,
-										new DataService.GetCallback<VisitPhoto>() {
-											@Override
-											public void onCompleted(VisitPhoto entity) {
+							// download photo bytes
+							visitPhotoDataService.downloadPhotoImage(visitPhoto, ApplicationConstants.THUMBNAIL_VIEW,
+									new DataService.GetCallback<VisitPhoto>() {
+										@Override
+										public void onCompleted(VisitPhoto entity) {
+											if (entity != null) {
 												visitPhoto.setImage(entity.getImageColumn().getBlob());
 												visitPhotos.add(visitPhoto);
 												visitPhotoView.showTabSpinner(false);
 
 												visitPhotoView.updateVisitImageMetadata(visitPhotos);
 											}
+										}
 
-											@Override
-											public void onError(Throwable t) {
-												visitPhotoView.showTabSpinner(false);
-												ToastUtil.error(t.getMessage());
-											}
-										});
-							}
+										@Override
+										public void onError(Throwable t) {
+											visitPhotoView.showTabSpinner(false);
+											ToastUtil.error(t.getMessage());
+										}
+									});
 						}
 
 						visitPhotoView.showTabSpinner(false);
@@ -168,7 +172,8 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 	}
 
 	@Override
-	public void unsubscribe() {}
+	public void unsubscribe() {
+	}
 
 	@Override
 	public void deleteImage(VisitPhoto visitPhoto) {

@@ -170,7 +170,6 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 			OpenMRS.getInstance().setVisitUuid(visit.getUuid());
 			setVisitDates(visit);
 			setVisitType(visit);
-			setVitals(visit);
 			setClinicalNote(visit);
 			setDiagnoses(visit);
 			setAuditData(visit);
@@ -343,8 +342,17 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 
 	private void loadVisitAttributeType(VisitAttribute visitAttribute, List<VisitAttributeType> attributeTypes) {
 		for (VisitAttributeType type : attributeTypes) {
-			if (type.getUuid().equalsIgnoreCase(visitAttribute.getAttributeType().getUuid())) {
-				visitAttribute.setAttributeType(type);
+			if (visitAttribute.getAttributeType() != null) {
+				if (type.getUuid().equalsIgnoreCase(visitAttribute.getAttributeType().getUuid())) {
+					visitAttribute.setAttributeType(type);
+				}
+			} else {
+				String[] visitAttributeTypeAndValue = visitAttribute.getDisplay().split(": ");
+				if (visitAttributeTypeAndValue.length > 1 &&
+						visitAttribute.getDisplay().contains(visitAttributeTypeAndValue[0])) {
+					visitAttribute.setAttributeType(type);
+					visitAttribute.setValue(visitAttributeTypeAndValue[1]);
+				}
 			}
 		}
 	}
@@ -398,13 +406,12 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 				if ((visit.getEncounters().get(i).getEncounterType().getUuid()
 						.equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.AUDIT_DATA_UUID) || visit.getEncounters()
 						.get(i).getEncounterType().getDisplay().equalsIgnoreCase(ApplicationConstants
-								.EncounterTypeDisplays.AUDITDATA)&& !visit.getEncounters().get(i).getVoided())) {
+								.EncounterTypeDisplays.AUDITDATA) && !visit.getEncounters().get(i).getVoided())) {
 
 					if (visit.getEncounters().get(i).getObs().size() != 0) {
 						auditDataMetadata.setVisibility(View.VISIBLE);
 						auditDataMetadataDate.setText(
-								DATE_FORMAT.format(visit.getEncounters().get(i).getEncounterDatetime()))
-						;
+								DATE_FORMAT.format(visit.getEncounters().get(i).getEncounterDatetime()));
 
 						for (int v = 0; v < visit.getEncounters().get(i).getEncounterProviders().size(); v++) {
 							if (v == 0) {
@@ -430,7 +437,7 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 		if (visit.getEncounters().size() != 0) {
 			for (int i = 0; i < visit.getEncounters().size(); i++) {
 				Encounter encounter = visit.getEncounters().get(i);
-				if (encounter.getVoided())
+				if (encounter.getVoided() != null && encounter.getVoided())
 					continue;
 
 				if (encounter.getEncounterType().getDisplay()

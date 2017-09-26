@@ -46,7 +46,6 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 
 	@Override
 	public void subscribe() {
-		fetchInpatientTypeServices();
 	}
 
 	@Override

@@ -25,7 +25,7 @@ public abstract class BaseDbServiceTest<E extends BaseOpenmrsObject> {
 	protected ModelAsserters.ModelAsserter<E> asserter;
 	protected ModelGenerators.ModelGenerator<E> generator;
 
-	protected Repository repository = new RepositoryImpl();
+	protected Repository repository = new RepositoryImpl();;
 
 	protected abstract BaseDbService<E> getDbService();
 

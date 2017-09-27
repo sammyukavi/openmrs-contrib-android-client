@@ -152,6 +152,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		this.visitStopDate = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE);
 
 		fragmentView = inflater.inflate(R.layout.fragment_audit_form, container, false);
+		mPresenter.fetchInpatientTypeServices();
 
 		initViewFields();
 
@@ -172,8 +173,6 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		if (!instance.getLocation().equalsIgnoreCase(null)) {
 			locationUuid = instance.getParentLocationUuid();
 		}
-
-		mPresenter.fetchVisit(visitUuid);
 
 		initObservations();
 		addListeners();

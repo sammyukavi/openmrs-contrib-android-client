@@ -62,13 +62,18 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 				new DataService.GetCallback<List<Observation>>() {
 					@Override
 					public void onCompleted(List<Observation> observations) {
-						if (observations == null) {
+						if (observations == null || observations.isEmpty()) {
 							visitPhotoView.showTabSpinner(false);
 							visitPhotoView.updateVisitImageMetadata(visitPhotos);
 							return;
 						}
 
 						for (Observation observation : observations) {
+							if (searchLocalVisitPhoto(observation, visitPhotos)) {
+								visitPhotoView.updateVisitImageMetadata(visitPhotos);
+								continue;
+							}
+
 							VisitPhoto visitPhoto = new VisitPhoto();
 							visitPhoto.setFileCaption(observation.getComment());
 							visitPhoto.setDateCreated(new Date(DateUtils.convertTime(observation.getObsDatetime())));
@@ -110,6 +115,18 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 						visitPhotoView.showTabSpinner(false);
 					}
 				});
+	}
+
+	private boolean searchLocalVisitPhoto(Observation obs, List<VisitPhoto> visitPhotos) {
+		for (VisitPhoto visitPhoto : visitPhotos) {
+			if (visitPhoto.getObservation() != null) {
+				if (visitPhoto.getObservation().getUuid().equalsIgnoreCase(obs.getUuid())) {
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 
 	@Override

@@ -140,6 +140,10 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 	private TextInputLayout hba1cTextLayout, cd4TextInputLayout;
 	private TextView errorFirstGcsScore;
 
+	private ConceptAnswer initialInpatientTypeServiceSelection;
+
+	private String encounterInpatientService;
+
 	public static AuditDataFragment newInstance() {
 		return new AuditDataFragment();
 	}
@@ -177,6 +181,10 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 
 		initObservations();
 		addListeners();
+
+		initialInpatientTypeServiceSelection = new ConceptAnswer();
+		initialInpatientTypeServiceSelection.setDisplay(getString(R.string.inpatient_service_type_prompt));
+
 		displayExtraFormFields = false;
 		// Font config
 		FontsUtil.setFont((ViewGroup)this.getActivity().findViewById(android.R.id.content));
@@ -189,6 +197,14 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				ConceptAnswer conceptAnswer = conceptAnswerList.get(position);
+
+				if (conceptAnswer == initialInpatientTypeServiceSelection) {
+					if (inpatientServiceTypeObservation != null) {
+						setObservationVoided(inpatientServiceTypeObservation);
+					}
+					return;
+				}
+
 				inpatientServiceTypeSelectedUuid = conceptAnswer.getUuid();
 				inpatientServiceTypeObservation = setObservationFields(inpatientServiceTypeObservation,
 						CONCEPT_INPATIENT_SERVICE_TYPE, conceptAnswer.getUuid(),
@@ -761,10 +777,21 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 
 	@Override
 	public void setInpatientTypeServices(List<ConceptAnswer> conceptAnswers) {
-		conceptAnswerList = conceptAnswers;
+		conceptAnswerList = new ArrayList<>();
+
+		conceptAnswerList.add(initialInpatientTypeServiceSelection);
+		conceptAnswerList.addAll(conceptAnswers);
+
+		int selectedInpatientServiceTypePositon = inpatientServiceType.getSelectedItemPosition();
 		ArrayAdapter<ConceptAnswer> adapter = new ArrayAdapter<>(getContext(), android.R.layout
-				.simple_spinner_dropdown_item, conceptAnswers);
+				.simple_spinner_dropdown_item, conceptAnswerList);
 		inpatientServiceType.setAdapter(adapter);
+
+		if (selectedInpatientServiceTypePositon >= 0) {
+			inpatientServiceType.setSelection(selectedInpatientServiceTypePositon);
+		} else if (!StringUtils.isNullOrEmpty(encounterInpatientService)) {
+			updateInpatientDisplaySelection(encounterInpatientService);
+		}
 	}
 
 	@Override
@@ -941,14 +968,8 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 					break;
 
 				case CONCEPT_INPATIENT_SERVICE_TYPE:
-					if (conceptAnswerList != null) {
-						for (int i = 0; i < conceptAnswerList.size(); i++) {
-							if (conceptAnswerList.get(i).getDisplay().equalsIgnoreCase(displayValue)) {
-								inpatientServiceType.setSelection(i);
-								inpatientServiceTypeSelectedUuid = conceptAnswerList.get(i).getUuid();
-							}
-						}
-					}
+					encounterInpatientService = displayValue;
+					updateInpatientDisplaySelection(displayValue);
 					inpatientServiceTypeObservation = setObservationFields(observation, CONCEPT_INPATIENT_SERVICE_TYPE,
 							inpatientServiceTypeSelectedUuid);
 
@@ -1170,6 +1191,17 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 			}
 		}
 
+	}
+
+	private void updateInpatientDisplaySelection(String displayValue) {
+		if (conceptAnswerList != null) {
+			for (int i = 0; i < conceptAnswerList.size(); i++) {
+				if (conceptAnswerList.get(i).getDisplay().equalsIgnoreCase(displayValue)) {
+					inpatientServiceType.setSelection(i);
+					inpatientServiceTypeSelectedUuid = conceptAnswerList.get(i).getUuid();
+				}
+			}
+		}
 	}
 
 	private void performDataSend() {

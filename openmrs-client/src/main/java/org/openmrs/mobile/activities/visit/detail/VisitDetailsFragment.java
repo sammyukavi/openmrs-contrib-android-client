@@ -272,11 +272,12 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 			}
 		} else {
 			for (VisitAttribute visitAttribute : visit.getAttributes()) {
-				loadVisitAttributeType(visitAttribute, visitAttributeTypes);
-				createVisitAttributeLayout(visitAttribute);
+				if (!visitAttribute.getVoided()) {
+					loadVisitAttributeType(visitAttribute, visitAttributeTypes);
+					createVisitAttributeLayout(visitAttribute);
+				}
 			}
 		}
-
 	}
 
 	@Override

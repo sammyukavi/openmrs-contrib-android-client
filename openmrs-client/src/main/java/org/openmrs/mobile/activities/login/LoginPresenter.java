@@ -115,7 +115,7 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 				public void onCompleted(Session session) {
 					if (session != null && session.isAuthenticated()) {
 						if (wipeRequired) {
-							openMRS.deleteDatabase(AppDatabase.NAME);
+							openMRS.resetDatabase(AppDatabase.NAME);
 							isFirstAccessOfNewUrl = true;
 							setData(session.getSessionId(), url, username, password);
 

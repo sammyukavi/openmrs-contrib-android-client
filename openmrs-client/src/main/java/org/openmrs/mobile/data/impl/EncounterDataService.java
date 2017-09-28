@@ -54,13 +54,7 @@ public class EncounterDataService extends BaseDataService<Encounter, EncounterDb
 				},
 				() -> restService.create(entity),
 				(Encounter result) -> {
-					if (!entity.getObs().isEmpty()) {
-						for (Observation observation : entity.getObs()) {
-							if (observation.getVoided() == true) {
-								observationDbService.delete(observation);
-							}
-						}
-					}
+					deleteVoidedObservationsFromEncounter(entity);
 					return result;
 				},
 				(e) -> dbService.save(e));
@@ -81,15 +75,19 @@ public class EncounterDataService extends BaseDataService<Encounter, EncounterDb
 				},
 				() -> restService.update(entity),
 				(Encounter result) -> {
-					if (!entity.getObs().isEmpty()) {
-						for (Observation observation : entity.getObs()) {
-							if (observation.getVoided() == true) {
-								observationDbService.delete(observation);
-							}
-						}
-					}
+					deleteVoidedObservationsFromEncounter(entity);
 					return result;
 				},
 				(e) -> dbService.save(e));
+	}
+
+	private void deleteVoidedObservationsFromEncounter(Encounter entity) {
+		if (!entity.getObs().isEmpty()) {
+			for (Observation observation : entity.getObs()) {
+				if (observation.getVoided() == true) {
+					observationDbService.delete(observation);
+				}
+			}
+		}
 	}
 }

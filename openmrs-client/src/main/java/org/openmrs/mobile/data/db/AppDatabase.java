@@ -11,6 +11,7 @@ import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 import org.openmrs.mobile.data.sync.impl.ConceptAnswerSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.ConceptClassSubscriptionProvider;
+import org.openmrs.mobile.data.sync.impl.ConceptSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.DiagnosisConceptSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.EncounterTypeSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.LocationSubscriptionProvider;
@@ -55,7 +56,7 @@ public class AppDatabase {
 
 	@Migration(version = 0, database = AppDatabase.class)
 	public static class Initialization extends BaseMigration {
-		private final static Integer INT_SECONDS_PER_DAY = (int) TimeConstants.SECONDS_PER_DAY;
+		private final static Integer INT_SECONDS_PER_DAY = (int)TimeConstants.SECONDS_PER_DAY;
 		private final static Integer MAX_INCREMENTAL_COUNT = 25;
 
 		public static void initializePullSubscriptions(@NonNull DatabaseWrapper database) {
@@ -104,7 +105,9 @@ public class AppDatabase {
 			pullSubscriptions.add(
 					newPullSub(ConceptAnswerSubscriptionProvider.class.getSimpleName(), MAX_INCREMENTAL_COUNT,
 							INT_SECONDS_PER_DAY));
-
+			pullSubscriptions.add(
+					newPullSub(ConceptSubscriptionProvider.class.getSimpleName(), MAX_INCREMENTAL_COUNT,
+							INT_SECONDS_PER_DAY));
 
 			FlowManager.getModelAdapter(PullSubscription.class).saveAll(pullSubscriptions, database);
 		}

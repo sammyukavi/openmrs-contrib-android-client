@@ -4,24 +4,25 @@ import org.openmrs.mobile.data.db.impl.PullSubscriptionDbService;
 import org.openmrs.mobile.data.sync.SyncService;
 import org.openmrs.mobile.data.sync.impl.ConceptAnswerSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.ConceptClassSubscriptionProvider;
+import org.openmrs.mobile.data.sync.impl.ConceptSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.DiagnosisConceptSubscriptionProvider;
+import org.openmrs.mobile.data.sync.impl.EncounterPushProvider;
 import org.openmrs.mobile.data.sync.impl.EncounterTypeSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.LocationSubscriptionProvider;
+import org.openmrs.mobile.data.sync.impl.ObservationPushProvider;
 import org.openmrs.mobile.data.sync.impl.PatientIdentifierTypeSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.PatientListContextSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.PatientListSubscriptionProvider;
+import org.openmrs.mobile.data.sync.impl.PatientPushProvider;
 import org.openmrs.mobile.data.sync.impl.PatientTrimProvider;
 import org.openmrs.mobile.data.sync.impl.PersonAttributeTypeSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.VisitAttributeTypeSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.VisitNotePushProvider;
 import org.openmrs.mobile.data.sync.impl.VisitPhotoPushProvider;
 import org.openmrs.mobile.data.sync.impl.VisitPredefinedTaskSubscriptionProvider;
-import org.openmrs.mobile.data.sync.impl.VisitTypeSubscriptionProvider;
-import org.openmrs.mobile.data.sync.impl.EncounterPushProvider;
-import org.openmrs.mobile.data.sync.impl.ObservationPushProvider;
-import org.openmrs.mobile.data.sync.impl.PatientPushProvider;
 import org.openmrs.mobile.data.sync.impl.VisitPushProvider;
 import org.openmrs.mobile.data.sync.impl.VisitTaskPushProvider;
+import org.openmrs.mobile.data.sync.impl.VisitTypeSubscriptionProvider;
 
 import javax.inject.Singleton;
 
@@ -45,6 +46,8 @@ public interface SyncComponent {
 	PatientListSubscriptionProvider patientListSubscriptionProvider();
 
 	ConceptClassSubscriptionProvider conceptClassSubscriptionProvider();
+
+	ConceptSubscriptionProvider conceptSubscriptionProvider();
 
 	EncounterTypeSubscriptionProvider encounterTypeSubscriptionProvider();
 

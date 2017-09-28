@@ -38,21 +38,23 @@
 	</RelativeLayout>
 
 	<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-			android:id="@+id/visitDetailsTab"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:focusable="true"
-			android:focusableInTouchMode="true"
-			android:orientation="vertical"
-			android:layout_alignParentTop="true"
-			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true"
-			android:layout_marginTop="19dp">
+	            android:id="@+id/visitDetailsTab"
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:focusable="true"
+	            android:focusableInTouchMode="true"
+	            android:orientation="vertical"
+	            android:layout_alignParentTop="true"
+	            android:layout_alignParentLeft="true"
+	            android:layout_alignParentStart="true"
+	            android:layout_marginTop="19dp"
+			>
 
 		<LinearLayout
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:orientation="vertical">
+				android:orientation="vertical"
+				android:paddingBottom="30dip">
 
 			<android.support.v7.widget.CardView
 					android:layout_margin="10dp"
@@ -86,7 +88,7 @@
 								android:paddingRight="5dp"
 								android:textColor="@color/color_white"
 								android:text="@string/active_visit_label"
-								android:background="@drawable/active_visit_badge" />
+								android:background="@drawable/active_visit_badge"/>
 
 						<TextView
 								android:id="@+id/visitStartDate"
@@ -98,7 +100,7 @@
 								android:layout_marginRight="10dp"
 								android:layout_alignParentBottom="true"
 								android:layout_toRightOf="@+id/activeVisitBadge"
-								android:layout_toEndOf="@+id/activeVisitBadge" />
+								android:layout_toEndOf="@+id/activeVisitBadge"/>
 
 						<TextView
 								android:id="@+id/startDuration"
@@ -112,7 +114,7 @@
 								android:textColor="@color/openmrs_color_grey"
 								android:layout_alignParentBottom="true"
 								android:layout_alignParentEnd="true"
-								android:layout_alignParentRight="true" />
+								android:layout_alignParentRight="true"/>
 					</RelativeLayout>
 
 					<RelativeLayout
@@ -127,7 +129,7 @@
 								android:layout_height="wrap_content"
 								android:layout_marginTop="3dp"
 								android:layout_marginLeft="10dp"
-								android:layout_marginStart="10dp" />
+								android:layout_marginStart="10dp"/>
 
 						<TextView
 								android:id="@+id/visitDuration"
@@ -142,7 +144,7 @@
 								android:textColor="@color/openmrs_color_grey"
 								android:layout_alignParentBottom="true"
 								android:layout_alignParentEnd="true"
-								android:layout_alignParentRight="true" />
+								android:layout_alignParentRight="true"/>
 					</RelativeLayout>
 
 
@@ -160,7 +162,7 @@
 								android:layout_marginRight="5dp"
 								android:layout_width="wrap_content"
 								android:layout_height="wrap_content"
-								android:text="@string/visit_type" />
+								android:text="@string/visit_type"/>
 
 						<TextView
 								android:id="@+id/visitType"
@@ -170,7 +172,7 @@
 								android:layout_width="wrap_content"
 								android:layout_height="wrap_content"
 								android:layout_toEndOf="@+id/visitTypeLabel"
-								android:layout_toRightOf="@+id/visitTypeLabel" />
+								android:layout_toRightOf="@+id/visitTypeLabel"/>
 					</RelativeLayout>
 
 					<View
@@ -179,7 +181,7 @@
 							android:layout_height="1dp"
 							android:layout_marginLeft="5dp"
 							android:layout_marginRight="5dp"
-							android:background="@android:color/darker_gray" />
+							android:background="@android:color/darker_gray"/>
 
 					<com.google.android.flexbox.FlexboxLayout
 							android:id="@+id/visitAttributesLayout"
@@ -228,7 +230,7 @@
 								android:layout_marginLeft="10dp"
 								android:layout_marginStart="10dp"
 								android:textStyle="bold"
-								android:text="@string/visit_note" />
+								android:text="@string/visit_note"/>
 					</LinearLayout>
 
 					<RelativeLayout
@@ -249,7 +251,7 @@
 								android:textSize="12sp"
 								android:layout_alignParentLeft="true"
 								android:layout_alignParentStart="true"
-								android:textColor="@color/openmrs_color_grey" />
+								android:textColor="@color/openmrs_color_grey"/>
 
 
 						<TextView
@@ -264,7 +266,7 @@
 								android:layout_alignParentRight="true"
 								android:layout_alignParentEnd="true"
 								android:textColor="@color/openmrs_color_grey"
-								tools:ignore="RelativeOverlap" />
+								tools:ignore="RelativeOverlap"/>
 					</RelativeLayout>
 
 					<View
@@ -273,7 +275,7 @@
 							android:layout_marginLeft="5dp"
 							android:layout_marginRight="5dp"
 							android:layout_marginBottom="10dp"
-							android:background="@android:color/darker_gray" />
+							android:background="@android:color/darker_gray"/>
 
 				</LinearLayout>
 
@@ -306,7 +308,7 @@
 								android:layout_marginRight="5dp"
 								android:textSize="15sp"
 								android:layout_marginEnd="5dp"
-								android:hint="@string/clinical_notes_label" />
+								android:hint="@string/clinical_notes_label"/>
 					</android.support.design.widget.TextInputLayout>
 
 					<LinearLayout
@@ -336,7 +338,7 @@
 									android:inputType="textAutoComplete|textAutoCorrect"
 									android:textSize="15sp"
 									android:layout_marginEnd="5dp"
-									android:hint="@string/add_diagnosis" />
+									android:hint="@string/add_diagnosis"/>
 
 						</android.support.design.widget.TextInputLayout>
 
@@ -351,7 +353,7 @@
 									android:layout_width="wrap_content"
 									android:layout_height="match_parent"
 									android:layout_centerInParent="true"
-									android:layout_gravity="center" />
+									android:layout_gravity="center"/>
 
 						</RelativeLayout>
 
@@ -377,7 +379,7 @@
 										android:layout_marginLeft="10dp"
 										android:layout_marginRight="10dp"
 										android:textStyle="bold"
-										android:text="@string/primary_diagnosis_label" />
+										android:text="@string/primary_diagnosis_label"/>
 
 								<TextView
 										android:id="@+id/noPrimaryDiagnosis"
@@ -391,7 +393,7 @@
 										android:visibility="gone"
 										android:textSize="13sp"
 										android:textColor="@color/openmrs_color_grey"
-										android:text="@string/no_primary_diagnosis" />
+										android:text="@string/no_primary_diagnosis"/>
 
 								<android.support.v7.widget.RecyclerView
 										android:id="@+id/primaryDiagnosisRecyclerView"
@@ -403,7 +405,7 @@
 										android:layout_marginBottom="5dp"
 										android:layout_marginRight="10dp"
 										android:layout_marginEnd="10dp"
-										android:layout_gravity="start|bottom" />
+										android:layout_gravity="start|bottom"/>
 							</LinearLayout>
 
 							<LinearLayout
@@ -423,7 +425,7 @@
 										android:layout_marginLeft="10dp"
 										android:layout_marginRight="10dp"
 										android:textStyle="bold"
-										android:text="@string/secondary_diagnosis_label" />
+										android:text="@string/secondary_diagnosis_label"/>
 
 								<TextView
 										android:id="@+id/noSecondaryDiagnosis"
@@ -437,7 +439,7 @@
 										android:visibility="gone"
 										android:textSize="13sp"
 										android:textColor="@color/openmrs_color_grey"
-										android:text="@string/no_secondary_diagnosis" />
+										android:text="@string/no_secondary_diagnosis"/>
 
 								<android.support.v7.widget.RecyclerView
 										android:id="@+id/secondaryDiagnosisRecyclerView"
@@ -449,7 +451,7 @@
 										android:layout_marginBottom="5dp"
 										android:layout_marginRight="10dp"
 										android:layout_marginEnd="10dp"
-										android:layout_gravity="start|bottom" />
+										android:layout_gravity="start|bottom"/>
 
 							</LinearLayout>
 						</LinearLayout>
@@ -485,7 +487,7 @@
 								android:layout_marginLeft="10dp"
 								android:layout_marginStart="10dp"
 								android:textStyle="bold"
-								android:text="@string/patient_scroll_tab_vitals_label" />
+								android:text="@string/patient_scroll_tab_vitals_label"/>
 
 						<ImageButton
 								android:id="@+id/visitVitalsAdd"
@@ -503,7 +505,7 @@
 								android:tint="@color/color_primary_dark"
 								android:layout_centerHorizontal="true"
 								android:layout_alignParentEnd="true"
-								android:layout_alignParentRight="true" />
+								android:layout_alignParentRight="true"/>
 
 					</RelativeLayout>
 
@@ -526,7 +528,7 @@
 								android:textSize="12sp"
 								android:layout_alignParentLeft="true"
 								android:layout_alignParentStart="true"
-								android:textColor="@color/openmrs_color_grey" />
+								android:textColor="@color/openmrs_color_grey"/>
 
 
 						<TextView
@@ -540,7 +542,7 @@
 								android:textSize="12sp"
 								android:layout_alignParentRight="true"
 								android:layout_alignParentEnd="true"
-								android:textColor="@color/openmrs_color_grey" />
+								android:textColor="@color/openmrs_color_grey"/>
 					</RelativeLayout>
 
 					<View
@@ -548,7 +550,7 @@
 							android:layout_height="1dp"
 							android:layout_marginLeft="5dp"
 							android:layout_marginRight="5dp"
-							android:background="@android:color/darker_gray" />
+							android:background="@android:color/darker_gray"/>
 
 				</LinearLayout>
 
@@ -570,16 +572,16 @@
 							android:layout_marginEnd="15dp"
 							android:layout_marginBottom="5dp"
 							android:textColor="@color/openmrs_color_grey"
-							android:text="@string/no_vitals" />
+							android:text="@string/no_vitals"/>
 
 					<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-							android:id="@+id/visitVitalsTable"
-							android:layout_width="match_parent"
-							android:layout_height="wrap_content"
-							android:padding="@dimen/patient_card_margin"
-							android:layout_gravity="center"
-							android:layout_marginTop="10dp"
-							android:layout_marginBottom="5dp">
+					             android:id="@+id/visitVitalsTable"
+					             android:layout_width="match_parent"
+					             android:layout_height="wrap_content"
+					             android:padding="@dimen/patient_card_margin"
+					             android:layout_gravity="center"
+					             android:layout_marginTop="10dp"
+					             android:layout_marginBottom="5dp">
 
 
 					</TableLayout>
@@ -591,7 +593,8 @@
 					card_view:cardBackgroundColor="@color/white"
 					card_view:cardCornerRadius="4dp"
 					android:layout_width="match_parent"
-					android:layout_height="wrap_content">
+					android:layout_height="wrap_content"
+					>
 
 				<LinearLayout
 						android:layout_width="match_parent"
@@ -612,7 +615,7 @@
 								android:layout_marginStart="10dp"
 								android:layout_marginBottom="5dp"
 								android:textStyle="bold"
-								android:text="@string/audit_info" />
+								android:text="@string/audit_info"/>
 
 						<ImageButton
 								android:id="@+id/visitAuditInfoAdd"
@@ -630,7 +633,7 @@
 								android:tint="@color/color_primary_dark"
 								android:layout_centerHorizontal="true"
 								android:layout_alignParentEnd="true"
-								android:layout_alignParentRight="true" />
+								android:layout_alignParentRight="true"/>
 
 						<TextView
 								android:id="@+id/auditDataCompleteness"
@@ -649,7 +652,7 @@
 								android:layout_centerHorizontal="true"
 								android:layout_alignParentEnd="true"
 								android:layout_alignParentRight="true"
-								android:textColor="@color/yellow" />
+								android:textColor="@color/yellow"/>
 					</RelativeLayout>
 
 					<RelativeLayout
@@ -671,7 +674,7 @@
 								android:textSize="12sp"
 								android:layout_alignParentLeft="true"
 								android:layout_alignParentStart="true"
-								android:textColor="@color/openmrs_color_grey" />
+								android:textColor="@color/openmrs_color_grey"/>
 
 
 						<TextView
@@ -685,7 +688,7 @@
 								android:textSize="12sp"
 								android:layout_alignParentRight="true"
 								android:layout_alignParentEnd="true"
-								android:textColor="@color/openmrs_color_grey" />
+								android:textColor="@color/openmrs_color_grey"/>
 					</RelativeLayout>
 
 
@@ -694,7 +697,7 @@
 							android:layout_height="1dp"
 							android:layout_marginLeft="5dp"
 							android:layout_marginRight="5dp"
-							android:background="@android:color/darker_gray" />
+							android:background="@android:color/darker_gray"/>
 
 				</LinearLayout>
 
@@ -716,16 +719,16 @@
 							android:layout_marginEnd="15dp"
 							android:textColor="@color/openmrs_color_grey"
 							android:layout_marginBottom="5dp"
-							android:text="@string/no_audit_infomation" />
+							android:text="@string/no_audit_infomation"/>
 
 					<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-							android:id="@+id/auditInfoTable"
-							android:layout_width="match_parent"
-							android:layout_height="wrap_content"
-							android:padding="@dimen/patient_card_margin"
-							android:layout_gravity="center"
-							android:layout_marginTop="10dp"
-							android:layout_marginBottom="5dp">
+					             android:id="@+id/auditInfoTable"
+					             android:layout_width="match_parent"
+					             android:layout_height="wrap_content"
+					             android:padding="@dimen/patient_card_margin"
+					             android:layout_gravity="center"
+					             android:layout_marginTop="10dp"
+					             android:layout_marginBottom="5dp">
 
 
 					</TableLayout>

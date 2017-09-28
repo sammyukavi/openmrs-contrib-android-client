@@ -15,6 +15,7 @@
 package org.openmrs.mobile.utilities;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -33,6 +34,7 @@ import java.util.concurrent.TimeUnit;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public final class DateUtils {
+	private static final String TAG = DateUtils.class.getSimpleName();
 	public static final String DEFAULT_DATE_FORMAT = "dd/MM/yyyy";
 	public static final String DATE_WITH_TIME_FORMAT = "dd/MM/yyyy HH:mm";
 	public static final String OPEN_MRS_REQUEST_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
@@ -142,7 +144,7 @@ public final class DateUtils {
 	}
 
 	public static String calculateAge(String date) {
-		DateFormat dateFormat = new SimpleDateFormat(OPEN_MRS_REQUEST_FORMAT, Locale.getDefault());
+		DateFormat dateFormat = new SimpleDateFormat(OPEN_MRS_REQUEST_PATIENT_FORMAT, Locale.getDefault());
 
 		int years = 0;
 		int months = 0;
@@ -153,7 +155,8 @@ public final class DateUtils {
 			Calendar dob = Calendar.getInstance();
 			dob.setTime(startDate);
 			if (dob.after(now)) {
-				throw new IllegalArgumentException("Can't be born in the future");
+				Log.e(TAG, "Can't be born in the future");
+				return ApplicationConstants.EMPTY_STRING;
 			}
 			int year1 = now.get(Calendar.YEAR);
 			int year2 = dob.get(Calendar.YEAR);
@@ -173,7 +176,8 @@ public final class DateUtils {
 				}
 			}
 		} catch (ParseException e) {
-			e.printStackTrace();
+			Log.e(TAG, "Error parsing date: ", e);
+			return ApplicationConstants.EMPTY_STRING;
 		}
 
 		if (years > 0) {

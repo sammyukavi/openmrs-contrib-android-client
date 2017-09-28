@@ -43,6 +43,7 @@ public class ConceptSubscriptionProvider extends
 
 	@Override
 	public void pull(PullSubscription subscription) {
+		//Load the Inpatient Service Type
 		Concept concept = RestHelper.getCallValue(restService.getByUuid(ApplicationConstants.AuditFormConcepts
 				.CONCEPT_INPATIENT_SERVICE_TYPE, QueryOptions.FULL_REP));
 		concept.processRelationships();

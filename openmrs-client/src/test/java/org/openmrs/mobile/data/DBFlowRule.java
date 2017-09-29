@@ -7,7 +7,7 @@ import com.raizlabs.android.dbflow.config.FlowManager;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
-import org.openmrs.mobile.data.db.TestAppDatabase;
+import org.openmrs.mobile.data.db.AppDatabase;
 import org.robolectric.RuntimeEnvironment;
 
 public class DBFlowRule implements TestRule {
@@ -24,9 +24,12 @@ public class DBFlowRule implements TestRule {
 		return new Statement() {
 			@Override
 			public void evaluate() throws Throwable {
-				FlowManager.init(FlowConfig.builder(RuntimeEnvironment.application)
-						.addDatabaseConfig(
-								DatabaseConfig.inMemoryBuilder(TestAppDatabase.class)
+				FlowManager.destroy();
+
+				FlowManager.init(
+						FlowConfig.builder(RuntimeEnvironment.application)
+							.addDatabaseConfig(
+								DatabaseConfig.inMemoryBuilder(AppDatabase.class)
 										.databaseName("TestDatabase")
 										.build())
 						.build());

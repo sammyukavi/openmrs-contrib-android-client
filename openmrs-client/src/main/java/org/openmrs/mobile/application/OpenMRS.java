@@ -29,8 +29,9 @@ import org.openmrs.mobile.dagger.ApplicationComponent;
 import org.openmrs.mobile.dagger.ApplicationModule;
 import org.openmrs.mobile.dagger.DaggerApplicationComponent;
 import org.openmrs.mobile.dagger.SyncModule;
-import org.openmrs.mobile.net.AuthorizationManager;
 import org.openmrs.mobile.data.DatabaseHelper;
+import org.openmrs.mobile.data.db.AppDatabase;
+import org.openmrs.mobile.net.AuthorizationManager;
 import org.openmrs.mobile.net.NetworkManager;
 import org.openmrs.mobile.security.SecretKeyGenerator;
 import org.openmrs.mobile.sync.SyncManager;
@@ -114,9 +115,16 @@ public class OpenMRS extends Application {
 		/*FlowConfig config = new FlowConfig.Builder(this)
 				.openDatabasesOnInit(true)
 				.build();*/
-
-
 		FlowManager.init(this);
+	}
+
+	/*
+	Delete the existing database and reinit through dbflow
+	 */
+	public void resetDatabase(String name){
+		super.deleteDatabase(name+".db");
+		FlowManager.getDatabase(AppDatabase.NAME).reset();
+
 	}
 
 	public SharedPreferences getPreferences() {

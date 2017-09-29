@@ -39,6 +39,10 @@ public abstract class BaseDbService<E extends BaseOpenmrsObject> implements DbSe
 
 	protected void postSave(@NonNull E entity) { }
 
+	protected void preSaveAll(@NonNull List<E> entities) { }
+
+	protected void postSaveAll(@NonNull List<E> entities) { }
+
 	protected void preDelete(@NonNull E entity) { }
 
 	protected void preDelete(@NonNull String uuid) { }
@@ -94,7 +98,11 @@ public abstract class BaseDbService<E extends BaseOpenmrsObject> implements DbSe
 			}
 		}
 
+		preSaveAll(entities);
+
 		repository.saveAll(entityTable, entities);
+
+		postSaveAll(entities);
 
 		for (E entity : entities) {
 			if (entity != null) {

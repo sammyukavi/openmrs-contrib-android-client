@@ -29,6 +29,7 @@ public class SyncManager {
 	private PatientListContextDbService patientListContextDbService;
 
 	private boolean canSync = false;
+	private boolean isSyncing = false;
 
 	@Inject
 	public SyncManager(OpenMRS openMRS, SyncReceiver syncReceiver, SyncService syncService,
@@ -64,13 +65,17 @@ public class SyncManager {
 
 	public void requestSync() {
 		if (openMRS.getAuthorizationManager().isUserLoggedIn()) {
-			if (canSync) {
+			if (canSync && !isSyncing) {
 				new Thread(() -> {
+					isSyncing = true;
 					try {
 						syncService.sync();
 					}
 					catch (Exception ex) {
 						openMRS.getOpenMRSLogger().e("Error running the sync service", ex);
+					}
+					finally {
+						isSyncing = false;
 					}
 				}).start();
 			}
@@ -80,8 +85,11 @@ public class SyncManager {
 	}
 
 	public void requestInitialSync() {
-		canSync = true;
-		requestSync();
+		// If canSync is true, assume we have already called the initial sync
+		if (!canSync) {
+			canSync = true;
+			requestSync();
+		}
 	}
 
 	public void deleteUnsyncedPatientListData(String patientListUuid) {

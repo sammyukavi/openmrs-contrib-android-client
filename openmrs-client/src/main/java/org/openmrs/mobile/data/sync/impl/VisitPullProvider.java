@@ -3,6 +3,9 @@ package org.openmrs.mobile.data.sync.impl;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.raizlabs.android.dbflow.sql.language.SQLOperator;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
+
 import org.openmrs.mobile.data.DatabaseHelper;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
@@ -33,6 +36,7 @@ import org.openmrs.mobile.utilities.ApplicationConstants;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -159,8 +163,17 @@ public class VisitPullProvider {
 			List<RecordInfo> observationInfo = RestHelper.getCallListValue(obsRestService
 					.getVisitDocumentsObsRecordInfoByPatientAndConceptList(patientRecord.getUuid()));
 
+			List<SQLOperator> observationsOperators = new ArrayList<>();
+			observationsOperators.add(
+					Observation_Table.encounter_uuid.eq(
+							SQLite.select(Encounter_Table.uuid).from(Encounter.class)
+									.where(Encounter_Table.visit_uuid.eq(recordInfo.getUuid()))));
+
+			observationsOperators.add(Observation_Table.concept_uuid.in(
+					Arrays.asList(ApplicationConstants.ConceptSets.VISIT_DOCUMENT_UUID.split(","))));
+
 			databaseHelper
-					.diffDelete(Observation.class, Observation_Table.uuid.eq(recordInfo.getUuid()), observationInfo);
+					.diffDelete(Observation.class, observationsOperators, observationInfo);
 
 			List<VisitPhoto> visitPhotos = new ArrayList<>();
 			List<Observation> observations = new ArrayList<>();

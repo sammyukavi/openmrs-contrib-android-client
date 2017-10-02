@@ -17,8 +17,11 @@ package org.openmrs.mobile.activities.visit.visitphoto;
 import org.openmrs.mobile.activities.visit.VisitContract;
 import org.openmrs.mobile.activities.visit.VisitPresenterImpl;
 import org.openmrs.mobile.data.DataService;
+import org.openmrs.mobile.data.QueryOptions;
+import org.openmrs.mobile.data.RequestStrategy;
 import org.openmrs.mobile.data.impl.ObsDataService;
 import org.openmrs.mobile.data.impl.VisitPhotoDataService;
+import org.openmrs.mobile.data.rest.RestConstants;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Provider;
@@ -76,11 +79,9 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 
 							VisitPhoto visitPhoto = new VisitPhoto();
 							visitPhoto.setFileCaption(observation.getComment());
-							visitPhoto.setDateCreated(new Date(DateUtils.convertTime(observation.getObsDatetime())));
+							visitPhoto.setDateCreated(observation.getDateCreated());
 
-							User creator = new User();
-							creator.setPerson(observation.getPerson());
-							visitPhoto.setCreator(creator);
+							visitPhoto.setCreator(observation.getCreator());
 
 							visitPhoto.setObservation(observation);
 

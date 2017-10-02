@@ -28,8 +28,8 @@ import android.widget.TextView;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.visit.VisitContract;
+import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.models.VisitPhoto;
-import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.DateUtils;
 
 import java.util.HashMap;
@@ -92,10 +92,16 @@ public class VisitPhotoRecyclerViewAdapter
 									visitPhoto.getImageColumn().getBlob().length));
 
 					TextView descriptionView = new TextView(context);
+					String uploadedBy;
+					if (visitPhoto.getCreator() != null) {
+						uploadedBy = visitPhoto.getCreator().getDisplay();
+					} else {
+						// must have been uploaded locally
+						uploadedBy = OpenMRS.getInstance().getUserPersonName();
+					}
+
 					descriptionView.setText(view.formatVisitImageDescription(visitPhoto.getFileCaption(),
-							DateUtils.calculateRelativeDate(visitPhoto.getDateCreated()),
-							visitPhoto.getCreator() != null ? visitPhoto.getCreator().getPerson().getDisplay() :
-									ApplicationConstants.EMPTY_STRING));
+							DateUtils.calculateRelativeDate(visitPhoto.getDateCreated()), uploadedBy));
 					descriptionView.setPadding(10, 10, 10, 10);
 
 					linearLayout.addView(descriptionView);

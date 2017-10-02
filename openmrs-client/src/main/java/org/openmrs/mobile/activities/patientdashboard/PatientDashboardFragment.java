@@ -43,6 +43,7 @@ import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.FontsUtil;
 import org.openmrs.mobile.utilities.StringUtils;
+import org.openmrs.mobile.utilities.ToastUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -103,6 +104,16 @@ public class PatientDashboardFragment extends BaseDiagnosisFragment<PatientDashb
 				}
 			}
 		});
+	}
+
+	@Override
+	public void navigateBack() {
+		getActivity().onBackPressed();
+	}
+
+	@Override
+	public void alertOfflineAndPatientNotFound() {
+		ToastUtil.notify(getString(R.string.no_network_and_no_patient_data_in_database));
 	}
 
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

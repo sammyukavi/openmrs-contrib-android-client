@@ -53,6 +53,10 @@ public interface PatientDashboardContract {
 
 		void showNoPatientData(boolean visible);
 
+		void navigateBack();
+
+		void alertOfflineAndPatientNotFound();
+
 	}
 
 	interface Presenter extends BasePresenterContract {

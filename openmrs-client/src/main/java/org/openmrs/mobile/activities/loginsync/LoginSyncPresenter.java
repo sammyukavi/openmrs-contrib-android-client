@@ -214,7 +214,7 @@ public class LoginSyncPresenter extends BasePresenter implements LoginSyncContra
 			// If the network speed is fluctuating enough to have the message go from "fast" to "slow", stop the timer
 			// and just keep the message as "slow" to be safe. I'm assuming people like to see things will speed up, not
 			// that they're slowing down
-			if (networkConnectionIsFast) {
+			if (networkConnectionIsFast != null && networkConnectionIsFast) {
 				stopMeasuringConnectivity();
 			}
 			networkConnectionIsFast = false;

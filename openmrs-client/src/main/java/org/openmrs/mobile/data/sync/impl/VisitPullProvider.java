@@ -3,8 +3,6 @@ package org.openmrs.mobile.data.sync.impl;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.raizlabs.android.dbflow.sql.language.SQLOperator;
-
 import org.openmrs.mobile.data.DatabaseHelper;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
@@ -32,12 +30,9 @@ import org.openmrs.mobile.models.VisitTask;
 import org.openmrs.mobile.models.VisitTask_Table;
 import org.openmrs.mobile.models.Visit_Table;
 import org.openmrs.mobile.utilities.ApplicationConstants;
-import org.openmrs.mobile.utilities.DateUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -164,13 +159,8 @@ public class VisitPullProvider {
 			List<RecordInfo> observationInfo = RestHelper.getCallListValue(obsRestService
 					.getVisitDocumentsObsRecordInfoByPatientAndConceptList(patientRecord.getUuid()));
 
-			List<SQLOperator> observationsOperators = new ArrayList<>();
-			observationsOperators.add(Observation_Table.uuid.eq(recordInfo.getUuid()));
-			observationsOperators.add(Observation_Table.concept_uuid.in(Arrays.asList(ApplicationConstants.ConceptSets
-					.VISIT_DOCUMENT_UUID.split(","))));
-
 			databaseHelper
-					.diffDelete(Observation.class, observationsOperators, observationInfo);
+					.diffDelete(Observation.class, Observation_Table.uuid.eq(recordInfo.getUuid()), observationInfo);
 
 			List<VisitPhoto> visitPhotos = new ArrayList<>();
 			List<Observation> observations = new ArrayList<>();
@@ -188,24 +178,24 @@ public class VisitPullProvider {
 					visitPhoto.setVisit(visit);
 					visitPhoto.setObservation(observation);
 					visitPhoto.setFileCaption(observation.getComment());
-					visitPhoto.setDateCreated(new Date(DateUtils.convertTime(observation.getObsDatetime())));
+					visitPhoto.setDateCreated(observation.getDateCreated());
 					visitPhoto.setCreator(observation.getCreator());
+
+					// download image bytes
+					ResponseBody image = RestHelper.getCallValue(
+							visitPhotoRestService.downloadPhoto(observationRecord.getUuid(), null));
+					try {
+						visitPhoto.setImage(image.bytes());
+					} catch (IOException ex) {
+						Log.e(TAG, "Error downloading visit image: ", ex);
+					}
+
 					visitPhotos.add(visitPhoto);
 				}
 			}
 
 			if (!observations.isEmpty()) {
 				obsDbService.saveAll(observations);
-			}
-
-			for (VisitPhoto visitPhotoRecord : visitPhotos) {
-				ResponseBody image = RestHelper.getCallValue(
-						visitPhotoRestService.downloadPhoto(visitPhotoRecord.getObservation().getUuid(), null));
-				try {
-					visitPhotoRecord.setImage(image.bytes());
-				} catch (IOException ex) {
-					Log.e(TAG, "Visit image could not be saved.", ex);
-				}
 			}
 
 			if (!visitPhotos.isEmpty()) {

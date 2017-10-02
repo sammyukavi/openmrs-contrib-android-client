@@ -128,7 +128,9 @@ public class DatabaseHelper {
 	 * @param entities
 	 * @return
 	 */
-	public List<String> getEntityUuids(List<? extends Resource> entities) {
+	public List<String> getEntityUuids(@NonNull List<? extends Resource> entities) {
+		checkNotNull(entities);
+
 		List<String> uuids = new ArrayList<>();
 		for (Resource entity : entities) {
 			uuids.add(entity.getUuid());

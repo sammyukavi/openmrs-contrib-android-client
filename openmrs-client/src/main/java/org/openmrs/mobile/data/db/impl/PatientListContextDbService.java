@@ -37,35 +37,6 @@ public class PatientListContextDbService extends BaseDbService<PatientListContex
 		return executeQuery(options, pagingInfo,
 				(f) -> f.where(PatientListContext_Table.patientList_uuid.eq(patientListUuid)));
 	}
-
-	@Override
-	protected void postSaveAll(@NonNull List<PatientListContext> entities) {
-		if (entities.isEmpty() || entities.get(0).getPatientList() == null) {
-			return;
-		}
-		String patientListUuid = entities.get(0).getPatientList().getUuid();
-		boolean allEntitiesPertainToOnePatientList = true;
-
-		for (PatientListContext patientListContext : entities) {
-			if (patientListContext.getPatientList() == null
-					|| !patientListUuid.equals(patientListContext.getPatientList().getUuid())) {
-				allEntitiesPertainToOnePatientList = false;
-			}
-		}
-		if (!allEntitiesPertainToOnePatientList) {
-			return;
-		}
-
-		// Get all contexts associated with the patient list and delete ones that shouldn't be there
-		List<PatientListContext> patientListContextsInTheDB = getListPatients(patientListUuid, null, null);
-		List<String> patientListContextUuidsInTheDB = databaseHelper.getEntityUuids(patientListContextsInTheDB);
-		List<String> savedPatientListContextUuids = databaseHelper.getEntityUuids(entities);
-		for (String patientListContextUuidInTheDB : patientListContextUuidsInTheDB) {
-			if (!savedPatientListContextUuids.contains(patientListContextUuidInTheDB)) {
-				delete(getByUuid(patientListContextUuidInTheDB, null));
-			}
-		}
-	}
 }
 
 

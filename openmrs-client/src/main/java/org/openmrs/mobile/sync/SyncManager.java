@@ -28,8 +28,8 @@ public class SyncManager {
 	private SyncReceiver syncReceiver;
 	private PatientListContextDbService patientListContextDbService;
 
-	private boolean canSync = false;
-	private boolean isSyncing = false;
+	private volatile boolean hasInitialSyncBeenRequested = false;
+	private volatile boolean isSyncCurrentlyInProgress = false;
 
 	@Inject
 	public SyncManager(OpenMRS openMRS, SyncReceiver syncReceiver, SyncService syncService,
@@ -65,9 +65,9 @@ public class SyncManager {
 
 	public void requestSync() {
 		if (openMRS.getAuthorizationManager().isUserLoggedIn()) {
-			if (canSync && !isSyncing) {
+			if (hasInitialSyncBeenRequested && !isSyncCurrentlyInProgress) {
 				new Thread(() -> {
-					isSyncing = true;
+					isSyncCurrentlyInProgress = true;
 					try {
 						syncService.sync();
 					}
@@ -75,19 +75,18 @@ public class SyncManager {
 						openMRS.getOpenMRSLogger().e("Error running the sync service", ex);
 					}
 					finally {
-						isSyncing = false;
+						isSyncCurrentlyInProgress = false;
 					}
 				}).start();
 			}
 		} else {
-			canSync = false;
+			hasInitialSyncBeenRequested = false;
 		}
 	}
 
 	public void requestInitialSync() {
-		// If canSync is true, assume we have already called the initial sync
-		if (!canSync) {
-			canSync = true;
+		if (!hasInitialSyncBeenRequested) {
+			hasInitialSyncBeenRequested = true;
 			requestSync();
 		}
 	}

@@ -280,7 +280,7 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 
 	@Override
 	public void startVisit(List<VisitAttribute> attributes) {
-		visit.setAttributes(attributes);
+		updateExistingAttributes(attributes);
 		if (location != null) {
 			visit.setLocation(location.getParentLocation());
 		}
@@ -316,6 +316,8 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 			updatedVisit.setStopDatetime(visit.getStopDatetime());
 		}
 
+		updateExistingAttributes(attributes);
+
 		setProcessing(true);
 		visitDataService.updateVisit(visit, updatedVisit, new DataService.GetCallback<Visit>() {
 			@Override
@@ -332,15 +334,23 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 		});
 	}
 
+	private void updateExistingAttributes(List<VisitAttribute> attributes) {
+		// void existing attributes
+		for (VisitAttribute visitAttribute : visit.getAttributes()) {
+			visitAttribute.setVoided(true);
+		}
+
+		// append new attributes
+		visit.getAttributes().addAll(attributes);
+	}
+
 	@Override
-	public void endVisit(Visit visit) {
+	public void endVisit() {
 		if (visit.getStopDatetime() == null) {
 			visit.setStopDatetime(new Date());
 		}
 
-		visit.setPatient(null);
-
-		visitDataService.endVisit(visit.getUuid(), visit, null, new DataService.GetCallback<Visit>() {
+		visitDataService.endVisit(visit.getUuid(), visit, new DataService.GetCallback<Visit>() {
 			@Override
 			public void onCompleted(Visit entity) {
 				addEditVisitView.showPatientDashboard();
@@ -348,7 +358,6 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 
 			@Override
 			public void onError(Throwable t) {
-				System.out.println(t.getLocalizedMessage());
 				ToastUtil.error(t.getMessage());
 			}
 		});

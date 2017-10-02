@@ -15,6 +15,7 @@ import org.openmrs.mobile.data.rest.RestConstants;
 import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Observation;
+import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitNote;
 
 import java.util.ArrayList;
@@ -45,24 +46,28 @@ public class BaseDiagnosisPresenter {
 				new QueryOptions.Builder().customRepresentation(RestConstants.Representations.DIAGNOSIS_CONCEPT).build(),
 				pagingInfo, new DataService.GetCallback<List<Concept>>() {
 
-			@Override
-			public void onCompleted(List<Concept> entities) {
-				if (entities.isEmpty()) {
-					Concept nonCodedDiagnosis = new Concept();
-					nonCodedDiagnosis.setDisplay(searchQuery);
-					nonCodedDiagnosis.setValue("Non-Coded:" + searchQuery);
-					entities.add(nonCodedDiagnosis);
-				}
-				base.getBaseDiagnosisView().setSearchDiagnoses(entities);
-				base.getLoadingProgressBar().setVisibility(View.GONE);
-			}
+					@Override
+					public void onCompleted(List<Concept> entities) {
+						if (entities.isEmpty()) {
+							Concept nonCodedDiagnosis = new Concept();
+							nonCodedDiagnosis.setDisplay(searchQuery);
+							nonCodedDiagnosis.setValue("Non-Coded:" + searchQuery);
+							entities.add(nonCodedDiagnosis);
+						}
+						base.getBaseDiagnosisView().setSearchDiagnoses(entities);
+						base.getLoadingProgressBar().setVisibility(View.GONE);
+					}
 
-			@Override
-			public void onError(Throwable t) {
-				base.getLoadingProgressBar().setVisibility(View.GONE);
-				Log.e(TAG, "Error finding concept: " + t.getLocalizedMessage(), t);
-			}
-		});
+					@Override
+					public void onError(Throwable t) {
+						base.getLoadingProgressBar().setVisibility(View.GONE);
+						Log.e(TAG, "Error finding concept: " + t.getLocalizedMessage(), t);
+					}
+				});
+	}
+
+	public VisitNote getVisitNote(Visit visit) {
+		return visitNoteDataService.getByVisit(visit);
 	}
 
 	public void loadObs(Encounter encounter, IBaseDiagnosisFragment base) {
@@ -104,9 +109,11 @@ public class BaseDiagnosisPresenter {
 				.getByUuid(obs.getUuid(), options, new DataService.GetCallback<Observation>() {
 					@Override
 					public void onCompleted(Observation entity) {
-						obsUuids.add(entity.getUuid());
-						base.getBaseDiagnosisView().createEncounterDiagnosis(entity, entity.getDisplay(),
-								entity.getValueCodedName(), obsUuids.size() == encounter.getObs().size());
+						if (entity != null) {
+							obsUuids.add(entity.getUuid());
+							base.getBaseDiagnosisView().createEncounterDiagnosis(entity, entity.getDisplay(),
+									entity.getValueCodedName(), obsUuids.size() == encounter.getObs().size());
+						}
 					}
 
 					@Override

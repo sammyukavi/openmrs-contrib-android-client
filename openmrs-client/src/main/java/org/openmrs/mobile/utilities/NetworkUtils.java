@@ -46,25 +46,9 @@ public class NetworkUtils {
 
 	public boolean isOnline() {
 
-		final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(OpenMRS.getInstance());
-		boolean toggle = prefs.getBoolean("sync", true);
-
-		if (toggle) {
-			NetworkInfo activeNetworkInfo = getNetworkInfo();
-			boolean isConnected = activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
-			if (isConnected)
-				return true;
-			else {
-				SharedPreferences.Editor editor = prefs.edit();
-				editor.putBoolean("sync", false);
-				editor.commit();
-				return false;
-			}
-
-		}
-
-		return false;
-
+		NetworkInfo activeNetworkInfo = getNetworkInfo();
+		boolean isConnected = activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
+		return isConnected;
 	}
 
 	public boolean checkIfServerOnline() {

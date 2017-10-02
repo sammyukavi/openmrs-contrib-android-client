@@ -22,29 +22,33 @@ import org.openmrs.mobile.data.impl.EncounterDataService;
 import org.openmrs.mobile.data.impl.VisitDataService;
 import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.Encounter;
+import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
+
+import java.util.List;
 
 public class AuditDataPresenter extends BasePresenter implements AuditDataContract.Presenter {
 
 	private AuditDataContract.View auditDataView;
 	private VisitDataService visitDataService;
 	private ConceptDataService conceptDataService;
+	private String visitUuid;
 
 	private EncounterDataService encounterDataService;
 
-	public AuditDataPresenter(AuditDataContract.View view) {
+	public AuditDataPresenter(AuditDataContract.View view, String visitUuid) {
 		this.auditDataView = view;
 		this.auditDataView.setPresenter(this);
 
 		this.visitDataService = dataAccess().visit();
 		this.encounterDataService = dataAccess().encounter();
 		this.conceptDataService = dataAccess().concept();
+		this.visitUuid = visitUuid;
 	}
 
 	@Override
 	public void subscribe() {
-		fetchInpatientTypeServices();
 	}
 
 	@Override
@@ -55,6 +59,7 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 				if (concept != null) {
 					if (!concept.getAnswers().isEmpty()) {
 						auditDataView.setInpatientTypeServices(concept.getAnswers());
+						fetchVisit(visitUuid);
 					}
 				}
 			}
@@ -76,9 +81,12 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 			public void onCompleted(Visit visit) {
 				auditDataView.setVisit(visit);
 				for (Encounter encounter : visit.getEncounters()) {
+					if (encounter.getVoided() != null && encounter.getVoided()) {
+						continue;
+					}
+
 					if (encounter.getEncounterType().getUuid()
-							.equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.AUDIT_DATA_UUID)
-							&& !encounter.getVoided()) {
+							.equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.AUDIT_DATA_UUID)) {
 						fetchEncounter(encounter.getUuid());
 					}
 				}
@@ -142,6 +150,5 @@ public class AuditDataPresenter extends BasePresenter implements AuditDataContra
 			encounterDataService.update(encounter, serverResponceCallback);
 		}
 	}
-
 }
 

@@ -1311,8 +1311,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 
 		if (inpatientServiceTypeObservation != null) {
 			inpatientServiceTypeObservation = setObservationFields(inpatientServiceTypeObservation,
-					CONCEPT_INPATIENT_SERVICE_TYPE, inpatientServiceTypeSelectedUuid,
-					ApplicationConstants.ObservationLocators.TYPE_OF_INPATIENT_SERVICE + inpatientServiceTypeSelectedUuid);
+					CONCEPT_INPATIENT_SERVICE_TYPE, inpatientServiceTypeSelectedUuid);
 			observations.add(inpatientServiceTypeObservation);
 		}
 

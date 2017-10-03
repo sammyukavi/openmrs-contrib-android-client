@@ -122,4 +122,19 @@ public class DatabaseHelper {
 			}
 		}
 	}
+
+	/**
+	 * Takes a list of entities and returns there UUIDs as a list
+	 * @param entities
+	 * @return
+	 */
+	public List<String> getEntityUuids(@NonNull List<? extends Resource> entities) {
+		checkNotNull(entities);
+
+		List<String> uuids = new ArrayList<>();
+		for (Resource entity : entities) {
+			uuids.add(entity.getUuid());
+		}
+		return uuids;
+	}
 }

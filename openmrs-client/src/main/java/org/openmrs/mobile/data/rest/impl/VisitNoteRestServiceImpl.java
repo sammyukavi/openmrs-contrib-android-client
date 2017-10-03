@@ -31,7 +31,9 @@ public class VisitNoteRestServiceImpl extends BaseRestService<VisitNote, VisitNo
 	}
 
 	public Call<VisitNote> save(VisitNote visitNote) {
-		Gson gson = new GsonBuilder().setExclusionStrategies(new CustomExclusionStrategy()).create();
+		Gson gson = new GsonBuilder()
+				.excludeFieldsWithoutExposeAnnotation()
+				.setExclusionStrategies(new CustomExclusionStrategy()).create();
 		Map<String, String> params = new HashMap<>();
 		params.put("personId", visitNote.getPersonId());
 		params.put("htmlFormId", visitNote.getHtmlFormId());
@@ -50,7 +52,7 @@ public class VisitNoteRestServiceImpl extends BaseRestService<VisitNote, VisitNo
 		params.put("w10", visitNote.getW10());
 		params.put("w12", visitNote.getW12());
 
-		if(visitNote.getObservationUuid() != null) {
+		if (visitNote.getObservationUuid() != null) {
 			params.put("obs", visitNote.getObservationUuid());
 		}
 

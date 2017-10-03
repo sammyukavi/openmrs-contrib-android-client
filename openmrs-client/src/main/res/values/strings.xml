@@ -263,7 +263,9 @@
 	<string name="sync">Sync</string>
 	<string name="sync_on">Sync on</string>
 	<string name="sync_off">Sync off</string>
-	
+
+	<!-- Patient Dashboard -->
+	<string name="no_network_and_no_patient_data_in_database">Patient not synced</string>
 	
 	<!--Activity Logs-->
 	<string name="title_activity_logs">Logs</string>

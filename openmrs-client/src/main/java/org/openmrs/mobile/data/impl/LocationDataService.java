@@ -15,12 +15,12 @@ public class LocationDataService extends BaseMetadataDataService<Location, Locat
 	@Inject
 	public LocationDataService() { }
 
-	public void getLoginLocations(String url, GetCallback<List<Location>> callback) {
+	public void getLoginLocations(GetCallback<List<Location>> callback) {
 		executeMultipleCallback(callback,
 				new QueryOptions.Builder().requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL).build(),
 				null,
 				() -> dbService.getAll(null, null),
-				() -> restService.getLoginLocations(url)
+				() -> restService.getLoginLocations()
 		);
 
 	}

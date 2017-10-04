@@ -21,6 +21,8 @@ import javax.inject.Inject;
 
 import okhttp3.ResponseBody;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public class VisitPhotoDataService
 		extends BaseDataService<VisitPhoto, VisitPhotoDbService, VisitPhotoRestServiceImpl>
 		implements DataService<VisitPhoto> {
@@ -68,7 +70,9 @@ public class VisitPhotoDataService
 		);
 	}
 
-	public List<VisitPhoto> getByVisit(String uuid) {
-		return dbService.getPhotosByVisit(uuid, null, null);
+	public List<VisitPhoto> getByVisit(@NonNull Visit visit) {
+		checkNotNull(visit);
+
+		return dbService.getByVisit(visit);
 	}
 }

@@ -10,6 +10,7 @@ import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.db.BaseDbService;
 import org.openmrs.mobile.data.db.DbService;
 import org.openmrs.mobile.data.db.Repository;
+import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitPhoto;
 import org.openmrs.mobile.models.VisitPhoto_Table;
 
@@ -31,21 +32,16 @@ public class VisitPhotoDbService extends BaseDbService<VisitPhoto> implements Db
 		return (VisitPhoto_Table)FlowManager.getInstanceAdapter(VisitPhoto.class);
 	}
 
-	public List<VisitPhoto> getPhotosByVisit(@NonNull String visitUuid,
-			@Nullable QueryOptions options, @Nullable PagingInfo pagingInfo) {
-		checkNotNull(visitUuid);
-
-		return executeQuery(options, pagingInfo, (f) -> f.where(VisitPhoto_Table.visit_uuid.eq(visitUuid)));
-	}
-
 	public VisitPhoto getPhotoByObservation(@NonNull String obsUuid) {
 		checkNotNull(obsUuid);
 
 		return repository.querySingle(entityTable, VisitPhoto_Table.observation_uuid.eq(obsUuid));
 	}
 
-	public List<VisitPhoto> getByVisit(String uuid) {
-		return repository.query(getEntityTable(), VisitPhoto_Table.visit_uuid.eq(uuid));
+	public List<VisitPhoto> getByVisit(@NonNull Visit visit) {
+		checkNotNull(visit);
+
+		return repository.query(getEntityTable(), VisitPhoto_Table.visit_uuid.eq(visit.getUuid()));
 	}
 
 	public List<VisitPhoto> getByPatient(@NonNull String uuid) {

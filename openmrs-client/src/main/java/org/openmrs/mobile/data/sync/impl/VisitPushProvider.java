@@ -56,7 +56,8 @@ public class VisitPushProvider extends BasePushProvider<Visit, VisitDbService, V
 			encounterDbService.saveAll(encounters);
 		}
 
-		List<VisitPhoto> visitPhotos = visitPhotoDbService.getPhotosByVisit(originalEntity.getUuid(), null, null);
+		List<VisitPhoto> visitPhotos = visitPhotoDbService.getByVisit(originalEntity);
+
 		if (!visitPhotos.isEmpty()) {
 			for (VisitPhoto visitPhoto : visitPhotos) {
 				visitPhoto.setVisit(restEntity);

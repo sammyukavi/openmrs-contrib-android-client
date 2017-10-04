@@ -17,19 +17,14 @@ package org.openmrs.mobile.activities.visit.visitphoto;
 import org.openmrs.mobile.activities.visit.VisitContract;
 import org.openmrs.mobile.activities.visit.VisitPresenterImpl;
 import org.openmrs.mobile.data.DataService;
-import org.openmrs.mobile.data.QueryOptions;
-import org.openmrs.mobile.data.RequestStrategy;
 import org.openmrs.mobile.data.impl.ObsDataService;
 import org.openmrs.mobile.data.impl.VisitPhotoDataService;
-import org.openmrs.mobile.data.rest.RestConstants;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Provider;
-import org.openmrs.mobile.models.User;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitPhoto;
 import org.openmrs.mobile.utilities.ApplicationConstants;
-import org.openmrs.mobile.utilities.DateUtils;
 import org.openmrs.mobile.utilities.ToastUtil;
 
 import java.util.Date;
@@ -59,7 +54,7 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 	private void getPhotoMetadata() {
 		visitPhotoView.showTabSpinner(true);
 		// get local photos
-		List<VisitPhoto> visitPhotos = visitPhotoDataService.getByVisit(visitUuid);
+		List<VisitPhoto> visitPhotos = visitPhotoDataService.getByVisit(new Visit(visitUuid));
 		// download all photo metadata
 		visitPhotoDataService.downloadPhotoMetadata(visitUuid, null, obsDataService,
 				new DataService.GetCallback<List<Observation>>() {

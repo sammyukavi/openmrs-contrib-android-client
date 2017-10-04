@@ -14,7 +14,6 @@ import javax.inject.Inject;
 import retrofit2.Call;
 
 public class ObsRestServiceImpl extends BaseRestService<Observation, ObsRestService> {
-
 	@Inject
 	public ObsRestServiceImpl() {
 	}
@@ -29,14 +28,13 @@ public class ObsRestServiceImpl extends BaseRestService<Observation, ObsRestServ
 		return "obs";
 	}
 
-	public Call<Results<Observation>> getVisitDocumentsObsByPatientAndConceptList(String patientUuid,
-			QueryOptions options) {
-		return restService.getVisitDocumentsObsByPatientAndConceptList(buildRestRequestPath(), patientUuid,
-				ApplicationConstants.ConceptSets.VISIT_DOCUMENT_UUID, options.getCustomRepresentation());
+	public Call<Results<Observation>> getVisitPhotoObservations(String visitUuid) {
+		return restService.getVisitPhotoObservations(buildRestRequestPath(), visitUuid,
+				ApplicationConstants.ObservationLocators.VISIT_DOCUMENT_UUID, RestConstants.Representations.OBSERVATION);
 	}
 
-	public Call<Results<RecordInfo>> getVisitDocumentsObsRecordInfoByPatientAndConceptList(String patientUuid) {
-		return restService.getVisitDocumentsObsRecordInfoByPatientAndConceptList(buildRestRequestPath(), patientUuid,
-				ApplicationConstants.ConceptSets.VISIT_DOCUMENT_UUID, RestConstants.Representations.RECORD_INFO);
+	public Call<Results<RecordInfo>> getRecordInfoObservationsByVisit(String visitUuid) {
+		return restService.getRecordInfoObservationsByVisit(buildRestRequestPath(), visitUuid,
+				ApplicationConstants.ObservationLocators.VISIT_DOCUMENT_UUID, RestConstants.Representations.OBSERVATION);
 	}
 }

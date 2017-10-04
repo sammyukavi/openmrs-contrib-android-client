@@ -161,7 +161,7 @@ public class VisitPullProvider {
 
 		for (RecordInfo recordInfo : visitInfo) {
 			List<RecordInfo> observationInfo = RestHelper.getCallListValue(obsRestService
-					.getVisitDocumentsObsRecordInfoByPatientAndConceptList(patientRecord.getUuid()));
+					.getRecordInfoObservationsByVisit(recordInfo.getUuid()));
 
 			List<SQLOperator> observationsOperators = new ArrayList<>();
 			observationsOperators.add(

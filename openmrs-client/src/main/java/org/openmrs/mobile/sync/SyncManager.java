@@ -28,7 +28,8 @@ public class SyncManager {
 	private SyncReceiver syncReceiver;
 	private PatientListContextDbService patientListContextDbService;
 
-	private boolean canSync = false;
+	private volatile boolean hasInitialSyncBeenRequested = false;
+	private volatile boolean isSyncCurrentlyInProgress = false;
 
 	@Inject
 	public SyncManager(OpenMRS openMRS, SyncReceiver syncReceiver, SyncService syncService,
@@ -64,24 +65,30 @@ public class SyncManager {
 
 	public void requestSync() {
 		if (openMRS.getAuthorizationManager().isUserLoggedIn()) {
-			if (canSync) {
+			if (hasInitialSyncBeenRequested && !isSyncCurrentlyInProgress) {
 				new Thread(() -> {
+					isSyncCurrentlyInProgress = true;
 					try {
 						syncService.sync();
 					}
 					catch (Exception ex) {
 						openMRS.getOpenMRSLogger().e("Error running the sync service", ex);
 					}
+					finally {
+						isSyncCurrentlyInProgress = false;
+					}
 				}).start();
 			}
 		} else {
-			canSync = false;
+			hasInitialSyncBeenRequested = false;
 		}
 	}
 
 	public void requestInitialSync() {
-		canSync = true;
-		requestSync();
+		if (!hasInitialSyncBeenRequested) {
+			hasInitialSyncBeenRequested = true;
+			requestSync();
+		}
 	}
 
 	public void deleteUnsyncedPatientListData(String patientListUuid) {

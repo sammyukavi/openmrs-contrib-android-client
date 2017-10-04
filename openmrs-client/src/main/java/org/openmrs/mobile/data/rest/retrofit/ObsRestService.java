@@ -26,10 +26,10 @@ public interface ObsRestService {
 			@Query("v") String representation,
 			@Query("includeAll") Boolean includeAll);
 
-	@GET(RestConstants.GET_ALL)
-	Call<Results<Observation>> getVisitDocumentsObsByPatientAndConceptList(
+	@GET(RestConstants.OBS_SEARCH_PATH)
+	Call<Results<Observation>> getVisitPhotoObservations(
 			@Path(value = "restPath", encoded = true) String restPath,
-			@Query("patient") String patientUuid,
+			@Query("visit") String visitUuid,
 			@Query("conceptList") String conceptList,
 			@Query("v") String representation);
 

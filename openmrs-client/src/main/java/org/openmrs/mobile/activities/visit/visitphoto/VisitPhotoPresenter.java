@@ -17,8 +17,11 @@ package org.openmrs.mobile.activities.visit.visitphoto;
 import org.openmrs.mobile.activities.visit.VisitContract;
 import org.openmrs.mobile.activities.visit.VisitPresenterImpl;
 import org.openmrs.mobile.data.DataService;
+import org.openmrs.mobile.data.QueryOptions;
+import org.openmrs.mobile.data.RequestStrategy;
 import org.openmrs.mobile.data.impl.ObsDataService;
 import org.openmrs.mobile.data.impl.VisitPhotoDataService;
+import org.openmrs.mobile.data.rest.RestConstants;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Provider;
@@ -58,24 +61,26 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 		// get local photos
 		List<VisitPhoto> visitPhotos = visitPhotoDataService.getByVisit(visitUuid);
 		// download all photo metadata
-		visitPhotoDataService.downloadPhotoMetadata(patientUuid, null, obsDataService,
+		visitPhotoDataService.downloadPhotoMetadata(visitUuid, null, obsDataService,
 				new DataService.GetCallback<List<Observation>>() {
 					@Override
 					public void onCompleted(List<Observation> observations) {
-						if (observations == null) {
+						if (observations == null || observations.isEmpty()) {
 							visitPhotoView.showTabSpinner(false);
 							visitPhotoView.updateVisitImageMetadata(visitPhotos);
 							return;
 						}
 
 						for (Observation observation : observations) {
+							if (searchLocalVisitPhoto(observation, visitPhotos)) {
+								visitPhotoView.updateVisitImageMetadata(visitPhotos);
+								continue;
+							}
+
 							VisitPhoto visitPhoto = new VisitPhoto();
 							visitPhoto.setFileCaption(observation.getComment());
-							visitPhoto.setDateCreated(new Date(DateUtils.convertTime(observation.getObsDatetime())));
+							visitPhoto.setDateCreated(observation.getDateCreated());
 
-							User creator = new User();
-							creator.setPerson(observation.getPerson());
-							visitPhoto.setCreator(creator);
 							visitPhoto.setCreator(observation.getCreator());
 
 							visitPhoto.setObservation(observation);
@@ -107,9 +112,22 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 
 					@Override
 					public void onError(Throwable t) {
+						ToastUtil.error("Error downloading visit images");
 						visitPhotoView.showTabSpinner(false);
 					}
 				});
+	}
+
+	private boolean searchLocalVisitPhoto(Observation obs, List<VisitPhoto> visitPhotos) {
+		for (VisitPhoto visitPhoto : visitPhotos) {
+			if (visitPhoto.getObservation() != null) {
+				if (visitPhoto.getObservation().getUuid().equalsIgnoreCase(obs.getUuid())) {
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 
 	@Override
@@ -136,6 +154,7 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 		visitPhoto.setVisit(visit);
 		visitPhoto.setProvider(provider);
 		visitPhoto.setPatient(patient);
+		visitPhoto.setDateCreated(new Date());
 	}
 
 	@Override
@@ -151,7 +170,7 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 			@Override
 			public void onError(Throwable t) {
 				visitPhotoView.showTabSpinner(false);
-				ToastUtil.error(t.getMessage());
+				ToastUtil.error("Unable to upload image");
 			}
 		});
 	}

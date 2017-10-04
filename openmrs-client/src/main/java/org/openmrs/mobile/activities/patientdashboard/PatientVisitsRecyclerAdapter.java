@@ -189,14 +189,16 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 			} else {
 				Encounter tempEncounter = null;
 				for (Encounter encounter : visit.getEncounters()) {
-					if (encounter.getEncounterType().getDisplay()
-							.equalsIgnoreCase(ApplicationConstants.EncounterTypeDisplays.VISIT_NOTE)) {
-						if (!encounter.getVoided()) {
-							tempEncounter = encounter;
-							if (activeVisit == visit) {
-								baseDiagnosisFragment.setEncounter(encounter);
-								break;
-							}
+					if (encounter.getEncounterType()
+							.getDisplay().equalsIgnoreCase(ApplicationConstants.EncounterTypeDisplays.VISIT_NOTE)) {
+						if (encounter.getVoided() != null && encounter.getVoided()) {
+							continue;
+						}
+
+						tempEncounter = encounter;
+						if (activeVisit == visit) {
+							baseDiagnosisFragment.setEncounter(encounter);
+							break;
 						}
 					}
 				}

@@ -50,6 +50,7 @@ import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Person;
 import org.openmrs.mobile.models.Provider;
+import org.openmrs.mobile.models.Resource;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.FontsUtil;
@@ -640,7 +641,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 				break;
 
 			case R.id.ward_stay_admission_yes:
-				firstMapObservation =
+				wardStayAdmissionObservation =
 						setObservationFields(wardStayAdmissionObservation, CONCEPT_WARD_STAY_DURING_ADMISSION,
 								CONCEPT_ANSWER_YES,
 								ApplicationConstants.ObservationLocators.WARD_STAY_DURING_ADMISSION +
@@ -648,7 +649,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 				break;
 
 			case R.id.ward_stay_admission_no:
-				firstMapObservation =
+				wardStayAdmissionObservation =
 						setObservationFields(wardStayAdmissionObservation, CONCEPT_WARD_STAY_DURING_ADMISSION,
 								CONCEPT_ANSWER_NO,
 								ApplicationConstants.ObservationLocators.WARD_STAY_DURING_ADMISSION +
@@ -656,14 +657,14 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 				break;
 
 			case R.id.ward_stay_admission_unknown:
-				firstMapObservation =
+				wardStayAdmissionObservation =
 						setObservationFields(wardStayAdmissionObservation, CONCEPT_WARD_STAY_DURING_ADMISSION,
 								CONCEPT_ANSWER_UNKNOWN,
 								ApplicationConstants.ObservationLocators.WARD_STAY_DURING_ADMISSION +
 										ApplicationConstants.ObservationLocators.UNKNOWN);
 				break;
 			case R.id.patient_diabetic_yes:
-				firstMapObservation =
+				patientDiabeticObservation =
 						setObservationFields(patientDiabeticObservation, CONCEPT_PATIENT_DIABETIC,
 								CONCEPT_ANSWER_YES,
 								ApplicationConstants.ObservationLocators.PATIENT_DIABETIC +
@@ -672,7 +673,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 				break;
 
 			case R.id.patient_diabetic_no:
-				firstMapObservation =
+				patientDiabeticObservation =
 						setObservationFields(patientDiabeticObservation, CONCEPT_PATIENT_DIABETIC, CONCEPT_ANSWER_NO,
 								ApplicationConstants.ObservationLocators.PATIENT_DIABETIC +
 										ApplicationConstants.ObservationLocators.NO);
@@ -681,7 +682,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 				break;
 
 			case R.id.patient_diabetic_unknown:
-				firstMapObservation =
+				patientDiabeticObservation =
 						setObservationFields(patientDiabeticObservation, CONCEPT_PATIENT_DIABETIC, CONCEPT_ANSWER_UNKNOWN,
 								ApplicationConstants.ObservationLocators.PATIENT_DIABETIC +
 										ApplicationConstants.ObservationLocators.UNKNOWN);
@@ -1275,6 +1276,14 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 			observations.add(priorSedetionObservation);
 		}
 
+		if (patientDiabeticObservation != null) {
+			observations.add(patientDiabeticObservation);
+		}
+
+		if (wardStayAdmissionObservation != null) {
+			observations.add(wardStayAdmissionObservation);
+		}
+
 		if (firstIcuHeartRate.getText().length() > 0) {
 			if (Float.valueOf(firstIcuHeartRate.getText().toString()) >= 0
 					&& Float.valueOf(firstIcuHeartRate.getText().toString()) <= 240) {
@@ -1329,10 +1338,9 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 
 		observations.add(auditCompleteObservation);
 
-
 		boolean isNewEncounter = false;
 		Encounter encounter = new Encounter();
-		if (encounterUuid == null) {
+		if (encounterUuid == null || Resource.isLocalUuid(encounterUuid)) {
 			isNewEncounter = true;
 		} else {
 			encounter.setUuid(encounterUuid);

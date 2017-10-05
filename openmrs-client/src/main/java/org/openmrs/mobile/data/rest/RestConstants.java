@@ -10,6 +10,7 @@ public class RestConstants {
 	public static final String PURGE = GET_BY_UUID;
 	public static final String LOCATION_PATH = REST_PATH + "?tag=IM Location";
 	public static final String CONCEPT_SEARCH_PATH = REST_PATH + "?s=diagnosisByTerm";
+	public static final String OBS_SEARCH_PATH = REST_PATH + "?s=obsByConceptListVisit";
 
 	public class Representations {
 		public static final String FULL = "full";
@@ -25,10 +26,14 @@ public class RestConstants {
 				"custom:(uuid,patient:(uuid,dateChanged),patientList:(uuid,display),headerContent,bodyContent)";
 		public static final String PATIENT_LIST_PATIENTS = "custom:(uuid,patient,visit,patientList:(uuid,display),"
 				+ "headerContent,bodyContent)";
+		private static final String OBSERVATION_FIELDS = "(uuid,display,comment,value,groupMembers,concept:(uuid,display),"
+				+ "encounter,dateCreated,creator:(uuid,display,person:(uuid,display)))";
 		public static final String VISIT_ENCOUNTER = "custom:(uuid,display,encounterDatetime,patient:ref,location:ref,"
-				+ "form:ref,encounterType:ref,obs:full,creator:ref,dateCreated,changedBy:ref,dateChanged,voided,visit)";
-		public static final String OBSERVATION = "custom:(uuid,display,value,groupMembers,concept:(uuid,display),encounter,"
-				+ "dateCreated,creator:(uuid,display))";
+				+ "form:ref,encounterType:ref,obs:" + OBSERVATION_FIELDS + ",creator:(uuid,display,person:(uuid,display)),"
+				+ "dateCreated,changedBy:ref,dateChanged,voided,visit)";
+		public static final String OBSERVATION = "custom:" + OBSERVATION_FIELDS;
 		public static final String VISIT_TASKS = "custom:(uuid,status,name,closedOn)";
+		public static final String VISIT = "custom:(uuid,display,patient,visitType,startDatetime,stopDatetime,encounters:"
+				+ "(uuid,display,encounterDatetime,patient,location,encounterType,obs:" + OBSERVATION_FIELDS + "),voided)";
 	}
 }

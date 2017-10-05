@@ -8,6 +8,7 @@ import org.openmrs.mobile.data.db.impl.VisitTaskDbService;
 import org.openmrs.mobile.data.rest.impl.VisitRestServiceImpl;
 import org.openmrs.mobile.data.sync.BasePushProvider;
 import org.openmrs.mobile.models.Encounter;
+import org.openmrs.mobile.models.SyncLog;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitNote;
 import org.openmrs.mobile.models.VisitPhoto;
@@ -56,7 +57,8 @@ public class VisitPushProvider extends BasePushProvider<Visit, VisitDbService, V
 			encounterDbService.saveAll(encounters);
 		}
 
-		List<VisitPhoto> visitPhotos = visitPhotoDbService.getByVisit(originalEntity.getUuid());
+		List<VisitPhoto> visitPhotos = visitPhotoDbService.getByVisit(originalEntity);
+
 		if (!visitPhotos.isEmpty()) {
 			for (VisitPhoto visitPhoto : visitPhotos) {
 				visitPhoto.setVisit(restEntity);
@@ -71,6 +73,16 @@ public class VisitPushProvider extends BasePushProvider<Visit, VisitDbService, V
 		}
 
 		dbService.deleteLocalRelatedObjects(originalEntity);
+	}
+
+	@Override
+	protected void postProcess(Visit originalEntity, Visit restEntity, SyncLog syncLog) {
+		super.postProcess(originalEntity, restEntity, syncLog);
+
+		// void existing attributes
+		dbService.voidExistingVisitAttributes(originalEntity);
+
+		dbService.save(originalEntity);
 	}
 
 	@Override

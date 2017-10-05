@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.text.InputType;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +29,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -41,7 +43,6 @@ import org.openmrs.mobile.activities.ACBaseActivity;
 import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.activities.dialog.CustomFragmentDialog;
 import org.openmrs.mobile.activities.loginsync.LoginSyncActivity;
-import org.openmrs.mobile.activities.patientlist.PatientListActivity;
 import org.openmrs.mobile.activities.syncselection.SyncSelectionActivity;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
@@ -52,7 +53,6 @@ import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.FontsUtil;
 import org.openmrs.mobile.utilities.ImageUtils;
 import org.openmrs.mobile.utilities.StringUtils;
-import org.openmrs.mobile.utilities.ToastUtil;
 import org.openmrs.mobile.utilities.URLValidator;
 
 import java.lang.reflect.Type;
@@ -78,6 +78,7 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 	private TextInputLayout loginUrlTextLayout;
 	private View viewsContainer;
 	private AuthorizationManager authorizationManager;
+	private CheckBox showPassword;
 
 	public static LoginFragment newInstance() {
 		return new LoginFragment();
@@ -115,6 +116,7 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 		loadingProgressBar = (ProgressBar)mRootView.findViewById(R.id.locationLoadingProgressBar);
 		changeUrlIcon = (TextView)mRootView.findViewById(R.id.changeUrlIcon);
 		loginUrlTextLayout = (TextInputLayout)mRootView.findViewById(R.id.loginUrlTextLayout);
+		showPassword = (CheckBox)mRootView.findViewById(R.id.checkboxShowPassword);
 		url.setText(loginUrl);
 	}
 
@@ -164,6 +166,14 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 				password.getText().toString(),
 				url.getText().toString(),
 				openMRS.getLastLoginServerUrl()));
+
+		showPassword.setOnCheckedChangeListener((buttonView, isChecked) -> {
+			if (isChecked) {
+				password.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+			} else {
+				password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+			}
+		});
 	}
 
 	@Override

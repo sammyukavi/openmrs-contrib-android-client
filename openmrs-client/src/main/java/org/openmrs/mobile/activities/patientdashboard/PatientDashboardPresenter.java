@@ -128,7 +128,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 		};
 		QueryOptions options = new QueryOptions.Builder()
 				.includeInactive(true)
-				.customRepresentation(RestConstants.Representations.FULL)
+				.customRepresentation(RestConstants.Representations.VISIT)
 				.requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL)
 				.build();
 		visitDataService.getByPatient(patient, options, pagingInfo, fetchVisitsCallback);

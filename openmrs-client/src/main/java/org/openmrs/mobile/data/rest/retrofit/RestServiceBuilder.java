@@ -1,12 +1,12 @@
 package org.openmrs.mobile.data.rest.retrofit;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Base64;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import okhttp3.HttpUrl;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Resource;
@@ -31,7 +31,7 @@ public class RestServiceBuilder {
 	private static String API_BASE_URL = OpenMRS.getInstance().getServerUrl();
 
 	static {
-		applyDefaultBaseUrl();
+		initializeBuilder();
 	}
 
 	private static GsonConverterFactory buildGsonConverter() {
@@ -46,8 +46,7 @@ public class RestServiceBuilder {
 		return GsonConverterFactory.create(myGson);
 	}
 
-	public static <S> S createService(@NonNull Class<S> serviceClass, @Nullable String host,
-			@NonNull String username, @NonNull String password) {
+	public static <S> S createService(@NonNull Class<S> serviceClass, @NonNull String username, @NonNull String password) {
 		checkNotNull(serviceClass);
 		checkNotNull(username);
 		checkNotNull(password);
@@ -57,16 +56,15 @@ public class RestServiceBuilder {
 		httpClient.addInterceptor(chain -> {
 			Request original = chain.request();
 
-            /* Inject the host
-			if (StringUtils.notEmpty(host)) {
-                HttpUrl newUrl = original.url().newBuilder()
-                        .host(host)
-                        .build();
-                original = original.newBuilder()
-                        .url(newUrl)
-                        .build();
-            }
-            //*/
+            // Update the base URL to be what is stored
+			HttpUrl newUrl = original.url().newBuilder()
+					.host(
+							builder.build().baseUrl().host()
+					)
+					.build();
+			original = original.newBuilder()
+					.url(newUrl)
+					.build();
 
 			// Inject the credentials into the request
 			Request.Builder requestBuilder = original.newBuilder()
@@ -90,12 +88,10 @@ public class RestServiceBuilder {
 	}
 
 	public static <S> S createService(Class<S> serviceClass) {
-		return createService(serviceClass, app.getServerUrl(), app.getUsername(), app.getPassword());
+		return createService(serviceClass, app.getUsername(), app.getPassword());
 	}
 
-	public static void applyDefaultBaseUrl() {
-
-		API_BASE_URL = OpenMRS.getInstance().getServerUrl();
+	private static void initializeBuilder() {
 
 		builder = new Retrofit.Builder()
 				.baseUrl(API_BASE_URL)

@@ -1036,7 +1036,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 					if (displayValue.equalsIgnoreCase(ANSWER_NA)) {
 						surgery_na.setChecked(true);
 						surgeryObservation = setObservationFields(observation, CONCEPT_SURGERY_HOSPITAL_STAY,
-								CONCEPT_ANSWER_NA);
+								CONCEPT_ANSWER_NO);
 
 					} else if (displayValue.equalsIgnoreCase(ANSWER_PLANNED)) {
 						surgery_planned.setChecked(true);

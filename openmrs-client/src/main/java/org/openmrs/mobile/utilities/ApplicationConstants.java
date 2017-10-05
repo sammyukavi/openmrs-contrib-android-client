@@ -251,7 +251,7 @@ public abstract class ApplicationConstants {
 		public static final String CONCEPT_ANSWER_YES = "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 		public static final String CONCEPT_ANSWER_NO = "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 		public static final String CONCEPT_ANSWER_UNKNOWN = "1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
-		public static final String CONCEPT_ANSWER_PLANNED = "1d8dc2abe-d5a5-44b1-9dc6-809a993a8dbc";
+		public static final String CONCEPT_ANSWER_PLANNED = "d8dc2abe-d5a5-44b1-9dc6-809a993a8dbc";
 		public static final String CONCEPT_ANSWER_UNPLANNED = "1680114c-72b9-44d7-a292-f2c981322587";
 		public static final String CONCEPT_ANSWER_NA = "1175AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 		public static final String CONCEPT_ANSWER_NEGATIVE = "664AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";

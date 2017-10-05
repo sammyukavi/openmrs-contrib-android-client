@@ -57,6 +57,10 @@ public class Visit extends BaseOpenmrsEntity implements Serializable {
 	@Expose
 	private List<VisitAttribute> attributes = new ArrayList<>();
 
+	@SerializedName("visitTasks")
+	@Expose
+	private List<VisitTask> visitTasks = new ArrayList<>();
+
 	@Expose
 	@SerializedName("patient")
 	@ForeignKey(stubbedRelationship = true)
@@ -81,9 +85,16 @@ public class Visit extends BaseOpenmrsEntity implements Serializable {
 
 	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "attributes", isVariablePrivate = true)
 	List<VisitAttribute> loadAttributes() {
-		attributes =loadRelatedObject(VisitAttribute.class, attributes, () -> VisitAttribute_Table.visit_uuid.eq(getUuid()));
+		attributes = loadRelatedObject(VisitAttribute.class, attributes, () -> VisitAttribute_Table.visit_uuid.eq(getUuid()));
 
 		return attributes;
+	}
+
+	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "visitTasks", isVariablePrivate = true)
+	List<VisitTask> loadVisitTasks() {
+		visitTasks = loadRelatedObject(VisitTask.class, visitTasks, () -> VisitTask_Table.visit_uuid.eq(getUuid()));
+
+		return visitTasks;
 	}
 
 	@Override
@@ -92,6 +103,7 @@ public class Visit extends BaseOpenmrsEntity implements Serializable {
 
 		processRelatedObjects(encounters, (e) -> e.setVisit(this));
 		processRelatedObjects(attributes, (a) -> a.setVisit(this));
+		processRelatedObjects(visitTasks, (vt) -> vt.setVisit(this));
 	}
 
 	public Patient getPatient() {
@@ -148,6 +160,14 @@ public class Visit extends BaseOpenmrsEntity implements Serializable {
 
 	public void setAttributes(List<VisitAttribute> attributes) {
 		this.attributes = attributes;
+	}
+
+	public List<VisitTask> getVisitTasks() {
+		return visitTasks;
+	}
+
+	public void setVisitTasks(List<VisitTask> visitTasks) {
+		this.visitTasks = visitTasks;
 	}
 
 }

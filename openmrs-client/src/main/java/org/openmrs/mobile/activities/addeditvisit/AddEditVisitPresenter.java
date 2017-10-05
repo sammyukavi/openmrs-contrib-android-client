@@ -382,6 +382,10 @@ public class AddEditVisitPresenter extends BasePresenter implements AddEditVisit
 	public <T> T searchVisitAttributeValueByType(VisitAttributeType visitAttributeType) {
 		if (getVisit() != null && getVisit().getAttributes() != null) {
 			for (VisitAttribute visitAttribute : getVisit().getAttributes()) {
+				if(visitAttribute.getVoided() != null && visitAttribute.getVoided()) {
+					continue;
+				}
+
 				if (visitAttribute.getAttributeType().getUuid().equalsIgnoreCase(visitAttributeType.getUuid())) {
 					return (T)visitAttribute.getValue();
 				}

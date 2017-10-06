@@ -81,7 +81,8 @@ public class SyncService {
 
 	private void resetPatientListSyncHistory() {
 		// Get subscriptions
-		List<PullSubscription> patientListSubscriptions = subscriptionDbService.getPatientListSubscriptions();
+		List<PullSubscription> patientListSubscriptions =
+				subscriptionDbService.getBySubscriptionClass(PatientListContextSubscriptionProvider.class.getSimpleName());
 		for (PullSubscription patientListSubscription : patientListSubscriptions) {
 			patientListSubscription.setLastSync(null);
 			subscriptionDbService.save(patientListSubscription);

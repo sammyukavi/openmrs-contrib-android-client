@@ -23,8 +23,7 @@ public class PullSubscriptionDbService extends BaseDbService<PullSubscription> {
 		return (PullSubscription_Table)FlowManager.getInstanceAdapter(PullSubscription.class);
 	}
 
-	public List<PullSubscription> getPatientListSubscriptions() {
-		return repository.query(getEntityTable(),
-				PullSubscription_Table.subscriptionClass.eq(PatientListContextSubscriptionProvider.class.getSimpleName()));
+	public List<PullSubscription> getBySubscriptionClass(String subscriptionClass) {
+		return repository.query(getEntityTable(), PullSubscription_Table.subscriptionClass.eq(subscriptionClass));
 	}
 }

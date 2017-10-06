@@ -271,7 +271,7 @@ public class VisitPhotoFragment extends VisitFragment implements VisitContract.V
 		uploadVisitPhotoButton.setOnClickListener(v -> {
 			if (visitPhoto != null) {
 				ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-				visitPhoto.compress(Bitmap.CompressFormat.JPEG, 0, byteArrayOutputStream);
+				visitPhoto.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
 
 				((VisitPhotoPresenter)mPresenter).getVisitPhoto().setImage(byteArrayOutputStream.toByteArray());
 				((VisitPhotoPresenter)mPresenter).getVisitPhoto().setFileCaption(

@@ -21,6 +21,8 @@ import javax.inject.Inject;
 
 import okhttp3.ResponseBody;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public class VisitPhotoDataService
 		extends BaseDataService<VisitPhoto, VisitPhotoDbService, VisitPhotoRestServiceImpl>
 		implements DataService<VisitPhoto> {
@@ -32,23 +34,28 @@ public class VisitPhotoDataService
 	}
 
 	public void uploadPhoto(VisitPhoto visitPhoto, @NonNull GetCallback<VisitPhoto> callback) {
-		executeSingleCallback(callback, new QueryOptions.Builder().requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL).build(),
+		executeSingleCallback(callback,
+				new QueryOptions.Builder().requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL).build(),
 				() -> {
 					VisitPhoto result = dbService.save(visitPhoto);
 					syncLogService.save(result, SyncAction.NEW);
 					return result;
 				},
-				() -> restService.upload(visitPhoto));
+				() -> restService.upload(visitPhoto),
+				(e) -> {
+					visitPhoto.setObservation(e.getObservation());
+					dbService.save(visitPhoto);
+				});
 	}
 
-	public void downloadPhotoMetadata(String patientUuid, QueryOptions options, ObsDataService obsDataService,
-			GetCallback<List<Observation>> callback) {
-		obsDataService.getVisitDocumentsObsByPatientAndConceptList(patientUuid, options, callback);
+	public void downloadPhotoMetadata(String visitUuid,
+			QueryOptions options, ObsDataService obsDataService, GetCallback<List<Observation>> callback) {
+		obsDataService.getVisitPhotoObservations(visitUuid, options, callback);
 	}
 
 	public void downloadPhotoImage(VisitPhoto photo, String view, @NonNull GetCallback<VisitPhoto> callback) {
 		executeSingleCallback(callback, null,
-				() -> dbService.getByUuid(photo.getObservation().getUuid(), null),
+				() -> dbService.getPhotoByObservation(photo.getObservation().getUuid()),
 				() -> restService.downloadPhoto(photo.getObservation().getUuid(), view),
 				(ResponseBody body) -> {
 					try {
@@ -63,7 +70,9 @@ public class VisitPhotoDataService
 		);
 	}
 
-	public List<VisitPhoto> getByVisit(String uuid) {
-		return dbService.getByVisit(uuid);
+	public List<VisitPhoto> getByVisit(@NonNull Visit visit) {
+		checkNotNull(visit);
+
+		return dbService.getByVisit(visit);
 	}
 }

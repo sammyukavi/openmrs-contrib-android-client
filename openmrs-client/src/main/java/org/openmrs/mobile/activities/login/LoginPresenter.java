@@ -129,7 +129,7 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 						}
 
 						setLogin(true, url);
-						RestServiceBuilder.applyDefaultBaseUrl();
+						RestServiceBuilder.setBaseUrl(openMRS.getServerUrl());
 						openMRS.setLoginUserUuid(session.getUser().getUuid());
 
 						fetchFullUserInformation(session.getUser().getUuid());
@@ -151,10 +151,10 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 				}
 			};
 
-			loginDataService.getSession(url, username, password, loginUserCallback);
+			loginDataService.getSession(username, password, loginUserCallback);
 		} else {
 			if (openMRS.isUserLoggedOnline() && url.equals(openMRS.getLastLoginServerUrl())) {
-				RestServiceBuilder.applyDefaultBaseUrl();
+				RestServiceBuilder.setBaseUrl(openMRS.getServerUrl());
 				loginView.setProgressBarVisibility(false);
 				if (openMRS.getUsername().equals(username) && openMRS.getPassword().equals(password)) {
 					openMRS.setSessionToken(openMRS.getLastSessionToken());
@@ -234,7 +234,7 @@ public class LoginPresenter extends BasePresenter implements LoginContract.Prese
 				};
 
 		try {
-			locationDataService.getLoginLocations(url, locationDataServiceCallback);
+			locationDataService.getLoginLocations(locationDataServiceCallback);
 		} catch (IllegalArgumentException ex) {
 			loginView.setProgressBarVisibility(false);
 			loginView.showMessage(SERVER_ERROR);

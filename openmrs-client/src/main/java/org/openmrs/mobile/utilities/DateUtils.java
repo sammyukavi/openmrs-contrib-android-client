@@ -93,6 +93,17 @@ public final class DateUtils {
 		return time;
 	}
 
+	public static Date parseString(String dateAsString) {
+		try {
+			return parseString(dateAsString, new SimpleDateFormat(OPEN_MRS_REQUEST_FORMAT));
+		} catch(ParseException ex) {
+			OpenMRS.getInstance().getOpenMRSLogger()
+					.w("Failed to parse date :" + dateAsString + " caused by " + ex.toString());
+		}
+
+		return null;
+	}
+
 	private static Date parseString(String dateAsString, DateFormat format) throws ParseException {
 		Date formattedDate = null;
 		try {
@@ -192,38 +203,22 @@ public final class DateUtils {
 			return days + " days";
 	}
 
-	public static String convertTimeStringDisplay(String dateAsString) {
-		DateTime date = null;
-		if (StringUtils.notNull(dateAsString)) {
-			DateTimeFormatter originalFormat = DateTimeFormat.forPattern(DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT);
-			date = originalFormat.parseDateTime(dateAsString);
-		}
-		return String.valueOf(date);
-	}
-
 	public static String calculateRelativeDate(Date pastDate) {
 		String relative = "";
+		if (pastDate == null) {
+			return relative;
+		}
+
 		Date today = new Date();
-		long days = TimeUnit.MILLISECONDS.toHours(today.getTime() - pastDate.getTime());
+		long days = TimeUnit.DAYS.convert(today.getTime() - pastDate.getTime(), TimeUnit.MILLISECONDS);
 		if (days == 0) {
-			relative = "today";
+			relative = "within last 24hrs";
 		} else if (days < 7) {
-			relative = (days == 1 ? "getDateYesterday" : days + " days ago");
+			relative = (days == 1 ? "yesterday" : days + " days ago");
 		} else if (days < 30) {
 			relative = Math.round(days / 7) + " week" + (days / 7 > 1 ? "s " : " ") + "ago";
 		} else {
 			relative = Math.round(days / 30) + " month" + (days / 30 > 1 ? "s " : " ") + "ago";
-		}
-
-		return relative;
-	}
-
-	public static String calculateRelativeDate(String dateAsString) {
-		String relative = "";
-		try {
-			Date pastDate = parseString(dateAsString, new SimpleDateFormat(DateUtils.OPEN_MRS_RESPONSE_FORMAT));
-			relative = calculateRelativeDate(pastDate);
-		} catch (ParseException ex) {
 		}
 
 		return relative;

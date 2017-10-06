@@ -407,11 +407,14 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 	public void setAuditData(Visit visit) {
 		if (visit.getEncounters().size() > 0) {
 			for (Encounter encounter : visit.getEncounters()) {
-				if ((encounter.getEncounterType().getUuid()
-						.equalsIgnoreCase(ApplicationConstants.EncounterTypeEntity.AUDIT_DATA_UUID) ||
-						encounter.getEncounterType().getDisplay()
-								.equalsIgnoreCase(ApplicationConstants.EncounterTypeDisplays.AUDITDATA) &&
-								!encounter.getVoided())) {
+				if (encounter.getVoided() != null && encounter.getVoided()) {
+					continue;
+				}
+
+				if ((encounter.getEncounterType().getUuid().equalsIgnoreCase(
+						ApplicationConstants.EncounterTypeEntity.AUDIT_DATA_UUID) ||
+						encounter.getEncounterType().getDisplay().equalsIgnoreCase(
+								ApplicationConstants.EncounterTypeDisplays.AUDITDATA))) {
 
 					if (!encounter.getObs().isEmpty()) {
 						auditDataMetadata.setVisibility(View.VISIBLE);

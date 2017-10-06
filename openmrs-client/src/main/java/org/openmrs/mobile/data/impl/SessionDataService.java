@@ -13,10 +13,10 @@ public class SessionDataService extends BaseMetadataDataService<Session, Session
 	@Inject
 	public SessionDataService() { }
 
-	public void getSession(String serverURl, String username, String password, GetCallback<Session> callback) {
+	public void getSession(String username, String password, GetCallback<Session> callback) {
 		executeSingleCallback(callback,
 				new QueryOptions.Builder().requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL).build(),
 				() -> null,
-				() -> restService.getSession(serverURl, username, password));
+				() -> restService.getSession(username, password));
 	}
 }

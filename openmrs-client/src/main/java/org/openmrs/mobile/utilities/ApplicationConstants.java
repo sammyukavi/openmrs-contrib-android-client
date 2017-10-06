@@ -150,6 +150,8 @@ public abstract class ApplicationConstants {
 		public static final String PRESUMED_DIAGNOSIS = "Presumed diagnosis";
 		public static final String CONFIRMED_DIAGNOSIS = "Confirmed diagnosis";
 		public static final String CHIEF_COMPLAINT = "Chief complaint";
+		public static final String VISIT_DOCUMENT_UUID = "7cac8397-53cd-4f00-a6fe-028e8d743f8e,"
+				+ "42ed45fd-f3f6-44b6-bfc2-8bde1bb41e00";
 	}
 
 	public abstract static class DiagnosisStrings {
@@ -184,6 +186,8 @@ public abstract class ApplicationConstants {
 
 	public static class ConceptSets {
 		public static final String ICPC_DIAGNOSES = "160167AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+		public static final String VISIT_DOCUMENT_UUID =
+				"7cac8397-53cd-4f00-a6fe-028e8d743f8e,42ed45fd-f3f6-44b6-bfc2-8bde1bb41e00";
 	}
 
 	public static class toastMessages {
@@ -247,7 +251,7 @@ public abstract class ApplicationConstants {
 		public static final String CONCEPT_ANSWER_YES = "1065AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 		public static final String CONCEPT_ANSWER_NO = "1066AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 		public static final String CONCEPT_ANSWER_UNKNOWN = "1067AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
-		public static final String CONCEPT_ANSWER_PLANNED = "1d8dc2abe-d5a5-44b1-9dc6-809a993a8dbc";
+		public static final String CONCEPT_ANSWER_PLANNED = "d8dc2abe-d5a5-44b1-9dc6-809a993a8dbc";
 		public static final String CONCEPT_ANSWER_UNPLANNED = "1680114c-72b9-44d7-a292-f2c981322587";
 		public static final String CONCEPT_ANSWER_NA = "1175AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 		public static final String CONCEPT_ANSWER_NEGATIVE = "664AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";

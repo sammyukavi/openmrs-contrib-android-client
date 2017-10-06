@@ -72,7 +72,13 @@ public class Visit extends BaseOpenmrsEntity implements Serializable {
 		this.stopDatetime = stopDatetime;
 	}
 
-	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "encounters", isVariablePrivate = true)
+	/**
+	 * EffecientMethods has been disabled just so the underlying nested collections are persisted in the db.
+	 * Example: visit->encounters->obs won't be saved when effecientMethods are enabled.
+	 * https://github.com/Raizlabs/DBFlow/issues/1238
+	 * @return
+	 */
+	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "encounters", isVariablePrivate = true, efficientMethods = false)
 	List<Encounter> loadEncounters() {
 		encounters = loadRelatedObject(Encounter.class, encounters, () -> Encounter_Table.visit_uuid.eq(getUuid()));
 

@@ -81,12 +81,10 @@ public class SyncService {
 
 	private void resetPatientListSyncHistory() {
 		// Get subscriptions
-		List<PullSubscription> subscriptions = subscriptionDbService.getAll(null, null);
-		for (PullSubscription sub : subscriptions) {
-			if (sub.getSubscriptionClass().equals(PatientListContextSubscriptionProvider.class.getSimpleName())) {
-				sub.setLastSync(null);
-				subscriptionDbService.save(sub);
-			}
+		List<PullSubscription> patientListSubscriptions = subscriptionDbService.getPatientListSubscriptions();
+		for (PullSubscription patientListSubscription : patientListSubscriptions) {
+			patientListSubscription.setLastSync(null);
+			subscriptionDbService.save(patientListSubscription);
 		}
 	}
 

@@ -74,7 +74,7 @@ public class Visit extends BaseOpenmrsEntity implements Serializable {
 
 	/**
 	 * EffecientMethods has been disabled just so the underlying nested collections are persisted in the db.
-	 * Example: visit->encounters->obs won't be saved when effecientMethods are enabled.
+	 * Example: visit->encounters->obs won't be saved when effecientMethods is enabled.
 	 * https://github.com/Raizlabs/DBFlow/issues/1238
 	 * @return
 	 */

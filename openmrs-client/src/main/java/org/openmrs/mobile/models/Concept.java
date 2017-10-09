@@ -7,48 +7,135 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-
 package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.OneToMany;
+import com.raizlabs.android.dbflow.annotation.Table;
 
-public class Concept extends Resource{
+import org.openmrs.mobile.data.db.AppDatabase;
 
-    @SerializedName("datatype")
-    @Expose
-    private Datatype datatype;
+import java.util.List;
 
-    @SerializedName("name")
-    @Expose
-    private String name;
+@Table(database = AppDatabase.class)
+public class Concept extends BaseOpenmrsAuditableObject {
+	@SerializedName("datatype")
+	@Expose
+	@ForeignKey(stubbedRelationship = true)
+	private Datatype datatype;
 
-    @SerializedName("conceptClass")
-    @Expose
-    private ConceptClass conceptClass;
+	@SerializedName("description")
+	@Expose
+	@Column
+	private String description;
 
-    public Datatype getDatatype() {
-        return datatype;
-    }
+	@SerializedName("conceptClass")
+	@Expose
+	@ForeignKey(stubbedRelationship = true)
+	private ConceptClass conceptClass;
 
-    public void setDatatype(Datatype datatype) {
-        this.datatype = datatype;
-    }
+	@SerializedName("name")
+	@Expose
+	@ForeignKey(saveForeignKeyModel = true, deleteForeignKeyModel = true)
+	private ConceptName name;
 
-    public String getName() {
-        return name;
-    }
+	@SerializedName("answers")
+	@Expose
+	private List<ConceptAnswer> answers;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	@SerializedName("mappings")
+	@Expose
+	private List<ConceptMapping> mappings;
+	
+	@SerializedName("value")
+	@Expose
+	@Column
+	private String value;
 
-    public ConceptClass getConceptClass() {
-        return conceptClass;
-    }
+	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "answers", isVariablePrivate = true)
+	List<ConceptAnswer> loadAnswers() {
+		answers = loadRelatedObject(ConceptAnswer.class, answers, () -> ConceptAnswer_Table.concept_uuid.eq(getUuid()));
 
-    public void setConceptClass(ConceptClass conceptClass) {
-        this.conceptClass = conceptClass;
-    }
+		return answers;
+	}
 
+	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "mappings", isVariablePrivate = true)
+	List<ConceptMapping> loadMappings() {
+		mappings = loadRelatedObject(ConceptMapping.class, mappings, () -> ConceptMapping_Table.concept_uuid.eq(getUuid()));
+
+		return mappings;
+	}
+
+	@Override
+	public void processRelationships() {
+		super.processRelationships();
+
+		processRelatedObjects(answers, (a) -> a.setConcept(this));
+		processRelatedObjects(mappings, (m) -> m.setConcept(this));
+	}
+
+	public Datatype getDatatype() {
+		return datatype;
+	}
+
+	public void setDatatype(Datatype datatype) {
+		this.datatype = datatype;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public ConceptClass getConceptClass() {
+		return conceptClass;
+	}
+
+	public void setConceptClass(ConceptClass conceptClass) {
+		this.conceptClass = conceptClass;
+	}
+
+	public List<ConceptAnswer> getAnswers() {
+		return answers;
+	}
+
+	public void setAnswers(List<ConceptAnswer> answers) {
+		this.answers = answers;
+	}
+
+	public ConceptName getName() {
+		return name;
+	}
+
+	public void setName(ConceptName name) {
+		this.name = name;
+	}
+
+	public List<ConceptMapping> getMappings() {
+		return mappings;
+	}
+
+	public void setMappings(List<ConceptMapping> mappings) {
+		this.mappings = mappings;
+	}
+
+	public String getValue() {
+		return value;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
+	}
+
+	@Override
+	public String toString() {
+		return getDisplay();
+	}
 }
+

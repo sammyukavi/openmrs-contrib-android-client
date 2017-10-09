@@ -14,6 +14,11 @@
 
 package org.openmrs.mobile.models;
 
-public class ConceptClass extends Resource {
+import com.raizlabs.android.dbflow.annotation.Table;
+
+import org.openmrs.mobile.data.db.AppDatabase;
+
+@Table(database = AppDatabase.class)
+public class ConceptClass extends BaseOpenmrsMetadata {
 
 }

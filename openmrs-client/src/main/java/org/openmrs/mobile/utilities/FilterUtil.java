@@ -22,82 +22,82 @@ import java.util.List;
 
 public class FilterUtil {
 
-    /**
-     * Used to filter list by specified query
-     * Its possible to filter patients by: Name, Surname (Family Name) or ID.
-     * @param patientList list of patients to filter
-     * @param query query that needs to be contained in Name, Surname or ID.
-     * @return patient list filtered by query
-     */
-    public static List<Patient> getPatientsFilteredByQuery(List<Patient> patientList, String query) {
-        List<Patient> filteredList = new ArrayList<>();
+	/**
+	 * Used to filter list by specified query
+	 * Its possible to filter patients by: Name, Surname (Family Name) or ID.
+	 * @param patientList list of patients to filter
+	 * @param query       query that needs to be contained in Name, Surname or ID.
+	 * @return patient list filtered by query
+	 */
+	public static List<Patient> getPatientsFilteredByQuery(List<Patient> patientList, String query) {
+		List<Patient> filteredList = new ArrayList<>();
 
-        for (Patient patient : patientList) {
+		for (Patient patient : patientList) {
 
-            List<String> searchableWords = getPatientSearchableWords(patient);
+			List<String> searchableWords = getPatientSearchableWords(patient);
 
-            if (doesAnySearchableWordFitQuery(searchableWords, query)) {
-                filteredList.add(patient);
-            }
+			if (doesAnySearchableWordFitQuery(searchableWords, query)) {
+				filteredList.add(patient);
+			}
 
-        }
-        return filteredList;
-    }
+		}
+		return filteredList;
+	}
 
-    public static List<Visit> getPatientsWithActiveVisitsFilteredByQuery(List<Visit> visitList, String query) {
-        List<Visit> filteredList = new ArrayList<>();
+	public static List<Visit> getPatientsWithActiveVisitsFilteredByQuery(List<Visit> visitList, String query) {
+		List<Visit> filteredList = new ArrayList<>();
 
-        for (Visit visit : visitList) {
-            Patient patient = visit.getPatient();
-            List<String> patientsWithActiveVisitsSearchableWords = new ArrayList<>();
-            patientsWithActiveVisitsSearchableWords.addAll(getVisitSearchableWords(visit));
-            patientsWithActiveVisitsSearchableWords.addAll(getPatientSearchableWords(patient));
+		for (Visit visit : visitList) {
+			Patient patient = visit.getPatient();
+			List<String> patientsWithActiveVisitsSearchableWords = new ArrayList<>();
+			patientsWithActiveVisitsSearchableWords.addAll(getVisitSearchableWords(visit));
+			patientsWithActiveVisitsSearchableWords.addAll(getPatientSearchableWords(patient));
 
-            if (doesAnySearchableWordFitQuery(patientsWithActiveVisitsSearchableWords, query)) {
-                filteredList.add(visit);
-            }
-        }
-        return filteredList;
-    }
+			if (doesAnySearchableWordFitQuery(patientsWithActiveVisitsSearchableWords, query)) {
+				filteredList.add(visit);
+			}
+		}
+		return filteredList;
+	}
 
-    private static List<String> getPatientSearchableWords(Patient patient) {
-        String patientIdentifier = patient.getIdentifier().getIdentifier();
-        String fullName = patient.getPerson().getName().getNameString();
-        String givenFamilyName = patient.getPerson().getName().getGivenName() + " "
-                + patient.getPerson().getName().getFamilyName();
+	private static List<String> getPatientSearchableWords(Patient patient) {
+		String patientIdentifier = patient.getIdentifier().getIdentifier();
+		String fullName = patient.getPerson().getName().getNameString();
+		String givenFamilyName = patient.getPerson().getName().getGivenName() + " "
+				+ patient.getPerson().getName().getFamilyName();
 
-        List<String> searchableWords = new ArrayList<>();
-        searchableWords.add(patientIdentifier);
-        searchableWords.add(fullName);
-        searchableWords.add(givenFamilyName);
+		List<String> searchableWords = new ArrayList<>();
+		searchableWords.add(patientIdentifier);
+		searchableWords.add(fullName);
+		searchableWords.add(givenFamilyName);
 
-        return searchableWords;
-    }
+		return searchableWords;
+	}
 
-    private static List<String> getVisitSearchableWords(Visit visit) {
-        String visitPlace = visit.getLocation().getDisplay();
-        String visitType = visit.getVisitType().getDisplay();
+	private static List<String> getVisitSearchableWords(Visit visit) {
+		String visitPlace = visit.getLocation().getDisplay();
+		String visitType = visit.getVisitType().getDisplay();
 
-        List<String> searchableWords = new ArrayList<>();
-        searchableWords.add(visitPlace);
-        searchableWords.add(visitType);
+		List<String> searchableWords = new ArrayList<>();
+		searchableWords.add(visitPlace);
+		searchableWords.add(visitType);
 
-        return searchableWords;
-    }
+		return searchableWords;
+	}
 
-    private static boolean doesAnySearchableWordFitQuery(List<String> searchableWords, String query) {
-        for (String searchableWord : searchableWords) {
-            if (searchableWord != null) {
-                int queryLength = query.trim().length();
-                searchableWord = searchableWord.toLowerCase();
-                query = query.toLowerCase().trim();
-                boolean fits = searchableWord.length() >= queryLength && searchableWord.contains(query);
-                if (fits) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
+	private static boolean doesAnySearchableWordFitQuery(List<String> searchableWords, String query) {
+		for (String searchableWord : searchableWords) {
+			if (searchableWord != null) {
+				int queryLength = query.trim().length();
+				searchableWord = searchableWord.toLowerCase();
+				query = query.toLowerCase().trim();
+				boolean fits = searchableWord.length() >= queryLength && searchableWord.contains(query);
+				if (fits) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 
 }

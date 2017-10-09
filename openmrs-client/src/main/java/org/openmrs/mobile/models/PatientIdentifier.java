@@ -12,72 +12,79 @@ package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.Table;
 
-public class PatientIdentifier extends Resource {
+import org.openmrs.mobile.data.db.AppDatabase;
 
-    @SerializedName("identifierType")
-    @Expose
-    private IdentifierType identifierType;
-    @SerializedName("identifier")
-    @Expose
-    private String identifier;
-    @SerializedName("location")
-    @Expose
-    private Location location;
+@Table(database = AppDatabase.class)
+public class PatientIdentifier extends BaseOpenmrsEntity {
+	@SerializedName("identifierType")
+	@Expose
+	@ForeignKey
+	private PatientIdentifierType identifierType;
 
+	@SerializedName("identifier")
+	@Expose
+	@Column
+	private String identifier;
 
-    /**
-     * 
-     * @return
-     *     The identifierType
-     */
-    public IdentifierType getIdentifierType() {
-        return identifierType;
-    }
+	@SerializedName("location")
+	@Expose
+	@ForeignKey(stubbedRelationship = true)
+	private Location location;
 
-    /**
-     * 
-     * @param identifierType
-     *     The identifierType
-     */
-    public void setIdentifierType(IdentifierType identifierType) {
-        this.identifierType = identifierType;
-    }
+	@ForeignKey(stubbedRelationship = true)
+	private Patient patient;
 
-    /**
-     * 
-     * @return
-     *     The identifier
-     */
-    public String getIdentifier() {
-        return identifier;
-    }
+	/**
+	 * @return The identifierType
+	 */
+	public PatientIdentifierType getIdentifierType() {
+		return identifierType;
+	}
 
-    /**
-     * 
-     * @param identifier
-     *     The identifier
-     */
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
-    }
+	/**
+	 * @param identifierType The identifierType
+	 */
+	public void setIdentifierType(PatientIdentifierType identifierType) {
+		this.identifierType = identifierType;
+	}
 
-    /**
-     * 
-     * @return
-     *     The location
-     */
-    public Location getLocation() {
-        return location;
-    }
+	/**
+	 * @return The identifier
+	 */
+	public String getIdentifier() {
+		return identifier;
+	}
 
-    /**
-     * 
-     * @param location
-     *     The location
-     */
-    public void setLocation(Location location) {
-        this.location = location;
-    }
+	/**
+	 * @param identifier The identifier
+	 */
+	public void setIdentifier(String identifier) {
+		this.identifier = identifier;
+	}
 
+	/**
+	 * @return The location
+	 */
+	public Location getLocation() {
+		return location;
+	}
+
+	/**
+	 * @param location The location
+	 */
+	public void setLocation(Location location) {
+		this.location = location;
+	}
+
+	public Patient getPatient() {
+		return patient;
+	}
+
+	public void setPatient(Patient patient) {
+		this.patient = patient;
+	}
 }

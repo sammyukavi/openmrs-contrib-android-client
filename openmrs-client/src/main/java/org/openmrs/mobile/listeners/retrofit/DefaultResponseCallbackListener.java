@@ -16,8 +16,8 @@ package org.openmrs.mobile.listeners.retrofit;
 
 public interface DefaultResponseCallbackListener {
 
-    void onResponse();
+	void onResponse();
 
-    void onErrorResponse(String errorMessage);
+	void onErrorResponse(String errorMessage);
 
 }

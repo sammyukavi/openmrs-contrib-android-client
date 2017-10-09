@@ -12,167 +12,169 @@ package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.Table;
 
+import org.openmrs.mobile.data.db.AppDatabase;
 import org.openmrs.mobile.utilities.StringUtils;
 
-import java.io.Serializable;
+@Table(database = AppDatabase.class)
+public class PersonAddress extends BaseOpenmrsEntity {
+	@SerializedName("preferred")
+	@Expose
+	@Column
+	private Boolean preferred;
 
-public class PersonAddress implements Serializable {
+	@SerializedName("address1")
+	@Expose
+	@Column
+	private String address1;
 
-    @SerializedName("preferred")
-    @Expose
-    private Boolean preferred;
-    @SerializedName("address1")
-    @Expose
-    private String address1;
-    @SerializedName("address2")
-    @Expose
-    private String address2;
-    @SerializedName("cityVillage")
-    @Expose
-    private String cityVillage;
-    @SerializedName("stateProvince")
-    @Expose
-    private String stateProvince;
-    @SerializedName("country")
-    @Expose
-    private String country;
-    @SerializedName("postalCode")
-    @Expose
-    private String postalCode;
+	@SerializedName("address2")
+	@Expose
+	@Column
+	private String address2;
 
-    /**
-     * 
-     * @return
-     *     The preferred
-     */
-    public Boolean getPreferred() {
-        return preferred;
-    }
+	@SerializedName("cityVillage")
+	@Expose
+	@Column
+	private String cityVillage;
 
-    /**
-     * 
-     * @param preferred
-     *     The preferred
-     */
-    public void setPreferred(Boolean preferred) {
-        this.preferred = preferred;
-    }
+	@SerializedName("stateProvince")
+	@Expose
+	@Column
+	private String stateProvince;
 
-    /**
-     * 
-     * @return
-     *     The address1
-     */
-    public String getAddress1() {
-        return address1;
-    }
+	@SerializedName("country")
+	@Expose
+	@Column
+	private String country;
 
-    /**
-     * 
-     * @param address1
-     *     The address1
-     */
-    public void setAddress1(String address1) {
-        this.address1 = address1;
-    }
-    /**
-     *
-     * @return
-     *     The address2
-     */
-    public String getAddress2() {
-        return address2;
-    }
+	@SerializedName("postalCode")
+	@Expose
+	@Column
+	private String postalCode;
 
-    /**
-     *
-     * @param address2
-     *     The address2
-     */
-    public void setAddress2(String address2) {
-        this.address2 = address2;
-    }
+	@ForeignKey(stubbedRelationship = true)
+	private Person person;
 
-    /**
-     * 
-     * @return
-     *     The cityVillage
-     */
-    public String getAddressString()
-    {
-        String addr="";
-        if(StringUtils.notNull(address1))
-            addr+=address1+"\n";
-        if(StringUtils.notNull(address2))
-            addr+=address2;
-        return addr;
-    }
-    public String getCityVillage() {
-        return cityVillage;
-    }
+	/**
+	 * @return The preferred
+	 */
+	public Boolean getPreferred() {
+		return preferred;
+	}
 
-    /**
-     * 
-     * @param cityVillage
-     *     The cityVillage
-     */
-    public void setCityVillage(String cityVillage) {
-        this.cityVillage = cityVillage;
-    }
+	Boolean isPreferred() {
+		return getPreferred();
+	}
 
-    /**
-     * 
-     * @return
-     *     The stateProvince
-     */
-    public String getStateProvince() {
-        return stateProvince;
-    }
+	/**
+	 * @param preferred The preferred
+	 */
+	public void setPreferred(Boolean preferred) {
+		this.preferred = preferred;
+	}
 
-    /**
-     * 
-     * @param stateProvince
-     *     The stateProvince
-     */
-    public void setStateProvince(String stateProvince) {
-        this.stateProvince = stateProvince;
-    }
+	/**
+	 * @return The address1
+	 */
+	public String getAddress1() {
+		return address1;
+	}
 
-    /**
-     * 
-     * @return
-     *     The country
-     */
-    public String getCountry() {
-        return country;
-    }
+	/**
+	 * @param address1 The address1
+	 */
+	public void setAddress1(String address1) {
+		this.address1 = address1;
+	}
 
-    /**
-     * 
-     * @param country
-     *     The country
-     */
-    public void setCountry(String country) {
-        this.country = country;
-    }
+	/**
+	 * @return The address2
+	 */
+	public String getAddress2() {
+		return address2;
+	}
 
-    /**
-     * 
-     * @return
-     *     The postalCode
-     */
-    public String getPostalCode() {
-        return postalCode;
-    }
+	/**
+	 * @param address2 The address2
+	 */
+	public void setAddress2(String address2) {
+		this.address2 = address2;
+	}
 
-    /**
-     * 
-     * @param postalCode
-     *     The postalCode
-     */
-    public void setPostalCode(String postalCode) {
-        this.postalCode = postalCode;
-    }
+	/**
+	 * @return The cityVillage
+	 */
+	public String getAddressString() {
+		String addr = "";
+		if (StringUtils.notNull(address1))
+			addr += address1 + "\n";
+		if (StringUtils.notNull(address2))
+			addr += address2;
+		return addr;
+	}
 
+	public String getCityVillage() {
+		return cityVillage;
+	}
+
+	/**
+	 * @param cityVillage The cityVillage
+	 */
+	public void setCityVillage(String cityVillage) {
+		this.cityVillage = cityVillage;
+	}
+
+	/**
+	 * @return The stateProvince
+	 */
+	public String getStateProvince() {
+		return stateProvince;
+	}
+
+	/**
+	 * @param stateProvince The stateProvince
+	 */
+	public void setStateProvince(String stateProvince) {
+		this.stateProvince = stateProvince;
+	}
+
+	/**
+	 * @return The country
+	 */
+	public String getCountry() {
+		return country;
+	}
+
+	/**
+	 * @param country The country
+	 */
+	public void setCountry(String country) {
+		this.country = country;
+	}
+
+	/**
+	 * @return The postalCode
+	 */
+	public String getPostalCode() {
+		return postalCode;
+	}
+
+	/**
+	 * @param postalCode The postalCode
+	 */
+	public void setPostalCode(String postalCode) {
+		this.postalCode = postalCode;
+	}
+
+	public Person getPerson() {
+		return person;
+	}
+
+	public void setPerson(Person person) {
+		this.person = person;
+	}
 }

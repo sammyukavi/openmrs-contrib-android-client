@@ -7,358 +7,317 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-
 package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+
+import org.openmrs.mobile.data.db.AppDatabase;
 
 import java.io.Serializable;
 
+@Table(database = AppDatabase.class)
+public class Observation extends BaseOpenmrsEntity implements Serializable {
+	@SerializedName("concept")
+	@Expose
+	@ForeignKey(stubbedRelationship = true)
+	private Concept concept;
 
-public class Observation extends Resource implements Serializable {
+	@SerializedName("person")
+	@Expose
+	@ForeignKey(stubbedRelationship = true)
+	private Person person;
 
-    @SerializedName("concept")
-    @Expose
-    private Concept concept;
-    @SerializedName("person")
-    @Expose
-    private Person person;
-    @SerializedName("obsDatetime")
-    @Expose
-    private String obsDatetime;
-    @SerializedName("accessionNumber")
-    @Expose
-    private int accessionNumber;
-    @SerializedName("obsGroup")
-    @Expose
-    private Observation obsGroup;
-    @SerializedName("valueCodedName")
-    @Expose
-    private String valueCodedName;
-    @SerializedName("comment")
-    @Expose
-    private String comment;
-    @SerializedName("location")
-    @Expose
-    private Resource location=null;
-    @SerializedName("encounter")
-    @Expose
-    private Encounter encounter=null;
-    @SerializedName("voided")
-    @Expose
-    private Boolean voided;
-    @SerializedName("formFieldPath")
-    @Expose
-    private String formFieldPath;
-    @SerializedName("formFieldNamespace")
-    @Expose
-    private String formFieldNamespace;
-    @SerializedName("resourceVersion")
-    @Expose
-    private String resourceVersion;
+	@SerializedName("obsDatetime")
+	@Expose
+	@Column
+	private String obsDatetime;
 
-    private Long id;
-    private Long encounterID;
-    private String displayValue;
+	@SerializedName("accessionNumber")
+	@Expose
+	@Column
+	private String accessionNumber;
 
-    private String diagnosisList;
-    private String diagnosisCertainty;
-    private String diagnosisOrder;
+	@SerializedName("obsGroup")
+	@Expose
+	@ForeignKey(stubbedRelationship = true)
+	private Observation obsGroup;
 
-    private String diagnosisNote;
+	@SerializedName("valueCodedName")
+	@Expose
+	@Column
+	private String valueCodedName;
 
-    /**
-     *
-     * @return
-     *     The concept
-     */
-    public Concept getConcept() {
-        return concept;
-    }
+	@SerializedName("comment")
+	@Expose
+	@Column
+	private String comment;
 
-    /**
-     *
-     * @param concept
-     *     The concept
-     */
-    public void setConcept(Concept concept) {
-        this.concept = concept;
-    }
+	@SerializedName("location")
+	@Expose
+	@Column
+	private String location = null;
 
-    /**
-     *
-     * @return
-     *     The person
-     */
-    public Person getPerson() {
-        return person;
-    }
+	@SerializedName("encounter")
+	@Expose
+	@ForeignKey(stubbedRelationship = true)
+	private Encounter encounter = null;
 
-    /**
-     *
-     * @param person
-     *     The person
-     */
-    public void setPerson(Person person) {
-        this.person = person;
-    }
+	@SerializedName("formFieldPath")
+	@Expose
+	@Column
+	private String formFieldPath;
 
-    /**
-     *
-     * @return
-     *     The obsDatetime
-     */
-    public String getObsDatetime() {
-        return obsDatetime;
-    }
+	@SerializedName("formFieldNamespace")
+	@Expose
+	@Column
+	private String formFieldNamespace;
 
-    /**
-     *
-     * @param obsDatetime
-     *     The obsDatetime
-     */
-    public void setObsDatetime(String obsDatetime) {
-        this.obsDatetime = obsDatetime;
-    }
+	@SerializedName("resourceVersion")
+	@Expose
+	@Column
+	private String resourceVersion;
 
-    /**
-     *
-     * @return
-     *     The accessionNumber
-     */
-    public int getAccessionNumber() {
-        return accessionNumber;
-    }
+	@SerializedName("value")
+	@Expose
+	@Column
+	private String value;
 
-    /**
-     *
-     * @param accessionNumber
-     *     The accessionNumber
-     */
-    public void setAccessionNumber(int accessionNumber) {
-        this.accessionNumber = accessionNumber;
-    }
+	@Expose
+	@ForeignKey(stubbedRelationship = true)
+	private Provider provider;
 
-    /**
-     *
-     * @return
-     *     The obsGroup
-     */
-    public Observation getObsGroup() {
-        return obsGroup;
-    }
+	@Column
+	private String diagnosisList;
+	private String diagnosisCertainty;
+	private String diagnosisOrder;
 
-    /**
-     *
-     * @param obsGroup
-     *     The obsGroup
-     */
-    public void setObsGroup(Observation obsGroup) {
-        this.obsGroup = obsGroup;
-    }
+	private String diagnosisNote;
 
-    /**
-     *
-     * @return
-     *     The valueCodedName
-     */
-    public String getValueCodedName() {
-        return valueCodedName;
-    }
+	/**
+	 * @return The concept
+	 */
+	public Concept getConcept() {
+		return concept;
+	}
 
-    /**
-     *
-     * @param valueCodedName
-     *     The valueCodedName
-     */
-    public void setValueCodedName(String valueCodedName) {
-        this.valueCodedName = valueCodedName;
-    }
+	/**
+	 * @param concept The concept
+	 */
+	public void setConcept(Concept concept) {
+		this.concept = concept;
+	}
 
-    /**
-     *
-     * @return
-     *     The comment
-     */
-    public String getComment() {
-        return comment;
-    }
+	/**
+	 * @return The person
+	 */
+	public Person getPerson() {
+		return person;
+	}
 
-    /**
-     *
-     * @param comment
-     *     The comment
-     */
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
+	/**
+	 * @param person The person
+	 */
+	public void setPerson(Person person) {
+		this.person = person;
+	}
 
-    /**
-     *
-     * @return
-     *     The location
-     */
-    public Resource getLocation() {
-        return location;
-    }
+	/**
+	 * @return The obsDatetime
+	 */
+	public String getObsDatetime() {
+		return obsDatetime;
+	}
 
-    /**
-     *
-     * @param location
-     *     The location
-     */
-    public void setLocation(Resource location) {
-        this.location = location;
-    }
+	/**
+	 * @param obsDatetime The obsDatetime
+	 */
+	public void setObsDatetime(String obsDatetime) {
+		this.obsDatetime = obsDatetime;
+	}
 
-    /**
-     *
-     * @return
-     *     The encounter
-     */
-    public Encounter getEncounter() {
-        return encounter;
-    }
+	/**
+	 * @return The accessionNumber
+	 */
+	public String getAccessionNumber() {
+		return accessionNumber;
+	}
 
-    /**
-     *
-     * @param encounter
-     *     The encounter
-     */
-    public void setEncounter(Encounter encounter) {
-        this.encounter = encounter;
-    }
+	/**
+	 * @param accessionNumber The accessionNumber
+	 */
+	public void setAccessionNumber(String accessionNumber) {
+		this.accessionNumber = accessionNumber;
+	}
 
-    /**
-     *
-     * @return
-     *     The voided
-     */
-    public Boolean getVoided() {
-        return voided;
-    }
+	/**
+	 * @return The obsGroup
+	 */
+	public Observation getObsGroup() {
+		return obsGroup;
+	}
 
-    /**
-     *
-     * @param voided
-     *     The voided
-     */
-    public void setVoided(Boolean voided) {
-        this.voided = voided;
-    }
+	/**
+	 * @param obsGroup The obsGroup
+	 */
+	public void setObsGroup(Observation obsGroup) {
+		this.obsGroup = obsGroup;
+	}
 
-    /**
-     *
-     * @return
-     *     The formFieldPath
-     */
-    public String getFormFieldPath() {
-        return formFieldPath;
-    }
+	/**
+	 * @return The valueCodedName
+	 */
+	public String getValueCodedName() {
+		return valueCodedName;
+	}
 
-    /**
-     *
-     * @param formFieldPath
-     *     The formFieldPath
-     */
-    public void setFormFieldPath(String formFieldPath) {
-        this.formFieldPath = formFieldPath;
-    }
+	/**
+	 * @param valueCodedName The valueCodedName
+	 */
+	public void setValueCodedName(String valueCodedName) {
+		this.valueCodedName = valueCodedName;
+	}
 
-    /**
-     *
-     * @return
-     *     The formFieldNamespace
-     */
-    public String getFormFieldNamespace() {
-        return formFieldNamespace;
-    }
+	/**
+	 * @return The comment
+	 */
+	public String getComment() {
+		return comment;
+	}
 
-    /**
-     *
-     * @param formFieldNamespace
-     *     The formFieldNamespace
-     */
-    public void setFormFieldNamespace(String formFieldNamespace) {
-        this.formFieldNamespace = formFieldNamespace;
-    }
+	/**
+	 * @param comment The comment
+	 */
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
 
-    /**
-     *
-     * @return
-     *     The resourceVersion
-     */
-    public String getResourceVersion() {
-        return resourceVersion;
-    }
+	/**
+	 * @return The location
+	 */
+	public String getLocation() {
+		return location;
+	}
 
-    /**
-     *
-     * @param resourceVersion
-     *     The resourceVersion
-     */
-    public void setResourceVersion(String resourceVersion) {
-        this.resourceVersion = resourceVersion;
-    }
+	/**
+	 * @param location The location
+	 */
+	public void setLocation(String location) {
+		this.location = location;
+	}
 
-    public Long getId() {
-        return id;
-    }
+	/**
+	 * @return The encounter
+	 */
+	public Encounter getEncounter() {
+		return encounter;
+	}
 
-    public Long getEncounterID() {
-        return encounterID;
-    }
+	/**
+	 * @param encounter The encounter
+	 */
+	public void setEncounter(Encounter encounter) {
+		this.encounter = encounter;
+	}
 
-    public void setEncounterID(Long encounterID) {
-        this.encounterID = encounterID;
-    }
+	/**
+	 * @return The formFieldPath
+	 */
+	public String getFormFieldPath() {
+		return formFieldPath;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	/**
+	 * @param formFieldPath The formFieldPath
+	 */
+	public void setFormFieldPath(String formFieldPath) {
+		this.formFieldPath = formFieldPath;
+	}
 
-    public String getDisplayValue() {
-        if (displayValue == null && display != null && display.contains(":")) {
-            setDisplayValue(display.split(":")[1]);
-        }
-        return displayValue;
-    }
+	/**
+	 * @return The formFieldNamespace
+	 */
+	public String getFormFieldNamespace() {
+		return formFieldNamespace;
+	}
 
-    public void setDisplayValue(String displayValue) {
-        this.displayValue = displayValue;
-    }
+	/**
+	 * @param formFieldNamespace The formFieldNamespace
+	 */
+	public void setFormFieldNamespace(String formFieldNamespace) {
+		this.formFieldNamespace = formFieldNamespace;
+	}
 
-    public String getShortDiagnosisCertainty() {
-        return diagnosisCertainty.split(" ")[0];
-    }
-    public String getDiagnosisCertainty() {
-        return diagnosisCertainty;
-    }
-    public void setDiagnosisCertanity(String certanity) {
-        this.diagnosisCertainty = certanity;
-    }
+	/**
+	 * @return The resourceVersion
+	 */
+	public String getResourceVersion() {
+		return resourceVersion;
+	}
 
-    public String getDiagnosisOrder() {
-        return diagnosisOrder;
-    }
-    public void setDiagnosisOrder(String diagnosisOrder) {
-        this.diagnosisOrder = diagnosisOrder;
-    }
+	/**
+	 * @param resourceVersion The resourceVersion
+	 */
+	public void setResourceVersion(String resourceVersion) {
+		this.resourceVersion = resourceVersion;
+	}
 
-    public String getDiagnosisList() {
-        return diagnosisList;
-    }
-    public void setDiagnosisList(String diagnosisList) {
-        this.diagnosisList = diagnosisList;
-    }
+	public String getValue() {
+		return value;
+	}
 
-    public String getDiagnosisNote() {
-        return diagnosisNote;
-    }
+	public void setValue(String value) {
+		this.value = value;
+	}
 
-    public void setDiagnosisNote(String diagnosisNote) {
-        this.diagnosisNote = diagnosisNote;
-    }
+	public void setProvider(Provider provider) {
+		this.provider = provider;
+	}
 
+	public Provider getProvider() {
+		return provider;
+	}
+
+	public String getShortDiagnosisCertainty() {
+		return diagnosisCertainty.split(" ")[0];
+	}
+
+	public String getDiagnosisCertainty() {
+		return diagnosisCertainty;
+	}
+
+	public void setDiagnosisCertanity(String certanity) {
+		this.diagnosisCertainty = certanity;
+	}
+
+	public void setDiagnosisCertainty(String diagnosisCertainty) {
+		this.diagnosisCertainty = diagnosisCertainty;
+	}
+
+	public String getDiagnosisOrder() {
+		return diagnosisOrder;
+	}
+
+	public void setDiagnosisOrder(String diagnosisOrder) {
+		this.diagnosisOrder = diagnosisOrder;
+	}
+
+	public String getDiagnosisList() {
+		return diagnosisList;
+	}
+
+	public void setDiagnosisList(String diagnosisList) {
+		this.diagnosisList = diagnosisList;
+	}
+
+	public String getDiagnosisNote() {
+		return diagnosisNote;
+	}
+
+	public void setDiagnosisNote(String diagnosisNote) {
+		this.diagnosisNote = diagnosisNote;
+	}
 }

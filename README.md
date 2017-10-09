@@ -49,7 +49,7 @@ For a detailed description of all work done during GSoC 2016, please checkout th
 # Development
 We use JIRA to track issues and monitor project development. Refer to this link to view all issues and project summary: [Android Client JIRA](https://issues.openmrs.org/browse/AC)
 To get started contributing, try working on [introductory issues](https://issues.openmrs.org/issues/?filter=17165) in JIRA and check out [OpenMRS Pull Request Tips](https://wiki.openmrs.org/display/docs/Pull+Request+Tips). 
-Also, before creating a pull request, please run code review tools (Lint) and all tests.
+Also, before creating a pull requestImage, please run code review tools (Lint) and all tests.
 
 ### Code Style
 The coding conventions used by OpenMRS are outlined [here](https://wiki.openmrs.org/display/docs/Coding+Conventions).

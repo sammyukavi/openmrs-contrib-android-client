@@ -10,98 +10,17 @@
 
 package org.openmrs.mobile.models;
 
-import com.activeandroid.Model;
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Table;
+
+import org.openmrs.mobile.data.db.AppDatabase;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
-@Table(name = "encountertype")
-public class EncounterType extends Model implements Serializable {
+@Table(database = AppDatabase.class)
+public class EncounterType extends BaseOpenmrsMetadata implements Serializable {
+	public EncounterType() {}
 
-    @Column(name = "uuid")
-    @SerializedName("uuid")
-    @Expose
-    private String uuid;
-
-    @Column(name = "display")
-    @SerializedName("display")
-    @Expose
-    private String display;
-
-    @Column(name = "links")
-    @SerializedName("links")
-    @Expose
-    private List<Link> links = new ArrayList<Link>();
-
-    public static final String VITALS = "Vitals";
-    public static final String VISIT_NOTE = "Visit Note";
-    public static final String DISCHARGE = "Discharge";
-    public static final String ADMISSION = "Admission";
-
-    public EncounterType() {}
-
-    public EncounterType(String display) {
-        this.setDisplay(display);
-    }
-
-    /**
-     *
-     * @return
-     *     The uuid
-     */
-    public String getUuid() {
-        return uuid;
-    }
-
-    /**
-     *
-     * @param uuid
-     *     The uuid
-     */
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
-
-    /**
-     *
-     * @return
-     *     The display
-     */
-    public String getDisplay() {
-        return display;
-    }
-
-    /**
-     *
-     * @param display
-     *     The display
-     */
-    public void setDisplay(String display) {
-        this.display = display;
-    }
-
-    /**
-     *
-     * @return
-     *     The links
-     */
-    public List<Link> getLinks() {
-        return links;
-    }
-
-    /**
-     *
-     * @param links
-     *     The links
-     */
-    public void setLinks(List<Link> links) {
-        this.links = links;
-    }
-
-
+	public EncounterType(String display) {
+		this.setDisplay(display);
+	}
 }

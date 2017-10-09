@@ -12,89 +12,98 @@ package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.OneToMany;
+import com.raizlabs.android.dbflow.annotation.Table;
+
+import org.openmrs.mobile.data.db.AppDatabase;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Form extends Resource implements Serializable {
+@Table(database = AppDatabase.class)
+public class Form extends BaseOpenmrsObject implements Serializable {
+	@SerializedName("name")
+	@Expose
+	@Column
+	private String name;
 
-    @SerializedName("name")
-    @Expose
-    private String name;
+	@SerializedName("processor")
+	@Expose
+	@Column
+	private String processor;
 
-    @SerializedName("processor")
-    @Expose
-    private String processor;
+	@SerializedName("pages")
+	@Expose
+	private List<Page> pages = new ArrayList<Page>();
 
-    @SerializedName("pages")
-    @Expose
-    private List<Page> pages = new ArrayList<Page>();
+	@SerializedName("valueReference")
+	@Expose
+	@Column
+	private String valueReference;
 
-    @SerializedName("valueReference")
-    @Expose
-    private String valueReference;
+	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "pages", isVariablePrivate = true)
+	List<Page> loadPages() {
+		pages = loadRelatedObject(Page.class, pages, () -> Page_Table.form_uuid.eq(getUuid()));
 
-    /**
-     * 
-     * @return
-     *     The name
-     */
-    public String getName() {
-        return name;
-    }
+		return pages;
+	}
 
-    /**
-     * 
-     * @param name
-     *     The name
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
+	@Override
+	public void processRelationships() {
+		super.processRelationships();
 
-    public String getValueReference() {
-        return valueReference;
-    }
+		processRelatedObjects(pages, (p) -> p.setForm(this));
+	}
 
-    public void setValueReference(String valueReference) {
-        this.valueReference = valueReference;
-    }
+	/**
+	 * @return The name
+	 */
+	public String getName() {
+		return name;
+	}
 
-    /**
-     * 
-     * @return
-     *     The processor
-     */
-    public String getProcessor() {
-        return processor;
-    }
+	/**
+	 * @param name The name
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    /**
-     * 
-     * @param processor
-     *     The processor
-     */
-    public void setProcessor(String processor) {
-        this.processor = processor;
-    }
+	public String getValueReference() {
+		return valueReference;
+	}
 
-    /**
-     * 
-     * @return
-     *     The pages
-     */
-    public List<Page> getPages() {
-        return pages;
-    }
+	public void setValueReference(String valueReference) {
+		this.valueReference = valueReference;
+	}
 
-    /**
-     * 
-     * @param pages
-     *     The pages
-     */
-    public void setPages(List<Page> pages) {
-        this.pages = pages;
-    }
+	/**
+	 * @return The processor
+	 */
+	public String getProcessor() {
+		return processor;
+	}
 
+	/**
+	 * @param processor The processor
+	 */
+	public void setProcessor(String processor) {
+		this.processor = processor;
+	}
+
+	/**
+	 * @return The pages
+	 */
+	public List<Page> getPages() {
+		return pages;
+	}
+
+	/**
+	 * @param pages The pages
+	 */
+	public void setPages(List<Page> pages) {
+		this.pages = pages;
+	}
 }

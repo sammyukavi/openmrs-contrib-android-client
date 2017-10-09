@@ -12,330 +12,315 @@ package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.ManyToMany;
+import com.raizlabs.android.dbflow.annotation.OneToMany;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 
-import org.openmrs.mobile.utilities.DateUtils;
+import org.openmrs.mobile.data.db.AppDatabase;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-public class Encounter extends Resource implements Serializable{
+@Table(database = AppDatabase.class)
+@ManyToMany(referencedTable = Provider.class)
+public class Encounter extends BaseOpenmrsAuditableObject implements Serializable {
+	@SerializedName("encounterDatetime")
+	@Expose
+	@Column
+	private Date encounterDatetime;
 
-    private Long id;
+	@SerializedName("patient")
+	@Expose
+	@ForeignKey(stubbedRelationship = true)
+	private Patient patient;
 
-    @SerializedName("encounterDatetime")
-    @Expose
-    private String encounterDatetime;
-    @SerializedName("patient")
-    @Expose
-    private Patient patient;
-    @SerializedName("location")
-    @Expose
-    private Resource location;
-    @SerializedName("form")
-    @Expose
-    private Form form;
-    @SerializedName("encounterType")
-    @Expose
-    private EncounterType encounterType;
-    @SerializedName("obs")
-    @Expose
-    private List<Observation> observations = new ArrayList<Observation>();
-    @SerializedName("orders")
-    @Expose
-    private List<Object> orders = new ArrayList<Object>();
-    @SerializedName("voided")
-    @Expose
-    private Boolean voided;
-    @SerializedName("visit")
-    @Expose
-    private Visit visit;
-    @SerializedName("encounterProviders")
-    @Expose
-    private List<Resource> encounterProviders = new ArrayList<Resource>();
-    @SerializedName("resourceVersion")
-    @Expose
-    private String resourceVersion;
+	@SerializedName("location")
+	@Expose
+	@ForeignKey(stubbedRelationship = true)
+	private Location location;
 
-    private Long visitID;
-    private String patientUUID;
+	@SerializedName("form")
+	@Expose
+	@ForeignKey(stubbedRelationship = true)
+	private Form form;
 
-    public Long getId() {
-        return id;
-    }
+	@SerializedName("encounterType")
+	@Expose
+	@ForeignKey(saveForeignKeyModel = true)
+	private EncounterType encounterType;
 
-    public Long getVisitID() {
-        return visitID;
-    }
+	@SerializedName("obs")
+	@Expose
+	private List<Observation> obs = new ArrayList<>();
 
-    public void setVisitID(Long visitID) {
-        this.visitID = visitID;
-    }
+	@SerializedName("orders")
+	@Expose
+	private List<Object> orders = new ArrayList<>();
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	@SerializedName("voided")
+	@Expose
+	@Column
+	private Boolean voided;
 
-    public String getPatientUUID() {
-        return patientUUID;
-    }
+	@SerializedName("visit")
+	@Expose
+	@ForeignKey(stubbedRelationship = true)
+	private Visit visit;
 
-    public void setPatientUUID(String patientUUID) {
-        this.patientUUID = patientUUID;
-    }
+	@SerializedName("encounterProviders")
+	@Expose
+	private List<Provider> encounterProviders = new ArrayList<Provider>();
 
-    /**
-     *
-     * @return
-     *     The uuid
-     */
-    public String getUuid() {
-        return uuid;
-    }
+	@SerializedName("provider")
+	@Expose
+	private String provider;
 
-    /**
-     *
-     * @param uuid
-     *     The uuid
-     */
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
+	@SerializedName("resourceVersion")
+	@Expose
+	private String resourceVersion;
 
-    /**
-     *
-     * @return
-     *     The display
-     */
-    public String getDisplay() {
-        return display;
-    }
+	@OneToMany(methods = { OneToMany.Method.ALL}, variableName = "obs", isVariablePrivate = true)
+	List<Observation> loadObservations() {
+		obs = loadRelatedObject(Observation.class, obs, () -> Observation_Table.encounter_uuid.eq(getUuid()));
+		return obs;
+	}
 
-    /**
-     *
-     * @param display
-     *     The display
-     */
-    public void setDisplay(String display) {
-        this.display = display;
-    }
+	@Override
+	public void processRelationships() {
+		super.processRelationships();
 
-    /**
-     *
-     * @return
-     *     The encounterDatetime
-     */
-    public Long getEncounterDatetime() {
-        return DateUtils.convertTime(encounterDatetime);
-    }
+		if (form != null) {
+			form.processRelationships();
+		}
 
+		processRelatedObjects(obs, (e) -> e.setEncounter(this));
+	}
 
-    /**
-     *
-     * @param encounterDatetime
-     *     The encounterDatetime
-     */
-    public void setEncounterDatetime(String encounterDatetime) {
-        this.encounterDatetime = encounterDatetime;
-    }
+	/**
+	 * @return The uuid
+	 */
+	public String getUuid() {
+		return uuid;
+	}
 
-    /**
-     *
-     * @return
-     *     The patient
-     */
-    public Patient getPatient() {
-        return patient;
-    }
+	/**
+	 * @param uuid The uuid
+	 */
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
 
-    /**
-     *
-     * @param patient
-     *     The patient
-     */
-    public void setPatient(Patient patient) {
-        this.patient = patient;
-    }
+	/**
+	 * @return The display
+	 */
+	public String getDisplay() {
+		return display;
+	}
 
-    /**
-     *
-     * @return
-     *     The location
-     */
-    public Resource getLocation() {
-        return location;
-    }
+	/**
+	 * @param display The display
+	 */
+	public void setDisplay(String display) {
+		this.display = display;
+	}
 
-    /**
-     *
-     * @param location
-     *     The location
-     */
-    public void setLocation(Resource location) {
-        this.location = location;
-    }
+	/**
+	 * @return The encounterDatetime
+	 */
+	public Date getEncounterDatetime() {
+		return encounterDatetime;
+	}
 
-    /**
-     *
-     * @return
-     *     The form
-     */
-    public Form getForm() {
-        return form;
-    }
+	/**
+	 * @param encounterDatetime The encounterDatetime
+	 */
+	public void setEncounterDatetime(Date encounterDatetime) {
+		this.encounterDatetime = encounterDatetime;
+	}
 
-    /**
-     *
-     * @param form
-     *     The form
-     */
-    public void setForm(Form form) {
-        this.form = form;
-    }
+	/**
+	 * @return The patient
+	 */
+	public Patient getPatient() {
+		return patient;
+	}
 
-    /**
-     *
-     * @return
-     *     The encounterTypeToken
-     */
-    public EncounterType getEncounterType() {
-        return encounterType;
-    }
+	/**
+	 * @param patient The patient
+	 */
+	public void setPatient(Patient patient) {
+		this.patient = patient;
+	}
 
+	/**
+	 * @return The location
+	 */
+	public Location getLocation() {
+		return location;
+	}
 
-    public void setEncounterType(EncounterType encounterType) {
-        this.encounterType = encounterType;
-    }
+	/**
+	 * @param location The location
+	 */
+	public void setLocation(Location location) {
+		this.location = location;
+	}
 
-    /**
-     * 
-     * @return
-     *     The obs
-     */
-    public List<Observation> getObservations() {
-        return observations;
-    }
+	/**
+	 * @return The form
+	 */
+	public Form getForm() {
+		return form;
+	}
 
-    /**
-     * 
-     *     The obs
-     */
-    public void setObservations(List<Observation> observations) {
-        this.observations = observations;
-    }
-    /**
-     * 
-     * @return
-     *     The orders
-     */
-    public List<Object> getOrders() {
-        return orders;
-    }
+	/**
+	 * @param form The form
+	 */
+	public void setForm(Form form) {
+		this.form = form;
+	}
 
-    /**
-     * 
-     * @param orders
-     *     The orders
-     */
-    public void setOrders(List<Object> orders) {
-        this.orders = orders;
-    }
+	/**
+	 * @return The encounterTypeToken
+	 */
+	public EncounterType getEncounterType() {
+		return encounterType;
+	}
 
-    /**
-     * 
-     * @return
-     *     The voided
-     */
-    public Boolean getVoided() {
-        return voided;
-    }
+	public void setEncounterType(EncounterType encounterType) {
+		this.encounterType = encounterType;
+	}
 
-    /**
-     * 
-     * @param voided
-     *     The voided
-     */
-    public void setVoided(Boolean voided) {
-        this.voided = voided;
-    }
+	/**
+	 * @return The obs
+	 */
+	public List<Observation> getObs() {
+		return obs;
+	}
 
-    /**
-     * 
-     * @return
-     *     The visit
-     */
-    public Visit getVisit() {
-        return visit;
-    }
+	/**
+	 * The obs
+	 */
+	public void setObs(List<Observation> obs) {
+		this.obs = obs;
+	}
 
-    /**
-     *
-     * @param visit
-     *     The visit
-     */
-    public void setVisit(Visit visit) {
-        this.visit = visit;
-    }
+	/**
+	 * @return The orders
+	 */
+	public List<Object> getOrders() {
+		return orders;
+	}
 
-    /**
-     * 
-     * @return
-     *     The encounterProviders
-     */
-    public List<Resource> getEncounterProviders() {
-        return encounterProviders;
-    }
+	/**
+	 * @param orders The orders
+	 */
+	public void setOrders(List<Object> orders) {
+		this.orders = orders;
+	}
 
-    /**
-     * 
-     * @param encounterProviders
-     *     The encounterProviders
-     */
-    public void setEncounterProviders(List<Resource> encounterProviders) {
-        this.encounterProviders = encounterProviders;
-    }
+	/**
+	 * @return The voided
+	 */
+	public Boolean getVoided() {
+		return voided;
+	}
 
-    /**
-     * 
-     * @return
-     *     The links
-     */
-    public List<Link> getLinks() {
-        return links;
-    }
+	Boolean isVoided() {
+		return getVoided();
+	}
 
-    /**
-     * 
-     * @param links
-     *     The links
-     */
-    public void setLinks(List<Link> links) {
-        this.links = links;
-    }
+	/**
+	 * @param voided The voided
+	 */
+	public void setVoided(Boolean voided) {
+		this.voided = voided;
+	}
 
-    /**
-     * 
-     * @return
-     *     The resourceVersion
-     */
-    public String getResourceVersion() {
-        return resourceVersion;
-    }
+	/**
+	 * @return The visit
+	 */
+	public Visit getVisit() {
+		return visit;
+	}
 
-    /**
-     * 
-     * @param resourceVersion
-     *     The resourceVersion
-     */
-    public void setResourceVersion(String resourceVersion) {
-        this.resourceVersion = resourceVersion;
-    }
+	/**
+	 * @param visit The visit
+	 */
+	public void setVisit(Visit visit) {
+		this.visit = visit;
+	}
 
-    public String getFormUuid(){
-        if(form != null)
-            return form.getUuid();
-        else
-            return null;
-    }
+	/**
+	 * @return The encounterProviders
+	 */
+	public List<Provider> getEncounterProviders() {
+		if (encounterProviders == null || encounterProviders.isEmpty()) {
+			List<Encounter_Provider> providers = SQLite.select()
+					.from(Encounter_Provider.class)
+					.where(Encounter_Provider_Table.encounter_uuid.eq(getUuid()))
+					.queryList();
 
+			for (Encounter_Provider join : providers) {
+				encounterProviders.add(join.getProvider());
+			}
+		}
+
+		return encounterProviders;
+	}
+
+	/**
+	 * @param encounterProviders The encounterProviders
+	 */
+	public void setEncounterProviders(List<Provider> encounterProviders) {
+		this.encounterProviders = encounterProviders;
+
+		// Clear out the encounter providers and save them
+		SQLite.delete(Encounter_Provider.class).where(Encounter_Provider_Table.encounter_uuid.eq(getUuid()));
+
+		// Add the providers for the encounter
+		if (encounterProviders != null && !encounterProviders.isEmpty()) {
+			for (Provider provider : encounterProviders) {
+				Encounter_Provider join = new Encounter_Provider();
+				join.setEncounter(this);
+				join.setProvider(provider);
+
+				join.save();
+			}
+		}
+	}
+
+	/**
+	 * @return The resourceVersion
+	 */
+	public String getResourceVersion() {
+		return resourceVersion;
+	}
+
+	/**
+	 * @param resourceVersion The resourceVersion
+	 */
+	public void setResourceVersion(String resourceVersion) {
+		this.resourceVersion = resourceVersion;
+	}
+
+	public String getFormUuid() {
+		if (form != null)
+			return form.getUuid();
+		else
+			return null;
+	}
+
+	public String getProvider() {
+		return provider;
+	}
+
+	public void setProvider(String provider) {
+		this.provider = provider;
+	}
 }

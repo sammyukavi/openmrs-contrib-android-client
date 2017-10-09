@@ -11,130 +11,129 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-
 package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.Table;
 
-public class Location extends Resource {
-    @Expose
-    private Long id;
-    @Expose
-    private String name;
-    @Expose
-    private String parentLocationUuid;
-    @Expose
-    private String description;
-    @Expose
-    private String address2;
-    @Expose
-    private String address1;
-    @Expose
-    private String cityVillage;
-    @Expose
-    private String stateProvince;
-    @Expose
-    private String country;
-    @Expose
-    private String postalCode;
+import org.openmrs.mobile.data.db.AppDatabase;
 
+@Table(database = AppDatabase.class)
+public class Location extends BaseOpenmrsMetadata {
+	@Expose
+	private String parentLocationUuid;
 
-    public Location() {}
+	@Expose
+	@Column
+	private String address2;
 
-    public Location(String display) {
-        this.display = display;
-    }
+	@Expose
+	@Column
+	private String address1;
 
-    public Location(Long id, String name, String parentLocationUuid, String description, String address2, String address1, String cityVillage, String stateProvince, String country, String postalCode) {
-        this.id = id;
-        this.name = name;
-        this.parentLocationUuid = parentLocationUuid;
-        this.description = description;
-        this.address2 = address2;
-        this.address1 = address1;
-        this.cityVillage = cityVillage;
-        this.stateProvince = stateProvince;
-        this.country = country;
-        this.postalCode = postalCode;
-    }
+	@Expose
+	@Column
+	private String cityVillage;
 
-    public Long getId() {
-        return id;
-    }
+	@Expose
+	@Column
+	private String stateProvince;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	@Expose
+	@Column
+	private String country;
 
-    public String getName() {
-        return name;
-    }
+	@Expose
+	@Column
+	private String postalCode;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	@Expose
+	@ForeignKey(stubbedRelationship = true)
+	private Location parentLocation;
 
-    public String getParentLocationUuid() {
-        return parentLocationUuid;
-    }
+	public Location() {
+	}
 
-    public void setParentLocationUuid(String parentLocationUuid) {
-        this.parentLocationUuid = parentLocationUuid;
-    }
+	public Location(String display) {
+		this.display = display;
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	public Location(Long id, String name, String parentLocationUuid, String description, String address2, String address1,
+			String cityVillage, String stateProvince, String country, String postalCode) {
+		setName(name);
+		this.parentLocationUuid = parentLocationUuid;
+		setDescription(description);
+		this.address2 = address2;
+		this.address1 = address1;
+		this.cityVillage = cityVillage;
+		this.stateProvince = stateProvince;
+		this.country = country;
+		this.postalCode = postalCode;
+	}
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	public String getParentLocationUuid() {
+		return parentLocationUuid;
+	}
 
-    public String getAddress2() {
-        return address2;
-    }
+	public void setParentLocationUuid(String parentLocationUuid) {
+		this.parentLocationUuid = parentLocationUuid;
+	}
 
-    public void setAddress2(String address2) {
-        this.address2 = address2;
-    }
+	public String getAddress2() {
+		return address2;
+	}
 
-    public String getAddress1() {
-        return address1;
-    }
+	public void setAddress2(String address2) {
+		this.address2 = address2;
+	}
 
-    public void setAddress1(String address1) {
-        this.address1 = address1;
-    }
+	public String getAddress1() {
+		return address1;
+	}
 
-    public String getCityVillage() {
-        return cityVillage;
-    }
+	public void setAddress1(String address1) {
+		this.address1 = address1;
+	}
 
-    public void setCityVillage(String cityVillage) {
-        this.cityVillage = cityVillage;
-    }
+	public String getCityVillage() {
+		return cityVillage;
+	}
 
-    public String getStateProvince() {
-        return stateProvince;
-    }
+	public void setCityVillage(String cityVillage) {
+		this.cityVillage = cityVillage;
+	}
 
-    public void setStateProvince(String stateProvince) {
-        this.stateProvince = stateProvince;
-    }
+	public String getStateProvince() {
+		return stateProvince;
+	}
 
-    public String getCountry() {
-        return country;
-    }
+	public void setStateProvince(String stateProvince) {
+		this.stateProvince = stateProvince;
+	}
 
-    public void setCountry(String country) {
-        this.country = country;
-    }
+	public String getCountry() {
+		return country;
+	}
 
-    public String getPostalCode() {
-        return postalCode;
-    }
+	public void setCountry(String country) {
+		this.country = country;
+	}
 
-    public void setPostalCode(String postalCode) {
-        this.postalCode = postalCode;
-    }
+	public String getPostalCode() {
+		return postalCode;
+	}
+
+	public void setPostalCode(String postalCode) {
+		this.postalCode = postalCode;
+	}
+
+	public Location getParentLocation() {
+		return parentLocation;
+	}
+
+	public void setParentLocation(Location parentLocation) {
+		this.parentLocation = parentLocation;
+	}
 }

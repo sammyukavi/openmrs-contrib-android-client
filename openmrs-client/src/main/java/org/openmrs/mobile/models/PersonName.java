@@ -12,81 +12,87 @@ package org.openmrs.mobile.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.Table;
 
-import java.io.Serializable;
+import org.openmrs.mobile.data.db.AppDatabase;
 
-public class PersonName implements Serializable {
+@Table(database = AppDatabase.class)
+public class PersonName extends BaseOpenmrsEntity {
+	@SerializedName("givenName")
+	@Expose
+	@Column
+	private String givenName;
 
-    @SerializedName("givenName")
-    @Expose
-    private String givenName;
-    @SerializedName("middleName")
-    @Expose
-    private String middleName;
-    @SerializedName("familyName")
-    @Expose
-    private String familyName;
+	@SerializedName("middleName")
+	@Expose
+	@Column
+	private String middleName;
 
-    /**
-     * 
-     * @return
-     *     The givenName
-     */
-    public String getGivenName() {
-        return givenName;
-    }
+	@SerializedName("familyName")
+	@Expose
+	@Column
+	private String familyName;
 
-    /**
-     * 
-     * @param givenName
-     *     The givenName
-     */
-    public void setGivenName(String givenName) {
-        this.givenName = givenName;
-    }
+	@ForeignKey(stubbedRelationship = true)
+	private Person person;
 
-    /**
-     * 
-     * @return
-     *     The familyName
-     */
-    public String getFamilyName() {
-        return familyName;
-    }
+	/**
+	 * @return The givenName
+	 */
+	public String getGivenName() {
+		return givenName;
+	}
 
-    /**
-     * 
-     * @param familyName
-     *     The familyName
-     */
-    public void setFamilyName(String familyName) {
-        this.familyName = familyName;
-    }
+	/**
+	 * @param givenName The givenName
+	 */
+	public void setGivenName(String givenName) {
+		this.givenName = givenName;
+	}
 
-    /**
-     *
-     * @return
-     *     The middleName
-     */
-    public String getMiddleName() {
-        return middleName;
-    }
+	/**
+	 * @return The familyName
+	 */
+	public String getFamilyName() {
+		return familyName;
+	}
 
-    /**
-     *
-     * @param middleName
-     *     The middleName
-     */
-    public void setMiddleName(String middleName) {
-        this.middleName = middleName;
-    }
+	/**
+	 * @param familyName The familyName
+	 */
+	public void setFamilyName(String familyName) {
+		this.familyName = familyName;
+	}
 
+	/**
+	 * @return The middleName
+	 */
+	public String getMiddleName() {
+		return middleName;
+	}
 
-    public String getNameString()
-    {
-        if (middleName==null || middleName.equals("null"))
-            return givenName+" "+familyName;
-        else
-            return givenName+" "+middleName+" "+familyName;
-    }
+	/**
+	 * @param middleName The middleName
+	 */
+	public void setMiddleName(String middleName) {
+		this.middleName = middleName;
+	}
+
+	public String getNameString() {
+		if (middleName == null || middleName.equals("null")) {
+			return givenName + " " + familyName;
+		} else {
+			return givenName + " " + middleName + " " + familyName;
+		}
+	}
+
+	public Person getPerson() {
+		return person;
+	}
+
+	public void setPerson(Person person) {
+		this.person = person;
+	}
 }

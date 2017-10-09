@@ -1,5 +1,6 @@
 package org.openmrs.mobile.data.sync.impl;
 
+import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.db.impl.EncounterDbService;
 import org.openmrs.mobile.data.db.impl.VisitDbService;
 import org.openmrs.mobile.data.db.impl.VisitNoteDbService;
@@ -8,12 +9,15 @@ import org.openmrs.mobile.data.db.impl.VisitTaskDbService;
 import org.openmrs.mobile.data.rest.impl.VisitRestServiceImpl;
 import org.openmrs.mobile.data.sync.BasePushProvider;
 import org.openmrs.mobile.models.Encounter;
+import org.openmrs.mobile.models.SyncAction;
 import org.openmrs.mobile.models.SyncLog;
 import org.openmrs.mobile.models.Visit;
+import org.openmrs.mobile.models.VisitAttribute;
 import org.openmrs.mobile.models.VisitNote;
 import org.openmrs.mobile.models.VisitPhoto;
 import org.openmrs.mobile.models.VisitTask;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -76,13 +80,41 @@ public class VisitPushProvider extends BasePushProvider<Visit, VisitDbService, V
 	}
 
 	@Override
+	protected void preProcess(Visit entity) {
+		// remove voided attributes
+		if (!entity.getAttributes().isEmpty()) {
+			List<VisitAttribute> attributes = new ArrayList<>();
+			for (VisitAttribute visitAttribute : entity.getAttributes()) {
+				if (visitAttribute.getVoided() == false) {
+					attributes.add(visitAttribute);
+				}
+			}
+
+			entity.setAttributes(attributes);
+		}
+	}
+
+	@Override
 	protected void postProcess(Visit originalEntity, Visit restEntity, SyncLog syncLog) {
-		super.postProcess(originalEntity, restEntity, syncLog);
+		if (restEntity != null) {
+			Visit tmpEntity = dbService.getByUuid(syncLog.getKey(), QueryOptions.FULL_REP);
+			// Delete any related records with local uuids, records with the server-generated uuids will be saved when
+			// saving the entity below
+			deleteLocalRelatedRecords(originalEntity, restEntity);
 
-		// void existing attributes
-		dbService.voidExistingVisitAttributes(originalEntity);
+			// Check if uuid has changed
+			if (!originalEntity.getUuid().equalsIgnoreCase(restEntity.getUuid())) {
+				// This will update the uuid for the current entity and also save any related objects
+				dbService.update(originalEntity.getUuid(), restEntity);
+			}
 
-		dbService.save(originalEntity);
+			if (tmpEntity.getAttributes().size() != originalEntity.getAttributes().size()) {
+				// void existing attributes
+				dbService.voidExistingVisitAttributes(originalEntity);
+
+				dbService.save(originalEntity);
+			}
+		}
 	}
 
 	@Override

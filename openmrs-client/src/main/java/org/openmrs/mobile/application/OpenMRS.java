@@ -168,9 +168,6 @@ public class OpenMRS extends Application {
 		SharedPreferences prefs = getPreferences();
 		String url = prefs.getString(ApplicationConstants.SERVER_URL, ApplicationConstants.DEFAULT_OPEN_MRS_URL);
 
-		if (!url.endsWith("/")) {
-			url += "/";
-		}
 		return url;
 	}
 

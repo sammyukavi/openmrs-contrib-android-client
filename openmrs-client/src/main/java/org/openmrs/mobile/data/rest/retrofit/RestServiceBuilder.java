@@ -17,6 +17,7 @@ import org.openmrs.mobile.utilities.ResourceSerializer;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.logging.HttpLoggingInterceptor;
+import org.openmrs.mobile.utilities.StringUtils;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -25,6 +26,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class RestServiceBuilder {
 	protected static final OpenMRS app = OpenMRS.getInstance();
 	private static final String REST_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+	private static final String BASE_URL_WHEN_API_IS_EMPTY = "http://localhost/";
 
 	private static Retrofit.Builder builder;
 	private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
@@ -62,6 +64,11 @@ public class RestServiceBuilder {
 							builder.build().baseUrl().host()
 					)
 					.build();
+			// If, for some reason, the URL has not been overridden by the user, we need to throw an error the same way
+			// Retrofit does (but with some more information) saying no base URL has been set
+			if (newUrl.equals(BASE_URL_WHEN_API_IS_EMPTY)) {
+				throw new IllegalArgumentException("URL has not been set yet.");
+			}
 			original = original.newBuilder()
 					.url(newUrl)
 					.build();
@@ -94,8 +101,15 @@ public class RestServiceBuilder {
 	private static void initializeBuilder() {
 
 		builder = new Retrofit.Builder()
-				.baseUrl(API_BASE_URL)
 				.addConverterFactory(buildGsonConverter());
+
+		if (!StringUtils.isNullOrEmpty(API_BASE_URL)) {
+			builder.baseUrl(API_BASE_URL);
+		} else {
+			// This is just so we can allow Dagger to initialize the REST services, but it will be overridden later by the
+			// user
+			builder.baseUrl(BASE_URL_WHEN_API_IS_EMPTY);
+		}
 	}
 
 	public static void setBaseUrl(String url) {

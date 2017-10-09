@@ -109,11 +109,7 @@ public class FindPatientRecordActivity extends ACBaseActivity {
 		getMenuInflater().inflate(R.menu.menu_find_patient_record, menu);
 		MenuItem mFindPatientMenuItem = menu.findItem(R.id.action_search);
 
-		if (OpenMRS.getInstance().isRunningHoneycombVersionOrHigher()) {
-			searchPatientsView = (EditText)mFindPatientMenuItem.getActionView().findViewById(R.id.searchPatient);
-		} else {
-			searchPatientsView = (EditText)MenuItemCompat.getActionView(mFindPatientMenuItem);
-		}
+		searchPatientsView = (EditText)mFindPatientMenuItem.getActionView().findViewById(R.id.searchPatient);
 
 		setTitle(R.string.nav_find_patient);
 

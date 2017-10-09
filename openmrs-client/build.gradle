@@ -29,16 +29,16 @@ android {
 
 	defaultConfig {
 		applicationId "org.openmrs.bandahealth.im"
-		versionName applicationVersion
-		versionCode 1
+		versionName buildVersionName
+		versionCode buildNumber
 
-		minSdkVersion 14
+		minSdkVersion 16
 		targetSdkVersion 23
 
 		defaultConfig {
 			applicationId "org.openmrs.bandahealth.im"
-			versionName applicationVersion
-			minSdkVersion 15
+			versionName buildVersionName
+			minSdkVersion 16
 			targetSdkVersion 23
 			testApplicationId "org.openmrs.mobile.test"
 			testInstrumentationRunner "org.openmrs.mobile.test.OpenMRSInstrumentationTestRunner"

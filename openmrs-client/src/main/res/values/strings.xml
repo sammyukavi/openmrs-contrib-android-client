@@ -13,8 +13,15 @@
   -->
 
 <resources>
+	<!-- Navigation Panel -->
+	<string name="nav_patient_list">Patient List</string>
+	<string name="nav_privacy_policy">Privacy Policy</string>
+	<string name="nav_find_patient">Find Patient Record</string>
 	<string name="action_settings">Settings</string>
 	<string name="action_logout">Logout</string>
+
+	<!-- URIs -->
+	<string name="uri_privacy_policy">https://www.bandahealth.org</string>
 	
 	<string name="dbname">openmrs.db</string>
 	<string name="aadbname">aaopenmrs.db</string>
@@ -170,8 +177,7 @@
 	<string name="create_account">No account yet? Create one</string>
 	<string name="search_hint">Search patients</string>
 	<string name="sync_hint">Sync selections</string>
-	
-	<string name="nav_find_patient">Find Patient Record</string>
+
 	<string name="nav_register_patient">Register Patient</string>
 	<string name="nav_open_visit_tasks">Open Visit Tasks</string>
 	<string name="nav_closed_visit_tasks_period">Date Closed: %1$s</string>
@@ -288,7 +294,6 @@
 		visitPhotoView meaningful results</string>
 	<string name="patient_metadata_label">Patient Contact Information</string>
 	<string name="visit_tasks_dialog_message">add a visit task</string>
-	<string name="nav_patient_list">Patient List</string>
 	
 	<string name="label_start_visit">Start Visit</string>
 	<string name="label_edit_visit">Edit Visit</string>

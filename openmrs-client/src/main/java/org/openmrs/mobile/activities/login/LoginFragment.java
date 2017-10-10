@@ -118,6 +118,10 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 		loginUrlTextLayout = (TextInputLayout)mRootView.findViewById(R.id.loginUrlTextLayout);
 		showPassword = (CheckBox)mRootView.findViewById(R.id.checkboxShowPassword);
 		url.setText(loginUrl);
+
+		if (StringUtils.isNullOrEmpty(loginUrl)) {
+			showEditUrlEditField(true);
+		}
 	}
 
 	private void loadLocations() {
@@ -131,9 +135,9 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 			locationsList = gson.fromJson(locationsStr, type);
 		}
 
-		if (locationsList.isEmpty()) {
+		if (locationsList.isEmpty() && !StringUtils.isNullOrEmpty(loginUrl)) {
 			mPresenter.loadLocations(loginUrl);
-		} else {
+		} else if (!StringUtils.isNullOrEmpty(loginUrl)) {
 			updateLocationsSpinner(locationsList, loginUrl);
 		}
 
@@ -201,7 +205,7 @@ public class LoginFragment extends ACBaseFragment<LoginContract.Presenter> imple
 			}
 			mPresenter.loadLocations(url);
 
-		} else {
+		} else if (!StringUtils.isNullOrEmpty(url)) {
 			showMessage(INVALID_URL);
 		}
 	}

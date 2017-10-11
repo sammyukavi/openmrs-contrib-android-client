@@ -18,6 +18,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import org.joda.time.DateTime;
+import org.joda.time.Period;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.openmrs.mobile.application.OpenMRS;
@@ -154,53 +155,41 @@ public final class DateUtils {
 		return dateFormat.format(yesterday());
 	}
 
-	public static String calculateAge(String date) {
+	public static String calculateAge(String dateOfBirth) {
 		DateFormat dateFormat = new SimpleDateFormat(OPEN_MRS_REQUEST_PATIENT_FORMAT, Locale.getDefault());
-
-		int years = 0;
-		int months = 0;
-		int days = 0;
+		int ageInYears, ageInMonths, ageInDays;
+		DateTime birthDate,currentTime;
+		Period periodSinceBirth;
 		try {
-			Date startDate = dateFormat.parse(date);
-			Calendar now = Calendar.getInstance();
-			Calendar dob = Calendar.getInstance();
-			dob.setTime(startDate);
-			if (dob.after(now)) {
+
+			birthDate = new DateTime(dateFormat.parse(dateOfBirth));
+			currentTime = new DateTime();
+			if (birthDate.isAfter(currentTime)) {
 				Log.e(TAG, "Can't be born in the future");
 				return ApplicationConstants.EMPTY_STRING;
 			}
-			int year1 = now.get(Calendar.YEAR);
-			int year2 = dob.get(Calendar.YEAR);
-			years = year1 - year2;
-			if (years == 0) {
-				int month1 = now.get(Calendar.MONTH);
-				int month2 = dob.get(Calendar.MONTH);
+			periodSinceBirth = Period.fieldDifference(birthDate.toLocalDate(),currentTime.toLocalDate());
+			ageInYears = periodSinceBirth.getYears();
+			ageInMonths = periodSinceBirth.getMonths();
+			ageInDays = periodSinceBirth.getDays();
 
-				if (month1 > month2) {
-					months = month1 - month2;
-				} else if (month1 == month2) {
-					int day1 = now.get(Calendar.DAY_OF_MONTH);
-					int day2 = dob.get(Calendar.DAY_OF_MONTH);
-					if (day1 > day2) {
-						days = day1 - day2;
-					}
-				}
-			}
 		} catch (ParseException e) {
 			Log.e(TAG, "Error parsing date: ", e);
 			return ApplicationConstants.EMPTY_STRING;
 		}
 
-		if (years > 0) {
-			return String.valueOf(years);
-		} else if (months == 1) {
-			return months + " month";
-		} else if (months > 1) {
-			return months + " months";
-		} else if (days == 1) {
-			return days + " day";
+		if (ageInYears > 0) {
+			//has birthday passed?
+			if(currentTime.isBefore(birthDate.plus(periodSinceBirth))) ageInYears = ageInYears - 1;
+			return String.valueOf(ageInYears);
+		} else if (ageInMonths == 1) {
+			return ageInMonths + " month";
+		} else if (ageInMonths > 1) {
+			return ageInMonths + " months";
+		} else if (ageInDays == 1) {
+			return ageInDays + " day";
 		} else
-			return days + " days";
+			return ageInDays + " days";
 	}
 
 	public static String calculateRelativeDate(Date pastDate) {

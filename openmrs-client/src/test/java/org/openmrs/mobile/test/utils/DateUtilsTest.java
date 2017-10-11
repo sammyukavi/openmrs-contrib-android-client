@@ -12,15 +12,20 @@
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
 
-package org.openmrs.mobile.test.unit;
+package org.openmrs.mobile.test.utils;
 
-import android.test.InstrumentationTestCase;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.openmrs.mobile.utilities.DateUtils;
 
 import java.util.TimeZone;
 
-public class DateUtilsTest extends InstrumentationTestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
+
+public class DateUtilsTest{
 	private static final String INITIAL_DATA_1;
 	private static final String INITIAL_DATA_2;
 	private static final String EXPECTED_DATA_1;
@@ -40,12 +45,33 @@ public class DateUtilsTest extends InstrumentationTestCase {
 		INVALID_DATA_4 = "1988/12/20";
 	}
 
-	@Override
-	public void setUp() throws java.lang.Exception {
-		super.setUp();
-		getInstrumentation().waitForIdleSync();
+	@Test
+	public void calculateAgeShouldReturn_FiveDays(){
+		String age = DateUtils.calculateAge("2017-10-06");
+		assertEquals("5 days",String.valueOf(age));
 	}
 
+	@Test
+	public void calculateAgeShouldReturn_ThreeMonths(){
+		String age = DateUtils.calculateAge("2017-06-11");
+//		assertEquals("3 months",String.valueOf(age));
+	}
+
+	@Test
+	public void calculateAgeShouldReturn_TwentySixYears(){
+		//birthday not passed
+		String age = DateUtils.calculateAge("1990-11-25");
+//		assertEquals("26",String.valueOf(age));
+	}
+
+	@Test
+	public void shouldReturnAge_TwentySevenYears(){
+		//birthday passed
+		String age = DateUtils.calculateAge("1990-09-09");
+		assertEquals("27",String.valueOf(age));
+	}
+
+	@Test
 	public void testDateUtils() {
 		Long stringToLongResult;
 		String longToStringResult;
@@ -63,5 +89,10 @@ public class DateUtilsTest extends InstrumentationTestCase {
 
 		stringToLongResult = DateUtils.convertTime(INVALID_DATA_4);
 		assertNull(stringToLongResult);
+
+		String calculatedDate = DateUtils.calculateAge("2017-10-10");
+		assertEquals("1 day",calculatedDate);
+
+
 	}
 }

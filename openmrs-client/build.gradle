@@ -1,5 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
+apply plugin: 'com.github.triplet.play'
+apply plugin: 'me.tatarka.retrolambda'
 
 buildscript {
 
@@ -13,12 +15,9 @@ buildscript {
 	}
 }
 
-apply plugin: 'com.github.triplet.play'
-apply plugin: 'me.tatarka.retrolambda'
-
-def version = "1.0.0"
-def dbflow_version = "4.1.1"
-def sqlcipher_version = "3.5.7"
+// Constants for app version and version code
+def app_version = "1.0.0"	// The version number displayed to users
+def app_version_code = 1	// The internal version number, higher is more recent
 
 def keystoreFile = "bandahealth.jks"
 
@@ -46,12 +45,12 @@ android {
 	buildToolsVersion '25.0.0'
 	useLibrary 'org.apache.http.legacy'
 
-	def applicationVersion = version;
+	def applicationVersion = app_version;
 
 	defaultConfig {
 		applicationId "org.openmrs.bandahealth.im"
 		versionName applicationVersion
-		versionCode 1
+		versionCode app_version_code
 
 		testApplicationId "org.openmrs.mobile.test"
 		testInstrumentationRunner "org.openmrs.mobile.test.OpenMRSInstrumentationTestRunner"
@@ -104,6 +103,9 @@ repositories {
 	maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
 	maven { url "https://jitpack.io" }
 }
+
+def dbflow_version = "4.1.1"
+def sqlcipher_version = "3.5.7"
 
 dependencies {
 	compile 'com.google.code.gson:gson:2.7'
@@ -159,17 +161,4 @@ dependencies {
 	)
 
 	testCompile 'org.robolectric:robolectric:3.3.2'
-}
-
-play {
-	if (version.contains("alpha")) {
-		track = 'alpha'
-	} else if (version.contains("beta")) {
-		track = 'beta'
-	} else {
-		track = 'production'
-	}
-
-	serviceAccountEmail = System.getenv("PUBLISHER_ACCOUNT_ID")
-	jsonFile = rootProject.file('google_play.json')
 }

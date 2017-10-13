@@ -15,16 +15,26 @@
 package org.openmrs.mobile.test.utils;
 
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeUtils;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.openmrs.mobile.utilities.DateUtils;
+import org.powermock.core.classloader.annotations.PrepareForTest;
 
 import java.util.TimeZone;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
 
+@RunWith(MockitoJUnitRunner.class)
 public class DateUtilsTest{
 	private static final String INITIAL_DATA_1;
 	private static final String INITIAL_DATA_2;
@@ -33,6 +43,17 @@ public class DateUtilsTest{
 	private static final String INVALID_DATA_3;
 	private static final String INVALID_DATA_4;
 	private static final String EXPECTED_LONG_3;
+
+//	@Mock private DateTime calcAgeDateInstance;
+
+	@PrepareForTest(DateTime.class)
+	@Before
+	public void setUp() throws Exception{
+			long mockDateMillis = new DateTime(2017,10,12,16,39).getMillis();
+			DateTimeUtils.setCurrentMillisFixed(mockDateMillis);
+		whenNew(DateTime.class).withNoArguments().thenReturn(new DateTime());
+//		create date to use as present date for tests
+	}
 
 	static {
 		INITIAL_DATA_1 = "1967-03-26T00:00:00.000+0200";
@@ -48,20 +69,20 @@ public class DateUtilsTest{
 	@Test
 	public void calculateAgeShouldReturn_FiveDays(){
 		String age = DateUtils.calculateAge("2017-10-06");
-		assertEquals("5 days",String.valueOf(age));
+		assertEquals("6 days",String.valueOf(age));
 	}
 
 	@Test
-	public void calculateAgeShouldReturn_ThreeMonths(){
-		String age = DateUtils.calculateAge("2017-06-11");
-//		assertEquals("3 months",String.valueOf(age));
+	public void calculateAgeShouldReturn_TwentyYears(){
+		String age = DateUtils.calculateAge("1997-10-11");
+		assertEquals("20",String.valueOf(age));
 	}
 
 	@Test
-	public void calculateAgeShouldReturn_TwentySixYears(){
-		//birthday not passed
-		String age = DateUtils.calculateAge("1990-11-25");
-//		assertEquals("26",String.valueOf(age));
+	public void calculateAgeShouldReturn_NineteenYears(){
+		//birthday not reached yet..so still 19yrs
+		String age = DateUtils.calculateAge("1997-10-15");
+		assertEquals("19",String.valueOf(age));
 	}
 
 	@Test
@@ -86,13 +107,18 @@ public class DateUtilsTest{
 
 		stringToLongResult = DateUtils.convertTime(INVALID_DATA_3);
 		assertNotSame(EXPECTED_LONG_3, String.valueOf(stringToLongResult));
+	}
 
+	@Test(expected = NullPointerException.class)
+	public void shouldFailWithException_convertTimeUsingInvalidData(){
+		Long stringToLongResult;
 		stringToLongResult = DateUtils.convertTime(INVALID_DATA_4);
 		assertNull(stringToLongResult);
+	}
 
-		String calculatedDate = DateUtils.calculateAge("2017-10-10");
-		assertEquals("1 day",calculatedDate);
-
-
+	@After
+	public void cleanUp(){
+		//reset System time millis
+		DateTimeUtils.setCurrentMillisSystem();
 	}
 }

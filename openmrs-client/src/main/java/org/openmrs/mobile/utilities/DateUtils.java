@@ -45,6 +45,7 @@ public final class DateUtils {
 	public static final String DATE_FORMAT = "dd-MMM-yyyy";
 	public static final Long ZERO = 0L;
 	public static final String OPEN_MRS_RESPONSE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+	public static final SimpleDateFormat dateFormat = new SimpleDateFormat(OPEN_MRS_REQUEST_PATIENT_FORMAT, Locale.getDefault());
 
 	private DateUtils() {
 
@@ -156,31 +157,35 @@ public final class DateUtils {
 	}
 
 	public static String calculateAge(String dateOfBirth) {
-		DateFormat dateFormat = new SimpleDateFormat(OPEN_MRS_REQUEST_PATIENT_FORMAT, Locale.getDefault());
-		int ageInYears, ageInMonths, ageInDays;
-		DateTime birthDate,currentTime;
-		Period periodSinceBirth;
-		try {
+		int ageInYears = 0;
+		int ageInMonths = 0;
+		int ageInDays = 0;
+		DateTime birthDate = null;
+		DateTime currentTime = null;
+		Period periodSinceBirth = null;
 
+		try {
 			birthDate = new DateTime(dateFormat.parse(dateOfBirth));
 			currentTime = new DateTime();
 			if (birthDate.isAfter(currentTime)) {
-				Log.e(TAG, "Can't be born in the future");
+				Log.w(TAG, "Can't be born in the future");
 				return ApplicationConstants.EMPTY_STRING;
 			}
+
 			periodSinceBirth = Period.fieldDifference(birthDate.toLocalDate(),currentTime.toLocalDate());
 			ageInYears = periodSinceBirth.getYears();
 			ageInMonths = periodSinceBirth.getMonths();
 			ageInDays = periodSinceBirth.getDays();
-
 		} catch (ParseException e) {
-			Log.e(TAG, "Error parsing date: ", e);
+			Log.e(TAG, "Error parsing date: " + dateOfBirth, e);
 			return ApplicationConstants.EMPTY_STRING;
 		}
 
 		if (ageInYears > 0) {
 			//has birthday passed?
-			if(currentTime.isBefore(birthDate.plus(periodSinceBirth))) ageInYears = ageInYears - 1;
+			if(currentTime.getDayOfYear() < birthDate.getDayOfYear()){
+				ageInYears = ageInYears - 1;
+			}
 			return String.valueOf(ageInYears);
 		} else if (ageInMonths == 1) {
 			return ageInMonths + " month";

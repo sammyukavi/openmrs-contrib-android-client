@@ -16,6 +16,7 @@ package org.openmrs.mobile.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -225,6 +226,16 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 			logoutMenuItem.setTitle(getString(R.string.action_logout) + " " + openMRS.getUsername());
 		}
 		navigationView.setNavigationItemSelectedListener(this);
+
+		View privacyPolicy = findViewById(R.id.privacyPolicy);
+		privacyPolicy.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.uri_privacy_policy)));
+				startActivity(browserIntent);
+			}
+		});
 	}
 
 	protected void disableActionBarNavigation() {

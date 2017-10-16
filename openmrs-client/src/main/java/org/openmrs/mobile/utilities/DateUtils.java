@@ -45,7 +45,7 @@ public final class DateUtils {
 	public static final String DATE_FORMAT = "dd-MMM-yyyy";
 	public static final Long ZERO = 0L;
 	public static final String OPEN_MRS_RESPONSE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
-	public static final SimpleDateFormat dateFormat = new SimpleDateFormat(OPEN_MRS_REQUEST_PATIENT_FORMAT, Locale.getDefault());
+	public static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat(OPEN_MRS_REQUEST_PATIENT_FORMAT, Locale.getDefault());
 
 	private DateUtils() {
 
@@ -165,7 +165,7 @@ public final class DateUtils {
 		Period periodSinceBirth = null;
 
 		try {
-			birthDate = new DateTime(dateFormat.parse(dateOfBirth));
+			birthDate = new DateTime(SIMPLE_DATE_FORMAT.parse(dateOfBirth));
 			currentTime = new DateTime();
 			if (birthDate.isAfter(currentTime)) {
 				Log.w(TAG, "Can't be born in the future");
@@ -183,7 +183,7 @@ public final class DateUtils {
 
 		if (ageInYears > 0) {
 			//has birthday passed?
-			if(currentTime.getDayOfYear() < birthDate.getDayOfYear()){
+			if(currentTime.getDayOfYear() < birthDate.getDayOfYear()) {
 				ageInYears = ageInYears - 1;
 			}
 			return String.valueOf(ageInYears);

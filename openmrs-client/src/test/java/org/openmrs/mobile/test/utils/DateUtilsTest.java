@@ -26,6 +26,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.openmrs.mobile.utilities.DateUtils;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 
+import java.util.Date;
 import java.util.TimeZone;
 
 import static org.junit.Assert.assertEquals;
@@ -47,7 +48,8 @@ public class DateUtilsTest{
 
 	@Before
 	public void setUp() throws Exception{
-			long mockDateMillis = new DateTime(2017,10,12,16,39).getMillis();
+		//mock present time to fixed date as (01-01-2017)
+			long mockDateMillis = new DateTime(2017,01,01,16,39).getMillis();
 			DateTimeUtils.setCurrentMillisFixed(mockDateMillis);
 		whenNew(DateTime.class).withNoArguments().thenReturn(new DateTime());
 	}
@@ -60,28 +62,33 @@ public class DateUtilsTest{
 
 	@Test
 	public void calculateAgeShouldReturn_FiveDays(){
-		String age = DateUtils.calculateAge("2017-10-06");
-		assertEquals("6 days",String.valueOf(age));
+		String age = DateUtils.calculateAge("2016-12-25");
+		assertEquals("7 days",age);
 	}
 
 	@Test
+	public void calculateAgeShouldReturn_SevenMonths(){
+		String age = DateUtils.calculateAge("2016-05-17");
+		assertEquals("7 months",age);
+	}
+	@Test
 	public void calculateAgeShouldReturn_TwentyYears(){
-		String age = DateUtils.calculateAge("1997-10-11");
-		assertEquals("20",String.valueOf(age));
+		String age = DateUtils.calculateAge("1996-10-11");
+		assertEquals("20",age);
 	}
 
 	@Test
 	public void calculateAgeShouldReturn_NineteenYears(){
 		//birthday not reached yet..so still 19yrs
 		String age = DateUtils.calculateAge("1997-10-15");
-		assertEquals("19",String.valueOf(age));
+		assertEquals("19",age);
 	}
 
 	@Test
 	public void shouldReturnAge_TwentySevenYears(){
 		//birthday passed
-		String age = DateUtils.calculateAge("1990-09-09");
-		assertEquals("27",String.valueOf(age));
+		String age = DateUtils.calculateAge("1990-01-01");
+		assertEquals("27",age);
 	}
 
 	@Test

@@ -18,7 +18,10 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.Months;
 import org.joda.time.Period;
+import org.joda.time.Years;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.openmrs.mobile.application.OpenMRS;
@@ -157,12 +160,11 @@ public final class DateUtils {
 	}
 
 	public static String calculateAge(String dateOfBirth) {
-		int ageInYears = 0;
-		int ageInMonths = 0;
-		int ageInDays = 0;
-		DateTime birthDate = null;
-		DateTime currentTime = null;
-		Period periodSinceBirth = null;
+		int ageInYears;
+		int ageInMonths;
+		int ageInDays;
+		DateTime birthDate;
+		DateTime currentTime;
 
 		try {
 			birthDate = new DateTime(SIMPLE_DATE_FORMAT.parse(dateOfBirth));
@@ -172,20 +174,15 @@ public final class DateUtils {
 				return ApplicationConstants.EMPTY_STRING;
 			}
 
-			periodSinceBirth = Period.fieldDifference(birthDate.toLocalDate(),currentTime.toLocalDate());
-			ageInYears = periodSinceBirth.getYears();
-			ageInMonths = periodSinceBirth.getMonths();
-			ageInDays = periodSinceBirth.getDays();
+			ageInYears = Years.yearsBetween(birthDate.toLocalDate(),currentTime.toLocalDate()).getYears();
+			ageInMonths = Months.monthsBetween(birthDate.toLocalDate(),currentTime.toLocalDate()).getMonths();
+			ageInDays = Days.daysBetween(birthDate.toLocalDate(),currentTime.toLocalDate()).getDays();
 		} catch (ParseException e) {
 			Log.e(TAG, "Error parsing date: " + dateOfBirth, e);
 			return ApplicationConstants.EMPTY_STRING;
 		}
 
 		if (ageInYears > 0) {
-			//has birthday passed?
-			if(currentTime.getDayOfYear() < birthDate.getDayOfYear()) {
-				ageInYears = ageInYears - 1;
-			}
 			return String.valueOf(ageInYears);
 		} else if (ageInMonths == 1) {
 			return ageInMonths + " month";

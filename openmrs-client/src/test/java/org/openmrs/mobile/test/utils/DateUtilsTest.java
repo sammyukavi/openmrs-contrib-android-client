@@ -20,19 +20,16 @@ import org.joda.time.DateTimeUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.openmrs.mobile.utilities.DateUtils;
-import org.powermock.core.classloader.annotations.PrepareForTest;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
-import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 public class DateUtilsTest{
@@ -45,6 +42,8 @@ public class DateUtilsTest{
 	private static final String INVALID_DATA_4 = "1988/12/20";
 	private static final String EXPECTED_LONG_3 = "598597200000";
 
+	private static final String TEST_DATE_FORMAT = "dd/MM/yyyy HH:mm:ss";
+	private SimpleDateFormat format;
 
 	@Before
 	public void setUp() throws Exception{
@@ -52,6 +51,8 @@ public class DateUtilsTest{
 			long mockDateMillis = new DateTime(2017,01,01,16,39).getMillis();
 			DateTimeUtils.setCurrentMillisFixed(mockDateMillis);
 		whenNew(DateTime.class).withNoArguments().thenReturn(new DateTime());
+
+		format = new SimpleDateFormat(TEST_DATE_FORMAT);
 	}
 
 	@After
@@ -92,6 +93,46 @@ public class DateUtilsTest{
 	}
 
 	@Test
+	public void calculateTimeDifference_returnsEightSeconds() throws ParseException{
+		Date start = format.parse("08/07/2017 14:44:22");
+		Date end = format.parse("08/07/2017 14:44:30");
+		String result = DateUtils.calculateTimeDifference(start,end,true);
+		assertEquals("8 secs",result);
+	}
+
+	@Test
+	public void calculateTimeDifference_returnsTwoMinutes() throws ParseException{
+		Date start = format.parse("11/10/2017 14:44:22");
+		Date end = format.parse("11/10/2017 14:46:30");
+		String result = DateUtils.calculateTimeDifference(start,end,true);
+		assertEquals("2 mins",result);
+	}
+
+	@Test
+	public void calculateTimeDifference_returnsThreeMonths() throws ParseException{
+		Date start = format.parse("18/07/2017 00:44:00");
+		Date end = format.parse("20/10/2017 14:41:56");
+		String result = DateUtils.calculateTimeDifference(start,end,true);
+		assertEquals("3 months",result);
+	}
+
+	@Test
+	public void calculateTimeDifference_returnsElevenMonths() throws ParseException{
+		Date start = format.parse("24/11/2016 00:44:22");
+		Date end = format.parse("10/10/2017 14:41:45");
+		String result = DateUtils.calculateTimeDifference(start,end,true);
+		assertEquals("11 months",result);
+	}
+
+	@Test
+	public void calculateTimeDifference_returnsFourYears() throws ParseException{
+		Date start = format.parse("24/03/2013 00:44:22");
+		Date end = format.parse("10/05/2017 14:41:45");
+		String result = DateUtils.calculateTimeDifference(start,end,true);
+		assertEquals("4 yrs",result);
+	}
+
+	@Test
 	public void testDateUtils() {
 		Long stringToLongResult;
 		String longToStringResult;
@@ -114,6 +155,4 @@ public class DateUtilsTest{
 		stringToLongResult = DateUtils.convertTime(INVALID_DATA_4);
 		assertNull(stringToLongResult);
 	}
-
-
 }

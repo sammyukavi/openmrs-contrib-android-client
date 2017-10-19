@@ -20,7 +20,6 @@ import android.util.Log;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.Months;
-import org.joda.time.Period;
 import org.joda.time.Years;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -274,7 +273,7 @@ public final class DateUtils {
 
 		if (minimum) {
 			if (Math.round(durationInSeconds / 60) < 1) {
-				relative = durationInSeconds <= 1 ? "1 sec" : durationInSeconds + "secs";
+				relative = durationInSeconds <= 1 ? "1 sec" : durationInSeconds + " secs";
 			} else if (Math.round(durationInSeconds / SECONDS_IN_A_MINUTE) < 60) {
 				int minutes = Math.round(durationInSeconds / SECONDS_IN_A_MINUTE);
 				relative = (minutes == 1 ? "1 min" : minutes + " mins");
@@ -287,7 +286,7 @@ public final class DateUtils {
 			} else if (Math.round(durationInSeconds / SECONDS_IN_A_WEEK) < 4) {
 				int weeks = Math.round(durationInSeconds / SECONDS_IN_A_WEEK);
 				relative = (weeks == 1 ? "1 wk" : weeks + " wks");
-			} else if (Math.round(durationInSeconds / SECONDS_IN_A_MONTH) < 4) {
+			} else if (Math.round(durationInSeconds / SECONDS_IN_A_MONTH) < 12) {
 				int months = Math.round(durationInSeconds / SECONDS_IN_A_MONTH);
 				relative = (months == 1 ? "1 month" : months + " months");
 			} else {

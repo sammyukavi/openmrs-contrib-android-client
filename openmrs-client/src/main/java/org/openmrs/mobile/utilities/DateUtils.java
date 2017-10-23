@@ -18,6 +18,9 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.Months;
+import org.joda.time.Years;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.openmrs.mobile.application.OpenMRS;
@@ -44,6 +47,7 @@ public final class DateUtils {
 	public static final String DATE_FORMAT = "dd-MMM-yyyy";
 	public static final Long ZERO = 0L;
 	public static final String OPEN_MRS_RESPONSE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+	public static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat(OPEN_MRS_REQUEST_PATIENT_FORMAT, Locale.getDefault());
 
 	private DateUtils() {
 
@@ -154,53 +158,39 @@ public final class DateUtils {
 		return dateFormat.format(yesterday());
 	}
 
-	public static String calculateAge(String date) {
-		DateFormat dateFormat = new SimpleDateFormat(OPEN_MRS_REQUEST_PATIENT_FORMAT, Locale.getDefault());
+	public static String calculateAge(String dateOfBirth) {
+		int ageInYears;
+		int ageInMonths;
+		int ageInDays;
+		DateTime birthDate;
+		DateTime currentTime;
 
-		int years = 0;
-		int months = 0;
-		int days = 0;
 		try {
-			Date startDate = dateFormat.parse(date);
-			Calendar now = Calendar.getInstance();
-			Calendar dob = Calendar.getInstance();
-			dob.setTime(startDate);
-			if (dob.after(now)) {
-				Log.e(TAG, "Can't be born in the future");
+			birthDate = new DateTime(SIMPLE_DATE_FORMAT.parse(dateOfBirth));
+			currentTime = new DateTime();
+			if (birthDate.isAfter(currentTime)) {
+				Log.w(TAG, "Can't be born in the future");
 				return ApplicationConstants.EMPTY_STRING;
 			}
-			int year1 = now.get(Calendar.YEAR);
-			int year2 = dob.get(Calendar.YEAR);
-			years = year1 - year2;
-			if (years == 0) {
-				int month1 = now.get(Calendar.MONTH);
-				int month2 = dob.get(Calendar.MONTH);
 
-				if (month1 > month2) {
-					months = month1 - month2;
-				} else if (month1 == month2) {
-					int day1 = now.get(Calendar.DAY_OF_MONTH);
-					int day2 = dob.get(Calendar.DAY_OF_MONTH);
-					if (day1 > day2) {
-						days = day1 - day2;
-					}
-				}
-			}
+			ageInYears = Years.yearsBetween(birthDate.toLocalDate(),currentTime.toLocalDate()).getYears();
+			ageInMonths = Months.monthsBetween(birthDate.toLocalDate(),currentTime.toLocalDate()).getMonths();
+			ageInDays = Days.daysBetween(birthDate.toLocalDate(),currentTime.toLocalDate()).getDays();
 		} catch (ParseException e) {
-			Log.e(TAG, "Error parsing date: ", e);
+			Log.e(TAG, "Error parsing date: " + dateOfBirth, e);
 			return ApplicationConstants.EMPTY_STRING;
 		}
 
-		if (years > 0) {
-			return String.valueOf(years);
-		} else if (months == 1) {
-			return months + " month";
-		} else if (months > 1) {
-			return months + " months";
-		} else if (days == 1) {
-			return days + " day";
+		if (ageInYears > 0) {
+			return String.valueOf(ageInYears);
+		} else if (ageInMonths == 1) {
+			return ageInMonths + " month";
+		} else if (ageInMonths > 1) {
+			return ageInMonths + " months";
+		} else if (ageInDays == 1) {
+			return ageInDays + " day";
 		} else
-			return days + " days";
+			return ageInDays + " days";
 	}
 
 	public static String calculateRelativeDate(Date pastDate) {
@@ -283,7 +273,7 @@ public final class DateUtils {
 
 		if (minimum) {
 			if (Math.round(durationInSeconds / 60) < 1) {
-				relative = durationInSeconds <= 1 ? "1 sec" : durationInSeconds + "secs";
+				relative = durationInSeconds <= 1 ? "1 sec" : durationInSeconds + " secs";
 			} else if (Math.round(durationInSeconds / SECONDS_IN_A_MINUTE) < 60) {
 				int minutes = Math.round(durationInSeconds / SECONDS_IN_A_MINUTE);
 				relative = (minutes == 1 ? "1 min" : minutes + " mins");
@@ -296,7 +286,7 @@ public final class DateUtils {
 			} else if (Math.round(durationInSeconds / SECONDS_IN_A_WEEK) < 4) {
 				int weeks = Math.round(durationInSeconds / SECONDS_IN_A_WEEK);
 				relative = (weeks == 1 ? "1 wk" : weeks + " wks");
-			} else if (Math.round(durationInSeconds / SECONDS_IN_A_MONTH) < 4) {
+			} else if (Math.round(durationInSeconds / SECONDS_IN_A_MONTH) < 12) {
 				int months = Math.round(durationInSeconds / SECONDS_IN_A_MONTH);
 				relative = (months == 1 ? "1 month" : months + " months");
 			} else {

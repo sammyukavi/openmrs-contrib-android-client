@@ -59,15 +59,13 @@ import org.openmrs.mobile.utilities.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormAnswers.ANSWER_NA;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormAnswers.ANSWER_NEGATIVE;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormAnswers.ANSWER_NO;
-import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormAnswers.ANSWER_PLANNED;
+import static org.openmrs.mobile.utilities.ApplicationConstants.ObservationLocators.SCHEDULED_IN_CLINIC;
+import static org.openmrs.mobile.utilities.ApplicationConstants.ObservationLocators.NOT_SCHEDULED_IN_CLINIC;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormAnswers.ANSWER_POSITIVE;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormAnswers.ANSWER_UNKNOWN;
-import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormAnswers.ANSWER_UNPLANNED;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormAnswers.ANSWER_YES;
-import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_ANSWER_NA;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_ANSWER_NEGATIVE;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_ANSWER_NO;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_ANSWER_PLANNED;
@@ -603,20 +601,23 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 			case R.id.surgery_na:
 				surgeryObservation =
 						setObservationFields(surgeryObservation, CONCEPT_SURGERY_HOSPITAL_STAY,
-								CONCEPT_ANSWER_NA,
-								ApplicationConstants.ObservationLocators.SURGERY_DURING_HOSPITAL_STAY + "NA");
+								CONCEPT_ANSWER_NO,
+								ApplicationConstants.ObservationLocators.SURGERY_DURING_HOSPITAL_STAY +
+										ApplicationConstants.ObservationLocators.NO);
 				break;
 
 			case R.id.surgery_planned:
 				surgeryObservation =
 						setObservationFields(surgeryObservation, CONCEPT_SURGERY_HOSPITAL_STAY, CONCEPT_ANSWER_PLANNED,
-								ApplicationConstants.ObservationLocators.SURGERY_DURING_HOSPITAL_STAY + "Planned");
+								ApplicationConstants.ObservationLocators.SURGERY_DURING_HOSPITAL_STAY +
+										ApplicationConstants.ObservationLocators.SCHEDULED_IN_CLINIC);
 				break;
 
 			case R.id.surgery_unplanned:
 				surgeryObservation =
 						setObservationFields(surgeryObservation, CONCEPT_SURGERY_HOSPITAL_STAY, CONCEPT_ANSWER_UNPLANNED,
-								ApplicationConstants.ObservationLocators.SURGERY_DURING_HOSPITAL_STAY + "Unplanned");
+								ApplicationConstants.ObservationLocators.SURGERY_DURING_HOSPITAL_STAY +
+										ApplicationConstants.ObservationLocators.NOT_SCHEDULED_IN_CLINIC);
 				break;
 
 			case R.id.first_map_yes:
@@ -1034,21 +1035,20 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 
 					break;
 				case ApplicationConstants.ObservationLocators.SURGERY_DURING_HOSPITAL_STAY:
-					if (displayValue.equalsIgnoreCase(ANSWER_NA)) {
+					if (displayValue.equalsIgnoreCase(ANSWER_NO)) {
 						surgery_na.setChecked(true);
 						surgeryObservation = setObservationFields(observation, CONCEPT_SURGERY_HOSPITAL_STAY,
 								CONCEPT_ANSWER_NO);
 
-					} else if (displayValue.equalsIgnoreCase(ANSWER_PLANNED)) {
+					} else if (displayValue.equalsIgnoreCase(SCHEDULED_IN_CLINIC)) {
 						surgery_planned.setChecked(true);
 						surgeryObservation = setObservationFields(observation, CONCEPT_SURGERY_HOSPITAL_STAY,
 								CONCEPT_ANSWER_PLANNED);
 
-					} else if (displayValue.equalsIgnoreCase(ANSWER_UNPLANNED)) {
+					} else if (displayValue.equalsIgnoreCase(NOT_SCHEDULED_IN_CLINIC)) {
 						surgery_unplanned.setChecked(true);
 						surgeryObservation = setObservationFields(observation, CONCEPT_SURGERY_HOSPITAL_STAY,
 								CONCEPT_ANSWER_UNPLANNED);
-
 					}
 
 					break;

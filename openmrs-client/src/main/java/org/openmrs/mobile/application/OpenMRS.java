@@ -411,6 +411,7 @@ public class OpenMRS extends Application {
 		SharedPreferences.Editor editor = prefs.edit();
 		editor.remove(ApplicationConstants.UserKeys.USER_PERSON_NAME);
 		editor.remove(ApplicationConstants.UserKeys.USER_UUID);
+		syncManager.clearSyncHistory();
 	}
 
 	public OpenMRSLogger getOpenMRSLogger() {
@@ -419,14 +420,6 @@ public class OpenMRS extends Application {
 
 	public String getOpenMRSDir() {
 		return mExternalDirectoryPath + OPENMRS_DIR_PATH;
-	}
-
-	public boolean isRunningHoneycombVersionOrHigher() {
-		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
-	}
-
-	public boolean isRunningJellyBeanVersionOrHigher() {
-		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;
 	}
 
 	public boolean isRunningKitKatVersionOrHigher() {

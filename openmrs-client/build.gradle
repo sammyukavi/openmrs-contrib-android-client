@@ -16,8 +16,8 @@ buildscript {
 }
 
 // Constants for app version and version code
-def app_version = "1.0.2"	// The version number displayed to users
-def app_version_code = 3	// The internal version number, higher is more recent
+def app_version = "1.0.0"	// The version number displayed to users
+def app_version_code = 1	// The internal version number, higher is more recent
 
 def keystoreFile = "bandahealth.jks"
 

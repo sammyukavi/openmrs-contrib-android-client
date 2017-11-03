@@ -12,10 +12,6 @@ buildscript {
 	}
 }
 
-// Constants for app version and version code
-def app_version = "1.1.0"	// The version number displayed to users
-def app_version_code = 4	// The internal version number, higher is more recent
-
 def keystoreFile = "bandahealth.jks"
 
 // Get the keystore.properties file location, first looking for the environment property
@@ -42,12 +38,10 @@ android {
 	buildToolsVersion '26.0.2'
 	useLibrary 'org.apache.http.legacy'
 
-	def applicationVersion = app_version;
-
 	defaultConfig {
 		applicationId "org.openmrs.bandahealth.im"
-		versionName applicationVersion
-		versionCode app_version_code
+		versionName version
+		versionCode buildVersionCode()
 
 		testApplicationId "org.openmrs.mobile.test"
 		testInstrumentationRunner "org.openmrs.mobile.test.OpenMRSInstrumentationTestRunner"

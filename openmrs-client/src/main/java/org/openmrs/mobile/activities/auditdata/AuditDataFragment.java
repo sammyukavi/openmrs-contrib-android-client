@@ -137,7 +137,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 	private String inpatientServiceTypeSelectedUuid, displayInpatientServiceType;
 	private Boolean displayExtraFormFields, displayCd4CountField, displayHbA1CField, displayHduCoManageField;
 	private TextInputLayout hba1cTextLayout, cd4TextInputLayout;
-	private TextView errorFirstGcsScore;
+	private TextView errorFirstGcsScore, errorHba1c;
 
 	private ConceptAnswer initialInpatientTypeServiceSelection;
 
@@ -230,6 +230,21 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 			}
 		});
 
+		hBa1c.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence charSequence, int startPos, int count, int after) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+			}
+
+			@Override
+			public void afterTextChanged(Editable editable) {
+				validateHba1c();
+			}
+		});
+
 		submitForm.setOnClickListener(v -> {
 			if (hasValidGcsScore()) {
 				performDataSend();
@@ -298,6 +313,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		cd4TextInputLayout = (TextInputLayout)fragmentView.findViewById(R.id.cd4TextInputLayout);
 		hba1cTextLayout = (TextInputLayout)fragmentView.findViewById(R.id.hba1cTextLayout);
 		errorFirstGcsScore = (TextView)fragmentView.findViewById(R.id.invalidGscError);
+		errorHba1c = (TextView)fragmentView.findViewById(R.id.invalidHba1cError);
 		progressBar = (RelativeLayout)fragmentView.findViewById(R.id.auditDataRelativeView);
 		auditDataFormProgressBar = (RelativeLayout)fragmentView.findViewById(R.id.auditDataFormProgressBar);
 		auditDataFormScreen = (LinearLayout)fragmentView.findViewById(R.id.auditDataFormScreen);
@@ -1313,9 +1329,12 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		}
 
 		if (hBa1c.getText().length() > 0) {
-			hBa1cObservation = setObservationFields(hBa1cObservation, CONCEPT_HBA1C, hBa1c.getText().toString(),
-					ApplicationConstants.ObservationLocators.GLYCOSYLATED_HEMOGLOBIN + hBa1c.getText().toString());
-			observations.add(hBa1cObservation);
+			if (Float.valueOf(hBa1c.getText().toString()) > 3
+					&& Float.valueOf(hBa1c.getText().toString()) < 26) {
+				hBa1cObservation = setObservationFields(hBa1cObservation, CONCEPT_HBA1C, hBa1c.getText().toString(),
+						ApplicationConstants.ObservationLocators.GLYCOSYLATED_HEMOGLOBIN + hBa1c.getText().toString());
+				observations.add(hBa1cObservation);
+			}
 		}
 
 		if (inpatientServiceTypeObservation != null) {
@@ -1398,6 +1417,23 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 			errorFirstGcsScore.setText(getString(R.string.error_gcs_score,
 					ApplicationConstants.ValidationFieldValues.AUDIT_GCS_SCORE_MIN,
 					ApplicationConstants.ValidationFieldValues.AUDIT_GCS_SCORE_MAX));
+			return false;
+		}
+		return true;
+	}
+
+	private boolean validateHba1c() {
+		if (hBa1c.getText().toString().length() == 0) {
+			errorHba1c.setVisibility(View.GONE);
+		} else if (Float.parseFloat(hBa1c.getText().toString()) > 3 &&
+				Float.parseFloat(hBa1c.getText().toString()) < 26) {
+			errorHba1c.setVisibility(View.GONE);
+			return true;
+		} else {
+			errorHba1c.setVisibility(View.VISIBLE);
+			errorHba1c.setText(getString(R.string.error_hba1c,
+					ApplicationConstants.ValidationFieldValues.AUDIT_HBA1C_MIN,
+					ApplicationConstants.ValidationFieldValues.AUDIT_HBA1C_MAX));
 			return false;
 		}
 		return true;

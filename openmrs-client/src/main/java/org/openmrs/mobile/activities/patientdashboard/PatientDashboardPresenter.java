@@ -35,6 +35,7 @@ import org.openmrs.mobile.utilities.NetworkUtils;
 import org.openmrs.mobile.utilities.StringUtils;
 import org.openmrs.mobile.utilities.ToastUtil;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class PatientDashboardPresenter extends BasePresenter implements PatientDashboardContract.Presenter {
@@ -111,7 +112,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 			public void onCompleted(List<Visit> visits) {
 				setLoading(false);
 				patientDashboardView.patientContacts(patient);
-				patientDashboardView.patientVisits(visits);
+				patientDashboardView.patientVisits(sortVisits(visits));
 
 				if (!visits.isEmpty() && pagingInfo.getTotalRecordCount() != null) {
 					totalNumberResults = pagingInfo.getTotalRecordCount();
@@ -222,5 +223,18 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 		}
 
 		return tmpPage;
+	}
+
+	private LinkedList<Visit> sortVisits(List<Visit> visits) {
+		LinkedList<Visit> sortVisits = new LinkedList<>();
+		for(Visit visit : visits) {
+			if(visit.getStopDatetime() == null) {
+				sortVisits.add(0, visit);
+			} else {
+				sortVisits.add(visit);
+			}
+		}
+
+		return sortVisits;
 	}
 }

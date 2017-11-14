@@ -154,7 +154,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 					new DataService.GetCallback<User>() {
 						@Override
 						public void onCompleted(User entity) {
-							if(entity != null) {
+							if (entity != null) {
 								openMRS.setCurrentUserUuid(entity.getPerson().getUuid());
 								patientDashboardView.setProviderUuid(entity.getPerson().getUuid());
 							}
@@ -227,8 +227,8 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
 	private LinkedList<Visit> sortVisits(List<Visit> visits) {
 		LinkedList<Visit> sortVisits = new LinkedList<>();
-		for(Visit visit : visits) {
-			if(visit.getStopDatetime() == null) {
+		for (Visit visit : visits) {
+			if (visit.getStopDatetime() == null) {
 				sortVisits.add(0, visit);
 			} else {
 				sortVisits.add(visit);

@@ -325,6 +325,10 @@ public abstract class ApplicationConstants {
 
 		public static int AUDIT_GCS_SCORE_MIN = 3;
 		public static int AUDIT_GCS_SCORE_MAX = 15;
+
+		public static int AUDIT_HBA1C_MIN = 4;
+		public static int AUDIT_HBA1C_MAX = 25;
+
 	}
 
 	public static class CacheKays {

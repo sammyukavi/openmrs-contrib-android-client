@@ -12,17 +12,11 @@ buildscript {
 	}
 }
 
-// Constants for app version and version code
-def app_version = "1.1.0"	// The version number displayed to users
-def app_version_code = 4	// The internal version number, higher is more recent
-
-def keystoreFile = "bandahealth.jks"
-
 // Get the keystore.properties file location, first looking for the environment property
-def keystorePropertiesFilePath = System.getenv('BANDA_IM_KEYSTORE_FILE')
+def keystorePropertiesFilePath = System.getenv(BANDA_IM_KEYSTORE_FILE)
 if (keystorePropertiesFilePath == null || keystorePropertiesFilePath.toString().length() == 0) {
 	// If the environment property is not defined then assume that the file in the root project folder has been configured
-	keystorePropertiesFilePath = rootDir.toString() + "/keystore.properties"
+	keystorePropertiesFilePath = rootDir.toString() + "/" + KEYSTORE_PROPERTIES
 }
 
 // Create a variable called keystorePropertiesFile, and initialize it to the keystore.properties file
@@ -42,15 +36,13 @@ android {
 	buildToolsVersion '26.0.2'
 	useLibrary 'org.apache.http.legacy'
 
-	def applicationVersion = app_version;
-
 	defaultConfig {
-		applicationId "org.openmrs.bandahealth.im"
-		versionName applicationVersion
-		versionCode app_version_code
+		applicationId APPLICATION_ID
+		versionName VERSION
+		versionCode buildVersionCode()
 
-		testApplicationId "org.openmrs.mobile.test"
-		testInstrumentationRunner "org.openmrs.mobile.test.OpenMRSInstrumentationTestRunner"
+		testApplicationId TEST_APPLICATION_ID
+		testInstrumentationRunner TEST_INSTRUMENTATION_RUNNER
 
 		minSdkVersion 16
 		targetSdkVersion 24
@@ -59,10 +51,10 @@ android {
 
 	signingConfigs {
 		release {
-			keyAlias keystoreProperties['keyAlias']
-			keyPassword keystoreProperties['keyPassword']
-			storeFile rootProject.file(keystoreFile)
-			storePassword keystoreProperties['storePassword']
+			keyAlias keystoreProperties[KEY_ALIAS]
+			keyPassword keystoreProperties[KEY_PASSWORD]
+			storeFile rootProject.file(KEYSTORE_FILE)
+			storePassword keystoreProperties[STORE_PASSWORD]
 		}
 	}
 

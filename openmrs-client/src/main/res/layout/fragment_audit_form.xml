@@ -790,7 +790,50 @@
 									android:layout_gravity="start"
 									android:checked="false" />
 						</RadioGroup>
-						
+
+						<TextView
+								android:text="@string/intubation_at_first_gcs"
+								android:layout_width="match_parent"
+								android:layout_height="wrap_content"
+								android:layout_marginLeft="10dp"
+								android:layout_marginRight="10dp"
+								android:layout_marginStart="10dp"
+								android:layout_marginEnd="10dp"
+								android:layout_marginBottom="5dp" />
+
+						<RadioGroup
+								android:layout_width="match_parent"
+								android:layout_height="wrap_content"
+								android:layout_marginStart="10dp"
+								android:layout_marginEnd="10dp"
+								android:layout_marginLeft="10dp"
+								android:layout_marginRight="10dp"
+								android:layout_marginBottom="10dp"
+								>
+							<RadioButton
+									android:layout_width="wrap_content"
+									android:layout_height="wrap_content"
+									android:text="@string/intubation_yes"
+									android:id="@+id/intubation_done"
+									android:layout_gravity="start"
+									android:checked="false"/>
+							<RadioButton
+									android:layout_width="wrap_content"
+									android:layout_height="wrap_content"
+									android:text="@string/intubation_no"
+									android:id="@+id/intubation_notdone"
+									android:layout_gravity="start"
+									android:checked="false"/>
+
+							<RadioButton
+									android:layout_width="wrap_content"
+									android:layout_height="wrap_content"
+									android:text="@string/intubation_unknown"
+									android:id="@+id/intubation_notknown"
+									android:layout_gravity="start"
+									android:checked="false"/>
+						</RadioGroup>
+
 						<TextView
 								android:text="@string/any_prior_sedetion"
 								android:layout_width="match_parent"

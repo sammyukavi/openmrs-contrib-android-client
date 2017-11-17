@@ -115,7 +115,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 			hBa1cObservation, inpatientServiceTypeObservation, auditCompleteObservation, mechanicalVentilationObservation,
 			vaospressorsObservation, confirmedInfectionObservation, firstSbpObservation, firstMapObservation,
 			priorSedetionObservation, surgeryObservation, firstIcuHeartRateObservation, firstGcsScoreObservation,
-			patientDiabeticObservation, wardStayAdmissionObservation;
+			patientDiabeticObservation, wardStayAdmissionObservation, intubationObservation;
 	private RadioButton deathInHospitalYes, deathInHospitalNo, palliativeConsultYes, palliativeConsultNo,
 			palliativeConsultUknown, preopRiskAssessmentYes, preopRiskAssessmentNo, preopRiskAssessmentUknown, icuStayYes,
 			icuStayNo, icuStayUnknown, hduStayYes, hduStayNo, hduStayUnknown, hduComgmtYes, hduComgmtNo, hduComgmtUnknown,
@@ -125,7 +125,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 			first_sbp_unknown, any_prior_sedetion_yes, any_prior_sedetion_no, any_prior_sedetion_unknown, surgery_na,
 			surgery_planned, surgery_unplanned, first_map_yes, first_map_no, first_map_unknown, ward_stay_admission_yes,
 			ward_stay_admission_no, ward_stay_admission_unknown, patient_diabetic_yes, patient_diabetic_no,
-			patient_diabetic_unknown;
+			patient_diabetic_unknown, intubated_yes, intubated_no, intubated_unknown;
 	private CheckBox auditComplete;
 
 	private Spinner inpatientServiceType;
@@ -168,7 +168,8 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 				first_sbp_yes, first_sbp_no, first_sbp_unknown, any_prior_sedetion_yes, any_prior_sedetion_no,
 				any_prior_sedetion_unknown, surgery_na, surgery_planned, surgery_unplanned, first_map_yes, first_map_no,
 				first_map_unknown, ward_stay_admission_yes, ward_stay_admission_no, ward_stay_admission_unknown,
-				patient_diabetic_yes, patient_diabetic_no, patient_diabetic_unknown);
+				patient_diabetic_yes, patient_diabetic_no, patient_diabetic_unknown, intubated_yes, intubated_no,
+				intubated_unknown);
 
 		initCheckboxListeners(auditComplete);
 
@@ -318,6 +319,9 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		auditDataFormProgressBar = (RelativeLayout)fragmentView.findViewById(R.id.auditDataFormProgressBar);
 		auditDataFormScreen = (LinearLayout)fragmentView.findViewById(R.id.auditDataFormScreen);
 		auditScrollView = (ScrollView)fragmentView.findViewById(R.id.auditDataFormScrollView);
+		intubated_yes = (RadioButton) fragmentView.findViewById(R.id.intubation_done);
+		intubated_no = (RadioButton) fragmentView.findViewById(R.id.intubation_notdone);
+		intubated_unknown = (RadioButton) fragmentView.findViewById(R.id.intubation_notknown);
 	}
 
 	private void initObservations() {
@@ -327,7 +331,8 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 								preopRiskAssessmentObservation = icuStayObservation = hduStayObservation =
 										hduComgmtObservation = hivPositiveObservation =
 												auditCompleteObservation = hBa1cObservation = cd4Observation =
-														patientDiabeticObservation = wardStayAdmissionObservation = null;
+														patientDiabeticObservation = wardStayAdmissionObservation =
+																intubationObservation = null;
 
 	}
 

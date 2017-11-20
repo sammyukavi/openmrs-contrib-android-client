@@ -17,5 +17,7 @@ public interface PatientHeaderContract {
 
 	interface Presenter extends BasePresenterContract {
 		void getPatient();
+
+		void notifyVisitFetchComplete();
 	}
 }

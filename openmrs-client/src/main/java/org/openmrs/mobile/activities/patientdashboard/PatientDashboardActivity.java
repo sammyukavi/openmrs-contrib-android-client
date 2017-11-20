@@ -99,4 +99,8 @@ public class PatientDashboardActivity extends ACBaseActivity {
 		super.onResume();
 	}
 
+	public void notifyVisitFetchComplete() {
+		headerFragment.notifyVisitFetchComplete();
+	}
+
 }

@@ -85,4 +85,8 @@ public class PatientHeaderFragment extends ACBaseFragment<PatientHeaderContract.
 
 	}
 
+	public void notifyVisitFetchComplete() {
+		mPresenter.notifyVisitFetchComplete();
+	}
+
 }

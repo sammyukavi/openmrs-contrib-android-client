@@ -21,6 +21,7 @@ public class PatientHeaderPresenter extends BasePresenter implements PatientHead
 	private Timer syncAgeUpdateTimer;
 	private TimerTask syncAgeUpdateTimerTask;
 	private Patient currentPatient;
+	private Date currentPatientLastSyncTime;
 
 	// one minute
 	private final int TIMER_DELAY_IN_MS = 60000;
@@ -41,10 +42,12 @@ public class PatientHeaderPresenter extends BasePresenter implements PatientHead
 			@Override
 			public void onCompleted(Patient patient) {
 				currentPatient = patient;
+				currentPatientLastSyncTime = null;
 				if (patient != null) {
 					patientHeaderView.holdHeader(false);
 					patientHeaderView.updatePatientHeader(patient);
-					updatePatientSyncAge(patient);
+					currentPatientLastSyncTime = patientDataService.getLastSyncTime(currentPatient.getUuid());
+					updatePatientSyncAge();
 				}
 			}
 
@@ -56,13 +59,18 @@ public class PatientHeaderPresenter extends BasePresenter implements PatientHead
 		});
 	}
 
-	private void updatePatientSyncAge(Patient patient) {
+	@Override
+	public void notifyVisitFetchComplete() {
+		if (currentPatient != null && currentPatientLastSyncTime == null) {
+			currentPatientLastSyncTime = patientDataService.getLastSyncTime(currentPatient.getUuid());
+			updatePatientSyncAge();
+		}
+	}
+
+	private void updatePatientSyncAge() {
 		String lastSyncCalendarTimeDifference = ApplicationConstants.EMPTY_STRING;
-		if (patient != null) {
-			Date lastPatientSyncTime = patientDataService.getLastSyncTime(patient.getUuid());
-			if (lastPatientSyncTime != null) {
-				lastSyncCalendarTimeDifference = DateUtils.calculateTimeDifference(lastPatientSyncTime, false);
-			}
+		if (currentPatientLastSyncTime != null) {
+			lastSyncCalendarTimeDifference = DateUtils.calculateTimeDifference(currentPatientLastSyncTime, false);
 		}
 		final String lastSyncCalendarTimeDifferenceToUse = lastSyncCalendarTimeDifference.toLowerCase();
 		patientHeaderView.runOnUIThread(() -> patientHeaderView.updatePatientSyncAge(lastSyncCalendarTimeDifferenceToUse));
@@ -91,7 +99,7 @@ public class PatientHeaderPresenter extends BasePresenter implements PatientHead
 
 			@Override
 			public void run() {
-				updatePatientSyncAge(currentPatient);
+				updatePatientSyncAge();
 			}
 		};
 		syncAgeUpdateTimer.schedule(syncAgeUpdateTimerTask, TIMER_DELAY_IN_MS, TIMER_DELAY_IN_MS);

@@ -230,6 +230,8 @@ public class PatientDashboardFragment extends BaseDiagnosisFragment<PatientDashb
 				new PatientVisitsRecyclerAdapter(patientVisitsRecyclerView, visits, getActivity(), this);
 		patientVisitsRecyclerAdapter.setUuids(uuidsHashmap);
 		patientVisitsRecyclerView.setAdapter(patientVisitsRecyclerAdapter);
+
+		((PatientDashboardActivity)getActivity()).notifyVisitFetchComplete();
 	}
 
 	@Override

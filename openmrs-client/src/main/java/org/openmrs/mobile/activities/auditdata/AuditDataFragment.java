@@ -61,6 +61,7 @@ import java.util.List;
 
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormAnswers.ANSWER_NEGATIVE;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormAnswers.ANSWER_NO;
+import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_INTUBATION_AT_GCS;
 import static org.openmrs.mobile.utilities.ApplicationConstants.ObservationLocators.SCHEDULED_IN_CLINIC;
 import static org.openmrs.mobile.utilities.ApplicationConstants.ObservationLocators.NOT_SCHEDULED_IN_CLINIC;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormAnswers.ANSWER_POSITIVE;
@@ -711,6 +712,22 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 				showAnimateView(false, hba1cTextLayout);
 				setObservationVoided(hBa1cObservation);
 				break;
+
+			case R.id.intubation_done:
+				intubationObservation = setObservationFields(intubationObservation,CONCEPT_INTUBATION_AT_GCS,CONCEPT_ANSWER_YES,
+						ApplicationConstants.ObservationLocators.INTUBATION_ON_FIRST_GCS +
+								ApplicationConstants.ObservationLocators.YES);
+				break;
+			case R.id.intubation_notdone:
+				intubationObservation = setObservationFields(intubationObservation,CONCEPT_INTUBATION_AT_GCS,CONCEPT_ANSWER_NO,
+						ApplicationConstants.ObservationLocators.INTUBATION_ON_FIRST_GCS +
+								ApplicationConstants.ObservationLocators.NO);
+				break;
+			case R.id.intubation_notknown:
+				intubationObservation = setObservationFields(intubationObservation,CONCEPT_INTUBATION_AT_GCS,CONCEPT_ANSWER_UNKNOWN,
+						ApplicationConstants.ObservationLocators.INTUBATION_ON_FIRST_GCS +
+								ApplicationConstants.ObservationLocators.UNKNOWN);
+				break;
 			default:
 				break;
 		}
@@ -1200,6 +1217,20 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 
 					}
 
+				case ApplicationConstants.ObservationLocators.INTUBATION_ON_FIRST_GCS:
+					if(displayValue.equalsIgnoreCase(ANSWER_YES)) {
+						intubated_yes.setChecked(true);
+						intubationObservation = setObservationFields(observation, CONCEPT_INTUBATION_AT_GCS,
+								CONCEPT_ANSWER_YES);
+					} else if (displayValue.equalsIgnoreCase(ANSWER_NO)) {
+						intubated_yes.setChecked(false);
+						intubationObservation = setObservationFields(observation, CONCEPT_INTUBATION_AT_GCS,
+								CONCEPT_ANSWER_NO);
+					} else {
+						intubated_yes.setChecked(false);
+						intubationObservation = setObservationFields(observation, CONCEPT_INTUBATION_AT_GCS,
+								CONCEPT_ANSWER_UNKNOWN);
+					}
 					break;
 
 				default:
@@ -1325,6 +1356,10 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 						ApplicationConstants.ObservationLocators.FIRST_GCS_SCORE + firstGcsScore.getText().toString());
 				observations.add(firstGcsScoreObservation);
 			}
+		}
+
+		if (intubationObservation != null ){
+			observations.add(intubationObservation);
 		}
 
 		if (cd4.getText().length() > 0) {

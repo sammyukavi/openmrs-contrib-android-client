@@ -154,6 +154,7 @@ public abstract class ApplicationConstants {
 				+ "42ed45fd-f3f6-44b6-bfc2-8bde1bb41e00";
 		public static final String SCHEDULED_IN_CLINIC = "Yes - scheduled in clinic";
 		public static final String NOT_SCHEDULED_IN_CLINIC = "Yes - not scheduled in clinic";
+		public static final String INTUBATION_ON_FIRST_GCS = "Intubated at time of 1st GCS";
 	}
 
 	public abstract static class DiagnosisStrings {
@@ -277,6 +278,7 @@ public abstract class ApplicationConstants {
 		public static final String CONCEPT_SEDETION_PRIOR_FIRST_GCS_SCORE_ICU = "7cccf308-edca-4c3e-afde-e7a3f1155ec6";
 		public static final String CONCEPT_PATIENT_DIABETIC = "a424ed50-5f94-4296-a91c-73ebbc1ccca1";
 		public static final String CONCEPT_WARD_STAY_DURING_ADMISSION = "59073230-e0d9-4cbc-bebc-4bf91a42f3bb";
+		public static final String CONCEPT_INTUBATION_AT_GCS = "8b6e4154-006b-4991-ab18-96c1c5357bf3";
 	}
 
 	public abstract static class VITALSFormConcepts {

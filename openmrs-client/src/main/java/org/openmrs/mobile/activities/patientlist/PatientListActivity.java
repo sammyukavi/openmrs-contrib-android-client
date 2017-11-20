@@ -66,6 +66,7 @@ public class PatientListActivity extends ACBaseActivity {
 			SyncComponent syncComponent = DaggerSyncComponent.builder().syncModule(new SyncModule(openMRS)).build();
 			pullSubscriptionDbService = syncComponent.pullSubscriptionDbService();
 			syncManager = openMRS.getSyncManager();
+			syncManager.requestInitialSync();
 		}
 	}
 

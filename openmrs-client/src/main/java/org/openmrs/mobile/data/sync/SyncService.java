@@ -4,11 +4,12 @@ import android.util.Log;
 
 import org.greenrobot.eventbus.EventBus;
 import org.joda.time.DateTime;
-import org.joda.time.Period;
+import org.joda.time.Duration;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.DataOperationException;
 import org.openmrs.mobile.data.db.impl.PullSubscriptionDbService;
 import org.openmrs.mobile.data.db.impl.SyncLogDbService;
+import org.openmrs.mobile.data.sync.impl.PatientListContextSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.PatientTrimProvider;
 import org.openmrs.mobile.event.SyncEvent;
 import org.openmrs.mobile.event.SyncPullEvent;
@@ -68,6 +69,23 @@ public class SyncService {
 
 			// Trim patient data that is not subscribed
 			trim();
+		}
+	}
+
+	public void clearSyncHistory() {
+		// Synchronize access so that only one thread is resetting at a time
+		synchronized (SYNC_LOCK) {
+			resetPatientListSyncHistory();
+		}
+	}
+
+	private void resetPatientListSyncHistory() {
+		// Get subscriptions
+		List<PullSubscription> patientListSubscriptions =
+				subscriptionDbService.getBySubscriptionClass(PatientListContextSubscriptionProvider.class.getSimpleName());
+		for (PullSubscription patientListSubscription : patientListSubscriptions) {
+			patientListSubscription.setLastSync(null);
+			subscriptionDbService.save(patientListSubscription);
 		}
 	}
 
@@ -147,10 +165,10 @@ public class SyncService {
 			eventBus.post(new SyncPullEvent(ApplicationConstants.EventMessages.Sync.Pull.SUBSCRIPTION_REMOTE_PULL_STARTING,
 					sub.getSubscriptionClass(), null));
 			// Check if subscription should be processed, given the minimum interval
-			Integer seconds = null;
+			Long seconds = null;
 			if (sub.getLastSync() != null && sub.getMinimumInterval() != null) {
-				Period p = new Period(new DateTime(sub.getLastSync()), DateTime.now());
-				seconds = p.getSeconds();
+				Duration duration = new Duration(new DateTime(sub.getLastSync()), DateTime.now());
+				seconds = duration.getStandardSeconds();
 			}
 
 			if (seconds == null || sub.getMinimumInterval() == null || seconds > sub.getMinimumInterval()) {
@@ -210,10 +228,10 @@ public class SyncService {
 
 		// Get the number of seconds since the trim was last executed
 		Date lastTrimDate = openmrs.getLastTrimDate();
-		Integer seconds = null;
+		Long seconds = null;
 		if (lastTrimDate != null) {
-			Period p = new Period(new DateTime(lastTrimDate), DateTime.now());
-			seconds = p.getSeconds();
+			Duration duration = new Duration(new DateTime(lastTrimDate), DateTime.now());
+			seconds = duration.getStandardSeconds();
 		}
 
 		if (seconds == null || seconds > TRIM_INTERVAL) {

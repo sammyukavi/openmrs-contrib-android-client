@@ -4,12 +4,15 @@ import android.support.annotation.NonNull;
 
 import org.openmrs.mobile.data.BaseDataService;
 import org.openmrs.mobile.data.DataService;
+import org.openmrs.mobile.data.DatabaseHelper;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.RequestStrategy;
 import org.openmrs.mobile.data.db.impl.EncounterDbService;
 import org.openmrs.mobile.data.db.impl.ObsDbService;
 import org.openmrs.mobile.data.db.impl.VisitNoteDbService;
 import org.openmrs.mobile.data.rest.impl.VisitNoteRestServiceImpl;
+import org.openmrs.mobile.models.EncounterDiagnosis;
+import org.openmrs.mobile.models.EncounterDiagnosis_Table;
 import org.openmrs.mobile.models.SyncAction;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitNote;
@@ -21,20 +24,30 @@ public class VisitNoteDataService extends BaseDataService<VisitNote, VisitNoteDb
 
 	private ObsDbService obsDbService;
 	private EncounterDbService encounterDbService;
+	private DatabaseHelper databaseHelper;
 
 	@Inject
-	public VisitNoteDataService(ObsDbService obsDbService, EncounterDbService encounterDbService) {
+	public VisitNoteDataService(ObsDbService obsDbService, EncounterDbService encounterDbService,
+			DatabaseHelper databaseHelper) {
 		this.obsDbService = obsDbService;
 		this.encounterDbService = encounterDbService;
+		this.databaseHelper = databaseHelper;
 	}
 
 	public void save(VisitNote visitNote, @NonNull GetCallback<VisitNote> callback) {
 		executeSingleCallback(callback,
 				new QueryOptions.Builder().requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL).build(),
 				() -> {
+					// clean up encounter diagnoses. helpful if a diagnosis has been removed while offline
+					databaseHelper.diffDelete(EncounterDiagnosis.class,
+							EncounterDiagnosis_Table.visitNote_uuid.eq(visitNote.getUuid()),
+							visitNote.getEncounterDiagnoses());
+
 					visitNote.processRelationships();
 					VisitNote result = dbService.save(visitNote);
-					syncLogService.save(result, SyncAction.UPDATED);
+					if (networkUtils.isOnline() != true) {
+						syncLogService.save(result, SyncAction.UPDATED);
+					}
 					return result;
 				}, () -> restService.save(visitNote),
 				(e) -> {

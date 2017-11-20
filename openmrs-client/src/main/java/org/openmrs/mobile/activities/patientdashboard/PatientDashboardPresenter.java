@@ -31,12 +31,15 @@ import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.User;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
+import org.openmrs.mobile.utilities.NetworkUtils;
 import org.openmrs.mobile.utilities.StringUtils;
 import org.openmrs.mobile.utilities.ToastUtil;
 
 import java.util.List;
 
 public class PatientDashboardPresenter extends BasePresenter implements PatientDashboardContract.Presenter {
+
+	private NetworkUtils networkUtils;
 
 	private PatientDashboardContract.View patientDashboardView;
 	private PatientDataService patientDataService;
@@ -57,6 +60,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 		this.visitDataService = dataAccess().visit();
 		this.userDataService = dataAccess().user();
 		this.locationDataService = dataAccess().location();
+		this.networkUtils = openMRS.getNetworkUtils();
 	}
 
 	@Override
@@ -71,6 +75,11 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 		patientDataService.getByUuid(uuid, QueryOptions.FULL_REP, new DataService.GetCallback<Patient>() {
 			@Override
 			public void onCompleted(Patient patient) {
+				if (patient == null && !networkUtils.isOnline()) {
+					patientDashboardView.alertOfflineAndPatientNotFound();
+					patientDashboardView.navigateBack();
+					return;
+				}
 				setPatient(patient);
 				fetchVisits(patient, startIndex);
 			}
@@ -119,7 +128,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 		};
 		QueryOptions options = new QueryOptions.Builder()
 				.includeInactive(true)
-				.customRepresentation(RestConstants.Representations.FULL)
+				.customRepresentation(RestConstants.Representations.VISIT)
 				.requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL)
 				.build();
 		visitDataService.getByPatient(patient, options, pagingInfo, fetchVisitsCallback);

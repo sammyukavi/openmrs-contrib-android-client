@@ -22,11 +22,9 @@ import org.openmrs.mobile.data.impl.VisitPhotoDataService;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Provider;
-import org.openmrs.mobile.models.User;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitPhoto;
 import org.openmrs.mobile.utilities.ApplicationConstants;
-import org.openmrs.mobile.utilities.DateUtils;
 import org.openmrs.mobile.utilities.ToastUtil;
 
 import java.util.Date;
@@ -56,26 +54,28 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 	private void getPhotoMetadata() {
 		visitPhotoView.showTabSpinner(true);
 		// get local photos
-		List<VisitPhoto> visitPhotos = visitPhotoDataService.getByVisit(visitUuid);
+		List<VisitPhoto> visitPhotos = visitPhotoDataService.getByVisit(new Visit(visitUuid));
 		// download all photo metadata
-		visitPhotoDataService.downloadPhotoMetadata(patientUuid, null, obsDataService,
+		visitPhotoDataService.downloadPhotoMetadata(visitUuid, null, obsDataService,
 				new DataService.GetCallback<List<Observation>>() {
 					@Override
 					public void onCompleted(List<Observation> observations) {
-						if (observations == null) {
+						if (observations == null || observations.isEmpty()) {
 							visitPhotoView.showTabSpinner(false);
 							visitPhotoView.updateVisitImageMetadata(visitPhotos);
 							return;
 						}
 
 						for (Observation observation : observations) {
+							if (searchLocalVisitPhoto(observation, visitPhotos)) {
+								visitPhotoView.updateVisitImageMetadata(visitPhotos);
+								continue;
+							}
+
 							VisitPhoto visitPhoto = new VisitPhoto();
 							visitPhoto.setFileCaption(observation.getComment());
-							visitPhoto.setDateCreated(new Date(DateUtils.convertTime(observation.getObsDatetime())));
+							visitPhoto.setDateCreated(observation.getDateCreated());
 
-							User creator = new User();
-							creator.setPerson(observation.getPerson());
-							visitPhoto.setCreator(creator);
 							visitPhoto.setCreator(observation.getCreator());
 
 							visitPhoto.setObservation(observation);
@@ -107,9 +107,22 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 
 					@Override
 					public void onError(Throwable t) {
+						ToastUtil.error("Error downloading visit images");
 						visitPhotoView.showTabSpinner(false);
 					}
 				});
+	}
+
+	private boolean searchLocalVisitPhoto(Observation obs, List<VisitPhoto> visitPhotos) {
+		for (VisitPhoto visitPhoto : visitPhotos) {
+			if (visitPhoto.getObservation() != null) {
+				if (visitPhoto.getObservation().getUuid().equalsIgnoreCase(obs.getUuid())) {
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 
 	@Override
@@ -136,6 +149,7 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 		visitPhoto.setVisit(visit);
 		visitPhoto.setProvider(provider);
 		visitPhoto.setPatient(patient);
+		visitPhoto.setDateCreated(new Date());
 	}
 
 	@Override
@@ -151,7 +165,7 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 			@Override
 			public void onError(Throwable t) {
 				visitPhotoView.showTabSpinner(false);
-				ToastUtil.error(t.getMessage());
+				ToastUtil.error("Unable to upload image");
 			}
 		});
 	}
@@ -180,9 +194,12 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 		visitPhotoView.showTabSpinner(true);
 		Observation obs = visitPhoto.getObservation();
 		obs.setVoided(true);
+
 		obsDataService.purge(obs, new DataService.VoidCallback() {
 			@Override
 			public void onCompleted() {
+				// delete locally saved instance if any (visitphoto not stored online)
+				visitPhotoDataService.purgeLocalInstance(visitPhoto);
 				visitPhotoView.showTabSpinner(false);
 				visitPhotoView.refresh();
 			}

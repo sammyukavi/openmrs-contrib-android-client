@@ -1,5 +1,6 @@
 package org.openmrs.mobile.models;
 
+import com.google.gson.annotations.Expose;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.Table;
@@ -27,6 +28,8 @@ public class VisitPhoto extends BaseOpenmrsEntity {
 	@Column
 	private Blob imageColumn;
 
+	@Expose
+	@ForeignKey(stubbedRelationship = true)
 	private Observation observation;
 
 	public Visit getVisit() {

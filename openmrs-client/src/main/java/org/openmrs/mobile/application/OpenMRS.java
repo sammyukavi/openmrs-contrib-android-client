@@ -168,9 +168,6 @@ public class OpenMRS extends Application {
 		SharedPreferences prefs = getPreferences();
 		String url = prefs.getString(ApplicationConstants.SERVER_URL, ApplicationConstants.DEFAULT_OPEN_MRS_URL);
 
-		if (!url.endsWith("/")) {
-			url += "/";
-		}
 		return url;
 	}
 
@@ -405,11 +402,16 @@ public class OpenMRS extends Application {
 		return infoMap;
 	}
 
+	public String getUserPersonName() {
+		return getPreferences().getString(ApplicationConstants.UserKeys.USER_PERSON_NAME, ApplicationConstants.EMPTY_STRING);
+	}
+
 	private void clearCurrentLoggedInUserInfo() {
 		SharedPreferences prefs = OpenMRS.getInstance().getPreferences();
 		SharedPreferences.Editor editor = prefs.edit();
 		editor.remove(ApplicationConstants.UserKeys.USER_PERSON_NAME);
 		editor.remove(ApplicationConstants.UserKeys.USER_UUID);
+		syncManager.clearSyncHistory();
 	}
 
 	public OpenMRSLogger getOpenMRSLogger() {
@@ -418,14 +420,6 @@ public class OpenMRS extends Application {
 
 	public String getOpenMRSDir() {
 		return mExternalDirectoryPath + OPENMRS_DIR_PATH;
-	}
-
-	public boolean isRunningHoneycombVersionOrHigher() {
-		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
-	}
-
-	public boolean isRunningJellyBeanVersionOrHigher() {
-		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;
 	}
 
 	public boolean isRunningKitKatVersionOrHigher() {

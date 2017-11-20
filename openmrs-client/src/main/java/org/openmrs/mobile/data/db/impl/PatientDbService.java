@@ -121,9 +121,5 @@ public class PatientDbService extends BaseDbService<Patient> implements DbServic
 						.where(PatientIdentifier_Table.identifier.eq(id))
 		);
 	}
-
-	public Date getLastSyncTime(String id) {
-		return null;
-	}
 }
 

@@ -23,7 +23,9 @@ public class PatientHeaderFragment extends ACBaseFragment<PatientHeaderContract.
 			patientSyncAge;
 	ImageView patientGender;
 	private View shadowLine;
-	private RelativeLayout hideHeader, headerScreen;
+	private RelativeLayout hideHeader, headerScreen, lastSyncInformation;
+
+	private boolean shouldShowLastSyncInformation = false;
 
 	public static PatientHeaderFragment newInstance() {
 		return new PatientHeaderFragment();
@@ -47,6 +49,10 @@ public class PatientHeaderFragment extends ACBaseFragment<PatientHeaderContract.
 
 		hideHeader = (RelativeLayout)fragmentView.findViewById(R.id.hideHeader);
 		headerScreen = (RelativeLayout)fragmentView.findViewById(R.id.headerScreen);
+		lastSyncInformation = (RelativeLayout)fragmentView.findViewById(R.id.patientSyncAgeLayout);
+		if (shouldShowLastSyncInformation) {
+			showLastSyncInformation();
+		}
 
 		shadowLine = fragmentView.findViewById(R.id.shadowLine);
 
@@ -87,6 +93,13 @@ public class PatientHeaderFragment extends ACBaseFragment<PatientHeaderContract.
 
 	public void notifyVisitFetchComplete() {
 		mPresenter.notifyVisitFetchComplete();
+	}
+
+	public void showLastSyncInformation() {
+		shouldShowLastSyncInformation = true;
+		if (lastSyncInformation != null) {
+			lastSyncInformation.setVisibility(View.VISIBLE);
+		}
 	}
 
 }

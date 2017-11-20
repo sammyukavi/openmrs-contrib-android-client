@@ -104,7 +104,8 @@
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:id="@+id/patientSyncAgeLayout"
-					android:layout_below="@+id/patientAgeLayout">
+					android:layout_below="@+id/patientAgeLayout"
+					android:visibility="gone">
 
 				<TextView
 						android:text="TextView"

@@ -62,6 +62,7 @@ public class PatientDashboardActivity extends ACBaseActivity {
 				}
 
 				new PatientHeaderPresenter(headerFragment, patientUuid);
+				headerFragment.showLastSyncInformation();
 			}
 		}
 	}

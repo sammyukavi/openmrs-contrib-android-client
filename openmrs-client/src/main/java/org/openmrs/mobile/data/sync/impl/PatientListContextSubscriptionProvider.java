@@ -3,6 +3,7 @@ package org.openmrs.mobile.data.sync.impl;
 import org.greenrobot.eventbus.EventBus;
 import org.openmrs.mobile.data.DatabaseHelper;
 import org.openmrs.mobile.data.QueryOptions;
+import org.openmrs.mobile.data.db.impl.EntitySyncInfoDbService;
 import org.openmrs.mobile.data.db.impl.PatientDbService;
 import org.openmrs.mobile.data.db.impl.PatientListContextDbService;
 import org.openmrs.mobile.data.db.impl.PatientListDbService;
@@ -20,6 +21,7 @@ import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -30,6 +32,7 @@ public class PatientListContextSubscriptionProvider extends BaseSubscriptionProv
 	private PatientListDbService patientListDbService;
 	private PatientDbService patientDbService;
 	private VisitDbService visitDbService;
+	private EntitySyncInfoDbService entitySyncInfoDbService;
 
 	private DatabaseHelper databaseHelper;
 
@@ -43,7 +46,8 @@ public class PatientListContextSubscriptionProvider extends BaseSubscriptionProv
 	public PatientListContextSubscriptionProvider(PatientListContextDbService dbService,
 			PatientListContextRestServiceImpl restService, PatientPullProvider patientPullProvider,
 			VisitPullProvider visitPullProvider, DatabaseHelper databaseHelper, EventBus eventBus,
-			PatientListDbService patientListDbService, PatientDbService patientDbService, VisitDbService visitDbService) {
+			PatientListDbService patientListDbService, PatientDbService patientDbService, VisitDbService visitDbService,
+			EntitySyncInfoDbService entitySyncInfoDbService) {
 
 		this.listPatientDbService = dbService;
 		this.listPatientRestService = restService;
@@ -51,6 +55,7 @@ public class PatientListContextSubscriptionProvider extends BaseSubscriptionProv
 		this.visitPullProvider = visitPullProvider;
 		this.databaseHelper = databaseHelper;
 		this.eventBus = eventBus;
+		this.entitySyncInfoDbService = entitySyncInfoDbService;
 
 		this.patientListDbService = patientListDbService;
 		this.patientDbService = patientDbService;
@@ -80,17 +85,17 @@ public class PatientListContextSubscriptionProvider extends BaseSubscriptionProv
 
 		// Create record info records
 		int size = patientListContexts == null ? 0 : patientListContexts.size();
-		List<RecordInfo> records = new ArrayList<>(size);
+		List<RecordInfo> patientRecordInfoList = new ArrayList<>(size);
 		if (patientListContexts != null && !patientListContexts.isEmpty()) {
 			for (PatientListContext patient : patientListContexts) {
 				RecordInfo record = RecordInfo.fromEntity(patient.getPatient());
-				records.add(record);
+				patientRecordInfoList.add(record);
 			}
 		}
 
 		// Delete context records that are no longer in patient list
 		databaseHelper.diffDelete(PatientListContext.class, PatientListContext_Table.patientList_uuid.eq(patientListUuid),
-				records);
+				patientRecordInfoList);
 
 		if (patientListContexts == null || patientListContexts.isEmpty()) {
 			return;
@@ -100,7 +105,7 @@ public class PatientListContextSubscriptionProvider extends BaseSubscriptionProv
 		eventBus.post(new SyncPullEvent(ApplicationConstants.EventMessages.Sync.Pull.ENTITY_REMOTE_PULL_STARTING,
 				syncEntityName, null));
 		// Pull patient information
-		patientListPullProvider.pull(subscription, records);
+		patientListPullProvider.pull(subscription, patientRecordInfoList);
 		eventBus.post(new SyncPullEvent(ApplicationConstants.EventMessages.Sync.Pull.ENTITY_REMOTE_PULL_COMPLETE,
 				syncEntityName, null));
 
@@ -108,12 +113,20 @@ public class PatientListContextSubscriptionProvider extends BaseSubscriptionProv
 		eventBus.post(new SyncPullEvent(ApplicationConstants.EventMessages.Sync.Pull.ENTITY_REMOTE_PULL_STARTING,
 				syncEntityName, null));
 		// Pull visit information
-		visitPullProvider.pull(subscription, records);
+		visitPullProvider.pull(subscription, patientRecordInfoList);
 		eventBus.post(new SyncPullEvent(ApplicationConstants.EventMessages.Sync.Pull.ENTITY_REMOTE_PULL_COMPLETE,
 				syncEntityName, null));
 
+		savePatientLastSyncInfo(patientRecordInfoList);
+
 		// Insert/update context records
 		loadPatientListContextRelationshipsAndSave(patientListContexts);
+	}
+
+	private void savePatientLastSyncInfo(List<RecordInfo> patientRecordInfoList) {
+		for (RecordInfo patientRecordInfo : patientRecordInfoList) {
+			entitySyncInfoDbService.savePatientLastSyncInfo(patientRecordInfo.getUuid(), new Date());
+		}
 	}
 
 	private void loadPatientListContextRelationshipsAndSave(List<PatientListContext> patientListContexts) {

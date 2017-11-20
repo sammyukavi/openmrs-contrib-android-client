@@ -3,8 +3,10 @@ package org.openmrs.mobile.data.impl;
 import org.openmrs.mobile.data.BaseDataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
+import org.openmrs.mobile.data.db.impl.EntitySyncInfoDbService;
 import org.openmrs.mobile.data.db.impl.PatientDbService;
 import org.openmrs.mobile.data.rest.impl.PatientRestServiceImpl;
+import org.openmrs.mobile.models.EntitySyncInfo;
 import org.openmrs.mobile.models.Patient;
 
 import java.util.Date;
@@ -13,8 +15,13 @@ import java.util.List;
 import javax.inject.Inject;
 
 public class PatientDataService extends BaseDataService<Patient, PatientDbService, PatientRestServiceImpl> {
+
+	private EntitySyncInfoDbService entitySyncInfoDbService;
+
 	@Inject
-	public PatientDataService() { }
+	public PatientDataService(EntitySyncInfoDbService entitySyncInfoDbService) {
+		this.entitySyncInfoDbService = entitySyncInfoDbService;
+	}
 
 	public void getByName(String name, QueryOptions options, PagingInfo pagingInfo, GetCallback<List<Patient>> callback) {
 		executeMultipleCallback(callback, options, pagingInfo,
@@ -48,6 +55,11 @@ public class PatientDataService extends BaseDataService<Patient, PatientDbServic
 	}
 
 	public Date getLastSyncTime(String id) {
-		return dbService.getLastSyncTime(id);
+		EntitySyncInfo patientSyncInfo = entitySyncInfoDbService.getPatientLastSyncInfo(id);
+		return patientSyncInfo == null ? null : patientSyncInfo.getLastSync();
+	}
+
+	public void saveLastSyncTime(String id, Date lastSync) {
+		entitySyncInfoDbService.savePatientLastSyncInfo(id, lastSync);
 	}
 }

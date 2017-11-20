@@ -36,19 +36,24 @@ public class PatientHeaderPresenter extends BasePresenter implements PatientHead
 
 	@Override
 	public void getPatient() {
+		// This method gets called each time the screen turns on, so we don't want to update the sync display if the data
+		// hasn't truly refreshed on the screen
+		final boolean isPatientNewMeaningLastSyncTimeShouldBeRefreshed = (currentPatient == null);
 		patientHeaderView.holdHeader(true);
 		patientDataService.getByUuid(patientUuid, QueryOptions.FULL_REP,
 				new DataService.GetCallback<Patient>() {
 			@Override
 			public void onCompleted(Patient patient) {
-				currentPatient = patient;
-				currentPatientLastSyncTime = null;
 				if (patient != null) {
+					currentPatient = patient;
 					patientHeaderView.holdHeader(false);
 					patientHeaderView.updatePatientHeader(patient);
-					currentPatientLastSyncTime = patientDataService.getLastSyncTime(currentPatient.getUuid());
-					updatePatientSyncAge();
+					if (isPatientNewMeaningLastSyncTimeShouldBeRefreshed) {
+						currentPatientLastSyncTime = patientDataService.getLastSyncTime(currentPatient.getUuid());
+					}
 				}
+
+				updatePatientSyncAge();
 			}
 
 			@Override

@@ -161,6 +161,11 @@ public class SyncService {
 		List<PullSubscription> subscriptions = subscriptionDbService.getAll(null, null);
 		eventBus.post(new SyncPullEvent(ApplicationConstants.EventMessages.Sync.Pull.TOTAL_SUBSCRIPTIONS,
 				ApplicationConstants.EventMessages.Sync.SyncType.SUBSCRIPTION, subscriptions.size()));
+
+		// Get the date before starting all of the pull processes so that some syncs don't get skipped because they all have
+		// different times syncing
+		Date lastSync = new Date();
+
 		for (PullSubscription sub : subscriptions) {
 			eventBus.post(new SyncPullEvent(ApplicationConstants.EventMessages.Sync.Pull.SUBSCRIPTION_REMOTE_PULL_STARTING,
 					sub.getSubscriptionClass(), null));
@@ -171,7 +176,7 @@ public class SyncService {
 				seconds = duration.getStandardSeconds();
 			}
 
-			if (seconds == null || sub.getMinimumInterval() == null || seconds > sub.getMinimumInterval()) {
+			if (seconds == null || sub.getMinimumInterval() == null || seconds >= sub.getMinimumInterval()) {
 				// Try to get the cached subscription provider
 				SubscriptionProvider provider = subscriptionProviders.get(sub.getSubscriptionClass());
 				if (provider == null) {
@@ -183,9 +188,6 @@ public class SyncService {
 				// If the provider was instantiated then execute it
 				if (provider != null) {
 					try {
-						// Get the date before starting the pull process so that server changes while the provider is
-						// processing don't get lost
-						Date lastSync = new Date();
 
 						provider.initialize(sub);
 						provider.pull(sub);

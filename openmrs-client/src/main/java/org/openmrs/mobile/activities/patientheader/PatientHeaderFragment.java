@@ -14,11 +14,13 @@ import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.utilities.DateUtils;
+import org.openmrs.mobile.utilities.StringUtils;
 
 public class PatientHeaderFragment extends ACBaseFragment<PatientHeaderContract.Presenter>
 		implements PatientHeaderContract.View {
 
-	private TextView patientDisplayName, patientAge, fileNumber, patientDob, patientAddress, patientPhonenumber;
+	private TextView patientDisplayName, patientAge, fileNumber, patientDob, patientAddress, patientPhonenumber,
+			patientSyncAge;
 	ImageView patientGender;
 	private View shadowLine;
 	private RelativeLayout hideHeader, headerScreen;
@@ -40,6 +42,8 @@ public class PatientHeaderFragment extends ACBaseFragment<PatientHeaderContract.
 
 		patientAddress = (TextView)fragmentView.findViewById(R.id.patientAddress);
 		patientPhonenumber = (TextView)fragmentView.findViewById(R.id.patientPhonenumber);
+
+		patientSyncAge = (TextView)fragmentView.findViewById(R.id.patientSyncAge);
 
 		hideHeader = (RelativeLayout)fragmentView.findViewById(R.id.hideHeader);
 		headerScreen = (RelativeLayout)fragmentView.findViewById(R.id.headerScreen);
@@ -65,6 +69,15 @@ public class PatientHeaderFragment extends ACBaseFragment<PatientHeaderContract.
 	public void holdHeader(boolean visibility) {
 		hideHeader.setVisibility(visibility ? View.VISIBLE : View.GONE);
 		headerScreen.setVisibility(visibility ? View.GONE : View.VISIBLE);
+	}
+
+	@Override
+	public void updatePatientSyncAge(String lastSyncCalendarTimeDifference) {
+		if (StringUtils.isNullOrEmpty(lastSyncCalendarTimeDifference)) {
+			patientSyncAge.setText(getString(R.string.patient_dashboard_sync_age_display_not_available));
+		} else {
+			patientSyncAge.setText(getString(R.string.patient_dashboard_sync_age_display, lastSyncCalendarTimeDifference));
+		}
 	}
 
 	public void updateShadowLine(boolean visible) {

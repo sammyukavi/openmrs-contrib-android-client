@@ -272,6 +272,8 @@
 
 	<!-- Patient Dashboard -->
 	<string name="no_network_and_no_patient_data_in_database">Patient not synced</string>
+	<string name="patient_dashboard_sync_age_display">Last synced %1$s</string>
+	<string name="patient_dashboard_sync_age_display_not_available">Sync information unavailable</string>
 	
 	<!--Activity Logs-->
 	<string name="title_activity_logs">Logs</string>

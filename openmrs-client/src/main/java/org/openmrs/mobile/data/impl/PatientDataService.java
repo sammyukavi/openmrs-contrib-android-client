@@ -7,6 +7,7 @@ import org.openmrs.mobile.data.db.impl.PatientDbService;
 import org.openmrs.mobile.data.rest.impl.PatientRestServiceImpl;
 import org.openmrs.mobile.models.Patient;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -44,5 +45,9 @@ public class PatientDataService extends BaseDataService<Patient, PatientDbServic
 				() -> dbService.getLastViewed(options, pagingInfo),
 				() -> restService.getLastViewed(lastViewed, options, pagingInfo)
 		);
+	}
+
+	public Date getLastSyncTime(String id) {
+		return dbService.getLastSyncTime(id);
 	}
 }

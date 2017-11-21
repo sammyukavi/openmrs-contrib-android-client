@@ -341,4 +341,8 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 			}
 		}
 	}
+
+	public void refreshData() {
+
+	}
 }

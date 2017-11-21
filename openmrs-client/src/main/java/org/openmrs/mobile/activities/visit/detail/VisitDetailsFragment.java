@@ -18,6 +18,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -91,6 +92,7 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 	private FlexboxLayout visitAttributesLayout;
 	private RelativeLayout visitNoteAuditInfo, visitVitalsAuditInfo, auditDataMetadata, visitDetailsProgressBar;
 	private ScrollView visitDetailsScrollView;
+	private SwipeRefreshLayout visitDetailsSwipeRefreshLayout;
 
 	private Map<String, Integer> auditDataSortOrder;
 
@@ -117,7 +119,7 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 		primaryDiagnosesRecycler.setLayoutManager(primaryDiagnosisLayoutManager);
 		secondaryDiagnosesRecycler.setLayoutManager(secondaryDiagnosisLayoutManager);
 
-		((VisitDetailsPresenter)mPresenter).getVisit();
+		((VisitDetailsPresenter)mPresenter).getVisit(false);
 		((VisitDetailsPresenter)mPresenter).getPatientUUID();
 		((VisitDetailsPresenter)mPresenter).getVisitUUID();
 		((VisitDetailsPresenter)mPresenter).getProviderUUID();
@@ -162,6 +164,7 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 		noVitals = (TextView)v.findViewById(R.id.noVitals);
 		visitVitalsTableLayout = (TableLayout)v.findViewById(R.id.visitVitalsTable);
 		auditInfoTableLayout = (TableLayout)v.findViewById(R.id.auditInfoTable);
+		visitDetailsSwipeRefreshLayout = (SwipeRefreshLayout)v.findViewById(R.id.visitDetailsTab);
 
 		// diagnoses components
 		searchDiagnosis = (AutoCompleteTextView)v.findViewById(R.id.searchDiagnosis);
@@ -192,7 +195,7 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 		auditDataMetadata = (RelativeLayout)v.findViewById(R.id.auditDataMetadata);
 
 		visitDetailsProgressBar = (RelativeLayout)v.findViewById(R.id.visitDetailsTabProgressBar);
-		visitDetailsScrollView = (ScrollView)v.findViewById(R.id.visitDetailsTab);
+		visitDetailsScrollView = (ScrollView)v.findViewById(R.id.visitDetailsTabScrollView);
 		setLoadingProgressBar((RelativeLayout)v.findViewById(R.id.loadingDiagnoses));
 		setDiagnosesContent((LinearLayout)v.findViewById(R.id.diagnosesContent));
 	}
@@ -204,6 +207,7 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 	@Override
 	public void setVisit(Visit visit) {
 		this.visit = visit;
+		visitDetailsSwipeRefreshLayout.setRefreshing(false);
 		if (visit != null) {
 			OpenMRS.getInstance().setVisitUuid(visit.getUuid());
 			setVisitDates(visit);
@@ -273,6 +277,13 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 			}
 		});
 
+		visitDetailsSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+
+			@Override
+			public void onRefresh() {
+				((VisitActivity) getActivity()).refreshData();
+			}
+		});
 	}
 
 	public void setVisitDates(Visit visit) {
@@ -642,5 +653,10 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 				}
 			}
 		}
+	}
+
+	public void refreshData() {
+		visitDetailsSwipeRefreshLayout.setRefreshing(true);
+		((VisitDetailsPresenter) mPresenter).getVisit(true);
 	}
 }

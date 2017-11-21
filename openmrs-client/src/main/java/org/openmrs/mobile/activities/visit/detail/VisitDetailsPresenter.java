@@ -21,6 +21,7 @@ import org.openmrs.mobile.activities.visit.VisitPresenterImpl;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
+import org.openmrs.mobile.data.RequestStrategy;
 import org.openmrs.mobile.data.impl.ConceptAnswerDataService;
 import org.openmrs.mobile.data.impl.ConceptDataService;
 import org.openmrs.mobile.data.impl.VisitAttributeTypeDataService;
@@ -71,8 +72,10 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 	}
 
 	@Override
-	public void getVisit() {
-		visitDetailsView.showTabSpinner(true);
+	public void getVisit(boolean forceRefresh) {
+		if (!forceRefresh) {
+			visitDetailsView.showTabSpinner(true);
+		}
 		DataService.GetCallback<Visit> getSingleCallback =
 				new DataService.GetCallback<Visit>() {
 					@Override
@@ -93,27 +96,12 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 										.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 					}
 				};
-		visitDataService.getByUuid(visitUUID, QueryOptions.FULL_REP, getSingleCallback);
-	}
-
-	@Override
-	public void getConcept(String name) {
-		DataService.GetCallback<List<Concept>> getCallback = new DataService.GetCallback<List<Concept>>() {
-
-			@Override
-			public void onCompleted(List<Concept> concepts) {
-				if (!concepts.isEmpty()) {
-					visitDetailsView.setConcept(concepts.get(0));
-				}
-			}
-
-			@Override
-			public void onError(Throwable t) {
-				Log.e("error", t.getLocalizedMessage());
-			}
-		};
-		conceptDataService.getByConceptName(name, QueryOptions.FULL_REP, getCallback);
-
+		QueryOptions options = QueryOptions.FULL_REP;
+		if (forceRefresh) {
+			options = new QueryOptions.Builder().requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL)
+					.customRepresentation(RestConstants.Representations.FULL).build();
+		}
+		visitDataService.getByUuid(visitUUID, options, getSingleCallback);
 	}
 
 	@Override

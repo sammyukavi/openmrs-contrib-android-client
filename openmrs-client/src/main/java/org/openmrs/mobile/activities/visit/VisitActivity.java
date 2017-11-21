@@ -14,6 +14,10 @@
 
 package org.openmrs.mobile.activities.visit;
 
+import static org.openmrs.mobile.activities.visit.VisitPageAdapter.VISIT_DETAILS_TAB_POS;
+import static org.openmrs.mobile.activities.visit.VisitPageAdapter.VISIT_IMAGES_TAB_POS;
+import static org.openmrs.mobile.activities.visit.VisitPageAdapter.VISIT_TASKS_TAB_POS;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -65,6 +69,8 @@ public class VisitActivity extends ACBaseActivity {
 	private FloatingActionButton captureVitalsButton, endVisitButton, editVisitButton, auditData;
 	private FloatingActionMenu visitDetailsMenu;
 
+	private VisitPageAdapter visitPageAdapter;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -86,8 +92,9 @@ public class VisitActivity extends ACBaseActivity {
 			visitUuid = extras.getString(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE);
 			providerUuid = OpenMRS.getInstance().getCurrentProviderUUID();
 			visitClosedDate = extras.getString(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE);
-			initViewPager(new VisitPageAdapter(getSupportFragmentManager(), patientUuid, visitUuid, providerUuid,
-					visitClosedDate));
+			visitPageAdapter = new VisitPageAdapter(getSupportFragmentManager(), patientUuid, visitUuid, providerUuid,
+					visitClosedDate);
+			initViewPager();
 
 			// patient header
 			if (patientHeaderPresenter == null) {
@@ -121,7 +128,7 @@ public class VisitActivity extends ACBaseActivity {
 		initializeListeners(endVisitButton, editVisitButton, captureVitalsButton, auditData);
 	}
 
-	private void initViewPager(VisitPageAdapter visitPageAdapter) {
+	private void initViewPager() {
 		MaterialTabHost tabHost = (MaterialTabHost)findViewById(R.id.visitDetailsTabHost);
 		tabHost.setType(MaterialTabHost.Type.FullScreenWidth);
 		for (int i = 0; i < visitPageAdapter.getCount(); i++) {
@@ -281,5 +288,17 @@ public class VisitActivity extends ACBaseActivity {
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		getApplicationContext().startActivity(intent);
+	}
+
+	public void refreshData() {
+		if (visitPageAdapter.getRegisteredFragment(VISIT_DETAILS_TAB_POS) != null) {
+			((VisitDetailsFragment) visitPageAdapter.getRegisteredFragment(VISIT_DETAILS_TAB_POS)).refreshData();
+		}
+		if (visitPageAdapter.getRegisteredFragment(VISIT_TASKS_TAB_POS) != null) {
+			((VisitTasksFragment) visitPageAdapter.getRegisteredFragment(VISIT_TASKS_TAB_POS)).refreshData();
+		}
+		if (visitPageAdapter.getRegisteredFragment(VISIT_IMAGES_TAB_POS) != null) {
+			((VisitPhotoFragment) visitPageAdapter.getRegisteredFragment(VISIT_IMAGES_TAB_POS)).refreshData();
+		}
 	}
 }

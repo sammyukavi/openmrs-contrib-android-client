@@ -122,12 +122,12 @@ public interface VisitContract {
 		VisitPhoto getVisitPhoto();
 
 		void deleteImage(VisitPhoto visitPhoto);
+
+		void refreshData();
 	}
 
 	interface VisitDetailsPresenter extends VisitDetailsMainPresenter {
-		void getVisit();
-
-		void getConcept(String name);
+		void getVisit(boolean forceRefresh);
 
 		void getPatientUUID();
 

@@ -17,6 +17,8 @@ package org.openmrs.mobile.activities.visit.visitphoto;
 import org.openmrs.mobile.activities.visit.VisitContract;
 import org.openmrs.mobile.activities.visit.VisitPresenterImpl;
 import org.openmrs.mobile.data.DataService;
+import org.openmrs.mobile.data.QueryOptions;
+import org.openmrs.mobile.data.RequestStrategy;
 import org.openmrs.mobile.data.impl.ObsDataService;
 import org.openmrs.mobile.data.impl.VisitPhotoDataService;
 import org.openmrs.mobile.models.Observation;
@@ -51,12 +53,19 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 		this.obsDataService = dataAccess().obs();
 	}
 
-	private void getPhotoMetadata() {
+	private void getPhotoMetadata(boolean forceRefresh) {
 		visitPhotoView.showTabSpinner(true);
 		// get local photos
 		List<VisitPhoto> visitPhotos = visitPhotoDataService.getByVisit(new Visit(visitUuid));
+
+		QueryOptions optionsTemp = null;
+		if (forceRefresh) {
+			optionsTemp = new QueryOptions.Builder().requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL).build();
+		}
+		final QueryOptions options = optionsTemp;
+
 		// download all photo metadata
-		visitPhotoDataService.downloadPhotoMetadata(visitUuid, null, obsDataService,
+		visitPhotoDataService.downloadPhotoMetadata(visitUuid, options, obsDataService,
 				new DataService.GetCallback<List<Observation>>() {
 					@Override
 					public void onCompleted(List<Observation> observations) {
@@ -82,6 +91,7 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 
 							// download photo bytes
 							visitPhotoDataService.downloadPhotoImage(visitPhoto, ApplicationConstants.THUMBNAIL_VIEW,
+									options,
 									new DataService.GetCallback<VisitPhoto>() {
 										@Override
 										public void onCompleted(VisitPhoto entity) {
@@ -128,7 +138,7 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 	@Override
 	public void subscribe() {
 		initVisitPhoto();
-		getPhotoMetadata();
+		getPhotoMetadata(false);
 	}
 
 	private void initVisitPhoto() {
@@ -209,5 +219,10 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 				visitPhotoView.showTabSpinner(false);
 			}
 		});
+	}
+
+	@Override
+	public void refreshData() {
+		getPhotoMetadata(true);
 	}
 }

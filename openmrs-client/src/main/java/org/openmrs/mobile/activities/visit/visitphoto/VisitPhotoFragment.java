@@ -321,4 +321,8 @@ public class VisitPhotoFragment extends VisitFragment implements VisitContract.V
 			}
 		}
 	}
+
+	public void refreshData() {
+
+	}
 }

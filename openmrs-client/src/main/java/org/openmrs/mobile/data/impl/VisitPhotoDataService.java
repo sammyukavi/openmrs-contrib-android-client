@@ -53,8 +53,9 @@ public class VisitPhotoDataService
 		obsDataService.getVisitPhotoObservations(visitUuid, options, callback);
 	}
 
-	public void downloadPhotoImage(VisitPhoto photo, String view, @NonNull GetCallback<VisitPhoto> callback) {
-		executeSingleCallback(callback, null,
+	public void downloadPhotoImage(VisitPhoto photo, String view, QueryOptions options,
+			@NonNull GetCallback<VisitPhoto> callback) {
+		executeSingleCallback(callback, options,
 				() -> dbService.getPhotoByObservation(photo.getObservation().getUuid()),
 				() -> restService.downloadPhoto(photo.getObservation().getUuid(), view),
 				(ResponseBody body) -> {

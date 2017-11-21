@@ -237,6 +237,9 @@ public class PatientDashboardFragment extends BaseDiagnosisFragment<PatientDashb
 		uuidsHashmap.put(PATIENT_UUID_BUNDLE, patient == null ? "" : patient.getUuid());
 		uuidsHashmap.put(LOCATION_UUID_BUNDLE, location == null ? "" : location.getUuid());
 
+		if (patientVisitsRecyclerAdapter != null) {
+			patientVisitsRecyclerAdapter.destroy();
+		}
 		patientVisitsRecyclerAdapter =
 				new PatientVisitsRecyclerAdapter(patientVisitsRecyclerView, visits, getActivity(), this);
 		patientVisitsRecyclerAdapter.setUuids(uuidsHashmap);

@@ -898,20 +898,20 @@
 									android:layout_width="wrap_content"
 									android:layout_height="wrap_content"
 									android:text="@string/intubation_yes"
-									android:id="@+id/intubation_done"
+									android:id="@+id/intubationDone"
 									android:checked="false"/>
 							<RadioButton
 									android:layout_width="wrap_content"
 									android:layout_height="wrap_content"
 									android:text="@string/intubation_no"
-									android:id="@+id/intubation_notdone"
+									android:id="@+id/intubationNotDone"
 									android:checked="false"/>
 
 							<RadioButton
 									android:layout_width="wrap_content"
 									android:layout_height="wrap_content"
 									android:text="@string/intubation_unknown"
-									android:id="@+id/intubation_notknown"
+									android:id="@+id/intubationNotKnown"
 									android:checked="false"/>
 						</RadioGroup>
 

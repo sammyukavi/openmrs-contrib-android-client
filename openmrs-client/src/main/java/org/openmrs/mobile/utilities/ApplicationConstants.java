@@ -154,7 +154,7 @@ public abstract class ApplicationConstants {
 				+ "42ed45fd-f3f6-44b6-bfc2-8bde1bb41e00";
 		public static final String SCHEDULED_IN_CLINIC = "Yes - scheduled in clinic";
 		public static final String NOT_SCHEDULED_IN_CLINIC = "Yes - not scheduled in clinic";
-		public static final String INTUBATION_ON_FIRST_GCS = "Intubated at time of 1st GCS";
+		public static final String INTUBATION_ON_FIRST_GCS = "Patient intubated at time of 1st GCS?: ";
 	}
 
 	public abstract static class DiagnosisStrings {

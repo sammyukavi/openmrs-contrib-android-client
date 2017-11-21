@@ -70,9 +70,16 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	}
 
 	@Override
-	public void fetchPatientData(String uuid) {
+	public void fetchPatientData(String uuid, boolean forceRefresh) {
 		patientDashboardView.showPageSpinner(true);
-		patientDataService.getByUuid(uuid, QueryOptions.FULL_REP, new DataService.GetCallback<Patient>() {
+		QueryOptions options = QueryOptions.FULL_REP;
+
+		if (forceRefresh) {
+			options = new QueryOptions.Builder().requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL)
+					.customRepresentation(RestConstants.Representations.FULL).build();
+		}
+
+		patientDataService.getByUuid(uuid, options, new DataService.GetCallback<Patient>() {
 			@Override
 			public void onCompleted(Patient patient) {
 				if (patient == null && !networkUtils.isOnline()) {
@@ -81,7 +88,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 					return;
 				}
 				setPatient(patient);
-				fetchVisits(patient, startIndex);
+				fetchVisits(patient, startIndex, forceRefresh);
 			}
 
 			@Override
@@ -97,7 +104,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	}
 
 	@Override
-	public void fetchVisits(Patient patient, int startIndex) {
+	public void fetchVisits(Patient patient, int startIndex, boolean forceRefresh) {
 		if (startIndex < 0) {
 			return;
 		}
@@ -126,11 +133,13 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 				setLoading(false);
 			}
 		};
-		QueryOptions options = new QueryOptions.Builder()
+		QueryOptions.Builder builder = new QueryOptions.Builder()
 				.includeInactive(true)
-				.customRepresentation(RestConstants.Representations.VISIT)
-				.requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL)
-				.build();
+				.customRepresentation(RestConstants.Representations.VISIT);
+		if (forceRefresh) {
+			builder = builder.requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL);
+		}
+		QueryOptions options = builder.build();
 		visitDataService.getByPatient(patient, options, pagingInfo, fetchVisitsCallback);
 	}
 
@@ -203,7 +212,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
 	@Override
 	public void loadResults(Patient patient, boolean loadNextResults) {
-		fetchVisits(patient, computePage(loadNextResults));
+		fetchVisits(patient, computePage(loadNextResults), false);
 	}
 
 	private int computePage(boolean next) {

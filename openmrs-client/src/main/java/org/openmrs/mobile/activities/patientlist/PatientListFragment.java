@@ -51,6 +51,7 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 	private SwipeRefreshLayout patientListSwipeRefreshLayout;
 
 	private PatientList selectedPatientList;
+	private PatientList patientListNotSelectedOption;
 
 	private PatientListModelRecyclerViewAdapter adapter;
 
@@ -129,9 +130,13 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 		numberOfPatientsLayout = (RelativeLayout)root.findViewById(R.id.numberOfPatientsLayout);
 		selectPatientList = (RelativeLayout)root.findViewById(R.id.selectPatientList);
 		patientListSwipeRefreshLayout = (SwipeRefreshLayout)root.findViewById(R.id.patientListSwipeRefreshView);
+		patientListSwipeRefreshLayout.setEnabled(false);
 
 		layoutManager = new LinearLayoutManager(this.getActivity());
 		patientListModelRecyclerView = (RecyclerView)root.findViewById(R.id.patientListModelRecyclerView);
+
+		patientListNotSelectedOption = new PatientList();
+		patientListNotSelectedOption.setName(getString(R.string.select_patient_list));
 
 		// Font config
 		FontsUtil.setFont((ViewGroup)this.getActivity().findViewById(android.R.id.content));
@@ -199,14 +204,17 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 				setSelectedPatientList(patientListsToShow.get(position));
 				currentPage = 1;
 				adapter.clearItems();
-				if (selectedPatientList.getUuid() == null) {
+				if (selectedPatientList.getUuid() == null || selectedPatientList.equals(patientListNotSelectedOption)) {
 					showNoPatientListSelected(true);
 					setNumberOfPatientsView(0);
 					List<PatientListContext> patientListContextList = new ArrayList<>();
 					updatePatientListData(patientListContextList, false);
+
+					patientListSwipeRefreshLayout.setEnabled(false);
 				} else {
 					showNoPatientListSelected(false);
 					mPresenter.getPatientListData(selectedPatientList.getUuid(), 1, false);
+					patientListSwipeRefreshLayout.setEnabled(true);
 				}
 			}
 
@@ -219,10 +227,7 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 	private List<PatientList> getPatientListDisplayList(List<PatientList> patientLists) { new ArrayList<>();
 		List<PatientList> patientListsToShow = new ArrayList<>();
 
-		PatientList patientList = new PatientList();
-		patientList.setName(getString(R.string.select_patient_list));
-
-		patientListsToShow.add(patientList);
+		patientListsToShow.add(patientListNotSelectedOption);
 		patientListsToShow.addAll(patientLists);
 
 		return patientListsToShow;

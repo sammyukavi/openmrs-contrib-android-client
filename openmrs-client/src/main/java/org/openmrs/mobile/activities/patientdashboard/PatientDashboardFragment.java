@@ -18,6 +18,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -66,6 +67,7 @@ public class PatientDashboardFragment extends BaseDiagnosisFragment<PatientDashb
 	private PatientVisitsRecyclerAdapter patientVisitsRecyclerAdapter;
 	private FloatingActionMenu patientDashboardMenu;
 	private RecyclerView patientVisitsRecyclerView;
+	private SwipeRefreshLayout patientVisitsSwipeRefreshView;
 
 	public static PatientDashboardFragment newInstance() {
 		return new PatientDashboardFragment();
@@ -130,7 +132,7 @@ public class PatientDashboardFragment extends BaseDiagnosisFragment<PatientDashb
 		initializeListeners(startVisitButton, editPatient);
 
 		//set start index incase it's cached somewhere
-		mPresenter.fetchPatientData(patientUuid);
+		mPresenter.fetchPatientData(patientUuid, false);
 		FontsUtil.setFont((ViewGroup)this.getActivity().findViewById(android.R.id.content));
 
 		return fragmentView;
@@ -172,6 +174,14 @@ public class PatientDashboardFragment extends BaseDiagnosisFragment<PatientDashb
 				}
 			}
 		});
+
+		patientVisitsSwipeRefreshView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+
+			@Override
+			public void onRefresh() {
+				mPresenter.fetchPatientData(patientUuid, true);
+			}
+		});
 	}
 
 	private void startSelectedPatientDashboardActivity(int selectedId) {
@@ -202,6 +212,7 @@ public class PatientDashboardFragment extends BaseDiagnosisFragment<PatientDashb
 		patientVisitsRecyclerView = (RecyclerView)fragmentView.findViewById(R.id.patientVisitsRecyclerView);
 		noPatientDataLabel = (TextView)fragmentView.findViewById(R.id.noPatientDataLabel);
 		noPatientDataLayout = (RelativeLayout)fragmentView.findViewById(R.id.noPatientDataLayout);
+		patientVisitsSwipeRefreshView = (SwipeRefreshLayout)fragmentView.findViewById(R.id.patientVisitsSwipeRefreshView);
 	}
 
 	@Override
@@ -230,6 +241,8 @@ public class PatientDashboardFragment extends BaseDiagnosisFragment<PatientDashb
 				new PatientVisitsRecyclerAdapter(patientVisitsRecyclerView, visits, getActivity(), this);
 		patientVisitsRecyclerAdapter.setUuids(uuidsHashmap);
 		patientVisitsRecyclerView.setAdapter(patientVisitsRecyclerAdapter);
+
+		patientVisitsSwipeRefreshView.setRefreshing(false);
 	}
 
 	@Override

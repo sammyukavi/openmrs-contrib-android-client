@@ -71,7 +71,9 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
 	@Override
 	public void fetchPatientData(String uuid, boolean forceRefresh) {
-		patientDashboardView.showPageSpinner(true);
+		if (!forceRefresh) {
+			patientDashboardView.showPageSpinner(true);
+		}
 		QueryOptions options = QueryOptions.FULL_REP;
 
 		if (forceRefresh) {
@@ -110,7 +112,9 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 		}
 		setLoading(true);
 		totalNumberResults = 0;
-		patientDashboardView.showPageSpinner(true);
+		if (!forceRefresh) {
+			patientDashboardView.showPageSpinner(true);
+		}
 		setLoading(true);
 		PagingInfo pagingInfo = new PagingInfo(startIndex, ApplicationConstants.Request.PATIENT_VISIT_COUNT);
 		DataService.GetCallback<List<Visit>> fetchVisitsCallback = new DataService.GetCallback<List<Visit>>() {

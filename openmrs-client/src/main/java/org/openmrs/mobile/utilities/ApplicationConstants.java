@@ -135,6 +135,7 @@ public abstract class ApplicationConstants {
 		public static final String FIRST_SBP_ICU = "1st SBP in ICU <= 90?: ";
 		public static final String FIRST_GCS_SCORE = "1st GCS score at ICU admission (#): ";
 		public static final String FIRST_HEART_RATE = "1st heart rate in ICU: ";
+		public static final String FIRST_RESPIRATORY_RATE = "Respiratory rate: ";
 		public static final String MECHANICAL_VENTILATION = "Mechanical ventilation: ";
 		public static final String PATIENT_DIABETIC = "Patient diabetic?: ";
 		public static final String RECEIVED_VAOSPRESSORS = "Received vaospressors during hospital stay?: ";
@@ -273,6 +274,7 @@ public abstract class ApplicationConstants {
 		public static final String CONCEPT_FIRST_SBP_ICU = "8f7ad9c2-aca6-458e-9362-963b4d391a7c";
 		public static final String CONCEPT_FIRST_MAP_ICU = "0b19946c-63a6-41e8-b3af-a87fc6addab4";
 		public static final String CONCEPT_FIRST_HEART_RATE_ICU = "9360b4f4-4456-4bc2-97fd-68e661a19d78";
+		public static final String CONCEPT_FIRST_RESPIRATORY_RATE_ICU = "5242AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 		public static final String CONCEPT_FIRST_GCS_SCORE_ICU = "99659fa6-fe39-41d7-ac6b-f183d9231310";
 		public static final String CONCEPT_SEDETION_PRIOR_FIRST_GCS_SCORE_ICU = "7cccf308-edca-4c3e-afde-e7a3f1155ec6";
 		public static final String CONCEPT_PATIENT_DIABETIC = "a424ed50-5f94-4296-a91c-73ebbc1ccca1";

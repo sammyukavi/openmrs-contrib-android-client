@@ -326,8 +326,8 @@ public abstract class ACBaseActivity extends AppCompatActivity implements Naviga
 		View windowToken = activity.getCurrentFocus();
 
 		if (windowToken != null) {
-			inputMethodManager.toggleSoftInputFromWindow(windowToken.getWindowToken(), inputMethodManager.SHOW_FORCED,
-					0);
+			inputMethodManager.toggleSoftInputFromWindow(windowToken.getWindowToken(),
+					inputMethodManager.SHOW_FORCED, 0);
 		}
 	}
 }

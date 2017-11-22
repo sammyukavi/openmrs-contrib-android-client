@@ -166,12 +166,13 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 		auditDataSortOrder.put(ApplicationConstants.ObservationLocators.INFECTION_CONFIRMED_SUSPECTED, 14);
 		auditDataSortOrder.put(ApplicationConstants.ObservationLocators.FIRST_SBP_ICU, 15);
 		auditDataSortOrder.put(ApplicationConstants.ObservationLocators.FIRST_MAP, 16);
-		auditDataSortOrder.put(ApplicationConstants.ObservationLocators.SEDETION_PRIOR_FIRST_GCS_SCORE_ICU, 17);
-		auditDataSortOrder.put(ApplicationConstants.ObservationLocators.SURGERY_DURING_HOSPITAL_STAY, 18);
-		auditDataSortOrder.put(ApplicationConstants.ObservationLocators.FIRST_HEART_RATE, 19);
-		auditDataSortOrder.put(ApplicationConstants.ObservationLocators.FIRST_RESPIRATORY_RATE, 20);
-		auditDataSortOrder.put(ApplicationConstants.ObservationLocators.FIRST_GCS_SCORE, 21);
-		auditDataSortOrder.put(ApplicationConstants.ObservationLocators.AUDIT_DATA_COMPLETE, 22);
+		auditDataSortOrder.put(ApplicationConstants.ObservationLocators.SURGERY_DURING_HOSPITAL_STAY, 17);
+		auditDataSortOrder.put(ApplicationConstants.ObservationLocators.FIRST_HEART_RATE, 18);
+		auditDataSortOrder.put(ApplicationConstants.ObservationLocators.FIRST_RESPIRATORY_RATE, 19);
+		auditDataSortOrder.put(ApplicationConstants.ObservationLocators.FIRST_GCS_SCORE, 20);
+		auditDataSortOrder.put(ApplicationConstants.ObservationLocators.INTUBATION_ON_FIRST_GCS, 21);
+		auditDataSortOrder.put(ApplicationConstants.ObservationLocators.SEDETION_PRIOR_FIRST_GCS_SCORE_ICU, 22);
+		auditDataSortOrder.put(ApplicationConstants.ObservationLocators.AUDIT_DATA_COMPLETE, 23);
 	}
 
 	@Override
@@ -499,6 +500,7 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 					auditInfoTableLayout.setVisibility(View.VISIBLE);
 					auditInfoTableLayout.removeAllViews();
 					loadObservationFields(encounter.getObs(), EncounterTypeData.AUDIT_DATA);
+
 				}
 			}
 		}

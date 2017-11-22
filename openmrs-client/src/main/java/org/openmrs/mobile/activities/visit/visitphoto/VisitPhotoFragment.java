@@ -32,6 +32,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.GridLayoutManager;
@@ -51,7 +52,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
-import org.openmrs.mobile.activities.visit.VisitActivity;
 import org.openmrs.mobile.activities.visit.VisitContract;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.event.VisitDashboardDataRefreshEvent;
@@ -89,7 +89,7 @@ public class VisitPhotoFragment extends ACBaseFragment<VisitContract.VisitDashbo
 	private Bitmap visitPhoto = null;
 	private AppCompatButton uploadVisitPhotoButton;
 	private RelativeLayout visitPhotoProgressBar;
-	private LinearLayout visitPhotoTab;
+	private SwipeRefreshLayout visitPhotoSwipRefreshLayout;
 
 	private File output;
 	private EditText fileCaption;
@@ -125,7 +125,7 @@ public class VisitPhotoFragment extends ACBaseFragment<VisitContract.VisitDashbo
 		noVisitImage = (TextView)root.findViewById(R.id.noVisitImage);
 
 		visitPhotoProgressBar = (RelativeLayout)root.findViewById(R.id.visitPhotoProgressBar);
-		visitPhotoTab = (LinearLayout)root.findViewById(R.id.visitPhotoTab);
+		visitPhotoSwipRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.visitPhotoTab);
 
 		addListeners();
 
@@ -167,7 +167,6 @@ public class VisitPhotoFragment extends ACBaseFragment<VisitContract.VisitDashbo
 		fileCaption.setText(ApplicationConstants.EMPTY_STRING);
 		FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
 		fragmentTransaction.detach(this).attach(this).commit();
-		mPresenter.subscribe();
 	}
 
 	@Override
@@ -184,10 +183,10 @@ public class VisitPhotoFragment extends ACBaseFragment<VisitContract.VisitDashbo
 	@Override
 	public void showTabSpinner(boolean visibility) {
 		if (visibility) {
-			visitPhotoTab.setVisibility(View.GONE);
+			visitPhotoSwipRefreshLayout.setVisibility(View.GONE);
 			visitPhotoProgressBar.setVisibility(View.VISIBLE);
 		} else {
-			visitPhotoTab.setVisibility(View.VISIBLE);
+			visitPhotoSwipRefreshLayout.setVisibility(View.VISIBLE);
 			visitPhotoProgressBar.setVisibility(View.GONE);
 		}
 	}
@@ -301,6 +300,14 @@ public class VisitPhotoFragment extends ACBaseFragment<VisitContract.VisitDashbo
 				((VisitPhotoPresenter)mPresenter).uploadImage();
 			}
 		});
+
+		visitPhotoSwipRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+
+			@Override
+			public void onRefresh() {
+				mPresenter.dataRefreshWasRequested();
+			}
+		});
 	}
 
 	@Override
@@ -343,7 +350,7 @@ public class VisitPhotoFragment extends ACBaseFragment<VisitContract.VisitDashbo
 
 	@Override
 	public void displayRefreshingData(boolean visible) {
-//		visitDetailsSwipeRefreshLayout.setRefreshing(visible);
+		visitPhotoSwipRefreshLayout.setRefreshing(visible);
 	}
 
 	@Override

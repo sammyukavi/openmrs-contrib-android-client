@@ -26,7 +26,7 @@ import org.openmrs.mobile.models.Provider;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitPhoto;
 import org.openmrs.mobile.utilities.ApplicationConstants;
-import org.openmrs.mobile.utilities.ToastUtil;
+import org.openmrs.mobile.utilities.ToastUtil.ToastType;
 
 import java.util.Date;
 import java.util.List;
@@ -39,6 +39,9 @@ public class VisitPhotoPresenter extends BaseVisitPresenter implements VisitCont
 	private VisitPhotoDataService visitPhotoDataService;
 	private ObsDataService obsDataService;
 	private VisitPhoto visitPhoto;
+
+	private int numberOfPhotosToDownload = 0;
+	private int numberOfPhotosDownloaded = 0;
 
 	public VisitPhotoPresenter(VisitContract.VisitPhotoView visitPhotoView, String patientUuid, String visitUuid,
 			String providerUuid) {
@@ -55,8 +58,6 @@ public class VisitPhotoPresenter extends BaseVisitPresenter implements VisitCont
 
 	private void getPhotoMetadata(boolean forceRefresh) {
 		visitPhotoView.showTabSpinner(true);
-		// get local photos
-		List<VisitPhoto> visitPhotos = visitPhotoDataService.getByVisit(new Visit(visitUuid));
 
 		QueryOptions optionsTemp = null;
 		if (forceRefresh) {
@@ -69,58 +70,82 @@ public class VisitPhotoPresenter extends BaseVisitPresenter implements VisitCont
 				new DataService.GetCallback<List<Observation>>() {
 					@Override
 					public void onCompleted(List<Observation> observations) {
-						if (observations == null || observations.isEmpty()) {
-							visitPhotoView.showTabSpinner(false);
-							visitPhotoView.updateVisitImageMetadata(visitPhotos);
-							return;
-						}
 
-						for (Observation observation : observations) {
-							if (searchLocalVisitPhoto(observation, visitPhotos)) {
-								visitPhotoView.updateVisitImageMetadata(visitPhotos);
-								continue;
-							}
-
-							VisitPhoto visitPhoto = new VisitPhoto();
-							visitPhoto.setFileCaption(observation.getComment());
-							visitPhoto.setDateCreated(observation.getDateCreated());
-
-							visitPhoto.setCreator(observation.getCreator());
-
-							visitPhoto.setObservation(observation);
-
-							// download photo bytes
-							visitPhotoDataService.downloadPhotoImage(visitPhoto, ApplicationConstants.THUMBNAIL_VIEW,
-									options,
-									new DataService.GetCallback<VisitPhoto>() {
-										@Override
-										public void onCompleted(VisitPhoto entity) {
-											if (entity != null) {
-												visitPhoto.setImage(entity.getImageColumn().getBlob());
-												visitPhotos.add(visitPhoto);
-												visitPhotoView.showTabSpinner(false);
-
-												visitPhotoView.updateVisitImageMetadata(visitPhotos);
-											}
-										}
-
-										@Override
-										public void onError(Throwable t) {
-											visitPhotoView.showTabSpinner(false);
-											ToastUtil.error(t.getMessage());
-										}
-									});
-						}
-
-						visitPhotoView.showTabSpinner(false);
+						getPhotoImages(forceRefresh, observations, options);
 					}
 
 					@Override
 					public void onError(Throwable t) {
-						ToastUtil.error("Error downloading visit images");
+						visitDashboardPageView.showToast("Error downloading visit images", ToastType.ERROR);
 						visitPhotoView.showTabSpinner(false);
+						visitDashboardPageView.displayRefreshingData(false);
 					}
 				});
+	}
+
+	private void getPhotoImages(boolean forceRefresh, List<Observation> observations, QueryOptions options) {
+		// get local photos
+		List<VisitPhoto> visitPhotos = visitPhotoDataService.getByVisit(new Visit(visitUuid));
+
+		if (forceRefresh) {
+			numberOfPhotosToDownload = observations.size();
+		}
+
+		if (observations == null || observations.isEmpty()) {
+			visitPhotoView.showTabSpinner(false);
+			visitPhotoView.updateVisitImageMetadata(visitPhotos);
+			return;
+		}
+
+		for (Observation observation : observations) {
+			if (searchLocalVisitPhoto(observation, visitPhotos)) {
+				visitPhotoView.updateVisitImageMetadata(visitPhotos);
+				if (forceRefresh) {
+					removeRefreshIndicatorIfAllCallsComplete();
+				}
+				continue;
+			}
+
+			VisitPhoto visitPhoto = new VisitPhoto();
+			visitPhoto.setFileCaption(observation.getComment());
+			visitPhoto.setDateCreated(observation.getDateCreated());
+
+			visitPhoto.setCreator(observation.getCreator());
+
+			visitPhoto.setObservation(observation);
+
+			// download photo bytes
+			visitPhotoDataService.downloadPhotoImage(visitPhoto, ApplicationConstants.THUMBNAIL_VIEW,
+					options,
+					new DataService.GetCallback<VisitPhoto>() {
+						@Override
+						public void onCompleted(VisitPhoto entity) {
+							if (entity != null) {
+								visitPhoto.setImage(entity.getImageColumn().getBlob());
+								visitPhotos.add(visitPhoto);
+								visitPhotoView.showTabSpinner(false);
+
+								visitPhotoView.updateVisitImageMetadata(visitPhotos);
+
+								if (forceRefresh) {
+									removeRefreshIndicatorIfAllCallsComplete();
+								}
+							}
+						}
+
+						@Override
+						public void onError(Throwable t) {
+							visitPhotoView.showTabSpinner(false);
+							visitDashboardPageView.showToast(t.getMessage(), ToastType.ERROR);
+
+							if (forceRefresh) {
+								removeRefreshIndicatorIfAllCallsComplete();
+							}
+						}
+					});
+		}
+
+		visitPhotoView.showTabSpinner(false);
 	}
 
 	private boolean searchLocalVisitPhoto(Observation obs, List<VisitPhoto> visitPhotos) {
@@ -170,12 +195,13 @@ public class VisitPhotoPresenter extends BaseVisitPresenter implements VisitCont
 			public void onCompleted(VisitPhoto entity) {
 				visitPhotoView.showTabSpinner(false);
 				visitPhotoView.refresh();
+				subscribe();
 			}
 
 			@Override
 			public void onError(Throwable t) {
 				visitPhotoView.showTabSpinner(false);
-				ToastUtil.error("Unable to upload image");
+				visitDashboardPageView.showToast("Unable to upload image", ToastType.ERROR);
 			}
 		});
 	}
@@ -208,6 +234,7 @@ public class VisitPhotoPresenter extends BaseVisitPresenter implements VisitCont
 				visitPhotoDataService.purgeLocalInstance(visitPhoto);
 				visitPhotoView.showTabSpinner(false);
 				visitPhotoView.refresh();
+				subscribe();
 			}
 
 			@Override
@@ -219,6 +246,14 @@ public class VisitPhotoPresenter extends BaseVisitPresenter implements VisitCont
 
 	@Override
 	protected void refreshDependentData() {
+		numberOfPhotosDownloaded = 0;
+		getPhotoMetadata(true);
+	}
 
+	private void removeRefreshIndicatorIfAllCallsComplete() {
+		numberOfPhotosDownloaded++;
+		if (numberOfPhotosDownloaded == numberOfPhotosToDownload || numberOfPhotosToDownload == 0) {
+			visitDashboardPageView.displayRefreshingData(false);
+		}
 	}
 }

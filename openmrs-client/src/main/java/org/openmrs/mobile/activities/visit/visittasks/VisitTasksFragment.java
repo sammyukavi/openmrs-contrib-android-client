@@ -34,10 +34,14 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.activities.visit.VisitActivity;
 import org.openmrs.mobile.activities.visit.VisitContract;
+import org.openmrs.mobile.application.OpenMRS;
+import org.openmrs.mobile.event.VisitDashboardDataRefreshEvent;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitPredefinedTask;
 import org.openmrs.mobile.models.VisitTask;
@@ -97,6 +101,18 @@ public class VisitTasksFragment extends ACBaseFragment<VisitContract.VisitDashbo
 		return mRootView;
 	}
 
+	@Override
+	public void onStart() {
+		super.onStart();
+		OpenMRS.getInstance().getEventBus().register(this);
+	}
+
+	@Override
+	public void onStop() {
+		OpenMRS.getInstance().getEventBus().unregister(this);
+		super.onStop();
+	}
+
 	private void resolveViews(View v) {
 		openViewTasksRecyclerView = (RecyclerView)v.findViewById(R.id.openVisitTasksRecyclerView);
 		addtask = (AutoCompleteTextView)v.findViewById(R.id.addVisitTasks);
@@ -110,7 +126,7 @@ public class VisitTasksFragment extends ACBaseFragment<VisitContract.VisitDashbo
 
 	@Override
 	public void showToast(String message, ToastUtil.ToastType toastType) {
-
+		ToastUtil.showShortToast(getContext(), toastType, message);
 	}
 
 	@Override
@@ -245,7 +261,7 @@ public class VisitTasksFragment extends ACBaseFragment<VisitContract.VisitDashbo
 
 			@Override
 			public void onRefresh() {
-				((VisitActivity) getActivity()).refreshBaseData();
+				mPresenter.dataRefreshWasRequested();
 			}
 		});
 	}
@@ -355,18 +371,13 @@ public class VisitTasksFragment extends ACBaseFragment<VisitContract.VisitDashbo
 	}
 
 	@Override
-	public void refreshData() {
-		visitTasksSwipeRefreshLayout.setRefreshing(true);
-//		((VisitTasksPresenter) mPresenter).getVisit(true);
-	}
-
-	@Override
 	public void displayRefreshingData(boolean visible) {
 		visitTasksSwipeRefreshLayout.setRefreshing(visible);
 	}
 
 	@Override
-	public void refreshBaseData() {
-		((VisitActivity) getActivity()).refreshBaseData();
+	@Subscribe(threadMode = ThreadMode.MAIN)
+	public void onVisitDashboardRefreshEvent(VisitDashboardDataRefreshEvent event) {
+		mPresenter.dataRefreshEventOccurred(event);
 	}
 }

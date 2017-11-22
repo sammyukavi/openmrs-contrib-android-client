@@ -19,6 +19,7 @@ import android.widget.TextView;
 import org.openmrs.mobile.activities.IBaseDiagnosisView;
 import org.openmrs.mobile.activities.BasePresenterContract;
 import org.openmrs.mobile.activities.BaseView;
+import org.openmrs.mobile.event.VisitDashboardDataRefreshEvent;
 import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitAttributeType;
@@ -30,20 +31,14 @@ import org.openmrs.mobile.utilities.ToastUtil;
 import java.util.List;
 
 public interface VisitContract {
-	interface VisitDashboardView extends BaseView<VisitDashboardPresenter> {
-		void displayRefreshingData(boolean visible);
-
-		void refreshDependentData();
-
-		void showToast(String message, ToastUtil.ToastType toastType);
-	}
 
 	interface VisitDashboardPageView extends BaseView<VisitDashboardPagePresenter> {
-		void refreshData();
 
 		void displayRefreshingData(boolean visible);
 
-		void refreshBaseData();
+		void showToast(String message, ToastUtil.ToastType toastType);
+
+		void onVisitDashboardRefreshEvent(VisitDashboardDataRefreshEvent event);
 	}
 
 	interface VisitTasksView extends VisitDashboardPageView {
@@ -107,15 +102,11 @@ public interface VisitContract {
 	/*
 	* Presenters
 	*/
-	interface VisitDashboardPresenter extends BasePresenterContract {
-		void refreshBaseData();
-	}
-
 	interface VisitDashboardPagePresenter extends BasePresenterContract {
 
-		void loadDependentData(boolean forceRefresh);
-
 		void dataRefreshWasRequested();
+
+		void dataRefreshEventOccurred(VisitDashboardDataRefreshEvent event);
 	}
 
 	interface VisitTasksPresenter extends VisitDashboardPagePresenter {
@@ -142,8 +133,6 @@ public interface VisitContract {
 		VisitPhoto getVisitPhoto();
 
 		void deleteImage(VisitPhoto visitPhoto);
-
-		void refreshData();
 	}
 
 	interface VisitDetailsPresenter extends VisitDashboardPagePresenter {

@@ -13,12 +13,10 @@
  */
 package org.openmrs.mobile.activities.visit.detail;
 
-import android.util.Log;
 import android.widget.TextView;
 
-import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.activities.visit.VisitContract;
-import org.openmrs.mobile.activities.visit.VisitPresenterImpl;
+import org.openmrs.mobile.activities.visit.BaseVisitPresenter;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
@@ -27,6 +25,7 @@ import org.openmrs.mobile.data.impl.ConceptDataService;
 import org.openmrs.mobile.data.impl.VisitAttributeTypeDataService;
 import org.openmrs.mobile.data.impl.VisitDataService;
 import org.openmrs.mobile.data.rest.RestConstants;
+import org.openmrs.mobile.event.VisitDashboardDataRefreshEvent;
 import org.openmrs.mobile.models.ConceptAnswer;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitAttributeType;
@@ -35,23 +34,22 @@ import org.openmrs.mobile.utilities.ToastUtil.ToastType;
 
 import java.util.List;
 
-public class VisitDetailsPresenter extends BasePresenter implements VisitContract.VisitDetailsPresenter {
+public class VisitDetailsPresenter extends BaseVisitPresenter implements VisitContract.VisitDetailsPresenter {
 
 	VisitContract.VisitDetailsView visitDetailsView;
 	private VisitAttributeTypeDataService visitAttributeTypeDataService;
 	private VisitDataService visitDataService;
 	private ConceptDataService conceptDataService;
-	private String patientUUID, visitUUID, providerUuid, visitStopDate;
+	private String patientUUID, providerUuid, visitStopDate;
 
 	private ConceptAnswerDataService conceptAnswerDataService;
 
 	public VisitDetailsPresenter(String patientUuid, String visitUuid, String providerUuid,
 			String visitStopDate, VisitContract.VisitDetailsView visitDetailsView) {
-		super();
+		super(visitUuid, visitDetailsView);
 
-		this.visitDetailsView = visitDetailsView;
-		this.visitDetailsView.setPresenter(this);
-		this.visitUUID = visitUuid;
+		visitDashboardPageView = visitDetailsView;
+
 		this.providerUuid = providerUuid;
 		this.patientUUID = patientUuid;
 		this.visitStopDate = visitStopDate;
@@ -60,6 +58,8 @@ public class VisitDetailsPresenter extends BasePresenter implements VisitContrac
 		this.conceptDataService = dataAccess().concept();
 		this.conceptAnswerDataService = dataAccess().conceptAnswer();
 		this.visitAttributeTypeDataService = dataAccess().visitAttributeType();
+
+		this.visitDetailsView = (VisitContract.VisitDetailsView) visitDashboardPageView;
 	}
 
 	@Override
@@ -93,7 +93,7 @@ public class VisitDetailsPresenter extends BasePresenter implements VisitContrac
 										.fetchErrorMessage, ToastType.ERROR);
 					}
 				};
-		visitDataService.getByUuid(visitUUID, QueryOptions.FULL_REP, getSingleCallback);
+		visitDataService.getByUuid(visitUuid, QueryOptions.FULL_REP, getSingleCallback);
 	}
 
 	@Override
@@ -103,7 +103,7 @@ public class VisitDetailsPresenter extends BasePresenter implements VisitContrac
 
 	@Override
 	public void getVisitUUID() {
-		visitDetailsView.setVisitUUID(visitUUID);
+		visitDetailsView.setVisitUUID(visitUuid);
 	}
 
 	@Override
@@ -161,13 +161,12 @@ public class VisitDetailsPresenter extends BasePresenter implements VisitContrac
 		});
 	}
 
-	@Override
-	public void loadDependentData(boolean forceRefresh) {
+	private void loadDependentData(boolean forceRefresh) {
 		loadVisitAttributeTypes();
 	}
 
 	@Override
-	public void dataRefreshWasRequested() {
-		visitDetailsView.refreshBaseData();
+	protected void refreshDependentData() {
+		loadDependentData(true);
 	}
 }

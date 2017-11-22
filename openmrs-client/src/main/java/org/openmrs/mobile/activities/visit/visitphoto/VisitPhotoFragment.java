@@ -47,14 +47,18 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.activities.visit.VisitActivity;
 import org.openmrs.mobile.activities.visit.VisitContract;
-import org.openmrs.mobile.activities.visit.VisitFragment;
+import org.openmrs.mobile.application.OpenMRS;
+import org.openmrs.mobile.event.VisitDashboardDataRefreshEvent;
 import org.openmrs.mobile.models.VisitPhoto;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.StringUtils;
+import org.openmrs.mobile.utilities.ToastUtil;
 import org.openmrs.mobile.utilities.ViewUtils;
 
 import java.io.ByteArrayOutputStream;
@@ -134,6 +138,18 @@ public class VisitPhotoFragment extends ACBaseFragment<VisitContract.VisitDashbo
 
 		adapter = new VisitPhotoRecyclerViewAdapter(this.getActivity(), this);
 		recyclerView.setAdapter(adapter);
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		OpenMRS.getInstance().getEventBus().register(this);
+	}
+
+	@Override
+	public void onStop() {
+		OpenMRS.getInstance().getEventBus().unregister(this);
+		super.onStop();
 	}
 
 	@Override
@@ -326,17 +342,18 @@ public class VisitPhotoFragment extends ACBaseFragment<VisitContract.VisitDashbo
 	}
 
 	@Override
-	public void refreshData() {
-
-	}
-
-	@Override
 	public void displayRefreshingData(boolean visible) {
-
+//		visitDetailsSwipeRefreshLayout.setRefreshing(visible);
 	}
 
 	@Override
-	public void refreshBaseData() {
-		((VisitActivity) getActivity()).refreshBaseData();
+	public void showToast(String message, ToastUtil.ToastType toastType) {
+		ToastUtil.showShortToast(getContext(), toastType, message);
+	}
+
+	@Override
+	@Subscribe(threadMode = ThreadMode.MAIN)
+	public void onVisitDashboardRefreshEvent(VisitDashboardDataRefreshEvent event) {
+		mPresenter.dataRefreshEventOccurred(event);
 	}
 }

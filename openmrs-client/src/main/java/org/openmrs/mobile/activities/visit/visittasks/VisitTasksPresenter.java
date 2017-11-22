@@ -14,14 +14,15 @@
 
 package org.openmrs.mobile.activities.visit.visittasks;
 
-import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.activities.visit.VisitContract;
+import org.openmrs.mobile.activities.visit.BaseVisitPresenter;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.impl.VisitDataService;
 import org.openmrs.mobile.data.impl.VisitPredefinedTaskDataService;
 import org.openmrs.mobile.data.impl.VisitTaskDataService;
+import org.openmrs.mobile.event.VisitDashboardDataRefreshEvent;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitPredefinedTask;
@@ -32,21 +33,21 @@ import org.openmrs.mobile.utilities.ToastUtil;
 
 import java.util.List;
 
-public class VisitTasksPresenter extends BasePresenter implements VisitContract.VisitTasksPresenter {
+public class VisitTasksPresenter extends BaseVisitPresenter implements VisitContract.VisitTasksPresenter {
 
 	private VisitContract.VisitTasksView visitTasksView;
 	private VisitPredefinedTaskDataService visitPredefinedTaskDataService;
 	private VisitTaskDataService visitTaskDataService;
 	private VisitDataService visitDataService;
-	private String patientUUID, visitUUID;
+	private String patientUUID;
 
 	private int page = 1;
 	private int limit = 10;
 
 	public VisitTasksPresenter(String patientUuid, String visitUuid, VisitContract.VisitTasksView visitTasksView) {
+		super(visitUuid, visitTasksView);
+
 		this.visitTasksView = visitTasksView;
-		this.visitTasksView.setPresenter(this);
-		this.visitUUID = visitUuid;
 		this.patientUUID = patientUuid;
 
 		this.visitPredefinedTaskDataService = dataAccess().visitPredefinedTask();
@@ -88,7 +89,7 @@ public class VisitTasksPresenter extends BasePresenter implements VisitContract.
 		visitTasksView.showTabSpinner(true);
 		PagingInfo pagingInfo = new PagingInfo(page, limit);
 		// get open tasks
-		visitTaskDataService.getAll("OPEN", patientUUID, visitUUID, QueryOptions.FULL_REP,
+		visitTaskDataService.getAll("OPEN", patientUUID, visitUuid, QueryOptions.FULL_REP,
 				pagingInfo,
 				new DataService.GetCallback<List<VisitTask>>() {
 					@Override
@@ -96,7 +97,7 @@ public class VisitTasksPresenter extends BasePresenter implements VisitContract.
 						visitTasksView.setOpenVisitTasks(visitTasksList);
 
 						// get closed tasks
-						visitTaskDataService.getAll("CLOSED", patientUUID, visitUUID, QueryOptions.FULL_REP,
+						visitTaskDataService.getAll("CLOSED", patientUUID, visitUuid, QueryOptions.FULL_REP,
 								pagingInfo,
 								new DataService.GetCallback<List<VisitTask>>() {
 									@Override
@@ -168,7 +169,7 @@ public class VisitTasksPresenter extends BasePresenter implements VisitContract.
 		patient.setUuid(patientUUID);
 
 		Visit visit = new Visit();
-		visit.setUuid(visitUUID);
+		visit.setUuid(visitUuid);
 
 		VisitTask visitTaskEntity = new VisitTask();
 
@@ -200,16 +201,11 @@ public class VisitTasksPresenter extends BasePresenter implements VisitContract.
 										.fetchErrorMessage, ToastUtil.ToastType.ERROR);
 					}
 				};
-		visitDataService.getByUuid(visitUUID, QueryOptions.FULL_REP, getSingleCallback);
+		visitDataService.getByUuid(visitUuid, QueryOptions.FULL_REP, getSingleCallback);
 	}
 
 	@Override
-	public void loadDependentData(boolean forceRefresh) {
+	protected void refreshDependentData() {
 		getVisitTasks(true);
-	}
-
-	@Override
-	public void dataRefreshWasRequested() {
-
 	}
 }

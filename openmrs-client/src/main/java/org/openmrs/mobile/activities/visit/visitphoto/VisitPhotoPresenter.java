@@ -14,7 +14,7 @@
 
 package org.openmrs.mobile.activities.visit.visitphoto;
 
-import org.openmrs.mobile.activities.BasePresenter;
+import org.openmrs.mobile.activities.visit.BaseVisitPresenter;
 import org.openmrs.mobile.activities.visit.VisitContract;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.QueryOptions;
@@ -32,7 +32,7 @@ import org.openmrs.mobile.utilities.ToastUtil;
 import java.util.Date;
 import java.util.List;
 
-public class VisitPhotoPresenter extends BasePresenter implements VisitContract.VisitPhotoPresenter {
+public class VisitPhotoPresenter extends BaseVisitPresenter implements VisitContract.VisitPhotoPresenter {
 
 	private VisitContract.VisitPhotoView visitPhotoView;
 	private String patientUuid, visitUuid, providerUuid;
@@ -43,8 +43,9 @@ public class VisitPhotoPresenter extends BasePresenter implements VisitContract.
 
 	public VisitPhotoPresenter(VisitContract.VisitPhotoView visitPhotoView, String patientUuid, String visitUuid,
 			String providerUuid) {
+		super(visitUuid, visitPhotoView);
+
 		this.visitPhotoView = visitPhotoView;
-		this.visitPhotoView.setPresenter(this);
 		this.patientUuid = patientUuid;
 		this.visitUuid = visitUuid;
 		this.providerUuid = providerUuid;
@@ -196,10 +197,6 @@ public class VisitPhotoPresenter extends BasePresenter implements VisitContract.
 	}
 
 	@Override
-	public void unsubscribe() {
-	}
-
-	@Override
 	public void deleteImage(VisitPhoto visitPhoto) {
 		visitPhotoView.showTabSpinner(true);
 		Observation obs = visitPhoto.getObservation();
@@ -222,17 +219,7 @@ public class VisitPhotoPresenter extends BasePresenter implements VisitContract.
 	}
 
 	@Override
-	public void refreshData() {
-		getPhotoMetadata(true);
-	}
-
-	@Override
-	public void loadDependentData(boolean forceRefresh) {
-
-	}
-
-	@Override
-	public void dataRefreshWasRequested() {
+	protected void refreshDependentData() {
 
 	}
 }

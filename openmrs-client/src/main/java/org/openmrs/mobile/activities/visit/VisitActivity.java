@@ -65,10 +65,6 @@ public class VisitActivity extends ACBaseActivity {
 	private FloatingActionButton captureVitalsButton, endVisitButton, editVisitButton, auditData;
 	private FloatingActionMenu visitDetailsMenu;
 
-	private VisitPageAdapter visitPageAdapter;
-
-	private VisitFragment visitFragment;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -90,10 +86,8 @@ public class VisitActivity extends ACBaseActivity {
 			visitUuid = extras.getString(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE);
 			providerUuid = OpenMRS.getInstance().getCurrentProviderUUID();
 			visitClosedDate = extras.getString(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE);
-
-			visitPageAdapter = new VisitPageAdapter(getSupportFragmentManager(), patientUuid, visitUuid, providerUuid,
-					visitClosedDate);
-			initViewPager();
+			initViewPager(new VisitPageAdapter(getSupportFragmentManager(), patientUuid, visitUuid, providerUuid,
+					visitClosedDate));
 
 			// patient header
 			if (patientHeaderPresenter == null) {
@@ -112,11 +106,6 @@ public class VisitActivity extends ACBaseActivity {
 
 		}
 
-		// Create fragment
-		visitFragment = VisitFragment.newInstance();
-		visitFragment.setActivity(this);
-		visitFragment.setPresenter(new VisitPresenterImpl(visitFragment, visitUuid));
-
 		captureVitalsButton = (FloatingActionButton)findViewById(R.id.capture_vitals);
 		auditData = (FloatingActionButton)findViewById(R.id.auditDataForm);
 		endVisitButton = (FloatingActionButton)findViewById(R.id.end_visit);
@@ -132,7 +121,7 @@ public class VisitActivity extends ACBaseActivity {
 		initializeListeners(endVisitButton, editVisitButton, captureVitalsButton, auditData);
 	}
 
-	private void initViewPager() {
+	private void initViewPager(VisitPageAdapter visitPageAdapter) {
 		MaterialTabHost tabHost = (MaterialTabHost)findViewById(R.id.visitDetailsTabHost);
 		tabHost.setType(MaterialTabHost.Type.FullScreenWidth);
 		for (int i = 0; i < visitPageAdapter.getCount(); i++) {
@@ -292,33 +281,5 @@ public class VisitActivity extends ACBaseActivity {
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		getApplicationContext().startActivity(intent);
-	}
-
-	public void refreshBaseData() {
-		visitFragment.refreshBaseData();
-	}
-
-	public void displayRefreshingData(boolean visible) {
-		for (int tabIndex = 0; tabIndex < visitPageAdapter.getCount(); tabIndex++) {
-			if (visitPageAdapter.getRegisteredFragment(tabIndex) != null) {
-				((VisitContract.VisitDashboardPageView) visitPageAdapter.getRegisteredFragment(tabIndex))
-						.displayRefreshingData(visible);
-			}
-		}
-	}
-
-	public void refreshDependentData() {
-		for (int tabIndex = 0; tabIndex < visitPageAdapter.getCount(); tabIndex++) {
-			if (visitPageAdapter.getRegisteredFragment(tabIndex) != null) {
-				((VisitContract.VisitDashboardPageView) visitPageAdapter.getRegisteredFragment(tabIndex))
-						.refreshData();
-			}
-		}
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		visitFragment.onDestroy();
 	}
 }

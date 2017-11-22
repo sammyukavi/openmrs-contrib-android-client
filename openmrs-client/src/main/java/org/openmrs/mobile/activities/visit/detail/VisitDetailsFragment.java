@@ -37,6 +37,9 @@ import android.widget.TextView;
 
 import com.google.android.flexbox.FlexboxLayout;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.BaseDiagnosisFragment;
 import org.openmrs.mobile.activities.IBaseDiagnosisView;
@@ -47,6 +50,7 @@ import org.openmrs.mobile.activities.visit.VisitActivity;
 import org.openmrs.mobile.activities.visit.VisitContract;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.bundle.CustomDialogBundle;
+import org.openmrs.mobile.event.VisitDashboardDataRefreshEvent;
 import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Observation;
@@ -95,6 +99,8 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 
 	private Map<String, Integer> auditDataSortOrder;
 
+	private EventBus eventBus;
+
 	public static VisitDetailsFragment newInstance() {
 		return new VisitDetailsFragment();
 	}
@@ -125,6 +131,18 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 		//buildMarginLayout();
 		initializeListeners();
 		return root;
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		OpenMRS.getInstance().getEventBus().register(this);
+	}
+
+	@Override
+	public void onStop() {
+		OpenMRS.getInstance().getEventBus().unregister(this);
+		super.onStop();
 	}
 
 	private void initializeAuditDataSortOrder() {
@@ -201,6 +219,7 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 
 	@Override
 	public void showToast(String message, ToastUtil.ToastType toastType) {
+		ToastUtil.showShortToast(getContext(), toastType, message);
 	}
 
 	@Override
@@ -655,17 +674,13 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 	}
 
 	@Override
-	public void refreshData() {
-		mPresenter.loadDependentData(true);
-	}
-
-	@Override
 	public void displayRefreshingData(boolean visible) {
 		visitDetailsSwipeRefreshLayout.setRefreshing(visible);
 	}
 
 	@Override
-	public void refreshBaseData() {
-		((VisitActivity) getActivity()).refreshBaseData();
+	@Subscribe(threadMode = ThreadMode.MAIN)
+	public void onVisitDashboardRefreshEvent(VisitDashboardDataRefreshEvent event) {
+		mPresenter.dataRefreshEventOccurred(event);
 	}
 }

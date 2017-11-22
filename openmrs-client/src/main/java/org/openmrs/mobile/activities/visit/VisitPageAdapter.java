@@ -92,8 +92,4 @@ public class VisitPageAdapter extends FragmentPagerAdapter {
 	public int getCount() {
 		return TAB_COUNT;
 	}
-
-	public Fragment getRegisteredFragment (int position) {
-		return registeredFragments.get(position);
-	}
 }

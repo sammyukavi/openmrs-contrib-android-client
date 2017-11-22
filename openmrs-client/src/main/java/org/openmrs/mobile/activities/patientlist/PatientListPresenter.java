@@ -126,7 +126,9 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 		}
 		setPage(page);
 		setLoading(true);
-		setViewBeforeLoadData();
+		if (!forceRefresh) {
+			setViewBeforeLoadData();
+		}
 		setTotalNumberResults(0);
 		setExistingPatientListUuid(patientListUuid);
 		PagingInfo pagingInfo = new PagingInfo(page, limit);

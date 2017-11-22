@@ -30,9 +30,9 @@ import org.openmrs.mobile.activities.visit.visittasks.VisitTasksPresenter;
 public class VisitPageAdapter extends FragmentPagerAdapter {
 	private static final int TAB_COUNT = 3;
 
-	public static final int VISIT_DETAILS_TAB_POS = 0;
-	public static final int VISIT_TASKS_TAB_POS = 1;
-	public static final int VISIT_IMAGES_TAB_POS = 2;
+	private static final int VISIT_DETAILS_TAB_POS = 0;
+	private static final int VISIT_TASKS_TAB_POS = 1;
+	private static final int VISIT_IMAGES_TAB_POS = 2;
 
 	private SparseArray<Fragment> registeredFragments = new SparseArray<>();
 

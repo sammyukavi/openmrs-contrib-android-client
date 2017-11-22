@@ -14,8 +14,8 @@
 
 package org.openmrs.mobile.activities.visit.visitphoto;
 
+import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.activities.visit.VisitContract;
-import org.openmrs.mobile.activities.visit.VisitPresenterImpl;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.RequestStrategy;
@@ -32,7 +32,7 @@ import org.openmrs.mobile.utilities.ToastUtil;
 import java.util.Date;
 import java.util.List;
 
-public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitContract.VisitPhotoPresenter {
+public class VisitPhotoPresenter extends BasePresenter implements VisitContract.VisitPhotoPresenter {
 
 	private VisitContract.VisitPhotoView visitPhotoView;
 	private String patientUuid, visitUuid, providerUuid;
@@ -224,5 +224,10 @@ public class VisitPhotoPresenter extends VisitPresenterImpl implements VisitCont
 	@Override
 	public void refreshData() {
 		getPhotoMetadata(true);
+	}
+
+	@Override
+	public void loadDependentData(boolean forceRefresh) {
+
 	}
 }

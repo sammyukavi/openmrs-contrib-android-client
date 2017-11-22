@@ -14,8 +14,8 @@
 
 package org.openmrs.mobile.activities.visit.visittasks;
 
+import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.activities.visit.VisitContract;
-import org.openmrs.mobile.activities.visit.VisitPresenterImpl;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
@@ -32,7 +32,7 @@ import org.openmrs.mobile.utilities.ToastUtil;
 
 import java.util.List;
 
-public class VisitTasksPresenter extends VisitPresenterImpl implements VisitContract.VisitTasksPresenter {
+public class VisitTasksPresenter extends BasePresenter implements VisitContract.VisitTasksPresenter {
 
 	private VisitContract.VisitTasksView visitTasksView;
 	private VisitPredefinedTaskDataService visitPredefinedTaskDataService;
@@ -189,7 +189,7 @@ public class VisitTasksPresenter extends VisitPresenterImpl implements VisitCont
 					@Override
 					public void onCompleted(Visit entity) {
 						visitTasksView.showTabSpinner(false);
-							visitTasksView.setVisit(entity);
+						visitTasksView.setVisit(entity);
 					}
 
 					@Override
@@ -201,5 +201,10 @@ public class VisitTasksPresenter extends VisitPresenterImpl implements VisitCont
 					}
 				};
 		visitDataService.getByUuid(visitUUID, QueryOptions.FULL_REP, getSingleCallback);
+	}
+
+	@Override
+	public void loadDependentData(boolean forceRefresh) {
+		
 	}
 }

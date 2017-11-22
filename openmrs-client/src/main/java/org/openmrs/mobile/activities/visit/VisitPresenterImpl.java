@@ -15,7 +15,61 @@
 package org.openmrs.mobile.activities.visit;
 
 import org.openmrs.mobile.activities.BasePresenter;
+import org.openmrs.mobile.data.DataService;
+import org.openmrs.mobile.data.QueryOptions;
+import org.openmrs.mobile.data.RequestStrategy;
+import org.openmrs.mobile.data.impl.VisitDataService;
+import org.openmrs.mobile.data.rest.RestConstants;
+import org.openmrs.mobile.models.Visit;
+import org.openmrs.mobile.utilities.ApplicationConstants;
+import org.openmrs.mobile.utilities.ToastUtil;
 
-public abstract class VisitPresenterImpl extends BasePresenter implements VisitContract.VisitDetailsMainPresenter {
+public class VisitPresenterImpl extends BasePresenter implements VisitContract.VisitDashboardPresenter {
 
+	private VisitContract.VisitDashboardView visitDashboardView;
+	private VisitDataService visitDataService;
+
+	private String visitUuid;
+
+	public VisitPresenterImpl(VisitContract.VisitDashboardView visitDashboardView, String visitUuid) {
+		this.visitDashboardView = visitDashboardView;
+		this.visitUuid = visitUuid;
+
+		visitDataService = dataAccess().visit();
+	}
+
+	@Override
+	public void subscribe() {
+		// Intentionally left blank
+	}
+
+	@Override
+	public void refreshData() {
+		visitDashboardView.displayRefreshingData(true);
+		getVisit(true);
+	}
+
+	private void getVisit(boolean forceRefresh) {
+		QueryOptions options = QueryOptions.FULL_REP;
+		if (forceRefresh) {
+			options = new QueryOptions.Builder().requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL)
+					.customRepresentation(RestConstants.Representations.FULL).build();
+		}
+
+		visitDataService.getByUuid(visitUuid, options, new DataService.GetCallback<Visit>() {
+
+			@Override
+			public void onCompleted(Visit visit) {
+				visitDashboardView.refreshDependentData();
+			}
+
+			@Override
+			public void onError(Throwable t) {
+				visitDashboardView.displayRefreshingData(false);
+				visitDashboardView
+						.showToast(ApplicationConstants.entityName.VISITS + ApplicationConstants.toastMessages
+								.fetchErrorMessage, ToastUtil.ToastType.ERROR);
+			}
+		});
+	}
 }

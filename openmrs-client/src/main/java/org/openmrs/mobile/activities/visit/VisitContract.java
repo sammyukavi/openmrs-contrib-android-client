@@ -30,10 +30,21 @@ import org.openmrs.mobile.utilities.ToastUtil;
 import java.util.List;
 
 public interface VisitContract {
-	interface ViewVisitDetailsMain extends BaseView<VisitDetailsMainPresenter> {
+	interface VisitDashboardView extends BaseView<VisitDashboardPresenter> {
+		void displayRefreshingData(boolean visible);
+
+		void refreshDependentData();
+
+		void showToast(String message, ToastUtil.ToastType toastType);
 	}
 
-	interface VisitTasksView extends ViewVisitDetailsMain {
+	interface VisitDashboardPageView extends BaseView<VisitDashboardPagePresenter> {
+		void refreshData();
+
+		void displayRefreshingData(boolean visible);
+	}
+
+	interface VisitTasksView extends VisitDashboardPageView {
 		void showToast(String message, ToastUtil.ToastType toastType);
 
 		void setOpenVisitTasks(List<VisitTask> visitTaskList);
@@ -56,7 +67,7 @@ public interface VisitContract {
 
 	}
 
-	interface VisitDetailsView extends ViewVisitDetailsMain, IBaseDiagnosisView {
+	interface VisitDetailsView extends VisitDashboardPageView, IBaseDiagnosisView {
 		void showToast(String message, ToastUtil.ToastType toastType);
 
 		void setVisit(Visit visit);
@@ -77,7 +88,7 @@ public interface VisitContract {
 
 	}
 
-	interface VisitPhotoView extends ViewVisitDetailsMain {
+	interface VisitPhotoView extends VisitDashboardPageView {
 		void updateVisitImageMetadata(List<VisitPhoto> visitPhotos);
 
 		void deleteImage(VisitPhoto visitPhoto);
@@ -94,11 +105,16 @@ public interface VisitContract {
 	/*
 	* Presenters
 	*/
-	interface VisitDetailsMainPresenter extends BasePresenterContract {
-
+	interface VisitDashboardPresenter extends BasePresenterContract {
+		void refreshData();
 	}
 
-	interface VisitTasksPresenter extends VisitDetailsMainPresenter {
+	interface VisitDashboardPagePresenter extends BasePresenterContract {
+
+		void loadDependentData(boolean forceRefresh);
+	}
+
+	interface VisitTasksPresenter extends VisitDashboardPagePresenter {
 		void getPredefinedTasks();
 
 		void getVisitTasks();
@@ -112,7 +128,7 @@ public interface VisitContract {
 		void getVisit();
 	}
 
-	interface VisitPhotoPresenter extends VisitDetailsMainPresenter {
+	interface VisitPhotoPresenter extends VisitDashboardPagePresenter {
 		boolean isLoading();
 
 		void setLoading(boolean loading);
@@ -126,8 +142,9 @@ public interface VisitContract {
 		void refreshData();
 	}
 
-	interface VisitDetailsPresenter extends VisitDetailsMainPresenter {
-		void getVisit(boolean forceRefresh);
+	interface VisitDetailsPresenter extends VisitDashboardPagePresenter {
+
+		void getVisit();
 
 		void getPatientUUID();
 
@@ -138,6 +155,5 @@ public interface VisitContract {
 		void getVisitStopDate();
 
 		void getConceptAnswer(String uuid, String searchValue, TextView textView);
-
 	}
 }

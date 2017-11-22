@@ -17,9 +17,12 @@ package org.openmrs.mobile.activities.visit;
 import android.os.Bundle;
 
 import org.openmrs.mobile.activities.ACBaseFragment;
+import org.openmrs.mobile.utilities.ToastUtil;
 
-public class VisitFragment extends ACBaseFragment<VisitContract.VisitDetailsMainPresenter>
-		implements VisitContract.ViewVisitDetailsMain {
+public class VisitFragment extends ACBaseFragment<VisitContract.VisitDashboardPresenter>
+		implements VisitContract.VisitDashboardView {
+
+	private VisitActivity visitActivity;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -27,4 +30,36 @@ public class VisitFragment extends ACBaseFragment<VisitContract.VisitDetailsMain
 		setHasOptionsMenu(true);
 	}
 
+	public static VisitFragment newInstance() {
+		return new VisitFragment();
+	}
+
+	public void refreshData() {
+		mPresenter.refreshData();
+	}
+
+	@Override
+	public void displayRefreshingData(boolean visible) {
+		visitActivity.displayRefreshingData(visible);
+	}
+
+	@Override
+	public void refreshDependentData() {
+		visitActivity.refreshDependentData();
+	}
+
+	@Override
+	public void showToast(String message, ToastUtil.ToastType toastType) {
+		ToastUtil.showShortToast(getContext(), toastType, message);
+	}
+
+	public void setActivity(VisitActivity visitActivity) {
+		this.visitActivity = visitActivity;
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		visitActivity = null;
+	}
 }

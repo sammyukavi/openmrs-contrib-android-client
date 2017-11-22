@@ -19,6 +19,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -34,8 +35,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.openmrs.mobile.R;
+import org.openmrs.mobile.activities.ACBaseFragment;
+import org.openmrs.mobile.activities.visit.VisitActivity;
 import org.openmrs.mobile.activities.visit.VisitContract;
-import org.openmrs.mobile.activities.visit.VisitFragment;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitPredefinedTask;
 import org.openmrs.mobile.models.VisitTask;
@@ -52,12 +54,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class VisitTasksFragment extends VisitFragment implements VisitContract.VisitTasksView {
+public class VisitTasksFragment extends ACBaseFragment<VisitContract.VisitDashboardPagePresenter>
+		implements VisitContract.VisitTasksView {
 
 	private View mRootView;
 	private RecyclerView openViewTasksRecyclerView;
 	private LinearLayoutManager layoutManager;
-	private LinearLayout addTaskLayout, closedTasksLayout, visitTasksTab;
+	private LinearLayout addTaskLayout, closedTasksLayout;
+	private SwipeRefreshLayout visitTasksSwipeRefreshLayout;
 	private RelativeLayout visitTasksProgressBar;
 
 	private List<VisitPredefinedTask> predefinedTasks;
@@ -98,7 +102,7 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 		addtask = (AutoCompleteTextView)v.findViewById(R.id.addVisitTasks);
 		addTaskLayout = (LinearLayout)v.findViewById(R.id.addTaskLayout);
 		closedTasksLayout = (LinearLayout)v.findViewById(R.id.closedTasksLayout);
-		visitTasksTab = (LinearLayout)v.findViewById(R.id.visitTasksTab);
+		visitTasksSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.visitTasksTab);
 		visitTasksProgressBar = (RelativeLayout)v.findViewById(R.id.visitTasksProgressBar);
 
 		noVisitTasks = (TextView)v.findViewById(R.id.noVisitTasks);
@@ -236,6 +240,14 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 				addtask.setText(ApplicationConstants.EMPTY_STRING);
 			}
 		});
+
+		visitTasksSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+
+			@Override
+			public void onRefresh() {
+				((VisitActivity) getActivity()).refreshData();
+			}
+		});
 	}
 
 	@Override
@@ -286,10 +298,10 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 	public void showTabSpinner(boolean visibility) {
 		if (visibility) {
 			visitTasksProgressBar.setVisibility(View.VISIBLE);
-			visitTasksTab.setVisibility(View.GONE);
+			visitTasksSwipeRefreshLayout.setVisibility(View.GONE);
 		} else {
 			visitTasksProgressBar.setVisibility(View.GONE);
-			visitTasksTab.setVisibility(View.VISIBLE);
+			visitTasksSwipeRefreshLayout.setVisibility(View.VISIBLE);
 		}
 	}
 
@@ -342,7 +354,14 @@ public class VisitTasksFragment extends VisitFragment implements VisitContract.V
 		}
 	}
 
+	@Override
 	public void refreshData() {
+		visitTasksSwipeRefreshLayout.setRefreshing(true);
+//		((VisitTasksPresenter) mPresenter).getVisit(true);
+	}
 
+	@Override
+	public void displayRefreshingData(boolean visible) {
+		visitTasksSwipeRefreshLayout.setRefreshing(visible);
 	}
 }

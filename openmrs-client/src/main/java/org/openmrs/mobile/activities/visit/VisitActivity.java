@@ -14,10 +14,6 @@
 
 package org.openmrs.mobile.activities.visit;
 
-import static org.openmrs.mobile.activities.visit.VisitPageAdapter.VISIT_DETAILS_TAB_POS;
-import static org.openmrs.mobile.activities.visit.VisitPageAdapter.VISIT_IMAGES_TAB_POS;
-import static org.openmrs.mobile.activities.visit.VisitPageAdapter.VISIT_TASKS_TAB_POS;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -58,7 +54,7 @@ import java.util.ArrayList;
 
 public class VisitActivity extends ACBaseActivity {
 	private static final int END_VISIT_RESULT = 1;
-	public VisitContract.VisitDetailsMainPresenter visitDetailsMainPresenter;
+	public VisitContract.VisitDashboardPagePresenter visitDetailsMainPresenter;
 	private PatientHeaderContract.Presenter patientHeaderPresenter;
 	private String patientUuid;
 	private String visitUuid;
@@ -70,6 +66,8 @@ public class VisitActivity extends ACBaseActivity {
 	private FloatingActionMenu visitDetailsMenu;
 
 	private VisitPageAdapter visitPageAdapter;
+
+	private VisitFragment visitFragment;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +90,7 @@ public class VisitActivity extends ACBaseActivity {
 			visitUuid = extras.getString(ApplicationConstants.BundleKeys.VISIT_UUID_BUNDLE);
 			providerUuid = OpenMRS.getInstance().getCurrentProviderUUID();
 			visitClosedDate = extras.getString(ApplicationConstants.BundleKeys.VISIT_CLOSED_DATE);
+
 			visitPageAdapter = new VisitPageAdapter(getSupportFragmentManager(), patientUuid, visitUuid, providerUuid,
 					visitClosedDate);
 			initViewPager();
@@ -112,6 +111,11 @@ public class VisitActivity extends ACBaseActivity {
 			}
 
 		}
+
+		// Create fragment
+		visitFragment = VisitFragment.newInstance();
+		visitFragment.setActivity(this);
+		visitFragment.setPresenter(new VisitPresenterImpl(visitFragment, visitUuid));
 
 		captureVitalsButton = (FloatingActionButton)findViewById(R.id.capture_vitals);
 		auditData = (FloatingActionButton)findViewById(R.id.auditDataForm);
@@ -291,14 +295,30 @@ public class VisitActivity extends ACBaseActivity {
 	}
 
 	public void refreshData() {
-		if (visitPageAdapter.getRegisteredFragment(VISIT_DETAILS_TAB_POS) != null) {
-			((VisitDetailsFragment) visitPageAdapter.getRegisteredFragment(VISIT_DETAILS_TAB_POS)).refreshData();
+		visitFragment.refreshData();
+	}
+
+	public void displayRefreshingData(boolean visible) {
+		for (int tabIndex = 0; tabIndex < visitPageAdapter.getCount(); tabIndex++) {
+			if (visitPageAdapter.getRegisteredFragment(tabIndex) != null) {
+				((VisitContract.VisitDashboardPageView) visitPageAdapter.getRegisteredFragment(tabIndex))
+						.displayRefreshingData(visible);
+			}
 		}
-		if (visitPageAdapter.getRegisteredFragment(VISIT_TASKS_TAB_POS) != null) {
-			((VisitTasksFragment) visitPageAdapter.getRegisteredFragment(VISIT_TASKS_TAB_POS)).refreshData();
+	}
+
+	public void refreshDependentData() {
+		for (int tabIndex = 0; tabIndex < visitPageAdapter.getCount(); tabIndex++) {
+			if (visitPageAdapter.getRegisteredFragment(tabIndex) != null) {
+				((VisitContract.VisitDashboardPageView) visitPageAdapter.getRegisteredFragment(tabIndex))
+						.refreshData();
+			}
 		}
-		if (visitPageAdapter.getRegisteredFragment(VISIT_IMAGES_TAB_POS) != null) {
-			((VisitPhotoFragment) visitPageAdapter.getRegisteredFragment(VISIT_IMAGES_TAB_POS)).refreshData();
-		}
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		visitFragment.onDestroy();
 	}
 }

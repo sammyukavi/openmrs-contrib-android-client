@@ -61,14 +61,13 @@ import org.openmrs.mobile.utilities.ToastUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.VisitDetailsMainPresenter>
+public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.VisitDashboardPagePresenter>
 		implements VisitContract.VisitDetailsView {
 
 	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(DateUtils.PATIENT_DASHBOARD_VISIT_DATE_FORMAT);
@@ -119,7 +118,7 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 		primaryDiagnosesRecycler.setLayoutManager(primaryDiagnosisLayoutManager);
 		secondaryDiagnosesRecycler.setLayoutManager(secondaryDiagnosisLayoutManager);
 
-		((VisitDetailsPresenter)mPresenter).getVisit(false);
+		((VisitDetailsPresenter)mPresenter).getVisit();
 		((VisitDetailsPresenter)mPresenter).getPatientUUID();
 		((VisitDetailsPresenter)mPresenter).getVisitUUID();
 		((VisitDetailsPresenter)mPresenter).getProviderUUID();
@@ -655,8 +654,13 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 		}
 	}
 
+	@Override
 	public void refreshData() {
-		visitDetailsSwipeRefreshLayout.setRefreshing(true);
-		((VisitDetailsPresenter) mPresenter).getVisit(true);
+		mPresenter.loadDependentData(true);
+	}
+
+	@Override
+	public void displayRefreshingData(boolean visible) {
+		visitDetailsSwipeRefreshLayout.setRefreshing(visible);
 	}
 }

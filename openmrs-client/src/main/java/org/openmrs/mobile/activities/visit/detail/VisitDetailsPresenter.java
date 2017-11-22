@@ -16,27 +16,26 @@ package org.openmrs.mobile.activities.visit.detail;
 import android.util.Log;
 import android.widget.TextView;
 
+import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.activities.visit.VisitContract;
 import org.openmrs.mobile.activities.visit.VisitPresenterImpl;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
-import org.openmrs.mobile.data.RequestStrategy;
 import org.openmrs.mobile.data.impl.ConceptAnswerDataService;
 import org.openmrs.mobile.data.impl.ConceptDataService;
 import org.openmrs.mobile.data.impl.VisitAttributeTypeDataService;
 import org.openmrs.mobile.data.impl.VisitDataService;
 import org.openmrs.mobile.data.rest.RestConstants;
-import org.openmrs.mobile.models.Concept;
 import org.openmrs.mobile.models.ConceptAnswer;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitAttributeType;
 import org.openmrs.mobile.utilities.ApplicationConstants;
-import org.openmrs.mobile.utilities.ToastUtil;
+import org.openmrs.mobile.utilities.ToastUtil.ToastType;
 
 import java.util.List;
 
-public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitContract.VisitDetailsPresenter {
+public class VisitDetailsPresenter extends BasePresenter implements VisitContract.VisitDetailsPresenter {
 
 	VisitContract.VisitDetailsView visitDetailsView;
 	private VisitAttributeTypeDataService visitAttributeTypeDataService;
@@ -72,10 +71,8 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 	}
 
 	@Override
-	public void getVisit(boolean forceRefresh) {
-		if (!forceRefresh) {
-			visitDetailsView.showTabSpinner(true);
-		}
+	public void getVisit() {
+		visitDetailsView.showTabSpinner(true);
 		DataService.GetCallback<Visit> getSingleCallback =
 				new DataService.GetCallback<Visit>() {
 					@Override
@@ -93,15 +90,10 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 						visitDetailsView.showTabSpinner(false);
 						visitDetailsView
 								.showToast(ApplicationConstants.entityName.VISITS + ApplicationConstants.toastMessages
-										.fetchErrorMessage, ToastUtil.ToastType.ERROR);
+										.fetchErrorMessage, ToastType.ERROR);
 					}
 				};
-		QueryOptions options = QueryOptions.FULL_REP;
-		if (forceRefresh) {
-			options = new QueryOptions.Builder().requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL)
-					.customRepresentation(RestConstants.Representations.FULL).build();
-		}
-		visitDataService.getByUuid(visitUUID, options, getSingleCallback);
+		visitDataService.getByUuid(visitUUID, QueryOptions.FULL_REP, getSingleCallback);
 	}
 
 	@Override
@@ -125,7 +117,6 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 	}
 
 	private void loadVisitAttributeTypes() {
-		visitDetailsView.showTabSpinner(true);
 
 		QueryOptions options = new QueryOptions.Builder()
 				.cacheKey(ApplicationConstants.CacheKays.VISIT_ATTRIBUTE_TYPE)
@@ -139,12 +130,14 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 							public void onCompleted(List<VisitAttributeType> entities) {
 								visitDetailsView.showTabSpinner(false);
 								visitDetailsView.setAttributeTypes(entities);
+								visitDetailsView.displayRefreshingData(false);
 							}
 
 							@Override
 							public void onError(Throwable t) {
 								visitDetailsView.showTabSpinner(false);
-								ToastUtil.error(t.getMessage());
+								visitDetailsView.showToast(t.getMessage(), ToastType.ERROR);
+								visitDetailsView.displayRefreshingData(false);
 							}
 						});
 	}
@@ -163,8 +156,13 @@ public class VisitDetailsPresenter extends VisitPresenterImpl implements VisitCo
 
 			@Override
 			public void onError(Throwable t) {
-				ToastUtil.error(t.getMessage());
+				visitDetailsView.showToast(t.getMessage(), ToastType.ERROR);
 			}
 		});
+	}
+
+	@Override
+	public void loadDependentData(boolean forceRefresh) {
+		loadVisitAttributeTypes();
 	}
 }

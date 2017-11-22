@@ -48,6 +48,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.openmrs.mobile.R;
+import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.activities.visit.VisitContract;
 import org.openmrs.mobile.activities.visit.VisitFragment;
 import org.openmrs.mobile.models.VisitPhoto;
@@ -70,7 +71,8 @@ import permissions.dispatcher.PermissionRequest;
 import permissions.dispatcher.RuntimePermissions;
 
 @RuntimePermissions
-public class VisitPhotoFragment extends VisitFragment implements VisitContract.VisitPhotoView {
+public class VisitPhotoFragment extends ACBaseFragment<VisitContract.VisitDashboardPagePresenter>
+		implements VisitContract.VisitPhotoView {
 
 	//Upload Visit photo
 	private final static int IMAGE_REQUEST = 1;
@@ -322,7 +324,13 @@ public class VisitPhotoFragment extends VisitFragment implements VisitContract.V
 		}
 	}
 
+	@Override
 	public void refreshData() {
+
+	}
+
+	@Override
+	public void displayRefreshingData(boolean visible) {
 
 	}
 }

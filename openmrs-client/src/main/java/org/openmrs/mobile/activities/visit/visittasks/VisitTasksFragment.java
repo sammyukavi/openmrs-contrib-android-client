@@ -245,7 +245,7 @@ public class VisitTasksFragment extends ACBaseFragment<VisitContract.VisitDashbo
 
 			@Override
 			public void onRefresh() {
-				((VisitActivity) getActivity()).refreshData();
+				((VisitActivity) getActivity()).refreshBaseData();
 			}
 		});
 	}
@@ -284,7 +284,7 @@ public class VisitTasksFragment extends ACBaseFragment<VisitContract.VisitDashbo
 			if (visit.getStopDatetime() != null) {
 				addTaskLayout.setVisibility(View.GONE);
 			}
-			((VisitTasksPresenter)mPresenter).getVisitTasks();
+			((VisitTasksPresenter)mPresenter).getVisitTasks(false);
 		}
 
 	}
@@ -363,5 +363,10 @@ public class VisitTasksFragment extends ACBaseFragment<VisitContract.VisitDashbo
 	@Override
 	public void displayRefreshingData(boolean visible) {
 		visitTasksSwipeRefreshLayout.setRefreshing(visible);
+	}
+
+	@Override
+	public void refreshBaseData() {
+		((VisitActivity) getActivity()).refreshBaseData();
 	}
 }

@@ -49,6 +49,7 @@ import android.widget.TextView;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.activities.ACBaseFragment;
+import org.openmrs.mobile.activities.visit.VisitActivity;
 import org.openmrs.mobile.activities.visit.VisitContract;
 import org.openmrs.mobile.activities.visit.VisitFragment;
 import org.openmrs.mobile.models.VisitPhoto;
@@ -332,5 +333,10 @@ public class VisitPhotoFragment extends ACBaseFragment<VisitContract.VisitDashbo
 	@Override
 	public void displayRefreshingData(boolean visible) {
 
+	}
+
+	@Override
+	public void refreshBaseData() {
+		((VisitActivity) getActivity()).refreshBaseData();
 	}
 }

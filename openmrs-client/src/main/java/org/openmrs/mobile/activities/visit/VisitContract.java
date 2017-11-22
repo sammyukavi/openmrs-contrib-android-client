@@ -42,6 +42,8 @@ public interface VisitContract {
 		void refreshData();
 
 		void displayRefreshingData(boolean visible);
+
+		void refreshBaseData();
 	}
 
 	interface VisitTasksView extends VisitDashboardPageView {
@@ -106,18 +108,20 @@ public interface VisitContract {
 	* Presenters
 	*/
 	interface VisitDashboardPresenter extends BasePresenterContract {
-		void refreshData();
+		void refreshBaseData();
 	}
 
 	interface VisitDashboardPagePresenter extends BasePresenterContract {
 
 		void loadDependentData(boolean forceRefresh);
+
+		void dataRefreshWasRequested();
 	}
 
 	interface VisitTasksPresenter extends VisitDashboardPagePresenter {
 		void getPredefinedTasks();
 
-		void getVisitTasks();
+		void getVisitTasks(boolean forceRefresh);
 
 		void addVisitTasks(VisitTask visitTasks);
 

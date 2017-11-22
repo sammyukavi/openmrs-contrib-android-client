@@ -84,7 +84,7 @@ public class VisitTasksPresenter extends BasePresenter implements VisitContract.
 	}
 
 	@Override
-	public void getVisitTasks() {
+	public void getVisitTasks(boolean forceRefresh) {
 		visitTasksView.showTabSpinner(true);
 		PagingInfo pagingInfo = new PagingInfo(page, limit);
 		// get open tasks
@@ -205,6 +205,11 @@ public class VisitTasksPresenter extends BasePresenter implements VisitContract.
 
 	@Override
 	public void loadDependentData(boolean forceRefresh) {
-		
+		getVisitTasks(true);
+	}
+
+	@Override
+	public void dataRefreshWasRequested() {
+
 	}
 }

@@ -294,8 +294,8 @@ public class VisitActivity extends ACBaseActivity {
 		getApplicationContext().startActivity(intent);
 	}
 
-	public void refreshData() {
-		visitFragment.refreshData();
+	public void refreshBaseData() {
+		visitFragment.refreshBaseData();
 	}
 
 	public void displayRefreshingData(boolean visible) {

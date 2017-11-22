@@ -44,7 +44,7 @@ public class VisitPresenterImpl extends BasePresenter implements VisitContract.V
 	}
 
 	@Override
-	public void refreshData() {
+	public void refreshBaseData() {
 		visitDashboardView.displayRefreshingData(true);
 		getVisit(true);
 	}

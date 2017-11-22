@@ -280,7 +280,7 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 
 			@Override
 			public void onRefresh() {
-				((VisitActivity) getActivity()).refreshData();
+				mPresenter.dataRefreshWasRequested();
 			}
 		});
 	}
@@ -662,5 +662,10 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 	@Override
 	public void displayRefreshingData(boolean visible) {
 		visitDetailsSwipeRefreshLayout.setRefreshing(visible);
+	}
+
+	@Override
+	public void refreshBaseData() {
+		((VisitActivity) getActivity()).refreshBaseData();
 	}
 }

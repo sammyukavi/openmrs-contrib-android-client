@@ -34,8 +34,8 @@ public class VisitFragment extends ACBaseFragment<VisitContract.VisitDashboardPr
 		return new VisitFragment();
 	}
 
-	public void refreshData() {
-		mPresenter.refreshData();
+	public void refreshBaseData() {
+		mPresenter.refreshBaseData();
 	}
 
 	@Override

@@ -165,4 +165,9 @@ public class VisitDetailsPresenter extends BasePresenter implements VisitContrac
 	public void loadDependentData(boolean forceRefresh) {
 		loadVisitAttributeTypes();
 	}
+
+	@Override
+	public void dataRefreshWasRequested() {
+		visitDetailsView.refreshBaseData();
+	}
 }

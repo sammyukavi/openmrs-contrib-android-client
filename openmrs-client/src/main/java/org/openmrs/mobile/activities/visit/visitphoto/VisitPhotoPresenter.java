@@ -230,4 +230,9 @@ public class VisitPhotoPresenter extends BasePresenter implements VisitContract.
 	public void loadDependentData(boolean forceRefresh) {
 
 	}
+
+	@Override
+	public void dataRefreshWasRequested() {
+
+	}
 }

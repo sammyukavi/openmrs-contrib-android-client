@@ -20,6 +20,7 @@ import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.impl.VisitDataService;
+import org.openmrs.mobile.event.DataRefreshEvent;
 import org.openmrs.mobile.event.VisitDashboardDataRefreshEvent;
 import org.openmrs.mobile.listeners.retrofit.DefaultResponseCallbackListener;
 import org.openmrs.mobile.models.Visit;
@@ -76,6 +77,7 @@ public abstract class BaseVisitPresenter extends BasePresenter implements VisitC
 	protected void refreshAllTabData() {
 		eventBus.post(new VisitDashboardDataRefreshEvent(ApplicationConstants.EventMessages.DataRefresh
 				.VisitDashboard.REFRESHING_BASE_DATA));
+		eventBus.post(new DataRefreshEvent(ApplicationConstants.EventMessages.DataRefresh.REFRESH));
 		refreshBaseData(new DefaultResponseCallbackListener() {
 
 			@Override

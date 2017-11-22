@@ -1,16 +1,8 @@
 package org.openmrs.mobile.event;
 
-import android.support.annotation.Nullable;
-
-public class VisitDashboardDataRefreshEvent {
-
-	private String message;
+public class VisitDashboardDataRefreshEvent extends OpenMRSEvent {
 
 	public VisitDashboardDataRefreshEvent(String message) {
-		this.message = message;
-	}
-
-	public String getMessage() {
-		return message;
+		super(message);
 	}
 }

@@ -57,7 +57,7 @@ public class PatientDashboardFragment extends BaseDiagnosisFragment<PatientDashb
 
 	private FloatingActionButton startVisitButton, editPatient;
 	private Patient patient;
-	private OpenMRS instance = OpenMRS.getInstance();
+	private OpenMRS openMRS = OpenMRS.getInstance();
 	private Intent intent;
 	private Location location;
 	private RelativeLayout dashboardScreen, noPatientDataLayout;
@@ -125,14 +125,12 @@ public class PatientDashboardFragment extends BaseDiagnosisFragment<PatientDashb
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View fragmentView = inflater.inflate(R.layout.fragment_patient_dashboard, container, false);
-		patientUuid = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys
-				.PATIENT_UUID_BUNDLE);
 
 		initializeViewFields(fragmentView);
 		initializeListeners(startVisitButton, editPatient);
 
 		//set start index incase it's cached somewhere
-		mPresenter.fetchPatientData(patientUuid, false);
+		mPresenter.fetchPatientData(false);
 		FontsUtil.setFont((ViewGroup)this.getActivity().findViewById(android.R.id.content));
 
 		return fragmentView;
@@ -179,7 +177,8 @@ public class PatientDashboardFragment extends BaseDiagnosisFragment<PatientDashb
 
 			@Override
 			public void onRefresh() {
-				mPresenter.fetchPatientData(patientUuid, true);
+				mPresenter.dataRefreshWasRequested();
+				mPresenter.fetchPatientData(true);
 			}
 		});
 	}
@@ -218,7 +217,7 @@ public class PatientDashboardFragment extends BaseDiagnosisFragment<PatientDashb
 	@Override
 	public void patientContacts(Patient patient) {
 		this.patient = patient;
-		instance.setPatientUuid(patient.getPerson().getUuid());
+		openMRS.setPatientUuid(patient.getPerson().getUuid());
 	}
 
 	@Override
@@ -228,7 +227,7 @@ public class PatientDashboardFragment extends BaseDiagnosisFragment<PatientDashb
 			if (visit.getStopDatetime() == null) {
 				//hasActiveVisit = true;
 				startVisitButton.setVisibility(View.GONE);
-				instance.setVisitUuid(visit.getUuid());
+				openMRS.setVisitUuid(visit.getUuid());
 				break;
 			}
 		}
@@ -257,7 +256,7 @@ public class PatientDashboardFragment extends BaseDiagnosisFragment<PatientDashb
 	public void setProviderUuid(String providerUuid) {
 		if (StringUtils.isBlank(providerUuid))
 			return;
-		SharedPreferences.Editor editor = instance.getPreferences().edit();
+		SharedPreferences.Editor editor = openMRS.getPreferences().edit();
 		editor.putString(ApplicationConstants.BundleKeys.PROVIDER_UUID_BUNDLE, providerUuid);
 		editor.commit();
 	}
@@ -308,7 +307,7 @@ public class PatientDashboardFragment extends BaseDiagnosisFragment<PatientDashb
 	public void onDestroy() {
 		super.onDestroy();
 
-		instance.setPatientUuid(ApplicationConstants.EMPTY_STRING);
+		openMRS.setPatientUuid(ApplicationConstants.EMPTY_STRING);
 	}
 
 	@Override

@@ -390,6 +390,8 @@ public abstract class ApplicationConstants {
 
 		public static class DataRefresh {
 
+			public static final String REFRESH = "Refresh";
+
 			public static class VisitDashboard {
 
 				public static final String REFRESHING_BASE_DATA = "Refreshing Base Data";

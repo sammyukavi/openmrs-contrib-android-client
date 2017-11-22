@@ -149,10 +149,11 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 		auditDataSortOrder.put(ApplicationConstants.ObservationLocators.FIRST_MAP, 16);
 		auditDataSortOrder.put(ApplicationConstants.ObservationLocators.SURGERY_DURING_HOSPITAL_STAY, 17);
 		auditDataSortOrder.put(ApplicationConstants.ObservationLocators.FIRST_HEART_RATE, 18);
-		auditDataSortOrder.put(ApplicationConstants.ObservationLocators.FIRST_GCS_SCORE, 19);
-		auditDataSortOrder.put(ApplicationConstants.ObservationLocators.INTUBATION_ON_FIRST_GCS,20);
-		auditDataSortOrder.put(ApplicationConstants.ObservationLocators.SEDETION_PRIOR_FIRST_GCS_SCORE_ICU, 21);
-		auditDataSortOrder.put(ApplicationConstants.ObservationLocators.AUDIT_DATA_COMPLETE, 22);
+		auditDataSortOrder.put(ApplicationConstants.ObservationLocators.FIRST_RESPIRATORY_RATE, 19);
+		auditDataSortOrder.put(ApplicationConstants.ObservationLocators.FIRST_GCS_SCORE, 20);
+		auditDataSortOrder.put(ApplicationConstants.ObservationLocators.INTUBATION_ON_FIRST_GCS, 21);
+		auditDataSortOrder.put(ApplicationConstants.ObservationLocators.SEDETION_PRIOR_FIRST_GCS_SCORE_ICU, 22);
+		auditDataSortOrder.put(ApplicationConstants.ObservationLocators.AUDIT_DATA_COMPLETE, 23);
 	}
 
 	@Override

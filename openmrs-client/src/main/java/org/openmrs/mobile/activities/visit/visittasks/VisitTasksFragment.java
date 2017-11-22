@@ -288,19 +288,10 @@ public class VisitTasksFragment extends ACBaseFragment<VisitContract.VisitDashbo
 	}
 
 	@Override
-	public void refresh() {
-		((VisitTasksPresenter)mPresenter).getVisit();
-		((VisitTasksPresenter)mPresenter).getPredefinedTasks();
-	}
-
-	@Override
 	public void setVisit(Visit visit) {
 		this.visit = visit;
-		if (visit != null) {
-			if (visit.getStopDatetime() != null) {
-				addTaskLayout.setVisibility(View.GONE);
-			}
-			((VisitTasksPresenter)mPresenter).getVisitTasks(false);
+		if (visit != null && visit.getStopDatetime() != null) {
+			addTaskLayout.setVisibility(View.GONE);
 		}
 
 	}

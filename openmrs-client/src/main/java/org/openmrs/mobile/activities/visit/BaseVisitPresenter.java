@@ -19,9 +19,7 @@ import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.QueryOptions;
-import org.openmrs.mobile.data.RequestStrategy;
 import org.openmrs.mobile.data.impl.VisitDataService;
-import org.openmrs.mobile.data.rest.RestConstants;
 import org.openmrs.mobile.event.VisitDashboardDataRefreshEvent;
 import org.openmrs.mobile.listeners.retrofit.DefaultResponseCallbackListener;
 import org.openmrs.mobile.models.Visit;
@@ -58,8 +56,7 @@ public abstract class BaseVisitPresenter extends BasePresenter implements VisitC
 	private void getVisit(boolean forceRefresh, DefaultResponseCallbackListener responseCallbackListener) {
 		QueryOptions options = QueryOptions.FULL_REP;
 		if (forceRefresh) {
-			options = new QueryOptions.Builder().requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL)
-					.customRepresentation(RestConstants.Representations.FULL).build();
+			options = QueryOptions.REMOTE_FULL_REP;
 		}
 
 		visitDataService.getByUuid(visitUuid, options, new DataService.GetCallback<Visit>() {

@@ -74,11 +74,10 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 		if (!forceRefresh) {
 			patientDashboardView.showPageSpinner(true);
 		}
-		QueryOptions options = QueryOptions.FULL_REP;
 
+		QueryOptions options = QueryOptions.FULL_REP;
 		if (forceRefresh) {
-			options = new QueryOptions.Builder().requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL)
-					.customRepresentation(RestConstants.Representations.FULL).build();
+			options = QueryOptions.REMOTE_FULL_REP;
 		}
 
 		patientDataService.getByUuid(uuid, options, new DataService.GetCallback<Patient>() {

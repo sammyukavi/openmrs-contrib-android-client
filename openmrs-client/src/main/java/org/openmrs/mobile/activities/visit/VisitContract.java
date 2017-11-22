@@ -54,8 +54,6 @@ public interface VisitContract {
 
 		void setUnSelectedVisitTask(VisitTask visitTask);
 
-		void refresh();
-
 		void setVisit(Visit visit);
 
 		void clearTextField();
@@ -110,17 +108,12 @@ public interface VisitContract {
 	}
 
 	interface VisitTasksPresenter extends VisitDashboardPagePresenter {
-		void getPredefinedTasks();
-
-		void getVisitTasks(boolean forceRefresh);
 
 		void addVisitTasks(VisitTask visitTasks);
 
 		void updateVisitTask(VisitTask visitTask);
 
 		void createVisitTasksObject(String visitTask);
-
-		void getVisit();
 	}
 
 	interface VisitPhotoPresenter extends VisitDashboardPagePresenter {

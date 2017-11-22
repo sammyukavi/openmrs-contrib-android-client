@@ -62,6 +62,7 @@ import java.util.List;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormAnswers.ANSWER_NEGATIVE;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormAnswers.ANSWER_NO;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_FIRST_RESPIRATORY_RATE_ICU;
+import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_INTUBATION_AT_GCS;
 import static org.openmrs.mobile.utilities.ApplicationConstants.ObservationLocators.SCHEDULED_IN_CLINIC;
 import static org.openmrs.mobile.utilities.ApplicationConstants.ObservationLocators.NOT_SCHEDULED_IN_CLINIC;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormAnswers.ANSWER_POSITIVE;
@@ -116,7 +117,8 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 			hBa1cObservation, inpatientServiceTypeObservation, auditCompleteObservation, mechanicalVentilationObservation,
 			vaospressorsObservation, confirmedInfectionObservation, firstSbpObservation, firstMapObservation,
 			priorSedetionObservation, surgeryObservation, firstIcuHeartRateObservation, firstGcsScoreObservation,
-			patientDiabeticObservation, wardStayAdmissionObservation, firstIcuRespiratoryRateObservation;
+			patientDiabeticObservation, wardStayAdmissionObservation, firstIcuRespiratoryRateObservation,
+			intubationObservation;
 	private RadioButton deathInHospitalYes, deathInHospitalNo, palliativeConsultYes, palliativeConsultNo,
 			palliativeConsultUknown, preopRiskAssessmentYes, preopRiskAssessmentNo, preopRiskAssessmentUknown, icuStayYes,
 			icuStayNo, icuStayUnknown, hduStayYes, hduStayNo, hduStayUnknown, hduComgmtYes, hduComgmtNo, hduComgmtUnknown,
@@ -126,7 +128,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 			first_sbp_unknown, any_prior_sedetion_yes, any_prior_sedetion_no, any_prior_sedetion_unknown, surgery_na,
 			surgery_planned, surgery_unplanned, first_map_yes, first_map_no, first_map_unknown, ward_stay_admission_yes,
 			ward_stay_admission_no, ward_stay_admission_unknown, patient_diabetic_yes, patient_diabetic_no,
-			patient_diabetic_unknown;
+			patient_diabetic_unknown, intubatedYes, intubatedNo, intubatedUnknown;
 	private CheckBox auditComplete;
 
 	private Spinner inpatientServiceType;
@@ -169,7 +171,8 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 				first_sbp_yes, first_sbp_no, first_sbp_unknown, any_prior_sedetion_yes, any_prior_sedetion_no,
 				any_prior_sedetion_unknown, surgery_na, surgery_planned, surgery_unplanned, first_map_yes, first_map_no,
 				first_map_unknown, ward_stay_admission_yes, ward_stay_admission_no, ward_stay_admission_unknown,
-				patient_diabetic_yes, patient_diabetic_no, patient_diabetic_unknown);
+				patient_diabetic_yes, patient_diabetic_no, patient_diabetic_unknown, intubatedYes, intubatedNo,
+				intubatedUnknown);
 
 		initCheckboxListeners(auditComplete);
 
@@ -320,6 +323,9 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		auditDataFormProgressBar = (RelativeLayout)fragmentView.findViewById(R.id.auditDataFormProgressBar);
 		auditDataFormScreen = (LinearLayout)fragmentView.findViewById(R.id.auditDataFormScreen);
 		auditScrollView = (ScrollView)fragmentView.findViewById(R.id.auditDataFormScrollView);
+		intubatedYes = (RadioButton) fragmentView.findViewById(R.id.intubationDone);
+		intubatedNo = (RadioButton) fragmentView.findViewById(R.id.intubationNotDone);
+		intubatedUnknown = (RadioButton) fragmentView.findViewById(R.id.intubationNotKnown);
 	}
 
 	private void initObservations() {
@@ -329,7 +335,8 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 								preopRiskAssessmentObservation = icuStayObservation = hduStayObservation =
 										hduComgmtObservation = hivPositiveObservation = firstIcuRespiratoryRateObservation =
 												auditCompleteObservation = hBa1cObservation = cd4Observation =
-														patientDiabeticObservation = wardStayAdmissionObservation = null;
+														patientDiabeticObservation = wardStayAdmissionObservation =
+																intubationObservation = null;
 
 	}
 
@@ -707,6 +714,22 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 										ApplicationConstants.ObservationLocators.UNKNOWN);
 				showAnimateView(false, hba1cTextLayout);
 				setObservationVoided(hBa1cObservation);
+				break;
+
+			case R.id.intubationDone:
+				intubationObservation = setObservationFields(intubationObservation, CONCEPT_INTUBATION_AT_GCS, CONCEPT_ANSWER_YES,
+						ApplicationConstants.ObservationLocators.INTUBATION_ON_FIRST_GCS +
+								ApplicationConstants.ObservationLocators.YES);
+				break;
+			case R.id.intubationNotDone:
+				intubationObservation = setObservationFields(intubationObservation, CONCEPT_INTUBATION_AT_GCS, CONCEPT_ANSWER_NO,
+						ApplicationConstants.ObservationLocators.INTUBATION_ON_FIRST_GCS +
+								ApplicationConstants.ObservationLocators.NO);
+				break;
+			case R.id.intubationNotKnown:
+				intubationObservation = setObservationFields(intubationObservation, CONCEPT_INTUBATION_AT_GCS, CONCEPT_ANSWER_UNKNOWN,
+						ApplicationConstants.ObservationLocators.INTUBATION_ON_FIRST_GCS +
+								ApplicationConstants.ObservationLocators.UNKNOWN);
 				break;
 			default:
 				break;
@@ -1203,6 +1226,20 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 
 					}
 
+				case ApplicationConstants.ObservationLocators.INTUBATION_ON_FIRST_GCS:
+					if (displayValue.equalsIgnoreCase(ANSWER_YES)) {
+						intubatedYes.setChecked(true);
+						intubationObservation = setObservationFields(observation, CONCEPT_INTUBATION_AT_GCS,
+								CONCEPT_ANSWER_YES);
+					} else if (displayValue.equalsIgnoreCase(ANSWER_NO)) {
+						intubatedYes.setChecked(false);
+						intubationObservation = setObservationFields(observation, CONCEPT_INTUBATION_AT_GCS,
+								CONCEPT_ANSWER_NO);
+					} else {
+						intubatedYes.setChecked(false);
+						intubationObservation = setObservationFields(observation, CONCEPT_INTUBATION_AT_GCS,
+								CONCEPT_ANSWER_UNKNOWN);
+					}
 					break;
 
 				default:
@@ -1344,6 +1381,10 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 						ApplicationConstants.ObservationLocators.FIRST_GCS_SCORE + firstGcsScore.getText().toString());
 				observations.add(firstGcsScoreObservation);
 			}
+		}
+
+		if (intubationObservation != null ){
+			observations.add(intubationObservation);
 		}
 
 		if (cd4.getText().length() > 0) {

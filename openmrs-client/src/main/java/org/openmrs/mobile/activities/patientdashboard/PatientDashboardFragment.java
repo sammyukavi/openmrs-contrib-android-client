@@ -178,7 +178,6 @@ public class PatientDashboardFragment extends BaseDiagnosisFragment<PatientDashb
 			@Override
 			public void onRefresh() {
 				mPresenter.dataRefreshWasRequested();
-				mPresenter.fetchPatientData(true);
 			}
 		});
 	}

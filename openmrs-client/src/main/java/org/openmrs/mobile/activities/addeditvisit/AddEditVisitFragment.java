@@ -208,7 +208,8 @@ public class AddEditVisitFragment extends ACBaseFragment<AddEditVisitContract.Pr
 			if (componentType instanceof RadioButton) {
 				visitAttribute.setValue(((RadioButton)componentType).isChecked() ? "true" : "false");
 			} else if (componentType instanceof EditText) {
-				visitAttribute.setValue(ViewUtils.getInput((EditText)componentType));
+				String value = ViewUtils.getInput((EditText)componentType);
+				visitAttribute.setValue(value != null ? value : " ");
 			}
 
 			if (visitAttribute.getValue() != null) {

@@ -333,6 +333,8 @@ public abstract class ApplicationConstants {
 		public static int AUDIT_HBA1C_MIN = 4;
 		public static int AUDIT_HBA1C_MAX = 25;
 
+		public static int AUDIT_1ST_RESPIRATORY_RATE_MIN = 0;
+		public static int AUDIT_1ST_RESPIRATORY_RATE_MAX = 100;
 	}
 
 	public static class CacheKays {

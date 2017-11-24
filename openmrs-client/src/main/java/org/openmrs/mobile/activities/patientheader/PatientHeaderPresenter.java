@@ -8,6 +8,7 @@ import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.impl.PatientDataService;
+import org.openmrs.mobile.event.DataRefreshEvent;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.DateUtils;
@@ -65,7 +66,13 @@ public class PatientHeaderPresenter extends BasePresenter implements PatientHead
 	}
 
 	@Override
-	public void notifyVisitFetchComplete() {
+	public void dataRefreshEventOccurred(DataRefreshEvent dataRefreshEvent) {
+		if (dataRefreshEvent.getMessage().equalsIgnoreCase(ApplicationConstants.EventMessages.DataRefresh.DATA_RETRIEVED)) {
+			refreshPatientLastSyncTime();
+		}
+	}
+
+	private void refreshPatientLastSyncTime() {
 		if (currentPatient != null && currentPatientLastSyncTime == null) {
 			currentPatientLastSyncTime = patientDataService.getLastSyncTime(currentPatient.getUuid());
 			updatePatientSyncAge();

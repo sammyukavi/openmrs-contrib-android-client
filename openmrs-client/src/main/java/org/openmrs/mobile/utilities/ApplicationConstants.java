@@ -391,6 +391,11 @@ public abstract class ApplicationConstants {
 				public static final String TRIM = "trim";
 			}
 		}
+
+	  public static class DataRefresh {
+
+			public static final String DATA_RETRIEVED = "Data Retrieved";
+	  }
 	}
 
 	public static class PatientSummary {

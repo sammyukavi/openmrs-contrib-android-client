@@ -33,7 +33,11 @@ public interface PatientDashboardContract {
 
 		void patientContacts(Patient patient);
 
-		void patientVisits(List<Visit> visits);
+		void setPatientVisits(List<Visit> visits);
+
+		void addPatientVisits(List<Visit> visits);
+
+		void notifyAllPatientVisitsFetched();
 
 		Patient getPatient();
 
@@ -69,7 +73,7 @@ public interface PatientDashboardContract {
 
 		void setLoading(boolean loading);
 
-		void loadResults(Patient patient, boolean loadNextResults);
+		void loadResults();
 
 		void dataRefreshWasRequested();
 	}

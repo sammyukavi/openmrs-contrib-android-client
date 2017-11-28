@@ -37,21 +37,20 @@ import org.openmrs.mobile.utilities.NetworkUtils;
 import org.openmrs.mobile.utilities.StringUtils;
 import org.openmrs.mobile.utilities.ToastUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class PatientDashboardPresenter extends BasePresenter implements PatientDashboardContract.Presenter {
 
 	private NetworkUtils networkUtils;
 
+	private final int INITIAL_PAGING_INDEX = 1;
+
 	private PatientDashboardContract.View patientDashboardView;
 	private PatientDataService patientDataService;
 	private VisitDataService visitDataService;
 	private LocationDataService locationDataService;
 	private UserDataService userDataService;
-	private int startIndex = 0;
-	private int currentIndex = 0;
-	private int totalNumberResults = 0;
+	private int currentPagingIndex = INITIAL_PAGING_INDEX;
 	private Patient patient;
 	private boolean loading;
 	private OpenMRS openMRS;
@@ -59,8 +58,6 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
 	private String patientUuid;
 	private boolean isPatientSynced = false;
-
-	private List<Visit> loadedVisits = new ArrayList<>();
 
 	public PatientDashboardPresenter(PatientDashboardContract.View view, OpenMRS openMRS, String patientUuid) {
 		this.patientDashboardView = view;
@@ -102,18 +99,18 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 		patientDataService.getByUuid(patientUuid, options, new DataService.GetCallback<Patient>() {
 			@Override
 			public void onCompleted(Patient patient) {
-				if (patient == null && !networkUtils.isOnline()) {
+				if (patient == null && !networkUtils.isConnected()) {
 					patientDashboardView.alertOfflineAndPatientNotFound();
 					patientDashboardView.navigateBack();
 					return;
 				}
 				setPatient(patient);
-				fetchVisits(patient, startIndex, forceRefresh);
+				fetchVisits(patient, INITIAL_PAGING_INDEX, forceRefresh);
 			}
 
 			@Override
 			public void onError(Throwable t) {
-				if (t instanceof DataOperationException && !openMRS.getNetworkUtils().hasNetwork()) {
+				if (t instanceof DataOperationException && !openMRS.getNetworkUtils().isConnected()) {
 					patientDashboardView.showNoPatientData(true);
 				} else {
 					patientDashboardView.showPageSpinner(false);
@@ -123,33 +120,36 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 		});
 	}
 
-	private void fetchVisits(Patient patient, int startIndex, boolean forceRefresh) {
-		if (startIndex < 0) {
-			return;
-		}
+	private void fetchVisits(Patient patient, int pagingIndex, boolean forceRefresh) {
 		setLoading(true);
 		if (!forceRefresh) {
 			patientDashboardView.showPageSpinner(true);
 		}
-		setLoading(true);
-		PagingInfo pagingInfo = new PagingInfo(startIndex, ApplicationConstants.Request.PATIENT_VISIT_COUNT);
+		PagingInfo pagingInfo = new PagingInfo(pagingIndex, ApplicationConstants.Request.PATIENT_VISIT_COUNT);
 		DataService.GetCallback<List<Visit>> fetchVisitsCallback = new DataService.GetCallback<List<Visit>>() {
 			@Override
 			public void onCompleted(List<Visit> visits) {
 				setLoading(false);
 				patientDashboardView.patientContacts(patient);
-				loadedVisits.addAll(visits);
-				patientDashboardView.patientVisits(loadedVisits);
-
-				if (visits.isEmpty()) {
-					totalNumberResults = loadedVisits.size();
+				if (pagingIndex == INITIAL_PAGING_INDEX) {
+					patientDashboardView.setPatientVisits(visits);
+				} else {
+					patientDashboardView.addPatientVisits(visits);
 				}
+				if (visits.isEmpty() || visits.size() < ApplicationConstants.Request.PATIENT_VISIT_COUNT) {
+					patientDashboardView.notifyAllPatientVisitsFetched();
+				}
+
 				patientDashboardView.showPageSpinner(false);
 			}
 
 			@Override
 			public void onError(Throwable t) {
 				t.printStackTrace();
+				// If we're online and we're not on the first page of results, assume it's because we have all results
+				if (openMRS.getNetworkUtils().isConnected() && pagingIndex > INITIAL_PAGING_INDEX) {
+					patientDashboardView.notifyAllPatientVisitsFetched();
+				}
 				patientDashboardView.showPageSpinner(false);
 				setLoading(false);
 			}
@@ -232,40 +232,19 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	}
 
 	@Override
-	public void loadResults(Patient patient, boolean loadNextResults) {
-		boolean shouldRequestNextResultsFromServer = loadNextResults;
-		// If patient is synced, we already have all the results and don't need a refresh
-		if (isPatientSynced) {
-			shouldRequestNextResultsFromServer = false;
+	public void loadResults() {
+		boolean shouldRequestNextResultsFromServer = false;
+		// If patient is not synced, we need a refresh
+		if (!isPatientSynced) {
+			shouldRequestNextResultsFromServer = true;
 		}
-		fetchVisits(patient, computePage(loadNextResults, isPatientSynced), shouldRequestNextResultsFromServer);
+		fetchVisits(patient, ++currentPagingIndex, shouldRequestNextResultsFromServer);
 	}
 
 	@Override
 	public void dataRefreshWasRequested() {
 		eventBus.post(new DataRefreshEvent(ApplicationConstants.EventMessages.DataRefresh.REFRESH));
-		loadedVisits = new ArrayList<>();
-		totalNumberResults = 0;
-		currentIndex = 0;
+		currentPagingIndex = INITIAL_PAGING_INDEX;
 		fetchPatientData(true);
-	}
-
-	private int computePage(boolean next, boolean isPatientSynced) {
-		// check if pagination is required.
-		if (startIndex < (Math.round(totalNumberResults / ApplicationConstants.Request.PATIENT_VISIT_COUNT))) {
-			if (next) {
-				// set next page
-				tmpPage += 1;
-			} else {
-				// set previous page.
-				tmpPage -= 1;
-			}
-		} else if (totalNumberResults == 0 && !isPatientSynced) {
-			tmpPage += 1;
-		} else {
-			tmpPage = -1;
-		}
-
-		return tmpPage;
 	}
 }

@@ -39,20 +39,14 @@ public class NetworkUtils {
 	public NetworkUtils() {
 	}
 
-	public boolean hasNetwork() {
+	public boolean isConnected() {
+
 		NetworkInfo activeNetworkInfo = getNetworkInfo();
 		return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
 	}
 
-	public boolean isOnline() {
-
-		NetworkInfo activeNetworkInfo = getNetworkInfo();
-		boolean isConnected = activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
-		return isConnected;
-	}
-
 	public boolean checkIfServerOnline() {
-		if (hasNetwork()) {
+		if (isConnected()) {
 			try {
 				HttpURLConnection urlc = (HttpURLConnection)(new URL(OpenMRS.getInstance().getServerUrl()).openConnection
 						());
@@ -81,7 +75,7 @@ public class NetworkUtils {
 	 * @return An estimate of the connection speed based on typical range estimates in KB/s
 	 */
 	public @Nullable Double getCurrentConnectionSpeed() {
-		if (!hasNetwork()) {
+		if (!isConnected()) {
 			return null;
 		}
 

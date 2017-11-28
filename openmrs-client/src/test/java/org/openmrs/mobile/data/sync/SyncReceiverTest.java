@@ -50,7 +50,7 @@ public class SyncReceiverTest {
 
 	@Test
 	public void connectivityReceiver_whenReceiveBroadcastWithoutNetworkSyncIsNotCalled() {
-		Mockito.when(networkUtils.hasNetwork()).thenReturn(false);
+		Mockito.when(networkUtils.isConnected()).thenReturn(false);
 
 		syncReceiver.onReceive(openMRS, intent);
 
@@ -59,7 +59,7 @@ public class SyncReceiverTest {
 
 	@Test
 	public void connectivityReceiver_whenReceiveBroadcastAndNetworkAvailableSyncIsCalled() {
-		Mockito.when(networkUtils.hasNetwork()).thenReturn(true);
+		Mockito.when(networkUtils.isConnected()).thenReturn(true);
 
 		syncReceiver.onReceive(openMRS, intent);
 

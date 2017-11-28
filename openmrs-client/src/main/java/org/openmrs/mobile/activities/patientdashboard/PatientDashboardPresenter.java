@@ -37,6 +37,7 @@ import org.openmrs.mobile.utilities.NetworkUtils;
 import org.openmrs.mobile.utilities.StringUtils;
 import org.openmrs.mobile.utilities.ToastUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PatientDashboardPresenter extends BasePresenter implements PatientDashboardContract.Presenter {
@@ -49,13 +50,17 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	private LocationDataService locationDataService;
 	private UserDataService userDataService;
 	private int startIndex = 0;
-	private int totalNumberResults;
+	private int currentIndex = 0;
+	private int totalNumberResults = 0;
 	private Patient patient;
 	private boolean loading;
 	private OpenMRS openMRS;
 	private EventBus eventBus;
 
 	private String patientUuid;
+	private boolean isPatientSynced = false;
+
+	private List<Visit> loadedVisits = new ArrayList<>();
 
 	public PatientDashboardPresenter(PatientDashboardContract.View view, OpenMRS openMRS, String patientUuid) {
 		this.patientDashboardView = view;
@@ -69,6 +74,8 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 		this.locationDataService = dataAccess().location();
 		this.networkUtils = openMRS.getNetworkUtils();
 		this.eventBus = openMRS.getEventBus();
+
+		isPatientSynced = patientDataService.isPatientSynced(patientUuid);
 	}
 
 	@Override
@@ -78,7 +85,11 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	}
 
 	@Override
-	public void fetchPatientData(boolean forceRefresh) {
+	public void fetchPatientData() {
+		fetchPatientData(false);
+	}
+
+	private void fetchPatientData(boolean forceRefresh) {
 		if (!forceRefresh) {
 			patientDashboardView.showPageSpinner(true);
 		}
@@ -112,13 +123,11 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 		});
 	}
 
-	@Override
-	public void fetchVisits(Patient patient, int startIndex, boolean forceRefresh) {
+	private void fetchVisits(Patient patient, int startIndex, boolean forceRefresh) {
 		if (startIndex < 0) {
 			return;
 		}
 		setLoading(true);
-		totalNumberResults = 0;
 		if (!forceRefresh) {
 			patientDashboardView.showPageSpinner(true);
 		}
@@ -129,10 +138,11 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 			public void onCompleted(List<Visit> visits) {
 				setLoading(false);
 				patientDashboardView.patientContacts(patient);
-				patientDashboardView.patientVisits(visits);
+				loadedVisits.addAll(visits);
+				patientDashboardView.patientVisits(loadedVisits);
 
-				if (!visits.isEmpty() && pagingInfo.getTotalRecordCount() != null) {
-					totalNumberResults = pagingInfo.getTotalRecordCount();
+				if (visits.isEmpty()) {
+					totalNumberResults = loadedVisits.size();
 				}
 				patientDashboardView.showPageSpinner(false);
 			}
@@ -223,17 +233,24 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
 	@Override
 	public void loadResults(Patient patient, boolean loadNextResults) {
-		fetchVisits(patient, computePage(loadNextResults), false);
+		boolean shouldRequestNextResultsFromServer = loadNextResults;
+		// If patient is synced, we already have all the results and don't need a refresh
+		if (isPatientSynced) {
+			shouldRequestNextResultsFromServer = false;
+		}
+		fetchVisits(patient, computePage(loadNextResults, isPatientSynced), shouldRequestNextResultsFromServer);
 	}
 
 	@Override
 	public void dataRefreshWasRequested() {
 		eventBus.post(new DataRefreshEvent(ApplicationConstants.EventMessages.DataRefresh.REFRESH));
+		loadedVisits = new ArrayList<>();
+		totalNumberResults = 0;
+		currentIndex = 0;
 		fetchPatientData(true);
 	}
 
-	private int computePage(boolean next) {
-		int tmpPage = startIndex;
+	private int computePage(boolean next, boolean isPatientSynced) {
 		// check if pagination is required.
 		if (startIndex < (Math.round(totalNumberResults / ApplicationConstants.Request.PATIENT_VISIT_COUNT))) {
 			if (next) {
@@ -243,6 +260,8 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 				// set previous page.
 				tmpPage -= 1;
 			}
+		} else if (totalNumberResults == 0 && !isPatientSynced) {
+			tmpPage += 1;
 		} else {
 			tmpPage = -1;
 		}

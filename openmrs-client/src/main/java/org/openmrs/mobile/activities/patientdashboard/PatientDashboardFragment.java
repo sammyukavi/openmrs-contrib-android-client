@@ -130,7 +130,7 @@ public class PatientDashboardFragment extends BaseDiagnosisFragment<PatientDashb
 		initializeListeners(startVisitButton, editPatient);
 
 		//set start index incase it's cached somewhere
-		mPresenter.fetchPatientData(false);
+		mPresenter.fetchPatientData();
 		FontsUtil.setFont((ViewGroup)this.getActivity().findViewById(android.R.id.content));
 
 		return fragmentView;

@@ -37,6 +37,7 @@ import org.openmrs.mobile.utilities.NetworkUtils;
 import org.openmrs.mobile.utilities.StringUtils;
 import org.openmrs.mobile.utilities.ToastUtil;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class PatientDashboardPresenter extends BasePresenter implements PatientDashboardContract.Presenter {
@@ -131,10 +132,11 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 			public void onCompleted(List<Visit> visits) {
 				setLoading(false);
 				patientDashboardView.patientContacts(patient);
+				LinkedList<Visit> sortedVisits = sortVisits(visits);
 				if (pagingIndex == INITIAL_PAGING_INDEX) {
-					patientDashboardView.setPatientVisits(visits);
+					patientDashboardView.setPatientVisits(sortedVisits);
 				} else {
-					patientDashboardView.addPatientVisits(visits);
+					patientDashboardView.addPatientVisits(sortedVisits);
 				}
 				if (visits.isEmpty() || visits.size() < ApplicationConstants.Request.PATIENT_VISIT_COUNT) {
 					patientDashboardView.notifyAllPatientVisitsFetched();
@@ -183,7 +185,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 					new DataService.GetCallback<User>() {
 						@Override
 						public void onCompleted(User entity) {
-							if(entity != null) {
+							if (entity != null) {
 								openMRS.setCurrentUserUuid(entity.getPerson().getUuid());
 								patientDashboardView.setProviderUuid(entity.getPerson().getUuid());
 							}
@@ -246,5 +248,18 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 		eventBus.post(new DataRefreshEvent(ApplicationConstants.EventMessages.DataRefresh.REFRESH));
 		currentPagingIndex = INITIAL_PAGING_INDEX;
 		fetchPatientData(true);
+	}
+
+	private LinkedList<Visit> sortVisits(List<Visit> visits) {
+		LinkedList<Visit> sortVisits = new LinkedList<>();
+		for (Visit visit : visits) {
+			if (visit.getStopDatetime() == null) {
+				sortVisits.add(0, visit);
+			} else {
+				sortVisits.add(visit);
+			}
+		}
+
+		return sortVisits;
 	}
 }

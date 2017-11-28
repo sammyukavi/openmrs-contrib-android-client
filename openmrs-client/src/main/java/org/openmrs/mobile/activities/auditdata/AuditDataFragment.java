@@ -100,6 +100,8 @@ import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcept
 import static org.openmrs.mobile.utilities.ApplicationConstants.EncounterTypeDisplays.AUDITDATA;
 import static org.openmrs.mobile.utilities.ApplicationConstants.EncounterTypeEntity.AUDIT_DATA_UUID;
 import static org.openmrs.mobile.utilities.ApplicationConstants.FORM_UUIDS.AUDIT_DATA_FORM_UUID;
+import static org.openmrs.mobile.utilities.ApplicationConstants.ValidationFieldValues.AUDIT_1ST_RESPIRATORY_RATE_MAX;
+import static org.openmrs.mobile.utilities.ApplicationConstants.ValidationFieldValues.AUDIT_1ST_RESPIRATORY_RATE_MIN;
 
 public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presenter>
 		implements AuditDataContract.View {
@@ -140,7 +142,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 	private String inpatientServiceTypeSelectedUuid, displayInpatientServiceType;
 	private Boolean displayExtraFormFields, displayCd4CountField, displayHbA1CField, displayHduCoManageField;
 	private TextInputLayout hba1cTextLayout, cd4TextInputLayout;
-	private TextView errorFirstGcsScore, errorHba1c;
+	private TextView errorFirstGcsScore, errorHba1c, errorFirstRespiratoryRate;
 
 	private ConceptAnswer initialInpatientTypeServiceSelection;
 
@@ -249,8 +251,24 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 			}
 		});
 
+		firstIcuRespiratoryRate.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				validateFirstRespiratoryRate();
+			}
+		});
+
 		submitForm.setOnClickListener(v -> {
-			if (hasValidGcsScore()) {
+			if (hasValidGcsScore() && validateFirstRespiratoryRate()) {
 				performDataSend();
 			}
 		});
@@ -318,6 +336,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		cd4TextInputLayout = (TextInputLayout)fragmentView.findViewById(R.id.cd4TextInputLayout);
 		hba1cTextLayout = (TextInputLayout)fragmentView.findViewById(R.id.hba1cTextLayout);
 		errorFirstGcsScore = (TextView)fragmentView.findViewById(R.id.invalidGscError);
+		errorFirstRespiratoryRate = (TextView) fragmentView.findViewById(R.id.invalidFirstRespiratoryRate);
 		errorHba1c = (TextView)fragmentView.findViewById(R.id.invalidHba1cError);
 		progressBar = (RelativeLayout)fragmentView.findViewById(R.id.auditDataRelativeView);
 		auditDataFormProgressBar = (RelativeLayout)fragmentView.findViewById(R.id.auditDataFormProgressBar);
@@ -1360,8 +1379,8 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		}
 
 		if (firstIcuRespiratoryRate.getText().length() > 0) {
-			if (Float.valueOf(firstIcuRespiratoryRate.getText().toString()) >= 0
-					&& Float.valueOf(firstIcuRespiratoryRate.getText().toString()) <= 240) {
+			if (Float.valueOf(firstIcuRespiratoryRate.getText().toString()) >= AUDIT_1ST_RESPIRATORY_RATE_MIN
+					&& Float.valueOf(firstIcuRespiratoryRate.getText().toString()) <= AUDIT_1ST_RESPIRATORY_RATE_MAX) {
 				firstIcuRespiratoryRateObservation =
 						setObservationFields(firstIcuRespiratoryRateObservation, CONCEPT_FIRST_RESPIRATORY_RATE_ICU,
 								firstIcuRespiratoryRate.getText().toString(),
@@ -1490,6 +1509,22 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 			errorFirstGcsScore.setText(getString(R.string.error_gcs_score,
 					ApplicationConstants.ValidationFieldValues.AUDIT_GCS_SCORE_MIN,
 					ApplicationConstants.ValidationFieldValues.AUDIT_GCS_SCORE_MAX));
+			return false;
+		}
+		return true;
+	}
+
+	private boolean validateFirstRespiratoryRate() {
+		if (firstIcuRespiratoryRate.getText().toString().length() == 0) {
+			errorFirstRespiratoryRate.setVisibility(View.GONE);
+		} else if (Float.parseFloat(firstIcuRespiratoryRate.getText().toString()) >= AUDIT_1ST_RESPIRATORY_RATE_MIN &&
+				Float.parseFloat(firstIcuRespiratoryRate.getText().toString()) <= AUDIT_1ST_RESPIRATORY_RATE_MAX) {
+			errorFirstRespiratoryRate.setVisibility(View.GONE);
+			return true;
+		} else {
+			errorFirstRespiratoryRate.setVisibility(View.VISIBLE);
+			errorFirstRespiratoryRate.setText(getString(R.string.error_first_respiratory_rate,
+					AUDIT_1ST_RESPIRATORY_RATE_MIN, AUDIT_1ST_RESPIRATORY_RATE_MAX));
 			return false;
 		}
 		return true;

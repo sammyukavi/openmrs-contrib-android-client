@@ -46,8 +46,8 @@ import org.openmrs.mobile.utilities.FontsUtil;
 import org.openmrs.mobile.utilities.StringUtils;
 import org.openmrs.mobile.utilities.ToastUtil;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import static org.openmrs.mobile.utilities.ApplicationConstants.BundleKeys.LOCATION_UUID_BUNDLE;
@@ -71,7 +71,7 @@ public class PatientDashboardFragment extends BaseDiagnosisFragment<PatientDashb
 	private SwipeRefreshLayout patientVisitsSwipeRefreshView;
 	private RecyclerView.OnScrollListener patientVisitsOnScrollListener;
 
-	private List<Visit> patientVisits = new ArrayList<>();
+	private LinkedList<Visit> patientVisits = new LinkedList<>();
 
 	public static PatientDashboardFragment newInstance() {
 		return new PatientDashboardFragment();
@@ -191,7 +191,7 @@ public class PatientDashboardFragment extends BaseDiagnosisFragment<PatientDashb
 	}
 
 	@Override
-	public void addPatientVisits(List<Visit> visits) {
+	public void addPatientVisits(LinkedList<Visit> visits) {
 
 		patientVisits.remove(patientVisits.size() - 1);
 		int numberOfCurrentItems = patientVisits.size();
@@ -201,7 +201,7 @@ public class PatientDashboardFragment extends BaseDiagnosisFragment<PatientDashb
 	}
 
 	@Override
-	public void setPatientVisits(List<Visit> visits) {
+	public void setPatientVisits(LinkedList<Visit> visits) {
 
 		patientVisits = visits;
 

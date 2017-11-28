@@ -25,6 +25,7 @@ import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.Visit;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public interface PatientDashboardContract {
@@ -33,9 +34,9 @@ public interface PatientDashboardContract {
 
 		void patientContacts(Patient patient);
 
-		void setPatientVisits(List<Visit> visits);
+		void setPatientVisits(LinkedList<Visit> visits);
 
-		void addPatientVisits(List<Visit> visits);
+		void addPatientVisits(LinkedList<Visit> visits);
 
 		void notifyAllPatientVisitsFetched();
 

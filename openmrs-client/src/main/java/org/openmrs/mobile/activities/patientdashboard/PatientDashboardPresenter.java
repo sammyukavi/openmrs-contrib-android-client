@@ -123,9 +123,6 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
 	private void fetchVisits(Patient patient, int pagingIndex, boolean forceRefresh) {
 		setLoading(true);
-		if (!forceRefresh) {
-			patientDashboardView.showPageSpinner(true);
-		}
 		PagingInfo pagingInfo = new PagingInfo(pagingIndex, ApplicationConstants.Request.PATIENT_VISIT_COUNT);
 		DataService.GetCallback<List<Visit>> fetchVisitsCallback = new DataService.GetCallback<List<Visit>>() {
 			@Override

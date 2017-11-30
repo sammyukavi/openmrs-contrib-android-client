@@ -57,4 +57,6 @@ public interface IBaseDiagnosisFragment {
 	IBaseDiagnosisView getBaseDiagnosisView();
 
 	void createPatientSummaryMergeDialog(String mergePatientSummaryText);
+
+	void cancelRunningRequest(boolean cancel);
 }

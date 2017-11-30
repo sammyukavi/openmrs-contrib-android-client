@@ -81,6 +81,7 @@ public class BaseDiagnosisPresenter {
 		visitNoteDataService.save(visitNote, new DataService.GetCallback<VisitNote>() {
 			@Override
 			public void onCompleted(VisitNote entity) {
+				base.cancelRunningRequest(false);
 				base.setEncounter(entity.getEncounter());
 
 				if (entity.getObservation() != null) {
@@ -96,6 +97,7 @@ public class BaseDiagnosisPresenter {
 			public void onError(Throwable t) {
 				Log.e(TAG, "Error saving visit note: " + t.getLocalizedMessage(), t);
 				base.getBaseDiagnosisView().showTabSpinner(false);
+				base.cancelRunningRequest(false);
 			}
 		});
 	}

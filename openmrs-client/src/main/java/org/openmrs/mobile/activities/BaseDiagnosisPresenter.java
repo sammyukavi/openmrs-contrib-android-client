@@ -17,9 +17,12 @@ import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitNote;
+import org.openmrs.mobile.utilities.ApplicationConstants;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class BaseDiagnosisPresenter {
 	private static final String TAG = BaseDiagnosisPresenter.class.getSimpleName();
@@ -31,6 +34,8 @@ public class BaseDiagnosisPresenter {
 	private int limit = 20;
 	private List<String> obsUuids = new ArrayList<>();
 	private DataAccessComponent dataAccess;
+	private Timer diagnosisTimer;
+	private boolean cancelRunningRequest;
 
 	public BaseDiagnosisPresenter() {
 		dataAccess = DaggerDataAccessComponent.create();
@@ -77,29 +82,42 @@ public class BaseDiagnosisPresenter {
 		}
 	}
 
+	/**
+	 * This strategy seeks to chain multiple requests into one in a given time frame.
+	 * The only limitation will come when a user switches between the patient dashboard and visit details within the
+	 * auto-save time frame. In this case, the screen would have to be refreshed to get the latest updates.
+	 * @param visitNote
+	 */
 	public void saveVisitNote(VisitNote visitNote, IBaseDiagnosisFragment base) {
-		visitNoteDataService.save(visitNote, new DataService.GetCallback<VisitNote>() {
+		cancelRunningRequest(true);
+		diagnosisTimer = new Timer();
+		diagnosisTimer.schedule(new TimerTask() {
 			@Override
-			public void onCompleted(VisitNote entity) {
-				base.cancelRunningRequest(false);
-				base.setEncounter(entity.getEncounter());
+			public void run() {
+				visitNoteDataService.save(visitNote, new DataService.GetCallback<VisitNote>() {
+					@Override
+					public void onCompleted(VisitNote entity) {
+						cancelRunningRequest(false);
+						base.setEncounter(entity.getEncounter());
 
-				if (entity.getObservation() != null) {
-					base.setObservation(entity.getObservation());
-				}
+						if (entity.getObservation() != null) {
+							base.setObservation(entity.getObservation());
+						}
 
-				if (entity.getW12() != null) {
-					base.createPatientSummaryMergeDialog(entity.getW12());
-				}
+						if (entity.getW12() != null) {
+							base.createPatientSummaryMergeDialog(entity.getW12());
+						}
+					}
+
+					@Override
+					public void onError(Throwable t) {
+						Log.e(TAG, "Error saving visit note: " + t.getLocalizedMessage(), t);
+						base.getBaseDiagnosisView().showTabSpinner(false);
+						cancelRunningRequest(false);
+					}
+				});
 			}
-
-			@Override
-			public void onError(Throwable t) {
-				Log.e(TAG, "Error saving visit note: " + t.getLocalizedMessage(), t);
-				base.getBaseDiagnosisView().showTabSpinner(false);
-				base.cancelRunningRequest(false);
-			}
-		});
+		}, ApplicationConstants.TimeConstants.SAVE_DIAGNOSES_DELAY);
 	}
 
 	private void getObservation(Observation obs, Encounter encounter, IBaseDiagnosisFragment base) {
@@ -124,5 +142,23 @@ public class BaseDiagnosisPresenter {
 						base.getBaseDiagnosisView().showTabSpinner(false);
 					}
 				});
+	}
+
+	private void cancelRunningRequest(boolean cancel) {
+		cancelRunningRequest = cancel;
+		if (cancelRunningRequest && diagnosisTimer != null) {
+			// remove pending requests in queue
+			diagnosisTimer.cancel();
+			// remove timer
+			diagnosisTimer = null;
+		}
+	}
+
+	public boolean isCancelRunningRequest() {
+		return cancelRunningRequest;
+	}
+
+	public void setCancelRunningRequest(boolean cancelRunningRequest) {
+		this.cancelRunningRequest = cancelRunningRequest;
 	}
 }

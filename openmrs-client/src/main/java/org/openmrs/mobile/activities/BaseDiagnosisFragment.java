@@ -48,7 +48,6 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	protected TextInputEditText clinicalNoteView;
 	protected BaseDiagnosisPresenter diagnosisPresenter = new BaseDiagnosisPresenter();
 	private Timer timer;
-	private Timer diagnosisTimer;
 	private Observation observation;
 	private Visit visit;
 	private boolean firstTimeEdit;
@@ -56,12 +55,10 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	private CustomFragmentDialog mergePatientSummaryDialog;
 	private TextWatcher clinicalNoteListener;
 	private Encounter encounter;
-	private boolean cancelRunningRequest;
-	private final static long SAVE_DIAGNOSES_DELAY = 5000;
 
 	@Override
 	public void initializeListeners() {
-		cancelRunningRequest = false;
+		diagnosisPresenter.setCancelRunningRequest(false);
 		primaryDiagnoses.clear();
 		secondaryDiagnoses.clear();
 		addDiagnosisListeners();
@@ -415,36 +412,12 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 		diagnosesContent.setVisibility(View.VISIBLE);
 	}
 
-	/**
-	 * This strategy seeks to chain multiple requests into one in a given time frame.
-	 * The only limitation will come when a user switches between the patient dashboard and visit details within the
-	 * auto-save time frame. In this case, the screen would have to be refreshed to get the latest updates.
-	 * @param visitNote
-	 */
 	public void saveVisitNote(VisitNote visitNote) {
-		cancelRunningRequest(true);
-		diagnosisTimer = new Timer();
-		diagnosisTimer.schedule(new TimerTask() {
-			@Override
-			public void run() {
-				diagnosisPresenter.saveVisitNote(visitNote, getIBaseDiagnosisFragment());
-			}
-		}, SAVE_DIAGNOSES_DELAY);
+		diagnosisPresenter.saveVisitNote(visitNote, getIBaseDiagnosisFragment());
 	}
 
 	public void saveVisitNote(Encounter encounter, String clinicalNote, Visit visit) {
 		saveVisitNote(createVisitNote(encounter, clinicalNote, visit));
-	}
-
-	@Override
-	public void cancelRunningRequest(boolean cancel) {
-		cancelRunningRequest = cancel;
-		if (cancelRunningRequest && diagnosisTimer != null) {
-			// remove pending requests in queue
-			diagnosisTimer.cancel();
-			// remove timer
-			diagnosisTimer = null;
-		}
 	}
 
 	protected VisitNote createVisitNote(Encounter encounter, String clinicalNote, Visit visit) {

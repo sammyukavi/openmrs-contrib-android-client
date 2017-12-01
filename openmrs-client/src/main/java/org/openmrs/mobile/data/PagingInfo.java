@@ -49,7 +49,7 @@ public class PagingInfo {
 	}
 
 	public static boolean isValid(PagingInfo pagingInfo) {
-		return !(pagingInfo == null || pagingInfo.getPage() == 0);
+		return !(pagingInfo == null || pagingInfo.getPage() < 0);
 	}
 
 	public int getPage() {

@@ -125,7 +125,7 @@ public class PatientListContextSubscriptionProvider extends BaseSubscriptionProv
 
 	private void savePatientLastSyncInfo(List<RecordInfo> patientRecordInfoList) {
 		for (RecordInfo patientRecordInfo : patientRecordInfoList) {
-			entitySyncInfoDbService.savePatientLastSyncInfo(patientRecordInfo.getUuid(), new Date());
+			entitySyncInfoDbService.saveLastSyncInfo(patientRecordInfo, new Date());
 		}
 	}
 

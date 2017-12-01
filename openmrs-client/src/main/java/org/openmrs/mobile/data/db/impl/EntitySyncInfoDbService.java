@@ -11,6 +11,7 @@ import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.structure.ModelAdapter;
 import org.openmrs.mobile.data.db.BaseDbService;
 import org.openmrs.mobile.data.db.Repository;
+import org.openmrs.mobile.models.BaseOpenmrsObject;
 import org.openmrs.mobile.models.EntitySyncInfo;
 import org.openmrs.mobile.models.EntitySyncInfo_Table;
 import org.openmrs.mobile.models.Patient;
@@ -26,22 +27,40 @@ public class EntitySyncInfoDbService extends BaseDbService<EntitySyncInfo> {
 		return (EntitySyncInfo_Table)FlowManager.getInstanceAdapter(EntitySyncInfo.class);
 	}
 
-	public EntitySyncInfo getPatientLastSyncInfo(@NonNull String patientUuid) {
-		checkNotNull(patientUuid);
+	public <T extends BaseOpenmrsObject> EntitySyncInfo getLastSyncInfo(@NonNull T entity) {
+		checkNotNull(entity);
 
-		return repository.querySingle(getEntityTable(), EntitySyncInfo_Table.entityClass.eq(Patient.class.getSimpleName()),
-				EntitySyncInfo_Table.entityUuid.eq(patientUuid));
+		return getLastSyncInfo(entity.getClass(), entity.getUuid());
 	}
 
-	public void savePatientLastSyncInfo(@NonNull String patientUuid, @NonNull Date lastSync) {
-		checkNotNull(patientUuid);
+	public <T extends BaseOpenmrsObject> void saveLastSyncInfo(@NonNull T entity, @NonNull Date lastSync) {
+		checkNotNull(entity);
 		checkNotNull(lastSync);
 
-		EntitySyncInfo entitySyncInfo = getPatientLastSyncInfo(patientUuid);
+		saveLastSyncInfo(entity.getClass(), entity.getUuid(), lastSync);
+	}
+
+	public <T extends BaseOpenmrsObject> EntitySyncInfo getLastSyncInfo(@NonNull Class<T> tClass,
+			@NonNull String entityUuid) {
+		checkNotNull(tClass);
+		checkNotNull(entityUuid);
+
+		return repository.querySingle(getEntityTable(),
+				EntitySyncInfo_Table.entityClass.eq(tClass.getSimpleName()),
+				EntitySyncInfo_Table.entityUuid.eq(entityUuid));
+	}
+
+	public <T extends BaseOpenmrsObject> void saveLastSyncInfo(@NonNull Class<T> tClass, @NonNull String entityUuid,
+			@NonNull Date lastSync) {
+		checkNotNull(tClass);
+		checkNotNull(entityUuid);
+		checkNotNull(lastSync);
+
+		EntitySyncInfo entitySyncInfo = getLastSyncInfo(tClass, entityUuid);
 		if (entitySyncInfo == null) {
 			entitySyncInfo = new EntitySyncInfo();
-			entitySyncInfo.setEntityClass(Patient.class.getSimpleName());
-			entitySyncInfo.setEntityUuid(patientUuid);
+			entitySyncInfo.setEntityClass(tClass.getSimpleName());
+			entitySyncInfo.setEntityUuid(entityUuid);
 		}
 
 		entitySyncInfo.setLastSync(lastSync);

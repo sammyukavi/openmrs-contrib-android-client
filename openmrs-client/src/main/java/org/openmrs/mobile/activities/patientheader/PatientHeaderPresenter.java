@@ -50,7 +50,7 @@ public class PatientHeaderPresenter extends BasePresenter implements PatientHead
 					patientHeaderView.holdHeader(false);
 					patientHeaderView.updatePatientHeader(patient);
 					if (isPatientNewMeaningLastSyncTimeShouldBeRefreshed) {
-						currentPatientLastSyncTime = patientDataService.getLastSyncTime(currentPatient.getUuid());
+						currentPatientLastSyncTime = patientDataService.getLastSyncTime(currentPatient);
 					}
 				}
 
@@ -74,7 +74,7 @@ public class PatientHeaderPresenter extends BasePresenter implements PatientHead
 
 	private void refreshPatientLastSyncTime() {
 		if (currentPatient != null && currentPatientLastSyncTime == null) {
-			currentPatientLastSyncTime = patientDataService.getLastSyncTime(currentPatient.getUuid());
+			currentPatientLastSyncTime = patientDataService.getLastSyncTime(currentPatient);
 			updatePatientSyncAge();
 		}
 	}

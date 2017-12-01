@@ -54,12 +54,12 @@ public class PatientDataService extends BaseDataService<Patient, PatientDbServic
 		);
 	}
 
-	public Date getLastSyncTime(String uuid) {
-		EntitySyncInfo patientSyncInfo = entitySyncInfoDbService.getPatientLastSyncInfo(uuid);
+	public Date getLastSyncTime(Patient patient) {
+		EntitySyncInfo patientSyncInfo = entitySyncInfoDbService.getLastSyncInfo(patient);
 		return patientSyncInfo == null ? null : patientSyncInfo.getLastSync();
 	}
 
-	public void saveLastSyncTime(String uuid, Date lastSync) {
-		entitySyncInfoDbService.savePatientLastSyncInfo(uuid, lastSync);
+	public void saveLastSyncTime(Patient patient, Date lastSync) {
+		entitySyncInfoDbService.saveLastSyncInfo(patient, lastSync);
 	}
 }

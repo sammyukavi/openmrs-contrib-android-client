@@ -77,7 +77,7 @@ public class VisitDataService extends BaseEntityDataService<Visit, VisitDbServic
 					dbService.saveAll(e);
 
 					// We determine a patient's sync is updated based on a successful pull of visits from the REST service
-					entitySyncInfoDbService.savePatientLastSyncInfo(patient.getUuid(), new Date());
+					entitySyncInfoDbService.saveLastSyncInfo(patient, new Date());
 				});
 	}
 }

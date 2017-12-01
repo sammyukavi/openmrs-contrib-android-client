@@ -90,7 +90,7 @@ public abstract class BaseVisitPresenter extends BasePresenter implements VisitC
 			public void onErrorResponse(String errorMessage) {
 				visitDashboardPageView
 						.showToast(ApplicationConstants.entityName.VISITS + ApplicationConstants.toastMessages
-								.fetchErrorMessage, ToastUtil.ToastType.ERROR);
+								.dataCouldNotBeRefreshed, ToastUtil.ToastType.ERROR);
 				eventBus.post(new VisitDashboardDataRefreshEvent(ApplicationConstants.EventMessages.DataRefresh
 						.VisitDashboard.REFRESH_ERROR));
 			}

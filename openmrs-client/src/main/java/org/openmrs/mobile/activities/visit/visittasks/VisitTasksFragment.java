@@ -123,11 +123,6 @@ public class VisitTasksFragment extends ACBaseFragment<VisitContract.VisitDashbo
 	}
 
 	@Override
-	public void showToast(String message, ToastUtil.ToastType toastType) {
-		ToastUtil.showShortToast(getContext(), toastType, message);
-	}
-
-	@Override
 	public void setOpenVisitTasks(List<VisitTask> visitTaskList) {
 		this.visitTasksLists = visitTaskList;
 		if (visit != null) {

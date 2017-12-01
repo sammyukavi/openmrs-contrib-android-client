@@ -354,11 +354,6 @@ public class VisitPhotoFragment extends ACBaseFragment<VisitContract.VisitDashbo
 	}
 
 	@Override
-	public void showToast(String message, ToastUtil.ToastType toastType) {
-		ToastUtil.showShortToast(getContext(), toastType, message);
-	}
-
-	@Override
 	@Subscribe(threadMode = ThreadMode.MAIN)
 	public void onVisitDashboardRefreshEvent(VisitDashboardDataRefreshEvent event) {
 		mPresenter.dataRefreshEventOccurred(event);

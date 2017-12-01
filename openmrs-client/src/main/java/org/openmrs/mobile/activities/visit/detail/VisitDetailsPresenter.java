@@ -161,12 +161,8 @@ public class VisitDetailsPresenter extends BaseVisitPresenter implements VisitCo
 		});
 	}
 
-	private void loadDependentData(boolean forceRefresh) {
-		loadVisitAttributeTypes();
-	}
-
 	@Override
 	protected void refreshDependentData() {
-		loadDependentData(true);
+		// No dependent data
 	}
 }

@@ -204,6 +204,9 @@ public abstract class ApplicationConstants {
 		public static final String fetchErrorMessage = " could not be fetched";
 		public static final String fetchWarningMessage = " could not be fetched";
 		public static final String fetchSuccessMessage = " were loaded successfully";
+		public static final String dataCouldNotBeRefreshed = "data could not be refreshed";
+		public static final String imageUploadError = "Unable to upload image";
+		public static final String imageDownloadError = "Error downloading visit images";
 	}
 
 	public static class entityName {

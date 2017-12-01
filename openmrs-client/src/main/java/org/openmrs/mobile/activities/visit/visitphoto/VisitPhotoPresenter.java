@@ -76,7 +76,8 @@ public class VisitPhotoPresenter extends BaseVisitPresenter implements VisitCont
 
 					@Override
 					public void onError(Throwable t) {
-						visitDashboardPageView.showToast("Error downloading visit images", ToastType.ERROR);
+						visitDashboardPageView.showToast(ApplicationConstants.toastMessages.imageDownloadError,
+								ToastType.ERROR);
 						visitPhotoView.showTabSpinner(false);
 						visitDashboardPageView.displayRefreshingData(false);
 					}
@@ -87,7 +88,7 @@ public class VisitPhotoPresenter extends BaseVisitPresenter implements VisitCont
 		// get local photos
 		List<VisitPhoto> visitPhotos = visitPhotoDataService.getByVisit(new Visit(visitUuid));
 
-		if (forceRefresh) {
+		if (forceRefresh && observations != null) {
 			numberOfPhotosToDownload = observations.size();
 		}
 
@@ -201,7 +202,7 @@ public class VisitPhotoPresenter extends BaseVisitPresenter implements VisitCont
 			@Override
 			public void onError(Throwable t) {
 				visitPhotoView.showTabSpinner(false);
-				visitDashboardPageView.showToast("Unable to upload image", ToastType.ERROR);
+				visitDashboardPageView.showToast(ApplicationConstants.toastMessages.imageUploadError, ToastType.ERROR);
 			}
 		});
 	}

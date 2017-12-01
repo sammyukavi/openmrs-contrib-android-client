@@ -17,10 +17,8 @@ package org.openmrs.mobile.utilities;
 import javax.inject.Inject;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -39,14 +37,14 @@ public class NetworkUtils {
 	public NetworkUtils() {
 	}
 
-	public boolean isConnected() {
+	public boolean isConnectedOrConnecting() {
 
 		NetworkInfo activeNetworkInfo = getNetworkInfo();
 		return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
 	}
 
 	public boolean checkIfServerOnline() {
-		if (isConnected()) {
+		if (isConnectedOrConnecting()) {
 			try {
 				HttpURLConnection urlc = (HttpURLConnection)(new URL(OpenMRS.getInstance().getServerUrl()).openConnection
 						());
@@ -75,7 +73,7 @@ public class NetworkUtils {
 	 * @return An estimate of the connection speed based on typical range estimates in KB/s
 	 */
 	public @Nullable Double getCurrentConnectionSpeed() {
-		if (!isConnected()) {
+		if (!isConnectedOrConnecting()) {
 			return null;
 		}
 

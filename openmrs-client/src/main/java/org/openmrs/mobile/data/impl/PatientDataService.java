@@ -34,11 +34,11 @@ public class PatientDataService extends BaseDataService<Patient, PatientDbServic
 		);
 	}
 
-	public void getByIdentifier(String id, QueryOptions options, PagingInfo pagingInfo,
+	public void getByIdentifier(String uuid, QueryOptions options, PagingInfo pagingInfo,
 			GetCallback<List<Patient>> callback) {
 		executeMultipleCallback(callback, options, pagingInfo,
-				() -> dbService.getByIdentifier(id, options, pagingInfo),
-				() -> restService.getByIdentifier(id, options, pagingInfo)
+				() -> dbService.getByIdentifier(uuid, options, pagingInfo),
+				() -> restService.getByIdentifier(uuid, options, pagingInfo)
 		);
 	}
 
@@ -58,8 +58,8 @@ public class PatientDataService extends BaseDataService<Patient, PatientDbServic
 		);
 	}
 
-	public boolean isPatientSynced(String id) {
-		List<PatientListContext> patientListContexts = patientListContextDbService.getListsForPatient(id);
+	public boolean isPatientSynced(String uuid) {
+		List<PatientListContext> patientListContexts = patientListContextDbService.getPatientListContextsForPatient(uuid);
 		for (PatientListContext patientListContext : patientListContexts) {
 			PatientList patientList = patientListContext.getPatientList();
 			if (patientList != null && pullSubscriptionDbService.patientListIsSyncing(patientList.getUuid())) {

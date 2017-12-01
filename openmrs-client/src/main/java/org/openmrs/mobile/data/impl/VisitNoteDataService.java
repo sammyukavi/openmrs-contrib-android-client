@@ -44,7 +44,7 @@ public class VisitNoteDataService extends BaseDataService<VisitNote, VisitNoteDb
 
 					visitNote.processRelationships();
 					VisitNote result = dbService.save(visitNote);
-					if (networkUtils.isConnected() != true) {
+					if (networkUtils.isConnectedOrConnecting() != true) {
 						syncLogService.save(result, SyncAction.UPDATED);
 					}
 					return result;

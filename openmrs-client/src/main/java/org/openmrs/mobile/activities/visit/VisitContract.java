@@ -36,13 +36,10 @@ public interface VisitContract {
 
 		void displayRefreshingData(boolean visible);
 
-		void showToast(String message, ToastUtil.ToastType toastType);
-
 		void onVisitDashboardRefreshEvent(VisitDashboardDataRefreshEvent event);
 	}
 
 	interface VisitTasksView extends VisitDashboardPageView {
-		void showToast(String message, ToastUtil.ToastType toastType);
 
 		void setOpenVisitTasks(List<VisitTask> visitTaskList);
 
@@ -63,7 +60,6 @@ public interface VisitContract {
 	}
 
 	interface VisitDetailsView extends VisitDashboardPageView, IBaseDiagnosisView {
-		void showToast(String message, ToastUtil.ToastType toastType);
 
 		void setVisit(Visit visit);
 

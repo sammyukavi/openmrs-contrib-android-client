@@ -193,8 +193,11 @@ public class PatientDashboardFragment extends BaseDiagnosisFragment<PatientDashb
 	@Override
 	public void addPatientVisits(LinkedList<Visit> visits) {
 
-		patientVisits.remove(patientVisits.size() - 1);
-		int numberOfCurrentItems = patientVisits.size();
+		// This should always be null (added for loading purposes) when this method is called, but adding in case it's not
+		// for some reason
+		if (patientVisits.getLast() == null) {
+			patientVisits.remove(patientVisits.size() - 1);
+		}
 		patientVisits.addAll(visits);
 		patientVisitsRecyclerAdapter.notifyDataSetChanged();
 		patientVisitsRecyclerAdapter.setLoaded();

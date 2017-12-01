@@ -219,11 +219,6 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 	}
 
 	@Override
-	public void showToast(String message, ToastUtil.ToastType toastType) {
-		ToastUtil.showShortToast(getContext(), toastType, message);
-	}
-
-	@Override
 	public void setVisit(Visit visit) {
 		this.visit = visit;
 		visitDetailsSwipeRefreshLayout.setRefreshing(false);

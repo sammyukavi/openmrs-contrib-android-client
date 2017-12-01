@@ -241,7 +241,5 @@ public class VisitTasksPresenter extends BaseVisitPresenter implements VisitCont
 	@Override
 	protected void refreshDependentData() {
 		numberOfDataCallsCompletedForDataRefresh = 0;
-		getVisit(true);
-		getPredefinedTasks(true);
 	}
 }

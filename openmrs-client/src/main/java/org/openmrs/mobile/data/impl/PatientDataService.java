@@ -30,11 +30,11 @@ public class PatientDataService extends BaseDataService<Patient, PatientDbServic
 		);
 	}
 
-	public void getByIdentifier(String id, QueryOptions options, PagingInfo pagingInfo,
+	public void getByIdentifier(String uuid, QueryOptions options, PagingInfo pagingInfo,
 			GetCallback<List<Patient>> callback) {
 		executeMultipleCallback(callback, options, pagingInfo,
-				() -> dbService.getByIdentifier(id, options, pagingInfo),
-				() -> restService.getByIdentifier(id, options, pagingInfo)
+				() -> dbService.getByIdentifier(uuid, options, pagingInfo),
+				() -> restService.getByIdentifier(uuid, options, pagingInfo)
 		);
 	}
 
@@ -54,12 +54,12 @@ public class PatientDataService extends BaseDataService<Patient, PatientDbServic
 		);
 	}
 
-	public Date getLastSyncTime(String id) {
-		EntitySyncInfo patientSyncInfo = entitySyncInfoDbService.getPatientLastSyncInfo(id);
+	public Date getLastSyncTime(String uuid) {
+		EntitySyncInfo patientSyncInfo = entitySyncInfoDbService.getPatientLastSyncInfo(uuid);
 		return patientSyncInfo == null ? null : patientSyncInfo.getLastSync();
 	}
 
-	public void saveLastSyncTime(String id, Date lastSync) {
-		entitySyncInfoDbService.savePatientLastSyncInfo(id, lastSync);
+	public void saveLastSyncTime(String uuid, Date lastSync) {
+		entitySyncInfoDbService.savePatientLastSyncInfo(uuid, lastSync);
 	}
 }

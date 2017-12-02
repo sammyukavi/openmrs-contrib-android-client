@@ -14,6 +14,7 @@
 
 package org.openmrs.mobile.activities.patientdashboard;
 
+import org.greenrobot.eventbus.EventBus;
 import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.DataOperationException;
@@ -26,6 +27,7 @@ import org.openmrs.mobile.data.impl.PatientDataService;
 import org.openmrs.mobile.data.impl.UserDataService;
 import org.openmrs.mobile.data.impl.VisitDataService;
 import org.openmrs.mobile.data.rest.RestConstants;
+import org.openmrs.mobile.event.DataRefreshEvent;
 import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.User;
@@ -52,6 +54,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	private Patient patient;
 	private boolean loading;
 	private OpenMRS openMRS;
+	private EventBus eventBus;
 
 	public PatientDashboardPresenter(PatientDashboardContract.View view, OpenMRS openMRS) {
 		this.patientDashboardView = view;
@@ -62,6 +65,8 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 		this.userDataService = dataAccess().user();
 		this.locationDataService = dataAccess().location();
 		this.networkUtils = openMRS.getNetworkUtils();
+
+		this.eventBus = openMRS.getEventBus();
 	}
 
 	@Override
@@ -113,6 +118,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 				setLoading(false);
 				patientDashboardView.patientContacts(patient);
 				patientDashboardView.patientVisits(sortVisits(visits));
+				eventBus.post(new DataRefreshEvent(ApplicationConstants.EventMessages.DataRefresh.DATA_RETRIEVED));
 
 				if (!visits.isEmpty() && pagingInfo.getTotalRecordCount() != null) {
 					totalNumberResults = pagingInfo.getTotalRecordCount();

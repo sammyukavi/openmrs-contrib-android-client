@@ -62,6 +62,7 @@ public class PatientDashboardActivity extends ACBaseActivity {
 				}
 
 				new PatientHeaderPresenter(headerFragment, patientUuid);
+				headerFragment.showLastSyncInformation();
 			}
 		}
 	}
@@ -98,5 +99,4 @@ public class PatientDashboardActivity extends ACBaseActivity {
 	protected void onResume() {
 		super.onResume();
 	}
-
 }

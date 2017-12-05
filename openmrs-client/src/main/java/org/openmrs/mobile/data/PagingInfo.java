@@ -12,6 +12,11 @@ public class PagingInfo {
 	 */
 	public static final PagingInfo ALL = new PagingInfo(1, 10000);
 
+	/**
+	 * Sets the page size to 10, matching the default page size for most entities.
+	 */
+	public static final PagingInfo DEFAULT = new PagingInfo(1, 10);
+
 	private int page;
 	private int pageSize;
 	private Integer totalRecordCount;

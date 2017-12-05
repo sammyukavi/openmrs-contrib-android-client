@@ -41,8 +41,6 @@ public class VisitTasksPresenter extends BaseVisitPresenter implements VisitCont
 	private VisitDataService visitDataService;
 	private String patientUUID;
 
-	private int page = 1;
-	private int limit = 10;
 	private int numberOfDataCallsCompletedForDataRefresh = 0;
 	private final int TOTAL_NUMBER_OF_REFRESH_DATA_CALLS = 2;
 
@@ -67,7 +65,7 @@ public class VisitTasksPresenter extends BaseVisitPresenter implements VisitCont
 		if (!forceRefresh) {
 			visitTasksView.showTabSpinner(true);
 		}
-		PagingInfo pagingInfo = new PagingInfo(page, 100);
+		PagingInfo pagingInfo = PagingInfo.ALL;
 		DataService.GetCallback<List<VisitPredefinedTask>> callback = new DataService
 				.GetCallback<List<VisitPredefinedTask>>() {
 			@Override
@@ -105,7 +103,7 @@ public class VisitTasksPresenter extends BaseVisitPresenter implements VisitCont
 		}
 		final QueryOptions options = optionsTemp;
 
-		PagingInfo pagingInfo = new PagingInfo(page, limit);
+		PagingInfo pagingInfo = PagingInfo.DEFAULT;
 		// get open tasks
 		visitTaskDataService.getAll("OPEN", patientUUID, visitUuid, options,
 				pagingInfo,

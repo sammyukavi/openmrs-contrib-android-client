@@ -124,7 +124,7 @@ public class VisitDetailsPresenter extends BaseVisitPresenter implements VisitCo
 				.build();
 
 		visitAttributeTypeDataService
-				.getAll(options, new PagingInfo(1, 100),
+				.getAll(options, PagingInfo.ALL,
 						new DataService.GetCallback<List<VisitAttributeType>>() {
 							@Override
 							public void onCompleted(List<VisitAttributeType> entities) {

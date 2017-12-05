@@ -36,8 +36,8 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 
 	@NonNull
 	private PatientListContract.View patientListView;
-	private int limit = 10;
-	private int page = 1;
+	private int limit = PagingInfo.DEFAULT.getLimit();
+	private int page = PagingInfo.DEFAULT.getPage();
 	private int totalNumberResults, totalNumberPages;
 	private boolean loading;
 	private String patientListUuid;
@@ -131,7 +131,7 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 		}
 		setTotalNumberResults(0);
 		setExistingPatientListUuid(patientListUuid);
-		PagingInfo pagingInfo = new PagingInfo(page, limit);
+		PagingInfo pagingInfo = PagingInfo.DEFAULT;
 
 		QueryOptions queryOptions = null;
 		if (forceRefresh) {

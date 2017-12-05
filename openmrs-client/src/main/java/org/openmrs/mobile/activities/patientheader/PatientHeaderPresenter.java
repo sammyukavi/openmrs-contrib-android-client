@@ -72,7 +72,7 @@ public class PatientHeaderPresenter extends BasePresenter implements PatientHead
 	}
 
 	private void refreshPatientLastSyncTime() {
-		if (currentPatient != null && currentPatientLastSyncTime == null) {
+		if (currentPatient != null) {
 			currentPatientLastSyncTime = patientDataService.getLastSyncTime(currentPatient);
 			updatePatientSyncAge();
 		}

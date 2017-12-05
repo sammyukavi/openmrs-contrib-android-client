@@ -44,7 +44,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
 	private NetworkUtils networkUtils;
 
-	private final int INITIAL_PAGING_INDEX = 0;
+	private final int INITIAL_PAGING_INDEX = 1;
 
 	private PatientDashboardContract.View patientDashboardView;
 	private PatientDataService patientDataService;

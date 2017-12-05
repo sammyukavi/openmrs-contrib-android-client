@@ -33,7 +33,7 @@ public class FindPatientRecordPresenter extends BasePresenter implements FindPat
 
 	@NonNull
 	private FindPatientRecordContract.View findPatientView;
-	private int page = 0;
+	private int page = 1;
 	private int limit = 10;
 	private PatientDataService patientDataService;
 	private boolean loading;

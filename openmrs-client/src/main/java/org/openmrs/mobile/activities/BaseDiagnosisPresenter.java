@@ -30,7 +30,7 @@ public class BaseDiagnosisPresenter {
 	private ConceptDataService conceptDataService;
 	private ObsDataService obsDataService;
 	private VisitNoteDataService visitNoteDataService;
-	private int page = 0;
+	private int page = 1;
 	private int limit = 20;
 	private List<String> obsUuids = new ArrayList<>();
 	private DataAccessComponent dataAccess;

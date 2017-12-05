@@ -104,6 +104,8 @@ public abstract class ACBaseFragment<T extends BasePresenterContract> extends Fr
 
 	@Override
 	public void runOnUIThread(Runnable runnable) {
-		getActivity().runOnUiThread(runnable);
+		if (getActivity() != null) {
+			getActivity().runOnUiThread(runnable);
+		}
 	}
 }

@@ -59,7 +59,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 	private String locationUuid;
 	private String conceptUuid;
 
-	private int page = 0;
+	private int page = 1;
 	private int limit = 10;
 
 	public AddEditPatientPresenter(AddEditPatientContract.View patientRegistrationView, List<String> counties,

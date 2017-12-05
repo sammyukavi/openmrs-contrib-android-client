@@ -398,6 +398,7 @@ public abstract class ApplicationConstants {
 		public static class DataRefresh {
 
 			public static final String REFRESH = "Refresh";
+			public static final String DATA_RETRIEVED = "Data Retrieved";
 
 			public static class VisitDashboard {
 
@@ -414,5 +415,9 @@ public abstract class ApplicationConstants {
 
 	public static class RequiredPersonAttributes{
 		public static final String TELEPHONE_NUMBER_UUID = "14d4f066-15f5-102d-96e4-000c29c2a5d7";
+	}
+
+	public static class TimeConstants {
+		public final static long SAVE_DIAGNOSES_DELAY = 5000;
 	}
 }

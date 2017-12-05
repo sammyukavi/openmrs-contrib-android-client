@@ -21,6 +21,7 @@ import org.openmrs.mobile.data.sync.impl.PersonAttributeTypeSubscriptionProvider
 import org.openmrs.mobile.data.sync.impl.VisitAttributeTypeSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.VisitPredefinedTaskSubscriptionProvider;
 import org.openmrs.mobile.data.sync.impl.VisitTypeSubscriptionProvider;
+import org.openmrs.mobile.models.EntitySyncInfo;
 import org.openmrs.mobile.models.PullSubscription;
 import org.openmrs.mobile.utilities.TimeConstants;
 
@@ -31,7 +32,7 @@ import java.util.List;
 public class AppDatabase {
 	public static final String NAME = "BandaHealth"; // Will get added with a .db extension
 
-	public static final int VERSION = 2;
+	public static final int VERSION = 3;
 
 	@Migration(version = 2, database = AppDatabase.class, priority = 10)
 	public static class RecreateDbMigration extends BaseMigration {
@@ -126,6 +127,17 @@ public class AppDatabase {
 			sub.setMinimumInterval(minInterval);
 
 			return sub;
+		}
+	}
+
+	@Migration(version = 3, database = AppDatabase.class)
+	public static class AddEntitySyncTables extends BaseMigration {
+		@Override
+		public void migrate(@NonNull DatabaseWrapper database) {
+			ModelAdapter modelAdapter = FlowManager.getModelAdapter(EntitySyncInfo.class);
+			database.execSQL("DROP TABLE IF EXISTS " + modelAdapter.getTableName());
+
+			database.execSQL(modelAdapter.getCreationQuery());
 		}
 	}
 }

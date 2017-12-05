@@ -71,6 +71,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 		this.userDataService = dataAccess().user();
 		this.locationDataService = dataAccess().location();
 		this.networkUtils = openMRS.getNetworkUtils();
+
 		this.eventBus = openMRS.getEventBus();
 
 		isPatientSynced = patientDataService.isPatientSynced(patientUuid);
@@ -132,6 +133,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 				LinkedList<Visit> sortedVisits = sortVisits(visits);
 				if (pagingIndex == INITIAL_PAGING_INDEX) {
 					patientDashboardView.setPatientVisits(sortedVisits);
+					eventBus.post(new DataRefreshEvent(ApplicationConstants.EventMessages.DataRefresh.DATA_RETRIEVED));
 				} else {
 					patientDashboardView.addPatientVisits(sortedVisits);
 				}

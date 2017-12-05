@@ -18,14 +18,18 @@ import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.event.DataRefreshEvent;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.utilities.DateUtils;
+import org.openmrs.mobile.utilities.StringUtils;
 
 public class PatientHeaderFragment extends ACBaseFragment<PatientHeaderContract.Presenter>
 		implements PatientHeaderContract.View {
 
-	private TextView patientDisplayName, patientAge, fileNumber, patientDob, patientAddress, patientPhonenumber;
+	private TextView patientDisplayName, patientAge, fileNumber, patientDob, patientAddress, patientPhonenumber,
+			patientSyncAge;
 	ImageView patientGender;
 	private View shadowLine;
-	private RelativeLayout hideHeader, headerScreen;
+	private RelativeLayout hideHeader, headerScreen, lastSyncInformation;
+
+	private boolean shouldShowLastSyncInformation = false;
 
 	public static PatientHeaderFragment newInstance() {
 		return new PatientHeaderFragment();
@@ -45,8 +49,14 @@ public class PatientHeaderFragment extends ACBaseFragment<PatientHeaderContract.
 		patientAddress = (TextView)fragmentView.findViewById(R.id.patientAddress);
 		patientPhonenumber = (TextView)fragmentView.findViewById(R.id.patientPhonenumber);
 
+		patientSyncAge = (TextView)fragmentView.findViewById(R.id.patientSyncAge);
+
 		hideHeader = (RelativeLayout)fragmentView.findViewById(R.id.hideHeader);
 		headerScreen = (RelativeLayout)fragmentView.findViewById(R.id.headerScreen);
+		lastSyncInformation = (RelativeLayout)fragmentView.findViewById(R.id.patientSyncAgeLayout);
+		if (shouldShowLastSyncInformation) {
+			showLastSyncInformation();
+		}
 
 		shadowLine = fragmentView.findViewById(R.id.shadowLine);
 
@@ -83,6 +93,15 @@ public class PatientHeaderFragment extends ACBaseFragment<PatientHeaderContract.
 		headerScreen.setVisibility(visibility ? View.GONE : View.VISIBLE);
 	}
 
+	@Override
+	public void updatePatientSyncAge(String lastSyncCalendarTimeDifference) {
+		if (StringUtils.isNullOrEmpty(lastSyncCalendarTimeDifference)) {
+			patientSyncAge.setText(getString(R.string.patient_dashboard_sync_age_display_not_available));
+		} else {
+			patientSyncAge.setText(getString(R.string.patient_dashboard_sync_age_display, lastSyncCalendarTimeDifference));
+		}
+	}
+
 	public void updateShadowLine(boolean visible) {
 		shadowLine.setVisibility(visible ? View.VISIBLE : View.GONE);
 
@@ -92,4 +111,12 @@ public class PatientHeaderFragment extends ACBaseFragment<PatientHeaderContract.
 	public void onDataRefreshEvent(DataRefreshEvent event) {
 		mPresenter.dataRefreshEventOccurred(event);
 	}
+
+	public void showLastSyncInformation() {
+		shouldShowLastSyncInformation = true;
+		if (lastSyncInformation != null) {
+			lastSyncInformation.setVisibility(View.VISIBLE);
+		}
+	}
+
 }

@@ -12,10 +12,12 @@ public interface PatientHeaderContract {
 		void updatePatientHeader(Patient patient);
 
 		void holdHeader(boolean visibility);
+
+		void updatePatientSyncAge(String lastSyncCalendarTimeDifference);
 	}
 
 	interface Presenter extends BasePresenterContract {
 
-		void dataRefreshEventOccurred(DataRefreshEvent event);
+		void dataRefreshEventOccurred(DataRefreshEvent dataRefreshEvent);
 	}
 }

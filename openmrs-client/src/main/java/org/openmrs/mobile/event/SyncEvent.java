@@ -18,10 +18,6 @@ public class SyncEvent extends OpenMRSEvent {
 		return entity;
 	}
 
-	public String getMessage() {
-		return message;
-	}
-
 	public Integer getTotalItems() {
 		return totalItems;
 	}

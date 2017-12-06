@@ -42,7 +42,7 @@ public class VisitTasksPresenter extends BaseVisitPresenter implements VisitCont
 	private String patientUUID;
 
 	private int numberOfDataCallsCompletedForDataRefresh = 0;
-	private final int TOTAL_NUMBER_OF_REFRESH_DATA_CALLS = 2;
+	private final int TOTAL_NUMBER_OF_REFRESH_DATA_CALLS = 1;
 
 	public VisitTasksPresenter(String patientUuid, String visitUuid, VisitContract.VisitTasksView visitTasksView) {
 		super(visitUuid, visitTasksView);
@@ -72,7 +72,6 @@ public class VisitTasksPresenter extends BaseVisitPresenter implements VisitCont
 			public void onCompleted(List<VisitPredefinedTask> visitPredefinedTasks) {
 				visitTasksView.setPredefinedTasks(visitPredefinedTasks);
 				visitTasksView.showTabSpinner(false);
-				removeRefreshIndicatorIfAllCallsComplete();
 			}
 
 			@Override
@@ -126,6 +125,7 @@ public class VisitTasksPresenter extends BaseVisitPresenter implements VisitCont
 									@Override
 									public void onError(Throwable t) {
 										visitTasksView.showTabSpinner(false);
+										removeRefreshIndicatorIfAllCallsComplete();
 									}
 								});
 					}
@@ -239,5 +239,6 @@ public class VisitTasksPresenter extends BaseVisitPresenter implements VisitCont
 	@Override
 	protected void refreshDependentData() {
 		numberOfDataCallsCompletedForDataRefresh = 0;
+		getVisitTasks(true);
 	}
 }

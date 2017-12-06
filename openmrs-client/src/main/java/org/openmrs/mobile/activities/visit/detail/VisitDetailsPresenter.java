@@ -130,14 +130,12 @@ public class VisitDetailsPresenter extends BaseVisitPresenter implements VisitCo
 							public void onCompleted(List<VisitAttributeType> entities) {
 								visitDetailsView.showTabSpinner(false);
 								visitDetailsView.setAttributeTypes(entities);
-								visitDetailsView.displayRefreshingData(false);
 							}
 
 							@Override
 							public void onError(Throwable t) {
 								visitDetailsView.showTabSpinner(false);
 								visitDetailsView.showToast(t.getMessage(), ToastType.ERROR);
-								visitDetailsView.displayRefreshingData(false);
 							}
 						});
 	}
@@ -164,5 +162,6 @@ public class VisitDetailsPresenter extends BaseVisitPresenter implements VisitCo
 	@Override
 	protected void refreshDependentData() {
 		// No dependent data
+		visitDetailsView.displayRefreshingData(false);
 	}
 }

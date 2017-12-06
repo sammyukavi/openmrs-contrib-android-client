@@ -46,6 +46,8 @@ public interface PatientListContract {
 		void updatePagingLabel(int currentPage, int totalNumberOfPages);
 
 		void updatePatientListSyncDisplay(List<PatientList> patientList, List<PatientList> syncingPatientLists);
+
+		void displayRefreshingData(boolean visibility);
 	}
 
 	interface Presenter extends BasePresenterContract {
@@ -54,7 +56,7 @@ public interface PatientListContract {
 
 		void getPatientList();
 
-		void getPatientListData(String patientListUuid, int startIndex, boolean wasForceRefresh);
+		void getPatientListData(String patientListUuid, int startIndex);
 
 		void setTotalNumberResults(int totalNumberResults);
 
@@ -75,5 +77,7 @@ public interface PatientListContract {
 		void setExistingPatientListUuid(String uuid);
 
 		void syncSelectionsSaved();
+
+		void dataRefreshWasRequested();
 	}
 }

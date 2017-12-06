@@ -207,6 +207,7 @@ public abstract class ApplicationConstants {
 		public static final String dataCouldNotBeRefreshed = "data could not be refreshed";
 		public static final String imageUploadError = "Unable to upload image";
 		public static final String imageDownloadError = "Error downloading visit images";
+		public static final String notConnected = "Not connected";
 	}
 
 	public static class entityName {
@@ -399,6 +400,7 @@ public abstract class ApplicationConstants {
 
 			public static final String REFRESH = "Refresh";
 			public static final String DATA_RETRIEVED = "Data Retrieved";
+			public static final String REFRESH_UNAVAILABLE = "Refresh Unavailable";
 
 			public static class VisitDashboard {
 

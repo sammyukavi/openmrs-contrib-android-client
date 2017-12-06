@@ -234,8 +234,11 @@ public class PatientDashboardFragment extends BaseDiagnosisFragment<PatientDashb
 			}
 		});
 		patientVisitsRecyclerView.setAdapter(patientVisitsRecyclerAdapter);
+	}
 
-		patientVisitsSwipeRefreshView.setRefreshing(false);
+	@Override
+	public void displayRefreshingData(boolean visible) {
+		patientVisitsSwipeRefreshView.setRefreshing(visible);
 	}
 
 	@Override

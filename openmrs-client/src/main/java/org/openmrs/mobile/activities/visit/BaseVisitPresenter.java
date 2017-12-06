@@ -25,7 +25,7 @@ import org.openmrs.mobile.event.VisitDashboardDataRefreshEvent;
 import org.openmrs.mobile.listeners.retrofit.DefaultResponseCallbackListener;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.utilities.ApplicationConstants;
-import org.openmrs.mobile.utilities.ToastUtil;
+import org.openmrs.mobile.utilities.ToastUtil.ToastType;
 
 public abstract class BaseVisitPresenter extends BasePresenter implements VisitContract.VisitDashboardPagePresenter {
 
@@ -90,7 +90,7 @@ public abstract class BaseVisitPresenter extends BasePresenter implements VisitC
 			public void onErrorResponse(String errorMessage) {
 				visitDashboardPageView
 						.showToast(ApplicationConstants.entityName.VISITS + ApplicationConstants.toastMessages
-								.dataCouldNotBeRefreshed, ToastUtil.ToastType.ERROR);
+								.dataCouldNotBeRefreshed, ToastType.ERROR);
 				eventBus.post(new VisitDashboardDataRefreshEvent(ApplicationConstants.EventMessages.DataRefresh
 						.VisitDashboard.REFRESH_ERROR));
 			}
@@ -99,7 +99,13 @@ public abstract class BaseVisitPresenter extends BasePresenter implements VisitC
 
 	@Override
 	public void dataRefreshWasRequested() {
-		refreshAllTabData();
+		if (OpenMRS.getInstance().getNetworkUtils().isConnectedOrConnecting()) {
+			refreshAllTabData();
+		} else {
+			visitDashboardPageView.showToast(ApplicationConstants.toastMessages.notConnected, ToastType.NOTICE );
+			eventBus.post(new VisitDashboardDataRefreshEvent(ApplicationConstants.EventMessages.DataRefresh
+					.REFRESH_UNAVAILABLE));
+		}
 	}
 
 	@Override
@@ -112,6 +118,7 @@ public abstract class BaseVisitPresenter extends BasePresenter implements VisitC
 				refreshDependentData();
 				break;
 			case ApplicationConstants.EventMessages.DataRefresh.VisitDashboard.REFRESH_ERROR:
+			case ApplicationConstants.EventMessages.DataRefresh.REFRESH_UNAVAILABLE:
 				visitDashboardPageView.displayRefreshingData(false);
 				break;
 			default:

@@ -133,6 +133,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 				LinkedList<Visit> sortedVisits = sortVisits(visits);
 				if (pagingIndex == INITIAL_PAGING_INDEX) {
 					patientDashboardView.setPatientVisits(sortedVisits);
+					patientDashboardView.displayRefreshingData(false);
 					eventBus.post(new DataRefreshEvent(ApplicationConstants.EventMessages.DataRefresh.DATA_RETRIEVED));
 				} else {
 					patientDashboardView.addPatientVisits(sortedVisits);
@@ -240,9 +241,14 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 
 	@Override
 	public void dataRefreshWasRequested() {
-		eventBus.post(new DataRefreshEvent(ApplicationConstants.EventMessages.DataRefresh.REFRESH));
-		currentPagingIndex = INITIAL_PAGING_INDEX;
-		fetchPatientData(true);
+		if (openMRS.getNetworkUtils().isConnectedOrConnecting()) {
+			eventBus.post(new DataRefreshEvent(ApplicationConstants.EventMessages.DataRefresh.REFRESH));
+			currentPagingIndex = INITIAL_PAGING_INDEX;
+			fetchPatientData(true);
+		} else {
+			patientDashboardView.showToast(ApplicationConstants.toastMessages.notConnected, ToastUtil.ToastType.NOTICE);
+			patientDashboardView.displayRefreshingData(false);
+		}
 	}
 
 	private LinkedList<Visit> sortVisits(List<Visit> visits) {

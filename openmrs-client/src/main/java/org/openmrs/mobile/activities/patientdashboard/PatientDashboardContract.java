@@ -62,6 +62,7 @@ public interface PatientDashboardContract {
 
 		void alertOfflineAndPatientNotFound();
 
+		void displayRefreshingData(boolean visible);
 	}
 
 	interface Presenter extends BasePresenterContract {

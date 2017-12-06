@@ -158,7 +158,12 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 
 			@Override
 			public void onRefresh() {
-				mPresenter.getPatientListData(selectedPatientList.getUuid(), 1, true);
+				if (isSelectedPatientListValid()) {
+					mPresenter.setExistingPatientListUuid(selectedPatientList.getUuid());
+					mPresenter.dataRefreshWasRequested();
+				} else {
+					displayRefreshingData(false);
+				}
 			}
 		});
 	}
@@ -204,16 +209,17 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 				setSelectedPatientList(patientListsToShow.get(position));
 				currentPage = 1;
 				adapter.clearItems();
-				if (selectedPatientList.getUuid() == null || selectedPatientList.equals(patientListNotSelectedOption)) {
+				if (!isSelectedPatientListValid()) {
 					showNoPatientListSelected(true);
 					setNumberOfPatientsView(0);
 					List<PatientListContext> patientListContextList = new ArrayList<>();
 					updatePatientListData(patientListContextList, false);
+					setEmptyPatientListVisibility(false);
 
 					patientListSwipeRefreshLayout.setEnabled(false);
 				} else {
 					showNoPatientListSelected(false);
-					mPresenter.getPatientListData(selectedPatientList.getUuid(), 1, false);
+					mPresenter.getPatientListData(selectedPatientList.getUuid(), 1);
 					patientListSwipeRefreshLayout.setEnabled(true);
 				}
 			}
@@ -245,7 +251,11 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 		} else {
 			adapter.addItems(patientListData);
 		}
-		patientListSwipeRefreshLayout.setRefreshing(false);
+	}
+
+	@Override
+	public void displayRefreshingData(boolean visibility) {
+		patientListSwipeRefreshLayout.setRefreshing(visibility);
 	}
 
 	@Override
@@ -276,5 +286,9 @@ public class PatientListFragment extends ACBaseFragment<PatientListContract.Pres
 
 	public void showNoPatientListSelected(boolean visibility) {
 		selectPatientList.setVisibility(visibility ? View.VISIBLE : View.GONE);
+	}
+
+	private boolean isSelectedPatientListValid() {
+		return selectedPatientList.getUuid() != null && !selectedPatientList.equals(patientListNotSelectedOption);
 	}
 }

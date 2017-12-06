@@ -61,7 +61,6 @@ import org.openmrs.mobile.models.VisitAttributeType;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.DateUtils;
 import org.openmrs.mobile.utilities.StringUtils;
-import org.openmrs.mobile.utilities.ToastUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

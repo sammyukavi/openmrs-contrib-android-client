@@ -16,6 +16,7 @@ package org.openmrs.mobile.activities.patientlist;
 import android.support.annotation.NonNull;
 
 import org.openmrs.mobile.activities.BasePresenter;
+import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.DataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
@@ -25,7 +26,9 @@ import org.openmrs.mobile.data.impl.PatientListDataService;
 import org.openmrs.mobile.models.PatientList;
 import org.openmrs.mobile.models.PatientListContext;
 import org.openmrs.mobile.models.PullSubscription;
+import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.StringUtils;
+import org.openmrs.mobile.utilities.ToastUtil.ToastType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -87,6 +90,16 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 	}
 
 	@Override
+	public void dataRefreshWasRequested() {
+		if (OpenMRS.getInstance().getNetworkUtils().isConnectedOrConnecting()) {
+			fetchPatientListData(patientListUuid, 1, true);
+		} else {
+			patientListView.showToast(ApplicationConstants.toastMessages.notConnected, ToastType.NOTICE);
+			patientListView.displayRefreshingData(false);
+		}
+	}
+
+	@Override
 	public void setExistingPatientListUuid(String uuid) {
 		this.patientListUuid = uuid;
 	}
@@ -106,7 +119,7 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 							patientListView.setNoPatientListsVisibility(false);
 							patientListView.updatePatientLists(entities, patientListsToSync);
 							if (StringUtils.notNull(patientListUuid)) {
-								getPatientListData(patientListUuid, getPage(), false);
+								fetchPatientListData(patientListUuid, getPage(), false);
 							}
 						}
 					}
@@ -120,7 +133,11 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 	}
 
 	@Override
-	public void getPatientListData(String patientListUuid, int page, boolean forceRefresh) {
+	public void getPatientListData(String patientListUuid, int page) {
+		fetchPatientListData(patientListUuid, page, false);
+	}
+
+	private void fetchPatientListData(String patientListUuid, int page, boolean forceRefresh) {
 		if (page <= 0) {
 			return;
 		}
@@ -157,6 +174,7 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 							}
 						}
 						setLoading(false);
+						patientListView.displayRefreshingData(false);
 					}
 
 					@Override
@@ -165,13 +183,14 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 						setViewAfterLoadData(true);
 						patientListView.setNumberOfPatientsView(0);
 						setLoading(false);
+						patientListView.displayRefreshingData(false);
 					}
 				});
 	}
 
 	@Override
 	public void loadResults(String patientListUuid, boolean loadNextResults) {
-		getPatientListData(patientListUuid, computePage(loadNextResults), false);
+		fetchPatientListData(patientListUuid, computePage(loadNextResults), false);
 	}
 
 	@Override

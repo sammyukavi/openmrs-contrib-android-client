@@ -13,6 +13,7 @@ import org.openmrs.mobile.data.rest.RestHelper;
 import org.openmrs.mobile.data.rest.impl.PatientListContextRestServiceImpl;
 import org.openmrs.mobile.data.sync.BaseSubscriptionProvider;
 import org.openmrs.mobile.event.SyncPullEvent;
+import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.PatientListContext;
 import org.openmrs.mobile.models.PatientListContext_Table;
 import org.openmrs.mobile.models.PullSubscription;
@@ -125,7 +126,7 @@ public class PatientListContextSubscriptionProvider extends BaseSubscriptionProv
 
 	private void savePatientLastSyncInfo(List<RecordInfo> patientRecordInfoList) {
 		for (RecordInfo patientRecordInfo : patientRecordInfoList) {
-			entitySyncInfoDbService.saveLastSyncInfo(patientRecordInfo, new Date());
+			entitySyncInfoDbService.saveLastSyncInfo(Patient.class, patientRecordInfo.getUuid(), new Date());
 		}
 	}
 

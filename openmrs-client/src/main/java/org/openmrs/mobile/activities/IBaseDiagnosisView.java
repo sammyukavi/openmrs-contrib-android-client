@@ -13,7 +13,7 @@ public interface IBaseDiagnosisView {
 
 	void showTabSpinner(boolean show);
 
-	void saveVisitNote(Encounter encounter, String clinicalNote, Visit visit);
+	void saveVisitNote(Encounter encounter, String clinicalNote, Visit visit, boolean scheduleTask);
 
 	void createEncounterDiagnosis(Observation observation, String diagnosis, String conceptNameId, boolean loadRecyclerView);
 

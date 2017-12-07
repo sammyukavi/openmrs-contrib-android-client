@@ -111,7 +111,7 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 					createEncounterDiagnosis(null, ViewUtils.getInput(searchDiagnosis), concept.getValue(),
 							true);
 
-					saveVisitNote(getEncounter(), getClinicalNoteView().getText().toString(), visit);
+					saveVisitNote(getEncounter(), getClinicalNoteView().getText().toString(), visit, true);
 				}
 			}
 		});
@@ -133,7 +133,7 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 				@Override
 				public void afterTextChanged(final Editable s) {
 					if (s.length() > 0 && !firstTimeEdit) {
-						saveVisitNote(getEncounter(), getClinicalNoteView().getText().toString(), visit);
+						saveVisitNote(getEncounter(), getClinicalNoteView().getText().toString(), visit, true);
 					} else {
 						firstTimeEdit = false;
 					}
@@ -150,7 +150,7 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 
 	public void mergePatientSummary() {
 		String updatedPatientSummary = mergePatientSummaryDialog.getEditNoteTextValue();
-		saveVisitNote(getEncounter(), updatedPatientSummary, visit);
+		saveVisitNote(getEncounter(), updatedPatientSummary, visit, false);
 		setClinicalNoteText(updatedPatientSummary);
 	}
 
@@ -400,12 +400,12 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 		diagnosesContent.setVisibility(View.VISIBLE);
 	}
 
-	public void saveVisitNote(VisitNote visitNote) {
-		diagnosisPresenter.saveVisitNote(visitNote, getIBaseDiagnosisFragment());
+	public void saveVisitNote(VisitNote visitNote,  boolean scheduleTask) {
+		diagnosisPresenter.saveVisitNote(visitNote, getIBaseDiagnosisFragment(), scheduleTask);
 	}
 
-	public void saveVisitNote(Encounter encounter, String clinicalNote, Visit visit) {
-		saveVisitNote(createVisitNote(encounter, clinicalNote, visit));
+	public void saveVisitNote(Encounter encounter, String clinicalNote, Visit visit, boolean scheduleTask) {
+		saveVisitNote(createVisitNote(encounter, clinicalNote, visit), scheduleTask);
 	}
 
 	protected VisitNote createVisitNote(Encounter encounter, String clinicalNote, Visit visit) {

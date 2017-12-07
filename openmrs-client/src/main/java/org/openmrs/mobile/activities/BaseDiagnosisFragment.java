@@ -1,6 +1,5 @@
 package org.openmrs.mobile.activities;
 
-import android.os.Handler;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -37,7 +36,7 @@ import java.util.TimerTask;
 public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 		extends ACBaseFragment<T> implements IBaseDiagnosisFragment {
 
-	private static long SEARCH_DIAGNOSES_DELAY = 1000, SAVE_CLINICAL_NOTE_DELAY = 2500;
+	private static long SEARCH_DIAGNOSES_DELAY = 1000;
 	protected List<EncounterDiagnosis> primaryDiagnoses = new ArrayList<>(), secondaryDiagnoses = new ArrayList<>();
 	protected AutoCompleteTextView searchDiagnosis;
 	protected RecyclerView primaryDiagnosesRecycler, secondaryDiagnosesRecycler;
@@ -51,7 +50,6 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 	private Observation observation;
 	private Visit visit;
 	private boolean firstTimeEdit;
-	private long lastTextEdit = 0;
 	private CustomFragmentDialog mergePatientSummaryDialog;
 	private TextWatcher clinicalNoteListener;
 	private Encounter encounter;
@@ -64,7 +62,7 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 		addDiagnosisListeners();
 
 		// load patient summary merge dialog if need be
-		createPatientSummaryMergeDialog(clinicalNoteView.getText().toString());
+		createPatientSummaryMergeDialog(getClinicalNoteView().getText().toString());
 	}
 
 	protected IBaseDiagnosisFragment getIBaseDiagnosisFragment() {
@@ -113,7 +111,7 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 					createEncounterDiagnosis(null, ViewUtils.getInput(searchDiagnosis), concept.getValue(),
 							true);
 
-					saveVisitNote(getEncounter(), clinicalNoteView.getText().toString(), visit);
+					saveVisitNote(getEncounter(), getClinicalNoteView().getText().toString(), visit);
 				}
 			}
 		});
@@ -121,13 +119,6 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 
 	private void addClinicalNoteListener() {
 		firstTimeEdit = true;
-
-		Handler handler = new Handler();
-		Runnable inputCompleteChecker = () -> {
-			if (System.currentTimeMillis() > (lastTextEdit + SAVE_CLINICAL_NOTE_DELAY)) {
-				saveVisitNote(getEncounter(), clinicalNoteView.getText().toString(), visit);
-			}
-		};
 
 		if (clinicalNoteListener == null) {
 			clinicalNoteListener = new TextWatcher() {
@@ -137,15 +128,12 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 
 				@Override
 				public void onTextChanged(final CharSequence s, int start, int before, int count) {
-					//Remove this to run only once
-					handler.removeCallbacks(inputCompleteChecker);
 				}
 
 				@Override
 				public void afterTextChanged(final Editable s) {
 					if (s.length() > 0 && !firstTimeEdit) {
-						lastTextEdit = System.currentTimeMillis();
-						handler.postDelayed(inputCompleteChecker, SAVE_CLINICAL_NOTE_DELAY);
+						saveVisitNote(getEncounter(), getClinicalNoteView().getText().toString(), visit);
 					} else {
 						firstTimeEdit = false;
 					}
@@ -153,17 +141,17 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 			};
 		}
 
-		clinicalNoteView.addTextChangedListener(clinicalNoteListener);
+		getClinicalNoteView().addTextChangedListener(clinicalNoteListener);
 	}
 
 	private void removeClinicalNoteListener() {
-		clinicalNoteView.removeTextChangedListener(clinicalNoteListener);
+		getClinicalNoteView().removeTextChangedListener(clinicalNoteListener);
 	}
 
 	public void mergePatientSummary() {
 		String updatedPatientSummary = mergePatientSummaryDialog.getEditNoteTextValue();
 		saveVisitNote(getEncounter(), updatedPatientSummary, visit);
-		clinicalNoteView.setText(updatedPatientSummary);
+		setClinicalNoteText(updatedPatientSummary);
 	}
 
 	public void createPatientSummaryMergeDialog(String patientSummaryText) {
@@ -180,7 +168,7 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 			mergePatientSummaryDialog.show(
 					getActivity().getSupportFragmentManager(), ApplicationConstants.DialogTAG.MERGE_PATIENT_SUMMARY_TAG);
 		} else {
-			clinicalNoteView.setText(patientSummaryText);
+			setClinicalNoteText(patientSummaryText);
 			addClinicalNoteListener();
 		}
 	}
@@ -267,7 +255,7 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 			}
 		}
 
-		clinicalNoteView.setText(visitNote.getW12());
+		setClinicalNoteText(visitNote.getW12());
 
 		setRecyclerViews();
 	}
@@ -467,6 +455,12 @@ public abstract class BaseDiagnosisFragment<T extends BasePresenterContract>
 		} else {
 			return ApplicationConstants.DiagnosisStrings.CONFIRMED;
 		}
+	}
+
+	private void setClinicalNoteText(String text) {
+		getClinicalNoteView().setText(text);
+		// position cursor at the end of text
+		getClinicalNoteView().setSelection(text.length());
 	}
 
 	@Override

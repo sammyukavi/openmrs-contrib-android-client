@@ -420,6 +420,6 @@ public abstract class ApplicationConstants {
 	}
 
 	public static class TimeConstants {
-		public final static long SAVE_DIAGNOSES_DELAY = 5000;
+		public final static long SAVE_DIAGNOSES_DELAY = 3500;
 	}
 }

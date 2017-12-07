@@ -154,10 +154,6 @@ public class BaseDiagnosisPresenter {
 		}
 	}
 
-	public boolean isCancelRunningRequest() {
-		return cancelRunningRequest;
-	}
-
 	public void setCancelRunningRequest(boolean cancelRunningRequest) {
 		this.cancelRunningRequest = cancelRunningRequest;
 	}

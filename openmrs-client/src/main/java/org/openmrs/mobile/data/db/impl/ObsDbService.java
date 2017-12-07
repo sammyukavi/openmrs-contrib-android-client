@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 
 import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
+import com.raizlabs.android.dbflow.sql.queriable.ModelQueriable;
 import com.raizlabs.android.dbflow.structure.ModelAdapter;
 
 import org.openmrs.mobile.data.PagingInfo;
@@ -59,7 +60,16 @@ public class ObsDbService extends BaseDbService<Observation> implements DbServic
 				(f) -> f.where(Observation_Table.encounter_uuid.eq(encounter.getUuid())));
 	}
 
-	public void voidExistingObs(@NonNull Encounter encounter) {
-		repository.deleteAll(observationTable, Observation_Table.encounter_uuid.eq(encounter.getUuid()));
+	public void removeVoidedObs(@NonNull Encounter encounter) {
+		checkNotNull(encounter);
+
+		if (encounter.getObs().isEmpty()) {
+			return;
+		}
+
+		ModelQueriable<Observation> query = SQLite.delete(getEntityClass())
+				.where(getEntityTable().getProperty("uuid").notIn(encounter.getObs()));
+
+		repository.deleteAll(query);
 	}
 }

@@ -9,27 +9,31 @@ import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.RequestStrategy;
 import org.openmrs.mobile.data.db.impl.EntitySyncInfoDbService;
+import org.openmrs.mobile.data.db.impl.ObsDbService;
 import org.openmrs.mobile.data.db.impl.VisitDbService;
 import org.openmrs.mobile.data.rest.impl.VisitRestServiceImpl;
+import org.openmrs.mobile.models.Encounter;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.SyncAction;
 import org.openmrs.mobile.models.Visit;
+
+import java.util.Date;
+import java.util.List;
 
 import javax.inject.Inject;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.Date;
-import java.util.List;
-
 public class VisitDataService extends BaseEntityDataService<Visit, VisitDbService, VisitRestServiceImpl>
 		implements EntityDataService<Visit> {
 
 	private EntitySyncInfoDbService entitySyncInfoDbService;
+	private ObsDbService obsDbService;
 
 	@Inject
-	public VisitDataService(EntitySyncInfoDbService entitySyncInfoDbService) {
+	public VisitDataService(EntitySyncInfoDbService entitySyncInfoDbService, ObsDbService obsDbService) {
 		this.entitySyncInfoDbService = entitySyncInfoDbService;
+		this.obsDbService = obsDbService;
 	}
 
 	public void endVisit(@NonNull String uuid, @NonNull Visit visit, @NonNull GetCallback<Visit> callback) {
@@ -37,7 +41,8 @@ public class VisitDataService extends BaseEntityDataService<Visit, VisitDbServic
 		checkNotNull(visit);
 		checkNotNull(callback);
 
-		executeSingleCallback(callback, new QueryOptions.Builder().requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL).build(),
+		executeSingleCallback(callback,
+				new QueryOptions.Builder().requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL).build(),
 				() -> {
 					Visit result = dbService.endVisit(visit);
 					syncLogService.save(visit, SyncAction.DELETED);
@@ -47,7 +52,8 @@ public class VisitDataService extends BaseEntityDataService<Visit, VisitDbServic
 	}
 
 	public void updateVisit(Visit existingVisit, Visit updatedVisit, GetCallback<Visit> callback) {
-		executeSingleCallback(callback, new QueryOptions.Builder().requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL).build(),
+		executeSingleCallback(callback,
+				new QueryOptions.Builder().requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL).build(),
 				() -> {
 					existingVisit.processRelationships();
 					Visit result = dbService.save(existingVisit);
@@ -74,6 +80,12 @@ public class VisitDataService extends BaseEntityDataService<Visit, VisitDbServic
 				() -> dbService.getByPatient(patient, options, pagingInfo),
 				() -> restService.getByPatient(patient.getUuid(), options, pagingInfo),
 				(e) -> {
+					// check if there are any voided obs from the server and delete them locally
+					for (Visit visit : e) {
+						for (Encounter encounter : visit.getEncounters()) {
+							obsDbService.removeVoidedObs(encounter);
+						}
+					}
 					dbService.saveAll(e);
 
 					// We determine a patient's sync is updated based on a successful pull of visits from the REST service

@@ -56,7 +56,7 @@ import java.util.ArrayList;
 
 public class VisitActivity extends ACBaseActivity {
 	private static final int END_VISIT_RESULT = 1;
-	public VisitContract.VisitDetailsMainPresenter visitDetailsMainPresenter;
+	public VisitContract.VisitDashboardPagePresenter visitDetailsMainPresenter;
 	private PatientHeaderContract.Presenter patientHeaderPresenter;
 	private String patientUuid;
 	private String visitUuid;

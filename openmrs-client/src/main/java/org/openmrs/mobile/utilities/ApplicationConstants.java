@@ -204,6 +204,10 @@ public abstract class ApplicationConstants {
 		public static final String fetchErrorMessage = " could not be fetched";
 		public static final String fetchWarningMessage = " could not be fetched";
 		public static final String fetchSuccessMessage = " were loaded successfully";
+		public static final String dataCouldNotBeRefreshed = "data could not be refreshed";
+		public static final String imageUploadError = "Unable to upload image";
+		public static final String imageDownloadError = "Error downloading visit images";
+		public static final String notConnected = "Not connected";
 	}
 
 	public static class entityName {
@@ -392,10 +396,19 @@ public abstract class ApplicationConstants {
 			}
 		}
 
-	  public static class DataRefresh {
+		public static class DataRefresh {
 
+			public static final String REFRESH = "Refresh";
 			public static final String DATA_RETRIEVED = "Data Retrieved";
-	  }
+			public static final String REFRESH_UNAVAILABLE = "Refresh Unavailable";
+
+			public static class VisitDashboard {
+
+				public static final String REFRESHING_BASE_DATA = "Refreshing Base Data";
+				public static final String REFRESH_DEPENDENT_DATA = "Refresh Dependent Data";
+				public static final String REFRESH_ERROR = "Refresh Error";
+			}
+		}
 	}
 
 	public static class PatientSummary {

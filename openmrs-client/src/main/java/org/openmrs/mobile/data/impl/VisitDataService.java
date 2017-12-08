@@ -7,7 +7,6 @@ import org.openmrs.mobile.data.BaseEntityDataService;
 import org.openmrs.mobile.data.EntityDataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
-import org.openmrs.mobile.data.RequestStrategy;
 import org.openmrs.mobile.data.db.impl.EntitySyncInfoDbService;
 import org.openmrs.mobile.data.db.impl.VisitDbService;
 import org.openmrs.mobile.data.rest.impl.VisitRestServiceImpl;
@@ -37,7 +36,7 @@ public class VisitDataService extends BaseEntityDataService<Visit, VisitDbServic
 		checkNotNull(visit);
 		checkNotNull(callback);
 
-		executeSingleCallback(callback, new QueryOptions.Builder().requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL).build(),
+		executeSingleCallback(callback, QueryOptions.REMOTE,
 				() -> {
 					Visit result = dbService.endVisit(visit);
 					syncLogService.save(visit, SyncAction.DELETED);
@@ -47,7 +46,7 @@ public class VisitDataService extends BaseEntityDataService<Visit, VisitDbServic
 	}
 
 	public void updateVisit(Visit existingVisit, Visit updatedVisit, GetCallback<Visit> callback) {
-		executeSingleCallback(callback, new QueryOptions.Builder().requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL).build(),
+		executeSingleCallback(callback, QueryOptions.REMOTE,
 				() -> {
 					existingVisit.processRelationships();
 					Visit result = dbService.save(existingVisit);

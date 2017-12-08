@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 
 import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
-import com.raizlabs.android.dbflow.sql.queriable.ModelQueriable;
 import com.raizlabs.android.dbflow.structure.ModelAdapter;
 
 import org.openmrs.mobile.data.PagingInfo;
@@ -19,6 +18,7 @@ import org.openmrs.mobile.models.Observation;
 import org.openmrs.mobile.models.Observation_Table;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -60,16 +60,24 @@ public class ObsDbService extends BaseDbService<Observation> implements DbServic
 				(f) -> f.where(Observation_Table.encounter_uuid.eq(encounter.getUuid())));
 	}
 
-	public void removeVoidedObs(@NonNull Encounter encounter) {
+	public void removeLocalObservationsNotFoundInREST(@NonNull Encounter encounter) {
 		checkNotNull(encounter);
 
 		if (encounter.getObs().isEmpty()) {
 			return;
 		}
 
-		ModelQueriable<Observation> query = SQLite.delete(getEntityClass())
-				.where(getEntityTable().getProperty("uuid").notIn(encounter.getObs()));
+		repository.deleteAll(observationTable,
+				Observation_Table.encounter_uuid.eq(encounter.getUuid()),
+				Observation_Table.uuid.notIn(getObservationUuids(encounter)));
+	}
 
-		repository.deleteAll(query);
+	private List<String> getObservationUuids(Encounter encounter) {
+		List<String> uuids = new ArrayList<>();
+		for (Observation observation : encounter.getObs()) {
+			uuids.add(observation.getUuid());
+		}
+
+		return uuids;
 	}
 }

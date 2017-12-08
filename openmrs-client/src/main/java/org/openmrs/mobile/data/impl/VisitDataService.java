@@ -83,7 +83,7 @@ public class VisitDataService extends BaseEntityDataService<Visit, VisitDbServic
 					// check if there are any voided obs from the server and delete them locally
 					for (Visit visit : e) {
 						for (Encounter encounter : visit.getEncounters()) {
-							obsDbService.removeVoidedObs(encounter);
+							obsDbService.removeLocalObservationsNotFoundInREST(encounter);
 						}
 					}
 					dbService.saveAll(e);

@@ -249,7 +249,7 @@ public class VisitPullProvider {
 							encounterRestService.getByUuid(encounterRecord.getUuid(), options));
 
 					// check if there are any voided obs from the server, and delete them locally
-					obsDbService.removeVoidedObs(encounter);
+					obsDbService.removeLocalObservationsNotFoundInREST(encounter);
 
 					encounter.processRelationships();
 					encounters.add(encounter);

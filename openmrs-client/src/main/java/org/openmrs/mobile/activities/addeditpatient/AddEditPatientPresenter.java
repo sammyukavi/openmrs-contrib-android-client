@@ -59,9 +59,6 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 	private String locationUuid;
 	private String conceptUuid;
 
-	private int page = 0;
-	private int limit = 10;
-
 	public AddEditPatientPresenter(AddEditPatientContract.View patientRegistrationView, List<String> counties,
 			String patientToUpdateUuid) {
 		this(patientRegistrationView, counties, patientToUpdateUuid, null);
@@ -266,7 +263,7 @@ public class AddEditPatientPresenter extends BasePresenter implements AddEditPat
 	}
 
 	public void findSimilarPatients(Patient patient) {
-		PagingInfo pagingInfo = new PagingInfo(page, limit);
+		PagingInfo pagingInfo = PagingInfo.DEFAULT;
 		DataService.GetCallback<List<Patient>> callback = new DataService.GetCallback<List<Patient>>() {
 			@Override
 			public void onCompleted(List<Patient> patients) {

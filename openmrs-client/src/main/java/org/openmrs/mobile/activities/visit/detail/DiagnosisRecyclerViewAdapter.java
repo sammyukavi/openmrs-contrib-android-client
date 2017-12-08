@@ -85,7 +85,7 @@ public class DiagnosisRecyclerViewAdapter extends RecyclerView.Adapter<Diagnosis
 					visitDetailsView.setSecondaryDiagnosis(encounterDiagnosis);
 				}
 
-				visitDetailsView.saveVisitNote(encounter, clinicalNote, visit);
+				visitDetailsView.saveVisitNote(encounter, clinicalNote, visit, true);
 			}
 		});
 
@@ -100,7 +100,7 @@ public class DiagnosisRecyclerViewAdapter extends RecyclerView.Adapter<Diagnosis
 					visitDetailsView.setDiagnosisCertainty(encounterDiagnosis);
 				}
 
-				visitDetailsView.saveVisitNote(encounter, clinicalNote, visit);
+				visitDetailsView.saveVisitNote(encounter, clinicalNote, visit, true);
 			}
 		});
 
@@ -110,7 +110,7 @@ public class DiagnosisRecyclerViewAdapter extends RecyclerView.Adapter<Diagnosis
 			public boolean onLongClick(View v) {
 				visitDetailsView.removeDiagnosis(encounterDiagnosis, diagnosisOrder);
 
-				visitDetailsView.saveVisitNote(encounter, clinicalNote, visit);
+				visitDetailsView.saveVisitNote(encounter, clinicalNote, visit, true);
 
 				return true;
 			}

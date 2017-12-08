@@ -35,13 +35,19 @@ public class PatientHeaderPresenter extends BasePresenter implements PatientHead
 		this.patientDataService = dataAccess().patient();
 	}
 
-	@Override
-	public void getPatient() {
-		// This method gets called each time the screen turns on, so we don't want to update the sync display if the data
+	private void getPatient(boolean forceRefresh) {
 		// hasn't truly refreshed on the screen
 		final boolean isPatientNewMeaningLastSyncTimeShouldBeRefreshed = (currentPatient == null);
-		patientHeaderView.holdHeader(true);
-		patientDataService.getByUuid(patientUuid, QueryOptions.FULL_REP,
+		if (!forceRefresh) {
+			patientHeaderView.holdHeader(true);
+		}
+
+		QueryOptions options = QueryOptions.FULL_REP;
+		if (forceRefresh) {
+			options = QueryOptions.REMOTE_FULL_REP;
+		}
+
+		patientDataService.getByUuid(patientUuid, options,
 				new DataService.GetCallback<Patient>() {
 			@Override
 			public void onCompleted(Patient patient) {
@@ -65,15 +71,8 @@ public class PatientHeaderPresenter extends BasePresenter implements PatientHead
 		});
 	}
 
-	@Override
-	public void dataRefreshEventOccurred(DataRefreshEvent dataRefreshEvent) {
-		if (dataRefreshEvent.getMessage().equalsIgnoreCase(ApplicationConstants.EventMessages.DataRefresh.DATA_RETRIEVED)) {
-			refreshPatientLastSyncTime();
-		}
-	}
-
 	private void refreshPatientLastSyncTime() {
-		if (currentPatient != null && currentPatientLastSyncTime == null) {
+		if (currentPatient != null) {
 			currentPatientLastSyncTime = patientDataService.getLastSyncTime(currentPatient);
 			updatePatientSyncAge();
 		}
@@ -90,13 +89,21 @@ public class PatientHeaderPresenter extends BasePresenter implements PatientHead
 
 	@Override
 	public void subscribe() {
-		getPatient();
+		getPatient(false);
 		createPatientSyncAgeTimer();
 	}
 
 	@Override
 	public void unsubscribe() {
 		destroyPatientSyncAgeTimer();
+	}
+
+	@Override
+	public void dataRefreshEventOccurred(DataRefreshEvent dataRefreshEvent) {
+		getPatient(true);
+		if (dataRefreshEvent.getMessage().equalsIgnoreCase(ApplicationConstants.EventMessages.DataRefresh.DATA_RETRIEVED)) {
+			refreshPatientLastSyncTime();
+		}
 	}
 
 	private void destroyPatientSyncAgeTimer() {

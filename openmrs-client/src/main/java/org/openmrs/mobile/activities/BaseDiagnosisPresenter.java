@@ -30,8 +30,8 @@ public class BaseDiagnosisPresenter {
 	private ConceptDataService conceptDataService;
 	private ObsDataService obsDataService;
 	private VisitNoteDataService visitNoteDataService;
-	private int page = 0;
-	private int limit = 20;
+	private int page = PagingInfo.DEFAULT.getPage();
+	private int limit = PagingInfo.DEFAULT.getLimit() * 2;
 	private List<String> obsUuids = new ArrayList<>();
 	private DataAccessComponent dataAccess;
 	private Timer diagnosisTimer;
@@ -88,36 +88,44 @@ public class BaseDiagnosisPresenter {
 	 * auto-save time frame. In this case, the screen would have to be refreshed to get the latest updates.
 	 * @param visitNote
 	 */
-	public void saveVisitNote(VisitNote visitNote, IBaseDiagnosisFragment base) {
+	public void saveVisitNote(VisitNote visitNote, IBaseDiagnosisFragment base, boolean scheduleTask) {
 		cancelRunningRequest(true);
-		diagnosisTimer = new Timer();
-		diagnosisTimer.schedule(new TimerTask() {
+		if (scheduleTask) {
+			diagnosisTimer = new Timer();
+			diagnosisTimer.schedule(new TimerTask() {
+				@Override
+				public void run() {
+					saveVisitNote(visitNote, base);
+				}
+			}, ApplicationConstants.TimeConstants.SAVE_DIAGNOSES_DELAY);
+		} else {
+			saveVisitNote(visitNote, base);
+		}
+	}
+
+	private void saveVisitNote(VisitNote visitNote, IBaseDiagnosisFragment base) {
+		visitNoteDataService.save(visitNote, new DataService.GetCallback<VisitNote>() {
 			@Override
-			public void run() {
-				visitNoteDataService.save(visitNote, new DataService.GetCallback<VisitNote>() {
-					@Override
-					public void onCompleted(VisitNote entity) {
-						cancelRunningRequest(false);
-						base.setEncounter(entity.getEncounter());
+			public void onCompleted(VisitNote entity) {
+				cancelRunningRequest(false);
+				base.setEncounter(entity.getEncounter());
 
-						if (entity.getObservation() != null) {
-							base.setObservation(entity.getObservation());
-						}
+				if (entity.getObservation() != null) {
+					base.setObservation(entity.getObservation());
+				}
 
-						if (entity.getW12() != null) {
-							base.createPatientSummaryMergeDialog(entity.getW12());
-						}
-					}
-
-					@Override
-					public void onError(Throwable t) {
-						Log.e(TAG, "Error saving visit note: " + t.getLocalizedMessage(), t);
-						base.getBaseDiagnosisView().showTabSpinner(false);
-						cancelRunningRequest(false);
-					}
-				});
+				if (entity.getW12() != null) {
+					base.createPatientSummaryMergeDialog(entity.getW12());
+				}
 			}
-		}, ApplicationConstants.TimeConstants.SAVE_DIAGNOSES_DELAY);
+
+			@Override
+			public void onError(Throwable t) {
+				Log.e(TAG, "Error saving visit note: " + t.getLocalizedMessage(), t);
+				base.getBaseDiagnosisView().showTabSpinner(false);
+				cancelRunningRequest(false);
+			}
+		});
 	}
 
 	private void getObservation(Observation obs, Encounter encounter, IBaseDiagnosisFragment base) {

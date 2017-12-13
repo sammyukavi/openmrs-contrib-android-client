@@ -1388,7 +1388,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 										firstIcuRespiratoryRate.getText().toString());
 				observations.add(firstIcuRespiratoryRateObservation);
 			}
-		} else {
+		} else if (firstIcuRespiratoryRateObservation != null) {
 			observationsToVoid.add(firstIcuRespiratoryRateObservation);
 		}
 

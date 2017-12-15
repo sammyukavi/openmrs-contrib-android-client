@@ -219,6 +219,7 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 
 	@Override
 	public void setVisit(Visit visit) {
+		initializeListeners();
 		this.visit = visit;
 		visitDetailsSwipeRefreshLayout.setRefreshing(false);
 		if (visit != null) {

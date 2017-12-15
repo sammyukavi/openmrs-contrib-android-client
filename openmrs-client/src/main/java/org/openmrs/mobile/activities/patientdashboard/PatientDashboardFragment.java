@@ -182,7 +182,7 @@ public class PatientDashboardFragment extends BaseDiagnosisFragment<PatientDashb
 	@Override
 	public void patientContacts(Patient patient) {
 		this.patient = patient;
-		patientUuid = patient.getPerson().getUuid();
+		patientUuid = patient.getUuid();
 		openMRS.setPatientUuid(patientUuid);
 	}
 

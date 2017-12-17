@@ -4,6 +4,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.raizlabs.android.dbflow.config.FlowManager;
+import com.raizlabs.android.dbflow.sql.language.OperatorGroup;
+import com.raizlabs.android.dbflow.sql.language.SQLOperator;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.ModelAdapter;
 
@@ -67,9 +69,13 @@ public class ObsDbService extends BaseDbService<Observation> implements DbServic
 			return;
 		}
 
-		repository.deleteAll(observationTable,
-				Observation_Table.encounter_uuid.eq(encounter.getUuid()),
-				Observation_Table.uuid.notIn(getObservationUuids(encounter)));
+		// create a group of SQLOperators
+		List<SQLOperator> operators =
+				OperatorGroup.clause(
+						Observation_Table.encounter_uuid.eq(encounter.getUuid()))
+						.and(Observation_Table.uuid.notIn(getObservationUuids(encounter))).getConditions();
+
+		repository.deleteAll(observationTable, operators.toArray(new SQLOperator[operators.size()]));
 	}
 
 	private List<String> getObservationUuids(Encounter encounter) {

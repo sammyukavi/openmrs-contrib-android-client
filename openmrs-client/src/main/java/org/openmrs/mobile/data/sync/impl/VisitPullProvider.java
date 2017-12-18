@@ -118,6 +118,7 @@ public class VisitPullProvider {
 				Visit visit = RestHelper.getCallValue(
 						visitRestService.getByUuid(visitRecord.getUuid(), QueryOptions.INCLUDE_ALL_FULL_REP));
 
+				visitDbService.voidExistingVisitAttributes(visit);
 				visit.processRelationships();
 				visits.add(visit);
 			}

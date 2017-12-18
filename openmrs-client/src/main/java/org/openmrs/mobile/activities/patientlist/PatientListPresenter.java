@@ -149,6 +149,7 @@ public class PatientListPresenter extends BasePresenter implements PatientListCo
 		setTotalNumberResults(0);
 		setExistingPatientListUuid(patientListUuid);
 		PagingInfo pagingInfo = PagingInfo.DEFAULT;
+		pagingInfo.setLoadRecordCount(true);
 
 		QueryOptions queryOptions = null;
 		if (forceRefresh) {

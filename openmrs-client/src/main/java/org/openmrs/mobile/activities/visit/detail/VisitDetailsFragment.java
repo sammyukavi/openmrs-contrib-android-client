@@ -128,7 +128,6 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 		((VisitDetailsPresenter)mPresenter).getVisitUUID();
 		((VisitDetailsPresenter)mPresenter).getProviderUUID();
 		//buildMarginLayout();
-		initializeListeners();
 		return root;
 	}
 
@@ -219,6 +218,7 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 
 	@Override
 	public void setVisit(Visit visit) {
+		initializeListeners();
 		this.visit = visit;
 		visitDetailsSwipeRefreshLayout.setRefreshing(false);
 		if (visit != null) {

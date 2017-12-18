@@ -128,7 +128,6 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 		((VisitDetailsPresenter)mPresenter).getVisitUUID();
 		((VisitDetailsPresenter)mPresenter).getProviderUUID();
 		//buildMarginLayout();
-		initializeListeners();
 		return root;
 	}
 

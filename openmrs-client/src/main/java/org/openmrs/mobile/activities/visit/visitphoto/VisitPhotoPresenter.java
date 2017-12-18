@@ -95,6 +95,7 @@ public class VisitPhotoPresenter extends BaseVisitPresenter implements VisitCont
 		if (observations == null || observations.isEmpty()) {
 			visitPhotoView.showTabSpinner(false);
 			visitPhotoView.updateVisitImageMetadata(visitPhotos);
+			removeRefreshIndicatorIfAllCallsComplete();
 			return;
 		}
 

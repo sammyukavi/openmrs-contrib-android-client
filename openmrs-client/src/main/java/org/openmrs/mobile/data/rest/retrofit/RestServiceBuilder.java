@@ -33,6 +33,7 @@ public class RestServiceBuilder {
 
 	private static Retrofit.Builder builder;
 	private static String API_BASE_URL = OpenMRS.getInstance().getServerUrl();
+	private static long TIMEOUT = 10000;
 
 	static {
 		initializeBuilder();
@@ -88,8 +89,11 @@ public class RestServiceBuilder {
 
 		HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
 		logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-		httpClient.writeTimeout(10000, TimeUnit.MILLISECONDS);
 		httpClient.addInterceptor(logging);
+		// set timeouts
+		httpClient.writeTimeout(TIMEOUT, TimeUnit.MILLISECONDS);
+		httpClient.readTimeout(TIMEOUT, TimeUnit.MILLISECONDS);
+		httpClient.connectTimeout(TIMEOUT, TimeUnit.MILLISECONDS);
 
 		OkHttpClient client = httpClient.build();
 

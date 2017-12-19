@@ -127,6 +127,9 @@ public class VisitPhotoFragment extends ACBaseFragment<VisitContract.VisitDashbo
 
 		addListeners();
 
+		// Disabling swipe refresh on this fragment due to issues
+		visitPhotoSwipRefreshLayout.setEnabled(false);
+
 		return root;
 	}
 

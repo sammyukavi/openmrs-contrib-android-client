@@ -123,6 +123,9 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 		primaryDiagnosesRecycler.setLayoutManager(primaryDiagnosisLayoutManager);
 		secondaryDiagnosesRecycler.setLayoutManager(secondaryDiagnosisLayoutManager);
 
+		// Disabling swipe refresh on this fragment due to issues
+		visitDetailsSwipeRefreshLayout.setEnabled(false);
+
 		((VisitDetailsPresenter)mPresenter).getVisit();
 		((VisitDetailsPresenter)mPresenter).getPatientUUID();
 		((VisitDetailsPresenter)mPresenter).getVisitUUID();

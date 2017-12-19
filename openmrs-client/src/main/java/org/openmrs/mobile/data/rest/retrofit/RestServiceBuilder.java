@@ -18,6 +18,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.logging.HttpLoggingInterceptor;
 import org.openmrs.mobile.utilities.StringUtils;
+
+import java.util.concurrent.TimeUnit;
+
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -85,6 +88,7 @@ public class RestServiceBuilder {
 
 		HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
 		logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+		httpClient.writeTimeout(10000, TimeUnit.MILLISECONDS);
 		httpClient.addInterceptor(logging);
 
 		OkHttpClient client = httpClient.build();

@@ -93,6 +93,10 @@ public class VisitTasksFragment extends ACBaseFragment<VisitContract.VisitDashbo
 		openViewTasksRecyclerView.setLayoutManager(layoutManager);
 
 		addListeners();
+
+		// Disabling swipe refresh on this fragment due to issues
+		visitTasksSwipeRefreshLayout.setEnabled(false);
+
 		return mRootView;
 	}
 

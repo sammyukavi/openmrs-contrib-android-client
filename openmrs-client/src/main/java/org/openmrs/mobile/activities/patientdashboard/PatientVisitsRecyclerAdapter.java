@@ -228,8 +228,9 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 			} else {
 				Encounter tempEncounter = null;
 				for (Encounter encounter : visit.getEncounters()) {
-					if (encounter.getEncounterType()
-							.getDisplay().equalsIgnoreCase(ApplicationConstants.EncounterTypeDisplays.VISIT_NOTE)) {
+					if (encounter.getEncounterType() != null
+							&& encounter.getEncounterType().getDisplay().equalsIgnoreCase(
+									ApplicationConstants.EncounterTypeDisplays.VISIT_NOTE)) {
 						if (encounter.getVoided() != null && encounter.getVoided()) {
 							continue;
 						}

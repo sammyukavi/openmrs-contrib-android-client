@@ -30,7 +30,6 @@ import org.openmrs.mobile.utilities.StringUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -155,7 +154,7 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 			RecyclerViewHeader recyclerViewHeader = (RecyclerViewHeader)holder;
 			updateContactInformation(recyclerViewHeader);
 		} else if (holder instanceof ProgressViewHolder) {
-			((ProgressViewHolder) holder).progressBar.setIndeterminate(true);
+			((ProgressViewHolder)holder).progressBar.setIndeterminate(true);
 		} else if (holder instanceof PatientVisitViewHolder) {
 			boolean isActiveVisit = false;
 			PatientVisitViewHolder viewHolder = (PatientVisitViewHolder)holder;
@@ -264,10 +263,6 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 		fullDataSetHasBeenLoaded = true;
 	}
 
-	public interface OnLoadMoreListener {
-		void onLoadMore();
-	}
-
 	public void setOnLoadMoreListener(OnLoadMoreListener onLoadMoreListener) {
 		this.onLoadMoreListener = onLoadMoreListener;
 	}
@@ -360,6 +355,16 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 				} else if (displayName.toLowerCase().startsWith(TELEPHONE)) {
 					phone = displayName.split("=")[1];
 				}
+			} else if (personAttribute.getAttributeType() != null) {
+				// this is helpful when a patient has been created offline and not synced up, yet
+				String name = personAttribute.getAttributeType().getName();
+				if (name.toLowerCase().startsWith(SUBCOUNTY)) {
+					subCounty = personAttribute.getStringValue();
+				} else if (name.toLowerCase().startsWith(COUNTY)) {
+					county = personAttribute.getStringValue();
+				} else if (name.toLowerCase().startsWith(TELEPHONE)) {
+					phone = personAttribute.getStringValue();
+				}
 			}
 		}
 
@@ -433,6 +438,10 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 	@Override
 	public int getItemCount() {
 		return visits == null ? 0 : visits.size() + 1;//Add an index for the header
+	}
+
+	public interface OnLoadMoreListener {
+		void onLoadMore();
 	}
 
 	private class RecyclerViewHeader extends RecyclerView.ViewHolder {

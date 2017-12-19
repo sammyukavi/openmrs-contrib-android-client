@@ -226,7 +226,7 @@ public abstract class ApplicationConstants {
 		public static final String LOCATION = "Location(s)";
 		public static final String COUNTY = "county";
 		public static final String SUBCOUNTY = "sub-county";
-		public static final String TELEPHONE = "telephonenumber";
+		public static final String TELEPHONE = "telephone";
 	}
 
 	public static class unwantedPersonAttributes {

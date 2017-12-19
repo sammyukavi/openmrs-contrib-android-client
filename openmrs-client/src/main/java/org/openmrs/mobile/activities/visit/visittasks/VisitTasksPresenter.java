@@ -152,7 +152,7 @@ public class VisitTasksPresenter extends BaseVisitPresenter implements VisitCont
 					@Override
 					public void onCompleted(VisitTask entity) {
 						if (entity != null) {
-							subscribe();
+							getVisitTasks(false);
 						}
 					}
 
@@ -173,7 +173,7 @@ public class VisitTasksPresenter extends BaseVisitPresenter implements VisitCont
 			@Override
 			public void onCompleted(VisitTask entity) {
 				if (entity != null) {
-					subscribe();
+					getVisitTasks(false);
 				}
 			}
 

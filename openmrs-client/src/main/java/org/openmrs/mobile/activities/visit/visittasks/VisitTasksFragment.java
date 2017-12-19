@@ -268,6 +268,7 @@ public class VisitTasksFragment extends ACBaseFragment<VisitContract.VisitDashbo
 	@Override
 	public void setSelectedVisitTask(VisitTask visitTask) {
 		visitTask.setStatus(VisitTaskStatus.CLOSED);
+		visitTask.setClosedOn(DateUtils.getDateToday(DateUtils.OPEN_MRS_REQUEST_PATIENT_FORMAT));
 		((VisitTasksPresenter)mPresenter).updateVisitTask(visitTask);
 	}
 

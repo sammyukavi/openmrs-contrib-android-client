@@ -34,7 +34,11 @@ public interface PatientDashboardContract {
 
 		void patientContacts(Patient patient);
 
-		void patientVisits(LinkedList<Visit> visits);
+		void setPatientVisits(LinkedList<Visit> visits);
+
+		void addPatientVisits(LinkedList<Visit> visits);
+
+		void notifyAllPatientVisitsFetched();
 
 		Patient getPatient();
 
@@ -58,13 +62,12 @@ public interface PatientDashboardContract {
 
 		void alertOfflineAndPatientNotFound();
 
+		void displayRefreshingData(boolean visible);
 	}
 
 	interface Presenter extends BasePresenterContract {
 
-		void fetchPatientData(final String patientId);
-
-		void fetchVisits(Patient patient, int startIndex);
+		void fetchPatientData();
 
 		Patient getPatient();
 
@@ -72,6 +75,8 @@ public interface PatientDashboardContract {
 
 		void setLoading(boolean loading);
 
-		void loadResults(Patient patient, boolean loadNextResults);
+		void loadResults();
+
+		void dataRefreshWasRequested();
 	}
 }

@@ -37,6 +37,11 @@ public class PatientListContextDbService extends BaseDbService<PatientListContex
 		return executeQuery(options, pagingInfo,
 				(f) -> f.where(PatientListContext_Table.patientList_uuid.eq(patientListUuid)));
 	}
+
+	public List<PatientListContext> getPatientListContextsForPatient(String patientUuid) {
+		return executeQuery(null, null,
+				(f) -> f.where(PatientListContext_Table.patient_uuid.eq(patientUuid)));
+	}
 }
 
 

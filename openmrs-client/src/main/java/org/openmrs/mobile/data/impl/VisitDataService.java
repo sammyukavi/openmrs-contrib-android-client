@@ -7,7 +7,6 @@ import org.openmrs.mobile.data.BaseEntityDataService;
 import org.openmrs.mobile.data.EntityDataService;
 import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
-import org.openmrs.mobile.data.RequestStrategy;
 import org.openmrs.mobile.data.db.impl.EntitySyncInfoDbService;
 import org.openmrs.mobile.data.db.impl.ObsDbService;
 import org.openmrs.mobile.data.db.impl.VisitDbService;
@@ -41,8 +40,7 @@ public class VisitDataService extends BaseEntityDataService<Visit, VisitDbServic
 		checkNotNull(visit);
 		checkNotNull(callback);
 
-		executeSingleCallback(callback,
-				new QueryOptions.Builder().requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL).build(),
+		executeSingleCallback(callback, QueryOptions.REMOTE,
 				() -> {
 					Visit result = dbService.endVisit(visit);
 					syncLogService.save(visit, SyncAction.DELETED);
@@ -52,8 +50,8 @@ public class VisitDataService extends BaseEntityDataService<Visit, VisitDbServic
 	}
 
 	public void updateVisit(Visit existingVisit, Visit updatedVisit, GetCallback<Visit> callback) {
-		executeSingleCallback(callback,
-				new QueryOptions.Builder().requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL).build(),
+
+		executeSingleCallback(callback, QueryOptions.REMOTE,
 				() -> {
 					existingVisit.processRelationships();
 					Visit result = dbService.save(existingVisit);
@@ -86,6 +84,21 @@ public class VisitDataService extends BaseEntityDataService<Visit, VisitDbServic
 
 					// We determine a patient's sync is updated based on a successful pull of visits from the REST service
 					entitySyncInfoDbService.saveLastSyncInfo(patient, new Date());
+				});
+	}
+
+	@Override
+	public void getByUuid(@NonNull String uuid, @Nullable QueryOptions options,
+			@NonNull GetCallback<Visit> callback) {
+		checkNotNull(uuid);
+		checkNotNull(callback);
+
+		executeSingleCallback(callback, options,
+				() -> dbService.getByUuid(uuid, options),
+				() -> restService.getByUuid(uuid, options),
+				(e) -> {
+					dbService.deleteAllVisitAttributes(e);
+					dbService.save(e);
 				});
 	}
 }

@@ -30,8 +30,9 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.FileProvider;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.GridLayoutManager;
@@ -43,13 +44,16 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.openmrs.mobile.R;
+import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.activities.visit.VisitContract;
-import org.openmrs.mobile.activities.visit.VisitFragment;
+import org.openmrs.mobile.application.OpenMRS;
+import org.openmrs.mobile.event.VisitDashboardDataRefreshEvent;
 import org.openmrs.mobile.models.VisitPhoto;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.StringUtils;
@@ -70,7 +74,8 @@ import permissions.dispatcher.PermissionRequest;
 import permissions.dispatcher.RuntimePermissions;
 
 @RuntimePermissions
-public class VisitPhotoFragment extends VisitFragment implements VisitContract.VisitPhotoView {
+public class VisitPhotoFragment extends ACBaseFragment<VisitContract.VisitDashboardPagePresenter>
+		implements VisitContract.VisitPhotoView {
 
 	//Upload Visit photo
 	private final static int IMAGE_REQUEST = 1;
@@ -82,7 +87,7 @@ public class VisitPhotoFragment extends VisitFragment implements VisitContract.V
 	private Bitmap visitPhoto = null;
 	private AppCompatButton uploadVisitPhotoButton;
 	private RelativeLayout visitPhotoProgressBar;
-	private LinearLayout visitPhotoTab;
+	private SwipeRefreshLayout visitPhotoSwipRefreshLayout;
 
 	private File output;
 	private EditText fileCaption;
@@ -118,9 +123,12 @@ public class VisitPhotoFragment extends VisitFragment implements VisitContract.V
 		noVisitImage = (TextView)root.findViewById(R.id.noVisitImage);
 
 		visitPhotoProgressBar = (RelativeLayout)root.findViewById(R.id.visitPhotoProgressBar);
-		visitPhotoTab = (LinearLayout)root.findViewById(R.id.visitPhotoTab);
+		visitPhotoSwipRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.visitPhotoTab);
 
 		addListeners();
+
+		// Disabling swipe refresh on this fragment due to issues
+		visitPhotoSwipRefreshLayout.setEnabled(false);
 
 		return root;
 	}
@@ -131,6 +139,18 @@ public class VisitPhotoFragment extends VisitFragment implements VisitContract.V
 
 		adapter = new VisitPhotoRecyclerViewAdapter(this.getActivity(), this);
 		recyclerView.setAdapter(adapter);
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		OpenMRS.getInstance().getEventBus().register(this);
+	}
+
+	@Override
+	public void onStop() {
+		OpenMRS.getInstance().getEventBus().unregister(this);
+		super.onStop();
 	}
 
 	@Override
@@ -148,7 +168,6 @@ public class VisitPhotoFragment extends VisitFragment implements VisitContract.V
 		fileCaption.setText(ApplicationConstants.EMPTY_STRING);
 		FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
 		fragmentTransaction.detach(this).attach(this).commit();
-		mPresenter.subscribe();
 	}
 
 	@Override
@@ -165,26 +184,46 @@ public class VisitPhotoFragment extends VisitFragment implements VisitContract.V
 	@Override
 	public void showTabSpinner(boolean visibility) {
 		if (visibility) {
-			visitPhotoTab.setVisibility(View.GONE);
+			visitPhotoSwipRefreshLayout.setVisibility(View.GONE);
 			visitPhotoProgressBar.setVisibility(View.VISIBLE);
 		} else {
-			visitPhotoTab.setVisibility(View.VISIBLE);
+			visitPhotoSwipRefreshLayout.setVisibility(View.VISIBLE);
 			visitPhotoProgressBar.setVisibility(View.GONE);
 		}
 	}
 
-	@NeedsPermission({ Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE })
+	@NeedsPermission(Manifest.permission.CAMERA)
 	public void capturePhoto() {
+		VisitPhotoFragmentPermissionsDispatcher.externalStorageWithCheck(VisitPhotoFragment.this);
 		Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 		if (takePictureIntent.resolveActivity(getContext().getPackageManager()) != null) {
-			File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+			OpenMRS openMRS = OpenMRS.getInstance();
+			File dir = openMRS.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
 			output = new File(dir, getUniqueImageFileName());
-			takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(output));
-			startActivityForResult(takePictureIntent, IMAGE_REQUEST);
+			if (output != null) {
+				Uri photoURI = FileProvider.getUriForFile(openMRS, ApplicationConstants.Authorities.FILE_PROVIDER, output);
+				takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+				startActivityForResult(takePictureIntent, IMAGE_REQUEST);
+			} else {
+				createSnackbar(getString(R.string.external_storage_not_available));
+			}
 		}
 	}
 
-	@OnShowRationale({ Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE })
+	@NeedsPermission(value = Manifest.permission.WRITE_EXTERNAL_STORAGE, maxSdkVersion = 18)
+	public void externalStorage() { }
+
+	@OnPermissionDenied(value = Manifest.permission.WRITE_EXTERNAL_STORAGE)
+	public void showDeniedForWritingToExternalStorage() {
+		createSnackbar(getString(R.string.permission_write_external_storage_denied));
+	}
+
+	@OnNeverAskAgain(value = Manifest.permission.WRITE_EXTERNAL_STORAGE)
+	public void showNeverAskForWritingToExternalStorage() {
+		createSnackbar(getString(R.string.permission_write_external_storage_denied));
+	}
+
+	@OnShowRationale(Manifest.permission.CAMERA)
 	public void showRationaleForCamera(final PermissionRequest request) {
 		new AlertDialog.Builder(getActivity())
 				.setMessage(R.string.permission_camera_rationale)
@@ -193,31 +232,20 @@ public class VisitPhotoFragment extends VisitFragment implements VisitContract.V
 				.show();
 	}
 
-	@OnPermissionDenied({ Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE })
+	@OnPermissionDenied(Manifest.permission.CAMERA)
 	public void showDeniedForCamera() {
-		createSnackbarLong(R.string.permission_camera_denied)
-				.show();
+		createSnackbar(getString(R.string.permission_camera_denied));
 	}
 
-	@OnNeverAskAgain({ Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE })
+	@OnNeverAskAgain(Manifest.permission.CAMERA)
 	public void showNeverAskForCamera() {
-		createSnackbarLong(R.string.permission_camera_neverask)
-				.show();
+		createSnackbar(getString(R.string.permission_camera_neverask));
 	}
 
 	private String getUniqueImageFileName() {
 		// Create an image file name
 		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 		return timeStamp + "_" + ".jpg";
-	}
-
-	private Snackbar createSnackbarLong(int stringId) {
-		//Snackbar snackbar = Snackbar.make(linearLayout, stringId, Snackbar.LENGTH_LONG);
-		//View sbView = snackbar.getView();
-		//TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
-		//textView.setTextColor(Color.WHITE);
-		//return snackbar;
-		return null;
 	}
 
 	private Bitmap getPortraitImage(String imagePath) {
@@ -282,6 +310,14 @@ public class VisitPhotoFragment extends VisitFragment implements VisitContract.V
 				((VisitPhotoPresenter)mPresenter).uploadImage();
 			}
 		});
+
+		visitPhotoSwipRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+
+			@Override
+			public void onRefresh() {
+				mPresenter.dataRefreshWasRequested();
+			}
+		});
 	}
 
 	@Override
@@ -320,5 +356,16 @@ public class VisitPhotoFragment extends VisitFragment implements VisitContract.V
 				}
 			}
 		}
+	}
+
+	@Override
+	public void displayRefreshingData(boolean visible) {
+		visitPhotoSwipRefreshLayout.setRefreshing(visible);
+	}
+
+	@Override
+	@Subscribe(threadMode = ThreadMode.MAIN)
+	public void onVisitDashboardRefreshEvent(VisitDashboardDataRefreshEvent event) {
+		mPresenter.dataRefreshEventOccurred(event);
 	}
 }

@@ -62,11 +62,7 @@ public class VisitDataService extends BaseEntityDataService<Visit, VisitDbServic
 				},
 				() -> restService.updateVisit(updatedVisit),
 				(e) -> {
-					// void existing attributes
-					dbService.voidExistingVisitAttributes(existingVisit);
-
-					// update visit
-					dbService.save(e);
+					dbService.saveVisitAttributes(e);
 				});
 	}
 

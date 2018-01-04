@@ -109,10 +109,7 @@ public class VisitPushProvider extends BasePushProvider<Visit, VisitDbService, V
 			}
 
 			if (originalEntity.getAttributes().size() != restEntity.getAttributes().size()) {
-				// void existing attributes
-				dbService.voidExistingVisitAttributes(restEntity);
-
-				dbService.save(restEntity);
+				dbService.saveVisitAttributes(originalEntity);
 			}
 		}
 	}

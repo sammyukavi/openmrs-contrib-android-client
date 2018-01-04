@@ -1450,7 +1450,8 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		}
 
 		for (Observation observationToVoid : observationsToVoid) {
-			if (mPresenter.isObservationExistingForCurrentEncounter(observationToVoid)) {
+			if (observationToVoid != null &&
+					mPresenter.isObservationExistingForCurrentEncounter(observationToVoid)) {
 				setObservationVoided(observationToVoid);
 				observations.add(observationToVoid);
 			}

@@ -57,6 +57,7 @@ import org.openmrs.mobile.utilities.FontsUtil;
 import org.openmrs.mobile.utilities.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormAnswers.ANSWER_NEGATIVE;
@@ -1464,7 +1465,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		encounter.setVisit(visit);
 		encounter.setProvider(instance.getCurrentLoggedInUserInfo().get(ApplicationConstants.UserKeys.USER_UUID));
 		encounter.setEncounterType(auditFormEncounterType);
-		encounter.setEncounterDatetime(visit.getStartDatetime());
+		encounter.setEncounterDatetime(new Date());
 
 		mPresenter.saveUpdateEncounter(encounter, isNewEncounter);
 	}

@@ -38,6 +38,10 @@ public abstract class ApplicationConstants {
 		public static final String LAST_TRIM_DATE = "last_trim_date";
 	}
 
+	public abstract static class Authorities {
+		public static final String FILE_PROVIDER = "org.openmrs.mobile.bandahealth.im.fileprovider";
+	}
+
 	public abstract static class API {
 		public static final String REST_ENDPOINT_V1 = "ws/rest/v1/";
 		public static final String REST_ENDPOINT_V2 = "ws/rest/v2/";
@@ -135,6 +139,7 @@ public abstract class ApplicationConstants {
 		public static final String FIRST_SBP_ICU = "1st SBP in ICU <= 90?: ";
 		public static final String FIRST_GCS_SCORE = "1st GCS score at ICU admission (#): ";
 		public static final String FIRST_HEART_RATE = "1st heart rate in ICU: ";
+		public static final String FIRST_RESPIRATORY_RATE = "Respiratory rate: ";
 		public static final String MECHANICAL_VENTILATION = "Mechanical ventilation: ";
 		public static final String PATIENT_DIABETIC = "Patient diabetic?: ";
 		public static final String RECEIVED_VAOSPRESSORS = "Received vaospressors during hospital stay?: ";
@@ -154,6 +159,7 @@ public abstract class ApplicationConstants {
 				+ "42ed45fd-f3f6-44b6-bfc2-8bde1bb41e00";
 		public static final String SCHEDULED_IN_CLINIC = "Yes - scheduled in clinic";
 		public static final String NOT_SCHEDULED_IN_CLINIC = "Yes - not scheduled in clinic";
+		public static final String INTUBATION_ON_FIRST_GCS = "Patient intubated at time of 1st GCS?: ";
 	}
 
 	public abstract static class DiagnosisStrings {
@@ -202,6 +208,10 @@ public abstract class ApplicationConstants {
 		public static final String fetchErrorMessage = " could not be fetched";
 		public static final String fetchWarningMessage = " could not be fetched";
 		public static final String fetchSuccessMessage = " were loaded successfully";
+		public static final String dataCouldNotBeRefreshed = "data could not be refreshed";
+		public static final String imageUploadError = "Unable to upload image";
+		public static final String imageDownloadError = "Error downloading visit images";
+		public static final String notConnected = "Not connected";
 	}
 
 	public static class entityName {
@@ -216,7 +226,7 @@ public abstract class ApplicationConstants {
 		public static final String LOCATION = "Location(s)";
 		public static final String COUNTY = "county";
 		public static final String SUBCOUNTY = "sub-county";
-		public static final String TELEPHONE = "telephonenumber";
+		public static final String TELEPHONE = "telephone";
 	}
 
 	public static class unwantedPersonAttributes {
@@ -273,10 +283,12 @@ public abstract class ApplicationConstants {
 		public static final String CONCEPT_FIRST_SBP_ICU = "8f7ad9c2-aca6-458e-9362-963b4d391a7c";
 		public static final String CONCEPT_FIRST_MAP_ICU = "0b19946c-63a6-41e8-b3af-a87fc6addab4";
 		public static final String CONCEPT_FIRST_HEART_RATE_ICU = "9360b4f4-4456-4bc2-97fd-68e661a19d78";
+		public static final String CONCEPT_FIRST_RESPIRATORY_RATE_ICU = "5242AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 		public static final String CONCEPT_FIRST_GCS_SCORE_ICU = "99659fa6-fe39-41d7-ac6b-f183d9231310";
 		public static final String CONCEPT_SEDETION_PRIOR_FIRST_GCS_SCORE_ICU = "7cccf308-edca-4c3e-afde-e7a3f1155ec6";
 		public static final String CONCEPT_PATIENT_DIABETIC = "a424ed50-5f94-4296-a91c-73ebbc1ccca1";
 		public static final String CONCEPT_WARD_STAY_DURING_ADMISSION = "59073230-e0d9-4cbc-bebc-4bf91a42f3bb";
+		public static final String CONCEPT_INTUBATION_AT_GCS = "8b6e4154-006b-4991-ab18-96c1c5357bf3";
 	}
 
 	public abstract static class VITALSFormConcepts {
@@ -325,6 +337,12 @@ public abstract class ApplicationConstants {
 
 		public static int AUDIT_GCS_SCORE_MIN = 3;
 		public static int AUDIT_GCS_SCORE_MAX = 15;
+
+		public static int AUDIT_HBA1C_MIN = 4;
+		public static int AUDIT_HBA1C_MAX = 25;
+
+		public static int AUDIT_1ST_RESPIRATORY_RATE_MIN = 0;
+		public static int AUDIT_1ST_RESPIRATORY_RATE_MAX = 100;
 	}
 
 	public static class CacheKays {
@@ -381,6 +399,20 @@ public abstract class ApplicationConstants {
 				public static final String TRIM = "trim";
 			}
 		}
+
+		public static class DataRefresh {
+
+			public static final String REFRESH = "Refresh";
+			public static final String DATA_RETRIEVED = "Data Retrieved";
+			public static final String REFRESH_UNAVAILABLE = "Refresh Unavailable";
+
+			public static class VisitDashboard {
+
+				public static final String REFRESHING_BASE_DATA = "Refreshing Base Data";
+				public static final String REFRESH_DEPENDENT_DATA = "Refresh Dependent Data";
+				public static final String REFRESH_ERROR = "Refresh Error";
+			}
+		}
 	}
 
 	public static class PatientSummary {
@@ -389,5 +421,9 @@ public abstract class ApplicationConstants {
 
 	public static class RequiredPersonAttributes{
 		public static final String TELEPHONE_NUMBER_UUID = "14d4f066-15f5-102d-96e4-000c29c2a5d7";
+	}
+
+	public static class TimeConstants {
+		public final static long SAVE_DIAGNOSES_DELAY = 3500;
 	}
 }

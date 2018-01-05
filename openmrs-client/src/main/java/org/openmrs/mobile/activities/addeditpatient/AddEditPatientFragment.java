@@ -317,11 +317,6 @@ public class AddEditPatientFragment extends ACBaseFragment<AddEditPatientContrac
 	}
 
 	@Override
-	public void showToast(String message, ToastUtil.ToastType toastType) {
-		ToastUtil.showShortToast(getContext(), toastType, message);
-	}
-
-	@Override
 	public void loadPersonAttributeTypes(List<PersonAttributeType> personAttributeTypeList) {
 		for (PersonAttributeType personAttributeType : personAttributeTypeList) {
 			LinearLayout personLayout = new LinearLayout(getContext());

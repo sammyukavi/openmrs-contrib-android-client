@@ -9,7 +9,8 @@ import org.openmrs.mobile.data.db.impl.VisitTaskDbService;
 import org.openmrs.mobile.data.rest.impl.VisitRestServiceImpl;
 import org.openmrs.mobile.data.sync.BasePushProvider;
 import org.openmrs.mobile.models.Encounter;
-import org.openmrs.mobile.models.SyncAction;
+import org.openmrs.mobile.models.Observation;
+import org.openmrs.mobile.models.Resource;
 import org.openmrs.mobile.models.SyncLog;
 import org.openmrs.mobile.models.Visit;
 import org.openmrs.mobile.models.VisitAttribute;
@@ -57,6 +58,11 @@ public class VisitPushProvider extends BasePushProvider<Visit, VisitDbService, V
 		if (!encounters.isEmpty()) {
 			for (Encounter encounter : encounters) {
 				encounter.setVisit(restEntity);
+				encounter.setPatient(restEntity.getPatient());
+
+				for (Observation obs : encounter.getObs()) {
+					obs.setPerson(restEntity.getPatient().getPerson());
+				}
 			}
 			encounterDbService.saveAll(encounters);
 		}
@@ -73,6 +79,7 @@ public class VisitPushProvider extends BasePushProvider<Visit, VisitDbService, V
 		VisitNote visitNote = visitNoteDbService.getByVisit(originalEntity);
 		if (visitNote != null) {
 			visitNote.setVisit(restEntity);
+			visitNote.setPersonId(restEntity.getPatient().getUuid());
 			visitNoteDbService.save(visitNote);
 		}
 
@@ -92,12 +99,17 @@ public class VisitPushProvider extends BasePushProvider<Visit, VisitDbService, V
 
 			entity.setAttributes(attributes);
 		}
+
+		if (Resource.isLocalUuid(entity.getUuid())) {
+			// remove encounters as they will be handled separately in the EncounterPushProvider
+			entity.setEncounters(null);
+		}
 	}
 
 	@Override
 	protected void postProcess(Visit originalEntity, Visit restEntity, SyncLog syncLog) {
 		if (restEntity != null) {
-			Visit tmpEntity = dbService.getByUuid(syncLog.getKey(), QueryOptions.FULL_REP);
+			originalEntity = dbService.getByUuid(syncLog.getKey(), QueryOptions.FULL_REP);
 			// Delete any related records with local uuids, records with the server-generated uuids will be saved when
 			// saving the entity below
 			deleteLocalRelatedRecords(originalEntity, restEntity);
@@ -108,11 +120,8 @@ public class VisitPushProvider extends BasePushProvider<Visit, VisitDbService, V
 				dbService.update(originalEntity.getUuid(), restEntity);
 			}
 
-			if (tmpEntity.getAttributes().size() != originalEntity.getAttributes().size()) {
-				// void existing attributes
-				dbService.voidExistingVisitAttributes(originalEntity);
-
-				dbService.save(originalEntity);
+			if (originalEntity.getAttributes().size() != restEntity.getAttributes().size()) {
+				dbService.saveVisitAttributes(originalEntity);
 			}
 		}
 	}

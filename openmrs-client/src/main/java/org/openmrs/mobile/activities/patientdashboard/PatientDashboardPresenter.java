@@ -14,6 +14,7 @@
 
 package org.openmrs.mobile.activities.patientdashboard;
 
+import org.greenrobot.eventbus.EventBus;
 import org.openmrs.mobile.activities.BasePresenter;
 import org.openmrs.mobile.application.OpenMRS;
 import org.openmrs.mobile.data.DataOperationException;
@@ -26,6 +27,7 @@ import org.openmrs.mobile.data.impl.PatientDataService;
 import org.openmrs.mobile.data.impl.UserDataService;
 import org.openmrs.mobile.data.impl.VisitDataService;
 import org.openmrs.mobile.data.rest.RestConstants;
+import org.openmrs.mobile.event.DataRefreshEvent;
 import org.openmrs.mobile.models.Location;
 import org.openmrs.mobile.models.Patient;
 import org.openmrs.mobile.models.User;
@@ -35,32 +37,44 @@ import org.openmrs.mobile.utilities.NetworkUtils;
 import org.openmrs.mobile.utilities.StringUtils;
 import org.openmrs.mobile.utilities.ToastUtil;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class PatientDashboardPresenter extends BasePresenter implements PatientDashboardContract.Presenter {
 
 	private NetworkUtils networkUtils;
 
+	private final int INITIAL_PAGING_INDEX = PagingInfo.DEFAULT.getInstance().getPage();
+
 	private PatientDashboardContract.View patientDashboardView;
 	private PatientDataService patientDataService;
 	private VisitDataService visitDataService;
 	private LocationDataService locationDataService;
 	private UserDataService userDataService;
-	private int startIndex = 0;
-	private int totalNumberResults;
+	private int currentPagingIndex = INITIAL_PAGING_INDEX;
 	private Patient patient;
 	private boolean loading;
 	private OpenMRS openMRS;
+	private EventBus eventBus;
 
-	public PatientDashboardPresenter(PatientDashboardContract.View view, OpenMRS openMRS) {
+	private String patientUuid;
+	private boolean isPatientSynced = false;
+
+	public PatientDashboardPresenter(PatientDashboardContract.View view, OpenMRS openMRS, String patientUuid) {
 		this.patientDashboardView = view;
 		this.patientDashboardView.setPresenter(this);
 		this.openMRS = openMRS;
+		this.patientUuid = patientUuid;
+
 		this.patientDataService = dataAccess().patient();
 		this.visitDataService = dataAccess().visit();
 		this.userDataService = dataAccess().user();
 		this.locationDataService = dataAccess().location();
 		this.networkUtils = openMRS.getNetworkUtils();
+
+		this.eventBus = openMRS.getEventBus();
+
+		isPatientSynced = patientDataService.isPatientSynced(patientUuid);
 	}
 
 	@Override
@@ -70,23 +84,35 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	}
 
 	@Override
-	public void fetchPatientData(String uuid) {
-		patientDashboardView.showPageSpinner(true);
-		patientDataService.getByUuid(uuid, QueryOptions.FULL_REP, new DataService.GetCallback<Patient>() {
+	public void fetchPatientData() {
+		fetchPatientData(false);
+	}
+
+	private void fetchPatientData(boolean forceRefresh) {
+		if (!forceRefresh) {
+			patientDashboardView.showPageSpinner(true);
+		}
+
+		QueryOptions options = QueryOptions.FULL_REP;
+		if (forceRefresh) {
+			options = QueryOptions.REMOTE_FULL_REP;
+		}
+
+		patientDataService.getByUuid(patientUuid, options, new DataService.GetCallback<Patient>() {
 			@Override
 			public void onCompleted(Patient patient) {
-				if (patient == null && !networkUtils.isOnline()) {
+				if (patient == null && !networkUtils.isConnectedOrConnecting()) {
 					patientDashboardView.alertOfflineAndPatientNotFound();
 					patientDashboardView.navigateBack();
 					return;
 				}
 				setPatient(patient);
-				fetchVisits(patient, startIndex);
+				fetchVisits(patient, INITIAL_PAGING_INDEX, forceRefresh);
 			}
 
 			@Override
 			public void onError(Throwable t) {
-				if (t instanceof DataOperationException && !openMRS.getNetworkUtils().hasNetwork()) {
+				if (t instanceof DataOperationException && !openMRS.getNetworkUtils().isConnectedOrConnecting()) {
 					patientDashboardView.showNoPatientData(true);
 				} else {
 					patientDashboardView.showPageSpinner(false);
@@ -96,41 +122,47 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 		});
 	}
 
-	@Override
-	public void fetchVisits(Patient patient, int startIndex) {
-		if (startIndex < 0) {
-			return;
-		}
+	private void fetchVisits(Patient patient, int pagingIndex, boolean forceRefresh) {
 		setLoading(true);
-		totalNumberResults = 0;
-		patientDashboardView.showPageSpinner(true);
-		setLoading(true);
-		PagingInfo pagingInfo = new PagingInfo(startIndex, ApplicationConstants.Request.PATIENT_VISIT_COUNT);
+		PagingInfo pagingInfo = new PagingInfo(pagingIndex, ApplicationConstants.Request.PATIENT_VISIT_COUNT);
 		DataService.GetCallback<List<Visit>> fetchVisitsCallback = new DataService.GetCallback<List<Visit>>() {
 			@Override
 			public void onCompleted(List<Visit> visits) {
 				setLoading(false);
 				patientDashboardView.patientContacts(patient);
-				patientDashboardView.patientVisits(visits);
-
-				if (!visits.isEmpty() && pagingInfo.getTotalRecordCount() != null) {
-					totalNumberResults = pagingInfo.getTotalRecordCount();
+				LinkedList<Visit> sortedVisits = sortVisits(visits);
+				if (pagingIndex == INITIAL_PAGING_INDEX) {
+					patientDashboardView.setPatientVisits(sortedVisits);
+					patientDashboardView.displayRefreshingData(false);
+					eventBus.post(new DataRefreshEvent(ApplicationConstants.EventMessages.DataRefresh.DATA_RETRIEVED));
+				} else {
+					patientDashboardView.addPatientVisits(sortedVisits);
 				}
+				if (visits.isEmpty() || visits.size() < ApplicationConstants.Request.PATIENT_VISIT_COUNT) {
+					patientDashboardView.notifyAllPatientVisitsFetched();
+				}
+
 				patientDashboardView.showPageSpinner(false);
 			}
 
 			@Override
 			public void onError(Throwable t) {
 				t.printStackTrace();
+				// If we're online and we're not on the first page of results, assume it's because we have all results
+				if (openMRS.getNetworkUtils().isConnectedOrConnecting() && pagingIndex > INITIAL_PAGING_INDEX) {
+					patientDashboardView.notifyAllPatientVisitsFetched();
+				}
 				patientDashboardView.showPageSpinner(false);
 				setLoading(false);
 			}
 		};
-		QueryOptions options = new QueryOptions.Builder()
+		QueryOptions.Builder builder = new QueryOptions.Builder()
 				.includeInactive(true)
-				.customRepresentation(RestConstants.Representations.VISIT)
-				.requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL)
-				.build();
+				.customRepresentation(RestConstants.Representations.VISIT);
+		if (forceRefresh) {
+			builder = builder.requestStrategy(RequestStrategy.REMOTE_THEN_LOCAL);
+		}
+		QueryOptions options = builder.build();
 		visitDataService.getByPatient(patient, options, pagingInfo, fetchVisitsCallback);
 	}
 
@@ -153,7 +185,7 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 					new DataService.GetCallback<User>() {
 						@Override
 						public void onCompleted(User entity) {
-							if(entity != null) {
+							if (entity != null) {
 								openMRS.setCurrentUserUuid(entity.getPerson().getUuid());
 								patientDashboardView.setProviderUuid(entity.getPerson().getUuid());
 							}
@@ -202,25 +234,33 @@ public class PatientDashboardPresenter extends BasePresenter implements PatientD
 	}
 
 	@Override
-	public void loadResults(Patient patient, boolean loadNextResults) {
-		fetchVisits(patient, computePage(loadNextResults));
+	public void loadResults() {
+		// Only the first five results are loaded for any patient (even in sync), so subsequent loads need new data
+		fetchVisits(patient, ++currentPagingIndex, true);
 	}
 
-	private int computePage(boolean next) {
-		int tmpPage = startIndex;
-		// check if pagination is required.
-		if (startIndex < (Math.round(totalNumberResults / ApplicationConstants.Request.PATIENT_VISIT_COUNT))) {
-			if (next) {
-				// set next page
-				tmpPage += 1;
-			} else {
-				// set previous page.
-				tmpPage -= 1;
-			}
+	@Override
+	public void dataRefreshWasRequested() {
+		if (openMRS.getNetworkUtils().isConnectedOrConnecting()) {
+			eventBus.post(new DataRefreshEvent(ApplicationConstants.EventMessages.DataRefresh.REFRESH));
+			currentPagingIndex = INITIAL_PAGING_INDEX;
+			fetchPatientData(true);
 		} else {
-			tmpPage = -1;
+			patientDashboardView.showToast(ApplicationConstants.toastMessages.notConnected, ToastUtil.ToastType.NOTICE);
+			patientDashboardView.displayRefreshingData(false);
+		}
+	}
+
+	private LinkedList<Visit> sortVisits(List<Visit> visits) {
+		LinkedList<Visit> sortVisits = new LinkedList<>();
+		for (Visit visit : visits) {
+			if (visit.getStopDatetime() == null) {
+				sortVisits.add(0, visit);
+			} else {
+				sortVisits.add(visit);
+			}
 		}
 
-		return tmpPage;
+		return sortVisits;
 	}
 }

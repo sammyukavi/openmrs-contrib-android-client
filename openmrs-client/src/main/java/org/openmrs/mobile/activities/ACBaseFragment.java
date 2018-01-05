@@ -19,6 +19,7 @@ import android.view.Menu;
 
 import org.openmrs.mobile.R;
 import org.openmrs.mobile.utilities.ApplicationConstants;
+import org.openmrs.mobile.utilities.ToastUtil;
 
 public abstract class ACBaseFragment<T extends BasePresenterContract> extends Fragment implements BaseView<T> {
 
@@ -46,6 +47,13 @@ public abstract class ACBaseFragment<T extends BasePresenterContract> extends Fr
 		super.onPause();
 		if (mPresenter != null) {
 			mPresenter.unsubscribe();
+		}
+	}
+
+	@Override
+	public void showToast(String message, ToastUtil.ToastType toastType) {
+		if (getContext() != null) {
+			ToastUtil.showShortToast(getContext(), toastType, message);
 		}
 	}
 
@@ -96,6 +104,8 @@ public abstract class ACBaseFragment<T extends BasePresenterContract> extends Fr
 
 	@Override
 	public void runOnUIThread(Runnable runnable) {
-		getActivity().runOnUiThread(runnable);
+		if (getActivity() != null) {
+			getActivity().runOnUiThread(runnable);
+		}
 	}
 }

@@ -32,6 +32,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.GridLayoutManager;
@@ -47,9 +48,12 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.openmrs.mobile.R;
+import org.openmrs.mobile.activities.ACBaseFragment;
 import org.openmrs.mobile.activities.visit.VisitContract;
-import org.openmrs.mobile.activities.visit.VisitFragment;
+import org.openmrs.mobile.event.VisitDashboardDataRefreshEvent;
 import org.openmrs.mobile.models.VisitPhoto;
 import org.openmrs.mobile.utilities.ApplicationConstants;
 import org.openmrs.mobile.utilities.StringUtils;
@@ -70,7 +74,7 @@ import permissions.dispatcher.PermissionRequest;
 import permissions.dispatcher.RuntimePermissions;
 
 @RuntimePermissions
-public class VisitPhotoFragment extends VisitFragment implements VisitContract.VisitPhotoView {
+public class VisitPhotoFragment extends ACBaseFragment<VisitContract.VisitDashboardPagePresenter> implements VisitContract.VisitPhotoView {
 
 	//Upload Visit photo
 	private final static int IMAGE_REQUEST = 1;
@@ -82,7 +86,7 @@ public class VisitPhotoFragment extends VisitFragment implements VisitContract.V
 	private Bitmap visitPhoto = null;
 	private AppCompatButton uploadVisitPhotoButton;
 	private RelativeLayout visitPhotoProgressBar;
-	private LinearLayout visitPhotoTab;
+	private SwipeRefreshLayout visitPhotoTab;
 
 	private File output;
 	private EditText fileCaption;
@@ -118,7 +122,10 @@ public class VisitPhotoFragment extends VisitFragment implements VisitContract.V
 		noVisitImage = (TextView)root.findViewById(R.id.noVisitImage);
 
 		visitPhotoProgressBar = (RelativeLayout)root.findViewById(R.id.visitPhotoProgressBar);
-		visitPhotoTab = (LinearLayout)root.findViewById(R.id.visitPhotoTab);
+		visitPhotoTab = (SwipeRefreshLayout)root.findViewById(R.id.visitPhotoTab);
+
+		// Disabling swipe refresh on this fragment due to issues
+		visitPhotoTab.setEnabled(false);
 
 		addListeners();
 
@@ -320,5 +327,15 @@ public class VisitPhotoFragment extends VisitFragment implements VisitContract.V
 				}
 			}
 		}
+	}
+
+	@Override
+	public void displayRefreshingData(boolean visible) {
+	}
+
+	@Override
+	@Subscribe(threadMode = ThreadMode.MAIN)
+	public void onVisitDashboardRefreshEvent(VisitDashboardDataRefreshEvent event) {
+		mPresenter.dataRefreshEventOccurred(event);
 	}
 }

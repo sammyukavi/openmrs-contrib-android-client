@@ -124,6 +124,9 @@ public class VisitPhotoFragment extends ACBaseFragment<VisitContract.VisitDashbo
 		visitPhotoProgressBar = (RelativeLayout)root.findViewById(R.id.visitPhotoProgressBar);
 		visitPhotoTab = (SwipeRefreshLayout)root.findViewById(R.id.visitPhotoTab);
 
+		// Disabling swipe refresh on this fragment due to issues
+		visitPhotoTab.setEnabled(false);
+
 		addListeners();
 
 		return root;

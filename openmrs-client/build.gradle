@@ -12,6 +12,12 @@ buildscript {
 	}
 }
 
+// Constants for app version and version code
+def app_version = "1.0.2"	// The version number displayed to users
+def app_version_code = 3	// The internal version number, higher is more recent
+
+def keystoreFile = "bandahealth.jks"
+
 // Get the keystore.properties file location, first looking for the environment property
 def keystorePropertiesFilePath = System.getenv(BANDA_IM_KEYSTORE_FILE)
 if (keystorePropertiesFilePath == null || keystorePropertiesFilePath.toString().length() == 0) {

@@ -57,10 +57,13 @@ import org.openmrs.mobile.utilities.FontsUtil;
 import org.openmrs.mobile.utilities.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormAnswers.ANSWER_NEGATIVE;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormAnswers.ANSWER_NO;
+import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_FIRST_RESPIRATORY_RATE_ICU;
+import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcepts.CONCEPT_INTUBATION_AT_GCS;
 import static org.openmrs.mobile.utilities.ApplicationConstants.ObservationLocators.SCHEDULED_IN_CLINIC;
 import static org.openmrs.mobile.utilities.ApplicationConstants.ObservationLocators.NOT_SCHEDULED_IN_CLINIC;
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormAnswers.ANSWER_POSITIVE;
@@ -98,6 +101,8 @@ import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormConcept
 import static org.openmrs.mobile.utilities.ApplicationConstants.EncounterTypeDisplays.AUDITDATA;
 import static org.openmrs.mobile.utilities.ApplicationConstants.EncounterTypeEntity.AUDIT_DATA_UUID;
 import static org.openmrs.mobile.utilities.ApplicationConstants.FORM_UUIDS.AUDIT_DATA_FORM_UUID;
+import static org.openmrs.mobile.utilities.ApplicationConstants.ValidationFieldValues.AUDIT_1ST_RESPIRATORY_RATE_MAX;
+import static org.openmrs.mobile.utilities.ApplicationConstants.ValidationFieldValues.AUDIT_1ST_RESPIRATORY_RATE_MIN;
 
 public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presenter>
 		implements AuditDataContract.View {
@@ -105,7 +110,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 	private Visit visit;
 	//private Patient patient;
 	private View fragmentView;
-	private EditText cd4, hBa1c, firstIcuHeartRate, firstGcsScore;
+	private EditText cd4, hBa1c, firstIcuHeartRate, firstIcuRespiratoryRate, firstGcsScore;
 	private String encounterUuid = null;
 	private String visitUuid, patientUuid, visitStopDate, locationUuid;
 	private OpenMRS instance = OpenMRS.getInstance();
@@ -115,7 +120,8 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 			hBa1cObservation, inpatientServiceTypeObservation, auditCompleteObservation, mechanicalVentilationObservation,
 			vaospressorsObservation, confirmedInfectionObservation, firstSbpObservation, firstMapObservation,
 			priorSedetionObservation, surgeryObservation, firstIcuHeartRateObservation, firstGcsScoreObservation,
-			patientDiabeticObservation, wardStayAdmissionObservation;
+			patientDiabeticObservation, wardStayAdmissionObservation, firstIcuRespiratoryRateObservation,
+			intubationObservation;
 	private RadioButton deathInHospitalYes, deathInHospitalNo, palliativeConsultYes, palliativeConsultNo,
 			palliativeConsultUknown, preopRiskAssessmentYes, preopRiskAssessmentNo, preopRiskAssessmentUknown, icuStayYes,
 			icuStayNo, icuStayUnknown, hduStayYes, hduStayNo, hduStayUnknown, hduComgmtYes, hduComgmtNo, hduComgmtUnknown,
@@ -125,7 +131,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 			first_sbp_unknown, any_prior_sedetion_yes, any_prior_sedetion_no, any_prior_sedetion_unknown, surgery_na,
 			surgery_planned, surgery_unplanned, first_map_yes, first_map_no, first_map_unknown, ward_stay_admission_yes,
 			ward_stay_admission_no, ward_stay_admission_unknown, patient_diabetic_yes, patient_diabetic_no,
-			patient_diabetic_unknown;
+			patient_diabetic_unknown, intubatedYes, intubatedNo, intubatedUnknown;
 	private CheckBox auditComplete;
 
 	private Spinner inpatientServiceType;
@@ -137,7 +143,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 	private String inpatientServiceTypeSelectedUuid, displayInpatientServiceType;
 	private Boolean displayExtraFormFields, displayCd4CountField, displayHbA1CField, displayHduCoManageField;
 	private TextInputLayout hba1cTextLayout, cd4TextInputLayout;
-	private TextView errorFirstGcsScore;
+	private TextView errorFirstGcsScore, errorHba1c, errorFirstRespiratoryRate;
 
 	private ConceptAnswer initialInpatientTypeServiceSelection;
 
@@ -168,7 +174,8 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 				first_sbp_yes, first_sbp_no, first_sbp_unknown, any_prior_sedetion_yes, any_prior_sedetion_no,
 				any_prior_sedetion_unknown, surgery_na, surgery_planned, surgery_unplanned, first_map_yes, first_map_no,
 				first_map_unknown, ward_stay_admission_yes, ward_stay_admission_no, ward_stay_admission_unknown,
-				patient_diabetic_yes, patient_diabetic_no, patient_diabetic_unknown);
+				patient_diabetic_yes, patient_diabetic_no, patient_diabetic_unknown, intubatedYes, intubatedNo,
+				intubatedUnknown);
 
 		initCheckboxListeners(auditComplete);
 
@@ -230,8 +237,39 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 			}
 		});
 
+		hBa1c.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence charSequence, int startPos, int count, int after) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+			}
+
+			@Override
+			public void afterTextChanged(Editable editable) {
+				validateHba1c();
+			}
+		});
+
+		firstIcuRespiratoryRate.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				validateFirstRespiratoryRate();
+			}
+		});
+
 		submitForm.setOnClickListener(v -> {
-			if (hasValidGcsScore()) {
+			if (hasValidGcsScore() && validateFirstRespiratoryRate()) {
 				performDataSend();
 			}
 		});
@@ -267,6 +305,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		extraFormAdditions = (LinearLayout)fragmentView.findViewById(R.id.extraFormAdditions);
 		hduCoManage = (LinearLayout)fragmentView.findViewById(R.id.hduCoManage);
 		firstIcuHeartRate = (EditText)fragmentView.findViewById(R.id.firstIcuHeartRate);
+		firstIcuRespiratoryRate = (EditText)fragmentView.findViewById(R.id.firstIcuRespiratoryRate);
 		firstGcsScore = (EditText)fragmentView.findViewById(R.id.firstGcsScore);
 		mechanical_ventilation_yes = (RadioButton)fragmentView.findViewById(R.id.mechanical_ventilation_yes);
 		mechanical_ventilation_no = (RadioButton)fragmentView.findViewById(R.id.mechanical_ventilation_no);
@@ -298,10 +337,15 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		cd4TextInputLayout = (TextInputLayout)fragmentView.findViewById(R.id.cd4TextInputLayout);
 		hba1cTextLayout = (TextInputLayout)fragmentView.findViewById(R.id.hba1cTextLayout);
 		errorFirstGcsScore = (TextView)fragmentView.findViewById(R.id.invalidGscError);
+		errorFirstRespiratoryRate = (TextView) fragmentView.findViewById(R.id.invalidFirstRespiratoryRate);
+		errorHba1c = (TextView)fragmentView.findViewById(R.id.invalidHba1cError);
 		progressBar = (RelativeLayout)fragmentView.findViewById(R.id.auditDataRelativeView);
 		auditDataFormProgressBar = (RelativeLayout)fragmentView.findViewById(R.id.auditDataFormProgressBar);
 		auditDataFormScreen = (LinearLayout)fragmentView.findViewById(R.id.auditDataFormScreen);
 		auditScrollView = (ScrollView)fragmentView.findViewById(R.id.auditDataFormScrollView);
+		intubatedYes = (RadioButton) fragmentView.findViewById(R.id.intubationDone);
+		intubatedNo = (RadioButton) fragmentView.findViewById(R.id.intubationNotDone);
+		intubatedUnknown = (RadioButton) fragmentView.findViewById(R.id.intubationNotKnown);
 	}
 
 	private void initObservations() {
@@ -309,9 +353,10 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 				firstMapObservation = priorSedetionObservation = surgeryObservation = firstIcuHeartRateObservation =
 						firstGcsScoreObservation = deathInHospitalObservation = palliativeConsultObservation =
 								preopRiskAssessmentObservation = icuStayObservation = hduStayObservation =
-										hduComgmtObservation = hivPositiveObservation =
+										hduComgmtObservation = hivPositiveObservation = firstIcuRespiratoryRateObservation =
 												auditCompleteObservation = hBa1cObservation = cd4Observation =
-														patientDiabeticObservation = wardStayAdmissionObservation = null;
+														patientDiabeticObservation = wardStayAdmissionObservation =
+																intubationObservation = null;
 
 	}
 
@@ -690,6 +735,22 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 				showAnimateView(false, hba1cTextLayout);
 				setObservationVoided(hBa1cObservation);
 				break;
+
+			case R.id.intubationDone:
+				intubationObservation = setObservationFields(intubationObservation, CONCEPT_INTUBATION_AT_GCS, CONCEPT_ANSWER_YES,
+						ApplicationConstants.ObservationLocators.INTUBATION_ON_FIRST_GCS +
+								ApplicationConstants.ObservationLocators.YES);
+				break;
+			case R.id.intubationNotDone:
+				intubationObservation = setObservationFields(intubationObservation, CONCEPT_INTUBATION_AT_GCS, CONCEPT_ANSWER_NO,
+						ApplicationConstants.ObservationLocators.INTUBATION_ON_FIRST_GCS +
+								ApplicationConstants.ObservationLocators.NO);
+				break;
+			case R.id.intubationNotKnown:
+				intubationObservation = setObservationFields(intubationObservation, CONCEPT_INTUBATION_AT_GCS, CONCEPT_ANSWER_UNKNOWN,
+						ApplicationConstants.ObservationLocators.INTUBATION_ON_FIRST_GCS +
+								ApplicationConstants.ObservationLocators.UNKNOWN);
+				break;
 			default:
 				break;
 		}
@@ -991,6 +1052,12 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 					firstIcuHeartRate.setText(displayValue);
 					break;
 
+				case ApplicationConstants.ObservationLocators.FIRST_RESPIRATORY_RATE:
+					firstIcuRespiratoryRateObservation =
+							setObservationFields(observation, CONCEPT_FIRST_RESPIRATORY_RATE_ICU, displayValue);
+					firstIcuRespiratoryRate.setText(displayValue);
+					break;
+
 				case ApplicationConstants.ObservationLocators.FIRST_GCS_SCORE:
 					firstGcsScoreObservation = setObservationFields(observation, CONCEPT_FIRST_GCS_SCORE_ICU, displayValue);
 					firstGcsScore.setText(displayValue);
@@ -1179,6 +1246,20 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 
 					}
 
+				case ApplicationConstants.ObservationLocators.INTUBATION_ON_FIRST_GCS:
+					if (displayValue.equalsIgnoreCase(ANSWER_YES)) {
+						intubatedYes.setChecked(true);
+						intubationObservation = setObservationFields(observation, CONCEPT_INTUBATION_AT_GCS,
+								CONCEPT_ANSWER_YES);
+					} else if (displayValue.equalsIgnoreCase(ANSWER_NO)) {
+						intubatedNo.setChecked(true);
+						intubationObservation = setObservationFields(observation, CONCEPT_INTUBATION_AT_GCS,
+								CONCEPT_ANSWER_NO);
+					} else {
+						intubatedUnknown.setChecked(true);
+						intubationObservation = setObservationFields(observation, CONCEPT_INTUBATION_AT_GCS,
+								CONCEPT_ANSWER_UNKNOWN);
+					}
 					break;
 
 				default:
@@ -1201,6 +1282,8 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 	}
 
 	private void performDataSend() {
+		List<Observation> observationsToVoid = new ArrayList<>();
+
 		//create location instance
 		Location location = new Location();
 		location.setUuid(locationUuid);
@@ -1296,6 +1379,20 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 			}
 		}
 
+		if (firstIcuRespiratoryRate.getText().length() > 0) {
+			if (Float.valueOf(firstIcuRespiratoryRate.getText().toString()) >= AUDIT_1ST_RESPIRATORY_RATE_MIN
+					&& Float.valueOf(firstIcuRespiratoryRate.getText().toString()) <= AUDIT_1ST_RESPIRATORY_RATE_MAX) {
+				firstIcuRespiratoryRateObservation =
+						setObservationFields(firstIcuRespiratoryRateObservation, CONCEPT_FIRST_RESPIRATORY_RATE_ICU,
+								firstIcuRespiratoryRate.getText().toString(),
+								ApplicationConstants.ObservationLocators.FIRST_RESPIRATORY_RATE +
+										firstIcuRespiratoryRate.getText().toString());
+				observations.add(firstIcuRespiratoryRateObservation);
+			}
+		} else if (firstIcuRespiratoryRateObservation != null) {
+			observationsToVoid.add(firstIcuRespiratoryRateObservation);
+		}
+
 		if (firstGcsScore.getText().length() > 0) {
 			if (Float.valueOf(firstGcsScore.getText().toString()) >= 1
 					&& Float.valueOf(firstGcsScore.getText().toString()) <= 15) {
@@ -1306,6 +1403,10 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 			}
 		}
 
+		if (intubationObservation != null ){
+			observations.add(intubationObservation);
+		}
+
 		if (cd4.getText().length() > 0) {
 			cd4Observation = setObservationFields(cd4Observation, CONCEPT_CD4_COUNT, cd4.getText().toString(),
 					ApplicationConstants.ObservationLocators.CD4_COUNT + cd4.getText().toString());
@@ -1313,9 +1414,12 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		}
 
 		if (hBa1c.getText().length() > 0) {
-			hBa1cObservation = setObservationFields(hBa1cObservation, CONCEPT_HBA1C, hBa1c.getText().toString(),
-					ApplicationConstants.ObservationLocators.GLYCOSYLATED_HEMOGLOBIN + hBa1c.getText().toString());
-			observations.add(hBa1cObservation);
+			if (Float.valueOf(hBa1c.getText().toString()) > 3
+					&& Float.valueOf(hBa1c.getText().toString()) < 26) {
+				hBa1cObservation = setObservationFields(hBa1cObservation, CONCEPT_HBA1C, hBa1c.getText().toString(),
+						ApplicationConstants.ObservationLocators.GLYCOSYLATED_HEMOGLOBIN + hBa1c.getText().toString());
+				observations.add(hBa1cObservation);
+			}
 		}
 
 		if (inpatientServiceTypeObservation != null) {
@@ -1346,6 +1450,14 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 			encounter.setUuid(encounterUuid);
 		}
 
+		for (Observation observationToVoid : observationsToVoid) {
+			if (observationToVoid != null &&
+					mPresenter.isObservationExistingForCurrentEncounter(observationToVoid)) {
+				setObservationVoided(observationToVoid);
+				observations.add(observationToVoid);
+			}
+		}
+
 		encounter.setObs(observations);
 		encounter.setPatient(visit.getPatient());
 		encounter.setForm(auditDataForm);
@@ -1353,7 +1465,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		encounter.setVisit(visit);
 		encounter.setProvider(instance.getCurrentLoggedInUserInfo().get(ApplicationConstants.UserKeys.USER_UUID));
 		encounter.setEncounterType(auditFormEncounterType);
-		encounter.setEncounterDatetime(visit.getStartDatetime());
+		encounter.setEncounterDatetime(new Date());
 
 		mPresenter.saveUpdateEncounter(encounter, isNewEncounter);
 	}
@@ -1366,6 +1478,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		setObservationVoided(firstSbpObservation);
 		setObservationVoided(firstMapObservation);
 		setObservationVoided(firstIcuHeartRateObservation);
+		setObservationVoided(firstIcuRespiratoryRateObservation);
 		setObservationVoided(firstGcsScoreObservation);
 		setObservationVoided(priorSedetionObservation);
 	}
@@ -1398,6 +1511,39 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 			errorFirstGcsScore.setText(getString(R.string.error_gcs_score,
 					ApplicationConstants.ValidationFieldValues.AUDIT_GCS_SCORE_MIN,
 					ApplicationConstants.ValidationFieldValues.AUDIT_GCS_SCORE_MAX));
+			return false;
+		}
+		return true;
+	}
+
+	private boolean validateFirstRespiratoryRate() {
+		if (firstIcuRespiratoryRate.getText().toString().length() == 0) {
+			errorFirstRespiratoryRate.setVisibility(View.GONE);
+		} else if (Float.parseFloat(firstIcuRespiratoryRate.getText().toString()) >= AUDIT_1ST_RESPIRATORY_RATE_MIN &&
+				Float.parseFloat(firstIcuRespiratoryRate.getText().toString()) <= AUDIT_1ST_RESPIRATORY_RATE_MAX) {
+			errorFirstRespiratoryRate.setVisibility(View.GONE);
+			return true;
+		} else {
+			errorFirstRespiratoryRate.setVisibility(View.VISIBLE);
+			errorFirstRespiratoryRate.setText(getString(R.string.error_first_respiratory_rate,
+					AUDIT_1ST_RESPIRATORY_RATE_MIN, AUDIT_1ST_RESPIRATORY_RATE_MAX));
+			return false;
+		}
+		return true;
+	}
+
+	private boolean validateHba1c() {
+		if (hBa1c.getText().toString().length() == 0) {
+			errorHba1c.setVisibility(View.GONE);
+		} else if (Float.parseFloat(hBa1c.getText().toString()) > 3 &&
+				Float.parseFloat(hBa1c.getText().toString()) < 26) {
+			errorHba1c.setVisibility(View.GONE);
+			return true;
+		} else {
+			errorHba1c.setVisibility(View.VISIBLE);
+			errorHba1c.setText(getString(R.string.error_hba1c,
+					ApplicationConstants.ValidationFieldValues.AUDIT_HBA1C_MIN,
+					ApplicationConstants.ValidationFieldValues.AUDIT_HBA1C_MAX));
 			return false;
 		}
 		return true;

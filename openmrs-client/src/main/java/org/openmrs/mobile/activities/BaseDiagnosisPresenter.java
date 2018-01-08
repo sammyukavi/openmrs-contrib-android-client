@@ -30,8 +30,8 @@ public class BaseDiagnosisPresenter {
 	private ConceptDataService conceptDataService;
 	private ObsDataService obsDataService;
 	private VisitNoteDataService visitNoteDataService;
-	private int page = PagingInfo.DEFAULT.getPage();
-	private int limit = PagingInfo.DEFAULT.getLimit() * 2;
+	private int page = PagingInfo.DEFAULT.getInstance().getPage();
+	private int limit = PagingInfo.DEFAULT.getInstance().getLimit() * 2;
 	private List<String> obsUuids = new ArrayList<>();
 	private DataAccessComponent dataAccess;
 	private Timer diagnosisTimer;
@@ -90,6 +90,7 @@ public class BaseDiagnosisPresenter {
 	 */
 	public void saveVisitNote(VisitNote visitNote, IBaseDiagnosisFragment base, boolean scheduleTask) {
 		cancelRunningRequest(true);
+		base.setLoading(true);
 		if (scheduleTask) {
 			diagnosisTimer = new Timer();
 			diagnosisTimer.schedule(new TimerTask() {
@@ -108,6 +109,7 @@ public class BaseDiagnosisPresenter {
 			@Override
 			public void onCompleted(VisitNote entity) {
 				cancelRunningRequest(false);
+				base.setLoading(false);
 				base.setEncounter(entity.getEncounter());
 
 				if (entity.getObservation() != null) {
@@ -124,6 +126,7 @@ public class BaseDiagnosisPresenter {
 				Log.e(TAG, "Error saving visit note: " + t.getLocalizedMessage(), t);
 				base.getBaseDiagnosisView().showTabSpinner(false);
 				cancelRunningRequest(false);
+				base.setLoading(false);
 			}
 		});
 	}

@@ -57,6 +57,7 @@ import org.openmrs.mobile.utilities.FontsUtil;
 import org.openmrs.mobile.utilities.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.openmrs.mobile.utilities.ApplicationConstants.AuditFormAnswers.ANSWER_NEGATIVE;
@@ -1251,11 +1252,11 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 						intubationObservation = setObservationFields(observation, CONCEPT_INTUBATION_AT_GCS,
 								CONCEPT_ANSWER_YES);
 					} else if (displayValue.equalsIgnoreCase(ANSWER_NO)) {
-						intubatedYes.setChecked(false);
+						intubatedNo.setChecked(true);
 						intubationObservation = setObservationFields(observation, CONCEPT_INTUBATION_AT_GCS,
 								CONCEPT_ANSWER_NO);
 					} else {
-						intubatedYes.setChecked(false);
+						intubatedUnknown.setChecked(true);
 						intubationObservation = setObservationFields(observation, CONCEPT_INTUBATION_AT_GCS,
 								CONCEPT_ANSWER_UNKNOWN);
 					}
@@ -1450,7 +1451,8 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		}
 
 		for (Observation observationToVoid : observationsToVoid) {
-			if (mPresenter.isObservationExistingForCurrentEncounter(observationToVoid)) {
+			if (observationToVoid != null &&
+					mPresenter.isObservationExistingForCurrentEncounter(observationToVoid)) {
 				setObservationVoided(observationToVoid);
 				observations.add(observationToVoid);
 			}
@@ -1463,7 +1465,7 @@ public class AuditDataFragment extends ACBaseFragment<AuditDataContract.Presente
 		encounter.setVisit(visit);
 		encounter.setProvider(instance.getCurrentLoggedInUserInfo().get(ApplicationConstants.UserKeys.USER_UUID));
 		encounter.setEncounterType(auditFormEncounterType);
-		encounter.setEncounterDatetime(visit.getStartDatetime());
+		encounter.setEncounterDatetime(new Date());
 
 		mPresenter.saveUpdateEncounter(encounter, isNewEncounter);
 	}

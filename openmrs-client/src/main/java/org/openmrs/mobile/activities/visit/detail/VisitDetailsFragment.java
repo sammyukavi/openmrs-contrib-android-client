@@ -123,12 +123,14 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 		primaryDiagnosesRecycler.setLayoutManager(primaryDiagnosisLayoutManager);
 		secondaryDiagnosesRecycler.setLayoutManager(secondaryDiagnosisLayoutManager);
 
+		// Disabling swipe refresh on this fragment due to issues
+		visitDetailsSwipeRefreshLayout.setEnabled(false);
+
 		((VisitDetailsPresenter)mPresenter).getVisit();
 		((VisitDetailsPresenter)mPresenter).getPatientUUID();
 		((VisitDetailsPresenter)mPresenter).getVisitUUID();
 		((VisitDetailsPresenter)mPresenter).getProviderUUID();
 		//buildMarginLayout();
-		initializeListeners();
 		return root;
 	}
 
@@ -219,6 +221,7 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 
 	@Override
 	public void setVisit(Visit visit) {
+		initializeListeners();
 		this.visit = visit;
 		visitDetailsSwipeRefreshLayout.setRefreshing(false);
 		if (visit != null) {
@@ -601,7 +604,7 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 				}
 
 				private int getObservationSortOrderFromTableRow(TableRow tableRow) {
-					String labelMatchingConstants = ((TextView) tableRow.getVirtualChildAt(0)).getText() + ": ";
+					String labelMatchingConstants = ((TextView)tableRow.getVirtualChildAt(0)).getText() + ": ";
 					if (!auditDataSortOrder.containsKey(labelMatchingConstants)) {
 						return 0;
 					}
@@ -678,5 +681,12 @@ public class VisitDetailsFragment extends BaseDiagnosisFragment<VisitContract.Vi
 	@Subscribe(threadMode = ThreadMode.MAIN)
 	public void onVisitDashboardRefreshEvent(VisitDashboardDataRefreshEvent event) {
 		mPresenter.dataRefreshEventOccurred(event);
+	}
+
+	@Override
+	public void setLoading(boolean loading) {
+		if (getActivity() != null) {
+			((VisitActivity)getActivity()).setLoading(loading);
+		}
 	}
 }

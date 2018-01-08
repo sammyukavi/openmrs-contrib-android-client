@@ -46,7 +46,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -89,7 +88,7 @@ public class VisitPhotoFragment extends ACBaseFragment<VisitContract.VisitDashbo
 	private Bitmap visitPhoto = null;
 	private AppCompatButton uploadVisitPhotoButton;
 	private RelativeLayout visitPhotoProgressBar;
-	private SwipeRefreshLayout visitPhotoTab;
+	private SwipeRefreshLayout visitPhotoSwipeRefreshLayout;
 
 	private File output;
 	private EditText fileCaption;
@@ -125,10 +124,10 @@ public class VisitPhotoFragment extends ACBaseFragment<VisitContract.VisitDashbo
 		noVisitImage = (TextView)root.findViewById(R.id.noVisitImage);
 
 		visitPhotoProgressBar = (RelativeLayout)root.findViewById(R.id.visitPhotoProgressBar);
-		visitPhotoTab = (SwipeRefreshLayout)root.findViewById(R.id.visitPhotoTab);
+		visitPhotoSwipeRefreshLayout = (SwipeRefreshLayout)root.findViewById(R.id.visitPhotoTab);
 
 		// Disabling swipe refresh on this fragment due to issues
-		visitPhotoTab.setEnabled(false);
+		visitPhotoSwipeRefreshLayout.setEnabled(false);
 
 		addListeners();
 
@@ -175,10 +174,10 @@ public class VisitPhotoFragment extends ACBaseFragment<VisitContract.VisitDashbo
 	@Override
 	public void showTabSpinner(boolean visibility) {
 		if (visibility) {
-			visitPhotoTab.setVisibility(View.GONE);
+			visitPhotoSwipeRefreshLayout.setVisibility(View.GONE);
 			visitPhotoProgressBar.setVisibility(View.VISIBLE);
 		} else {
-			visitPhotoTab.setVisibility(View.VISIBLE);
+			visitPhotoSwipeRefreshLayout.setVisibility(View.VISIBLE);
 			visitPhotoProgressBar.setVisibility(View.GONE);
 		}
 	}

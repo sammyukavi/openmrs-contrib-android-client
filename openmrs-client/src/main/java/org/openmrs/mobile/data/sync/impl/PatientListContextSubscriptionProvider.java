@@ -99,9 +99,11 @@ public class PatientListContextSubscriptionProvider extends BaseSubscriptionProv
 			}
 		}
 
-		// Delete context records that are no longer in patient list
-		databaseHelper.diffDelete(PatientListContext.class, PatientListContext_Table.patientList_uuid.eq(patientListUuid),
-				patientRecordInfoList);
+		if (patientListContexts != null) {
+			// Delete context records that are no longer in patient list
+			databaseHelper.diffDelete(PatientListContext.class,
+					PatientListContext_Table.patientList_uuid.eq(patientListUuid), patientListContexts);
+		}
 
 		if (patientListContexts.isEmpty()) {
 			return;

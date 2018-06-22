@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -29,7 +30,6 @@ import org.openmrs.mobile.utilities.StringUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -46,7 +46,8 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 
 	private final int VIEW_TYPE_HEADER = 0;
 	private final int VIEW_TYPE_ITEM = 1;
-	private HashMap<String, String> uuids;
+	private final int VIEW_TYPE_PROGRESS = 2;
+
 	private Context context;
 	private List<Visit> visits;
 	private LayoutInflater layoutInflater;
@@ -56,6 +57,12 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 	private View activeVisitView;
 	private IBaseDiagnosisFragment baseDiagnosisFragment;
 	private boolean hasStartedDiagnoses;
+
+	// The minimum amount of items to have below your current scroll position before loading more.
+	private int visibleThreshold = 0;
+	private int lastVisibleItem, totalItemCount;
+	private boolean loading, fullDataSetHasBeenLoaded = false;
+	private OnLoadMoreListener onLoadMoreListener;
 
 	private LinearLayoutManager primaryDiagnosisLayoutManager, secondaryDiagnosisLayoutManager;
 	private LinearLayout diagnosesLayout, pastDiagnosisLayout;
@@ -71,10 +78,32 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 		this.context = context;
 		this.layoutInflater = LayoutInflater.from(context);
 		this.patientDashboardActivity = (PatientDashboardActivity)context;
-		LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+		final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
 		visitsRecyclerView.setLayoutManager(linearLayoutManager);
 		this.baseDiagnosisFragment = baseDiagnosisFragment;
 		this.hasStartedDiagnoses = false;
+
+		visitsRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+			@Override
+			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+				super.onScrolled(recyclerView, dx, dy);
+
+				if (fullDataSetHasBeenLoaded) {
+					return;
+				}
+
+				totalItemCount = linearLayoutManager.getItemCount() - 1;
+				lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
+				if (!loading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
+					// End has been reached
+					// Do something
+					loading = true;
+					if (onLoadMoreListener != null) {
+						onLoadMoreListener.onLoadMore();
+					}
+				}
+			}
+		});
 	}
 
 	// condition for header
@@ -91,8 +120,10 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 	public int getItemViewType(int position) {
 		if (isPositionHeader(position)) {
 			return VIEW_TYPE_HEADER;
-		} else {
+		} else if (visits.get(position - 1) != null) {
 			return VIEW_TYPE_ITEM;
+		} else {
+			return VIEW_TYPE_PROGRESS;
 		}
 	}
 
@@ -108,6 +139,11 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 					LayoutInflater.from(parent.getContext()).inflate(R.layout.patient_visits_container, parent,
 							false);
 			return new PatientVisitViewHolder(patientVisitView);
+		} else if (viewType == VIEW_TYPE_PROGRESS) {
+			View patientProgressView =
+					LayoutInflater.from(parent.getContext()).inflate(R.layout.progress_item, parent, false);
+
+			return new ProgressViewHolder(patientProgressView);
 		}
 		return null;
 	}
@@ -117,6 +153,8 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 		if (holder instanceof RecyclerViewHeader) {
 			RecyclerViewHeader recyclerViewHeader = (RecyclerViewHeader)holder;
 			updateContactInformation(recyclerViewHeader);
+		} else if (holder instanceof ProgressViewHolder) {
+			((ProgressViewHolder)holder).progressBar.setIndeterminate(true);
 		} else if (holder instanceof PatientVisitViewHolder) {
 			boolean isActiveVisit = false;
 			PatientVisitViewHolder viewHolder = (PatientVisitViewHolder)holder;
@@ -190,8 +228,9 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 			} else {
 				Encounter tempEncounter = null;
 				for (Encounter encounter : visit.getEncounters()) {
-					if (encounter.getEncounterType()
-							.getDisplay().equalsIgnoreCase(ApplicationConstants.EncounterTypeDisplays.VISIT_NOTE)) {
+					if (encounter.getEncounterType() != null
+							&& encounter.getEncounterType().getDisplay().equalsIgnoreCase(
+									ApplicationConstants.EncounterTypeDisplays.VISIT_NOTE)) {
 						if (encounter.getVoided() != null && encounter.getVoided()) {
 							continue;
 						}
@@ -215,6 +254,33 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 
 			viewHolder.patientVisitDetailsContainer.addView(singleVisitView);
 		}
+	}
+
+	public void setLoaded() {
+		loading = false;
+	}
+
+	public void setFullDataSetHasBeenLoaded() {
+		fullDataSetHasBeenLoaded = true;
+	}
+
+	public void setOnLoadMoreListener(OnLoadMoreListener onLoadMoreListener) {
+		this.onLoadMoreListener = onLoadMoreListener;
+	}
+
+	public void destroy() {
+		baseDiagnosisFragment.setVisit(null);
+		baseDiagnosisFragment.setEncounter(null);
+		baseDiagnosisFragment.setSearchDiagnosisView(null);
+		baseDiagnosisFragment.setNoPrimaryDiagnoses(null);
+		baseDiagnosisFragment.setNoSecondaryDiagnoses(null);
+		baseDiagnosisFragment.setPrimaryDiagnosesRecycler(null);
+		baseDiagnosisFragment.setSecondaryDiagnosesRecycler(null);
+		baseDiagnosisFragment.setClinicalNoteView(null);
+		baseDiagnosisFragment.setLoadingProgressBar(null);
+		baseDiagnosisFragment.setDiagnosesContent(null);
+		onLoadMoreListener = null;
+		visits.clear();
 	}
 
 	private void initDiagnosesComponents(View view) {
@@ -242,10 +308,6 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 		}
 	}
 
-	public void setUuids(HashMap<String, String> uuids) {
-		this.uuids = uuids;
-	}
-
 	public void updateSavingClinicalNoteProgressBar(boolean show) {
 		if (activeVisitView != null) {
 			activeVisitView.findViewById(R.id.savingProgressBarView).setVisibility(show ? View.VISIBLE : View.GONE);
@@ -259,7 +321,7 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 	}
 
 	private void loadVisitDetails(Visit visit) {
-		if (!patientDashboardActivity.mPresenter.isLoading()) {
+		if (patientDashboardActivity != null && !patientDashboardActivity.isLoading()) {
 			setVisitStopDate(visit);
 			Intent intent = new Intent(context, VisitActivity.class);
 			intent.putExtra(ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE, OpenMRS.getInstance()
@@ -293,6 +355,16 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 					county = displayName.split("=")[1];
 				} else if (displayName.toLowerCase().startsWith(TELEPHONE)) {
 					phone = displayName.split("=")[1];
+				}
+			} else if (personAttribute.getAttributeType() != null) {
+				// this is helpful when a patient has been created offline and not synced up, yet
+				String name = personAttribute.getAttributeType().getName();
+				if (name.toLowerCase().startsWith(SUBCOUNTY)) {
+					subCounty = personAttribute.getStringValue();
+				} else if (name.toLowerCase().startsWith(COUNTY)) {
+					county = personAttribute.getStringValue();
+				} else if (name.toLowerCase().startsWith(TELEPHONE)) {
+					phone = personAttribute.getStringValue();
 				}
 			}
 		}
@@ -369,6 +441,10 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 		return visits == null ? 0 : visits.size() + 1;//Add an index for the header
 	}
 
+	public interface OnLoadMoreListener {
+		void onLoadMore();
+	}
+
 	private class RecyclerViewHeader extends RecyclerView.ViewHolder {
 		TextView patientAddress;
 		TextView patientPhonenumber;
@@ -386,6 +462,15 @@ public class PatientVisitsRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 		PatientVisitViewHolder(View view) {
 			super(view);
 			patientVisitDetailsContainer = (LinearLayout)view.findViewById(R.id.patientVisitDetailsContainer);
+		}
+	}
+
+	public class ProgressViewHolder extends RecyclerView.ViewHolder {
+		public ProgressBar progressBar;
+
+		public ProgressViewHolder(View view) {
+			super(view);
+			progressBar = (ProgressBar)view.findViewById(R.id.progressBarItem);
 		}
 	}
 }

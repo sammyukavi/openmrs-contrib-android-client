@@ -17,7 +17,6 @@ public interface PatientHeaderContract {
 	}
 
 	interface Presenter extends BasePresenterContract {
-		void getPatient();
 
 		void dataRefreshEventOccurred(DataRefreshEvent dataRefreshEvent);
 	}

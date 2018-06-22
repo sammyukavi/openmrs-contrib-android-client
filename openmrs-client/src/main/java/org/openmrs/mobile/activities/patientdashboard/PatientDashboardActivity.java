@@ -43,7 +43,6 @@ public class PatientDashboardActivity extends ACBaseActivity {
 		if (!patientDashboardFragment.isActive()) {
 			addFragmentToActivity(getSupportFragmentManager(), patientDashboardFragment, R.id.contentFrame);
 		}
-		mPresenter = new PatientDashboardPresenter(patientDashboardFragment, openMRS);
 
 		Bundle extras = getIntent().getExtras();
 		String patientUuid = "";
@@ -65,6 +64,8 @@ public class PatientDashboardActivity extends ACBaseActivity {
 				headerFragment.showLastSyncInformation();
 			}
 		}
+
+		mPresenter = new PatientDashboardPresenter(patientDashboardFragment, openMRS, patientUuid);
 	}
 
 	@Override
@@ -79,7 +80,7 @@ public class PatientDashboardActivity extends ACBaseActivity {
 
 	@Override
 	public void onBackPressed() {
-		if (!mPresenter.isLoading()) {
+		if (!isLoading()) {
 			if (drawer.isDrawerOpen(GravityCompat.START)) {
 				drawer.closeDrawer(GravityCompat.START);
 			} else {

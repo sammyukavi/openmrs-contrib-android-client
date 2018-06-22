@@ -18,6 +18,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,19 +46,14 @@ import org.openmrs.mobile.utilities.FontsUtil;
 import org.openmrs.mobile.utilities.StringUtils;
 import org.openmrs.mobile.utilities.ToastUtil;
 
-import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
-
-import static org.openmrs.mobile.utilities.ApplicationConstants.BundleKeys.LOCATION_UUID_BUNDLE;
-import static org.openmrs.mobile.utilities.ApplicationConstants.BundleKeys.PATIENT_UUID_BUNDLE;
 
 public class PatientDashboardFragment extends BaseDiagnosisFragment<PatientDashboardContract.Presenter>
 		implements PatientDashboardContract.View {
 
 	private FloatingActionButton startVisitButton, editPatient;
 	private Patient patient;
-	private OpenMRS instance = OpenMRS.getInstance();
+	private OpenMRS openMRS = OpenMRS.getInstance();
 	private Intent intent;
 	private Location location;
 	private RelativeLayout dashboardScreen, noPatientDataLayout;
@@ -67,6 +63,10 @@ public class PatientDashboardFragment extends BaseDiagnosisFragment<PatientDashb
 	private PatientVisitsRecyclerAdapter patientVisitsRecyclerAdapter;
 	private FloatingActionMenu patientDashboardMenu;
 	private RecyclerView patientVisitsRecyclerView;
+	private SwipeRefreshLayout patientVisitsSwipeRefreshView;
+	private RecyclerView.OnScrollListener patientVisitsOnScrollListener;
+
+	private LinkedList<Visit> patientVisits = new LinkedList<>();
 
 	public static PatientDashboardFragment newInstance() {
 		return new PatientDashboardFragment();
@@ -75,36 +75,10 @@ public class PatientDashboardFragment extends BaseDiagnosisFragment<PatientDashb
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
-		patientVisitsRecyclerView.removeOnScrollListener(new RecyclerView.OnScrollListener() {
-			@Override
-			public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-				super.onScrollStateChanged(recyclerView, newState);
-			}
-
-			@Override
-			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-				super.onScrolled(recyclerView, dx, dy);
-
-				View patientContactInfo = recyclerView.findViewById(R.id.container_patient_address_info);
-				if (patientContactInfo == null) {
-					((PatientDashboardActivity)getActivity()).updateHeaderShadowLine(true);
-				} else {
-					((PatientDashboardActivity)getActivity()).updateHeaderShadowLine(false);
-				}
-
-				if (!mPresenter.isLoading()) {
-					if (!recyclerView.canScrollVertically(1)) {
-						// load next page
-						mPresenter.loadResults(patient, true);
-					}
-
-					if (!recyclerView.canScrollVertically(-1) && dy < 0) {
-						// load previous page
-						mPresenter.loadResults(patient, false);
-					}
-				}
-			}
-		});
+		patientVisitsRecyclerView.removeOnScrollListener(patientVisitsOnScrollListener);
+		if (patientVisitsRecyclerAdapter != null) {
+			patientVisitsRecyclerAdapter.destroy();
+		}
 	}
 
 	@Override
@@ -124,14 +98,12 @@ public class PatientDashboardFragment extends BaseDiagnosisFragment<PatientDashb
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View fragmentView = inflater.inflate(R.layout.fragment_patient_dashboard, container, false);
-		patientUuid = getActivity().getIntent().getStringExtra(ApplicationConstants.BundleKeys
-				.PATIENT_UUID_BUNDLE);
 
 		initializeViewFields(fragmentView);
 		initializeListeners(startVisitButton, editPatient);
 
 		//set start index incase it's cached somewhere
-		mPresenter.fetchPatientData(patientUuid);
+		mPresenter.fetchPatientData();
 		FontsUtil.setFont((ViewGroup)this.getActivity().findViewById(android.R.id.content));
 
 		return fragmentView;
@@ -143,7 +115,7 @@ public class PatientDashboardFragment extends BaseDiagnosisFragment<PatientDashb
 					view -> startSelectedPatientDashboardActivity(patientActionButtons.getId()));
 		}
 
-		patientVisitsRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+		patientVisitsOnScrollListener = new RecyclerView.OnScrollListener() {
 			@Override
 			public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
 				super.onScrollStateChanged(recyclerView, newState);
@@ -159,18 +131,16 @@ public class PatientDashboardFragment extends BaseDiagnosisFragment<PatientDashb
 				} else {
 					((PatientDashboardActivity)getActivity()).updateHeaderShadowLine(false);
 				}
+			}
+		};
 
-				if (!mPresenter.isLoading()) {
-					if (!recyclerView.canScrollVertically(1)) {
-						// load next page
-						mPresenter.loadResults(patient, true);
-					}
+		patientVisitsRecyclerView.addOnScrollListener(patientVisitsOnScrollListener);
 
-					if (!recyclerView.canScrollVertically(-1) && dy < 0) {
-						// load previous page
-						mPresenter.loadResults(patient, false);
-					}
-				}
+		patientVisitsSwipeRefreshView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+
+			@Override
+			public void onRefresh() {
+				mPresenter.dataRefreshWasRequested();
 			}
 		});
 	}
@@ -203,34 +173,70 @@ public class PatientDashboardFragment extends BaseDiagnosisFragment<PatientDashb
 		patientVisitsRecyclerView = (RecyclerView)fragmentView.findViewById(R.id.patientVisitsRecyclerView);
 		noPatientDataLabel = (TextView)fragmentView.findViewById(R.id.noPatientDataLabel);
 		noPatientDataLayout = (RelativeLayout)fragmentView.findViewById(R.id.noPatientDataLayout);
+		patientVisitsSwipeRefreshView = (SwipeRefreshLayout)fragmentView.findViewById(R.id.patientVisitsSwipeRefreshView);
 	}
 
 	@Override
 	public void patientContacts(Patient patient) {
 		this.patient = patient;
-		instance.setPatientUuid(patient.getPerson().getUuid());
+		patientUuid = patient.getUuid();
+		openMRS.setPatientUuid(patientUuid);
 	}
 
 	@Override
-	public void patientVisits(LinkedList<Visit> visits) {
+	public void notifyAllPatientVisitsFetched() {
+		patientVisitsRecyclerAdapter.setFullDataSetHasBeenLoaded();
+	}
+
+	@Override
+	public void addPatientVisits(LinkedList<Visit> visits) {
+
+		// This should always be null (added for loading purposes) when this method is called, but adding in case it's not
+		// for some reason
+		if (patientVisits.getLast() == null) {
+			patientVisits.remove(patientVisits.size() - 1);
+		}
+		patientVisits.addAll(visits);
+		patientVisitsRecyclerAdapter.notifyDataSetChanged();
+		patientVisitsRecyclerAdapter.setLoaded();
+	}
+
+	@Override
+	public void setPatientVisits(LinkedList<Visit> visits) {
+
+		patientVisits = visits;
+
 		//hasActiveVisit = false;
-		for (Visit visit : visits) {
+		for (Visit visit : patientVisits) {
 			if (visit.getStopDatetime() == null) {
 				//hasActiveVisit = true;
 				startVisitButton.setVisibility(View.GONE);
-				instance.setVisitUuid(visit.getUuid());
+				openMRS.setVisitUuid(visit.getUuid());
 				break;
 			}
 		}
 
-		HashMap<String, String> uuidsHashmap = new HashMap<>();
-		uuidsHashmap.put(PATIENT_UUID_BUNDLE, patient == null ? "" : patient.getUuid());
-		uuidsHashmap.put(LOCATION_UUID_BUNDLE, location == null ? "" : location.getUuid());
-
+		if (patientVisitsRecyclerAdapter != null) {
+			patientVisitsRecyclerAdapter.destroy();
+		}
 		patientVisitsRecyclerAdapter =
-				new PatientVisitsRecyclerAdapter(patientVisitsRecyclerView, visits, getActivity(), this);
-		patientVisitsRecyclerAdapter.setUuids(uuidsHashmap);
+				new PatientVisitsRecyclerAdapter(patientVisitsRecyclerView, patientVisits, getActivity(), this);
+		patientVisitsRecyclerAdapter.setOnLoadMoreListener(new PatientVisitsRecyclerAdapter.OnLoadMoreListener() {
+
+			@Override
+			public void onLoadMore() {
+				// Add a null for loading indicator
+				patientVisits.add(null);
+				patientVisitsRecyclerAdapter.notifyItemInserted(patientVisits.size() - 1);
+				mPresenter.loadResults();
+			}
+		});
 		patientVisitsRecyclerView.setAdapter(patientVisitsRecyclerAdapter);
+	}
+
+	@Override
+	public void displayRefreshingData(boolean visible) {
+		patientVisitsSwipeRefreshView.setRefreshing(visible);
 	}
 
 	@Override
@@ -242,7 +248,7 @@ public class PatientDashboardFragment extends BaseDiagnosisFragment<PatientDashb
 	public void setProviderUuid(String providerUuid) {
 		if (StringUtils.isBlank(providerUuid))
 			return;
-		SharedPreferences.Editor editor = instance.getPreferences().edit();
+		SharedPreferences.Editor editor = openMRS.getPreferences().edit();
 		editor.putString(ApplicationConstants.BundleKeys.PROVIDER_UUID_BUNDLE, providerUuid);
 		editor.commit();
 	}
@@ -293,7 +299,8 @@ public class PatientDashboardFragment extends BaseDiagnosisFragment<PatientDashb
 	public void onDestroy() {
 		super.onDestroy();
 
-		instance.setPatientUuid(ApplicationConstants.EMPTY_STRING);
+		patientUuid = ApplicationConstants.EMPTY_STRING;
+		openMRS.setPatientUuid(patientUuid);
 	}
 
 	@Override
@@ -309,5 +316,12 @@ public class PatientDashboardFragment extends BaseDiagnosisFragment<PatientDashb
 	@Override
 	public void showTabSpinner(boolean show) {
 		showSavingClinicalNoteProgressBar(show);
+	}
+
+	@Override
+	public void setLoading(boolean loading) {
+		if (getActivity() != null) {
+			((PatientDashboardActivity)getActivity()).setLoading(loading);
+		}
 	}
 }

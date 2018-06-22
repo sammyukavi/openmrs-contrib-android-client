@@ -5,9 +5,13 @@ import org.openmrs.mobile.data.PagingInfo;
 import org.openmrs.mobile.data.QueryOptions;
 import org.openmrs.mobile.data.db.impl.EntitySyncInfoDbService;
 import org.openmrs.mobile.data.db.impl.PatientDbService;
+import org.openmrs.mobile.data.db.impl.PatientListContextDbService;
+import org.openmrs.mobile.data.db.impl.PullSubscriptionDbService;
 import org.openmrs.mobile.data.rest.impl.PatientRestServiceImpl;
 import org.openmrs.mobile.models.EntitySyncInfo;
 import org.openmrs.mobile.models.Patient;
+import org.openmrs.mobile.models.PatientList;
+import org.openmrs.mobile.models.PatientListContext;
 
 import java.util.Date;
 import java.util.List;
@@ -16,10 +20,15 @@ import javax.inject.Inject;
 
 public class PatientDataService extends BaseDataService<Patient, PatientDbService, PatientRestServiceImpl> {
 
+	private PatientListContextDbService patientListContextDbService;
+	private PullSubscriptionDbService pullSubscriptionDbService;
 	private EntitySyncInfoDbService entitySyncInfoDbService;
 
 	@Inject
-	public PatientDataService(EntitySyncInfoDbService entitySyncInfoDbService) {
+	public PatientDataService(PatientListContextDbService patientListContextDbService,
+			PullSubscriptionDbService pullSubscriptionDbService, EntitySyncInfoDbService entitySyncInfoDbService) {
+		this.patientListContextDbService = patientListContextDbService;
+		this.pullSubscriptionDbService = pullSubscriptionDbService;
 		this.entitySyncInfoDbService = entitySyncInfoDbService;
 	}
 
@@ -52,6 +61,17 @@ public class PatientDataService extends BaseDataService<Patient, PatientDbServic
 				() -> dbService.getLastViewed(options, pagingInfo),
 				() -> restService.getLastViewed(lastViewed, options, pagingInfo)
 		);
+	}
+
+	public boolean isPatientSynced(String uuid) {
+		List<PatientListContext> patientListContexts = patientListContextDbService.getPatientListContextsForPatient(uuid);
+		for (PatientListContext patientListContext : patientListContexts) {
+			PatientList patientList = patientListContext.getPatientList();
+			if (patientList != null && pullSubscriptionDbService.patientListIsSyncing(patientList.getUuid())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public Date getLastSyncTime(Patient patient) {
